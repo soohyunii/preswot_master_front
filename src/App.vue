@@ -1,8 +1,6 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
     <router-view/>
-    <el-button type="primary">Primary Button Tset</el-button>
   </div>
 </template>
 
