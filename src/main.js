@@ -3,17 +3,21 @@
 import Vue from 'vue';
 import Element from 'element-ui';
 import locale from 'element-ui/lib/locale/lang/en';
+
 import App from './App';
 import router from './router';
+import store from './stores';
 
 Vue.config.productionTip = false;
 Vue.use(Element, {
   locale,
 });
 
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  store,
   router,
   template: '<App/>',
   components: { App },

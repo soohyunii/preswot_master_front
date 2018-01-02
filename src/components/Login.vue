@@ -16,10 +16,12 @@
         </el-col>
       </el-row>
     </el-container>
+    jwt: {{ jwt }}
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import auth from '../services/auth';
 
 export default {
@@ -44,6 +46,10 @@ export default {
         }
       }
     },
+  },
+  computed: {
+    ...mapState('auth', ['jwt']),
+    // ...mapState(/* 'auth', */['jwt']),
   },
 };
 </script>
