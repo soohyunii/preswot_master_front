@@ -6,12 +6,12 @@
         <el-col>
           <!-- TODO: add form html element -->
           <!-- TODO: add validation -->
-        <h1>Login</h1>
+        <h1>{{ $t('LOGIN.LOGIN_TITLE') }}</h1>
         <el-input placeholder="abc@gmail.com" v-model="inputEmail" type="email">
-          <template slot="prepend">Email</template>
+          <template slot="prepend">{{ $t('LOGIN.EMAIL') }}</template>
         </el-input>
         <el-input placeholder="********" v-model="inputPassword" type="password">
-          <template slot="prepend">Password</template>
+          <template slot="prepend">{{ $t('LOGIN.PASSWORD') }}</template>
         </el-input>
         <!-- TODO: add disabled attr according to validation -->
         <el-button type="primary" @click="onClick('LOGIN')">login</el-button>

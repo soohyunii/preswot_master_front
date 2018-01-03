@@ -22,7 +22,7 @@ const browserLocale = getLocale().split('-')[0];
 
 const i18n = new VueI18n({
   locale: localStorage.getItem('locale') || browserLocale || 'ko', // TODO: choose from browser
-  fallbackLocale: 'en',
+  fallbackLocale: 'ko',
   messages,
 });
 
