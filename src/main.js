@@ -2,7 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue';
 import Element from 'element-ui';
-import locale from 'element-ui/lib/locale/lang/en';
+import locale from 'element-ui/lib/locale/lang/ko';
 import VueI18n from 'vue-i18n';
 
 import App from './App';

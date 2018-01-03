@@ -4,8 +4,18 @@
     <router-link to="/login">Login</router-link>
     <router-link to="/register">Register</router-link>
     |
-    <el-button @click="changeLocale('ko')">한국어</el-button>
-    <el-button @click="changeLocale('en')">English</el-button>
+    <el-button
+      :type="locale === 'ko' ? 'primary' : 'default'"
+      @click="changeLocale('ko')"
+    >
+      한국어
+    </el-button>
+    <el-button
+      :type="locale === 'en' ? 'primary' : 'default'"
+      @click="changeLocale('en')"
+    >
+      English
+    </el-button>
     locale: {{ locale }}
 
     <router-view/>
