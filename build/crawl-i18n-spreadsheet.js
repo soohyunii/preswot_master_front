@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const readline = require('readline');
 const google = require('googleapis');
 const googleAuth = require('google-auth-library');
@@ -14,7 +15,7 @@ var TOKEN_PATH = TOKEN_DIR + 'sheets.googleapis.com-nodejs-quickstart.json';
 const localeList = ['en', 'ko'];
 
 // Load client secrets from a local file.
-fs.readFile('googleapi-client.json', function processClientSecrets(err, content) {
+fs.readFile(path.resolve(__dirname, './googleapi-client.json'), function processClientSecrets(err, content) {
   if (err) {
     console.log('Error loading client secret file: ' + err);
     return;
