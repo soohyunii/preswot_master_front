@@ -1,6 +1,6 @@
 <template>
   <div>
-    Hello, Register Template.
+    <h2>Hello, Register Template.</h2>
   </div>
 </template>
 
@@ -13,8 +13,11 @@ export default {
 };
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+h2 {
+  color: red;
+}
 </style>
+
 
 
