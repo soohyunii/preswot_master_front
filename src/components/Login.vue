@@ -5,6 +5,7 @@
       <el-row>
         <el-col>
           <!-- TODO: add form html element -->
+          <!-- TODO: add validation -->
         <h1>Login</h1>
         <el-input placeholder="abc@gmail.com" v-model="inputEmail" type="email">
           <template slot="prepend">Email</template>
@@ -12,6 +13,7 @@
         <el-input placeholder="********" v-model="inputPassword" type="password">
           <template slot="prepend">Password</template>
         </el-input>
+        <!-- TODO: add disabled attr according to validation -->
         <el-button type="primary" @click="onClick('LOGIN')">login</el-button>
         </el-col>
       </el-row>

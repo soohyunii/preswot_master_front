@@ -9,6 +9,7 @@ function getJwtFromLocalStorage() {
   localStorage.setItem('jwt', null);
   return '';
 }
+
 export default {
   namespaced: true,
   state: {
