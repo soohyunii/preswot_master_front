@@ -6,7 +6,7 @@ export default {
     return new Promise((resolve) => {
       window.setTimeout(() => {
         resolve({
-          jwt: 'blahblahblahvalid',
+          jwt: 'blahblahblah_unexpired',
         });
       }, 500);
     });

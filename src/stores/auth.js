@@ -3,10 +3,11 @@ import auth from '../services/auth';
 function getJwtFromLocalStorage() {
   const jwt = localStorage.getItem('jwt') || '';
   // TODO: Replace dummy validation
-  if (jwt.endsWith('valid')) {
+  if (jwt.endsWith('unexpired')) {
     return jwt;
   }
-  localStorage.setItem('jwt', null);
+  // if jwt is expired, erase it then return empty string
+  localStorage.setItem('jwt', '');
   return '';
 }
 
