@@ -26,6 +26,7 @@ export default {
     async reqLogin({ commit }, { email, password }) {
       // TODO: try catch
       const res = await authService.login({ email, password });
+      // TODO: delete console.log
       console.log('store auth', res); // eslint-disable-line
       commit('updateJwt', {
         jwt: res.jwt,
