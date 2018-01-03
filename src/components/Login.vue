@@ -26,7 +26,7 @@
 import { mapState, mapActions } from 'vuex';
 
 export default {
-  name: 'login',
+  name: 'Login',
   data() {
     return {
       inputEmail: 'adoji92@gmail.com',
@@ -55,7 +55,6 @@ export default {
   },
   computed: {
     ...mapState('auth', ['jwt']),
-    // ...mapState(/* 'auth', */['jwt']),
   },
 };
 </script>
