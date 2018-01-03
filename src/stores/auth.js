@@ -1,4 +1,4 @@
-import auth from '../services/auth';
+import authService from '../services/auth';
 
 function getJwtFromLocalStorage() {
   const jwt = localStorage.getItem('jwt') || '';
@@ -24,7 +24,8 @@ export default {
   },
   actions: {
     async reqLogin({ commit }, { email, password }) {
-      const res = await auth.login({ email, password });
+      // TODO: try catch
+      const res = await authService.login({ email, password });
       console.log('store auth', res); // eslint-disable-line
       commit('updateJwt', {
         jwt: res.jwt,
