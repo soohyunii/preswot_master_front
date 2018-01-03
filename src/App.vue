@@ -38,7 +38,6 @@ export default {
     ...mapMutations('auth', ['updateLocale']),
     changeLocale(locale) {
       const vm = this;
-      // vm.setLocale(locale); // TODO: implement vuex muation
       vm.$i18n.locale = locale;
       vm.updateLocale({ locale });
     },
