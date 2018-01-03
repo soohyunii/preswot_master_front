@@ -21,8 +21,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import auth from '../services/auth';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'login',
@@ -33,12 +32,17 @@ export default {
     };
   },
   methods: {
+    ...mapActions('auth', [
+      'reqLogin',
+    ]),
     async onClick(type) {
       const vm = this;
       switch (type) {
         case 'LOGIN': {
-          const res = await auth.login(vm.inputEmail, vm.inputPassword);
-          console.log('login response:', res); // eslint-disable-line
+          this.reqLogin({
+            email: vm.inputEmail,
+            password: vm.inputPassword,
+          });
           break;
         }
         default: {
