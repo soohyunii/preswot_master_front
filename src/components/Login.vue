@@ -14,7 +14,7 @@
           <template slot="prepend">{{ $t('LOGIN.PASSWORD') }}</template>
         </el-input>
         <!-- TODO: add disabled attr according to validation -->
-        <el-button type="primary" @click="onClick('LOGIN')">login</el-button>
+        <el-button type="primary" @click="onClick('LOGIN')">{{ $t('LOGIN.LOGIN_TITLE') }}</el-button>
         </el-col>
       </el-row>
     </el-container>

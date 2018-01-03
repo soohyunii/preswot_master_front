@@ -1,25 +1,21 @@
 import authService from '../services/auth';
+import utils from '../utils';
 
-function getJwtFromLocalStorage() {
-  const jwt = localStorage.getItem('jwt') || '';
-  // TODO: Replace dummy validation
-  if (jwt.endsWith('unexpired')) {
-    return jwt;
-  }
-  // if jwt is expired, erase it then return empty string
-  localStorage.setItem('jwt', '');
-  return '';
-}
 
 export default {
   namespaced: true,
   state: {
-    jwt: getJwtFromLocalStorage(),
+    jwt: utils.getJwtFromLocalStorage(),
+    locale: utils.getDefaultLocale(),
   },
   mutations: {
     updateJwt(state, { jwt }) {
       state.jwt = jwt;
       window.localStorage.setItem('jwt', jwt);
+    },
+    updateLocale(state, { locale }) {
+      state.locale = locale;
+      window.localStorage.setItem('locale', locale);
     },
   },
   actions: {

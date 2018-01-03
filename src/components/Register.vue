@@ -5,6 +5,8 @@
 </template>
 
 <script>
+// id(string), password(string), name(string),
+// birth(1991-07-16 형식string), address(string), phone(string), major(string), belong(string소속)
 export default {
   name: 'Register',
   data() {
