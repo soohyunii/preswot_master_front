@@ -1,9 +1,18 @@
 import auth from '../services/auth';
 
+function getJwtFromLocalStorage() {
+  const jwt = localStorage.getItem('jwt') || '';
+  // TODO: Replace dummy validation
+  if (jwt.endsWith('valid')) {
+    return jwt;
+  }
+  localStorage.setItem('jwt', null);
+  return '';
+}
 export default {
   namespaced: true,
   state: {
-    jwt: localStorage.getItem('jwt') || '',
+    jwt: getJwtFromLocalStorage(),
   },
   mutations: {
     updateJwt(state, { jwt }) {
