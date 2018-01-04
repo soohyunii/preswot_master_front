@@ -29,6 +29,9 @@
             <!-- TODO: 생년월일 -->
             <!-- http://element.eleme.io/#/en-US/component/date-picker -->
 
+            <!-- TODO: 성별 -->
+            <!-- http://element.eleme.io/#/en-US/component/radio#with-borders -->
+
             <!-- TODO: 주소 -->
             <!-- http://postcode.map.daum.net/guide -->
 
@@ -36,11 +39,21 @@
             <!-- 핸드폰 번호 인증 어떻게?? -->
             <!-- 010-1234-1234 로 포미탱도 있어야 할듯 -->
 
+            <br />
+            <br />
+
             <!-- TODO: 전공 -->
             <!-- Just simple input -->
 
             <!-- TODO: 소속 -->
             <!-- Just simple input -->
+
+            <br />
+            <br />
+            <!-- TODO: terms of use / privacy policy -->
+            이용약관 <br />
+            <!-- TODO: 이용약관에 동의 체크박스 -->
+            <!-- http://element.eleme.io/#/en-US/component/checkbox#basic-usage -->
 
             <el-button type="primary" @click="onClick('LOGIN')">회원가입</el-button>
             <br />
