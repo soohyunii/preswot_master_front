@@ -46,8 +46,8 @@ export default {
       switch (type) {
         case 'LOGIN': {
           this.reqLogin({
-            email: vm.inputEmail,
-            password: vm.inputPassword,
+            email: vm.input.email,
+            password: vm.input.email,
           });
           break;
         }
