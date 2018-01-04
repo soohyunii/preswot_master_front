@@ -1,20 +1,22 @@
 <template>
   <div>
-    <h2>회원가입</h2>
+    <h2>{{ $t('REG.REG_TITLE') }}</h2>
     <el-container>
       <el-row>
         <el-col>
           <!-- TODO: change label-width according to locale
           (based on longest label length in current locale) -->
           <el-form :model="input" :rules="rules" ref="elForm" label-width="120px">
-            <el-form-item :label="$t('LOGIN.EMAIL')" prop="email">
-              <el-input placeholder="abc@gmail.com" v-model="input.email" type="email"></el-input>
+            <el-form-item :label="$t('REG.EMAIL_LABEL')" prop="email">
+              <el-input :placeholder="$t('REG.EMAIL_PH')" v-model="input.email" type="email"></el-input>
             </el-form-item>
+
             <el-input placeholder="********" v-model="input.password" type="password">
-              <template slot="prepend">{{ $t('LOGIN.PASSWORD') }}</template>
+              <template slot="prepend">{{ $t('REG.PASSWORD_LABEL') }}</template>
             </el-input>
+
             <el-input placeholder="********" v-model="input.password2" type="password">
-              <template slot="prepend">{{ $t('LOGIN.PASSWORD') }} 2</template>
+              <template slot="prepend">{{ $t('REG.PASSWORD_CHECK_LABEL') }}</template>
             </el-input>
 
             <br />
@@ -57,6 +59,7 @@ import authService from '../services/auth';
 export default {
   name: 'Register',
   data() {
+    const vm = this;
     return {
       input: {
         email: 'adoji92@gmail.com',
@@ -68,12 +71,12 @@ export default {
         email: [
           {
             required: true,
-            message: 'email required', // TODO: replace
+            message: vm.$t('FORM.ERR_REQUIRED'),
             trigger: 'change,blur',
           },
           {
             type: 'email',
-            message: 'invalid email regex', // TODO: replace
+            message: vm.$t('FORM.ERR_TYPE_EMAIL'),
             trigger: 'change,blur',
           },
           {
@@ -81,7 +84,8 @@ export default {
               // TODO: try catch
               const res = await authService.checkEmailDuplicated({ email: value });
               if (res.duplicated) {
-                callback(new Error('duplicated email')); // TODO: replace
+                const errMsg = vm.$t('REG.ERR_DUPLICATED_EMAIL');
+                callback(new Error(errMsg));
               } else {
                 callback();
               }
