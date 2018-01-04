@@ -4,10 +4,12 @@
     <el-container>
       <el-row>
         <el-col>
-          <form novalidate>
-            <el-input placeholder="abc@gmail.com" v-model="input.email" type="email">
-              <template slot="prepend">{{ $t('LOGIN.EMAIL') }}</template>
-            </el-input>
+          <!-- TODO: change label-width according to locale
+          (based on longest label length in current locale) -->
+          <el-form :model="input" :rules="rules" ref="elForm" label-width="120px">
+            <el-form-item :label="$t('LOGIN.EMAIL')" prop="email">
+              <el-input placeholder="abc@gmail.com" v-model="input.email" type="email"></el-input>
+            </el-form-item>
             <el-input placeholder="********" v-model="input.password" type="password">
               <template slot="prepend">{{ $t('LOGIN.PASSWORD') }}</template>
             </el-input>
@@ -41,7 +43,7 @@
             <el-button type="primary" @click="onClick('LOGIN')">회원가입</el-button>
             <br />
             <pre>{{ input }}</pre>
-          </form>
+          </el-form>
         </el-col>
       </el-row>
     </el-container>
@@ -60,6 +62,33 @@ export default {
         password: 'adojiadoji',
         password2: 'adojiadoji',
         name: '안동진',
+      },
+      rules: {
+        email: [
+          {
+            required: true,
+            message: 'email required', // TODO: replace
+            trigger: 'change,blur',
+          },
+          {
+            type: 'email',
+            message: 'invalid email regex', // TODO: replace
+            trigger: 'change,blur',
+          },
+          {
+            validator(rule, value, callback) {
+              window.setTimeout(() => {
+                // TODO: replace dummy duplicated email checking
+                if (value === 'adoji92@gmail.com') {
+                  callback(new Error('duplicated email')); // TODO: replace
+                } else {
+                  callback();
+                }
+              }, 500);
+            },
+            trigger: 'blur', // change로 해놓으면 서버에 너무 많이 요청하게 됨
+          },
+        ],
       },
     };
   },
