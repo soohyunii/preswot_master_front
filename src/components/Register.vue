@@ -39,12 +39,12 @@
               <template slot="prepend">우편번호</template>
             </el-input>
             <el-input placeholder="address" v-model="input.address" type="string" v-show="true">
-              <template slot="prepend">앞주소</template>
+              <template slot="prepend">도로명주소</template>
             </el-input>
             <el-input id="detail" placeholder="detail addr" v-model="input.address2" type="string" v-show="true">
               <template slot="prepend">상세주소</template>
             </el-input>
-            <el-input type="string" v-show="true" :value="input.total_addr" >
+            <el-input type="string" v-show="true" :value="input.total_addr" disabled>
               <template slot="prepend">{{ $t('LOGIN.ADDRESS') }}</template>
               {{total_addr}}
             </el-input>
@@ -53,7 +53,7 @@
             <!-- TODO: 핸드폰 번호 -->
             <!-- 핸드폰 번호 인증 어떻게?? -->
             <!-- 010-1234-1234 로 포매팅도 있어야 할듯 -->
-            <el-input placeholder="010-1234-1234" v-model="input.phone" type="string">
+            <el-input placeholder="010-1234-1234" v-model="input.phone" v-mask="['###-####-####', '##-###-####', '###-###-####']" type="tel">
               <template slot="prepend">{{ $t('LOGIN.PHONE') }}</template>
             </el-input>
             <el-button type="primary" @click="dummy()">인증번호</el-button>
