@@ -20,7 +20,7 @@
       </el-row>
     </el-container>
     jwt: {{ jwt }} <br />
-    input: {{ input | json }}
+    input: {{ input }}
   </div>
 </template>
 
@@ -46,8 +46,8 @@ export default {
       switch (type) {
         case 'LOGIN': {
           this.reqLogin({
-            email: vm.inputEmail,
-            password: vm.inputPassword,
+            email: vm.input.email,
+            password: vm.input.email,
           });
           break;
         }
