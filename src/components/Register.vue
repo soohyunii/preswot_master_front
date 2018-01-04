@@ -39,6 +39,8 @@
             <!-- Just simple input -->
 
             <el-button type="primary" @click="onClick('LOGIN')">회원가입</el-button>
+            <br />
+            <pre>{{ input | json }}</pre>
           </form>
         </el-col>
       </el-row>
