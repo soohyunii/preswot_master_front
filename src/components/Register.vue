@@ -53,7 +53,7 @@
             <!-- TODO: 핸드폰 번호 -->
             <!-- 핸드폰 번호 인증 어떻게?? -->
             <!-- 010-1234-1234 로 포매팅도 있어야 할듯 -->
-            <el-input placeholder="010-1234-1234" v-model="input.phone" type="string">
+            <el-input placeholder="010-1234-1234" v-model="input.phone" v-mask="['###-####-####', '###-###-####']" type="tel">
               <template slot="prepend">{{ $t('LOGIN.PHONE') }}</template>
             </el-input>
             <el-button type="primary" @click="dummy()">인증번호</el-button>
