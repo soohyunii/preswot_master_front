@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import authService from '../services/auth';
 // id(string), password(string), name(string),
 // birth(1991-07-16 형식string), address(string), phone(string), major(string), belong(string소속)
 export default {
@@ -76,17 +77,16 @@ export default {
             trigger: 'change,blur',
           },
           {
-            validator(rule, value, callback) {
-              window.setTimeout(() => {
-                // TODO: replace dummy duplicated email checking
-                if (value === 'adoji92@gmail.com') {
-                  callback(new Error('duplicated email')); // TODO: replace
-                } else {
-                  callback();
-                }
-              }, 500);
+            async validator(rule, value, callback) {
+              // TODO: try catch
+              const res = await authService.checkEmailDuplicated({ email: value });
+              if (res.duplicated) {
+                callback(new Error('duplicated email')); // TODO: replace
+              } else {
+                callback();
+              }
             },
-            trigger: 'blur', // change로 해놓으면 서버에 너무 많이 요청하게 됨
+            trigger: 'blur', // change 추가하면 서버에 너무 많이 요청하게 됨
           },
         ],
       },
