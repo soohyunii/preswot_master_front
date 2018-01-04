@@ -31,4 +31,4 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 
 ## 번역 파일 링크
 
-https://docs.google.com/spreadsheets/d/16wNDS_wWfnZjBsf50sK1tVmtoxIU9dUWwr370CVbuXI/edit#gid=0
+https://docs.google.com/spreadsheets/d/16wNDS_wWfnZjBsf50sK1tVmtoxIU9dUWwr370CVbuXI/edit?usp=sharing
