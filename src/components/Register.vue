@@ -4,10 +4,12 @@
     <el-container>
       <el-row>
         <el-col>
-          <form novalidate>
-            <el-input placeholder="abc@gmail.com" v-model="input.email" type="email">
-              <template slot="prepend">{{ $t('LOGIN.EMAIL') }}</template>
-            </el-input>
+          <!-- TODO: change label-width according to locale
+          (based on longest label length in current locale) -->
+          <el-form :model="input" :rules="rules" ref="elForm" label-width="120px">
+            <el-form-item :label="$t('LOGIN.EMAIL')" prop="email">
+              <el-input placeholder="abc@gmail.com" v-model="input.email" type="email"></el-input>
+            </el-form-item>
             <el-input placeholder="********" v-model="input.password" type="password">
               <template slot="prepend">{{ $t('LOGIN.PASSWORD') }}</template>
             </el-input>
@@ -41,7 +43,7 @@
             <el-button type="primary" @click="onClick('LOGIN')">회원가입</el-button>
             <br />
             <pre>{{ input }}</pre>
-          </form>
+          </el-form>
         </el-col>
       </el-row>
     </el-container>
@@ -49,6 +51,7 @@
 </template>
 
 <script>
+import authService from '../services/auth';
 // id(string), password(string), name(string),
 // birth(1991-07-16 형식string), address(string), phone(string), major(string), belong(string소속)
 export default {
@@ -60,6 +63,32 @@ export default {
         password: 'adojiadoji',
         password2: 'adojiadoji',
         name: '안동진',
+      },
+      rules: {
+        email: [
+          {
+            required: true,
+            message: 'email required', // TODO: replace
+            trigger: 'change,blur',
+          },
+          {
+            type: 'email',
+            message: 'invalid email regex', // TODO: replace
+            trigger: 'change,blur',
+          },
+          {
+            async validator(rule, value, callback) {
+              // TODO: try catch
+              const res = await authService.checkEmailDuplicated({ email: value });
+              if (res.duplicated) {
+                callback(new Error('duplicated email')); // TODO: replace
+              } else {
+                callback();
+              }
+            },
+            trigger: 'blur', // change 추가하면 서버에 너무 많이 요청하게 됨
+          },
+        ],
       },
     };
   },
