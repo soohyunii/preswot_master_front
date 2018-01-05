@@ -39,16 +39,16 @@
 
             <!-- TODO: 주소 -->
             <!-- http://postcode.map.daum.net/guide -->
-            <el-button type="primary" onclick="sample6_execDaumPostcode()">
+            <el-button type="primary" onclick="execDaumPostcode()">
               우편번호 찾기<br>
             </el-button>
-            <el-input type="string" id="sample6_postcode" v-model="input.address1" placeholder="우편번호">
+            <el-input placeholder="우편번호" id="postcode" v-model="input.postcode" type="string">
             </el-input>
-            <el-input type="string" id="sample6_address" v-model="input.address2" placeholder="주소">
+            <el-input placeholder="주소" id="address" v-model="input.address1" type="string">
             </el-input>
-            <el-input type="string" id="sample6_address2" v-model="input.address3" v-focus="focused" @focus="focused = true" @blur="focused = false" placeholder="상세주소">
+            <el-input placeholder="상세주소" id="address2" v-model="input.address2" type="string" v-focus="focused" @focus="focused = true" @blur="focused = false">
             </el-input>
-            <el-input placeholder="주소" :disabled="true" v-model="address">
+            <el-input placeholder="주소" v-model="fullAddress" :disabled="true">
               <template slot="prepend">{{ $t('LOGIN.ADDRESS') }}</template>
             </el-input>
             <br />
@@ -57,7 +57,7 @@
             <!-- TODO: 핸드폰 번호 -->
             <!-- 핸드폰 번호 인증 어떻게?? -->
             <!-- 010-1234-1234 로 포매팅도 있어야 할듯 -->
-            <el-input type="tel" v-mask="['###-####-####','###-###-####']" v-model="input.phone" placeholder="핸드폰 번호">
+            <el-input placeholder="핸드폰 번호" v-model="input.phone" type="string" v-mask="['###-####-####','###-###-####']">
               <template slot="prepend">{{ $t('LOGIN.PHONE') }}</template>
             </el-input>
            
@@ -82,7 +82,6 @@
             <el-button type="primary" @click="onClick('LOGIN')">회원가입</el-button>
             <br />
             <pre>{{ input }}</pre>
-            <pre>{{ address }}</pre>
           </form>
         </el-col>
       </el-row>
@@ -106,26 +105,28 @@ export default {
         password2: 'adojiadoji',
         name: '안동진',
         birth: '',
-        address1: '',
+        postcode: '10073',
+        address1: '경기 김포시 김포대로 1430 (운양동, 리버 에일린의 뜰)',
         address2: '',
-        address3: '',
+        address: '',
         phone: '010-1234-5678',
         major: 'CS',
-        belong: 'aa',
+        belong: '공과대학',
       },
     };
+  },
+  computed: {
+    fullAddress() {
+      this.input.address = `${this.input.address1} ${this.input.address2} ${this.input.postcode}`;
+      return this.input.address;
+    },
   },
   watch: {
     focused: {
       handler() {
-        this.input.address1 = document.getElementById('sample6_postcode').value;
-        this.input.address2 = document.getElementById('sample6_address').value;
+        this.input.postcode = document.getElementById('postcode').value;
+        this.input.address1 = document.getElementById('address').value;
       },
-    },
-  },
-  computed: {
-    address() {
-      return `${this.input.address2} ${this.input.address3} ${this.input.address1}`;
     },
   },
 };

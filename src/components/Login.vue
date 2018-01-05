@@ -20,7 +20,7 @@
       </el-row>
     </el-container>
     jwt: {{ jwt }} <br />
-    input: {{ input | json }}
+    input: {{ input }}
   </div>
 </template>
 
