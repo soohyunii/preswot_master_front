@@ -3,7 +3,8 @@ export default {
   "en": {
     "FORM": {
       "ERR_REQUIRED": "Required.",
-      "ERR_TYPE_EMAIL": "Invalid E-mail."
+      "ERR_TYPE_EMAIL": "Invalid E-mail.",
+      "ERR_PASSWORD_LENGTH": "Invalid length."
     },
     "LOGIN": {
       "LOGIN_TITLE": "Login",
@@ -11,9 +12,7 @@ export default {
       "EMAIL_PH": "abc@gmail.com",
       "PASSWORD_LABEL": "Password",
       "PASSWORD_PH": "********",
-      "ERR_PASSWORD_LENGTH": "Invalid length.",
       "ERR_PASSWORD_MATCH": "Passwords do not match.",
-      "ERR_PASSWORD_SPECIAL_CHAR": "이거까지 굳이 해야할까",
       "LOGIN_BUTTON": "Login",
       "FORGOT_PASSWORD_BUTTON": "Forgot Password?"
     },
@@ -40,7 +39,8 @@ export default {
   "ko": {
     "FORM": {
       "ERR_REQUIRED": "필수 입력입니다.",
-      "ERR_TYPE_EMAIL": "유효하지 않은 이메일입니다."
+      "ERR_TYPE_EMAIL": "유효하지 않은 이메일입니다.",
+      "ERR_PASSWORD_LENGTH": "유효하지 않은 길이입니다."
     },
     "LOGIN": {
       "LOGIN_TITLE": "로그인",
@@ -48,9 +48,7 @@ export default {
       "EMAIL_PH": "abc@gmail.com",
       "PASSWORD_LABEL": "비밀번호",
       "PASSWORD_PH": "********",
-      "ERR_PASSWORD_LENGTH": "유효하지 않은 길이입니다.",
       "ERR_PASSWORD_MATCH": "비밀번호가 일치하지 않습니다.",
-      "ERR_PASSWORD_SPECIAL_CHAR": "특수문자포함해야한다능~~~",
       "LOGIN_BUTTON": "로그인",
       "FORGOT_PASSWORD_BUTTON": "비밀번호를 잊어버리셨나요?"
     },
