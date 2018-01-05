@@ -74,6 +74,10 @@
             <!-- TODO: 이용약관에 동의 체크박스 -->
             <!-- http://element.eleme.io/#/en-US/component/checkbox#basic-usage -->
 
+            <!-- <el-input type="tel" v-mask="['###-####-####','###-###-####']" v-model="input.phone" placeholder="핸드폰 번호">
+              <template slot="prepend">{{ $t('LOGIN.PHONE') }}</template>
+            </el-input> -->
+
             <el-button type="primary" @click="onClick('LOGIN')">회원가입</el-button>
             <br />
             <pre>{{ input }}</pre>
@@ -89,10 +93,12 @@ import authService from '../services/auth';
 // id(string), password(string), name(string),
 // birth(1991-07-16 형식string), address(string), phone(string), major(string), belong(string소속)
 export default {
+  directives: { focus },
   name: 'Register',
   data() {
     const vm = this;
     return {
+      focused: false,
       input: {
         email: 'adoji92@gmail.com',
         password: 'adojiadoji',
