@@ -75,6 +75,10 @@
               <template slot="prepend">{{ $t('REG.BELONG_LABEL') }}</template>
             </el-input>
 
+            <el-input placeholder="문과대학" v-model="input.belong" type="string">
+              <template slot="prepend">{{ $t('REG.BELONG_LABEL') }}</template>
+            </el-input>
+
             <br />
             <br />
             <!-- TODO: terms of use / privacy policy -->

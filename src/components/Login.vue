@@ -9,13 +9,26 @@
           <h1>{{ $t('LOGIN.LOGIN_TITLE') }}</h1>
 
           <el-input placeholder="abc@gmail.com" v-model="input.email" type="email">
-            <template slot="prepend">{{ $t('LOGIN.EMAIL') }}</template>
+            <template slot="prepend">{{ $t('LOGIN.EMAIL_LABEL') }}</template>
           </el-input>
           <el-input placeholder="********" v-model="input.password" type="password">
-            <template slot="prepend">{{ $t('LOGIN.PASSWORD') }}</template>
+            <template slot="prepend">{{ $t('LOGIN.PASSWORD_LABEL') }}</template>
           </el-input>
+          <br />
+          <br />
           <!-- TODO: add disabled attr according to validation -->
-          <el-button type="primary" @click="onClick('LOGIN')">{{ $t('LOGIN.LOGIN_TITLE') }}</el-button>
+          <el-button
+            type="primary"
+            @click="onClick('LOGIN')"
+          >
+            {{ $t('LOGIN.LOGIN_BUTTON') }}
+          </el-button>
+          <el-button
+            type="primary"
+            @click="/* onClick('FORGOT_PASSWORD') */"
+          >
+            {{ $t('LOGIN.FORGOT_PASSWORD_BUTTON') }}
+          </el-button>
         </el-col>
       </el-row>
     </el-container>
@@ -46,8 +59,8 @@ export default {
       switch (type) {
         case 'LOGIN': {
           this.reqLogin({
-            email: vm.inputEmail,
-            password: vm.inputPassword,
+            email: vm.input.email,
+            password: vm.input.email,
           });
           break;
         }
