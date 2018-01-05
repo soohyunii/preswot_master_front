@@ -29,9 +29,13 @@ npm test
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
 
-## 번역 파일 링크
+## Translation Spreadsheet Link
 
 https://docs.google.com/spreadsheets/d/16wNDS_wWfnZjBsf50sK1tVmtoxIU9dUWwr370CVbuXI/edit?usp=sharing
+
+## Asana Introduction
+
+https://docs.google.com/document/d/1a7OisDdvRJMxIufXmmlBKCNICD-XVTkmtfHfGHX9GfU/edit?usp=sharing
 
 ## LF, CRLF Issue
 
