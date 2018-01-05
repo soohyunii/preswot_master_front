@@ -27,16 +27,14 @@
             </el-input>
 
             <el-form-item :label="$t('REG.BIRTHDAY_LABEL')" prop="birthday">
-              <!-- TODO: Translation placeholder -->
-              <!-- TODO: validation -->
-              <el-date-picker :placeholder="$t('REG.BIRTHDAY_PH')" value-format="yyyy-MM-dd" v-model="input.birth" type="date">
+              <el-date-picker :placeholder="$t('REG.BIRTHDAY_PH')" v-model="input.birthday" type="date" id="user_birthday_input">
               </el-date-picker>
             </el-form-item>
 
             <!-- TODO: 성별 -->
             <!-- http://element.eleme.io/#/en-US/component/radio#with-borders -->
 
-            <el-form-item :label="$t('REG.ADDRESS_LABEL')" prop="combinedAddress">
+            <el-form-item :label="$t('REG.ADDRESS_LABEL')" prop="address">
               <el-input type="string" :placeholder="$t('REG.ADDRESS_PH')" :value="combinedAddress" readonly>
               </el-input>
               <!-- TODO: Replace button position -->
@@ -101,7 +99,7 @@ export default {
         password: 'adojiadoji',
         password2: 'adojiadoji',
         name: '안동진',
-        birth: '',
+        birthday: '',
         postcode: '',
         address: '', // 지역 주소
         address2: '', // 상세 주소
@@ -135,6 +133,42 @@ export default {
               }
             },
             trigger: 'blur', // change 추가하면 서버에 너무 많이 요청하게 됨
+          },
+        ],
+        birthday: [
+          {
+            required: true,
+            message: vm.$t('FORM.ERR_REQUIRED'),
+            trigger: 'change,blur',
+          },
+          {
+            validator(rule, value, callback) {
+              // console.log(value.match); // type of `value` = Date, not String
+              window.setTimeout(() => {
+                const strValue = document.getElementById('user_birthday_input').value;
+                if (strValue.match(/^(\d{4})-(\d{2})-(\d{2})$/)) {
+                  callback();
+                } else {
+                  const errMsg = vm.$t('FORM.ERR_TYPE_DATE');
+                  callback(new Error(errMsg));
+                }
+              }, 500);
+            },
+            trigger: 'change',
+          },
+        ],
+        address: [
+          {
+            required: true,
+            message: vm.$t('FORM.ERR_REQUIRED'),
+            trigger: 'change,blur',
+          },
+        ],
+        address2: [
+          {
+            required: true,
+            message: vm.$t('FORM.ERR_REQUIRED'),
+            trigger: 'change,blur',
           },
         ],
       },

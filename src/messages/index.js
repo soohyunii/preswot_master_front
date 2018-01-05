@@ -4,7 +4,8 @@ export default {
     "FORM": {
       "ERR_REQUIRED": "Required.",
       "ERR_TYPE_EMAIL": "Invalid E-mail.",
-      "ERR_TYPE_PHONE": "Invalid Phone number",
+      "ERR_TYPE_PHONE": "Invalid Phone number.",
+      "ERR_TYPE_DATE": "Invalid date.",
       "ERR_PASSWORD_LENGTH": "Invalid length."
     },
     "LOGIN": {
@@ -52,6 +53,7 @@ export default {
       "ERR_REQUIRED": "필수 입력입니다.",
       "ERR_TYPE_EMAIL": "유효하지 않은 이메일입니다.",
       "ERR_TYPE_PHONE": "유효하지 않은 핸드폰번호입니다.",
+      "ERR_TYPE_DATE": "유효하지 않은 날짜입니다.",
       "ERR_PASSWORD_LENGTH": "유효하지 않은 길이입니다."
     },
     "LOGIN": {
