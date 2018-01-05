@@ -57,10 +57,10 @@
 
             <!-- TODO: 핸드폰 번호 -->
             <!-- 핸드폰 번호 인증 어떻게?? -->
-            <el-input placeholder="010-1234-1234" v-model="input.phone" v-mask="['###-####-####', '###-###-####']" type="tel">
-              <template slot="prepend">{{ $t('REG.PHONE_LABEL') }}</template>
-            </el-input>
-            <el-button type="primary" @click="dummy()">인증번호</el-button>
+            <el-form-item :label="$t('REG.PHONE_LABEL')" prop="phone">
+              <el-input :placeholder="$t('REG.PHONE_PH')" v-model="input.phone" v-mask="['###-####-####', '###-###-####']" type="tel"></el-input>
+            </el-form-item>
+            <el-button type="primary" @click="dummy()">{{$t('REG.PHONE_VERIFY_BUTTON')}}</el-button>
 
             <br />
             <br />
@@ -69,9 +69,9 @@
               <template slot="prepend">{{ $t('REG.MAJOR_LABEL') }}</template>
             </el-input>
 
-            <el-input placeholder="문과대학" v-model="input.belong" type="string">
-              <template slot="prepend">{{ $t('REG.BELONG_LABEL') }}</template>
-            </el-input>
+            <el-form-item :label="$t('REG.BELONG_LABEL')" prop="belong">
+              <el-input :placeholder="$t('REG.BELONG_PH')" v-model="input.belong" type="string"></el-input>
+            </el-form-item>
 
             <br />
             <br />
@@ -192,6 +192,32 @@ export default {
               }, 500);
             },
             trigger: 'change',
+          },
+        ],
+        phone: [
+          {
+            required: true,
+            message: vm.$t('FORM.ERR_REQUIRED'),
+            trigger: 'change,blur',
+          },
+          {
+            validator(rule, value, callback) {
+              const pattern = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
+              if (!pattern.test(value)) {
+                const errMsg = vm.$t('FORM.ERR_TYPE_PHONE');
+                callback(new Error(errMsg));
+              } else {
+                callback();
+              }
+            },
+            trigger: 'change,blur',
+          },
+        ],
+        belong: [
+          {
+            required: true,
+            message: vm.$t('FORM.ERR_REQUIRED'),
+            trigger: 'change,blur',
           },
         ],
         birthday: [
