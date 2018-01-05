@@ -3,7 +3,7 @@
     <h2>{{ $t('REG.REG_TITLE') }}</h2>
     <el-container>
       <el-row>
-        <el-col>
+        <el-col style="max-width: 600px;">
           <!-- TODO: change label-width according to locale
           (based on longest label length in current locale) -->
           <el-form :model="input" :rules="rules" ref="elForm" label-width="120px">
@@ -50,7 +50,6 @@
 
             <!-- TODO: 핸드폰 번호 -->
             <!-- 핸드폰 번호 인증 어떻게?? -->
-            <!-- 010-1234-1234 로 포매팅도 있어야 할듯 -->
             <el-input placeholder="010-1234-1234" v-model="input.phone" v-mask="['###-####-####', '###-###-####']" type="tel">
               <template slot="prepend">{{ $t('REG.PHONE_LABEL') }}</template>
             </el-input>
@@ -69,14 +68,11 @@
 
             <br />
             <br />
-            <!-- TODO: terms of use / privacy policy -->
+            <!-- TODO: terms of use / privacy policy text 주루루룩 -->
             이용약관 <br />
             <!-- TODO: 이용약관에 동의 체크박스 -->
             <!-- http://element.eleme.io/#/en-US/component/checkbox#basic-usage -->
 
-            <!-- <el-input type="tel" v-mask="['###-####-####','###-###-####']" v-model="input.phone" placeholder="핸드폰 번호">
-              <template slot="prepend">{{ $t('LOGIN.PHONE') }}</template>
-            </el-input> -->
 
             <el-button type="primary" @click="onClick('LOGIN')">회원가입</el-button>
             <br />
