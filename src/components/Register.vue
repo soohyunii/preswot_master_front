@@ -62,7 +62,7 @@
             </el-input>
 
             <el-form-item :label="$t('REG.BELONG_LABEL')" prop="belong">
-            <el-input :placeholder="$t('REG.BELONG_PH')" v-model="input.belong" type="string"></el-input>
+              <el-input :placeholder="$t('REG.BELONG_PH')" v-model="input.belong" type="string"></el-input>
             </el-form-item>
 
             <br />
