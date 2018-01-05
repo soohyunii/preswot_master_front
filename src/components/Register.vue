@@ -30,8 +30,16 @@
             <el-date-picker placeholder="Pick a day" value-format="yyyy-MM-dd" v-model="input.birth" type="date">
             </el-date-picker>
 
-            <!-- TODO: 성별 -->
-            <!-- http://element.eleme.io/#/en-US/component/radio#with-borders -->
+            <br />
+            <br />
+
+            <!-- TODO: 성별이 클릭이 되지 않은 상태 체크 -->
+            <el-form-item :label="$t('REG.SEX_LABEL')" prop="sex">
+              <el-radio-group v-model="input.sex">
+                <el-radio-button label="male" >{{ $t('REG.SEX_LABEL_MALE') }}</el-radio-button>
+                <el-radio-button label="female" >{{ $t('REG.SEX_LABEL_FEMALE') }}</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
 
             <el-input placeholder="postcode" v-model="input.postcode" type="string" v-show="true">
               <template slot="prepend">우편번호</template>
@@ -70,9 +78,14 @@
             <br />
             <!-- TODO: terms of use / privacy policy text 주루루룩 -->
             이용약관 <br />
-            <!-- TODO: 이용약관에 동의 체크박스 -->
+            <!-- TODO: 회원가입 버튼 누를 시 약관 동의 확인 필요 -->
             <!-- http://element.eleme.io/#/en-US/component/checkbox#basic-usage -->
 
+            <el-form-item prop="checkTOS">
+              <el-checkbox v-model="input.checkTOS">{{ $t('REG.TOS_LABEL') }}</el-checkbox>
+            </el-form-item>
+            <br />
+            <br />
 
             <el-button type="primary" @click="onClick('LOGIN')">회원가입</el-button>
             <br />
@@ -108,6 +121,8 @@ export default {
         phone: '010-1234-1234',
         major: '컴퓨터과학',
         belong: '공과대학',
+        sex: '',
+        checkTOS: false,
       },
       rules: {
         email: [
@@ -133,6 +148,20 @@ export default {
               }
             },
             trigger: 'blur', // change 추가하면 서버에 너무 많이 요청하게 됨
+          },
+        ],
+        sex: [
+          {
+            required: true,
+            message: vm.$t('REG.ERR_REQUIRED'),
+            trigger: 'change,blur',
+          },
+        ],
+        checkTOS: [
+          {
+            required: true,
+            message: vm.$t('REG.ERR_REQUIRED'),
+            trigger: 'change,blur',
           },
         ],
       },

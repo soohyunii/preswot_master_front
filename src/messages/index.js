@@ -33,7 +33,12 @@ export default {
       "MAJOR_LABEL": "Major",
       "MAJOR_PH": "Computer Science",
       "BELONG_LABEL": "Belong",
-      "BELONG_PH": "College of Engineering"
+      "BELONG_PH": "College of Engineering",
+      "SEX_LABEL": "Sex",
+      "SEX_LABEL_MALE": "Male",
+      "SEX_LABEL_FEMALE": "Female",
+      "TOS_LABEL": "I agree to the terms and conditions",
+      "ERR_REQUIRED": "Required.",
     }
   },
   "ko": {
@@ -69,7 +74,12 @@ export default {
       "MAJOR_LABEL": "전공",
       "MAJOR_PH": "컴퓨터과학",
       "BELONG_LABEL": "소속",
-      "BELONG_PH": "공과대학"
+      "BELONG_PH": "공과대학",
+      "SEX_LABEL": "성별",
+      "SEX_LABEL_MALE": "남성",
+      "SEX_LABEL_FEMALE": "여성",
+      "TOS_LABEL": "이용약관에 동의합니다",
+      "ERR_REQUIRED": "필수 입력입니다.",
     }
   }
 }
