@@ -29,7 +29,7 @@
             <el-form-item :label="$t('REG.BIRTHDAY_LABEL')" prop="birthday">
               <!-- TODO: Translation placeholder -->
               <!-- TODO: validation -->
-              <el-date-picker placeholder="눌러서 날짜 선택" value-format="yyyy-MM-dd" v-model="input.birth" type="date">
+              <el-date-picker :placeholder="$t('REG.BIRTHDAY_PH')" value-format="yyyy-MM-dd" v-model="input.birth" type="date">
               </el-date-picker>
             </el-form-item>
 
@@ -37,17 +37,14 @@
             <!-- http://element.eleme.io/#/en-US/component/radio#with-borders -->
 
             <el-form-item :label="$t('REG.ADDRESS_LABEL')" prop="combinedAddress">
-              <!-- TODO: Translation placeholder -->
-              <el-input type="string" placeholder="주소 검색에서 선택" :value="combinedAddress" readonly>
+              <el-input type="string" :placeholder="$t('REG.ADDRESS_PH')" :value="combinedAddress" readonly>
               </el-input>
               <!-- TODO: Replace button position -->
-              <el-button type="primary" @click="execDaumPostcode()">{{ $t('REG.ADDRESS_SERACH_BUTTON') }}</el-button>
+              <el-button type="primary" @click="execDaumPostcode()">{{ $t('REG.ADDRESS_SEARCH_BUTTON') }}</el-button>
             </el-form-item>
 
-            <!-- TODO: Translation label -->
-            <el-form-item label="상세 주소" prop="address2">
-              <!-- TODO: Translation placeholder -->
-              <el-input id="detail" placeholder="장미아파트 101동 101호" v-model="input.address2">
+            <el-form-item :label="$t('REG.ADDRESS2_LABEL')" prop="address2">
+              <el-input id="detail" :placeholder="$t('REG.ADDRESS2_PH')" v-model="input.address2">
               </el-input>
             </el-form-item>
 
