@@ -26,27 +26,31 @@
               <template slot="prepend">{{ $t('REG.NAME_LABEL') }}</template>
             </el-input>
 
-            <template>{{ $t('REG.BIRTHDAY_LABEL') }}</template>
-            <el-date-picker placeholder="Pick a day" value-format="yyyy-MM-dd" v-model="input.birth" type="date">
-            </el-date-picker>
+            <el-form-item :label="$t('REG.BIRTHDAY_LABEL')" prop="birthday">
+              <!-- TODO: Translation placeholder -->
+              <!-- TODO: validation -->
+              <el-date-picker placeholder="눌러서 날짜 선택" value-format="yyyy-MM-dd" v-model="input.birth" type="date">
+              </el-date-picker>
+            </el-form-item>
 
             <!-- TODO: 성별 -->
             <!-- http://element.eleme.io/#/en-US/component/radio#with-borders -->
 
-            <el-input placeholder="postcode" v-model="input.postcode" type="string" v-show="true">
-              <template slot="prepend">우편번호</template>
-            </el-input>
-            <el-input placeholder="address" v-model="input.address" type="string" v-show="true">
-              <template slot="prepend">도로명주소</template>
-            </el-input>
-            <el-input id="detail" placeholder="detail addr" v-model="input.address2" type="string" v-show="true">
-              <template slot="prepend">상세주소</template>
-            </el-input>
-            <el-input type="string" v-show="true" :value="input.total_addr" disabled>
-              <template slot="prepend">{{ $t('REG.ADDRESS_LABEL') }}</template>
-              {{total_addr}}
-            </el-input>
-            <el-button type="primary" @click="execDaumPostcode()">{{ $t('REG.ADDRESS_SERACH_BUTTON') }}</el-button>
+            <el-form-item :label="$t('REG.ADDRESS_LABEL')" prop="combinedAddress">
+              <!-- TODO: Translation placeholder -->
+              <el-input type="string" placeholder="주소 검색에서 선택" :value="combinedAddress" readonly>
+              </el-input>
+              <!-- TODO: Replace button position -->
+              <el-button type="primary" @click="execDaumPostcode()">{{ $t('REG.ADDRESS_SERACH_BUTTON') }}</el-button>
+            </el-form-item>
+
+            <!-- TODO: Translation label -->
+            <el-form-item label="상세 주소" prop="address2">
+              <!-- TODO: Translation placeholder -->
+              <el-input id="detail" placeholder="장미아파트 101동 101호" v-model="input.address2">
+              </el-input>
+            </el-form-item>
+
 
             <!-- TODO: 핸드폰 번호 -->
             <!-- 핸드폰 번호 인증 어떻게?? -->
@@ -100,11 +104,10 @@ export default {
         password: 'adojiadoji',
         password2: 'adojiadoji',
         name: '안동진',
-        birth: '1990-12-31',
-        postcode: '03722',
-        address: '서울 서대문구 연세로 50 (연세대학교)',
-        address2: '제4 공학관 811호',
-        total_addr: '',
+        birth: '',
+        postcode: '',
+        address: '', // 지역 주소
+        address2: '', // 상세 주소
         phone: '010-1234-1234',
         major: '컴퓨터과학',
         belong: '공과대학',
@@ -124,7 +127,9 @@ export default {
           {
             async validator(rule, value, callback) {
               // TODO: try catch
-              const res = await authService.checkEmailDuplicated({ email: value });
+              const res = await authService.checkEmailDuplicated({
+                email: value,
+              });
               if (res.duplicated) {
                 const errMsg = vm.$t('REG.ERR_DUPLICATED_EMAIL');
                 callback(new Error(errMsg));
@@ -139,11 +144,10 @@ export default {
     };
   },
   computed: {
-    total_addr() {
+    combinedAddress() {
       const vm = this;
-      // eslint-disable-next-line
-      vm.input.total_addr = vm.input.address + ' ' + vm.input.address2 + ' ' + vm.input.postcode;
-      return vm.input.total_addr;
+      const combinedAddress = `${vm.input.address} ${vm.input.address2} ${vm.input.postcode}`;
+      return combinedAddress.trim();
     },
   },
   methods: {
@@ -158,9 +162,11 @@ export default {
           let extraAddr = ''; // 조합형 주소 변수
 
           // 사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-          if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+          if (data.userSelectedType === 'R') {
+            // 사용자가 도로명 주소를 선택했을 경우
             fullAddr = data.roadAddress;
-          } else { // 사용자가 지번 주소를 선택했을 경우(J)
+          } else {
+            // 사용자가 지번 주소를 선택했을 경우(J)
             fullAddr = data.jibunAddress;
           }
 
@@ -172,10 +178,11 @@ export default {
             }
             // 건물명이 있을 경우 추가한다.
             if (data.buildingName !== '') {
-              extraAddr += (extraAddr !== '' ? `, ${data.buildingName}` : data.buildingName);
+              extraAddr +=
+                extraAddr !== '' ? `, ${data.buildingName}` : data.buildingName;
             }
             // 조합형주소의 유무에 따라 양쪽에 괄호를 추가하여 최종 주소를 만든다.
-            fullAddr += (extraAddr !== '' ? ` (${extraAddr})` : '');
+            fullAddr += extraAddr !== '' ? ` (${extraAddr})` : '';
           }
 
           // 우편번호와 주소 정보를 해당 필드에 넣는다.
