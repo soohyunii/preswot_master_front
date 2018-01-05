@@ -52,7 +52,7 @@
             <el-form-item :label="$t('REG.PHONE_LABEL')" prop="phone">
               <el-input :placeholder="$t('REG.PHONE_PH')" v-model="input.phone" v-mask="['###-####-####', '###-###-####']" type="tel"></el-input>
             </el-form-item>
-            <el-button type="primary" @click="dummy()">인증번호</el-button>
+            <el-button type="primary" @click="dummy()">{{$t('REG.PHONE_VERIFY_BUTTON')}}</el-button>
 
             <br />
             <br />
@@ -145,7 +145,7 @@ export default {
             validator(rule, value, callback) {
               const pattern = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
               if (!pattern.test(value)) {
-                const errMsg = 'phone type err!'; // vm.$t('FORM.ERR_TYPE_PHONE'),
+                const errMsg = vm.$t('FORM.ERR_TYPE_PHONE');
                 callback(new Error(errMsg));
               } else {
                 callback();
