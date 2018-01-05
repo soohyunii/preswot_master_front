@@ -53,6 +53,10 @@ http://simp.ly/p/b2Hptz
 
 http://simp.ly/p/WzDx39
 
+## Git Commit Message Convention
+
+http://iamabluetiger.com/git-convention-reference/
+
 ## Frequently Used Git Commands
 
 http://simp.ly/p/08MtVv
