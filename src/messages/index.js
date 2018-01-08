@@ -4,9 +4,9 @@ export default {
     "FORM": {
       "ERR_REQUIRED": "Required.",
       "ERR_TYPE_EMAIL": "Invalid E-mail.",
-      "ERR_TYPE_PHONE": "Invalid Phone number.",
+      "ERR_TYPE_PHONE_NUMBER": "Invalid Phone number.",
       "ERR_TYPE_DATE": "Invalid date.",
-      "ERR_TYPE_PASSWORD": "Invalid pssword.",
+      "ERR_TYPE_PASSWORD": "Invalid password.",
       "ERR_PASSWORD_LENGTH": "Invalid length."
     },
     "LOGIN": {
@@ -35,9 +35,10 @@ export default {
       "ADDRESS2_LABEL": "Detailed Address ",
       "ADDRESS2_PH": "Rose-apt, 101-101",
       "ADDRESS_SEARCH_BUTTON": "Search Address",
-      "PHONE_LABEL": "Phone Number",
-      "PHONE_PH": "010-1234-1234",
-      "PHONE_VERIFY_BUTTON": "Verify",
+      "PHONE_NUMBER_LABEL": "Phone Number",
+      "PHONE_NUMBER_PH": "010-1234-1234",
+      "ERR_DUPLICATED_PHONE": "Duplicated Phone number. Try another.",
+      "PHONE_NUMBER_VERIFY_BUTTON": "Verify",
       "MAJOR_LABEL": "Major",
       "MAJOR_PH": "Computer Science",
       "BELONG_LABEL": "Belong",
@@ -47,14 +48,14 @@ export default {
       "SEX_LABEL_FEMALE": "Female",
       "TOU_LABEL": "I agree to the terms and conditions",
       "ERR_TOU_REQUIRED": "Please check your agreement to the Terms and Conditions",
-      "ERR_SEX_REQUIRED": "Please select gender"
+      "ERR_SEX_REQUIRED": "Please select your sex"
     }
   },
   "ko": {
     "FORM": {
       "ERR_REQUIRED": "필수 입력입니다.",
       "ERR_TYPE_EMAIL": "유효하지 않은 이메일입니다.",
-      "ERR_TYPE_PHONE": "유효하지 않은 핸드폰번호입니다.",
+      "ERR_TYPE_PHONE_NUMBER": "유효하지 않은 핸드폰번호입니다.",
       "ERR_TYPE_DATE": "유효하지 않은 날짜입니다.",
       "ERR_TYPE_PASSWORD": "유효하지 않은 비밀번호입니다.",
       "ERR_PASSWORD_LENGTH": "유효하지 않은 길이입니다."
@@ -85,9 +86,10 @@ export default {
       "ADDRESS2_LABEL": "상세 주소",
       "ADDRESS2_PH": "장미아파트 101동 101호",
       "ADDRESS_SEARCH_BUTTON": "주소 검색",
-      "PHONE_LABEL": "핸드폰 번호",
-      "PHONE_PH": "010-1234-1234",
-      "PHONE_VERIFY_BUTTON": "인증",
+      "PHONE_NUMBER_LABEL": "핸드폰 번호",
+      "PHONE_NUMBER_PH": "010-1234-1234",
+      "ERR_DUPLICATED_PHONE": "중복된 핸드폰 번호입니다. 다시 시도해주세요.",
+      "PHONE_NUMBER_VERIFY_BUTTON": "인증",
       "MAJOR_LABEL": "전공",
       "MAJOR_PH": "컴퓨터과학",
       "BELONG_LABEL": "소속",
@@ -95,9 +97,9 @@ export default {
       "SEX_LABEL": "성별",
       "SEX_LABEL_MALE": "남성",
       "SEX_LABEL_FEMALE": "여성",
-      "TOU_LABEL": "이용약관에 대해 동의합니다",
-      "ERR_TOU_REQUIRED": "필수 약관에 동의를 체크 하셔야 합니다",
-      "ERR_SEX_REQUIRED": "성별을 골라주십시오"
+      "TOU_LABEL": "이용약관에 대해 동의합니다.",
+      "ERR_TOU_REQUIRED": "필수 약관에 동의를 체크하셔야 합니다.",
+      "ERR_SEX_REQUIRED": "성별을 골라주십시오."
     }
   }
 }
