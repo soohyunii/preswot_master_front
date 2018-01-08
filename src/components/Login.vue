@@ -62,6 +62,8 @@ export default {
             email: vm.input.email,
             password: vm.input.email,
           });
+//          console.log(vm.$route.params.to);
+          vm.$router.push(vm.$route.params.to);
           break;
         }
         default: {

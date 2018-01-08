@@ -45,6 +45,9 @@ export default class AuthPlugin {
         // TODO: show noti (notification that you're not logged in)
         next({
           name: 'Login',
+          params: {
+            to: to.path,
+          },
         });
       } else {
         next();
