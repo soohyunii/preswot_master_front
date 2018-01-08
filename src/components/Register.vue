@@ -11,13 +11,13 @@
               <el-input :placeholder="$t('REG.EMAIL_PH')" v-model="input.email" type="email"></el-input>
             </el-form-item>
 
-            <el-input placeholder="********" v-model="input.password" type="password">
-              <template slot="prepend">{{ $t('REG.PASSWORD_LABEL') }}</template>
-            </el-input>
+            <el-form-item :label="$t('REG.PASSWORD_LABEL')" prop="password">
+              <el-input :placeholder="$t('LOGIN.PASSWORD_PH')" v-model="input.password" type="password"></el-input>
+            </el-form-item>
 
-            <el-input placeholder="********" v-model="input.password2" type="password">
-              <template slot="prepend">{{ $t('REG.PASSWORD_CHECK_LABEL') }}</template>
-            </el-input>
+            <el-form-item :label="$t('REG.PASSWORD_CHECK_LABEL')" prop="password2">
+              <el-input :placeholder="$t('LOGIN.PASSWORD_PH')" v-model="input.password2" type="password"></el-input>
+            </el-form-item>
 
             <br />
             <br />
@@ -57,9 +57,9 @@
             <br />
             <br />
 
-            <el-input placeholder="국어국문" v-model="input.major" type="string">
-              <template slot="prepend">{{ $t('REG.MAJOR_LABEL') }}</template>
-            </el-input>
+            <el-form-item :label="$t('REG.MAJOR_LABEL')" prop="major">
+              <el-input :placeholder="$t('REG.MAJOR_PH')" v-model="input.major" type="string"></el-input>
+            </el-form-item>
 
             <el-form-item :label="$t('REG.BELONG_LABEL')" prop="belong">
               <el-input :placeholder="$t('REG.BELONG_PH')" v-model="input.belong" type="string"></el-input>
@@ -72,6 +72,9 @@
             <!-- TODO: 이용약관에 동의 체크박스 -->
             <!-- http://element.eleme.io/#/en-US/component/checkbox#basic-usage -->
 
+            <!-- <el-input type="tel" v-mask="['###-####-####','###-###-####']" v-model="input.phone" placeholder="핸드폰 번호">
+              <template slot="prepend">{{ $t('LOGIN.PHONE') }}</template>
+            </el-input> -->
 
             <el-button type="primary" @click="onClick('LOGIN')">회원가입</el-button>
             <br />
@@ -134,6 +137,46 @@ export default {
             },
             trigger: 'blur', // change 추가하면 서버에 너무 많이 요청하게 됨
           },
+
+        ],
+        password: [
+          {
+            required: true,
+            message: vm.$t('FORM.ERR_REQUIRED'),
+            trigger: 'change,blur',
+          },
+          {
+            validator(rule, value, callback) {
+              const checkNumber = value.search(/[0-9]/g);
+              const checkEnglish = value.search(/[a-z]/ig);
+              if (!vm.input.password.match(/^[A-Za-z0-9]{10,50}$/)) {
+                callback(new Error(vm.$t('FORM.ERR_PASSWORD_LENGTH')));
+              } else if (checkNumber < 0 || checkEnglish < 0) {
+                callback(new Error(vm.$t('FORM.ERR_TYPE_PASSWORD')));
+              } else if (vm.input.password2 !== '') {
+                vm.$refs.elForm.validateField('password2');
+              }
+              callback();
+            },
+            trigger: 'change,blur',
+          },
+        ],
+        password2: [
+          {
+            required: true,
+            message: vm.$t('FORM.ERR_REQUIRED'),
+            trigger: 'change,blur',
+          },
+          {
+            validator(rule, value, callback) {
+              if (value !== vm.input.password) {
+                callback(new Error(vm.$t('LOGIN.ERR_PASSWORD_MATCH')));
+              } else {
+                callback();
+              }
+            },
+            trigger: 'change,blur',
+          },
         ],
         phone: [
           {
@@ -191,6 +234,13 @@ export default {
           },
         ],
         address2: [
+          {
+            required: true,
+            message: vm.$t('FORM.ERR_REQUIRED'),
+            trigger: 'change,blur',
+          },
+        ],
+        major: [
           {
             required: true,
             message: vm.$t('FORM.ERR_REQUIRED'),
