@@ -36,7 +36,7 @@
 
             <!-- TODO: 성별이 클릭이 되지 않은 상태 체크 -->
             <el-form-item :label="$t('REG.SEX_LABEL')" prop="sex">
-              <el-radio-group v-model="input.sex" id = "user_sex_input">
+              <el-radio-group v-model="input.sex" id ="user_sex_input">
                 <el-radio-button label="male" >{{ $t('REG.SEX_LABEL_MALE') }}</el-radio-button>
                 <el-radio-button label="female" >{{ $t('REG.SEX_LABEL_FEMALE') }}</el-radio-button>
               </el-radio-group>
@@ -80,8 +80,8 @@
             <!-- TODO: 회원가입 버튼 누를 시 약관 동의 확인 필요 -->
             <!-- http://element.eleme.io/#/en-US/component/checkbox#basic-usage -->
 
-            <el-form-item prop="checkTOS">
-              <el-checkbox v-model="input.checkTOS" id = "user-TOS-input">{{ $t('REG.TOS_LABEL') }}</el-checkbox>
+            <el-form-item prop="checkTOU">
+              <el-checkbox v-model="input.checkTOU" id ="user_TOU_input">{{ $t('REG.TOU_LABEL') }}</el-checkbox>
             </el-form-item>
             <br />
             <br />
@@ -120,7 +120,7 @@ export default {
         major: '컴퓨터과학',
         belong: '공과대학',
         sex: '',
-        checkTOS: false,
+        checkTOU: false,
       },
       rules: {
         email: [
@@ -153,7 +153,7 @@ export default {
         sex: [
           {
             required: true,
-            message: vm.$t('REG.ERR_REQUIRED'),
+            message: vm.$t('FORM.ERR_REQUIRED'),
             trigger: 'change,blur',
           },
           {
@@ -172,19 +172,19 @@ export default {
             trigger: 'change',
           },
         ],
-        checkTOS: [
+        checkTOU: [
           {
             required: true,
-            message: vm.$t('REG.ERR_REQUIRED'),
+            message: vm.$t('FORM.ERR_REQUIRED'),
             trigger: 'change,blur',
           },
           {
             validator(rule, value, callback) {
               // console.log(value.match); // type of `value` = Date, not String
               window.setTimeout(() => {
-                const strValue = document.getElementById('user-TOS-input').value;
+                const strValue = document.getElementById('user_TOU_input').value;
                 if (strValue.value === false) {
-                  const errMsg = vm.$t('REG.ERR_TOS_REQUIRED');
+                  const errMsg = vm.$t('REG.ERR_TOU_REQUIRED');
                   callback(new Error(errMsg));
                 } else {
                   callback();
