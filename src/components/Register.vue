@@ -58,7 +58,7 @@
             <br />
 
             <el-form-item :label="$t('REG.MAJOR_LABEL')" prop="major">
-              <el-input :placeholder="$t('REG.MAJOR_PH')" v-model="input.major" type="major"></el-input>
+              <el-input :placeholder="$t('REG.MAJOR_PH')" v-model="input.major" type="string"></el-input>
             </el-form-item>
 
             <el-input placeholder="문과대학" v-model="input.belong" type="string">
