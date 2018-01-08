@@ -36,7 +36,7 @@
 
             <!-- TODO: 성별이 클릭이 되지 않은 상태 체크 -->
             <el-form-item :label="$t('REG.SEX_LABEL')" prop="sex">
-              <el-radio-group v-model="input.sex" id ="user_sex_input">
+              <el-radio-group v-model="input.sex" id="user_sex_input">
                 <el-radio-button label="male" >{{ $t('REG.SEX_LABEL_MALE') }}</el-radio-button>
                 <el-radio-button label="female" >{{ $t('REG.SEX_LABEL_FEMALE') }}</el-radio-button>
               </el-radio-group>
@@ -80,17 +80,11 @@
             <!-- TODO: 회원가입 버튼 누를 시 약관 동의 확인 필요 -->
             <!-- http://element.eleme.io/#/en-US/component/checkbox#basic-usage -->
 
-<<<<<<< HEAD
             <el-form-item prop="checkTOU">
-              <el-checkbox v-model="input.checkTOU" id ="user_TOU_input">{{ $t('REG.TOU_LABEL') }}</el-checkbox>
+              <el-checkbox v-model="input.checkTOU" id="user_TOU_input">{{ $t('REG.TOU_LABEL') }}</el-checkbox>
             </el-form-item>
             <br />
             <br />
-=======
-            <!-- <el-input type="tel" v-mask="['###-####-####','###-###-####']" v-model="input.phone" placeholder="핸드폰 번호">
-              <template slot="prepend">{{ $t('LOGIN.PHONE') }}</template>
-            </el-input> -->
->>>>>>> master
 
             <el-button type="primary" @click="onClick('LOGIN')">회원가입</el-button>
             <br />
