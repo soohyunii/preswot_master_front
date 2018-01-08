@@ -115,7 +115,7 @@ export default {
         postcode: '',
         address: '', // 지역 주소
         address2: '', // 상세 주소
-        phone: '',
+        phoneNumber: '',
         major: '',
         belong: '',
         sex: '',
@@ -236,7 +236,7 @@ export default {
             trigger: 'change,blur',
           },
         ],
-        phone: [
+        phoneNumber: [
           {
             required: true,
             message: vm.$t('FORM.ERR_REQUIRED'),
