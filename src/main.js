@@ -5,7 +5,7 @@ import Element from 'element-ui';
 import locale from 'element-ui/lib/locale/lang/ko';
 import VueI18n from 'vue-i18n';
 import VueTheMask from 'vue-the-mask';
-import authPlugin from './utils/auth-plugin';
+import authPlugin from './utils/authPlugin';
 
 import App from './App';
 import router from './router';
