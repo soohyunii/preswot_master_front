@@ -161,7 +161,7 @@ export default {
               const checkNumber = value.search(/[0-9]/g);
               const checkEnglish = value.search(/[a-z]/ig);
               if (!vm.input.password.match(/^[A-Za-z0-9]{10,50}$/)) {
-                callback(new Error(vm.$t('FORM.ERR_PASSWORD_LENGTH')));
+                callback(new Error(vm.$t('FORM.ERR_LENGTH')));
               } else if (checkNumber < 0 || checkEnglish < 0) {
                 callback(new Error(vm.$t('FORM.ERR_TYPE_PASSWORD')));
               } else if (vm.input.password2 !== '') {

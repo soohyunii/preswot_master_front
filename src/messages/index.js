@@ -3,11 +3,11 @@ export default {
   "en": {
     "FORM": {
       "ERR_REQUIRED": "Required.",
+      "ERR_LENGTH": "Invalid length.",
       "ERR_TYPE_EMAIL": "Invalid E-mail.",
       "ERR_TYPE_PHONE_NUMBER": "Invalid Phone number.",
       "ERR_TYPE_DATE": "Invalid date.",
-      "ERR_TYPE_PASSWORD": "Invalid password.",
-      "ERR_PASSWORD_LENGTH": "Invalid length."
+      "ERR_TYPE_PASSWORD": "Invalid password."
     },
     "LOGIN": {
       "LOGIN_TITLE": "Login",
@@ -54,11 +54,11 @@ export default {
   "ko": {
     "FORM": {
       "ERR_REQUIRED": "필수 입력입니다.",
+      "ERR_LENGTH": "유효하지 않은 길이입니다.",
       "ERR_TYPE_EMAIL": "유효하지 않은 이메일입니다.",
       "ERR_TYPE_PHONE_NUMBER": "유효하지 않은 핸드폰번호입니다.",
       "ERR_TYPE_DATE": "유효하지 않은 날짜입니다.",
-      "ERR_TYPE_PASSWORD": "유효하지 않은 비밀번호입니다.",
-      "ERR_PASSWORD_LENGTH": "유효하지 않은 길이입니다."
+      "ERR_TYPE_PASSWORD": "유효하지 않은 비밀번호입니다."
     },
     "LOGIN": {
       "LOGIN_TITLE": "로그인",
