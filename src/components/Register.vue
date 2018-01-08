@@ -22,17 +22,16 @@
             <br />
             <br />
 
-            <el-input placeholder="홍길동" v-model="input.name" type="string">
-              <template slot="prepend">{{ $t('REG.NAME_LABEL') }}</template>
-            </el-input>
+            <el-form-item :label="$t('REG.NAME_LABEL')" prop="name">
+              <el-input :placeholder="$t('REG.NAME_PH')" v-model="input.name" type="string">
+              </el-input>
+            </el-form-item>
+
 
             <el-form-item :label="$t('REG.BIRTHDAY_LABEL')" prop="birthday">
               <el-date-picker :placeholder="$t('REG.BIRTHDAY_PH')" v-model="input.birthday" type="date" id="user_birthday_input">
               </el-date-picker>
             </el-form-item>
-
-            <br />
-            <br />
 
             <!-- TODO: 성별이 클릭이 되지 않은 상태 체크 -->
             <el-form-item :label="$t('REG.SEX_LABEL')" prop="sex">
@@ -80,8 +79,8 @@
             <!-- TODO: 회원가입 버튼 누를 시 약관 동의 확인 필요 -->
             <!-- http://element.eleme.io/#/en-US/component/checkbox#basic-usage -->
 
-            <el-form-item prop="checkTOU">
-              <el-checkbox v-model="input.checkTOU" id="user_TOU_input">{{ $t('REG.TOU_LABEL') }}</el-checkbox>
+            <el-form-item prop="checkTou">
+              <el-checkbox v-model="input.checkTou" id="user_tou_input">{{ $t('REG.TOU_LABEL') }}</el-checkbox>
             </el-form-item>
             <br />
             <br />
@@ -108,19 +107,19 @@ export default {
     return {
       focused: false,
       input: {
-        email: 'adoji92@gmail.com',
-        password: 'adojiadoji',
-        password2: 'adojiadoji',
-        name: '안동진',
+        email: '',
+        password: '',
+        password2: '',
+        name: '',
         birthday: '',
         postcode: '',
         address: '', // 지역 주소
         address2: '', // 상세 주소
-        phone: '010-1234-1234',
-        major: '컴퓨터과학',
-        belong: '공과대학',
+        phone: '',
+        major: '',
+        belong: '',
         sex: '',
-        checkTOU: false,
+        checkTou: false,
       },
       rules: {
         email: [
@@ -190,6 +189,13 @@ export default {
             trigger: 'change,blur',
           },
         ],
+        name: [
+          {
+            rqeuired: true,
+            message: vm.$t('FORM.ERR_REQUIRED'),
+            trigger: 'change,blur',
+          },
+        ],
         sex: [
           {
             required: true,
@@ -212,7 +218,7 @@ export default {
             trigger: 'change',
           },
         ],
-        checkTOU: [
+        checkTou: [
           {
             required: true,
             message: vm.$t('FORM.ERR_REQUIRED'),
@@ -220,18 +226,14 @@ export default {
           },
           {
             validator(rule, value, callback) {
-              // console.log(value.match); // type of `value` = Date, not String
-              window.setTimeout(() => {
-                const strValue = document.getElementById('user_TOU_input').value;
-                if (strValue.value === false) {
-                  const errMsg = vm.$t('REG.ERR_TOU_REQUIRED');
-                  callback(new Error(errMsg));
-                } else {
-                  callback();
-                }
-              }, 500);
+              if (value) {
+                callback();
+              } else {
+                const errMsg = vm.$t('REG.ERR_TOU_REQUIRED');
+                callback(new Error(errMsg));
+              }
             },
-            trigger: 'change',
+            trigger: 'change,blur',
           },
         ],
         phone: [
