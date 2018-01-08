@@ -1,6 +1,7 @@
 import authService from '../services/auth';
 import utils from '../utils';
 
+console.log('import auth store'); // eslint-disable-line
 
 export default {
   namespaced: true,
