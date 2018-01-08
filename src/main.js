@@ -5,6 +5,7 @@ import Element from 'element-ui';
 import locale from 'element-ui/lib/locale/lang/ko';
 import VueI18n from 'vue-i18n';
 import VueTheMask from 'vue-the-mask';
+import authPlugin from './utils/auth-plugin';
 
 import App from './App';
 import router from './router';
@@ -19,6 +20,9 @@ Vue.use(Element, {
 });
 Vue.use(VueI18n);
 Vue.use(VueTheMask);
+Vue.use(authPlugin, {
+  router,
+});
 
 const defaultLocale = utils.getDefaultLocale();
 
