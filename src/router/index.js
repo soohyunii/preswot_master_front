@@ -26,7 +26,7 @@ export default new Router({
       name: 'Register',
       component: Register,
     },
-    ...authRoutes('/auth'),
+    ...authRoutes('/a'),
     {
       path: '*',
       name: 'NotFound',

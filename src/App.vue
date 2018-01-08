@@ -3,6 +3,7 @@
     <router-link to="/">Landing Page</router-link>
     <router-link to="/login">Login</router-link>
     <router-link to="/register">Register</router-link>
+    <router-link to="/a/home">Home</router-link>
     |
     <el-button
       :type="locale === 'ko' ? 'primary' : 'default'"

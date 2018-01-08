@@ -6,10 +6,10 @@
 
 <script>
 export default {
-  name: `Test ${Math.random().toString(36).substring(7)}`,
+  name: `Test-${Math.random().toString(36).substring(7)}`,
   data() {
     return {
-      name: `Test ${Math.random().toString(36).substring(7)}`,
+      name: `Test-${Math.random().toString(36).substring(7)}`,
     };
   },
 };
