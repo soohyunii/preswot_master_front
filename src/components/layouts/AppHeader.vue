@@ -1,5 +1,8 @@
 <template>
   <div>
+    <!-- TODO: 햄버거 아이콘 -->
+    <!-- TODO: 브랜드 로고 -->
+    [햄버거 아이콘] [브랜드 로고]
     <!-- TODO: translate placeholder -->
     <el-input placeholder="Please input" v-model="searchText" class="input-with-select">
       <el-button slot="append" icon="el-icon-search"></el-button>
