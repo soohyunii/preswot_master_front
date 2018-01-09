@@ -33,7 +33,8 @@
       </el-row>
     </el-container>
     jwt: {{ jwt }} <br />
-    input: {{ input }}
+    input: {{ input }} <br />
+    params : {{ params }}
   </div>
 </template>
 
@@ -62,6 +63,13 @@ export default {
             email: vm.input.email,
             password: vm.input.email,
           });
+          if (vm.$route.params.to) {
+            setTimeout(() => {
+              vm.$router.push({
+                path: vm.$route.params.to,
+              });
+            }, 500);
+          }
           break;
         }
         default: {
@@ -69,9 +77,26 @@ export default {
         }
       }
     },
+    noti() {
+      const vm = this;
+      vm.$notify({
+        title: vm.$t('LOGIN.LOGIN_REQUIRED'),
+        type: 'warning',
+      });
+    },
   },
   computed: {
     ...mapState('auth', ['jwt']),
+    params() {
+      const vm = this;
+      return vm.$route.params.to;
+    },
+  },
+  mounted() {
+    const vm = this;
+    if (vm.$route.params.to) {
+      vm.noti();
+    }
   },
 };
 </script>

@@ -1,4 +1,5 @@
 // import store from '../stores';
+import utils from '../utils';
 
 // window.setInterval(() => {
 //   console.log(store); // eslint-disable-line
@@ -40,11 +41,15 @@ export default class AuthPlugin {
       }
 
       // TODO: check jwt is present and valid
-      const loginRequired = Math.random() < 0.5;
-      if (loginRequired) {
+      const jwt = utils.getJwtFromLocalStorage();
+      // const loginRequired = 1; // Math.random() < 0.5;
+      if (!jwt) {
         // TODO: show noti (notification that you're not logged in)
         next({
           name: 'Login',
+          params: {
+            to: to.path,
+          },
         });
       } else {
         next();
