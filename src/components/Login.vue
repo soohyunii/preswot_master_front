@@ -61,22 +61,21 @@ export default {
       const vm = this;
       switch (type) {
         case 'LOGIN': {
-          vm.reqLogin({
-            email: vm.input.email,
-            password: vm.input.email,
-          })
-          .then(() => {
+          try {
+            await vm.reqLogin({
+              email: vm.input.email,
+              password: vm.input.email,
+            });
             vm.openNoti('success', 'Login Success !!', 'Success');
             if (vm.redirectTo) {
               // jwt 업데이트 후 페이지 이동 이루어지도록
               vm.$router.push(vm.redirectTo);
             }
-          })
-          .catch((error) => {
+          } catch (error) {
             // 로그인 실패 시 ( jwt 값 갱신 실패 시 )
             vm.openNoti('error', 'Login Failed !!');
             window.console.error(error);
-          });
+          }
           break;
         }
         default: {
