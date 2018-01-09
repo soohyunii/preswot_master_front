@@ -17,7 +17,8 @@ export default {
       "PASSWORD_PH": "********",
       "ERR_PASSWORD_MATCH": "Passwords do not match.",
       "LOGIN_BUTTON": "Login",
-      "FORGOT_PASSWORD_BUTTON": "Forgot Password?"
+      "FORGOT_PASSWORD_BUTTON": "Forgot Password?",
+      "LOGIN_REQUIRED": "Please login"
     },
     "REG": {
       "REG_TITLE": "Register",
@@ -68,7 +69,8 @@ export default {
       "PASSWORD_PH": "********",
       "ERR_PASSWORD_MATCH": "비밀번호가 일치하지 않습니다.",
       "LOGIN_BUTTON": "로그인",
-      "FORGOT_PASSWORD_BUTTON": "비밀번호를 잊어버리셨나요?"
+      "FORGOT_PASSWORD_BUTTON": "비밀번호를 잊어버리셨나요?",
+      "LOGIN_REQUIRED": "로그인이 필요합니다."
     },
     "REG": {
       "REG_TITLE": "회원가입",

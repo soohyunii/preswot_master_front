@@ -8,6 +8,8 @@
           <!-- TODO: add validation -->
           <h1>{{ $t('LOGIN.LOGIN_TITLE') }}</h1>
 
+          <span v-if="redirectTo" style="color:red">{{ $t('LOGIN.LOGIN_REQUIRED') }}</span>
+
           <el-input placeholder="abc@gmail.com" v-model="input.email" type="email">
             <template slot="prepend">{{ $t('LOGIN.EMAIL_LABEL') }}</template>
           </el-input>
@@ -33,7 +35,8 @@
       </el-row>
     </el-container>
     jwt: {{ jwt }} <br />
-    input: {{ input }}
+    input: {{ input }} <br />
+    redirectTo: {{ redirectTo }}
   </div>
 </template>
 
@@ -62,8 +65,10 @@ export default {
             email: vm.input.email,
             password: vm.input.email,
           });
-//          console.log(vm.$route.params.to);
-          vm.$router.push(vm.$route.params.to);
+          const loginSuccess = Math.random() < 0.5;
+          if (loginSuccess && vm.redirectTo) {
+            vm.$router.push(vm.redirectTo);
+          }
           break;
         }
         default: {
@@ -71,9 +76,24 @@ export default {
         }
       }
     },
+    openNoti() {
+      this.$notify.error({
+        title: 'Error',
+        message: this.$t('LOGIN.LOGIN_REQUIRED'),
+      });
+    },
   },
   computed: {
     ...mapState('auth', ['jwt']),
+    redirectTo() {
+      const vm = this;
+      return vm.$route.params.to;
+    },
+  },
+  mounted() {
+    if (this.redirectTo) {
+      this.openNoti();
+    }
   },
 };
 </script>
