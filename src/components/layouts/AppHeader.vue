@@ -23,7 +23,7 @@
 import { mapState, mapMutations } from 'vuex';
 
 export default {
-  name: 'app-header',
+  name: 'AppHeader',
   computed: {
     ...mapState('auth', ['locale']),
   },
