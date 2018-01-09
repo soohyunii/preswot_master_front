@@ -25,9 +25,16 @@ export default {
       const res = await authService.login({ email, password });
       // TODO: delete console.log
       console.log('store auth', res); // eslint-disable-line
-      commit('updateJwt', {
-        jwt: res.jwt,
-      });
+      // 로그인 성공/실패 가정
+      const login = Math.random() < 0.5;
+      // jwt update 신호 주기위함
+      if (login) {
+        commit('updateJwt', {
+          jwt: res.jwt,
+        });
+      } else {
+        throw new Error('login failed');
+      }
     },
   },
 };

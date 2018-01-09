@@ -61,15 +61,22 @@ export default {
       const vm = this;
       switch (type) {
         case 'LOGIN': {
-          this.reqLogin({
+          vm.reqLogin({
             email: vm.input.email,
             password: vm.input.email,
-          });
-          if (vm.$route.params.to) {
-            setTimeout(() => {
+          })
+          .then(() => {
+            vm.openNoti('success', 'Login Success !!', 'Success');
+            if (vm.redirectTo) {
+              // jwt 업데이트 후 페이지 이동 이루어지도록
               vm.$router.push(vm.redirectTo);
-            }, 500);
-          }
+            }
+          })
+          .catch((error) => {
+            // 로그인 실패 시 ( jwt 값 갱신 실패 시 )
+            vm.openNoti('error', 'Login Failed !!');
+            window.console.error(error);
+          });
           break;
         }
         default: {
@@ -77,11 +84,26 @@ export default {
         }
       }
     },
-    openNoti() {
-      this.$notify.error({
-        title: 'Error',
-        message: this.$t('LOGIN.LOGIN_REQUIRED'),
-      });
+    openNoti(type, message, title) {
+      const vm = this;
+      switch (type) {
+        case 'success':
+        case 'warning':
+          vm.$notify({
+            title,
+            message,
+            type,
+          });
+          break;
+        default :
+        case 'error' : {
+          vm.$notify.error({
+            title: 'Error',
+            message,
+          });
+          break;
+        }
+      }
     },
   },
   computed: {
@@ -92,8 +114,9 @@ export default {
     },
   },
   mounted() {
-    if (this.redirectTo) {
-      this.openNoti();
+    const vm = this;
+    if (vm.redirectTo) {
+      vm.openNoti('warning', vm.$t('LOGIN.LOGIN_REQUIRED'), 'Warning');
     }
   },
 };
