@@ -53,7 +53,7 @@ export default {
       vm.$i18n.locale = locale;
       vm.updateLocale({ locale });
     },
-    onClick(type){
+    onClick(type) {
       const vm = this;
       switch (type) {
         case 'PROFILE': {
