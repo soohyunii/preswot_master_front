@@ -8,6 +8,8 @@
           <!-- TODO: add validation -->
           <h1>{{ $t('LOGIN.LOGIN_TITLE') }}</h1>
 
+          <span v-if="redirectTo" style="color:red">{{ $t('LOGIN.LOGIN_REQUIRED') }}</span>
+
           <el-input placeholder="abc@gmail.com" v-model="input.email" type="email">
             <template slot="prepend">{{ $t('LOGIN.EMAIL_LABEL') }}</template>
           </el-input>
@@ -34,7 +36,7 @@
     </el-container>
     jwt: {{ jwt }} <br />
     input: {{ input }} <br />
-    params : {{ params }}
+    redirectTo: {{ redirectTo }}
   </div>
 </template>
 
@@ -65,9 +67,7 @@ export default {
           });
           if (vm.$route.params.to) {
             setTimeout(() => {
-              vm.$router.push({
-                path: vm.$route.params.to,
-              });
+              vm.$router.push(vm.redirectTo);
             }, 500);
           }
           break;
@@ -77,25 +77,23 @@ export default {
         }
       }
     },
-    noti() {
-      const vm = this;
-      vm.$notify({
-        title: vm.$t('LOGIN.LOGIN_REQUIRED'),
-        type: 'warning',
+    openNoti() {
+      this.$notify.error({
+        title: 'Error',
+        message: this.$t('LOGIN.LOGIN_REQUIRED'),
       });
     },
   },
   computed: {
     ...mapState('auth', ['jwt']),
-    params() {
+    redirectTo() {
       const vm = this;
       return vm.$route.params.to;
     },
   },
   mounted() {
-    const vm = this;
-    if (vm.$route.params.to) {
-      vm.noti();
+    if (this.redirectTo) {
+      this.openNoti();
     }
   },
 };
