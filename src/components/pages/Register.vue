@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import authService from '../services/auth';
+import authService from '../../services/auth';
 // id(string), password(string), name(string),
 // birth(1991-07-16 형식string), address(string), phone(string), major(string), belong(string소속)
 export default {

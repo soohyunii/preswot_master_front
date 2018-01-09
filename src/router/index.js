@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import LandingPage from '../components/LandingPage';
-import Login from '../components/Login';
-import Register from '../components/Register';
+import LandingPage from '../components/pages/LandingPage';
+import Login from '../components/pages/Login';
+import Register from '../components/pages/Register';
 import Test from '../components/TestComponent';
 import authRoutes from './authRoutes';
 
