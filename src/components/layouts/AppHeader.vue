@@ -4,18 +4,17 @@
     <el-input placeholder="Please input" v-model="searchText" class="input-with-select">
       <el-button slot="append" icon="el-icon-search"></el-button>
     </el-input>
-    <el-button
-      :type="locale === 'ko' ? 'primary' : 'default'"
-      @click="onClick('LOCALE_KO')"
-    >
-      한국어
-    </el-button>
-    <el-button
-      :type="locale === 'en' ? 'primary' : 'default'"
-      @click="onClick('LOCALE_EN')"
-    >
-      English
-    </el-button>
+
+    <el-dropdown @command="handleCommand">
+      <el-button type="primary">
+        Lang<i class="el-icon-arrow-down el-icon--right"></i>
+      </el-button>
+      <el-dropdown-menu slot="dropdown">
+        <el-dropdown-item command="LOCALE_KO">한국어</el-dropdown-item>
+        <el-dropdown-item command="LOCALE_EN">English</el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown>
+
     locale: {{ locale }}
     <router-link to="/login">Login</router-link>
     <router-link to="/register">Register</router-link>
@@ -53,7 +52,7 @@ export default {
       vm.$i18n.locale = locale;
       vm.updateLocale({ locale });
     },
-    onClick(type){
+    onClick(type) {
       const vm = this;
       switch (type) {
         case 'PROFILE': {
@@ -74,6 +73,10 @@ export default {
           throw new Error('not defined type', type);
         }
       }
+    },
+    handleCommand(command) {
+      const vm = this;
+      vm.onClick(command);
     },
   },
 };
