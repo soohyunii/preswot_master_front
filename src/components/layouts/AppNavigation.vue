@@ -1,8 +1,12 @@
 <template>
   <div>
-    <!-- FIXME: collapse가 너무 느림 -->
-
-    <el-menu default-active="1" class="el-menu-vertical-demo" @select="onSelect" :collapse="isNavCollapsed" :default-openeds="['3', '4']">
+    <el-menu
+      default-active="1"
+      class="app-nav-menu"
+      @select="onSelect"
+      :collapse="isNavCollapsed"
+      :default-openeds="['3', '4']"
+    >
       <el-menu-item index="1">
         <i class="fa fa-home el-compatible" style="width: 18px; height: 18px;"></i>
         <!-- TODO: Translation -->
@@ -118,5 +122,13 @@ export default {
 
 .fa.el-compatible {
   content: "\E638";
+}
+
+.app-nav-menu {
+  height: 93vh;
+}
+.app-nav-menu:not(.el-menu--collapse) {
+  width: 190px;
+  min-height: 400px;
 }
 </style>
