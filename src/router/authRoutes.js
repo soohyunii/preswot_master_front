@@ -1,4 +1,5 @@
 import Test from '../components/TestComponent';
+import Profile from '../components/pages/Profile';
 
 export default function authRoutes(root) {
   return [
@@ -17,6 +18,15 @@ export default function authRoutes(root) {
       component: Test, // TODO: replace dummy with real component
       meta: {
         title: 'Admin Home', // TODO: import from i18n
+        auth: true,
+      },
+    },
+    {
+      path: '/profile',
+      name: 'Profile',
+      component: Profile, // TODO: replace dummy with real component
+      meta: {
+        title: 'Profile', // TODO: import from i18n
         auth: true,
       },
     },
