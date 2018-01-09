@@ -6,13 +6,13 @@
     </el-input>
     <el-button
       :type="locale === 'ko' ? 'primary' : 'default'"
-      @click="changeLocale('ko')"
+      @click="onClick('LOCALE_KO')"
     >
       한국어
     </el-button>
     <el-button
       :type="locale === 'en' ? 'primary' : 'default'"
-      @click="changeLocale('en')"
+      @click="onClick('LOCALE_EN')"
     >
       English
     </el-button>
@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     ...mapMutations('auth', ['updateLocale']),
-    changeLocale(locale) {
+    _changeLocale(locale) {
       const vm = this;
       vm.$i18n.locale = locale;
       vm.updateLocale({ locale });
@@ -60,6 +60,14 @@ export default {
           vm.$router.push({
             name: 'Profile',
           });
+          break;
+        }
+        case 'LOCALE_KO': {
+          vm._changeLocale('ko'); // eslint-disable-line no-underscore-dangle
+          break;
+        }
+        case 'LOCALE_EN': {
+          vm._changeLocale('en'); // eslint-disable-line no-underscore-dangle
           break;
         }
         default: {
