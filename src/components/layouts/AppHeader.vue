@@ -7,7 +7,7 @@
 
     <el-dropdown @command="handleCommand">
       <el-button type="primary">
-        Lang<i class="el-icon-arrow-down el-icon--right"></i>
+        {{ $t('HEADER.LANG_INFO') }}<i class="el-icon-arrow-down el-icon--right"></i>
       </el-button>
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item command="LOCALE_KO">한국어</el-dropdown-item>

@@ -49,6 +49,9 @@ export default {
       "TOU_LABEL": "I agree to the terms and conditions",
       "ERR_TOU_REQUIRED": "Please check your agreement to the Terms and Conditions",
       "ERR_SEX_REQUIRED": "Please select your sex"
+    },
+    "HEADER": {
+      "LANG_INFO": "English",
     }
   },
   "ko": {
@@ -100,6 +103,9 @@ export default {
       "TOU_LABEL": "이용약관에 대해 동의합니다.",
       "ERR_TOU_REQUIRED": "필수 약관에 동의를 체크하셔야 합니다.",
       "ERR_SEX_REQUIRED": "성별을 골라주십시오."
+    },
+    "HEADER": {
+      "LANG_INFO": "한국어",
     }
   }
 }
