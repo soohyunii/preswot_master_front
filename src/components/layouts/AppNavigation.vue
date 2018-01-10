@@ -1,12 +1,12 @@
 <template>
   <div>
-    <!-- FIXME: collapse가 너무 느림 -->
-    <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
-      <el-radio-button :label="false">expand</el-radio-button>
-      <el-radio-button :label="true">collapse</el-radio-button>
-    </el-radio-group>
-
-    <el-menu default-active="1" class="el-menu-vertical-demo" @select="onSelect" :collapse="isCollapse" :default-openeds="['3', '4']">
+    <el-menu
+      default-active="1"
+      class="app-nav-menu"
+      @select="onSelect"
+      :collapse="isNavCollapsed"
+      :default-openeds="['3', '4']"
+    >
       <el-menu-item index="1">
         <i class="fa fa-home el-compatible" style="width: 18px; height: 18px;"></i>
         <!-- TODO: Translation -->
@@ -52,12 +52,17 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: 'AppNavigation',
-  data() {
-    return {
-      isCollapse: false,
-    };
+  // data() {
+  //   return {
+  //     isCollapse: false,
+  //   };
+  // },
+  computed: {
+    ...mapState('layout', ['isNavCollapsed']),
   },
   methods: {
     onSelect(index) {
@@ -117,5 +122,13 @@ export default {
 
 .fa.el-compatible {
   content: "\E638";
+}
+
+.app-nav-menu {
+  height: 93vh;
+}
+.app-nav-menu:not(.el-menu--collapse) {
+  width: 190px;
+  min-height: 400px;
 }
 </style>

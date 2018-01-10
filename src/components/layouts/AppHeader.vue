@@ -1,5 +1,23 @@
 <template>
   <div>
+    <!-- TODO: 버튼 그룹 => 햄버거 아이콘 -->
+    <el-button-group>
+      <el-button
+        :type="isNavCollapsed ? 'primary' : 'default'"
+        @click="onClick('COLLAPSE')"
+      >
+        Collapse
+      </el-button>
+      <el-button
+        :type="!isNavCollapsed ? 'primary' : 'default'"
+        @click="onClick('EXPAND')"
+      >
+        Expand
+      </el-button>
+    </el-button-group>
+    [햄버거 아이콘]
+    <!-- TODO: 브랜드 로고 -->
+    [브랜드 로고]
     <!-- TODO: translate placeholder -->
     <el-input placeholder="Please input" v-model="searchText" class="input-with-select">
       <el-button slot="append" icon="el-icon-search"></el-button>
@@ -44,8 +62,10 @@ export default {
   },
   computed: {
     ...mapState('auth', ['locale']),
+    ...mapState('layout', ['isNavCollapsed']),
   },
   methods: {
+    ...mapMutations('layout', ['updateCollapse']),
     ...mapMutations('auth', ['updateLocale']),
     _changeLocale(locale) {
       const vm = this;
@@ -67,6 +87,18 @@ export default {
         }
         case 'LOCALE_EN': {
           vm._changeLocale('en'); // eslint-disable-line no-underscore-dangle
+          break;
+        }
+        case 'COLLAPSE': {
+          vm.updateCollapse({
+            isNavCollapsed: true,
+          });
+          break;
+        }
+        case 'EXPAND': {
+          vm.updateCollapse({
+            isNavCollapsed: false,
+          });
           break;
         }
         default: {
