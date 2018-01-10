@@ -59,8 +59,10 @@ export default {
   },
   computed: {
     ...mapState('auth', ['jwt', 'locale', 'valid']),
+    ...mapState('layout', ['isNavCollapsed']),
   },
   methods: {
+    ...mapMutations('layout', ['updateCollapse']),
     ...mapMutations('auth', ['updateJwt', 'updateLocale', 'updateValid']),
     _changeLocale(locale) {
       const vm = this;
