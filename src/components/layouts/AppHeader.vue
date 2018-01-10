@@ -1,20 +1,9 @@
 <template>
   <div>
     <!-- TODO: 버튼 그룹 => 햄버거 아이콘 -->
-    <el-button-group>
-      <el-button
-        :type="isNavCollapsed ? 'primary' : 'default'"
-        @click="onClick('COLLAPSE')"
-      >
-        Collapse
-      </el-button>
-      <el-button
-        :type="!isNavCollapsed ? 'primary' : 'default'"
-        @click="onClick('EXPAND')"
-      >
-        Expand
-      </el-button>
-    </el-button-group>
+    <el-button type="primary" @click="onClick('COLLAPSE')">
+      <i class="el-icon-menu"></i>
+    </el-button>
     [햄버거 아이콘]
     <!-- TODO: 브랜드 로고 -->
     [브랜드 로고]
@@ -35,11 +24,25 @@
       English
     </el-button>
     locale: {{ locale }}
-    <router-link to="/login">Login</router-link>
+    <!-- Login / Profile, Logout button part -->
+    <router-link to="/login" style="text-decoration:none; color: #ffffff" v-if="!valid">
+      <el-button type="primary">
+          {{ $t('LOGIN.LOGIN_BUTTON') }}
+      </el-button>
+    </router-link>
+    <router-link to="/a/profile" style="text-decoration:none; color: #ffffff" v-else>
+      <el-dropdown @command="handleCommand">
+        <el-button type="primary">
+            {{ $t('HEADER.PROFILE_BUTTON') }}<i class="el-icon-arrow-down el-icon--right"></i>
+        </el-button>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="profile">{{ $t('HEADER.PROFILE_BUTTON') }}</el-dropdown-item>
+          <el-dropdown-item command="logout">{{ $t('HEADER.LOGOUT_BUTTON') }}</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+    </router-link>
+    <!-- router-link to "register" -->
     <router-link to="/register">Register</router-link>
-    <el-button type="primary" @click="onClick('PROFILE')">
-      Profile
-    </el-button>
     <!-- <router-link to="/a/home">Home</router-link> -->
   </div>
 </template>
@@ -62,12 +65,12 @@ export default {
     };
   },
   computed: {
-    ...mapState('auth', ['locale']),
+    ...mapState('auth', ['jwt', 'locale', 'valid']),
     ...mapState('layout', ['isNavCollapsed']),
   },
   methods: {
     ...mapMutations('layout', ['updateCollapse']),
-    ...mapMutations('auth', ['updateLocale']),
+    ...mapMutations('auth', ['updateJwt', 'updateLocale', 'updateValid']),
     _changeLocale(locale) {
       const vm = this;
       vm.$i18n.locale = locale;
@@ -91,20 +94,38 @@ export default {
           break;
         }
         case 'COLLAPSE': {
-          vm.updateCollapse({
-            isNavCollapsed: true,
-          });
-          break;
-        }
-        case 'EXPAND': {
-          vm.updateCollapse({
-            isNavCollapsed: false,
-          });
+          if (vm.isNavCollapsed === true) {
+            vm.updateCollapse({
+              isNavCollapsed: false,
+            });
+          } else {
+            vm.updateCollapse({
+              isNavCollapsed: true,
+            });
+          }
           break;
         }
         default: {
           throw new Error('not defined type', type);
         }
+      }
+    },
+    handleCommand(command) {
+      const vm = this;
+      switch (command) {
+        case 'logout': {
+          vm.updateJwt('');
+          vm.updateValid(false);
+          vm.$router.push({
+            name: 'LandingPage',
+          });
+          break;
+        }
+        case 'profile': {
+          vm.onClick('PROFILE');
+          break;
+        }
+        default :
       }
     },
   },

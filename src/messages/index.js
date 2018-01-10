@@ -17,7 +17,8 @@ export default {
       "PASSWORD_PH": "********",
       "ERR_PASSWORD_MATCH": "Passwords do not match.",
       "LOGIN_BUTTON": "Login",
-      "FORGOT_PASSWORD_BUTTON": "Forgot Password?"
+      "FORGOT_PASSWORD_BUTTON": "Forgot Password?",
+      "LOGIN_REQUIRED": "Please login"
     },
     "REG": {
       "REG_TITLE": "Register",
@@ -49,6 +50,14 @@ export default {
       "TOU_LABEL": "I agree to the terms and conditions",
       "ERR_TOU_REQUIRED": "Please check your agreement to the Terms and Conditions",
       "ERR_SEX_REQUIRED": "Please select your sex"
+    },
+    "HEADER": {
+      "LANG_INFO": "English",
+      "LOGOUT_BUTTON": "Logout",
+      "PROFILE_BUTTON": "Profile"
+    },
+    "NOTFOUND": {
+      "REDIRECT_MESSAGE": "after 5 seconds, redirected to login page"
     }
   },
   "ko": {
@@ -68,7 +77,8 @@ export default {
       "PASSWORD_PH": "********",
       "ERR_PASSWORD_MATCH": "비밀번호가 일치하지 않습니다.",
       "LOGIN_BUTTON": "로그인",
-      "FORGOT_PASSWORD_BUTTON": "비밀번호를 잊어버리셨나요?"
+      "FORGOT_PASSWORD_BUTTON": "비밀번호를 잊어버리셨나요?",
+      "LOGIN_REQUIRED": "로그인이 필요합니다."
     },
     "REG": {
       "REG_TITLE": "회원가입",
@@ -100,6 +110,14 @@ export default {
       "TOU_LABEL": "이용약관에 대해 동의합니다.",
       "ERR_TOU_REQUIRED": "필수 약관에 동의를 체크하셔야 합니다.",
       "ERR_SEX_REQUIRED": "성별을 골라주십시오."
+    },
+    "HEADER": {
+      "LANG_INFO": "한국어",
+      "LOGOUT_BUTTON": "로그아웃",
+      "PROFILE_BUTTON": "프로필"
+    },
+    "NOTFOUND": {
+      "REDIRECT_MESSAGE": "초 뒤 홈페이지로 이동합니다."
     }
   }
 }

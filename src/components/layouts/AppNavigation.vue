@@ -4,7 +4,6 @@
       default-active="1"
       class="app-nav-menu"
       @select="onSelect"
-      :collapse="isNavCollapsed"
       :default-openeds="['3', '4']"
     >
       <el-menu-item index="1">
