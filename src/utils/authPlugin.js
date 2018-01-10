@@ -40,7 +40,8 @@ export default class AuthPlugin {
       }
 
       // TODO: check jwt is present and valid
-      const loginRequired = Math.random() < 0.5;
+      // const loginRequired = Math.random() < 0.5;
+      const loginRequired = false;
       if (loginRequired) {
         // TODO: show noti (notification that you're not logged in)
         next({
