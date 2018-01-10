@@ -1,10 +1,8 @@
 <template>
   <div>
-    <!-- TODO: 버튼 그룹 => 햄버거 아이콘 -->
-    <el-button type="primary" @click="onClick('COLLAPSE')">
+    <el-button type="primary" @click="onClick('TOGGLE_NAVIGATION')">
       <i class="el-icon-menu"></i>
     </el-button>
-    [햄버거 아이콘]
     <!-- TODO: 브랜드 로고 -->
     [브랜드 로고]
     <!-- TODO: translate placeholder -->
@@ -100,7 +98,7 @@ export default {
           vm._changeLocale('en'); // eslint-disable-line no-underscore-dangle
           break;
         }
-        case 'COLLAPSE': {
+        case 'TOGGLE_NAVIGATION': {
           vm.updateCollapse({
             isNavCollapsed: !vm.isNavCollapsed,
           });
