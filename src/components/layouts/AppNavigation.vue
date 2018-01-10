@@ -28,9 +28,12 @@
           <span slot="title">수강 중인 과목</span>
         </template>
         <el-menu-item-group>
-          <!-- TODO: replace with v-for -->
-          <el-menu-item index="3-1">어쩌구</el-menu-item>
-          <el-menu-item index="3-2">저쩌구</el-menu-item>
+          <template v-for="(item, key, index) in attending">
+            <el-menu-item :index="'3-'+index" :key="key">
+              <!-- TODO: link to each class -->
+              {{ item.className }}
+            </el-menu-item>
+          </template>
         </el-menu-item-group>
       </el-submenu>
 
@@ -41,9 +44,12 @@
           <span slot="title">강의 중인 과목</span>
         </template>
         <el-menu-item-group>
-          <!-- TODO: replace with v-for -->
-          <el-menu-item index="4-1">저쩌구</el-menu-item>
-          <el-menu-item index="4-2">어쩌구</el-menu-item>
+          <template v-for="(item, key, index) in opening">
+            <el-menu-item :index="'4-'+index" :key="key">
+              <!-- TODO: link to each class -->
+              {{ item.className }}
+            </el-menu-item>
+          </template>
         </el-menu-item-group>
       </el-submenu>
 
@@ -57,14 +63,17 @@
 
 <script>
 import { mapState } from 'vuex';
+import classService from '../../services/classService';
 
 export default {
   name: 'AppNavigation',
-  // data() {
-  //   return {
-  //     isCollapse: false,
-  //   };
-  // },
+  data() {
+    return {
+      // isCollapse: false,
+      attending: '',
+      opening: '',
+    };
+  },
   computed: {
     ...mapState('layout', ['isNavCollapsed']),
   },
@@ -90,6 +99,13 @@ export default {
         }
       }
     },
+  },
+  async mounted() {
+    const vm = this;
+    vm.attending = await classService.attendingClass();
+    vm.opening = await classService.openingClass();
+    window.console.log(this.attending);
+    window.console.log(this.opening);
   },
 };
 </script>
