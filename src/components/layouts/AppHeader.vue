@@ -17,7 +17,21 @@
       English
     </el-button>
     locale: {{ locale }}
-    <router-link to="/login">Login</router-link>
+    <!-- Login / Profile, Logout button part -->
+    <el-button type="primary" v-if="!valid">
+        <router-link to="/login" style="text-decoration:none; color: #ffffff">{{ $t('LOGIN.LOGIN_BUTTON') }}</router-link>
+    </el-button>
+    <el-dropdown v-else @command="handleCommand">
+      <el-button type="primary">
+        <router-link to="/a/profile" style="text-decoration:none; color: #ffffff">
+          {{ $t('HEADER.PROFILE_BUTTON') }}<i class="el-icon-arrow-down el-icon--right"></i>
+        </router-link>
+      </el-button>
+      <el-dropdown-menu slot="dropdown">
+        <el-dropdown-item command="profile">{{ $t('HEADER.PROFILE_BUTTON') }}</el-dropdown-item>
+        <el-dropdown-item command="logout">{{ $t('HEADER.LOGOUT_BUTTON') }}</el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown>
     <router-link to="/register">Register</router-link>
     <el-button type="primary" @click="onClick('PROFILE')">
       Profile
@@ -44,16 +58,16 @@ export default {
     };
   },
   computed: {
-    ...mapState('auth', ['locale']),
+    ...mapState('auth', ['jwt', 'locale', 'valid']),
   },
   methods: {
-    ...mapMutations('auth', ['updateLocale']),
+    ...mapMutations('auth', ['updateJwt', 'updateLocale', 'updateValid']),
     _changeLocale(locale) {
       const vm = this;
       vm.$i18n.locale = locale;
       vm.updateLocale({ locale });
     },
-    onClick(type){
+    onClick(type) {
       const vm = this;
       switch (type) {
         case 'PROFILE': {
@@ -73,6 +87,24 @@ export default {
         default: {
           throw new Error('not defined type', type);
         }
+      }
+    },
+    handleCommand(command) {
+      const vm = this;
+      switch (command) {
+        case 'logout': {
+          vm.updateJwt('');
+          vm.updateValid(false);
+          vm.$router.push({
+            name: 'LandingPage',
+          });
+          break;
+        }
+        case 'profile': {
+          vm.onClick('PROFILE');
+          break;
+        }
+        default :
       }
     },
   },
