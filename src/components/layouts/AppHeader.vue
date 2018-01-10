@@ -1,20 +1,9 @@
 <template>
   <div>
     <!-- TODO: 버튼 그룹 => 햄버거 아이콘 -->
-    <el-button-group>
-      <el-button
-        :type="isNavCollapsed ? 'primary' : 'default'"
-        @click="onClick('COLLAPSE')"
-      >
-        Collapse
-      </el-button>
-      <el-button
-        :type="!isNavCollapsed ? 'primary' : 'default'"
-        @click="onClick('EXPAND')"
-      >
-        Expand
-      </el-button>
-    </el-button-group>
+    <el-button type="primary" @click="onClick('COLLAPSE')">
+      <i class="el-icon-menu"></i>
+    </el-button>
     [햄버거 아이콘]
     <!-- TODO: 브랜드 로고 -->
     [브랜드 로고]
@@ -105,15 +94,15 @@ export default {
           break;
         }
         case 'COLLAPSE': {
-          vm.updateCollapse({
-            isNavCollapsed: true,
-          });
-          break;
-        }
-        case 'EXPAND': {
-          vm.updateCollapse({
-            isNavCollapsed: false,
-          });
+          if (vm.isNavCollapsed === true) {
+            vm.updateCollapse({
+              isNavCollapsed: false,
+            });
+          } else {
+            vm.updateCollapse({
+              isNavCollapsed: true,
+            });
+          }
           break;
         }
         default: {
