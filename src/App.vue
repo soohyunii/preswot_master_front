@@ -1,19 +1,21 @@
 <template>
   <div id="app">
     <el-container>
-      <el-aside width="200px">
-        <app-navigation></app-navigation>
-      </el-aside>
+      <el-header>
+        <app-header></app-header>
+      </el-header>
       <el-container>
-        <el-header>
-          <app-header></app-header>
-        </el-header>
-        <el-main>
-          <router-view/>
-        </el-main>
-        <el-footer>
-          <app-footer></app-footer>
-        </el-footer>
+        <el-aside width="200px">
+          <app-navigation></app-navigation>
+        </el-aside>
+        <el-container>
+          <el-main>
+            <router-view/>
+          </el-main>
+          <el-footer>
+            <app-footer></app-footer>
+          </el-footer>
+        </el-container>
       </el-container>
     </el-container>
   </div>

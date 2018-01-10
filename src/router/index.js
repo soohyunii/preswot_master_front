@@ -3,7 +3,8 @@ import Router from 'vue-router';
 import LandingPage from '../components/pages/LandingPage';
 import Login from '../components/pages/Login';
 import Register from '../components/pages/Register';
-import Test from '../components/TestComponent';
+import NotFound from '../components/pages/NotFound';
+// import Test from '../components/TestComponent';
 import authRoutes from './authRoutes';
 
 Vue.use(Router);
@@ -30,7 +31,7 @@ export default new Router({
     {
       path: '*',
       name: 'NotFound',
-      component: Test,
+      component: NotFound,
     },
   ],
 });
