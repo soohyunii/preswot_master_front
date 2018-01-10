@@ -12,7 +12,7 @@
       <el-button slot="append" icon="el-icon-search"></el-button>
     </el-input>
 
-    <el-dropdown @command="handleCommand">
+    <el-dropdown @command="onClick">
       <el-button type="primary">
         {{ $t('HEADER.LANG_INFO') }}<i class="el-icon-arrow-down el-icon--right"></i>
       </el-button>
@@ -24,19 +24,19 @@
 
     locale: {{ locale }}
     <!-- Login / Profile, Logout button part -->
-    <router-link to="/login" style="text-decoration:none; color: #ffffff" v-if="!valid">
+    <router-link to="/login" style="text-decoration:none; color: #ffffff" v-if="!isJwtValid">
       <el-button type="primary">
           {{ $t('LOGIN.LOGIN_BUTTON') }}
       </el-button>
     </router-link>
     <router-link to="/a/profile" style="text-decoration:none; color: #ffffff" v-else>
-      <el-dropdown @command="handleCommand">
+      <el-dropdown @command="onClick">
         <el-button type="primary">
             {{ $t('HEADER.PROFILE_BUTTON') }}<i class="el-icon-arrow-down el-icon--right"></i>
         </el-button>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="profile">{{ $t('HEADER.PROFILE_BUTTON') }}</el-dropdown-item>
-          <el-dropdown-item command="logout">{{ $t('HEADER.LOGOUT_BUTTON') }}</el-dropdown-item>
+          <el-dropdown-item command="PROFILE">{{ $t('HEADER.PROFILE_BUTTON') }}</el-dropdown-item>
+          <el-dropdown-item command="LOGOUT">{{ $t('HEADER.LOGOUT_BUTTON') }}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </router-link>
@@ -54,7 +54,7 @@
 
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapGetters, mapMutations } from 'vuex';
 
 export default {
   name: 'AppHeader',
@@ -64,12 +64,13 @@ export default {
     };
   },
   computed: {
-    ...mapState('auth', ['jwt', 'locale', 'valid']),
+    ...mapState('auth', ['jwt', 'locale']),
     ...mapState('layout', ['isNavCollapsed']),
+    ...mapGetters('auth', ['isJwtValid']),
   },
   methods: {
     ...mapMutations('layout', ['updateCollapse']),
-    ...mapMutations('auth', ['updateJwt', 'updateLocale', 'updateValid']),
+    ...mapMutations('auth', ['updateJwt', 'updateLocale']),
     _changeLocale(locale) {
       const vm = this;
       vm.$i18n.locale = locale;
@@ -84,6 +85,13 @@ export default {
           });
           break;
         }
+        case 'LOGOUT': {
+          vm.updateJwt('');
+          vm.$router.push({
+            name: 'LandingPage',
+          });
+          break;
+        }
         case 'LOCALE_KO': {
           vm._changeLocale('ko'); // eslint-disable-line no-underscore-dangle
           break;
@@ -93,43 +101,15 @@ export default {
           break;
         }
         case 'COLLAPSE': {
-          if (vm.isNavCollapsed === true) {
-            vm.updateCollapse({
-              isNavCollapsed: false,
-            });
-          } else {
-            vm.updateCollapse({
-              isNavCollapsed: true,
-            });
-          }
-          break;
-        }
-        default: {
-          throw new Error('not defined type', type);
-        }
-      }
-    },
-    handleCommand(command) {
-      const vm = this;
-      switch (command) {
-        case 'logout': {
-          vm.updateJwt('');
-          vm.updateValid(false);
-          vm.$router.push({
-            name: 'LandingPage',
+          vm.updateCollapse({
+            isNavCollapsed: !vm.isNavCollapsed,
           });
           break;
         }
-        case 'profile': {
-          vm.onClick('PROFILE');
-          break;
+        default: {
+          throw new Error(`not defined type ${type}`);
         }
-        default :
       }
-    },
-    handleCommand(command) {
-      const vm = this;
-      vm.onClick(command);
     },
   },
 };

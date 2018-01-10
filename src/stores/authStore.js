@@ -8,7 +8,12 @@ export default {
   state: {
     jwt: utils.getJwtFromLocalStorage(),
     locale: utils.getDefaultLocale(),
-    valid: false,
+  },
+  getters: {
+    isJwtValid(state) {
+      // TODO: Implement jwt validation check
+      return !!state.jwt;
+    },
   },
   mutations: {
     updateJwt(state, { jwt }) {
@@ -18,10 +23,6 @@ export default {
     updateLocale(state, { locale }) {
       state.locale = locale;
       window.localStorage.setItem('locale', locale);
-    },
-    updateValid(state, { valid }) {
-      state.valid = valid;
-      window.localStorage.setItem('valid', valid);
     },
   },
   actions: {
@@ -37,9 +38,6 @@ export default {
       if (login) {
         commit('updateJwt', {
           jwt: res.jwt,
-        });
-        commit('updateValid', {
-          valid: true,
         });
       } else {
         throw new Error('login failed');
