@@ -18,20 +18,22 @@
     </el-button>
     locale: {{ locale }}
     <!-- Login / Profile, Logout button part -->
-    <el-button type="primary" v-if="!valid">
-        <router-link to="/login" style="text-decoration:none; color: #ffffff">{{ $t('LOGIN.LOGIN_BUTTON') }}</router-link>
-    </el-button>
-    <el-dropdown v-else @command="handleCommand">
+    <router-link to="/login" style="text-decoration:none; color: #ffffff" v-if="!valid">
       <el-button type="primary">
-        <router-link to="/a/profile" style="text-decoration:none; color: #ffffff">
-          {{ $t('HEADER.PROFILE_BUTTON') }}<i class="el-icon-arrow-down el-icon--right"></i>
-        </router-link>
+          {{ $t('LOGIN.LOGIN_BUTTON') }}
       </el-button>
-      <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item command="profile">{{ $t('HEADER.PROFILE_BUTTON') }}</el-dropdown-item>
-        <el-dropdown-item command="logout">{{ $t('HEADER.LOGOUT_BUTTON') }}</el-dropdown-item>
-      </el-dropdown-menu>
-    </el-dropdown>
+    </router-link>
+    <router-link to="/a/profile" style="text-decoration:none; color: #ffffff" v-else>
+      <el-dropdown @command="handleCommand">
+        <el-button type="primary">
+            {{ $t('HEADER.PROFILE_BUTTON') }}<i class="el-icon-arrow-down el-icon--right"></i>
+        </el-button>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="profile">{{ $t('HEADER.PROFILE_BUTTON') }}</el-dropdown-item>
+          <el-dropdown-item command="logout">{{ $t('HEADER.LOGOUT_BUTTON') }}</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+    </router-link>
     <router-link to="/register">Register</router-link>
     <el-button type="primary" @click="onClick('PROFILE')">
       Profile
