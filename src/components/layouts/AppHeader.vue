@@ -34,10 +34,8 @@
         </el-dropdown-menu>
       </el-dropdown>
     </router-link>
+    <!-- router-link to "register" -->
     <router-link to="/register">Register</router-link>
-    <el-button type="primary" @click="onClick('PROFILE')">
-      Profile
-    </el-button>
     <!-- <router-link to="/a/home">Home</router-link> -->
   </div>
 </template>
