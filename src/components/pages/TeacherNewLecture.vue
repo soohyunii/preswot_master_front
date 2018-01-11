@@ -22,7 +22,7 @@
               <el-main>
                 <div class="method-list"></div>
               </el-main>
-              <el-footer class="method-list-message">
+              <el-footer>
                 시퀀스 제작 도구
               </el-footer>
             </div>
@@ -57,10 +57,6 @@
 </template>
 
 <style scoped>
-  .method-list-message {
-     min-height: 20px;
-     text-align: center;
-  }
   .method-list {
     min-height: 100px;
   }
