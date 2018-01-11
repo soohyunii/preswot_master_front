@@ -27,22 +27,29 @@
                 :data="tableData"
                 style="width: 100%">
                 <el-table-column
-                  prop="date"
+                  prop="num"
                   label="번호"
+                  sortable
                   width="180">
                 </el-table-column>
                 <el-table-column
                   prop="name"
                   label="강의 시나리오"
+                  sortable
                   width="180">
                 </el-table-column>
                 <el-table-column
-                  prop="address"
-                  label="강의 날짜">
+                  prop="date"
+                  label="강의 날짜"
+                  sortable>
                 </el-table-column>
                 <el-table-column
-                  prop="address"
-                  label="수강생 이해도(평균)">
+                  prop="understanding"
+                  label="수강생 이해도(평균)"
+                  sortable>
+                  <template slot-scope="scope">
+                    <el-progress :text-inside="true" :stroke-width="18" :percentage="scope.row.understanding"></el-progress>
+                  </template>
                 </el-table-column>
               </el-table>
               <router-link to="/a/teacher/lecture/new">
@@ -69,46 +76,28 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'TeacherHome',
   data() {
     return {
       tableData: [{
-        date: '2016-05-03',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles'
-      }, {
-        date: '2016-05-02',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles'
-      }, {
-        date: '2016-05-04',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles'
-      }, {
+        num: '1',
         date: '2016-05-01',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles'
-      }]
+        name: '1강',
+        understanding: 95,
+      }, {
+        num: '2',
+        date: '2016-05-02',
+        name: '2강',
+        understanding: '86',
+      }, {
+        num: '3',
+        date: '2016-05-04',
+        name: '3강',
+        understanding: '57',
+      }],
     };
-  },
-  methods: {
-    onClick(type) {
-      vm = this;
-      switch (type) {
-        case 'NEW': {
-          this.reqLogin({
-            email: vm.input.email,
-            password: vm.input.email,
-          });
-          break;
-        }
-        default: {
-        }
-      }
-    },
   },
 };
 </script>
