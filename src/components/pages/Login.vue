@@ -33,15 +33,21 @@
       </el-row>
     </el-container>
     jwt: {{ jwt }} <br />
-    input: {{ input }}
+    input: {{ input }} <br />
+    <lecture-element-group />
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex';
 
+import LectureElementGroup from '../partials/LectureElementGroup';
+
 export default {
   name: 'Login',
+  components: {
+    LectureElementGroup,
+  },
   data() {
     return {
       input: {
