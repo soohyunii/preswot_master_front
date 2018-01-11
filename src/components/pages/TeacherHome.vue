@@ -2,6 +2,7 @@
   <div>
     <el-container class="outline">
       <el-aside width="150px">
+        <!-- TODO: Implement dummy response about class list -->
         <el-row>
           파이썬 초급
         </el-row>
@@ -20,63 +21,8 @@
         <el-button>과목저널링</el-button>
         <br /><br />
         <el-row :gutter="20">
-          <el-col :span="16">
-            <div class="grid-content bg-white">
-              강의 시나리오 목록<hr>
-              <el-table
-                :data="tableData"
-                style="width: 100%">
-                <el-table-column
-                  prop="num"
-                  label="번호"
-                  sortable
-                  width="180">
-                </el-table-column>
-                <el-table-column
-                  prop="name"
-                  label="강의 시나리오"
-                  sortable
-                  width="180">
-                </el-table-column>
-                <el-table-column
-                  prop="date"
-                  label="강의 날짜"
-                  sortable>
-                </el-table-column>
-                <el-table-column
-                  prop="understanding"
-                  label="수강생 이해도(평균)"
-                  sortable>
-                  <template slot-scope="scope">
-                    <el-progress
-                      v-if="scope.row.understanding === 100"
-                      :text-inside="true"
-                      :stroke-width="18"
-                      :percentage="scope.row.understanding"
-                      status="success">
-                    </el-progress>
-                    <el-progress
-                      v-else-if="scope.row.understanding > 70"
-                      :text-inside="true"
-                      :stroke-width="18"
-                      :percentage="scope.row.understanding">
-                    </el-progress>
-                    <el-progress
-                      v-else
-                      :text-inside="true"
-                      :stroke-width="18"
-                      :percentage="scope.row.understanding"
-                      status="exception">
-                    </el-progress>
-                  </template>
-                </el-table-column>
-              </el-table>
-              <router-link to="/a/teacher/lecture/new">
-                <br /><br />
-                <el-button>강의 시나리오 추가</el-button>
-              </router-link>
-            </div>
-          </el-col>
+          <!-- TODO: Implement dummy response about lecture list -->
+          <lecture-list :tableData="tableData"></lecture-list>
           <el-col :span="8">
             <div class="grid-content bg-white">
               <el-col :span="16">수강생 목록</el-col>
@@ -85,17 +31,16 @@
             </div>
           </el-col>
         </el-row>
-        <el-row :gutter="20">
-          <el-col>
-            <div class="grid-content bg-white">과목 통계<hr></div>
-          </el-col>
-        </el-row>
+          <!-- TODO: Implement dummy response about lecture statistics -->
+          <lecture-statistics></lecture-statistics>
       </el-main>
     </el-container>
   </div>
 </template>
 
 <script>
+import LectureList from './LectureList';
+import LectureStatistics from './LectureStatistics';
 
 export default {
   name: 'TeacherHome',
@@ -124,7 +69,12 @@ export default {
       }],
     };
   },
+  components: {
+    LectureList,
+    LectureStatistics,
+  },
 };
+
 </script>
 
 <style scoped>
@@ -153,17 +103,8 @@ export default {
 
   .grid-content {
     border-radius: 4px;
-    min-height: 340px;
+    min-height: 500px;
     padding: 25px;
     margin-bottom: 30px;
-  }
-
-  .el-container:nth-child(5) .el-aside,
-  .el-container:nth-child(6) .el-aside {
-    line-height: 260px;
-  }
-
-  .el-container:nth-child(7) .el-aside {
-    line-height: 320px;
   }
 </style>
