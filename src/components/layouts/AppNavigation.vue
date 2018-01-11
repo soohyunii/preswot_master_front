@@ -13,7 +13,7 @@
         <span slot="title">홈</span>
       </el-menu-item>
 
-      <el-menu-item index="/register">
+      <el-menu-item index="/classes">
         <i class="el-icon-setting"></i>
         <span slot="title">
           <!-- TODO: Translation -->
@@ -70,10 +70,10 @@ export default {
   filters: {
 
   },
-  beforeRouteLeave(to, from) {
-    console.log(to, from);
-    console.log(1, 2, 3);
-  },
+  // beforeRouteLeave(to, from) {
+  //   console.log(to, from);
+  //   console.log(1, 2, 3);
+  // },
   // methods: {
   //   onSelect(index) {
   //     const vm = this;
