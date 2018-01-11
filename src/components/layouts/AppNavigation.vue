@@ -44,7 +44,7 @@
           <span slot="title">강의 중인 과목</span>
         </template>
         <el-menu-item-group>
-          <template v-for="(item, key, index) in openingClassList">
+          <template v-for="(item, key, index) in teachingClassList">
             <el-menu-item :index="'4-'+index" :key="key">
               <!-- TODO: link to each class -->
               {{ item.className }}
@@ -70,7 +70,7 @@ export default {
     return {
       // isCollapse: false,
       attendingClassList: [],
-      openingClassList: [],
+      teachingClassList: [],
     };
   },
   computed: {
@@ -86,7 +86,7 @@ export default {
   async mounted() {
     const vm = this;
     vm.attendingClassList = await classService.fetchAttendingClassList();
-    vm.openingClassList = await classService.fetchOpeningClassList();
+    vm.teachingClassList = await classService.fetchTeachingClassList();
     // window.console.log(this.attending);
     // window.console.log(this.opening);
   },

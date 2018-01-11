@@ -17,7 +17,7 @@ export default {
       }, 500);
     });
   },
-  fetchOpeningClassList() {
+  fetchTeachingClassList() {
     // 강의중인 과목 정보
     console.log('Fetch classes info which user is opening'); // eslint-disable-line
 
