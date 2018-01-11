@@ -3,7 +3,7 @@
     <el-container>
       <el-aside width="100px">
         <el-row>
-          <el-col><p>asdasd</p></el-col>
+          <div>강의중인 과목 목록</div>
         </el-row>
       </el-aside>
       <el-main class="main-box">
@@ -12,10 +12,10 @@
             <el-col :span="24"><div class="lecture-number-name">4강 (배열)</div></el-col>
           </el-row>  
         </el-header>
-
+        
         <el-row :gutter="30">
           <el-col :span="16">
-            <div class="scenario bg-purple"></div>
+            <div class="scenario bg-purple">시퀀스 들이 배열되는 공간</div>
           </el-col>
           <el-col :span="8">
             <div class="scenario bg-purple-light sequence-method">
@@ -35,15 +35,7 @@
                 <div class="lecture-number-name">새 문항 입력하기</div>
               </el-header>
               <el-main>
-                  <el-input type="textarea" :rows="2" placeholder="JAVA 배열에 대한 본인의 경험은 어느정도 일까요?" v-model="textarea"></el-input>
-                  <div>
-                    <el-radio-group v-model="radio6" size="mini">
-                      <el-radio-button label="단답형"></el-radio-button>
-                      <el-radio-button label="객관식"></el-radio-button>
-                      <el-radio-button label="서술형"></el-radio-button>
-                    </el-radio-group>
-                  </div>
-                  <el-input type="textarea" :rows="2" placeholder="상,중,하" v-model="textarea"></el-input>
+                  <div>문항에 관련된 사항 입력 공간</div>
               </el-main>
             </div>
           </el-col>
@@ -53,12 +45,7 @@
                 <div class="lecture-number-name">활성화 방식</div>
               </el-header>
               <el-main>
-                  <div>
-                    <el-radio-group v-model="radio6" size="mini">
-                      <el-radio-button label="수동"></el-radio-button>
-                      <el-radio-button label="사전입력"></el-radio-button>
-                    </el-radio-group>
-                  </div>
+                  <div></div>
               </el-main>
             </div>
           </el-col>
