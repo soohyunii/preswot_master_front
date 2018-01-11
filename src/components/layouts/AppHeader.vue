@@ -1,45 +1,45 @@
 <template>
   <div>
-    <!-- TODO: 버튼 그룹 => 햄버거 아이콘 -->
-    <el-button-group>
-      <el-button
-        :type="isNavCollapsed ? 'primary' : 'default'"
-        @click="onClick('COLLAPSE')"
-      >
-        Collapse
-      </el-button>
-      <el-button
-        :type="!isNavCollapsed ? 'primary' : 'default'"
-        @click="onClick('EXPAND')"
-      >
-        Expand
-      </el-button>
-    </el-button-group>
-    [햄버거 아이콘]
+    <el-button type="primary" @click="onClick('TOGGLE_NAVIGATION')">
+      <i class="el-icon-menu"></i>
+    </el-button>
     <!-- TODO: 브랜드 로고 -->
     [브랜드 로고]
     <!-- TODO: translate placeholder -->
     <el-input placeholder="Please input" v-model="searchText" class="input-with-select">
       <el-button slot="append" icon="el-icon-search"></el-button>
     </el-input>
-    <el-button
-      :type="locale === 'ko' ? 'primary' : 'default'"
-      @click="onClick('LOCALE_KO')"
-    >
-      한국어
-    </el-button>
-    <el-button
-      :type="locale === 'en' ? 'primary' : 'default'"
-      @click="onClick('LOCALE_EN')"
-    >
-      English
-    </el-button>
+
+    <el-dropdown @command="onClick">
+      <el-button type="primary">
+        {{ $t('HEADER.LANG_INFO') }}<i class="el-icon-arrow-down el-icon--right"></i>
+      </el-button>
+      <el-dropdown-menu slot="dropdown">
+        <el-dropdown-item command="LOCALE_KO">한국어</el-dropdown-item>
+        <el-dropdown-item command="LOCALE_EN">English</el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown>
+
     locale: {{ locale }}
-    <router-link to="/login">Login</router-link>
+    <!-- Login / Profile, Logout button part -->
+    <router-link to="/login" style="text-decoration:none; color: #ffffff" v-if="!isJwtValid">
+      <el-button type="primary">
+          {{ $t('LOGIN.LOGIN_BUTTON') }}
+      </el-button>
+    </router-link>
+    <router-link to="/a/profile" style="text-decoration:none; color: #ffffff" v-else>
+      <el-dropdown @command="onClick">
+        <el-button type="primary">
+            {{ $t('HEADER.PROFILE_BUTTON') }}<i class="el-icon-arrow-down el-icon--right"></i>
+        </el-button>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="PROFILE">{{ $t('HEADER.PROFILE_BUTTON') }}</el-dropdown-item>
+          <el-dropdown-item command="LOGOUT">{{ $t('HEADER.LOGOUT_BUTTON') }}</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+    </router-link>
+    <!-- router-link to "register" -->
     <router-link to="/register">Register</router-link>
-    <el-button type="primary" @click="onClick('PROFILE')">
-      Profile
-    </el-button>
     <!-- <router-link to="/a/home">Home</router-link> -->
   </div>
 </template>
@@ -52,7 +52,7 @@
 
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapGetters, mapMutations } from 'vuex';
 
 export default {
   name: 'AppHeader',
@@ -62,12 +62,13 @@ export default {
     };
   },
   computed: {
-    ...mapState('auth', ['locale']),
+    ...mapState('auth', ['jwt', 'locale']),
     ...mapState('layout', ['isNavCollapsed']),
+    ...mapGetters('auth', ['isJwtValid']),
   },
   methods: {
     ...mapMutations('layout', ['updateCollapse']),
-    ...mapMutations('auth', ['updateLocale']),
+    ...mapMutations('auth', ['updateJwt', 'updateLocale']),
     _changeLocale(locale) {
       const vm = this;
       vm.$i18n.locale = locale;
@@ -82,6 +83,13 @@ export default {
           });
           break;
         }
+        case 'LOGOUT': {
+          vm.updateJwt('');
+          vm.$router.push({
+            name: 'LandingPage',
+          });
+          break;
+        }
         case 'LOCALE_KO': {
           vm._changeLocale('ko'); // eslint-disable-line no-underscore-dangle
           break;
@@ -90,20 +98,14 @@ export default {
           vm._changeLocale('en'); // eslint-disable-line no-underscore-dangle
           break;
         }
-        case 'COLLAPSE': {
+        case 'TOGGLE_NAVIGATION': {
           vm.updateCollapse({
-            isNavCollapsed: true,
-          });
-          break;
-        }
-        case 'EXPAND': {
-          vm.updateCollapse({
-            isNavCollapsed: false,
+            isNavCollapsed: !vm.isNavCollapsed,
           });
           break;
         }
         default: {
-          throw new Error('not defined type', type);
+          throw new Error(`not defined type ${type}`);
         }
       }
     },
