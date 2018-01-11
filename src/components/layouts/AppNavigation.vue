@@ -1,19 +1,19 @@
 <template>
   <div>
+    <!-- TODO: replace index of el-menu-item (now just plain string) to corresponding vue-router's path -->
     <el-menu
-      default-active="1"
+      :default-active="$route.path"
       class="app-nav-menu"
-      @select="onSelect"
-      :collapse="isNavCollapsed"
       :default-openeds="['3', '4']"
+      :router="true"
     >
-      <el-menu-item index="1">
+      <el-menu-item index="/">
         <i class="fa fa-home el-compatible" style="width: 18px; height: 18px;"></i>
         <!-- TODO: Translation -->
         <span slot="title">홈</span>
       </el-menu-item>
 
-      <el-menu-item index="2">
+      <el-menu-item index="/register">
         <i class="el-icon-setting"></i>
         <span slot="title">
           <!-- TODO: Translation -->
@@ -28,7 +28,7 @@
           <span slot="title">수강 중인 과목</span>
         </template>
         <el-menu-item-group>
-          <template v-for="(item, key, index) in attending">
+          <template v-for="(item, key, index) in attendingClassList">
             <el-menu-item :index="'3-'+index" :key="key">
               <!-- TODO: link to each class -->
               {{ item.className }}
@@ -44,7 +44,7 @@
           <span slot="title">강의 중인 과목</span>
         </template>
         <el-menu-item-group>
-          <template v-for="(item, key, index) in opening">
+          <template v-for="(item, key, index) in openingClassList">
             <el-menu-item :index="'4-'+index" :key="key">
               <!-- TODO: link to each class -->
               {{ item.className }}
@@ -57,7 +57,6 @@
       <router-link to="/a/teacher">Teacher Home</router-link> <br />
       <router-link to="/a/teacher/lecture/new">Teacher New Lecture</router-link>
     </el-menu>
-
   </div>
 </template>
 
@@ -70,42 +69,26 @@ export default {
   data() {
     return {
       // isCollapse: false,
-      attending: '',
-      opening: '',
+      attendingClassList: [],
+      openingClassList: [],
     };
   },
   computed: {
     ...mapState('layout', ['isNavCollapsed']),
   },
-  methods: {
-    onSelect(index) {
-      const vm = this;
-      switch (index) {
-        case '1': {
-          vm.$router.push({
-            name: 'LandingPage',
-          });
-          break;
-        }
-        case '2': {
-          vm.$router.push({
-            path: '/asdf',
-          });
-          break;
-        }
-        // TODO: dynamic onSelect
-        default: {
-          throw new Error('not defined index', index);
-        }
-      }
-    },
+  filters: {
+
+  },
+  beforeRouteLeave(to, from) {
+    console.log(to, from);
+    console.log(1, 2, 3);
   },
   async mounted() {
     const vm = this;
-    vm.attending = await classService.fetchAttendingClassList();
-    vm.opening = await classService.fetchOpeningClassList();
-    window.console.log(this.attending);
-    window.console.log(this.opening);
+    vm.attendingClassList = await classService.fetchAttendingClassList();
+    vm.openingClassList = await classService.fetchOpeningClassList();
+    // window.console.log(this.attending);
+    // window.console.log(this.opening);
   },
 };
 </script>

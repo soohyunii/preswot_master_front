@@ -5,7 +5,7 @@
         <app-header></app-header>
       </el-header>
       <el-container>
-        <el-aside width="200px">
+        <el-aside width="200px" v-if="isNavCollapsed">
           <app-navigation></app-navigation>
         </el-aside>
         <el-container>
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 // Import element-ui css
 import 'element-ui/lib/theme-chalk/index.css'; // eslint-disable-line
 
@@ -35,6 +36,9 @@ export default {
     AppNavigation,
     AppHeader,
     AppFooter,
+  },
+  computed: {
+    ...mapState('layout', ['isNavCollapsed']),
   },
 };
 </script>
