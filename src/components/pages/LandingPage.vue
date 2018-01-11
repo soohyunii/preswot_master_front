@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div id="main">
+    <resize-observer @notify="handleResize" />
     <el-container class="container" id="container">
       <el-main>
         <el-row type="flex" justify="center">
@@ -11,9 +12,9 @@
         </el-row>
 
         <div class="">인기 강의 목록<hr></div>
-        <el-row :gutter="20">
-          <template v-for="(item, key) in popClasses">
-            <el-col :span="4" :key="key">
+        <el-row :gutter="20" >
+          <template v-for="(item, index, key) in popClasses">
+            <el-col :key="key" :span="Math.ceil(24/elementNumber)" v-if="index < elementNumber">
               <div class="film-content bg-film">{{item.className}}</div>
             </el-col>
           </template>
@@ -45,19 +46,46 @@ export default {
   data() {
     return {
       popClasses: '',
+      elementNumber: 3,
+      elmenetwidthPixel: 300,
     };
   },
+  methods: {
+    handleResize() {
+      const vm = this;
+      const width = document.getElementById('main').offsetWidth;
+      const el = vm.getElementNum(width);
+      if (vm.elementNumber !== el) {
+        vm.elementNumber = el;
+        document.getElementById('container').style.width = el * vm.elmenetwidthPixel + 'px'; // eslint-disable-line
+      }
+      window.console.log('width', width, 'el', el, 'vm_el', vm.elementNumber);
+      return width;
+    },
+    getElementNum(width) {
+      const vm = this;
+      const px = vm.elmenetwidthPixel;
+      if (width <= px * 3) {
+        return 2;
+      } else if (width <= px * 4) {
+        return 3;
+      }
+      return 4;
+    },
+  },
   computed: {
-    width() {
-      window.console.log('width', document.body.scrollWidth);
-      return document.body.scrollWidth;
+    popClassesSliced() {
+      const vm = this;
+      const sliced = vm.popClasses.slice(0, vm.elementNum);
+      window.console.log('sl', sliced, 'el', vm.elementNum);
+      return vm.popClasses.slice(0, vm.elementNum);
     },
   },
   async mounted() {
     const vm = this;
-    vm.popClasses = await classService.popClass();
+    vm.popClasses = await classService.fetchPopClassList();
+    vm.handleResize();
     window.console.log(vm.popClasses);
-    window.console.log(vm.width);
   },
 };
 </script>
@@ -65,9 +93,7 @@ export default {
 
 <style scoped>
   .container {
-    width: 90%;
-    max-width: 1400px;
-    min-width: 700px;
+    min-width: 500px;
     margin: auto;
   }
 
@@ -105,8 +131,10 @@ export default {
   }
 
   .thumbnail-content {
+    border: rgb(20, 41, 87) solid 2px;
+    padding: 10px;
     min-height: 200px;
-    width: 600px;
+    width: 500px;
     padding: 30px;
     margin-bottom: 30px;
   }

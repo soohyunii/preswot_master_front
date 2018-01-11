@@ -102,8 +102,8 @@ export default {
   },
   async mounted() {
     const vm = this;
-    vm.attending = await classService.attendingClass();
-    vm.opening = await classService.openingClass();
+    vm.attending = await classService.fetchAttendingClassList();
+    vm.opening = await classService.fetchOpeningClassList();
     window.console.log(this.attending);
     window.console.log(this.opening);
   },
