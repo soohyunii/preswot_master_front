@@ -43,6 +43,9 @@ export default {
       vm.secondLeft -= 1;
       if (vm.secondLeft === 0) {
         window.clearInterval(intervalId);
+        vm.updateRedirectionTimeoutId({
+          redirectionTimeoutId: null,
+        });
       }
     }, 1000);
   },
