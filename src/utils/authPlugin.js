@@ -36,7 +36,7 @@ export default class AuthPlugin {
       // If user routes himeself before force-redirection, cancel timeout
       if (route.name !== 'NotFound' && !!store.state.auth.redirectionTimeoutId) {
         window.clearTimeout(store.state.auth.redirectionTimeoutId);
-        router.commit('auth/updateRedirectionTimeoutId', {
+        store.commit('auth/updateRedirectionTimeoutId', {
           redirectionTimeoutId: null,
         });
         next();

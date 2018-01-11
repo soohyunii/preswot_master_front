@@ -3,10 +3,10 @@
     <el-menu
       default-active="1"
       class="app-nav-menu"
-      @select="onSelect"
       :default-openeds="['3', '4']"
+      :router="true"
     >
-      <el-menu-item index="1">
+      <el-menu-item index="/">
         <i class="fa fa-home el-compatible" style="width: 18px; height: 18px;"></i>
         <!-- TODO: Translation -->
         <span slot="title">홈</span>
@@ -63,29 +63,29 @@ export default {
   computed: {
     ...mapState('layout', ['isNavCollapsed']),
   },
-  methods: {
-    onSelect(index) {
-      const vm = this;
-      switch (index) {
-        case '1': {
-          vm.$router.push({
-            name: 'LandingPage',
-          });
-          break;
-        }
-        case '2': {
-          vm.$router.push({
-            path: '/asdf',
-          });
-          break;
-        }
-        // TODO: dynamic onSelect
-        default: {
-          throw new Error('not defined index', index);
-        }
-      }
-    },
-  },
+  // methods: {
+  //   onSelect(index) {
+  //     const vm = this;
+  //     switch (index) {
+  //       case '1': {
+  //         vm.$router.push({
+  //           name: 'LandingPage',
+  //         });
+  //         break;
+  //       }
+  //       case '2': {
+  //         vm.$router.push({
+  //           path: '/asdf',
+  //         });
+  //         break;
+  //       }
+  //       // TODO: dynamic onSelect
+  //       default: {
+  //         throw new Error('not defined index', index);
+  //       }
+  //     }
+  //   },
+  // },
 };
 </script>
 
