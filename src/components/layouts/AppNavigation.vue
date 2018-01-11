@@ -28,9 +28,12 @@
           <span slot="title">수강 중인 과목</span>
         </template>
         <el-menu-item-group>
-          <!-- TODO: replace with v-for -->
-          <el-menu-item index="/wiejrerji">어쩌구</el-menu-item>
-          <el-menu-item index="3-2">저쩌구</el-menu-item>
+          <template v-for="(item, key, index) in attendingClassList">
+            <el-menu-item :index="'3-'+index" :key="key">
+              <!-- TODO: link to each class -->
+              {{ item.className }}
+            </el-menu-item>
+          </template>
         </el-menu-item-group>
       </el-submenu>
 
@@ -41,9 +44,12 @@
           <span slot="title">강의 중인 과목</span>
         </template>
         <el-menu-item-group>
-          <!-- TODO: replace with v-for -->
-          <el-menu-item index="4-1">저쩌구</el-menu-item>
-          <el-menu-item index="4-2">어쩌구</el-menu-item>
+          <template v-for="(item, key, index) in teachingClassList">
+            <el-menu-item :index="'4-'+index" :key="key">
+              <!-- TODO: link to each class -->
+              {{ item.className }}
+            </el-menu-item>
+          </template>
         </el-menu-item-group>
       </el-submenu>
 
@@ -56,14 +62,17 @@
 
 <script>
 import { mapState } from 'vuex';
+import classService from '../../services/classService';
 
 export default {
   name: 'AppNavigation',
-  // data() {
-  //   return {
-  //     activeLink: '/', // TODO: init from $route?
-  //   };
-  // },
+  data() {
+    return {
+      // isCollapse: false,
+      attendingClassList: [],
+      teachingClassList: [],
+    };
+  },
   computed: {
     ...mapState('layout', ['isNavCollapsed']),
   },
@@ -74,29 +83,13 @@ export default {
     console.log(to, from);
     console.log(1, 2, 3);
   },
-  // methods: {
-  //   onSelect(index) {
-  //     const vm = this;
-  //     switch (index) {
-  //       case '1': {
-  //         vm.$router.push({
-  //           name: 'LandingPage',
-  //         });
-  //         break;
-  //       }
-  //       case '2': {
-  //         vm.$router.push({
-  //           path: '/asdf',
-  //         });
-  //         break;
-  //       }
-  //       // TODO: dynamic onSelect
-  //       default: {
-  //         throw new Error('not defined index', index);
-  //       }
-  //     }
-  //   },
-  // },
+  async mounted() {
+    const vm = this;
+    vm.attendingClassList = await classService.fetchAttendingClassList();
+    vm.teachingClassList = await classService.fetchTeachingClassList();
+    // window.console.log(this.attending);
+    // window.console.log(this.opening);
+  },
 };
 </script>
 
