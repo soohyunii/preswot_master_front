@@ -8,6 +8,7 @@ export default {
   state: {
     jwt: utils.getJwtFromLocalStorage(),
     locale: utils.getDefaultLocale(),
+    redirectionTimeoutId: null,
   },
   getters: {
     isJwtValid(state) {
@@ -23,6 +24,9 @@ export default {
     updateLocale(state, { locale }) {
       state.locale = locale;
       window.localStorage.setItem('locale', locale);
+    },
+    updateRedirectionTimeoutId(state, { redirectionTimeoutId }) {
+      state.redirectionTimeoutId = redirectionTimeoutId;
     },
   },
   actions: {

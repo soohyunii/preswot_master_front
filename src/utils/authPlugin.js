@@ -3,6 +3,7 @@
 // window.setInterval(() => {
 //   console.log(store); // eslint-disable-line
 // }, 1000);
+import store from '../stores';
 
 export default class AuthPlugin {
   constructor(options) {
@@ -24,10 +25,19 @@ export default class AuthPlugin {
   _applyRouteGuard(router) { // eslint-disable-line class-methods-use-this
     router.beforeEach(async (to, from, next) => {
       const route = to.matched.find(e => e.meta.auth !== null);
+      // console.log('beforeEach', route);
       if (!route) {
         next({
           name: 'NotFound',
         });
+        return;
+      }
+
+      // If user routes himeself before force-redirection, cancel timeout
+      if (route.name !== 'NotFound' && !!store.state.auth.redirectionTimeoutId) {
+        console.log('canceled!');
+        window.clearTimeout(store.state.auth.redirectionTimeoutId);
+        next();
         return;
       }
 

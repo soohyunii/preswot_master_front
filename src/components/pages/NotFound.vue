@@ -1,41 +1,50 @@
 <template>
   <div>
-    <h1 class=notfound>Not Found 404</h1>
-    <h2 class=redirectmessage>{{ $t('NOTFOUND.REDIRECT_MESSAGE1') }}{{ time }}{{ $t('NOTFOUND.REDIRECT_MESSAGE2') }}</h2>
+    <h1 class="not-found">Not Found 404</h1>
+    <h2 class="redirect-message">{{ $t('NOTFOUND.REDIRECT_MESSAGE1') }}{{ secondLeft }}{{ $t('NOTFOUND.REDIRECT_MESSAGE2') }}</h2>
   </div>
 </template>
 
-<style>
-.notfound {
+<style scoped>
+.not-found {
   text-align: center;
   font-size: 5em
 }
-.redirectmessage {
+.redirect-message {
   text-align: center;
   font-size: 2em
 }
 </style>
 
 <script>
+import { mapMutations } from 'vuex';
+
 export default {
   data() {
     return {
-      time: 5, // 몇 초뒤 이동 되는지를 나타내는 시간
+      secondLeft: 5, // 몇 초뒤 이동 되는지를 나타내는 시간
     };
   },
   methods: {
-    redirectTo() {
-      const vm = this;
-      vm.$router.push('/login');
-    },
-    countdown() {
-      const vm = this;
-      vm.time -= 1;
-    },
+    ...mapMutations('auth', ['updateRedirectionTimeoutId']),
   },
   mounted() {
-    setTimeout(this.redirectTo, 5000); // 5초 후 리다이렉팅 실행
-    setInterval(this.countdown, 1000); // 매 초마다 표기 숫자를 카운트다운
+    const vm = this;
+
+    const redirectionTimeoutId = setTimeout(() => {
+      vm.$router.push('/login');
+    }, 5000);
+
+    vm.updateRedirectionTimeoutId({
+      redirectionTimeoutId,
+    });
+
+    const intervalId = setInterval(() => {
+      vm.secondLeft -= 1;
+      if (vm.secondLeft === 0) {
+        window.clearInterval(intervalId);
+      }
+    }, 1000);
   },
 };
 </script>
