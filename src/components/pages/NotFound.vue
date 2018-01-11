@@ -32,7 +32,7 @@ export default {
     const vm = this;
 
     const redirectionTimeoutId = setTimeout(() => {
-      vm.$router.push('/login');
+      vm.$router.push('/');
     }, 5000);
 
     vm.updateRedirectionTimeoutId({

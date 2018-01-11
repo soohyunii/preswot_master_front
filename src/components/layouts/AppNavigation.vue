@@ -2,7 +2,7 @@
   <div>
     <!-- TODO: replace index of el-menu-item (now just plain string) to corresponding vue-router's path -->
     <el-menu
-      default-active="1"
+      :default-active="$route.path"
       class="app-nav-menu"
       :default-openeds="['3', '4']"
       :router="true"
@@ -13,7 +13,7 @@
         <span slot="title">홈</span>
       </el-menu-item>
 
-      <el-menu-item index="2">
+      <el-menu-item index="/register">
         <i class="el-icon-setting"></i>
         <span slot="title">
           <!-- TODO: Translation -->
@@ -29,7 +29,7 @@
         </template>
         <el-menu-item-group>
           <!-- TODO: replace with v-for -->
-          <el-menu-item index="3-1">어쩌구</el-menu-item>
+          <el-menu-item index="/wiejrerji">어쩌구</el-menu-item>
           <el-menu-item index="3-2">저쩌구</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
@@ -47,7 +47,6 @@
         </el-menu-item-group>
       </el-submenu>
     </el-menu>
-
   </div>
 </template>
 
@@ -58,11 +57,18 @@ export default {
   name: 'AppNavigation',
   // data() {
   //   return {
-  //     isCollapse: false,
+  //     activeLink: '/', // TODO: init from $route?
   //   };
   // },
   computed: {
     ...mapState('layout', ['isNavCollapsed']),
+  },
+  filters: {
+
+  },
+  beforeRouteLeave(to, from) {
+    console.log(to, from);
+    console.log(1, 2, 3);
   },
   // methods: {
   //   onSelect(index) {
