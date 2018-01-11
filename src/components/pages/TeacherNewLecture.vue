@@ -3,18 +3,21 @@
     <el-container>
       <el-aside width="100px">
         <el-row>
+          <!-- TODO: translation -->
           <div>강의중인 과목 목록</div>
         </el-row>
       </el-aside>
       <el-main class="main-box">
         <el-header>
           <el-row>
+            <!-- TODO: translation -->
             <el-col :span="24"><div class="lecture-number-name">4강 (배열)</div></el-col>
-          </el-row>  
+          </el-row>
         </el-header>
-        
+
         <el-row :gutter="30">
           <el-col :span="16">
+            <!-- TODO: translation -->
             <div class="scenario bg-purple">시퀀스 들이 배열되는 공간</div>
           </el-col>
           <el-col :span="8">
@@ -23,6 +26,7 @@
                 <div class="method-list"></div>
               </el-main>
               <el-footer>
+                <!-- TODO: translation -->
                 시퀀스 제작 도구
               </el-footer>
             </div>
@@ -32,16 +36,19 @@
           <el-col :span="16">
             <div class="item-config-box bg-purple-dark">
               <el-header>
+                <!-- TODO: translation -->
                 <div class="lecture-number-name">새 문항 입력하기</div>
               </el-header>
               <el-main>
-                  <div>문항에 관련된 사항 입력 공간</div>
+                <!-- TODO: translation -->
+                <div>문항에 관련된 사항 입력 공간</div>
               </el-main>
             </div>
           </el-col>
           <el-col :span="8">
             <div class="item-config-box bg-purple-dark">
               <el-header>
+                <!-- TODO: translation -->
                 <div class="lecture-number-name">활성화 방식</div>
               </el-header>
               <el-main>
@@ -49,10 +56,10 @@
               </el-main>
             </div>
           </el-col>
-        </el-row>       
+        </el-row>
       </el-main>
     </el-container>
-    
+
   </div>
 </template>
 
