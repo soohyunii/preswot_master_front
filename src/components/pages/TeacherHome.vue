@@ -39,8 +39,8 @@
 </template>
 
 <script>
-import LectureList from './LectureList';
-import LectureStatistics from './LectureStatistics';
+import LectureList from '../partials/LectureList';
+import LectureStatistics from '../partials/LectureStatistics';
 
 export default {
   name: 'TeacherHome',
