@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- TODO: replace index of el-menu-item (now just plain string) to corresponding vue-router's path -->
     <el-menu
       default-active="1"
       class="app-nav-menu"
