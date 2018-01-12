@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-container>
-      <h1 class="headline">실시간 강의 이해도</h1>
+      <h1>실시간 강의 이해도</h1>
       <el-row>
         <el-col :span="6"><div>나의 이해도</div></el-col>
         <el-col :span="6"><div><el-progress :text-inside="true" :stroke-width="18" :percentage="70"></el-progress></div></el-col>
@@ -21,12 +21,6 @@
     </el-container>
   </div>
 </template>
-
-<style scoped>
-  .headline {
-    border-bottom-style: solid;
-  }
-</style>
 
 <script>
 export default {
