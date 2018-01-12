@@ -59,8 +59,8 @@ export default {
           icon = 'el-icon-document';
           break;
         }
-        default:
-        case 'D': {
+        case 'D':
+        default: {
           icon = 'el-icon-setting';
           break;
         }
