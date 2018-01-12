@@ -3,18 +3,23 @@
     <el-container class="outline">
       <el-aside width="150px">
         <!-- TODO: Implement dummy response about class list -->
+        <!-- TODO: translation -->
         <el-row>
           파이썬 초급
         </el-row>
+        <!-- TODO: translation -->
+
         <el-row>
           자바
         </el-row>
         <el-row>
           <!-- TODO: Implement adding lecture part -->
+          <!-- TODO: translation -->
           <el-button>과목 추가</el-button>
         </el-row>
       </el-aside>
       <el-main>
+        <!-- TODO: translation -->
         <h3>자바</h3><hr>
         <el-button>과목지식맵</el-button>
         <el-button>과목큐레이션</el-button>
@@ -25,6 +30,7 @@
           <lecture-list :tableData="tableData"></lecture-list>
           <el-col :span="8">
             <div class="grid-content bg-white">
+              <!-- TODO: translation -->
               <el-col :span="16">수강생 목록</el-col>
               <el-col :span="8" style="text-align: right;">8명</el-col>
               <hr>
