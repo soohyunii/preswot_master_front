@@ -32,3 +32,11 @@
   }
 </style>
 
+<script>
+export default {
+  // TODO: 전달되는 데이터 명 확인
+  name: 'StudentRealtimeSummary',
+  props: ['SummaryData'],
+};
+</script>
+
