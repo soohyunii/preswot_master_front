@@ -5,6 +5,7 @@ export default {
     const jwt = localStorage.getItem('jwt') || '';
     // TODO: Replace dummy validation
     // TODO: Check expiration date periodically
+    // TODO: Check expiration date left > 24hrs or not
     if (jwt.endsWith('unexpired')) {
       return jwt;
     }
