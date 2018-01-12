@@ -12,7 +12,7 @@
 import { mapMutations } from 'vuex';
 
 export default {
-  name: 'LectureElementGroup',
+  name: 'LectureElementButtonGroup',
   methods: {
     ...mapMutations('teacher', ['pushLectureElement']),
     onClick(type) {

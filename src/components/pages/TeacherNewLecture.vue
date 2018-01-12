@@ -19,7 +19,7 @@
             <lecture-element-sequence />
           </el-col>
           <el-col :span="8">
-            <lecture-element-group />
+            <lecture-element-button-group />
           </el-col>
         </el-row>
         <el-row>
@@ -43,14 +43,14 @@
 </template>
 
 <script>
-import LectureElementGroup from '../partials/LectureElementGroup';
 import LectureElementSequence from '../partials/LectureElementSequence';
+import LectureElementButtonGroup from '../partials/LectureElementButtonGroup';
 
 export default {
   name: 'TeacherNewLecture',
   components: {
-    LectureElementGroup,
     LectureElementSequence,
+    LectureElementButtonGroup,
   },
 };
 </script>
