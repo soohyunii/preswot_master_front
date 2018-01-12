@@ -1,5 +1,7 @@
 import Test from '../components/TestComponent';
 import Profile from '../components/pages/Profile';
+import TeacherHome from '../components/pages/TeacherHome';
+import TeacherNewLecture from '../components/pages/TeacherNewLecture';
 
 export default function authRoutes(root) {
   return [
@@ -27,6 +29,24 @@ export default function authRoutes(root) {
       component: Profile, // TODO: replace dummy with real component
       meta: {
         title: 'Profile', // TODO: import from i18n
+        auth: true,
+      },
+    },
+    {
+      path: '/teacher',
+      name: 'TeacherHome',
+      component: TeacherHome, // TODO: replace dummy with real component
+      meta: {
+        title: 'Teacher Home', // TODO: import from i18n
+        auth: true,
+      },
+    },
+    {
+      path: '/teacher/lecture/new',
+      name: 'TeacherNewLecture',
+      component: TeacherNewLecture, // TODO: replace dummy with real component
+      meta: {
+        title: 'Teacher New Lecture', // TODO: import from i18n
         auth: true,
       },
     },

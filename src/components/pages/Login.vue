@@ -8,6 +8,8 @@
           <!-- TODO: add validation -->
           <h1>{{ $t('LOGIN.LOGIN_TITLE') }}</h1>
 
+          <span v-if="redirectTo" style="color:red">{{ $t('LOGIN.LOGIN_REQUIRED') }}</span>
+
           <el-input placeholder="abc@gmail.com" v-model="input.email" type="email">
             <template slot="prepend">{{ $t('LOGIN.EMAIL_LABEL') }}</template>
           </el-input>
@@ -34,7 +36,7 @@
     </el-container>
     jwt: {{ jwt }} <br />
     input: {{ input }} <br />
-    <lecture-element-group />
+    redirectTo: {{ redirectTo }}
   </div>
 </template>
 
@@ -64,10 +66,21 @@ export default {
       const vm = this;
       switch (type) {
         case 'LOGIN': {
-          this.reqLogin({
-            email: vm.input.email,
-            password: vm.input.email,
-          });
+          try {
+            await vm.reqLogin({
+              email: vm.input.email,
+              password: vm.input.email,
+            });
+            vm.openNoti('success', 'Login Success !!', 'Success');
+            if (vm.redirectTo) {
+              // jwt 업데이트 후 페이지 이동 이루어지도록
+              vm.$router.push(vm.redirectTo);
+            }
+          } catch (error) {
+            // 로그인 실패 시 ( jwt 값 갱신 실패 시 )
+            vm.openNoti('error', 'Login Failed !!');
+            window.console.error(error);
+          }
           break;
         }
         default: {
@@ -75,9 +88,40 @@ export default {
         }
       }
     },
+    openNoti(type, message, title) {
+      const vm = this;
+      switch (type) {
+        case 'success':
+        case 'warning':
+          vm.$notify({
+            title,
+            message,
+            type,
+          });
+          break;
+        default :
+        case 'error' : {
+          vm.$notify.error({
+            title: 'Error',
+            message,
+          });
+          break;
+        }
+      }
+    },
   },
   computed: {
     ...mapState('auth', ['jwt']),
+    redirectTo() {
+      const vm = this;
+      return vm.$route.params.to;
+    },
+  },
+  mounted() {
+    const vm = this;
+    if (vm.redirectTo) {
+      vm.openNoti('warning', vm.$t('LOGIN.LOGIN_REQUIRED'), 'Warning');
+    }
   },
 };
 </script>

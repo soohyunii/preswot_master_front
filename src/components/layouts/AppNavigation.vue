@@ -13,7 +13,7 @@
         <span slot="title">홈</span>
       </el-menu-item>
 
-      <el-menu-item index="/register">
+      <el-menu-item index="/classes">
         <i class="el-icon-setting"></i>
         <span slot="title">
           <!-- TODO: Translation -->
@@ -28,9 +28,12 @@
           <span slot="title">수강 중인 과목</span>
         </template>
         <el-menu-item-group>
-          <!-- TODO: replace with v-for -->
-          <el-menu-item index="/wiejrerji">어쩌구</el-menu-item>
-          <el-menu-item index="3-2">저쩌구</el-menu-item>
+          <template v-for="(item, key, index) in attendingClassList">
+            <el-menu-item :index="'3-'+index" :key="key">
+              <!-- TODO: link to each class -->
+              {{ item.className }}
+            </el-menu-item>
+          </template>
         </el-menu-item-group>
       </el-submenu>
 
@@ -41,58 +44,43 @@
           <span slot="title">강의 중인 과목</span>
         </template>
         <el-menu-item-group>
-          <!-- TODO: replace with v-for -->
-          <el-menu-item index="4-1">저쩌구</el-menu-item>
-          <el-menu-item index="4-2">어쩌구</el-menu-item>
+          <template v-for="(item, key, index) in teachingClassList">
+            <el-menu-item :index="'4-'+index" :key="key">
+              <!-- TODO: link to each class -->
+              {{ item.className }}
+            </el-menu-item>
+          </template>
         </el-menu-item-group>
       </el-submenu>
+
+      <!-- TODO: Find a better place to be -->
+      <router-link to="/a/teacher">Teacher Home</router-link> <br />
+      <router-link to="/a/teacher/lecture/new">Teacher New Lecture</router-link>
     </el-menu>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
+import classService from '../../services/classService';
 
 export default {
   name: 'AppNavigation',
-  // data() {
-  //   return {
-  //     activeLink: '/', // TODO: init from $route?
-  //   };
-  // },
+  data() {
+    return {
+      // isCollapse: false,
+      attendingClassList: [],
+      teachingClassList: [],
+    };
+  },
   computed: {
     ...mapState('layout', ['isNavCollapsed']),
   },
-  filters: {
-
+  async mounted() {
+    const vm = this;
+    vm.attendingClassList = await classService.fetchAttendingClassList();
+    vm.teachingClassList = await classService.fetchTeachingClassList();
   },
-  beforeRouteLeave(to, from) {
-    console.log(to, from);
-    console.log(1, 2, 3);
-  },
-  // methods: {
-  //   onSelect(index) {
-  //     const vm = this;
-  //     switch (index) {
-  //       case '1': {
-  //         vm.$router.push({
-  //           name: 'LandingPage',
-  //         });
-  //         break;
-  //       }
-  //       case '2': {
-  //         vm.$router.push({
-  //           path: '/asdf',
-  //         });
-  //         break;
-  //       }
-  //       // TODO: dynamic onSelect
-  //       default: {
-  //         throw new Error('not defined index', index);
-  //       }
-  //     }
-  //   },
-  // },
 };
 </script>
 
