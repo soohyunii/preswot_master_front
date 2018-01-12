@@ -16,8 +16,7 @@
 
         <el-row :gutter="30">
           <el-col :span="16">
-            <!-- TODO: translation -->
-            <div>시퀀스 들이 배열되는 공간</div>
+            <lecture-element-sequence />
           </el-col>
           <el-col :span="8">
             <lecture-element-group />
@@ -45,13 +44,15 @@
 
 <script>
 import LectureElementGroup from '../partials/LectureElementGroup';
+import LectureElementSequence from '../partials/LectureElementSequence';
 
 export default {
   name: 'TeacherNewLecture',
   components: {
     LectureElementGroup,
+    LectureElementSequence,
   },
-}
+};
 </script>
 
 
