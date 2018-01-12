@@ -5,9 +5,14 @@
       <template v-for="(item, index, key) in lectureElementSequence">
         <el-col :span="4" :key="key" align="center">
           <!-- TODO: change icons -->
-          <el-tag><i :class="getIconsByType(item.type)"/></el-tag><br/>
+          <!-- TODO: Translate tooltip -->
+          <el-tooltip content="Delete by clicking" placement="top">
+            <el-button @click="onClick(index)" :icon="getIconsByType(item.type)"></el-button>
+          </el-tooltip>
+
           <!-- TODO: change bg color, time variable -->
-          <el-tag color="#C0C4CC">time</el-tag><br/>
+          <el-tag color="#DCDFE6">time</el-tag><br/>
+
           <!-- TODO: change bg color, duration variable -->
           <el-tag color="#F2F6FC">duration</el-tag><br/>
         </el-col>
@@ -21,7 +26,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'LectureElementSequnce',
@@ -29,6 +34,18 @@ export default {
     ...mapState('teacher', ['lectureElementSequence']),
   },
   methods: {
+    // TODO: edit lecture element
+    // TODO: add drag/drop function
+    ...mapMutations('teacher', ['deleteLectureElement']),
+    onClick(index) {
+      const vm = this;
+      if (index < Object.keys(vm.lectureElementSequence).length) {
+        vm.deleteLectureElement({
+          lectureElementIndex: index,
+        });
+      }
+      window.console.log(index);
+    },
     getIconsByType(type) {
       let icon;
       switch (type) {
