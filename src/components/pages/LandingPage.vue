@@ -73,15 +73,6 @@ export default {
       return 4;
     },
   },
-  computed: {
-    // FIXME: 이거 어디서 쓰이는 것?
-    popClassesSliced() {
-      const vm = this;
-      const sliced = vm.popClasses.slice(0, vm.elementNum);
-      window.console.log('sl', sliced, 'el', vm.elementNum);
-      return vm.popClasses.slice(0, vm.elementNum);
-    },
-  },
   async mounted() {
     const vm = this;
     vm.popClasses = await classService.fetchPopularClassList();
