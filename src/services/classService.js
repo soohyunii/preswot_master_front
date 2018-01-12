@@ -41,7 +41,7 @@ export default {
       }, 500);
     });
   },
-  fetchPopClassList() {
+  fetchPopularClassList() {
     // 인기강의 정보
     console.log('Fetch classes info. which are popular than others'); // eslint-disable-line
 

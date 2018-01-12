@@ -13,7 +13,7 @@
         <span slot="title">홈</span>
       </el-menu-item>
 
-      <el-menu-item index="/register">
+      <el-menu-item index="/classes">
         <i class="el-icon-setting"></i>
         <span slot="title">
           <!-- TODO: Translation -->
@@ -76,19 +76,10 @@ export default {
   computed: {
     ...mapState('layout', ['isNavCollapsed']),
   },
-  filters: {
-
-  },
-  beforeRouteLeave(to, from) {
-    console.log(to, from);
-    console.log(1, 2, 3);
-  },
   async mounted() {
     const vm = this;
     vm.attendingClassList = await classService.fetchAttendingClassList();
     vm.teachingClassList = await classService.fetchTeachingClassList();
-    // window.console.log(this.attending);
-    // window.console.log(this.opening);
   },
 };
 </script>
