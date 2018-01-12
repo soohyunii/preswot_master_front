@@ -17,13 +17,15 @@ export default {
     ...mapMutations('teacher', ['pushLectureElement']),
     onClick(type) {
       const vm = this;
-      const typeList = ['A', 'B', 'C', 'D'];
-      if (typeList.includes(type)) {
+      const validTypeList = ['A', 'B', 'C', 'D'];
+      if (validTypeList.includes(type)) {
         vm.pushLectureElement({
           lectureElement: {
             type,
           },
         });
+      } else {
+        throw new Error(`not defined type ${type}`);
       }
       // switch (type) {
       //   case 'A': {
