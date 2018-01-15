@@ -83,8 +83,8 @@ export default {
    position:fixed;
    left:0px;
    bottom:0px;
-   height: 40px;
    width:100%;
+   padding: 5px 0px 5px 0px;
    background:rgba(0, 0, 0, 0.5);
    color: white;
 }
