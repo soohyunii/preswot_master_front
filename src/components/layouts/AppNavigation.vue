@@ -52,6 +52,9 @@
           </template>
         </el-menu-item-group>
       </el-submenu>
+
+      <!-- TODO: Find a better place to be -->
+      <router-link to="/a/student/lecture/realtime">Student Realtime</router-link>
     </el-menu>
   </div>
 </template>
