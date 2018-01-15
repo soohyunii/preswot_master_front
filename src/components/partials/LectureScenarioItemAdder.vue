@@ -47,7 +47,7 @@
 import { mapMutations } from 'vuex';
 
 export default {
-  name: 'LectureElementButtonGroup',
+  name: 'LectureScenarioItemAdder',
   methods: {
     ...mapMutations('teacher', ['pushLectureElement']),
     onClick(type) {

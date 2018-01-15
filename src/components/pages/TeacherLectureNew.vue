@@ -33,7 +33,6 @@
       <!-- 이 메인은 맞음 시작 -->
       <el-main>
         <el-row>
-          <!-- TODO: translation -->
           <el-col :span="24">
             <div class="lecture-number-name" v-if="inputFlag">
               <el-row :gutter="10">
@@ -59,12 +58,12 @@
         <el-row :gutter="30">
           <el-col :span="16">
             <div class="grid-content bg-white">
-              <lecture-element-sequence />
+              <lecture-scenario />
             </div>
           </el-col>
           <el-col :span="8">
             <div class="grid-content bg-white">
-              <lecture-element-button-group />
+              <lecture-scenario-item-adder />
             </div>
           </el-col>
         </el-row>
@@ -89,12 +88,16 @@
 </template>
 
 <script>
-import LectureElementSequence from '../partials/LectureElementSequence';
-import LectureElementButtonGroup from '../partials/LectureElementButtonGroup';
+import LectureScenario from '../partials/LectureScenario';
+import LectureScenarioItemAdder from '../partials/LectureScenarioItemAdder';
 import classService from '../../services/classService';
 
 export default {
   name: 'TeacherNewLecture',
+  components: {
+    LectureScenario,
+    LectureScenarioItemAdder,
+  },
   data() {
     return {
       teachingClassList: [],
@@ -123,10 +126,6 @@ export default {
   async mounted() {
     const vm = this;
     vm.teachingClassList = await classService.fetchTeachingClassList();
-  },
-  components: {
-    LectureElementSequence,
-    LectureElementButtonGroup,
   },
 };
 </script>

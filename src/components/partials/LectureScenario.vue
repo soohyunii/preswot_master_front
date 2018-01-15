@@ -27,7 +27,7 @@
 import { mapState, mapMutations } from 'vuex';
 
 export default {
-  name: 'LectureElementSequnce',
+  name: 'LectureScenario',
   computed: {
     ...mapState('teacher', ['lectureElementSequence']),
   },

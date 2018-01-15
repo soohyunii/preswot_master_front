@@ -1,7 +1,7 @@
 import Test from '../components/TestComponent';
 import Profile from '../components/pages/Profile';
 import TeacherHome from '../components/pages/TeacherHome';
-import TeacherNewLecture from '../components/pages/TeacherNewLecture';
+import TeacherLectureNew from '../components/pages/TeacherLectureNew';
 import StudentRealtime from '../components/pages/StudentRealtime';
 
 export default function authRoutes(root) {
@@ -44,8 +44,8 @@ export default function authRoutes(root) {
     },
     {
       path: '/teacher/lecture/new',
-      name: 'TeacherNewLecture',
-      component: TeacherNewLecture, // TODO: replace dummy with real component
+      name: 'TeacherLectureNew',
+      component: TeacherLectureNew, // TODO: replace dummy with real component
       meta: {
         title: 'Teacher New Lecture', // TODO: import from i18n
         auth: true,
