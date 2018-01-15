@@ -6,6 +6,7 @@ import locale from 'element-ui/lib/locale/lang/ko';
 import VueI18n from 'vue-i18n';
 import VueTheMask from 'vue-the-mask';
 import VueResize from 'vue-resize';
+import Vue2Filters from 'vue2-filters';
 import authPlugin from './utils/authPlugin';
 
 import App from './App';
@@ -25,6 +26,7 @@ Vue.use(authPlugin, {
   router,
 });
 Vue.use(VueResize);
+Vue.use(Vue2Filters);
 
 const defaultLocale = utils.getDefaultLocale();
 
