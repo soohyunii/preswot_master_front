@@ -2,11 +2,26 @@
   <div>
     <el-container>
       <el-aside width="100px">
+        <template v-for="(item, key) in teachingClassList">
+          <el-row :key="key">
+            <el-col align="center">
+            <!-- TODO: link to each class -->
+            <i :class="dummyIcons()" style="font-size: 50px;" @click="dummy(item)"></i><br/>
+            {{ item.className | truncate(10) }}
+            </el-col>
+          </el-row>
+        </template>
+
         <el-row>
+          <el-col align="center">
+          <!-- TODO: Implement adding lecture part -->
           <!-- TODO: translation -->
-          <div>강의중인 과목 목록</div>
+          <i class='el-icon-circle-plus' style="font-size: 50px;" @click="dummy('과목추가')"></i><br/>
+          과목 추가
+          </el-col>
         </el-row>
       </el-aside>
+
       <!-- 이 메인은 맞음 시작 -->
       <el-main>
         <el-row>
@@ -45,9 +60,27 @@
 <script>
 import LectureElementSequence from '../partials/LectureElementSequence';
 import LectureElementButtonGroup from '../partials/LectureElementButtonGroup';
+import classService from '../../services/classService';
 
 export default {
   name: 'TeacherNewLecture',
+  data() {
+    return {
+      teachingClassList: [],
+    };
+  },
+  methods: {
+    dummyIcons() {
+      return 'el-icon-document';
+    },
+    dummy(index) {
+      window.console.log(index);
+    },
+  },
+  async mounted() {
+    const vm = this;
+    vm.teachingClassList = await classService.fetchTeachingClassList();
+  },
   components: {
     LectureElementSequence,
     LectureElementButtonGroup,
