@@ -30,10 +30,10 @@
                     </el-col>
                 </el-row>
                 <el-row>
-                    <div id="footer" v-if="!isCloseFooter">
-                        <student-realtime-summary :SummaryData="SummaryData"></student-realtime-summary>
+                    <div id="statusbar" v-if="!isCloseStatusbar">
+                        <student-realtime-summary :SummaryData="SummaryData" />
                         <el-col :span="5" style="text-align:right;">
-                            <i class="el-icon-close" @click="onClick('CLOSE_FOOTER')"></i>
+                            <i class="el-icon-close" @click="onClick('CLOSE_STATUSBAR')" />
                         </el-col>
                     </div>
                 </el-row>
@@ -53,7 +53,7 @@ export default {
   data() {
     return {
       isCloseMovie: false,
-      isCloseFooter: false,
+      isCloseStatusbar: false,
       SummaryData: [],
     };
   },
@@ -65,8 +65,8 @@ export default {
           vm.isCloseMovie = true;
           break;
         }
-        case 'CLOSE_FOOTER': {
-          vm.isCloseFooter = true;
+        case 'CLOSE_STATUSBAR': {
+          vm.isCloseStatusbar = true;
           break;
         }
         default: {
@@ -79,7 +79,7 @@ export default {
 </script>
 
 <style scoped>
-#footer {
+#statusbar {
    position:fixed;
    left:0px;
    bottom:0px;
