@@ -21,6 +21,9 @@
     </el-dropdown>
 
     locale: {{ locale }}
+
+    <router-link to="/a/teacher">* Teacher Home *</router-link>
+
     <!-- Login / Profile, Logout button part -->
     <router-link to="/login" style="text-decoration:none; color: #ffffff" v-if="!isJwtValid">
       <el-button type="primary">

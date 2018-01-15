@@ -52,10 +52,6 @@
           </template>
         </el-menu-item-group>
       </el-submenu>
-
-      <!-- TODO: Find a better place to be -->
-      <router-link to="/a/teacher">Teacher Home</router-link> <br />
-      <router-link to="/a/teacher/lecture/new">Teacher New Lecture</router-link>
     </el-menu>
   </div>
 </template>
