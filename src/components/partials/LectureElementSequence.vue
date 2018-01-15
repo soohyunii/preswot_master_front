@@ -6,10 +6,8 @@
         <el-col :span="4" :key="key" align="center">
           <!-- TODO: change icons -->
           <!-- TODO: Translate tooltip -->
-          <el-tooltip content="Delete by clicking" placement="top">
-            <el-button @click="onClick(index)" :icon="getIconsByType(item.type)"></el-button>
-          </el-tooltip>
-
+          <i :class="getIconsByType(item.type)" style="font-size: 50px;"></i>
+          <i class="el-icon-error" style="color:red; vertical-align:top" @click="onClick(index)"></i>
           <!-- TODO: change bg color, time variable -->
           <el-tag color="#DCDFE6">time</el-tag><br/>
 
@@ -61,8 +59,8 @@ export default {
           icon = 'el-icon-document';
           break;
         }
-        default:
-        case 'D': {
+        case 'D':
+        default: {
           icon = 'el-icon-setting';
           break;
         }

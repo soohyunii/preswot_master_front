@@ -43,13 +43,8 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 
-import LectureElementGroup from '../partials/LectureElementGroup';
-
 export default {
   name: 'Login',
-  components: {
-    LectureElementGroup,
-  },
   data() {
     return {
       input: {
