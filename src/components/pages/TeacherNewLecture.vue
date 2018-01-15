@@ -33,7 +33,6 @@
       <!-- 이 메인은 맞음 시작 -->
       <el-main>
         <el-row>
-          <!-- TODO: translation -->
           <el-col :span="24">
             <div class="lecture-number-name" v-if="inputFlag">
               <el-row :gutter="10">
