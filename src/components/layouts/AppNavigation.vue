@@ -54,8 +54,7 @@
       </el-submenu>
 
       <!-- TODO: Find a better place to be -->
-      <router-link to="/a/teacher">Teacher Home</router-link> <br />
-      <router-link to="/a/teacher/lecture/new">Teacher New Lecture</router-link>
+      <router-link to="/a/student/lecture/realtime">Student Realtime</router-link>
     </el-menu>
   </div>
 </template>
