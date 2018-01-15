@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import StudentRealtimeSummary from '../partial/StudentRealtimeSummary';
+import StudentRealtimeSummary from '../partials/StudentRealtimeSummary';
 
 export default {
   name: 'StudentRealtime',
