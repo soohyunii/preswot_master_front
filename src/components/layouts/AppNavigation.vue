@@ -31,7 +31,7 @@
           <template v-for="(item, key, index) in attendingClassList">
             <el-menu-item :index="'3-'+index" :key="key">
               <!-- TODO: link to each class -->
-              {{ item.className }}
+              {{ item.className | truncate(16) }}
             </el-menu-item>
           </template>
         </el-menu-item-group>
@@ -47,7 +47,7 @@
           <template v-for="(item, key, index) in teachingClassList">
             <el-menu-item :index="'4-'+index" :key="key">
               <!-- TODO: link to each class -->
-              {{ item.className }}
+              {{ item.className | truncate(16) }}
             </el-menu-item>
           </template>
         </el-menu-item-group>
