@@ -27,32 +27,35 @@
       </el-dropdown-menu>
     </el-dropdown>
 
-
-    <el-button type="primary" @click="onClick('TEACHER_HOME')" v-if="isJwtValid">
-      <i class="fa fa-pencil-square-o"></i>
-    </el-button>
+    <router-link to="/a/teacher" v-show="isJwtValid">
+      <el-button type="primary">
+        <i class="fa fa-pencil-square-o"></i>
+      </el-button>
+    </router-link>
 
     <!-- Login / Profile, Logout button part -->
-    <router-link to="/login" style="text-decoration:none; color: #ffffff" v-show="!isJwtValid">
+    <router-link to="/login" v-show="!isJwtValid">
       <el-button type="primary">
           {{ $t('LOGIN.LOGIN_BUTTON') }}
       </el-button>
     </router-link>
-    <router-link to="/a/profile" style="text-decoration:none; color: #ffffff" v-show="isJwtValid">
-      <el-dropdown @command="onClick">
-        <el-button type="primary">
-            {{ $t('HEADER.PROFILE_BUTTON') }}<i class="el-icon-arrow-down el-icon--right"></i>
-        </el-button>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="PROFILE">{{ $t('HEADER.PROFILE_BUTTON') }}</el-dropdown-item>
-          <el-dropdown-item command="LOGOUT">{{ $t('HEADER.LOGOUT_BUTTON') }}</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
-    </router-link>
+    <el-dropdown @command="onClick">
+      <el-button type="primary" v-show="isJwtValid">
+          {{ $t('HEADER.PROFILE_BUTTON') }}<i class="el-icon-arrow-down el-icon--right"></i>
+      </el-button>
+      <el-dropdown-menu slot="dropdown">
+        <el-dropdown-item command="PROFILE">{{ $t('HEADER.PROFILE_BUTTON') }}</el-dropdown-item>
+        <el-dropdown-item command="LOGOUT">{{ $t('HEADER.LOGOUT_BUTTON') }}</el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown>
+    <!-- <router-link to="/a/profile" v-show="isJwtValid">
+    </router-link> -->
 
-    <el-button type="primary" @click="onClick('REGISTER')" v-show="!isJwtValid">
-      회원가입
-    </el-button>
+    <router-link to="/register" v-show="!isJwtValid">
+      <el-button type="primary">
+        회원가입
+      </el-button>
+    </router-link>
   </div>
 </template>
 
@@ -125,14 +128,6 @@ export default {
         }
         case 'LOCALE_EN': {
           vm._changeLocale('en'); // eslint-disable-line no-underscore-dangle
-          break;
-        }
-        case 'TEACHER_HOME': {
-          vm.$router.push('/a/teacher');
-          break;
-        }
-        case 'REGISTER': {
-          vm.$router.push('/register');
           break;
         }
         default: {
