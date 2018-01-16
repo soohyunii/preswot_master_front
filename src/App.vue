@@ -9,7 +9,7 @@
           <app-navigation />
         </el-aside>
         <el-container>
-          <el-main>
+          <el-main id="app_router_view_wrapper" >
             <router-view/>
           </el-main>
           <el-footer>
@@ -43,9 +43,15 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 @import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+@import "~@/variables.scss";
+
 body {
   font-family: 'Noto Sans KR', sans-serif !important;
+}
+
+#app_router_view_wrapper {
+  background-color: $oatmeal;
 }
 </style>
