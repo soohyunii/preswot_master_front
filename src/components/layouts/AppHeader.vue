@@ -27,9 +27,10 @@
       </el-dropdown-menu>
     </el-dropdown>
 
-    locale: {{ locale }}
 
-    <router-link to="/a/teacher">* Teacher Home *</router-link>
+    <el-button type="primary" @click="onClick('TEACHER_HOME')" v-if="isJwtValid">
+      <i class="fa fa-pencil-square-o"></i>
+    </el-button>
 
     <!-- Login / Profile, Logout button part -->
     <router-link to="/login" style="text-decoration:none; color: #ffffff" v-if="!isJwtValid">
@@ -48,9 +49,10 @@
         </el-dropdown-menu>
       </el-dropdown>
     </router-link>
-    <!-- router-link to "register" -->
-    <router-link to="/register">Register</router-link>
-    <!-- <router-link to="/a/home">Home</router-link> -->
+
+    <el-button type="primary" @click="onClick('REGISTER')" v-if="isJwtValid">
+      회원가입
+    </el-button>
   </div>
 </template>
 
@@ -98,6 +100,12 @@ export default {
     onClick(type) {
       const vm = this;
       switch (type) {
+        case 'TOGGLE_NAVIGATION': {
+          vm.updateCollapse({
+            isNavCollapsed: !vm.isNavCollapsed,
+          });
+          break;
+        }
         case 'PROFILE': {
           vm.$router.push({
             name: 'Profile',
@@ -119,10 +127,12 @@ export default {
           vm._changeLocale('en'); // eslint-disable-line no-underscore-dangle
           break;
         }
-        case 'TOGGLE_NAVIGATION': {
-          vm.updateCollapse({
-            isNavCollapsed: !vm.isNavCollapsed,
-          });
+        case 'TEACHER_HOME': {
+          vm.$router.push('/a/teacher');
+          break;
+        }
+        case 'REGISTER': {
+          vm.$router.push('/register');
           break;
         }
         default: {
