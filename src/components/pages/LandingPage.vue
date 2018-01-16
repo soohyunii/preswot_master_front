@@ -11,6 +11,7 @@
           </el-col>
         </el-row>
 
+        <!-- TODO: translation -->
         <div class="">인기 강의 목록<hr></div>
         <el-row :gutter="20" >
           <template v-for="(item, index, key) in popularClassList">
@@ -20,6 +21,7 @@
           </template>
         </el-row>
 
+        <!-- TODO: translation -->
         <div class="">내 수강 통계<hr></div>
         <el-row type="flex" justify="center">
           <el-col>
@@ -27,6 +29,7 @@
           </el-col>
         </el-row>
 
+        <!-- TODO: translation -->
         <div class="">내 과목 통계<hr></div>
         <el-row type="flex" justify="center">
           <el-col>
