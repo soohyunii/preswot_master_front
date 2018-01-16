@@ -108,25 +108,6 @@ export default {
     margin: auto;
   }
 
-  .el-header, .el-footer {
-    background-color: #B3C0D1;
-    color: #333;
-    text-align: center;
-    line-height: 60px;
-  }
-
-  .el-aside {
-    background-color: rgb(255, 255, 255);
-    color: #333;
-    text-align: center;
-    line-height: 50px;
-  }
-
-  .el-main {
-    background-color: #E9EEF3;
-    color: #333;
-  }
-
   .bg-white {
     background-color: rgb(255, 255, 255);
   }
