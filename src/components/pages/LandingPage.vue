@@ -48,7 +48,7 @@ export default {
   name: 'Home',
   data() {
     return {
-      popularClassList: [],
+      popularClassList: [], // TODO: restore popularClassList from localStorage
       elementNumber: 3,
       elmenetwidthPixel: 300,
     };
@@ -79,6 +79,7 @@ export default {
   async mounted() {
     const vm = this;
     vm.popularClassList = await studentService.fetchPopularClassList();
+    // TODO: save popularClassList to localStorage
     vm.handleResize();
     // window.console.log(vm.popularClassList);
   },
