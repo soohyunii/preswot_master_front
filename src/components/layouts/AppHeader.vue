@@ -4,20 +4,18 @@
       id="navigation_toggle"
       @click="onClick('TOGGLE_NAVIGATION')"
     >
-      <!-- <i class="fa fa-bars" /> -->
       <i class="fa fa-bars fa-2x" />
-      <!-- d -->
     </el-button>
-    <!-- <el-button type="primary" @click="onClick('TOGGLE_NAVIGATION')">
-      <i class="el-icon-menu"></i>
-    </el-button> -->
     <!-- TODO: replace 브랜드 로고 -->
-    <div id="header_brand_img">
-    </div>
+    <el-button type="primary">Brand Logo</el-button>
     <!-- TODO: translate placeholder -->
-    <el-input placeholder="Please input" v-model="searchText" class="input-with-select">
-      <el-button slot="append" icon="el-icon-search" type="primary"></el-button>
+    <el-input placeholder="Please input" v-model="searchText">
     </el-input>
+    <!-- <el-button icon="el-icon-search" type="primary"></el-button> -->
+    <el-button type="primary">
+      <i class="fa fa-search"></i>
+    </el-button>
+
 
     <el-dropdown @command="onClick">
       <el-button type="primary">
@@ -57,7 +55,7 @@
 </template>
 
 <style lang="scss" scoped>
-@import "~@/variables.scss"; // * To use $--color-primary scss variable
+// @import "~@/variables.scss"; // * To use $--color-primary scss variable
 
 .el-input {
   width: 400px; // TODO: Rplace 400px with designed value
@@ -65,15 +63,12 @@
 
 #navigation_toggle {
   border: 0;
-  padding: 10px 12px;
+  padding: 6px 10px;
+  .fa.fa-bars {
+    top: 100px;
+  }
 }
 
-#header_brand_img {
-  background-color: $--color-primary !important;
-  width: 100px;
-  height: 48px;
-  display: inline;
-}
 </style>
 
 
