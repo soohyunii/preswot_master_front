@@ -9,14 +9,16 @@
                     <el-col :span="24" v-if="!isCloseMovie">
                         <!-- TODO: translation -->
                         <el-row class="video">
-                            <el-col :span="12" offset=6>
-                                <video controls width=100% poster="../../assets/test.jpg" />
+                            <el-col :span="12" :offset="6">
+                                <video controls width=100% poster="../../assets/test.jpg">
+                                    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                                </video>
                             </el-col>
                             <el-col :span="6">
                                 <i class="el-icon-circle-close" @click="onClick('CLOSE_MOVIE')" style="color:#dee2e8; vertical-align:top; font-size:30px;"/>
                             </el-col>
                             <el-col :span="6">
-                                <i class="el-icon-upload2" style="color:#dee2e8; vertical-align:top; font-size:30px;"/>
+                                <i class="el-icon-upload2" @click="onClick('POPUP_MOVIE')" style="color:#dee2e8; vertical-align:top; font-size:30px;"/>
                             </el-col>
                         </el-row>
                     </el-col>
@@ -74,6 +76,10 @@ export default {
         }
         case 'CLOSE_STATUSBAR': {
           vm.isCloseStatusbar = true;
+          break;
+        }
+        case 'POPUP_MOVIE': {
+          window.open('https://www.w3schools.com/html/mov_bbb.mp4', '_blank', 'location=0');
           break;
         }
         default: {
