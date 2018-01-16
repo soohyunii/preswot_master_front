@@ -12,8 +12,8 @@
           <el-main id="app_router_view_wrapper" >
             <router-view/>
           </el-main>
-          <el-footer>
-            <app-footer></app-footer>
+          <el-footer id="app_footer_wrapper">
+            <app-footer />
           </el-footer>
         </el-container>
       </el-container>
@@ -59,6 +59,10 @@ body {
 #app_router_view_wrapper {
   background-color: $oatmeal;
   flex: 1;
+}
+
+#app_footer_wrapper {
+  background-color: $oatmeal;
 }
 
 </style>
