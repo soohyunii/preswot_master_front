@@ -62,7 +62,7 @@ export default {
         vm.elementNumber = el;
         document.getElementById('landing_page_container').style.width = el * vm.elmenetwidthPixel + 'px'; // eslint-disable-line
       }
-      window.console.log('width', width, 'el', el, 'vm_el', vm.elementNumber);
+      // window.console.log('width', width, 'el', el, 'vm_el', vm.elementNumber);
       return width;
     },
     getElementNum(width) {
@@ -80,7 +80,7 @@ export default {
     const vm = this;
     vm.popularClassList = await studentService.fetchPopularClassList();
     vm.handleResize();
-    window.console.log(vm.popularClassList);
+    // window.console.log(vm.popularClassList);
   },
 };
 </script>

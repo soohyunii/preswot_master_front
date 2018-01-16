@@ -1,8 +1,5 @@
 export default {
   fetchTeachingClassList() {
-    // 강의중인 과목 정보
-    console.log('Fetch classes info which user is opening'); // eslint-disable-line
-
     // TODO: Replace dummy with axios
     return new Promise((resolve) => {
       window.setTimeout(() => {
