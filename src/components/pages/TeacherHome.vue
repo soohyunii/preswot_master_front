@@ -55,7 +55,7 @@
 <script>
 import LectureList from '../partials/LectureList';
 import LectureStatistics from '../partials/LectureStatistics';
-import classService from '../../services/classService';
+import teacherService from '../../services/teacherService';
 
 export default {
   name: 'TeacherHome',
@@ -108,7 +108,7 @@ export default {
   },
   async mounted() {
     const vm = this;
-    vm.teachingClassList = await classService.fetchTeachingClassList();
+    vm.teachingClassList = await teacherService.fetchTeachingClassList();
   },
   components: {
     LectureList,

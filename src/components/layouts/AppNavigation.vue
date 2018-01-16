@@ -61,7 +61,8 @@
 
 <script>
 import { mapState } from 'vuex';
-import classService from '../../services/classService';
+import studentService from '../../services/studentService';
+import teacherService from '../../services/teacherService';
 
 export default {
   name: 'AppNavigation',
@@ -77,8 +78,8 @@ export default {
   },
   async mounted() {
     const vm = this;
-    vm.attendingClassList = await classService.fetchAttendingClassList();
-    vm.teachingClassList = await classService.fetchTeachingClassList();
+    vm.attendingClassList = await studentService.fetchAttendingClassList();
+    vm.teachingClassList = await teacherService.fetchTeachingClassList();
   },
 };
 </script>
