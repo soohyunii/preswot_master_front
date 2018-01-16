@@ -3,24 +3,21 @@
     <el-container class="outline">
       <el-aside width="150px">
         <!-- TODO: Implement dummy response about class list -->
-        <!-- TODO: translation -->
         <el-row>
           파이썬 초급
         </el-row>
-        <!-- TODO: translation -->
 
         <el-row>
           자바
         </el-row>
         <el-row>
           <!-- TODO: Implement adding lecture part -->
-          <!-- TODO: translation -->
           <el-button>과목 추가</el-button>
         </el-row>
       </el-aside>
       <el-main>
-        <!-- TODO: translation -->
         <h3>자바</h3><hr>
+        <!-- TODO: translation -->
         <el-button>과목지식맵</el-button>
         <el-button>과목큐레이션</el-button>
         <el-button>과목저널링</el-button>
