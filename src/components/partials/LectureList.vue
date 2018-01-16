@@ -81,8 +81,7 @@
         </el-table>
 
         <el-col align="center">
-          <!-- TODO: Link to class scenarion adding page -->
-          <router-link to="/a/teacher/lecture/new"> <!-- Link is Wrong -->
+          <router-link to="/a/teacher/lecture/new">
           <br /><br />
           <el-button>과목 시나리오 추가</el-button>
           </router-link>

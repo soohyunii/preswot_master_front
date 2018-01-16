@@ -8,11 +8,11 @@
           <el-row :key="key">
             <el-col align="center">
               <!-- TODO: link to each class -->
-              <el-button v-if="dummyCurrentClass(item)" type="info" disabled>
+              <el-button v-if="isCurrentClass(item)" type="info" disabled>
                 <i :class="dummyIcons()" style="font-size: 50px;"></i><br/>
                 {{ item.className | truncate(10) }}
               </el-button>
-              <el-button @click="dummy(item)" v-else>
+              <el-button @click="moveClass(item)" v-else>
                 <i :class="dummyIcons()" style="font-size: 50px;"></i><br/>
                 {{ item.className | truncate(10) }}
               </el-button>
@@ -42,7 +42,6 @@
         <el-button>과목저널링</el-button>
         <br /><br />
 
-        <!-- TODO: Implement dummy response about lecture list -->
         <lecture-list :tableData="scenarioList.tableData"></lecture-list>
 
         <!-- TODO: Implement dummy response about lecture statistics -->
@@ -68,6 +67,12 @@ export default {
   },
   // TODO: Replace dummy functions
   methods: {
+    async moveClass(item) {
+      const vm = this;
+      vm.currentClass = item.className;
+      vm.scenarioList = await teacherService.fetchScenarioListOfClass({ teachingClass: vm.currentClass }); // eslint-disable-line
+      // window.console.log(vm.scenarioList.className);
+    },
     dummyIcons() {
       // TODO: Replace icons of classes
       return 'el-icon-document';
@@ -75,24 +80,25 @@ export default {
     dummyAddClass() {
       // TODO: Link to adding class page
     },
-    dummyCurrentClass(item) {
-      // Get current class's info. to display scenario list of current class
-      if (item.className === 'Vue.js') {
-        const vm = this;
-        vm.currentClass = item.className;
+    isCurrentClass(item) {
+      const vm = this;
+      if (item.className === vm.currentClass) {
         return true;
       }
       return false;
     },
-    changeLectureName() {
-      const vm = this;
-      vm.inputFlag = !vm.inputFlag;
-    },
+  },
+  computed: {
   },
   async mounted() {
     const vm = this;
     vm.teachingClassList = await teacherService.fetchTeachingClassList();
+    // 강사 메인화면 페이지 접속 직후 주시하는 과목 없는 경우 제일 첫번째 과목 정보 나타냄
+    if (!vm.currentClass) {
+      vm.currentClass = vm.teachingClassList[0].className;
+    }
     vm.scenarioList = await teacherService.fetchScenarioListOfClass({ teachingClass: vm.currentClass }); // eslint-disable-line
+    // window.console.log(vm.scenarioList.className);
   },
   components: {
     LectureList,
