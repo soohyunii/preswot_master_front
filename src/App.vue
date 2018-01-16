@@ -2,11 +2,11 @@
   <div id="app">
     <el-container>
       <el-header>
-        <app-header></app-header>
+        <app-header />
       </el-header>
       <el-container>
         <el-aside width="200px" v-show="isNavCollapsed">
-          <app-navigation></app-navigation>
+          <app-navigation />
         </el-aside>
         <el-container>
           <el-main>
