@@ -1,8 +1,16 @@
 <template>
   <div>
-    <el-button type="primary" @click="onClick('TOGGLE_NAVIGATION')">
-      <i class="el-icon-menu"></i>
+    <el-button
+      id="navigation_toggle"
+      @click="onClick('TOGGLE_NAVIGATION')"
+    >
+      <!-- <i class="fa fa-bars" /> -->
+      <i class="fa fa-bars fa-2x" />
+      <!-- d -->
     </el-button>
+    <!-- <el-button type="primary" @click="onClick('TOGGLE_NAVIGATION')">
+      <i class="el-icon-menu"></i>
+    </el-button> -->
     <!-- TODO: 브랜드 로고 -->
     [브랜드 로고]
     <!-- TODO: translate placeholder -->
@@ -50,6 +58,11 @@
 <style lang="scss" scoped>
 .el-input {
   width: 400px; // TODO: Rplace 400px with designed value
+}
+
+#navigation_toggle {
+  border: 0;
+  padding: 10px 12px;
 }
 </style>
 
