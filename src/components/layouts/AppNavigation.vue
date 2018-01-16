@@ -123,6 +123,7 @@ export default {
   height: 100%;
   .app-nav-menu {
     height: 100%;
+    border: 0;
   }
 }
 </style>
