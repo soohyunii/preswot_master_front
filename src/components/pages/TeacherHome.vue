@@ -8,7 +8,7 @@
           <el-row :key="key">
             <el-col align="center">
               <!-- TODO: link to each class -->
-              <el-button @click="dummy(item)" v-if="disabledummy(item)" type="info" disabled>
+              <el-button v-if="dummyCurrentClass(item)" type="info" disabled>
                 <i :class="dummyIcons()" style="font-size: 50px;"></i><br/>
                 {{ item.className | truncate(10) }}
               </el-button>
@@ -24,7 +24,7 @@
           <el-col align="center">
           <!-- TODO: Implement adding lecture part -->
           <!-- TODO: translation -->
-          <el-button @click="dummy('과목추가')">
+          <el-button @click="dummyAddClass()">
             <i class='el-icon-circle-plus' style="font-size: 50px;"></i><br/>
             과목 추가
           </el-button>
@@ -33,7 +33,7 @@
       </el-aside>
 
       <el-main>
-        <h3>{{currentClass}}</h3><hr>
+        <h3>{{ currentClass }}</h3><hr>
 
         <!-- TODO: translation -->
         <!-- TODO: Link to each page per button-->
@@ -66,14 +66,17 @@ export default {
       scenarioList: '',
     };
   },
+  // TODO: Replace dummy functions
   methods: {
     dummyIcons() {
+      // TODO: Replace icons of classes
       return 'el-icon-document';
     },
-    dummy(index) {
-      window.console.log(index);
+    dummyAddClass() {
+      // TODO: Link to adding class page
     },
-    disabledummy(item) {
+    dummyCurrentClass(item) {
+      // Get current class's info. to display scenario list of current class
       if (item.className === 'Vue.js') {
         const vm = this;
         vm.currentClass = item.className;

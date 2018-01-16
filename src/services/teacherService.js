@@ -24,6 +24,7 @@ export default {
     });
   },
   fetchScenarioListOfClass({ teachingClass }) {
+    // teachingClass라는 과목에 대한 시나리오 정보
     // TODO: Replace dummy with axios
     return new Promise((resolve) => {
       window.setTimeout(() => {

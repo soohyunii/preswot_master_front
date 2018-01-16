@@ -3,7 +3,7 @@
     <el-col>
       <div class="grid-content bg-white">
         <!-- TODO: translate -->
-        강의 목록<hr>
+        시나리오 목록<hr>
         <el-table
           :data="tableData"
           style="width: 100%">
