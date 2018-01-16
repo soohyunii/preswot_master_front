@@ -90,7 +90,7 @@
 <script>
 import LectureScenario from '../partials/LectureScenario';
 import LectureScenarioItemAdder from '../partials/LectureScenarioItemAdder';
-import classService from '../../services/classService';
+import teacherService from '../../services/teacherService';
 
 export default {
   name: 'TeacherNewLecture',
@@ -125,7 +125,7 @@ export default {
   },
   async mounted() {
     const vm = this;
-    vm.teachingClassList = await classService.fetchTeachingClassList();
+    vm.teachingClassList = await teacherService.fetchTeachingClassList();
   },
 };
 </script>

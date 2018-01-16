@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import classService from '../../services/classService';
+import studentService from '../../services/studentService';
 
 export default {
   name: 'Home',
@@ -75,7 +75,7 @@ export default {
   },
   async mounted() {
     const vm = this;
-    vm.popClasses = await classService.fetchPopularClassList();
+    vm.popClasses = await studentService.fetchPopularClassList();
     vm.handleResize();
     window.console.log(vm.popClasses);
   },
