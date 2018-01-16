@@ -1,7 +1,7 @@
 <template>
-  <div id="main">
+  <div id="landing_page_wrapper">
     <resize-observer @notify="handleResize" />
-    <el-container class="container" id="container">
+    <el-container class="container" id="landing_page_container">
       <el-main>
         <el-row type="flex" justify="center">
           <el-col align="center">
@@ -13,9 +13,9 @@
 
         <div class="">인기 강의 목록<hr></div>
         <el-row :gutter="20" >
-          <template v-for="(item, index, key) in popClasses">
-            <el-col :key="key" :span="Math.ceil(24/elementNumber)" v-if="index < elementNumber">
-              <div class="film-content bg-film">{{item.className}}</div>
+          <template v-for="(item, index, key) in popularClassList">
+            <el-col :key="key" :span="Math.ceil(24 / elementNumber)" v-if="index < elementNumber">
+              <div class="film-content bg-film">{{ item.className }}</div>
             </el-col>
           </template>
         </el-row>
@@ -45,7 +45,7 @@ export default {
   name: 'Home',
   data() {
     return {
-      popClasses: '',
+      popularClassList: [],
       elementNumber: 3,
       elmenetwidthPixel: 300,
     };
@@ -53,11 +53,11 @@ export default {
   methods: {
     handleResize() {
       const vm = this;
-      const width = document.getElementById('main').offsetWidth;
+      const width = document.getElementById('landing_page_wrapper').offsetWidth;
       const el = vm.getElementNum(width);
       if (vm.elementNumber !== el) {
         vm.elementNumber = el;
-        document.getElementById('container').style.width = el * vm.elmenetwidthPixel + 'px'; // eslint-disable-line
+        document.getElementById('landing_page_container').style.width = el * vm.elmenetwidthPixel + 'px'; // eslint-disable-line
       }
       window.console.log('width', width, 'el', el, 'vm_el', vm.elementNumber);
       return width;
@@ -75,9 +75,9 @@ export default {
   },
   async mounted() {
     const vm = this;
-    vm.popClasses = await studentService.fetchPopularClassList();
+    vm.popularClassList = await studentService.fetchPopularClassList();
     vm.handleResize();
-    window.console.log(vm.popClasses);
+    window.console.log(vm.popularClassList);
   },
 };
 </script>
