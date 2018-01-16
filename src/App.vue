@@ -52,7 +52,7 @@ body {
 
 #app {
   display: flex;
-  min-height: 100vh;
+  min-height: 108vh;
   flex-direction: column;
 }
 
