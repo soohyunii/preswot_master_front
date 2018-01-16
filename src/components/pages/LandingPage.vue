@@ -42,13 +42,24 @@
 </template>
 
 <script>
+import deepEqual from 'deep-equal';
 import studentService from '../../services/studentService';
 
 export default {
   name: 'Home',
   data() {
+    const vm = this;
+    // * Restore previous popularClassList
+    vm.$vlf.getItem('popularClassList')
+      .then((res) => {
+        if (!res) {
+          return;
+        }
+        vm.popularClassList = res;
+        vm.handleResize();
+      });
     return {
-      popularClassList: [], // TODO: restore popularClassList from localStorage
+      popularClassList: [],
       elementNumber: 3,
       elmenetwidthPixel: 300,
     };
@@ -78,10 +89,14 @@ export default {
   },
   async mounted() {
     const vm = this;
-    vm.popularClassList = await studentService.fetchPopularClassList();
-    // TODO: save popularClassList to localStorage
+    const res = await studentService.fetchPopularClassList();
+    // * If fetched popularClassList is different from stored one, replace it
+    if (deepEqual(res, vm.popularClassList)) {
+      return;
+    }
+    vm.popularClassList = res;
+    vm.$vlf.setItem('popularClassList', res);
     vm.handleResize();
-    // window.console.log(vm.popularClassList);
   },
 };
 </script>
