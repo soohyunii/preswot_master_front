@@ -1,14 +1,21 @@
 <template>
   <div>
-    <el-button type="primary" @click="onClick('TOGGLE_NAVIGATION')">
-      <i class="el-icon-menu"></i>
+    <el-button
+      id="navigation_toggle"
+      @click="onClick('TOGGLE_NAVIGATION')"
+    >
+      <i class="fa fa-bars fa-2x" />
     </el-button>
-    <!-- TODO: 브랜드 로고 -->
-    [브랜드 로고]
+    <!-- TODO: replace 브랜드 로고 -->
+    <el-button type="primary">Brand Logo</el-button>
     <!-- TODO: translate placeholder -->
-    <el-input placeholder="Please input" v-model="searchText" class="input-with-select">
-      <el-button slot="append" icon="el-icon-search"></el-button>
+    <el-input placeholder="Please input" v-model="searchText">
     </el-input>
+    <!-- <el-button icon="el-icon-search" type="primary"></el-button> -->
+    <el-button type="primary">
+      <i class="fa fa-search"></i>
+    </el-button>
+
 
     <el-dropdown @command="onClick">
       <el-button type="primary">
@@ -20,37 +27,53 @@
       </el-dropdown-menu>
     </el-dropdown>
 
-    locale: {{ locale }}
-
-    <router-link to="/a/teacher">* Teacher Home *</router-link>
+    <router-link to="/a/teacher" v-show="isJwtValid">
+      <el-button type="primary">
+        <i class="fa fa-pencil-square-o"></i>
+      </el-button>
+    </router-link>
 
     <!-- Login / Profile, Logout button part -->
-    <router-link to="/login" style="text-decoration:none; color: #ffffff" v-if="!isJwtValid">
+    <router-link to="/login" v-show="!isJwtValid">
       <el-button type="primary">
           {{ $t('LOGIN.LOGIN_BUTTON') }}
       </el-button>
     </router-link>
-    <router-link to="/a/profile" style="text-decoration:none; color: #ffffff" v-else>
-      <el-dropdown @command="onClick">
-        <el-button type="primary">
-            {{ $t('HEADER.PROFILE_BUTTON') }}<i class="el-icon-arrow-down el-icon--right"></i>
-        </el-button>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="PROFILE">{{ $t('HEADER.PROFILE_BUTTON') }}</el-dropdown-item>
-          <el-dropdown-item command="LOGOUT">{{ $t('HEADER.LOGOUT_BUTTON') }}</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
+    <el-dropdown @command="onClick">
+      <el-button type="primary" v-show="isJwtValid">
+          {{ $t('HEADER.PROFILE_BUTTON') }}<i class="el-icon-arrow-down el-icon--right"></i>
+      </el-button>
+      <el-dropdown-menu slot="dropdown">
+        <el-dropdown-item command="PROFILE">{{ $t('HEADER.PROFILE_BUTTON') }}</el-dropdown-item>
+        <el-dropdown-item command="LOGOUT">{{ $t('HEADER.LOGOUT_BUTTON') }}</el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown>
+    <!-- <router-link to="/a/profile" v-show="isJwtValid">
+    </router-link> -->
+
+    <router-link to="/register" v-show="!isJwtValid">
+      <el-button type="primary">
+        회원가입
+      </el-button>
     </router-link>
-    <!-- router-link to "register" -->
-    <router-link to="/register">Register</router-link>
-    <!-- <router-link to="/a/home">Home</router-link> -->
   </div>
 </template>
 
 <style lang="scss" scoped>
+// @import "~@/variables.scss"; // * To use $--color-primary scss variable
+
 .el-input {
   width: 400px; // TODO: Rplace 400px with designed value
 }
+
+#navigation_toggle {
+  border: 0;
+  padding: 6px 10px;
+  .fa.fa-bars {
+    top: 100px;
+  }
+}
+
 </style>
 
 
@@ -80,6 +103,12 @@ export default {
     onClick(type) {
       const vm = this;
       switch (type) {
+        case 'TOGGLE_NAVIGATION': {
+          vm.updateCollapse({
+            isNavCollapsed: !vm.isNavCollapsed,
+          });
+          break;
+        }
         case 'PROFILE': {
           vm.$router.push({
             name: 'Profile',
@@ -99,12 +128,6 @@ export default {
         }
         case 'LOCALE_EN': {
           vm._changeLocale('en'); // eslint-disable-line no-underscore-dangle
-          break;
-        }
-        case 'TOGGLE_NAVIGATION': {
-          vm.updateCollapse({
-            isNavCollapsed: !vm.isNavCollapsed,
-          });
           break;
         }
         default: {

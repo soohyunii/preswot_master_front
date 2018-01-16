@@ -13,20 +13,16 @@ export default class AuthPlugin {
 
   static install(Vue, options) {
     Vue.prototype.$auth = new AuthPlugin(options); // eslint-disable-line no-param-reassign
-    // Vue.prototype.$auth.load();
   }
-
-  // async load() {
-  //   this._userId = 1; // TODO: get from localStorage
-  //   this._userEmail = 'adoji92@gmail.com'; // TODO: get from localStorage if exists
-
-  //   this._isLoading = false;
-  // }
 
   _applyRouteGuard(router) { // eslint-disable-line class-methods-use-this
     router.beforeEach(async (to, from, next) => {
       const route = to.matched.find(e => e.meta.auth !== null);
       // console.log('beforeEach', route);
+      // * Collapse AppNav after every routing
+      store.commit('layout/updateCollapse', {
+        isNavCollapsed: false,
+      });
       if (!route) {
         next({
           name: 'NotFound',
@@ -46,7 +42,7 @@ export default class AuthPlugin {
 
       // TODO: split `auth` into two difference variables: authenticaion, authorization
       const auth = route.meta.auth;
-      // if authentication is not required, just route
+      // * if authentication is not required, just route
       if (!auth) {
         next();
         return;

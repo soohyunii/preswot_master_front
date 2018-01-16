@@ -70,6 +70,8 @@ export default {
             if (vm.redirectTo) {
               // jwt 업데이트 후 페이지 이동 이루어지도록
               vm.$router.push(vm.redirectTo);
+            } else {
+              vm.$router.push('/');
             }
           } catch (error) {
             // 로그인 실패 시 ( jwt 값 갱신 실패 시 )

@@ -31,7 +31,7 @@
           <template v-for="(item, key, index) in attendingClassList">
             <el-menu-item :index="'3-'+index" :key="key">
               <!-- TODO: link to each class -->
-              {{ item.className }}
+              {{ item.className | truncate(16) }}
             </el-menu-item>
           </template>
         </el-menu-item-group>
@@ -47,7 +47,7 @@
           <template v-for="(item, key, index) in teachingClassList">
             <el-menu-item :index="'4-'+index" :key="key">
               <!-- TODO: link to each class -->
-              {{ item.className }}
+              {{ item.className | truncate(16) }}
             </el-menu-item>
           </template>
         </el-menu-item-group>
@@ -61,7 +61,8 @@
 
 <script>
 import { mapState } from 'vuex';
-import classService from '../../services/classService';
+import studentService from '../../services/studentService';
+import teacherService from '../../services/teacherService';
 
 export default {
   name: 'AppNavigation',
@@ -77,8 +78,8 @@ export default {
   },
   async mounted() {
     const vm = this;
-    vm.attendingClassList = await classService.fetchAttendingClassList();
-    vm.teachingClassList = await classService.fetchTeachingClassList();
+    vm.attendingClassList = await studentService.fetchAttendingClassList();
+    vm.teachingClassList = await teacherService.fetchTeachingClassList();
   },
 };
 </script>
