@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="app_nav_wrapper">
     <!-- TODO: replace index of el-menu-item (now just plain string) to corresponding vue-router's path -->
     <el-menu
       :default-active="$route.path"
@@ -118,11 +118,11 @@ export default {
   content: "\E638";
 }
 
-.app-nav-menu {
-  height: 93vh;
-}
-.app-nav-menu:not(.el-menu--collapse) {
-  width: 190px;
-  min-height: 400px;
+// * AppNavigation
+#app_nav_wrapper {
+  height: 100%;
+  .app-nav-menu {
+    height: 100%;
+  }
 }
 </style>
