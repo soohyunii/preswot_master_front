@@ -6,8 +6,10 @@
     >
       <i class="fa fa-bars fa-2x" />
     </el-button>
-    <!-- TODO: replace 브랜드 로고 -->
-    <el-button type="primary">Brand Logo</el-button>
+    <router-link to="/">
+      <!-- TODO: replace 브랜드 로고 -->
+      <el-button type="primary">Brand Logo</el-button>
+    </router-link>
     <!-- TODO: translate placeholder -->
     <el-input placeholder="Please input" v-model="searchText">
     </el-input>
