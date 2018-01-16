@@ -56,6 +56,8 @@
         회원가입
       </el-button>
     </router-link>
+    redirectTo: {{ redirectTo }}
+    router: {{ this.$route.name }}
   </div>
 </template>
 
