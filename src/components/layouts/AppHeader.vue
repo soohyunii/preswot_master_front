@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="app_nav_wrapper">
     <el-button
       id="navigation_toggle"
       @click="onClick('TOGGLE_NAVIGATION')"
@@ -71,9 +71,14 @@
 #navigation_toggle {
   border: 0;
   padding: 6px 10px;
-  .fa.fa-bars {
-    top: 100px;
-  }
+  vertical-align: middle;
+  // .fa.fa-bars {
+  //   top: 100px;
+  // }
+}
+
+#app_nav_wrapper {
+  padding: 8px 0;
 }
 
 </style>
