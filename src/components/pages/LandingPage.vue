@@ -42,11 +42,22 @@
 </template>
 
 <script>
+import deepEqual from 'deep-equal';
 import studentService from '../../services/studentService';
 
 export default {
   name: 'Home',
   data() {
+    const vm = this;
+    // * Restore previous popularClassList
+    vm.$vlf.getItem('popularClassList')
+      .then((res) => {
+        if (!res) {
+          return;
+        }
+        vm.popularClassList = res;
+        vm.handleResize();
+      });
     return {
       popularClassList: [],
       elementNumber: 3,
@@ -62,7 +73,7 @@ export default {
         vm.elementNumber = el;
         document.getElementById('landing_page_container').style.width = el * vm.elmenetwidthPixel + 'px'; // eslint-disable-line
       }
-      window.console.log('width', width, 'el', el, 'vm_el', vm.elementNumber);
+      // window.console.log('width', width, 'el', el, 'vm_el', vm.elementNumber);
       return width;
     },
     getElementNum(width) {
@@ -78,9 +89,14 @@ export default {
   },
   async mounted() {
     const vm = this;
-    vm.popularClassList = await studentService.fetchPopularClassList();
+    const res = await studentService.fetchPopularClassList();
+    // * If fetched popularClassList is different from stored one, replace it
+    if (deepEqual(res, vm.popularClassList)) {
+      return;
+    }
+    vm.popularClassList = res;
+    vm.$vlf.setItem('popularClassList', res);
     vm.handleResize();
-    window.console.log(vm.popularClassList);
   },
 };
 </script>
@@ -90,25 +106,6 @@ export default {
   .container {
     min-width: 500px;
     margin: auto;
-  }
-
-  .el-header, .el-footer {
-    background-color: #B3C0D1;
-    color: #333;
-    text-align: center;
-    line-height: 60px;
-  }
-
-  .el-aside {
-    background-color: rgb(255, 255, 255);
-    color: #333;
-    text-align: center;
-    line-height: 50px;
-  }
-
-  .el-main {
-    background-color: #E9EEF3;
-    color: #333;
   }
 
   .bg-white {

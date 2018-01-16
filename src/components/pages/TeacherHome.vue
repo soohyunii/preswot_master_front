@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-container class="outline">
+    <el-container>
 
       <!-- TODO: 이 부분도 TeacherLectureNew.vue와 동일한데, 독립적으로 분리시키는건 어떨까요? -->
       <el-aside width="150px">
@@ -102,34 +102,5 @@ export default {
 
 </script>
 
-<style scoped>
-  .el-header, .el-footer {
-    background-color: #B3C0D1;
-    color: #333;
-    text-align: center;
-    line-height: 60px;
-  }
-
-  .el-aside {
-    background-color: rgb(255, 255, 255);
-    color: #333;
-    text-align: center;
-    line-height: 50px;
-  }
-
-  .el-main {
-    background-color: #E9EEF3;
-    color: #333;
-  }
-
-  .bg-white {
-    background-color: rgb(255, 255, 255);
-  }
-
-  .grid-content {
-    border-radius: 4px;
-    min-height: 500px;
-    padding: 25px;
-    margin-bottom: 30px;
-  }
+<style lang="scss" scoped>
 </style>
