@@ -33,12 +33,12 @@
     </el-button>
 
     <!-- Login / Profile, Logout button part -->
-    <router-link to="/login" style="text-decoration:none; color: #ffffff" v-if="!isJwtValid">
+    <router-link to="/login" style="text-decoration:none; color: #ffffff" v-show="!isJwtValid">
       <el-button type="primary">
           {{ $t('LOGIN.LOGIN_BUTTON') }}
       </el-button>
     </router-link>
-    <router-link to="/a/profile" style="text-decoration:none; color: #ffffff" v-else>
+    <router-link to="/a/profile" style="text-decoration:none; color: #ffffff" v-show="isJwtValid">
       <el-dropdown @command="onClick">
         <el-button type="primary">
             {{ $t('HEADER.PROFILE_BUTTON') }}<i class="el-icon-arrow-down el-icon--right"></i>
@@ -50,7 +50,7 @@
       </el-dropdown>
     </router-link>
 
-    <el-button type="primary" @click="onClick('REGISTER')" v-if="isJwtValid">
+    <el-button type="primary" @click="onClick('REGISTER')" v-show="!isJwtValid">
       회원가입
     </el-button>
   </div>
