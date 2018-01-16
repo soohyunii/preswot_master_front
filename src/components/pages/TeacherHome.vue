@@ -33,7 +33,7 @@
       </el-aside>
 
       <el-main>
-        <h3>{{currentLecture}}</h3><hr>
+        <h3>{{currentClass}}</h3><hr>
 
         <!-- TODO: translation -->
         <!-- TODO: Link to each page per button-->
@@ -43,7 +43,7 @@
         <br /><br />
 
         <!-- TODO: Implement dummy response about lecture list -->
-        <lecture-list :tableData="tableData"></lecture-list>
+        <lecture-list :tableData="scenarioList.tableData"></lecture-list>
 
         <!-- TODO: Implement dummy response about lecture statistics -->
         <lecture-statistics></lecture-statistics>
@@ -61,29 +61,9 @@ export default {
   name: 'TeacherHome',
   data() {
     return {
-      tableData: [{
-        num: '1',
-        date: '2018-01-02',
-        name: '1강',
-        understanding: 100,
-      }, {
-        num: '2',
-        date: '2018-01-09',
-        name: '2강',
-        understanding: 86,
-      }, {
-        num: '3',
-        date: '2018-01-13',
-        name: '3강',
-        understanding: 57,
-      }, {
-        num: '4',
-        date: '2018-01-15',
-        name: '4강',
-        understanding: 72,
-      }],
-      currentLecture: '',
+      currentClass: '',
       teachingClassList: [],
+      scenarioList: '',
     };
   },
   methods: {
@@ -96,7 +76,7 @@ export default {
     disabledummy(item) {
       if (item.className === 'Vue.js') {
         const vm = this;
-        vm.currentLecture = item.className;
+        vm.currentClass = item.className;
         return true;
       }
       return false;
@@ -109,6 +89,7 @@ export default {
   async mounted() {
     const vm = this;
     vm.teachingClassList = await teacherService.fetchTeachingClassList();
+    vm.scenarioList = await teacherService.fetchScenarioListOfClass({ teachingClass: vm.currentClass }); // eslint-disable-line
   },
   components: {
     LectureList,
