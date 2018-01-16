@@ -23,7 +23,6 @@
 
 <script>
 import { mapState } from 'vuex';
-// Import element-ui css
 import './app.scss';
 
 import AppNavigation from './components/layouts/AppNavigation';
@@ -51,7 +50,15 @@ body {
   font-family: 'Noto Sans KR', sans-serif !important;
 }
 
+#app {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
 #app_router_view_wrapper {
   background-color: $oatmeal;
+  flex: 1;
 }
+
 </style>
