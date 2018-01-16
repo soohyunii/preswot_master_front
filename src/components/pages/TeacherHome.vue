@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-container class="outline">
+    <el-container>
       <el-aside width="150px">
         <!-- TODO: Implement dummy response about class list -->
         <el-row>
@@ -26,10 +26,12 @@
           <!-- TODO: Implement dummy response about lecture list -->
           <lecture-list :tableData="tableData"></lecture-list>
           <el-col :span="8">
-            <div class="grid-content bg-white">
+            <div>
               <!-- TODO: translation -->
               <el-col :span="16">수강생 목록</el-col>
-              <el-col :span="8" style="text-align: right;">8명</el-col>
+              <!-- TODO: extract text-align to css -->
+              <!-- <el-col :span="8" style="text-align: right;">8명</el-col> -->
+              <el-col :span="8">8명</el-col>
               <hr>
             </div>
           </el-col>
@@ -80,34 +82,5 @@ export default {
 
 </script>
 
-<style scoped>
-  .el-header, .el-footer {
-    background-color: #B3C0D1;
-    color: #333;
-    text-align: center;
-    line-height: 60px;
-  }
-
-  .el-aside {
-    background-color: rgb(255, 255, 255);
-    color: #333;
-    text-align: center;
-    line-height: 50px;
-  }
-
-  .el-main {
-    background-color: #E9EEF3;
-    color: #333;
-  }
-
-  .bg-white {
-    background-color: rgb(255, 255, 255);
-  }
-
-  .grid-content {
-    border-radius: 4px;
-    min-height: 500px;
-    padding: 25px;
-    margin-bottom: 30px;
-  }
+<style lang="scss" scoped>
 </style>
