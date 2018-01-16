@@ -12,7 +12,7 @@
                 <i :class="dummyIcons()" style="font-size: 50px;"></i><br/>
                 {{ item.className | truncate(10) }}
               </el-button>
-              <el-button @click="moveClass(item)" v-else>
+              <el-button @click="moveClass(item.className)" v-else>
                 <i :class="dummyIcons()" style="font-size: 50px;"></i><br/>
                 {{ item.className | truncate(10) }}
               </el-button>
@@ -67,10 +67,10 @@ export default {
   },
   // TODO: Replace dummy functions
   methods: {
-    async moveClass(item) {
+    async moveClass(teachingClassName) {
       const vm = this;
-      vm.currentClassName = item.className;
-      vm.scenarioList = await teacherService.fetchScenarioList({ teachingClass: vm.currentClassName }); // eslint-disable-line
+      vm.currentClassName = teachingClassName;
+      vm.scenarioList = await teacherService.fetchScenarioList({ teachingClassName });
       // window.console.log(vm.scenarioList.className);
     },
     dummyIcons() {
@@ -91,10 +91,11 @@ export default {
     const vm = this;
     vm.teachingClassList = await teacherService.fetchTeachingClassList();
     // 강사 메인화면 페이지 접속 직후 주시하는 과목 없는 경우 제일 첫번째 과목 정보 나타냄
-    if (!vm.currentClassName) {
+    if (!vm.currentClassName && vm.teachingClassList) {
       vm.currentClassName = vm.teachingClassList[0].className;
     }
-    vm.scenarioList = await teacherService.fetchScenarioList({ teachingClass: vm.currentClassName }); // eslint-disable-line
+    const teachingClassName = vm.currentClassName;
+    vm.scenarioList = await teacherService.fetchScenarioList({ teachingClassName });
     // window.console.log(vm.scenarioList.className);
   },
   components: {
