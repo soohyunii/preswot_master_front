@@ -11,11 +11,12 @@
     <!-- <el-button type="primary" @click="onClick('TOGGLE_NAVIGATION')">
       <i class="el-icon-menu"></i>
     </el-button> -->
-    <!-- TODO: 브랜드 로고 -->
-    [브랜드 로고]
+    <!-- TODO: replace 브랜드 로고 -->
+    <div id="header_brand_img">
+    </div>
     <!-- TODO: translate placeholder -->
     <el-input placeholder="Please input" v-model="searchText" class="input-with-select">
-      <el-button slot="append" icon="el-icon-search"></el-button>
+      <el-button slot="append" icon="el-icon-search" type="primary"></el-button>
     </el-input>
 
     <el-dropdown @command="onClick">
@@ -56,6 +57,8 @@
 </template>
 
 <style lang="scss" scoped>
+@import "~@/variables.scss"; // * To use $--color-primary scss variable
+
 .el-input {
   width: 400px; // TODO: Rplace 400px with designed value
 }
@@ -63,6 +66,13 @@
 #navigation_toggle {
   border: 0;
   padding: 10px 12px;
+}
+
+#header_brand_img {
+  background-color: $--color-primary !important;
+  width: 100px;
+  height: 48px;
+  display: inline;
 }
 </style>
 
