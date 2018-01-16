@@ -24,8 +24,7 @@
 <script>
 import { mapState } from 'vuex';
 // Import element-ui css
-import './element-variables.scss';
-// import 'element-ui/lib/theme-chalk/index.css'; // eslint-disable-line
+import './app.scss';
 
 import AppNavigation from './components/layouts/AppNavigation';
 import AppHeader from './components/layouts/AppHeader';
