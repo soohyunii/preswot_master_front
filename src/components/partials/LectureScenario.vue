@@ -1,13 +1,13 @@
 <template>
   <div>
-    Lecture Element Sequence Template <br />
+    <h1>Lecture Element Sequence Template</h1>
     <el-row :gutter="10">
       <template v-for="(item, index, key) in lectureElementSequence">
-        <el-col :span="4" :key="key" align="center">
+        <el-col :span="3" :key="key" align="center">
           <!-- TODO: change icons -->
           <!-- TODO: Translate tooltip -->
           <i :class="getIconsByType(item.type)" style="font-size: 50px;"></i>
-          <i class="el-icon-error" style="color:red; vertical-align:top" @click="onClick(index)"></i>
+          <i class="el-icon-error" style="color:red; vertical-align:top" @click="onClick(index)"></i><br/>
           <!-- TODO: change bg color, time variable -->
           <el-tag color="#DCDFE6">time</el-tag><br/>
 
@@ -16,7 +16,7 @@
         </el-col>
         <el-col :span="1" :key="key" align="center" v-if="index + 1 < Object.keys(lectureElementSequence).length">
           <br/><br/>
-          <i class="el-icon-minus" />
+          <i class="el-icon-minus" style="font-size: 30px;"/>
         </el-col>
       </template>
     </el-row>
@@ -27,7 +27,7 @@
 import { mapState, mapMutations } from 'vuex';
 
 export default {
-  name: 'LectureElementSequnce',
+  name: 'LectureScenario',
   computed: {
     ...mapState('teacher', ['lectureElementSequence']),
   },
