@@ -8,10 +8,19 @@
                 <el-row>
                     <el-col :span="24" v-if="!isCloseMovie">
                         <!-- TODO: translation -->
-                        <div>
-                            영상이 들어가는 공간(팝업버튼)
-                            <el-button @click="onClick('CLOSE_MOVIE')">X</el-button>
-                        </div>
+                        <el-row class="video">
+                            <el-col :span="12" :offset="6">
+                                <video controls width=100% poster="../../assets/test.jpg">
+                                    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                                </video>
+                            </el-col>
+                            <el-col :span="6">
+                                <i class="el-icon-circle-close" @click="onClick('CLOSE_MOVIE')" style="color:#dee2e8; vertical-align:top; font-size:30px;"/>
+                            </el-col>
+                            <el-col :span="6">
+                                <i class="el-icon-upload2" @click="onClick('POPUP_MOVIE')" style="color:#dee2e8; vertical-align:top; font-size:30px;"/>
+                            </el-col>
+                        </el-row>
                     </el-col>
                 </el-row>
                 <br /><br />
@@ -69,6 +78,10 @@ export default {
           vm.isCloseStatusbar = true;
           break;
         }
+        case 'POPUP_MOVIE': {
+          window.open('https://www.w3schools.com/html/mov_bbb.mp4', '_blank', 'location=0');
+          break;
+        }
         default: {
           throw new Error('not defined type', type);
         }
@@ -84,8 +97,12 @@ export default {
    left:0px;
    bottom:0px;
    width:100%;
-   padding: 5px 0px 5px 0px;
-   background:rgba(0, 0, 0, 0.5);
+   padding: 8px 0px 5px 0px;
+   background:rgba(0, 0, 0, 0.6);
    color: white;
+}
+.video {
+    background-color: black;
+    min-height: 100px;
 }
 </style>
