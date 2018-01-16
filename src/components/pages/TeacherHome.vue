@@ -33,7 +33,7 @@
       </el-aside>
 
       <el-main>
-        <h3>{{ currentClass }}</h3><hr>
+        <h3>{{ currentClassName }}</h3><hr>
 
         <!-- TODO: translation -->
         <!-- TODO: Link to each page per button-->
@@ -42,7 +42,7 @@
         <el-button>과목저널링</el-button>
         <br /><br />
 
-        <lecture-list :tableData="scenarioList.tableData"></lecture-list>
+        <lecture-list :tableData="scenarioList"></lecture-list>
 
         <!-- TODO: Implement dummy response about lecture statistics -->
         <lecture-statistics></lecture-statistics>
@@ -60,17 +60,17 @@ export default {
   name: 'TeacherHome',
   data() {
     return {
-      currentClass: '',
+      currentClassName: '',
       teachingClassList: [],
-      scenarioList: '',
+      scenarioList: [],
     };
   },
   // TODO: Replace dummy functions
   methods: {
     async moveClass(item) {
       const vm = this;
-      vm.currentClass = item.className;
-      vm.scenarioList = await teacherService.fetchScenarioListOfClass({ teachingClass: vm.currentClass }); // eslint-disable-line
+      vm.currentClassName = item.className;
+      vm.scenarioList = await teacherService.fetchScenarioList({ teachingClass: vm.currentClassName }); // eslint-disable-line
       // window.console.log(vm.scenarioList.className);
     },
     dummyIcons() {
@@ -82,10 +82,7 @@ export default {
     },
     isCurrentClass(item) {
       const vm = this;
-      if (item.className === vm.currentClass) {
-        return true;
-      }
-      return false;
+      return item.className === vm.currentClassName;
     },
   },
   computed: {
@@ -94,10 +91,10 @@ export default {
     const vm = this;
     vm.teachingClassList = await teacherService.fetchTeachingClassList();
     // 강사 메인화면 페이지 접속 직후 주시하는 과목 없는 경우 제일 첫번째 과목 정보 나타냄
-    if (!vm.currentClass) {
-      vm.currentClass = vm.teachingClassList[0].className;
+    if (!vm.currentClassName) {
+      vm.currentClassName = vm.teachingClassList[0].className;
     }
-    vm.scenarioList = await teacherService.fetchScenarioListOfClass({ teachingClass: vm.currentClass }); // eslint-disable-line
+    vm.scenarioList = await teacherService.fetchScenarioList({ teachingClass: vm.currentClassName }); // eslint-disable-line
     // window.console.log(vm.scenarioList.className);
   },
   components: {
