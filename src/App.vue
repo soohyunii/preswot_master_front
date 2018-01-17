@@ -57,12 +57,12 @@ body {
 }
 
 #app_router_view_wrapper {
-  background-color: $oatmeal;
+  background-color: $app-oatmeal;
   flex: 1;
 }
 
 #app_footer_wrapper {
-  background-color: $oatmeal;
+  background-color: $app-oatmeal;
 }
 
 </style>
