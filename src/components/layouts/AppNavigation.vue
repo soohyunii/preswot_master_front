@@ -86,52 +86,35 @@ export default {
 
 <style lang="scss">
 // * handling font awesome icons
-.el-menu--collapse > .el-menu-item .fa.el-compatible {
-  margin: 0;
-  vertical-align: middle;
-  // width: 24px;
-  text-align: center;
-}
-
-.el-menu-item .fa.el-compatible {
-  margin-right: 5px;
-  // width: 24px;
-  text-align: center;
-  // font-size: 18px;
-  vertical-align: middle;
-}
-
-.fa.el-compatible {
-  // font-size: 18px;
-  font-style: normal;
-  font-weight: 400;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  vertical-align: baseline;
-  display: inline-block;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-// * AppNavigation
 #app_nav_wrapper {
   height: 100%;
-
   .app-nav-menu {
     height: 100%;
     border: 0;
   }
-
+  .el-menu-item.menu, .el-submenu.menu .el-submenu__title {
+    padding-left: 15px !important;
+  }
+  .el-menu-item .fa.el-compatible {
+    margin-right: 5px;
+    text-align: center;
+    vertical-align: middle;
+  }
   .fa.el-compatible {
     content: "\E638";
     vertical-align: middle;
   }
-
   .menu span {
     vertical-align: baseline;
     line-height: 18.6667px;
     margin-left: 7px;
+  }
+  .el-menu-item-group__title {
+    display: none;
+  }
+  .el-menu-item-group .el-menu-item {
+    height: 42px;
+    line-height: 42px;
   }
 }
 </style>
