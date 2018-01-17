@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-container>
-      <teaching-class-list @moveClass="moveClass"/>
+      <teaching-class-list />
 
       <!-- 이 메인은 맞음 시작 -->
       <el-main>
@@ -81,11 +81,6 @@ export default {
     };
   },
   methods: {
-    async moveClass({ whereToMove }) {
-      const vm = this;
-      vm.currentClassName = whereToMove;
-      // window.console.log('parent', whereToMove);
-    },
     changeLectureName() {
       const vm = this;
       vm.inputFlag = !vm.inputFlag;

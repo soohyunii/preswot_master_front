@@ -1,10 +1,10 @@
 <template>
   <div>
     <el-container>
-      <teaching-class-list @moveClass="moveClass"/>
+      <teaching-class-list @moveClass="changeScenario"/>
 
       <el-main>
-        <h3>{{ currentClassName }}</h3><hr>
+        <h3>{{ currentEditingClass }}</h3><hr>
 
         <!-- TODO: translation -->
         <!-- TODO: Link to each page per button-->
@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import LectureList from '../partials/LectureList';
 import LectureStatistics from '../partials/LectureStatistics';
 import TeachingClassList from '../partials/TeachingClassList';
@@ -30,19 +31,19 @@ import teacherService from '../../services/teacherService';
 
 export default {
   name: 'TeacherHome',
+  // TODO: Replace dummy functions
   data() {
     return {
       scenarioList: [],
-      currentClassName: '',
     };
   },
-  // TODO: Replace dummy functions
+  computed: {
+    ...mapState('teacher', ['currentEditingClass']),
+  },
   methods: {
-    async moveClass({ whereToMove }) {
+    async changeScenario() {
       const vm = this;
-      vm.currentClassName = whereToMove;
-      // window.console.log('parent', whereToMove);
-      const teachingClassName = vm.currentClassName;
+      const teachingClassName = vm.currentEditingClass;
       vm.scenarioList = await teacherService.fetchScenarioList({ teachingClassName });
     },
   },

@@ -5,6 +5,9 @@ export default {
     // TODO: Otherwise, init from localStorage (in case of server has no data)
     currentEditingElement: null, // TODO: init from localStorage
     // TODO: save currentEditingElement into localStorage inside Vue component using watch
+    teachingClassList: [],
+    currentEditingClass: null,
+    // scenarioList: [],
   },
   mutations: {
     pushLectureElement(state, { lectureElement }) {
@@ -16,5 +19,14 @@ export default {
       // TODO: update localForage
     },
     // TODO: editLectureElement
+    updateCurrentEditingClass(state, { editingClass }) {
+      state.currentEditingClass = editingClass;
+    },
+    updateTeachingClassList(state, { classList }) {
+      state.teachingClassList = classList;
+    },
+    /* updatescenarioList(state, { scenarioList }) {
+      state.scenarioList = scenarioList;
+    }, */
   },
 };
