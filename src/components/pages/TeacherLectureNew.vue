@@ -90,7 +90,7 @@ export default {
 </script>
 
 
-<style scoped>
+<style lang="scss" scoped>
   .lecture-number-name {
     border-bottom-style: solid;
     border-bottom-width: 1px;
