@@ -5,7 +5,7 @@
         <app-header />
       </el-header>
       <el-container>
-        <el-aside width="200px" v-show="isNavCollapsed">
+        <el-aside width="200px" v-show="!isNavCollapsed">
           <app-navigation />
         </el-aside>
         <el-container>
