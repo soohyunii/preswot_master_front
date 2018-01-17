@@ -1,0 +1,9 @@
+// * Custom color
+$app-ultra-violet: #57477f;
+$app-oatmeal: #f1f1f0;
+$app-orange: #eab524;
+$app-rose: #eb686b;
+
+/* element variables */
+// * Do not modify element-ui pre-defined color except primary
+$--color-primary: $app-ultra-violet;
