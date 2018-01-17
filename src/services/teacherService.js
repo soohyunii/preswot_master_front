@@ -20,10 +20,10 @@ export default {
       }, 500);
     });
   },
-  fetchScenarioList({ teachingClass }) {
+  fetchScenarioList({ teachingClassName }) {
     // teachingClass라는 과목에 대한 시나리오 정보
     // TODO: Replace dummy with axios
-    window.console.log(teachingClass);
+    window.console.log(teachingClassName);
     return new Promise((resolve) => {
       window.setTimeout(() => {
         resolve([
