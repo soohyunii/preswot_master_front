@@ -17,17 +17,7 @@ export default {
     },
     // TODO: editLectureElement
     editLectureElement(state, { evt }) {
-      console.log(evt);
-      console.log(state.lectureElementSequence);
-      const draggedIndex = evt.draggedContext.index / 3;
-      const relatedIndex = evt.relatedContext.index / 3;
-      console.log(draggedIndex);
-      console.log(relatedIndex);
-      const temp = state.lectureElementSequence[0];
-      console.log(temp);
-      // eslint-disable-next-line
-      state.lectureElementSequence[draggedIndex] = state.lectureElementSequence[relatedIndex];
-      state.lectureElementSequence[relatedIndex] = temp;
+      state.lectureElementSequence = evt.slice();
     },
   },
 };

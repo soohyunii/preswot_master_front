@@ -1,6 +1,6 @@
 <template>
   <div>
-    <draggable v-model="lectureElementSequence" :move="checkMove" @start="drag=true" @end="drag=false">
+    <draggable v-model="lectureElementSequence" @start="drag=true" @end="drag=false">
       <template v-for="(item, index, key) in lectureElementSequence">
         <el-col :span="3" :key="key" align="center">
           <!-- TODO: change icons -->
@@ -13,10 +13,6 @@
           <!-- TODO: change bg color, duration variable -->
           <el-tag color="#F2F6FC">duration</el-tag><br/>
         </el-col>
-        <el-col :span="1" :key="key" align="center" v-if="index + 1 < Object.keys(lectureElementSequence).length">
-          <br/><br/>
-          <i class="el-icon-minus" style="font-size: 30px;"/>
-        </el-col>
       </template>    
     </draggable>
     
@@ -24,29 +20,31 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapMutations } from 'vuex';
 import draggable from 'vuedraggable';
 
 export default {
+  data() {
+    return {
+      drag: false,
+    };
+  },
   name: 'LectureScenario',
   computed: {
-    ...mapState('teacher', ['lectureElementSequence']),
+    lectureElementSequence: {
+      get() {
+        return this.$store.state.teacher.lectureElementSequence;
+      },
+      set(value) {
+        this.$store.commit('teacher/editLectureElement', { evt: value });
+      },
+    },
   },
   methods: {
     // TODO: edit lecture element
     // TODO: add drag/drop function
     ...mapMutations('teacher', ['deleteLectureElement']),
     ...mapMutations('teacher', ['editLectureElement']),
-    checkMove(evt) {
-      const vm = this;
-      if ((evt.relatedContext.index % 3 === 0)) {
-        vm.editLectureElement({
-          evt,
-        });
-        return true;
-      }
-      return false;
-    },
     onClick(index) {
       const vm = this;
       if (index < Object.keys(vm.lectureElementSequence).length) {
