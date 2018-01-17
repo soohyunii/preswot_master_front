@@ -20,10 +20,9 @@ export default class AuthPlugin {
       const route = to.matched.find(e => e.meta.auth !== null);
       // console.log('beforeEach', route);
       // * Collapse AppNav after every routing
-      // TODO: uncomment below code
-      // store.commit('layout/updateCollapse', {
-      //   isNavCollapsed: false,
-      // });
+      store.commit('layout/updateCollapse', {
+        isNavCollapsed: false,
+      });
       if (!route) {
         next({
           name: 'NotFound',
