@@ -132,8 +132,16 @@ export default {
         }
         case 'LOGOUT': {
           vm.updateJwt('');
-          vm.$router.push({
-            name: 'LandingPage',
+          if (vm.$route.meta.auth) {
+            vm.$router.push({
+              name: 'LandingPage',
+            });
+          }
+          // TODO: translation
+          vm.$notify({
+            title: 'Success',
+            message: 'Logout Success !!',
+            type: 'success',
           });
           break;
         }
