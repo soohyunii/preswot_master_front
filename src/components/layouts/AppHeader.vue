@@ -1,61 +1,71 @@
 <template>
-  <div>
-    <el-button
-      id="navigation_toggle"
-      @click="onClick('TOGGLE_NAVIGATION')"
-    >
-      <i class="fa fa-bars fa-2x" />
-    </el-button>
-    <!-- TODO: replace 브랜드 로고 -->
-    <el-button type="primary">Brand Logo</el-button>
-    <!-- TODO: translate placeholder -->
-    <el-input placeholder="Please input" v-model="searchText">
-    </el-input>
-    <!-- <el-button icon="el-icon-search" type="primary"></el-button> -->
-    <el-button type="primary">
-      <i class="fa fa-search"></i>
-    </el-button>
+  <div id="app_nav_wrapper">
+    <el-row type="flex" justify="space-between">
 
+      <!-- TODO: replace span with :xs, :sm, :md, :lg, :xl -->
+      <el-col :span="12">
+        <el-button
+          id="navigation_toggle"
+          @click="onClick('TOGGLE_NAVIGATION')"
+        >
+          <i class="fa fa-bars fa-2x" />
+        </el-button>
+        <router-link to="/">
+          <!-- TODO: replace 브랜드 로고 -->
+          <el-button type="primary">Brand Logo</el-button>
+        </router-link>
+        <!-- TODO: translate placeholder -->
+        <el-input placeholder="Please input" v-model="searchText">
+        </el-input>
+        <!-- <el-button icon="el-icon-search" type="primary"></el-button> -->
+        <el-button type="primary">
+          <i class="fa fa-search"></i>
+        </el-button>
+      </el-col>
 
-    <el-dropdown @command="onClick">
-      <el-button type="primary">
-        {{ $t('HEADER.LANG_INFO') }}<i class="el-icon-arrow-down el-icon--right"></i>
-      </el-button>
-      <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item command="LOCALE_KO">한국어</el-dropdown-item>
-        <el-dropdown-item command="LOCALE_EN">English</el-dropdown-item>
-      </el-dropdown-menu>
-    </el-dropdown>
+      <el-col :span="5">
+        <el-dropdown @command="onClick">
+          <el-button type="primary">
+            {{ $t('HEADER.LANG_INFO') }}<i class="el-icon-arrow-down el-icon--right"></i>
+          </el-button>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="LOCALE_KO">한국어</el-dropdown-item>
+            <el-dropdown-item command="LOCALE_EN">English</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
 
-    <router-link to="/a/teacher" v-show="isJwtValid">
-      <el-button type="primary">
-        <i class="fa fa-pencil-square-o"></i>
-      </el-button>
-    </router-link>
+        <router-link to="/a/teacher" v-show="isJwtValid">
+          <el-button type="primary">
+            <i class="fa fa-pencil-square-o"></i>
+          </el-button>
+        </router-link>
 
-    <!-- Login / Profile, Logout button part -->
-    <router-link to="/login" v-show="!isJwtValid">
-      <el-button type="primary">
-          {{ $t('LOGIN.LOGIN_BUTTON') }}
-      </el-button>
-    </router-link>
-    <el-dropdown @command="onClick">
-      <el-button type="primary" v-show="isJwtValid">
-          {{ $t('HEADER.PROFILE_BUTTON') }}<i class="el-icon-arrow-down el-icon--right"></i>
-      </el-button>
-      <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item command="PROFILE">{{ $t('HEADER.PROFILE_BUTTON') }}</el-dropdown-item>
-        <el-dropdown-item command="LOGOUT">{{ $t('HEADER.LOGOUT_BUTTON') }}</el-dropdown-item>
-      </el-dropdown-menu>
-    </el-dropdown>
-    <!-- <router-link to="/a/profile" v-show="isJwtValid">
-    </router-link> -->
+        <!-- Login / Profile, Logout button part -->
+        <router-link to="/login" v-show="!isJwtValid">
+          <el-button type="primary">
+              {{ $t('LOGIN.LOGIN_BUTTON') }}
+          </el-button>
+        </router-link>
+        <el-dropdown @command="onClick">
+          <el-button type="primary" v-show="isJwtValid">
+              {{ $t('HEADER.PROFILE_BUTTON') }}<i class="el-icon-arrow-down el-icon--right"></i>
+          </el-button>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="PROFILE">{{ $t('HEADER.PROFILE_BUTTON') }}</el-dropdown-item>
+            <el-dropdown-item command="LOGOUT">{{ $t('HEADER.LOGOUT_BUTTON') }}</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+        <!-- <router-link to="/a/profile" v-show="isJwtValid">
+        </router-link> -->
 
-    <router-link to="/register" v-show="!isJwtValid">
-      <el-button type="primary">
-        회원가입
-      </el-button>
-    </router-link>
+        <router-link to="/register" v-show="!isJwtValid">
+          <el-button type="primary">
+            회원가입
+          </el-button>
+        </router-link>
+      </el-col>
+
+    </el-row>
   </div>
 </template>
 
@@ -69,9 +79,14 @@
 #navigation_toggle {
   border: 0;
   padding: 6px 10px;
-  .fa.fa-bars {
-    top: 100px;
-  }
+  vertical-align: middle;
+  // .fa.fa-bars {
+  //   top: 100px;
+  // }
+}
+
+#app_nav_wrapper {
+  padding: 8px 0;
 }
 
 </style>

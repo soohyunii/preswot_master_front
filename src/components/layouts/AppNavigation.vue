@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="app_nav_wrapper">
     <!-- TODO: replace index of el-menu-item (now just plain string) to corresponding vue-router's path -->
     <el-menu
       :default-active="$route.path"
@@ -7,23 +7,23 @@
       :default-openeds="['3', '4']"
       :router="true"
     >
-      <el-menu-item index="/">
-        <i class="fa fa-home el-compatible" style="width: 18px; height: 18px;"></i>
+      <el-menu-item index="/" class="menu">
+        <i class="fa fa-home fa-lg fa-fw el-compatible"></i>
         <!-- TODO: Translation -->
         <span slot="title">홈</span>
       </el-menu-item>
 
-      <el-menu-item index="/classes">
-        <i class="el-icon-setting"></i>
+      <el-menu-item index="/classes" class="menu">
+        <i class="fa fa-list fa-lg fa-fw el-compatible"></i>
         <span slot="title">
           <!-- TODO: Translation -->
           과목 리스트
         </span>
       </el-menu-item>
 
-      <el-submenu index="3">
+      <el-submenu index="3" class="menu">
         <template slot="title">
-          <i class="el-icon-location"></i>
+          <i class="fa fa-graduation-cap fa-lg fa-fw el-compatible"></i>
           <!-- TODO: Translation -->
           <span slot="title">수강 중인 과목</span>
         </template>
@@ -37,9 +37,9 @@
         </el-menu-item-group>
       </el-submenu>
 
-      <el-submenu index="4">
+      <el-submenu index="4" class="menu">
         <template slot="title">
-          <i class="el-icon-location"></i>
+          <i class="fa fa-book fa-lg fa-fw el-compatible"></i>
           <!-- TODO: Translation -->
           <span slot="title">강의 중인 과목</span>
         </template>
@@ -84,45 +84,37 @@ export default {
 };
 </script>
 
-<style lang="scss">
-// handling font awesome icons
-.el-menu--collapse > .el-menu-item .fa.el-compatible {
-  margin: 0;
-  vertical-align: middle;
-  width: 24px;
-  text-align: center;
-}
-
-.el-menu-item .fa.el-compatible {
-  margin-right: 5px;
-  width: 24px;
-  text-align: center;
-  font-size: 18px;
-  vertical-align: middle;
-}
-
-.fa.el-compatible {
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 400;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  vertical-align: baseline;
-  display: inline-block;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.fa.el-compatible {
-  content: "\E638";
-}
-
-.app-nav-menu {
-  height: 93vh;
-}
-.app-nav-menu:not(.el-menu--collapse) {
-  width: 190px;
-  min-height: 400px;
+<style lang="scss" scoped>
+// * handling font awesome icons
+#app_nav_wrapper {
+  height: 100%;
+  .app-nav-menu {
+    height: 100%;
+    border: 0;
+  }
+  .el-menu-item.menu, .el-submenu.menu .el-submenu__title {
+    padding-left: 15px !important;
+  }
+  .el-menu-item .fa.el-compatible {
+    margin-right: 5px;
+    text-align: center;
+    vertical-align: middle;
+  }
+  .fa.el-compatible {
+    content: "\E638";
+    vertical-align: middle;
+  }
+  .menu span {
+    vertical-align: baseline;
+    line-height: 18.6667px;
+    margin-left: 7px;
+  }
+  .el-menu-item-group__title {
+    display: none;
+  }
+  .el-menu-item-group .el-menu-item {
+    height: 42px;
+    line-height: 42px;
+  }
 }
 </style>
