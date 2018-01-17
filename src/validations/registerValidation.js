@@ -71,7 +71,7 @@ export default function generateRule(vm) {
     ],
     name: [
       {
-        rqeuired: true,
+        required: true,
         message: vm.$t('FORM.ERR_REQUIRED'),
         trigger: 'change,blur',
       },
