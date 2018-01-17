@@ -56,8 +56,6 @@
         회원가입
       </el-button>
     </router-link>
-    redirectTo: {{ redirectTo }}
-    router: {{ this.$route.name }}
   </div>
 </template>
 
@@ -119,8 +117,16 @@ export default {
         }
         case 'LOGOUT': {
           vm.updateJwt('');
-          vm.$router.push({
-            name: 'LandingPage',
+          if (vm.$route.meta.auth === true) {
+            vm.$router.push({
+              name: 'LandingPage',
+            });
+          }
+          // TODO: translation
+          vm.$notify({
+            title: 'Success',
+            message: 'Logout Success !!',
+            type: 'success',
           });
           break;
         }
