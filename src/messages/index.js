@@ -58,7 +58,8 @@ export default {
     },
     "NOTFOUND": {
       "REDIRECT_MESSAGE1": "after ",
-      "REDIRECT_MESSAGE2": "seconds, redirected to login page"
+      "REDIRECT_MESSAGE2": "seconds, redirected to login page",
+      "REDIRECT_MESSAGE": "{REDIRECT_MESSAGE1} {secondLeft}{REDIRECT_MESSAGE2}"
     }
   },
   "ko": {
@@ -119,7 +120,8 @@ export default {
     },
     "NOTFOUND": {
       "REDIRECT_MESSAGE1": " ",
-      "REDIRECT_MESSAGE2": "초 뒤 홈페이지로 이동합니다."
+      "REDIRECT_MESSAGE2": "초 뒤 홈페이지로 이동합니다.",
+      "REDIRECT_MESSAGE": "{REDIRECT_MESSAGE1} {secondLeft}{REDIRECT_MESSAGE2}"
     }
   }
 }
