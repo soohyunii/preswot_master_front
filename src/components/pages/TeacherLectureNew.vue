@@ -20,7 +20,7 @@
             </div>
             <div class="lecture-number-name" v-else>
               <h3>
-                {{lectureName}}
+                {{ lectureName }}
                 <i class="el-icon-edit" @click="changeLectureName()"></i>
               </h3>
             </div>
@@ -30,12 +30,12 @@
 
         <el-row :gutter="30">
           <el-col :span="16">
-            <div class="grid-content bg-white">
+            <div>
               <lecture-scenario />
             </div>
           </el-col>
           <el-col :span="8">
-            <div class="grid-content bg-white">
+            <div>
               <lecture-scenario-item-adder />
             </div>
           </el-col>
@@ -95,21 +95,5 @@ export default {
     border-bottom-style: solid;
     border-bottom-width: 1px;
     border-bottom-color: darkorange;
-  }
-
-  .el-main {
-    background-color: #E9EEF3;
-    color: #333;
-  }
-
-  .bg-white {
-    background-color: rgb(255, 255, 255);
-  }
-
-  .grid-content {
-    border-radius: 4px;
-    min-height: 150x;
-    padding: 25px;
-    margin-bottom: 30px;
   }
 </style>
