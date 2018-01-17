@@ -93,7 +93,7 @@
 
 <script>
 export default {
-  name: 'LectureList',
+  name: 'ClassScenario',
   props: ['tableData'],
   methods: {
     getType(type) {
