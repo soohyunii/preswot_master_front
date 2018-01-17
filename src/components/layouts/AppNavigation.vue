@@ -84,7 +84,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 // * handling font awesome icons
 #app_nav_wrapper {
   height: 100%;

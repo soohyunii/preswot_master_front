@@ -3,7 +3,7 @@
     <el-row type="flex" justify="space-between">
 
       <!-- TODO: replace span with :xs, :sm, :md, :lg, :xl -->
-      <el-col :span="12">
+      <el-col :span="13">
         <el-button
           id="navigation_toggle"
           @click="onClick('TOGGLE_NAVIGATION')"
@@ -23,46 +23,52 @@
         </el-button>
       </el-col>
 
-      <el-col :span="5">
-        <el-dropdown @command="onClick">
-          <el-button type="primary">
-            {{ $t('HEADER.LANG_INFO') }}<i class="el-icon-arrow-down el-icon--right"></i>
-          </el-button>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="LOCALE_KO">한국어</el-dropdown-item>
-            <el-dropdown-item command="LOCALE_EN">English</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+      <el-col :span="11">
 
-        <router-link to="/a/teacher" v-show="isJwtValid">
-          <el-button type="primary">
-            <i class="fa fa-pencil-square-o"></i>
-          </el-button>
-        </router-link>
+        <el-row type="flex" justify="end">
+          <el-col :span="12">
+            <el-dropdown @command="onClick">
+              <el-button type="primary">
+                {{ $t('HEADER.LANG_INFO') }}<i class="el-icon-arrow-down el-icon--right"></i>
+              </el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="LOCALE_KO">한국어</el-dropdown-item>
+                <el-dropdown-item command="LOCALE_EN">English</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
 
-        <!-- Login / Profile, Logout button part -->
-        <router-link to="/login" v-show="!isJwtValid">
-          <el-button type="primary">
-              {{ $t('LOGIN.LOGIN_BUTTON') }}
-          </el-button>
-        </router-link>
-        <el-dropdown @command="onClick">
-          <el-button type="primary" v-show="isJwtValid">
-              {{ $t('HEADER.PROFILE_BUTTON') }}<i class="el-icon-arrow-down el-icon--right"></i>
-          </el-button>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="PROFILE">{{ $t('HEADER.PROFILE_BUTTON') }}</el-dropdown-item>
-            <el-dropdown-item command="LOGOUT">{{ $t('HEADER.LOGOUT_BUTTON') }}</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-        <!-- <router-link to="/a/profile" v-show="isJwtValid">
-        </router-link> -->
+            <router-link to="/a/teacher" v-show="isJwtValid">
+              <el-button type="primary">
+                <i class="fa fa-pencil-square-o"></i>
+              </el-button>
+            </router-link>
 
-        <router-link to="/register" v-show="!isJwtValid">
-          <el-button type="primary">
-            회원가입
-          </el-button>
-        </router-link>
+            <!-- Login / Profile, Logout button part -->
+            <router-link to="/login" v-show="!isJwtValid">
+              <el-button type="primary">
+                  {{ $t('LOGIN.LOGIN_BUTTON') }}
+              </el-button>
+            </router-link>
+            <el-dropdown @command="onClick">
+              <el-button type="primary" v-show="isJwtValid">
+                  {{ $t('HEADER.PROFILE_BUTTON') }}<i class="el-icon-arrow-down el-icon--right"></i>
+              </el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="PROFILE">{{ $t('HEADER.PROFILE_BUTTON') }}</el-dropdown-item>
+                <el-dropdown-item command="LOGOUT">{{ $t('HEADER.LOGOUT_BUTTON') }}</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+            <!-- <router-link to="/a/profile" v-show="isJwtValid">
+            </router-link> -->
+
+            <router-link to="/register" v-show="!isJwtValid">
+              <el-button type="primary">
+                회원가입
+              </el-button>
+            </router-link>
+          </el-col>
+        </el-row>
+
       </el-col>
 
     </el-row>
@@ -132,8 +138,16 @@ export default {
         }
         case 'LOGOUT': {
           vm.updateJwt('');
-          vm.$router.push({
-            name: 'LandingPage',
+          if (vm.$route.meta.auth) {
+            vm.$router.push({
+              name: 'LandingPage',
+            });
+          }
+          // TODO: translation
+          vm.$notify({
+            title: 'Success',
+            message: 'Logout Success !!',
+            type: 'success',
           });
           break;
         }

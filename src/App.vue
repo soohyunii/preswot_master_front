@@ -5,7 +5,7 @@
         <app-header />
       </el-header>
       <el-container>
-        <el-aside width="200px" v-show="isNavCollapsed">
+        <el-aside width="200px" v-show="!isNavCollapsed">
           <app-navigation />
         </el-aside>
         <el-container>
@@ -57,12 +57,12 @@ body {
 }
 
 #app_router_view_wrapper {
-  background-color: $oatmeal;
+  background-color: $app-oatmeal;
   flex: 1;
 }
 
 #app_footer_wrapper {
-  background-color: $oatmeal;
+  background-color: $app-oatmeal;
 }
 
 </style>

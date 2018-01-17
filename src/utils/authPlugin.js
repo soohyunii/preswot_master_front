@@ -21,7 +21,7 @@ export default class AuthPlugin {
       // console.log('beforeEach', route);
       // * Collapse AppNav after every routing
       store.commit('layout/updateCollapse', {
-        isNavCollapsed: false,
+        isNavCollapsed: true,
       });
       if (!route) {
         next({
