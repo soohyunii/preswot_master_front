@@ -82,15 +82,28 @@ export default {
   computed: {
     ...mapState('layout', ['isNavCollapsed']),
   },
-  async mounted() {
+  mounted() {
     const vm = this;
-    vm.attendingClassList = await studentService.fetchAttendingClassList();
-    vm.teachingClassList = await teacherService.fetchTeachingClassList();
+    studentService.fetchAttendingClassList()
+    .then((attendingClassList) => {
+      vm.attendingClassList = attendingClassList;
+    })
+    .catch(() => {
+      // fetch fail
+    });
+
+    teacherService.fetchTeachingClassList()
+    .then((teachingClassList) => {
+      vm.teachingClassList = teachingClassList;
+    })
+    .catch(() => {
+      // fetch fail
+    });
   },
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 // * handling font awesome icons
 #app_nav_wrapper {
   height: 100%;
