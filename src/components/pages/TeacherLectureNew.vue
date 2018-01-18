@@ -45,14 +45,10 @@
 
         <el-row :gutter="30">
           <el-col :span="16">
-            <div class="grid-content bg-white">
-              <lecture-scenario />
-            </div>
+            <lecture-scenario />
           </el-col>
           <el-col :span="8">
-            <div class="grid-content bg-white">
-              <lecture-scenario-item-adder />
-            </div>
+            <lecture-scenario-item-adder />
           </el-col>
         </el-row>
         <el-row :gutter="30">
@@ -125,27 +121,5 @@ export default {
 };
 </script>
 
-
 <style scoped>
-  .lecture-number-name {
-    border-bottom-style: solid;
-    border-bottom-width: 1px;
-    border-bottom-color: darkorange;
-  }
-
-  .el-main {
-    background-color: #E9EEF3;
-    color: #333;
-  }
-
-  .bg-white {
-    background-color: rgb(255, 255, 255);
-  }
-
-  .grid-content {
-    border-radius: 4px;
-    min-height: 150x;
-    padding: 25px;
-    margin-bottom: 30px;
-  }
 </style>

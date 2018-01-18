@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="grid-content bg-white">
     <h1>Lecture Element Sequence Template</h1>
     <el-row :gutter="10">
       <!-- TODO: transform animation? -->
@@ -59,5 +59,15 @@ export default {
 
   .ghost {
     opacity: .5;
+  }
+
+  .bg-white {
+    background-color: rgb(255, 255, 255);
+  }
+
+  .grid-content {
+    border-radius: 4px;
+    padding: 25px;
+    margin-bottom: 30px;
   }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="grid-content bg-white">
     <h1>Lecture Element Group template</h1>
     <el-row :gutter="10">
       <el-col align="center" :span="6">
@@ -83,3 +83,15 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+  .bg-white {
+    background-color: rgb(255, 255, 255);
+  }
+
+  .grid-content {
+    border-radius: 4px;
+    padding: 25px;
+    margin-bottom: 30px;
+  }
+</style>
