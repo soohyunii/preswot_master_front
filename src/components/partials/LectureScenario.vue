@@ -2,8 +2,16 @@
   <div>
     <h1>Lecture Element Sequence Template</h1>
     <el-row :gutter="10">
-      <draggable v-model="lectureElementSequence" @start="drag=true" @end="drag=false">
-        <lecture-scenario-item :lectureElementSequence="lectureElementSequence"></lecture-scenario-item>
+      <!-- TODO: transform animation? -->
+      <!-- TODO: middle bar between two Items -->
+      <draggable v-model="lectureScenario" :options="dragOptions" @start="drag=true" @end="drag=false">
+        <transition-group>
+          <lecture-scenario-item
+            v-for="(item, index) in lectureScenario"
+            class="list-group-item"
+            :key="index"
+            :props="{ item, index }" />
+        </transition-group>
       </draggable>
     </el-row>
   </div>
@@ -21,14 +29,20 @@ export default {
     };
   },
   computed: {
-    lectureElementSequence: {
+    lectureScenario: {
       get() {
-        return this.$store.state.teacher.lectureElementSequence;
+        return this.$store.state.teacher.lectureScenario;
       },
-      set(value) {
-        window.console.log('dasdada');
-        this.$store.commit('teacher/editLectureElement', { evt: value });
+      set(lectureScenarioItems) {
+        // window.console.log(lectureScenarioItems);
+        this.$store.commit('teacher/editLectureElement', { lectureScenarioItems });
       },
+    },
+    dragOptions() {
+      return {
+        animation: 0,
+        ghostClass: 'ghost',
+      };
     },
   },
   components: {
@@ -37,3 +51,13 @@ export default {
   },
 };
 </script>
+
+<style>
+  .list-group-item {
+    cursor: move;
+  }
+
+  .ghost {
+    opacity: .5;
+  }
+</style>
