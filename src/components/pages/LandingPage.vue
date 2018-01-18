@@ -4,9 +4,10 @@
     <el-container class="container" id="landing_page_container">
       <el-main>
         <el-row type="flex" justify="center">
-          <el-col align="center">
-            <div class="thumbnail-content bg-film" align="center">
-              영상 썸네일
+          <el-col :span="12">
+            영상 썸네일
+            <div class="image-wrapper">
+              <img src="../../assets/dev/ratio_4_3.png">
             </div>
           </el-col>
         </el-row>
@@ -16,7 +17,10 @@
         <el-row :gutter="20" >
           <template v-for="(item, index, key) in popularClassList">
             <el-col :key="key" :span="Math.ceil(24 / elementNumber)" v-if="index < elementNumber">
-              <div class="film-content bg-film">{{ item.className }}</div>
+              {{ item.className }}
+              <div class="image-wrapper">
+                <img src="../../assets/dev/ratio_16_10.png">
+              </div>
             </el-col>
           </template>
         </el-row>
@@ -149,5 +153,17 @@ export default {
 
   .el-container:nth-child(7) .el-aside {
     line-height: 320px;
+  }
+
+  .image-wrapper {
+    position: relative;
+    padding-bottom: 56.25%;
+  }
+
+  .image-wrapper img {
+    position: absolute;
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
   }
 </style>
