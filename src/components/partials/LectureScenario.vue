@@ -8,7 +8,7 @@
       <el-main>
         <div ref="main">
           <el-row :gutter="10">
-            <template v-for="(item, index, key) in lectureElementSequence">
+            <template v-for="(item, index, key) in lectureScenario">
               <el-col :span="3" :key="key" align="center">
                 <!-- TODO: change icons -->
                 <!-- TODO: Translate tooltip -->
@@ -20,13 +20,14 @@
                 <!-- TODO: change bg color, duration variable -->
                 <el-tag color="#F2F6FC">duration</el-tag><br/>
               </el-col>
-              <el-col :span="1" :key="key" align="center" v-if="index + 1 < Object.keys(lectureElementSequence).length">
+              <el-col :span="1" :key="key" align="center" v-if="index + 1 < Object.keys(lectureScenario).length">
                 <br/><br/>
                 <i class="el-icon-minus" style="font-size: 30px;"/>
               </el-col>
             </template>
           </el-row>
         </div>
+        {{labelStyle}}
       </el-main>
     </el-container>
   </div>
@@ -115,6 +116,16 @@ export default {
       //   this.$forceUpdate();
       // });
       return res;
+    },
+    updateLabelStyle() {
+      const vm = this;
+      const main = this.$refs.main;
+      if (!main) {
+        vm.labelStyle.height = '200px';
+      } else {
+        vm.labelStyle.height = `${main.clientHeight + 40}px`;
+      }
+      return vm.labelStyle;
     },
   },
 };
