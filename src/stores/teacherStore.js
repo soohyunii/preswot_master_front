@@ -19,6 +19,9 @@ export default {
       // TODO: update localForage
     },
     // TODO: editLectureElement
+    editLectureElement(state, { evt }) {
+      state.lectureElementSequence = evt.slice();
+    },
     updateCurrentEditingClass(state, { editingClass }) {
       state.currentEditingClass = editingClass;
     },
