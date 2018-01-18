@@ -5,28 +5,43 @@
 
       <!-- 이 메인은 맞음 시작 -->
       <el-main>
-        <el-row>
-          <el-col :span="24">
-            <div class="lecture-number-name" v-if="inputFlag">
-              <el-row :gutter="10">
-                <el-col :span="8">
-                  <el-input v-model="lectureName"></el-input>
-                </el-col>
-                <el-col :span="4">
-                  <el-button @click="changeLectureName()">확인</el-button>
-                </el-col>
-              </el-row>
-              <br/>
-            </div>
-            <div class="lecture-number-name" v-else>
+        <el-row :gutter="5">
+          <template v-if="inputFlag">
+            <el-col :span="6">
+              <el-input v-model="lectureName"></el-input>
+            </el-col>
+            <!-- TODO: translate -->
+            <el-col :span="2">
+              <el-button @click="changeLectureName()">확인</el-button>
+            </el-col>
+          </template>
+
+          <template v-else>
+            <el-col :span="8">
               <h3>
                 {{lectureName}}
                 <i class="el-icon-edit" @click="changeLectureName()"></i>
               </h3>
-            </div>
+            </el-col>
+          </template>
+
+          <el-col :span="4">
+            <!-- TODO: translate -->
+            <el-dropdown @command="onClick">
+              <el-button type="primary">
+                분류 : {{lectureType}}<i class="el-icon-arrow-down el-icon--right"></i>
+              </el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="A">강의</el-dropdown-item>
+                <el-dropdown-item command="B">숙제</el-dropdown-item>
+                <el-dropdown-item command="C">퀴즈</el-dropdown-item>
+                <el-dropdown-item command="D">시험</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </el-col>
         </el-row>
-        <br />
+        <br v-if="inputFlag"/>
+        <hr><br />
 
         <el-row :gutter="30">
           <el-col :span="16">
@@ -40,16 +55,16 @@
             </div>
           </el-col>
         </el-row>
-        <el-row>
+        <el-row :gutter="30">
           <el-col :span="16">
             <!-- TODO: translation -->
-            <div class="lecture-number-name">새 문항 입력하기</div>
+            <div>새 문항 입력하기</div><hr>
             <div>문항에 관련된 사항 입력 공간</div>
           </el-col>
           <el-col :span="8">
             <div>
               <!-- TODO: translation -->
-              <div class="lecture-number-name">활성화 방식</div>
+              <div>활성화 방식</div><hr>
             </div>
           </el-col>
         </el-row>
@@ -73,14 +88,35 @@ export default {
     TeachingClassList,
   },
   data() {
+    // TODO: translate
     return {
       teachingClassList: [],
       lectureName: '4강 (배열)',
       inputFlag: false,
       currentClassName: '',
+      lectureType: '강의',
     };
   },
   methods: {
+    // TODO: translate
+    onClick(command) {
+      const vm = this;
+      switch (command) {
+        default:
+        case 'A':
+          vm.lectureType = '강의';
+          break;
+        case 'B':
+          vm.lectureType = '숙제';
+          break;
+        case 'C':
+          vm.lectureType = '퀴즈';
+          break;
+        case 'D':
+          vm.lectureType = '시험';
+          break;
+      }
+    },
     changeLectureName() {
       const vm = this;
       vm.inputFlag = !vm.inputFlag;
