@@ -55,9 +55,7 @@ export default {
       const validTypeList = ['A', 'B', 'C', 'D'];
       if (validTypeList.includes(type)) {
         vm.pushLectureElement({
-          lectureElement: {
-            type,
-          },
+          type,
         });
       } else {
         throw new Error(`not defined type ${type}`);

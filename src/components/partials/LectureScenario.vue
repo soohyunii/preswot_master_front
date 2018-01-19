@@ -1,15 +1,15 @@
 <template>
   <div class="grid-content bg-white">
     <h1>Lecture Element Sequence Template</h1>
-    <el-row :gutter="10">
+    <el-row :gutter="10" class="group">
       <!-- TODO: transform animation? -->
       <!-- TODO: middle bar between two Items -->
       <draggable v-model="lectureScenario" :options="dragOptions" @start="drag=true" @end="drag=false">
-        <transition-group>
+        <transition-group name="list-group">
           <lecture-scenario-item
             v-for="(item, index) in lectureScenario"
             class="list-group-item"
-            :key="index"
+            :key="item.key"
             :props="{ item, index }" />
         </transition-group>
       </draggable>
@@ -55,10 +55,22 @@ export default {
 <style>
   .list-group-item {
     cursor: move;
+    transition: all 1s;
+    display: inline-block;
+  }
+
+  .list-group-enter, .list-group-leave-to {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  .list-group-leave-active {
+    position: absolute;
   }
 
   .ghost {
     opacity: .5;
+    background-color: rgb(204, 204, 204);
   }
 
   .bg-white {
