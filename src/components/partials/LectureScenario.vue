@@ -28,6 +28,7 @@
           </el-row>
         </div>
       </el-main>
+      {{labelStyle}}
     </el-container>
   </div>
 </template>
@@ -62,7 +63,7 @@ export default {
   data() {
     return {
       labelStyle: {
-        height: '200px',
+        height: '154px',
       },
     };
   },
@@ -121,8 +122,10 @@ export default {
       const main = this.$refs.main;
       if (!main) {
         vm.labelStyle.height = '200px';
-      } else {
+      } else if (main.clientHeight !== 0) {
         vm.labelStyle.height = `${main.clientHeight + 40}px`;
+      } else {
+        vm.labelStyle.height = '154px';
       }
       return vm.labelStyle;
     },
