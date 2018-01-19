@@ -18,6 +18,7 @@
 </template>
 
 <script>
+// import { mapMutations } from 'vuex';
 import draggable from 'vuedraggable';
 import LectureScenarioItem from './LectureScenarioItem';
 
@@ -55,11 +56,12 @@ export default {
 <style>
   .list-group-item {
     cursor: move;
-    transition: all 1s;
     display: inline-block;
+    transition: all 1s;
+      margin-right: 10px;
   }
 
-  .list-group-enter, .list-group-leave-to {
+  .list-group-enter, .list-group-leave-to /* .list-leave-active below version 2.1.8 */ {
     opacity: 0;
     transform: translateY(30px);
   }

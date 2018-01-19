@@ -1,5 +1,6 @@
 <template>
-    <el-col :span="3" align="center">
+  <div>
+    <el-col align="center">
       <!-- TODO: change icons -->
       <!-- TODO: Translate tooltip -->
       <i :class="getIconsByType(props.item.type)" style="font-size: 50px;"></i>
@@ -10,6 +11,7 @@
       <!-- TODO: change bg color, duration variable -->
       <el-tag color="#F2F6FC">duration</el-tag><br/>
     </el-col>
+  </div>
 </template>
 
 <script>
