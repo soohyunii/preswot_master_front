@@ -2,7 +2,7 @@
   <div class="wrapper">
     <el-container>
       <el-aside width="39px">
-        <span class="label" :style="getLabelStyle()">SCENARIO</span>
+        <span class="label" :style="labelStyle">SCENARIO</span>
         <!-- <span class="label">SCENARIO</span> -->
       </el-aside>
       <el-main>
@@ -27,7 +27,6 @@
             </template>
           </el-row>
         </div>
-        {{labelStyle}}
       </el-main>
     </el-container>
   </div>
@@ -48,7 +47,7 @@
     writing-mode: vertical-lr;
     // height: 200px;
     text-align: center;
-    transform: rotate(180);
+    transform: rotate(180deg);
     // width: 100%;
   }
 }
@@ -127,6 +126,11 @@ export default {
       }
       return vm.labelStyle;
     },
+  },
+  async updated() {
+    const vm = this;
+    await vm.$nextTick();
+    await vm.updateLabelStyle();
   },
 };
 </script>
