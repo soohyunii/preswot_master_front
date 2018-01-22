@@ -34,21 +34,17 @@ export default {
     getIconsByType(type) {
       let icon;
       switch (type) {
-        case 'A': {
+        case '문제지': {
           icon = 'el-icon-question';
           break;
         }
-        case 'B': {
+        default:
+        case '강의자료': {
           icon = 'el-icon-info';
           break;
         }
-        case 'C': {
+        case '숙제': {
           icon = 'el-icon-document';
-          break;
-        }
-        case 'D':
-        default: {
-          icon = 'el-icon-setting';
           break;
         }
       }

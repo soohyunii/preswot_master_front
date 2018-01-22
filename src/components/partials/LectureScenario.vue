@@ -51,7 +51,6 @@
 
 
 <script>
-import { mapState } from 'vuex';
 import draggable from 'vuedraggable';
 import LectureScenarioItem from './LectureScenarioItem';
 
@@ -59,14 +58,13 @@ export default {
   name: 'LectureScenario',
   data() {
     return {
+      drag: false,
       labelStyle: {
-        drag: false,
         height: '154px',
       },
     };
   },
   computed: {
-    ...mapState('teacher', ['lectureScenario']),
     lectureScenario: {
       get() {
         return this.$store.state.teacher.lectureScenario;
@@ -82,6 +80,8 @@ export default {
         ghostClass: 'ghost',
       };
     },
+  },
+  methods: {
     getLabelStyle() {
       const main = this.$refs.main;
       const res = {};
@@ -130,7 +130,7 @@ export default {
 
   .list-group-enter, .list-group-leave-to /* .list-leave-active below version 2.1.8 */ {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(20px);
   }
 
   .list-group-leave-active {
