@@ -29,7 +29,7 @@
             <!-- TODO: translate -->
             <el-dropdown @command="onClickLectureType">
               <el-button type="primary">
-                분류 : {{lectureType}}<i class="el-icon-arrow-down el-icon--right"></i>
+                분류 : {{ lectureType }}<i class="el-icon-arrow-down el-icon--right"></i>
               </el-button>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="강의">강의</el-dropdown-item>
@@ -56,7 +56,7 @@
           </el-col>
         </el-row>
 
-        <div id="app_lecture_editor">
+        <div id="app_lecture_editor" v-show="!isLectureScenarioEmpty">
           <el-row :gutter="30">
             <el-col :span="16">
               <!-- TODO: translation -->
@@ -89,6 +89,7 @@
 
 
 <script>
+import { mapGetters } from 'vuex';
 import LectureScenario from '../partials/LectureScenario';
 import LectureScenarioItemAdder from '../partials/LectureScenarioItemAdder';
 import TeachingClassList from '../partials/TeachingClassList';
@@ -109,6 +110,9 @@ export default {
       currentClassName: '',
       lectureType: '강의',
     };
+  },
+  computed: {
+    ...mapGetters('teacher', ['isLectureScenarioEmpty']),
   },
   methods: {
     onClickLectureType(lectureType) {

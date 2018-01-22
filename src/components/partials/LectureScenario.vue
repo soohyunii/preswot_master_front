@@ -7,12 +7,12 @@
       </el-aside>
       <el-main>
         <div ref="main">
-          <div v-show="!lectureScenario || lectureScenario.length === 0">
+          <div v-show="isLectureScenarioEmpty">
             <!-- TODO: translation -->
             <!-- TODO: styling -->
             Empty Scenario
           </div>
-          <div v-show="!!lectureScenario && lectureScenario.length !== 0">
+          <div v-show="!isLectureScenarioEmpty">
             <el-row :gutter="10">
               <!-- TODO: middle bar between two Items -->
               <draggable v-model="lectureScenario"
@@ -90,6 +90,8 @@
 
 <script>
 import draggable from 'vuedraggable';
+import { mapGetters } from 'vuex';
+
 import LectureScenarioItem from './LectureScenarioItem';
 
 export default {
@@ -103,6 +105,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('teacher', ['isLectureScenarioEmpty']),
     lectureScenario: {
       get() {
         return this.$store.state.teacher.lectureScenario;
@@ -123,7 +126,7 @@ export default {
     updateLabelStyle() {
       const vm = this;
       const main = this.$refs.main;
-      if (!vm.lectureScenario || vm.lectureScenario.length === 0) {
+      if (vm.isLectureScenarioEmpty) {
         vm.labelStyle.height = '154px';
       } else {
         vm.labelStyle.height = `${main.clientHeight + 40}px`;
