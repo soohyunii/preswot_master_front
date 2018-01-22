@@ -13,7 +13,7 @@
         <el-button>과목저널링</el-button>
         <br /><br />
 
-        <lecture-list :tableData="scenarioList"></lecture-list>
+        <class-scenario :tableData="scenarioList"></class-scenario>
 
         <!-- TODO: Implement dummy response about lecture statistics -->
         <lecture-statistics></lecture-statistics>
@@ -24,7 +24,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import LectureList from '../partials/LectureList';
+import ClassScenario from '../partials/ClassScenario';
 import LectureStatistics from '../partials/LectureStatistics';
 import TeachingClassList from '../partials/TeachingClassList';
 import teacherService from '../../services/teacherService';
@@ -48,7 +48,7 @@ export default {
     },
   },
   components: {
-    LectureList,
+    ClassScenario,
     LectureStatistics,
     TeachingClassList,
   },

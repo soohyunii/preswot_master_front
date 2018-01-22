@@ -17,7 +17,7 @@ export default {
             className: 'length_test_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
           },
         ]);
-      }, 500);
+      }, 1500);
     });
   },
   fetchScenarioList({ teachingClassName }) {

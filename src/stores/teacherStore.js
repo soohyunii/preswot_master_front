@@ -1,7 +1,7 @@
 export default {
   namespaced: true,
   state: {
-    lectureElementSequence: [], // TODO: fetch(init) from server if exists
+    lectureScenario: [], // TODO: fetch(init) from server if exists
     // TODO: Otherwise, init from localStorage (in case of server has no data)
     currentEditingElement: null, // TODO: init from localStorage
     // TODO: save currentEditingElement into localStorage inside Vue component using watch
@@ -11,11 +11,11 @@ export default {
   },
   mutations: {
     pushLectureElement(state, { lectureElement }) {
-      state.lectureElementSequence.push(lectureElement);
+      state.lectureScenario.push(lectureElement);
       // TODO: save lectureElementSequence using localForage
     },
     deleteLectureElement(state, { lectureElementIndex }) {
-      state.lectureElementSequence.splice(lectureElementIndex, 1);
+      state.lectureScenario.splice(lectureElementIndex, 1);
       // TODO: update localForage
     },
     // TODO: editLectureElement

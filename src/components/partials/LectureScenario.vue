@@ -2,7 +2,7 @@
   <div>
     <h1>Lecture Element Sequence Template</h1>
     <el-row :gutter="10">
-      <template v-for="(item, index, key) in lectureElementSequence">
+      <template v-for="(item, index, key) in lectureScenario">
         <el-col :span="3" :key="key" align="center">
           <!-- TODO: change icons -->
           <!-- TODO: Translate tooltip -->
@@ -14,7 +14,7 @@
           <!-- TODO: change bg color, duration variable -->
           <el-tag color="#F2F6FC">duration</el-tag><br/>
         </el-col>
-        <el-col :span="1" :key="key" align="center" v-if="index + 1 < Object.keys(lectureElementSequence).length">
+        <el-col :span="1" :key="key" align="center" v-if="index + 1 < Object.keys(lectureScenario).length">
           <br/><br/>
           <i class="el-icon-minus" style="font-size: 30px;"/>
         </el-col>
@@ -29,7 +29,7 @@ import { mapState, mapMutations } from 'vuex';
 export default {
   name: 'LectureScenario',
   computed: {
-    ...mapState('teacher', ['lectureElementSequence']),
+    ...mapState('teacher', ['lectureScenario']),
   },
   methods: {
     // TODO: edit lecture element
@@ -37,7 +37,7 @@ export default {
     ...mapMutations('teacher', ['deleteLectureElement']),
     onClick(index) {
       const vm = this;
-      if (index < Object.keys(vm.lectureElementSequence).length) {
+      if (index < Object.keys(vm.lectureScenario).length) {
         vm.deleteLectureElement({
           lectureElementIndex: index,
         });

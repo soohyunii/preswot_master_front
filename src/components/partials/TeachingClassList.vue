@@ -4,14 +4,17 @@
       <el-row :key="key">
         <el-col align="center">
           <!-- TODO: link to each class -->
-          <el-button v-if="isCurrentClass(item)" type="info" disabled>
-          <i :class="dummyIcons()" style="font-size: 50px;"></i><br/>
-          {{ item.className | truncate(10) }}
-          </el-button>
-          <el-button @click="changeCurrentClass(item)" v-else>
-          <i :class="dummyIcons()" style="font-size: 50px;"></i><br/>
-          {{ item.className | truncate(10) }}
-          </el-button>
+          <el-tooltip
+          effect="dark"
+          :content="item.className"
+          :disabled="item.className.length < truncateLength"
+          placement="right">
+            <!-- TODO: currentClass 모습, 나머지 class 모습 바꾸기 -->
+            <el-button @click="changeCurrentClass(item)" :type="isCurrentClass(item) ? 'info' : ''">
+            <i :class="dummyIcons()" style="font-size: 50px;"></i><br/>
+            {{ item.className | truncate(truncateLength) }}
+            </el-button>
+          </el-tooltip>
         </el-col>
       </el-row>
     </template>
@@ -35,6 +38,11 @@ import teacherService from '../../services/teacherService';
 
 export default {
   name: 'teachingClassList',
+  data() {
+    return {
+      truncateLength: 10,
+    };
+  },
   computed: {
     ...mapState('teacher', ['teachingClassList', 'currentEditingClass']),
   },
