@@ -55,25 +55,38 @@
             </div>
           </el-col>
         </el-row>
-        <el-row :gutter="30">
-          <el-col :span="16">
-            <!-- TODO: translation -->
-            <div>새 문항 입력하기</div><hr>
-            <div>문항에 관련된 사항 입력 공간</div>
-          </el-col>
-          <el-col :span="8">
-            <div>
+
+        <div id="app_lecture_editor">
+          <el-row :gutter="30">
+            <el-col :span="16">
               <!-- TODO: translation -->
-              <div>활성화 방식</div><hr>
-            </div>
-          </el-col>
-        </el-row>
+              <div>새 문항 입력하기</div><hr>
+              <div>문항에 관련된 사항 입력 공간</div>
+            </el-col>
+            <el-col :span="8">
+              <div>
+                <!-- TODO: translation -->
+                <div>활성화 방식</div><hr>
+              </div>
+            </el-col>
+          </el-row>
+        </div>
+
       </el-main>
       <!-- 이 메인은 맞음 끝 -->
     </el-container>
 
   </div>
 </template>
+
+<style lang="scss" scoped>
+#app_lecture_editor {
+  margin-top: 2vh;
+  padding: 20px;
+  background-color: white;
+}
+</style>
+
 
 <script>
 import LectureScenario from '../partials/LectureScenario';
@@ -109,6 +122,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-</style>
