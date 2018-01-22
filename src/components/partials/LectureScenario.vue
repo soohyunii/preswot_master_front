@@ -23,7 +23,7 @@
                   <lecture-scenario-item
                     v-for="(item, index) in lectureScenario"
                     class="list-group-item"
-                    :key="item.guid.value"
+                    :key="item.key"
                     :type="item.type"
                     :index="index" />
                 </transition-group>
