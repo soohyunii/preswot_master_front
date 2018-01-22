@@ -7,28 +7,29 @@
       </el-aside>
       <el-main>
         <div ref="main">
-          <el-row v-if="lectureScenario.length === 0">
-            <el-col :span="12" :offset="6">
-              <div class="empty-scenario-wrapper">
-                시나리오 저작 도구를 클릭하여 시나리오 요소를 추가하세요
-              </div>
-            </el-col>
-          </el-row>
-          <el-row :gutter="10" v-else>
-            <!-- TODO: middle bar between two Items -->
-            <draggable v-model="lectureScenario"
-              :options="dragOptions"
-              @start="drag=true"
-              @end="drag=false">
-              <transition-group name="list-group">
-                <lecture-scenario-item
-                  v-for="(item, index) in lectureScenario"
-                  class="list-group-item"
-                  :key="item.key"
-                  :props="{ item, index }" />
-              </transition-group>
-            </draggable>
-          </el-row>
+          <div v-show="isLectureScenarioEmpty">
+            <!-- TODO: translation -->
+            <!-- TODO: styling -->
+            Empty Scenario
+          </div>
+          <div v-show="!isLectureScenarioEmpty">
+            <el-row :gutter="10">
+              <!-- TODO: middle bar between two Items -->
+              <draggable v-model="lectureScenario"
+                :options="dragOptions"
+                @start="drag = true;"
+                @end="drag = false;">
+                <transition-group name="list-group">
+                  <lecture-scenario-item
+                    v-for="(item, index) in lectureScenario"
+                    class="list-group-item"
+                    :key="item.key"
+                    :item="item"
+                    :index="index" />
+                </transition-group>
+              </draggable>
+            </el-row>
+          </div>
         </div>
       </el-main>
     </el-container>
@@ -99,6 +100,8 @@
 
 <script>
 import draggable from 'vuedraggable';
+import { mapGetters } from 'vuex';
+
 import LectureScenarioItem from './LectureScenarioItem';
 
 export default {
@@ -112,12 +115,12 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('teacher', ['isLectureScenarioEmpty']),
     lectureScenario: {
       get() {
         return this.$store.state.teacher.lectureScenario;
       },
       set(lectureScenarioItems) {
-        // window.console.log(lectureScenarioItems);
         this.$store.commit('teacher/editLectureElement', { lectureScenarioItems });
       },
     },
@@ -129,28 +132,13 @@ export default {
     },
   },
   methods: {
-    getLabelStyle() {
-      const main = this.$refs.main;
-      const res = {};
-      if (!main) {
-        res.height = '200px';
-      } else {
-        res.height = `${main.clientHeight + 40}px`;
-      }
-      // this.$nextTick(() => {
-      //   this.$forceUpdate();
-      // });
-      return res;
-    },
     updateLabelStyle() {
       const vm = this;
       const main = this.$refs.main;
-      if (!main) {
-        vm.labelStyle.height = '200px';
-      } else if (main.clientHeight > 114) {
-        vm.labelStyle.height = `${main.clientHeight + 40}px`;
-      } else {
+      if (vm.isLectureScenarioEmpty) {
         vm.labelStyle.height = '154px';
+      } else {
+        vm.labelStyle.height = `${main.clientHeight + 40}px`;
       }
       return vm.labelStyle;
     },
