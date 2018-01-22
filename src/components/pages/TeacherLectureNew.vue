@@ -111,7 +111,7 @@
 <style lang="scss" scoped>
 #app_lecture_editor {
   margin-top: 2vh;
-  padding: 20px;
+  padding: 0px 20px 20px 20px;
   background-color: white;
 }
 </style>
