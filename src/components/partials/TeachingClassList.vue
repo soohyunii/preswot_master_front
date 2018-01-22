@@ -5,10 +5,12 @@
         <el-col align="center">
           <!-- TODO: link to each class -->
           <el-tooltip
-          effect="dark"
-          :content="item.className"
-          :disabled="item.className.length < truncateLength"
-          placement="right">
+            effect="dark"
+            :content="item.className"
+            :disabled="item.className.length < truncateLength"
+            placement="right"
+            :open-delay="800"
+          >
             <!-- TODO: currentClass 모습, 나머지 class 모습 바꾸기 -->
             <el-button @click="changeCurrentClass(item)" :type="isCurrentClass(item) ? 'info' : ''">
             <i :class="dummyIcons()" style="font-size: 50px;"></i><br/>

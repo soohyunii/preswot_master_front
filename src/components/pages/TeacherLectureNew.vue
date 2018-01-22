@@ -58,16 +58,45 @@
 
         <div id="app_lecture_editor" v-show="!isLectureScenarioEmpty">
           <el-row :gutter="30">
-            <el-col :span="16">
+            <el-col :span="24">
               <!-- TODO: translation -->
-              <div>새 문항 입력하기</div><hr>
-              <div>문항에 관련된 사항 입력 공간</div>
-            </el-col>
-            <el-col :span="8">
-              <div>
-                <!-- TODO: translation -->
-                <div>활성화 방식</div><hr>
-              </div>
+              <h2>내용</h2>
+
+              <el-row>
+                <el-col :span="6">
+                  파일 업로드
+                </el-col>
+                <el-col :span="18">
+                  TODO: 업로드 [ + ]
+                </el-col>
+              </el-row>
+
+              <el-row>
+                <el-col :span="6">
+                  설명
+                </el-col>
+                <el-col :span="18">
+                  TODO: 텍스트박스
+                </el-col>
+              </el-row>
+
+              <h2>활성화 시간 입력</h2>
+              <el-row>
+                <el-col :span="6">
+                  활성화 되는 시각
+                </el-col>
+                <el-col :span="6">
+                  TODO: Time picker hh:mm:ss
+                </el-col>
+
+                <el-col :span="6">
+                  활성화 지속 시간
+                </el-col>
+                <el-col :span="6">
+                  TODO: Time picker mm:ss
+                </el-col>
+              </el-row>
+
             </el-col>
           </el-row>
         </div>
@@ -82,7 +111,7 @@
 <style lang="scss" scoped>
 #app_lecture_editor {
   margin-top: 2vh;
-  padding: 20px;
+  padding: 0px 20px 20px 20px;
   background-color: white;
 }
 </style>

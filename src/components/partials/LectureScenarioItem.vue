@@ -4,8 +4,8 @@
       <!-- TODO: change icons -->
       <!-- TODO: Translate tooltip -->
       <div class="image">
-        <i :class="getIconsByType(props.type)" class="main-image" ></i>
-        <i class="el-icon-error" style="color:red; vertical-align:top" @click="onClick(props.index)"></i><br/>
+        <i :class="getIconsByType(type)" class="main-image" ></i>
+        <i class="el-icon-error" style="color:red; vertical-align:top" @click="onClick(index)"></i><br/>
       </div>
       <!-- TODO: change bg color, time variable -->
       <div class="label-time">05:00</div>
@@ -20,7 +20,7 @@ import { mapMutations } from 'vuex';
 
 export default {
   name: 'LectureScenarioItem',
-  props: ['props'],
+  props: ['item', 'index'],
   methods: {
     // TODO: edit lecture element
     // TODO: add drag/drop function
@@ -30,7 +30,6 @@ export default {
       vm.deleteLectureElement({
         lectureElementIndex: index,
       });
-      // window.console.log(index);
     },
     getIconsByType(type) {
       let icon;
