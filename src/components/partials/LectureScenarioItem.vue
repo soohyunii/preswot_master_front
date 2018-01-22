@@ -20,7 +20,7 @@ import { mapMutations } from 'vuex';
 
 export default {
   name: 'LectureScenarioItem',
-  props: ['item', 'index'],
+  props: ['type', 'index'],
   methods: {
     // TODO: edit lecture element
     // TODO: add drag/drop function
