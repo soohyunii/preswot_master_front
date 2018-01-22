@@ -29,10 +29,17 @@
         </template>
         <el-menu-item-group>
           <template v-for="(item, key, index) in attendingClassList">
-            <el-menu-item :index="'3-'+index" :key="key">
-              <!-- TODO: link to each class -->
-              {{ item.className | truncate(16) }}
-            </el-menu-item>
+            <el-tooltip
+              effect="dark"
+              :content="item.className"
+              :disabled="item.className.length < truncateLength"
+              placement="right"
+              :key="key">
+              <el-menu-item :index="'3-'+index" :key="key">
+                <!-- TODO: link to each class -->
+                {{ item.className | truncate(truncateLength) }}
+              </el-menu-item>
+            </el-tooltip>
           </template>
         </el-menu-item-group>
       </el-submenu>
@@ -45,10 +52,17 @@
         </template>
         <el-menu-item-group>
           <template v-for="(item, key, index) in teachingClassList">
-            <el-menu-item :index="'4-'+index" :key="key">
-              <!-- TODO: link to each class -->
-              {{ item.className | truncate(16) }}
-            </el-menu-item>
+            <el-tooltip
+              effect="dark"
+              :content="item.className"
+              :disabled="item.className.length < truncateLength"
+              placement="right"
+              :key="key">
+              <el-menu-item :index="'4-'+index" :key="key">
+                <!-- TODO: link to each class -->
+                {{ item.className | truncate(truncateLength) }}
+              </el-menu-item>
+            </el-tooltip>
           </template>
         </el-menu-item-group>
       </el-submenu>
@@ -69,6 +83,7 @@ export default {
   data() {
     return {
       // isCollapse: false,
+      truncateLength: 16,
       attendingClassList: [],
       teachingClassList: [],
     };
@@ -76,28 +91,15 @@ export default {
   computed: {
     ...mapState('layout', ['isNavCollapsed']),
   },
-  mounted() {
+  async mounted() {
     const vm = this;
-    studentService.fetchAttendingClassList()
-    .then((attendingClassList) => {
-      vm.attendingClassList = attendingClassList;
-    })
-    .catch(() => {
-      // fetch fail
-    });
-
-    teacherService.fetchTeachingClassList()
-    .then((teachingClassList) => {
-      vm.teachingClassList = teachingClassList;
-    })
-    .catch(() => {
-      // fetch fail
-    });
+    vm.attendingClassList = await studentService.fetchAttendingClassList();
+    vm.teachingClassList = await teacherService.fetchTeachingClassList();
   },
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 // * handling font awesome icons
 #app_nav_wrapper {
   height: 100%;
