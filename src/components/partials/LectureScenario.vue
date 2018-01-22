@@ -25,7 +25,7 @@
                     class="list-group-item"
                     :key="item.key"
                     :item="item"
-                    :indice="index" />
+                    :index="index" />
                 </transition-group>
               </draggable>
             </el-row>
@@ -112,7 +112,6 @@ export default {
         return this.$store.state.teacher.lectureScenario;
       },
       set(lectureScenarioItems) {
-        // window.console.log(lectureScenarioItems);
         this.$store.commit('teacher/editLectureElement', { lectureScenarioItems });
       },
     },

@@ -19,6 +19,7 @@
     "browser-locale": "^1.0.3",
     "deep-equal": "^1.0.1",
     "element-ui": "^2.0.11",
+    "guid": "0.0.12",
     "localforage": "^1.5.5",
     "normalize.css": "^7.0.0",
     "vlf": "^1.0.3",
