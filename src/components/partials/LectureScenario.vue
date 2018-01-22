@@ -24,7 +24,7 @@
                     v-for="(item, index) in lectureScenario"
                     class="list-group-item"
                     :key="item.guid.value"
-                    :props="{ item: item.type, index }" />
+                    :props="{ type: item.type, index }" />
                 </transition-group>
               </draggable>
             </el-row>
