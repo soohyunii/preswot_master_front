@@ -46,10 +46,10 @@
 
   .el-button {
     border-width: 0;
-    padding-bottom: 0px;
+    padding: 6px 20px;
     i {
       font-size: 200%;
-      margin: 10px;
+      margin: 5px 10px 10px 10px;
     }
   }
 

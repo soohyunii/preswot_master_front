@@ -7,21 +7,28 @@
       </el-aside>
       <el-main>
         <div ref="main">
-          <el-row :gutter="10">
-            <!-- TODO: middle bar between two Items -->
-            <draggable v-model="lectureScenario"
-              :options="dragOptions"
-              @start="drag=true"
-              @end="drag=false">
-              <transition-group name="list-group">
-                <lecture-scenario-item
-                  v-for="(item, index) in lectureScenario"
-                  class="list-group-item"
-                  :key="item.guid.value"
-                  :props="{ type: item.type, index }" />
-              </transition-group>
-            </draggable>
-          </el-row>
+          <div v-show="isLectureScenarioEmpty">
+            <!-- TODO: translation -->
+            <!-- TODO: styling -->
+            Empty Scenario
+          </div>
+          <div v-show="!isLectureScenarioEmpty">
+            <el-row :gutter="10">
+              <!-- TODO: middle bar between two Items -->
+              <draggable v-model="lectureScenario"
+                :options="dragOptions"
+                @start="drag = true;"
+                @end="drag = false;">
+                <transition-group name="list-group">
+                  <lecture-scenario-item
+                    v-for="(item, index) in lectureScenario"
+                    class="list-group-item"
+                    :key="item.guid.value"
+                    :props="{ item: item.type, index }" />
+                </transition-group>
+              </draggable>
+            </el-row>
+          </div>
         </div>
       </el-main>
     </el-container>
@@ -83,6 +90,8 @@
 
 <script>
 import draggable from 'vuedraggable';
+import { mapGetters } from 'vuex';
+
 import LectureScenarioItem from './LectureScenarioItem';
 
 export default {
@@ -96,6 +105,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('teacher', ['isLectureScenarioEmpty']),
     lectureScenario: {
       get() {
         return this.$store.state.teacher.lectureScenario;
@@ -112,28 +122,13 @@ export default {
     },
   },
   methods: {
-    getLabelStyle() {
-      const main = this.$refs.main;
-      const res = {};
-      if (!main) {
-        res.height = '200px';
-      } else {
-        res.height = `${main.clientHeight + 40}px`;
-      }
-      // this.$nextTick(() => {
-      //   this.$forceUpdate();
-      // });
-      return res;
-    },
     updateLabelStyle() {
       const vm = this;
       const main = this.$refs.main;
-      if (!main) {
-        vm.labelStyle.height = '200px';
-      } else if (main.clientHeight !== 0) {
-        vm.labelStyle.height = `${main.clientHeight + 40}px`;
-      } else {
+      if (vm.isLectureScenarioEmpty) {
         vm.labelStyle.height = '154px';
+      } else {
+        vm.labelStyle.height = `${main.clientHeight + 40}px`;
       }
       return vm.labelStyle;
     },

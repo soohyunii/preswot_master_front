@@ -11,6 +11,11 @@ export default {
     currentEditingClass: null,
     // scenarioList: [],
   },
+  getters: {
+    isLectureScenarioEmpty(state) {
+      return state.lectureScenario.length === 0;
+    },
+  },
   mutations: {
     pushLectureElement(state, { type }) {
       const guid = Guid.create();
