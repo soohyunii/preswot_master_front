@@ -91,7 +91,7 @@
 
 <script>
 import draggable from 'vuedraggable';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 
 import LectureScenarioItem from './LectureScenarioItem';
 
@@ -111,8 +111,9 @@ export default {
       get() {
         return this.$store.state.teacher.lectureScenario;
       },
-      set(lectureScenarioItems) {
-        this.$store.commit('teacher/editLectureElement', { lectureScenarioItems });
+      set(lectureScenario) {
+        const vm = this;
+        vm.updateLectureScenario({ lectureScenario });
       },
     },
     dragOptions() {
@@ -123,6 +124,7 @@ export default {
     },
   },
   methods: {
+    ...mapMutations('teacher', ['updateLectureScenario']),
     updateLabelStyle() {
       const vm = this;
       const main = this.$refs.main;

@@ -101,6 +101,8 @@
           </el-row>
         </div>
 
+        <h1>debugg</h1>
+        lecture scenario: {{ lectureScenario }}
       </el-main>
       <!-- 이 메인은 맞음 끝 -->
     </el-container>
@@ -118,7 +120,7 @@
 
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import LectureScenario from '../partials/LectureScenario';
 import LectureScenarioItemAdder from '../partials/LectureScenarioItemAdder';
 import TeachingClassList from '../partials/TeachingClassList';
@@ -141,6 +143,7 @@ export default {
     };
   },
   computed: {
+    ...mapState('teacher', ['lectureScenario']),
     ...mapGetters('teacher', ['isLectureScenarioEmpty']),
   },
   methods: {

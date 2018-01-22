@@ -24,10 +24,10 @@ export default {
   methods: {
     // TODO: edit lecture element
     // TODO: add drag/drop function
-    ...mapMutations('teacher', ['deleteLectureElement']),
+    ...mapMutations('teacher', ['deleteLectureScenarioItem']),
     onClick(index) {
       const vm = this;
-      vm.deleteLectureElement({
+      vm.deleteLectureScenarioItem({
         lectureElementIndex: index,
       });
     },
