@@ -2,7 +2,6 @@
   <div class="wrapper">
     <el-col align="center">
       <!-- TODO: change icons -->
-      <!-- TODO: Translate tooltip -->
       <div class="image">
         <i :class="getIconsByType(type)" class="main-image" ></i>
         <i class="el-icon-error" style="color:red; vertical-align:top" @click="onClick(index)"></i><br/>

@@ -76,7 +76,12 @@
                   설명
                 </el-col>
                 <el-col :span="18">
-                  TODO: 텍스트박스
+                  <el-input
+                    type="textarea"
+                    :rows="3"
+                    v-model="description"
+                  >
+                  </el-input>
                 </el-col>
               </el-row>
 
@@ -102,7 +107,8 @@
         </div>
 
         <h1>debugg</h1>
-        lecture scenario: {{ lectureScenario }}
+        lecture scenario: {{ lectureScenario }} <br />
+        description: {{ description }}
       </el-main>
       <!-- 이 메인은 맞음 끝 -->
     </el-container>
@@ -120,7 +126,7 @@
 
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters, mapState, mapMutations } from 'vuex';
 import LectureScenario from '../partials/LectureScenario';
 import LectureScenarioItemAdder from '../partials/LectureScenarioItemAdder';
 import TeachingClassList from '../partials/TeachingClassList';
@@ -143,10 +149,29 @@ export default {
     };
   },
   computed: {
-    ...mapState('teacher', ['lectureScenario']),
+    ...mapState('teacher', ['lectureScenario', 'currentEditingLectureScenarioItem']),
     ...mapGetters('teacher', ['isLectureScenarioEmpty']),
+    description: {
+      get() {
+        const vm = this;
+        if (!!vm.currentEditingLectureScenarioItem) { // eslint-disable-line no-extra-boolean-cast
+          return vm.currentEditingLectureScenarioItem.description || '';
+        }
+        return '';
+      },
+      set(description) {
+        const vm = this;
+        vm.updateCurrentEditingLectureScenarioItem({
+          currentEditingLectureScenarioItem: {
+            ...vm.currentEditingLectureScenarioItem,
+            description,
+          },
+        });
+      },
+    },
   },
   methods: {
+    ...mapMutations('teacher', ['updateCurrentEditingLectureScenarioItem']),
     onClickLectureType(lectureType) {
       const vm = this;
       vm.lectureType = lectureType;
