@@ -1,20 +1,13 @@
 <template>
   <div>
     <h1 class="not-found">Not Found 404</h1>
-    <h2 class="redirect-message">{{ $t('NOTFOUND.REDIRECT_MESSAGE1') }}{{ secondLeft }}{{ $t('NOTFOUND.REDIRECT_MESSAGE2') }}</h2>
+    <i18n path="NOTFOUND.REDIRECT_MESSAGE" tag="h2" class="redirect-message">
+      <span place="REDIRECT_MESSAGE1">{{ $t('NOTFOUND.REDIRECT_MESSAGE1') }}</span>
+      <span place="secondLeft">{{ secondLeft }}</span>
+      <span place="REDIRECT_MESSAGE2">{{ $t('NOTFOUND.REDIRECT_MESSAGE2') }}</span>
+    </i18n>
   </div>
 </template>
-
-<style scoped>
-.not-found {
-  text-align: center;
-  font-size: 5em
-}
-.redirect-message {
-  text-align: center;
-  font-size: 2em
-}
-</style>
 
 <script>
 import { mapMutations } from 'vuex';
@@ -51,3 +44,14 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.not-found {
+  text-align: center;
+  font-size: 5em
+}
+.redirect-message {
+  text-align: center;
+  font-size: 2em
+}
+</style>

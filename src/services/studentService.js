@@ -11,7 +11,7 @@ export default {
             className: 'JavaScript',
           },
         ]);
-      }, 500);
+      }, 3000);
     });
   },
   fetchPopularClassList() {

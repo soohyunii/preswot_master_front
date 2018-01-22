@@ -30,6 +30,8 @@ export default class AuthPlugin {
         return;
       }
 
+      window.scrollTo(0, 0);
+
       // If user routes himeself before force-redirection, cancel timeout
       if (route.name !== 'NotFound' && !!store.state.auth.redirectionTimeoutId) {
         window.clearTimeout(store.state.auth.redirectionTimeoutId);
