@@ -17,18 +17,18 @@ export default {
     },
   },
   mutations: {
-    pushLectureElement(state, { type }) {
-      const guid = Guid.create();
-      state.lectureScenario.push({ type, guid });
+    pushLectureScenarioItem(state, { type }) {
+      const key = Guid.create().toString();
+      state.lectureScenario.push({ type, key });
       // TODO: save lectureElementSequence using localForage
     },
-    deleteLectureElement(state, { lectureElementIndex }) {
+    deleteLectureScenarioItem(state, { lectureElementIndex }) {
       state.lectureScenario.splice(lectureElementIndex, 1);
       // TODO: update localForage
     },
     // TODO: editLectureElement
-    editLectureElement(state, { lectureScenarioItems }) {
-      state.lectureScenario = lectureScenarioItems.slice();
+    updateLectureScenario(state, { lectureScenario }) {
+      state.lectureScenario = lectureScenario;
     },
     updateCurrentEditingClass(state, { editingClass }) {
       state.currentEditingClass = editingClass;
