@@ -2,7 +2,6 @@
   <div class="wrapper">
     <el-col align="center">
       <!-- TODO: change icons -->
-      <!-- TODO: Translate tooltip -->
       <div class="image">
         <i :class="getIconsByType(type)" class="main-image" ></i>
         <i class="el-icon-error" style="color:red; vertical-align:top" @click="onClick(index)"></i><br/>
@@ -59,6 +58,7 @@ export default {
 
 .wrapper {
   background-color: rgba(255, 255, 255, 0);
+  margin: 8px 0px;
 
   .image {
     padding-bottom: 10px;
