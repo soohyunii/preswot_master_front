@@ -11,8 +11,8 @@
             <!-- TODO: middle bar between two Items -->
             <draggable v-model="lectureScenario"
               :options="dragOptions"
-              @start="drag=true"
-              @end="drag=false">
+              @start="drag = true;"
+              @end="drag = false;">
               <transition-group name="list-group">
                 <lecture-scenario-item
                   v-for="(item, index) in lectureScenario"
