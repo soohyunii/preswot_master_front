@@ -1,19 +1,16 @@
 <template>
-  <!-- TODO: <div> 태그로 인해 드래그가 먹지 않음-->
   <div>
-    <template v-for="(item, index, key) in lectureElementSequence">
-      <el-col :span="3" :key="key" align="center">
-        <!-- TODO: change icons -->
-        <!-- TODO: Translate tooltip -->
-        <i :class="getIconsByType(item.type)" style="font-size: 50px;"></i>
-        <i class="el-icon-error" style="color:red; vertical-align:top" @click="onClick(index)"></i><br/>
-        <!-- TODO: change bg color, time variable -->
-        <el-tag color="#DCDFE6">time</el-tag><br/>
+    <el-col align="center">
+      <!-- TODO: change icons -->
+      <!-- TODO: Translate tooltip -->
+      <i :class="getIconsByType(props.item.type)" style="font-size: 50px;"></i>
+      <i class="el-icon-error" style="color:red; vertical-align:top" @click="onClick(props.index)"></i><br/>
+      <!-- TODO: change bg color, time variable -->
+      <el-tag color="#DCDFE6">time</el-tag><br/>
 
-        <!-- TODO: change bg color, duration variable -->
-        <el-tag color="#F2F6FC">duration</el-tag><br/>
-      </el-col>
-    </template>
+      <!-- TODO: change bg color, duration variable -->
+      <el-tag color="#F2F6FC">duration</el-tag><br/>
+    </el-col>
   </div>
 </template>
 
@@ -21,39 +18,33 @@
 import { mapMutations } from 'vuex';
 
 export default {
-  name: 'LectureScenario',
-  props: ['lectureElementSequence'],
+  name: 'LectureScenarioItem',
+  props: ['props'],
   methods: {
     // TODO: edit lecture element
     // TODO: add drag/drop function
     ...mapMutations('teacher', ['deleteLectureElement']),
     onClick(index) {
       const vm = this;
-      if (index < Object.keys(vm.lectureElementSequence).length) {
-        vm.deleteLectureElement({
-          lectureElementIndex: index,
-        });
-      }
-      window.console.log(index);
+      vm.deleteLectureElement({
+        lectureElementIndex: index,
+      });
+      // window.console.log(index);
     },
     getIconsByType(type) {
       let icon;
       switch (type) {
-        case 'A': {
+        case '문제지': {
           icon = 'el-icon-question';
           break;
         }
-        case 'B': {
+        default:
+        case '강의자료': {
           icon = 'el-icon-info';
           break;
         }
-        case 'C': {
+        case '숙제': {
           icon = 'el-icon-document';
-          break;
-        }
-        case 'D':
-        default: {
-          icon = 'el-icon-setting';
           break;
         }
       }
@@ -62,3 +53,9 @@ export default {
   },
 };
 </script>
+
+<style>
+  .el-icon-error {
+    cursor: pointer;
+  }
+</style>
