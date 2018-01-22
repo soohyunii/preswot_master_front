@@ -1,29 +1,22 @@
 <template>
-  <div class="grid-content bg-white">
-    <h1>Lecture Element Group template</h1>
-    <el-row :gutter="10">
+  <div>
+    <el-row>
       <el-col align="center" :span="6">
         <!-- TODO: Translate, change icon -->
-        <el-button @click="onClick('A')">
-          <i class="el-icon-question" style="font-size: 50px;"></i><br/>문항설문
+        <el-button @click="onClick('문제지')">
+          <i class="el-icon-question"></i><br/>문제지
         </el-button>
       </el-col>
       <el-col align="center" :span="6">
         <!-- TODO: Translate, change icon -->
-        <el-button @click="onClick('B')">
-          <i class="el-icon-info" style="font-size: 50px;"></i><br/>강의자료
+        <el-button @click="onClick('강의자료')">
+          <i class="el-icon-info"></i><br/>강의자료
         </el-button>
       </el-col>
       <el-col align="center" :span="6">
         <!-- TODO: Translate, change icon -->
-        <el-button @click="onClick('C')">
-          <i class="el-icon-document" style="font-size: 50px;"></i><br/>숙제
-        </el-button>
-      </el-col>
-      <el-col align="center" :span="6">
-        <!-- TODO: Translate, change icon -->
-        <el-button @click="onClick('D')">
-          <i class="el-icon-setting" style="font-size: 50px;"></i><br/>코딩
+        <el-button @click="onClick('숙제')">
+          <i class="el-icon-document"></i><br/>숙제
         </el-button>
       </el-col>
     </el-row>
@@ -43,6 +36,11 @@
   </div>
 </template>
 
+<style lang="scss" scoped>
+
+</style>
+
+
 <script>
 import { mapMutations } from 'vuex';
 
@@ -52,7 +50,7 @@ export default {
     ...mapMutations('teacher', ['pushLectureElement']),
     onClick(type) {
       const vm = this;
-      const validTypeList = ['A', 'B', 'C', 'D'];
+      const validTypeList = ['문제지', '강의자료', '숙제'];
       if (validTypeList.includes(type)) {
         vm.pushLectureElement({
           type,

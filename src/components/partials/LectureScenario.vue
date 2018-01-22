@@ -1,24 +1,57 @@
 <template>
-  <div class="grid-content bg-white">
-    <h1>Lecture Element Sequence Template</h1>
-    <el-row :gutter="10" class="group">
-      <!-- TODO: transform animation? -->
-      <!-- TODO: middle bar between two Items -->
-      <draggable v-model="lectureScenario" :options="dragOptions" @start="drag=true" @end="drag=false">
-        <transition-group name="list-group">
-          <lecture-scenario-item
-            v-for="(item, index) in lectureScenario"
-            class="list-group-item"
-            :key="item.key"
-            :props="{ item, index }" />
-        </transition-group>
-      </draggable>
-    </el-row>
+  <div class="wrapper">
+    <el-container>
+      <el-aside width="39px">
+        <span class="label" :style="labelStyle">SCENARIO</span>
+        <!-- <span class="label">SCENARIO</span> -->
+      </el-aside>
+      <el-main>
+        <div ref="main">
+          <el-row :gutter="10">
+            <!-- TODO: middle bar between two Items -->
+            <draggable v-model="lectureScenario"
+              :options="dragOptions"
+              @start="drag=true"
+              @end="drag=false">
+              <transition-group name="list-group">
+                <lecture-scenario-item
+                  v-for="(item, index) in lectureScenario"
+                  class="list-group-item"
+                  :key="item.key"
+                  :props="{ item, index }" />
+              </transition-group>
+            </draggable>
+          </el-row>
+        </div>
+      </el-main>
+    </el-container>
   </div>
 </template>
 
+<style lang="scss" scoped>
+@import "~@/variables.scss";
+
+.wrapper {
+  background-color: white;
+
+  .label {
+    font-size: 16px;
+    font-weight: 600;
+    padding: 2px 3px;
+    color: white;
+    background-color: $app-ultra-violet;
+    writing-mode: vertical-lr;
+    // height: 200px;
+    text-align: center;
+    transform: rotate(180deg);
+    // width: 100%;
+  }
+}
+</style>
+
+
 <script>
-// import { mapMutations } from 'vuex';
+import { mapState } from 'vuex';
 import draggable from 'vuedraggable';
 import LectureScenarioItem from './LectureScenarioItem';
 
@@ -26,10 +59,14 @@ export default {
   name: 'LectureScenario',
   data() {
     return {
-      drag: false,
+      labelStyle: {
+        drag: false,
+        height: '154px',
+      },
     };
   },
   computed: {
+    ...mapState('teacher', ['lectureScenario']),
     lectureScenario: {
       get() {
         return this.$store.state.teacher.lectureScenario;
@@ -45,6 +82,36 @@ export default {
         ghostClass: 'ghost',
       };
     },
+    getLabelStyle() {
+      const main = this.$refs.main;
+      const res = {};
+      if (!main) {
+        res.height = '200px';
+      } else {
+        res.height = `${main.clientHeight + 40}px`;
+      }
+      // this.$nextTick(() => {
+      //   this.$forceUpdate();
+      // });
+      return res;
+    },
+    updateLabelStyle() {
+      const vm = this;
+      const main = this.$refs.main;
+      if (!main) {
+        vm.labelStyle.height = '200px';
+      } else if (main.clientHeight !== 0) {
+        vm.labelStyle.height = `${main.clientHeight + 40}px`;
+      } else {
+        vm.labelStyle.height = '154px';
+      }
+      return vm.labelStyle;
+    },
+  },
+  async updated() {
+    const vm = this;
+    await vm.$nextTick();
+    await vm.updateLabelStyle();
   },
   components: {
     draggable,

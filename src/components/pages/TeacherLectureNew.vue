@@ -19,7 +19,7 @@
           <template v-else>
             <el-col :span="8">
               <h3>
-                {{lectureName}}
+                {{ lectureName }}
                 <i class="el-icon-edit" @click="changeLectureName()"></i>
               </h3>
             </el-col>
@@ -45,10 +45,14 @@
 
         <el-row :gutter="30">
           <el-col :span="16">
-            <lecture-scenario />
+            <div>
+              <lecture-scenario />
+            </div>
           </el-col>
           <el-col :span="8">
-            <lecture-scenario-item-adder />
+            <div>
+              <lecture-scenario-item-adder />
+            </div>
           </el-col>
         </el-row>
         <el-row :gutter="30">
