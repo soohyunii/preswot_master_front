@@ -3,7 +3,7 @@
     <el-col align="center">
       <!-- TODO: change icons -->
       <!-- TODO: Translate tooltip -->
-      <i :class="getIconsByType(props.item.type)" style="font-size: 50px;"></i>
+      <i :class="getIconsByType(props.type)" style="font-size: 50px;"></i>
       <i class="el-icon-error" style="color:red; vertical-align:top" @click="onClick(props.index)"></i><br/>
       <!-- TODO: change bg color, time variable -->
       <el-tag color="#DCDFE6">time</el-tag><br/>

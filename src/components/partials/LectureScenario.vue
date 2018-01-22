@@ -17,8 +17,8 @@
                 <lecture-scenario-item
                   v-for="(item, index) in lectureScenario"
                   class="list-group-item"
-                  :key="item.key"
-                  :props="{ item, index }" />
+                  :key="item.guid.value"
+                  :props="{ type: item.type, index }" />
               </transition-group>
             </draggable>
           </el-row>
@@ -101,7 +101,6 @@ export default {
         return this.$store.state.teacher.lectureScenario;
       },
       set(lectureScenarioItems) {
-        // window.console.log(lectureScenarioItems);
         this.$store.commit('teacher/editLectureElement', { lectureScenarioItems });
       },
     },
