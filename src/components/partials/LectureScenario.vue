@@ -2,13 +2,13 @@
   <div class="wrapper">
     <el-container>
       <el-aside width="39px">
-        <span class="label" :style="getLabelStyle()">SCENARIO</span>
+        <span class="label" :style="labelStyle">SCENARIO</span>
         <!-- <span class="label">SCENARIO</span> -->
       </el-aside>
       <el-main>
         <div ref="main">
           <el-row :gutter="10">
-            <template v-for="(item, index, key) in lectureElementSequence">
+            <template v-for="(item, index, key) in lectureScenario">
               <el-col :span="3" :key="key" align="center">
                 <!-- TODO: change icons -->
                 <!-- TODO: Translate tooltip -->
@@ -20,7 +20,7 @@
                 <!-- TODO: change bg color, duration variable -->
                 <el-tag color="#F2F6FC">duration</el-tag><br/>
               </el-col>
-              <el-col :span="1" :key="key" align="center" v-if="index + 1 < Object.keys(lectureElementSequence).length">
+              <el-col :span="1" :key="key" align="center" v-if="index + 1 < Object.keys(lectureScenario).length">
                 <br/><br/>
                 <i class="el-icon-minus" style="font-size: 30px;"/>
               </el-col>
@@ -28,6 +28,7 @@
           </el-row>
         </div>
       </el-main>
+      {{labelStyle}}
     </el-container>
   </div>
 </template>
@@ -47,7 +48,7 @@
     writing-mode: vertical-lr;
     // height: 200px;
     text-align: center;
-    transform: rotate(180);
+    transform: rotate(180deg);
     // width: 100%;
   }
 }
@@ -62,7 +63,7 @@ export default {
   data() {
     return {
       labelStyle: {
-        height: '200px',
+        height: '154px',
       },
     };
   },
@@ -116,6 +117,23 @@ export default {
       // });
       return res;
     },
+    updateLabelStyle() {
+      const vm = this;
+      const main = this.$refs.main;
+      if (!main) {
+        vm.labelStyle.height = '200px';
+      } else if (main.clientHeight !== 0) {
+        vm.labelStyle.height = `${main.clientHeight + 40}px`;
+      } else {
+        vm.labelStyle.height = '154px';
+      }
+      return vm.labelStyle;
+    },
+  },
+  async updated() {
+    const vm = this;
+    await vm.$nextTick();
+    await vm.updateLabelStyle();
   },
 };
 </script>
