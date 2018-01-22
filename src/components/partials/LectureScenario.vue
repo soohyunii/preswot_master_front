@@ -24,8 +24,8 @@
                     v-for="(item, index) in lectureScenario"
                     class="list-group-item"
                     :key="item.key"
-                    :items="item"
-                    :indices="index" />
+                    :item="item"
+                    :indice="index" />
                 </transition-group>
               </draggable>
             </el-row>
