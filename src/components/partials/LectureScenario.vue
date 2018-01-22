@@ -7,7 +7,14 @@
       </el-aside>
       <el-main>
         <div ref="main">
-          <el-row :gutter="10">
+          <el-row v-if="lectureScenario.length === 0">
+            <el-col :span="12" :offset="6">
+              <div class="empty-scenario-wrapper">
+                시나리오 저작 도구를 클릭하여 시나리오 요소를 추가하세요
+              </div>
+            </el-col>
+          </el-row>
+          <el-row :gutter="10" v-else>
             <!-- TODO: middle bar between two Items -->
             <draggable v-model="lectureScenario"
               :options="dragOptions"
@@ -77,6 +84,15 @@
     padding: 25px;
     margin-bottom: 30px;
   }
+  .empty-scenario-wrapper {
+    margin-top: 40px;
+    border: 4px $app-gray dotted;
+    background-color: white;
+    padding: 5px 10px;
+    text-align: center;
+    font-size: 85%;
+    padding: 10px 0px 12px;
+  }
 }
 </style>
 
@@ -131,7 +147,7 @@ export default {
       const main = this.$refs.main;
       if (!main) {
         vm.labelStyle.height = '200px';
-      } else if (main.clientHeight !== 0) {
+      } else if (main.clientHeight > 114) {
         vm.labelStyle.height = `${main.clientHeight + 40}px`;
       } else {
         vm.labelStyle.height = '154px';
