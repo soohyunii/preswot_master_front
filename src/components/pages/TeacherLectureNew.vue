@@ -27,15 +27,15 @@
 
           <el-col :span="4">
             <!-- TODO: translate -->
-            <el-dropdown @command="onClick">
+            <el-dropdown @command="onClickLectureType">
               <el-button type="primary">
                 분류 : {{lectureType}}<i class="el-icon-arrow-down el-icon--right"></i>
               </el-button>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="A">강의</el-dropdown-item>
-                <el-dropdown-item command="B">숙제</el-dropdown-item>
-                <el-dropdown-item command="C">퀴즈</el-dropdown-item>
-                <el-dropdown-item command="D">시험</el-dropdown-item>
+                <el-dropdown-item command="강의">강의</el-dropdown-item>
+                <el-dropdown-item command="숙제">숙제</el-dropdown-item>
+                <el-dropdown-item command="퀴즈">퀴즈</el-dropdown-item>
+                <el-dropdown-item command="시험">시험</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </el-col>
@@ -98,24 +98,9 @@ export default {
     };
   },
   methods: {
-    // TODO: translate
-    onClick(command) {
+    onClickLectureType(lectureType) {
       const vm = this;
-      switch (command) {
-        default:
-        case 'A':
-          vm.lectureType = '강의';
-          break;
-        case 'B':
-          vm.lectureType = '숙제';
-          break;
-        case 'C':
-          vm.lectureType = '퀴즈';
-          break;
-        case 'D':
-          vm.lectureType = '시험';
-          break;
-      }
+      vm.lectureType = lectureType;
     },
     changeLectureName() {
       const vm = this;
