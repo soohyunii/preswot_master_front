@@ -74,9 +74,7 @@ export default {
       const validTypeList = ['문제지', '강의자료', '숙제'];
       if (validTypeList.includes(type)) {
         vm.pushLectureElement({
-          lectureElement: {
-            type,
-          },
+          type,
         });
       } else {
         throw new Error(`not defined type ${type}`);
@@ -102,3 +100,15 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+  .bg-white {
+    background-color: rgb(255, 255, 255);
+  }
+
+  .grid-content {
+    border-radius: 4px;
+    padding: 25px;
+    margin-bottom: 30px;
+  }
+</style>
