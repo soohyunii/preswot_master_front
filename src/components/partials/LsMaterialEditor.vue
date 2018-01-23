@@ -12,6 +12,7 @@
           action="#"
           :auto-upload="false"
           :on-change="handleChange"
+          :on-remove="handleRemove"
           :file-list="fileList"
           multiple
           :limit="5"
@@ -71,6 +72,10 @@ export default {
     beforeRemove(file) {
       // TODO: translate
       return this.$confirm(`${file.name} 파일을 삭제하시겠습니까？`);
+    },
+    handleRemove(file, fileList) {
+      const vm = this;
+      vm.fileList = fileList;
     },
     handleChange(files, fileList) {
       const vm = this;
