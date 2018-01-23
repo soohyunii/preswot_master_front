@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper" :class="index === currentEditingLectureScenarioItemIndex ? selectedClass : ''" @click="onClick('selectLsItem',index)">
+  <div class="wrapper" :class="index === currentEditingLsItemIndex ? selectedClass : ''" @click="onClick('selectLsItem',index)">
     <el-col align="center">
       <!-- TODO: change icons -->
       <div class="image">
@@ -18,7 +18,7 @@
 import { mapState, mapMutations } from 'vuex';
 
 export default {
-  name: 'LectureScenarioItem',
+  name: 'LsItem',
   props: ['type', 'index'],
   data() {
     return {
@@ -28,19 +28,19 @@ export default {
   methods: {
     // TODO: edit lecture element
     // TODO: add drag/drop function
-    ...mapMutations('teacher', ['deleteLectureScenarioItem', 'updateCurrentEditingLectureScenarioItem']),
+    ...mapMutations('teacher', ['deleteLsItem', 'updateCurrentEditingLsItem']),
     onClick(type, index) {
       const vm = this;
       switch (type) {
         case 'selectLsItem': {
-          vm.updateCurrentEditingLectureScenarioItem({
-            currentEditingLectureScenarioItem: vm.lectureScenario[index],
+          vm.updateCurrentEditingLsItem({
+            currentEditingLsItem: vm.ls[index],
             lectureElementIndex: index,
           });
           break;
         }
         case 'deleteIcon': {
-          vm.deleteLectureScenarioItem({
+          vm.deleteLsItem({
             lectureElementIndex: index,
           });
           break;
@@ -71,7 +71,7 @@ export default {
     },
   },
   computed: {
-    ...mapState('teacher', ['lectureScenario', 'currentEditingLectureScenarioItemIndex']),
+    ...mapState('teacher', ['ls', 'currentEditingLsItemIndex']),
   },
 };
 </script>

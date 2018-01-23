@@ -7,7 +7,7 @@
       </el-aside>
       <el-main>
         <div ref="main">
-          <div v-show="isLectureScenarioEmpty">
+          <div v-show="isLsEmpty">
             <!-- TODO: translation -->
             <el-row>
               <el-col :span="12" :offset="6">
@@ -17,16 +17,16 @@
               </el-col>
             </el-row>
           </div>
-          <div v-show="!isLectureScenarioEmpty">
+          <div v-show="!isLsEmpty">
             <el-row :gutter="10">
               <!-- TODO: middle bar between two Items -->
-              <draggable v-model="lectureScenario"
+              <draggable v-model="ls"
                 :options="dragOptions"
                 @start="drag = true;"
                 @end="drag = false;">
                 <transition-group name="list-group">
-                  <lecture-scenario-item
-                    v-for="(item, index) in lectureScenario"
+                  <ls-item
+                    v-for="(item, index) in ls"
                     class="list-group-item"
                     :key="item.key"
                     :type="item.type"
@@ -107,10 +107,10 @@
 import draggable from 'vuedraggable';
 import { mapGetters, mapMutations } from 'vuex';
 
-import LectureScenarioItem from './LectureScenarioItem';
+import LsItem from './LsItem';
 
 export default {
-  name: 'LectureScenario',
+  name: 'Ls',
   data() {
     return {
       drag: false,
@@ -120,14 +120,14 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('teacher', ['isLectureScenarioEmpty']),
-    lectureScenario: {
+    ...mapGetters('teacher', ['isLsEmpty']),
+    ls: {
       get() {
-        return this.$store.state.teacher.lectureScenario;
+        return this.$store.state.teacher.ls;
       },
-      set(lectureScenario) {
+      set(ls) {
         const vm = this;
-        vm.updateLectureScenario({ lectureScenario });
+        vm.updateLs({ ls });
       },
     },
     dragOptions() {
@@ -138,11 +138,11 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['updateLectureScenario']),
+    ...mapMutations('teacher', ['updateLs']),
     updateLabelStyle() {
       const vm = this;
       const main = this.$refs.main;
-      if (vm.isLectureScenarioEmpty) {
+      if (vm.isLsEmpty) {
         vm.labelStyle.height = '154px';
       } else if (main.clientHeight > 114) {
         vm.labelStyle.height = `${main.clientHeight + 40}px`;
@@ -159,7 +159,7 @@ export default {
   },
   components: {
     draggable,
-    LectureScenarioItem,
+    LsItem,
   },
 };
 </script>
