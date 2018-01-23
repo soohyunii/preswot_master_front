@@ -46,6 +46,7 @@ export default {
   },
   computed: {
     ...mapState('teacher', ['lectureScenario', 'currentEditingLectureScenarioItem']),
+    ...mapState('teacher', ['currentEditingLectureScenarioItemIndex']),
     ...mapGetters('teacher', ['isLectureScenarioEmpty']),
     description: {
       get() {
@@ -62,6 +63,7 @@ export default {
             ...vm.currentEditingLectureScenarioItem,
             description,
           },
+          lectureElementIndex: vm.currentEditingLectureScenarioItemIndex,
         });
       },
     },

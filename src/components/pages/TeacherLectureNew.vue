@@ -68,6 +68,7 @@
                   활성화 되는 시각
                 </el-col>
                 <el-col :span="6">
+                  <el-time-picker></el-time-picker>
                   TODO: Time picker hh:mm:ss
                 </el-col>
 

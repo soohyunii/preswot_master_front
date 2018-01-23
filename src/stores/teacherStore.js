@@ -27,16 +27,14 @@ export default {
       state.lectureScenario.push(lectureScenarioItem);
       // TODO: save lectureElementSequence using localForage
     },
-    updateCurrentEditingLectureScenarioItem(state, { currentEditingLectureScenarioItem }) {
+    updateCurrentEditingLectureScenarioItem(state, { currentEditingLectureScenarioItem,
+       lectureElementIndex }) {
       state.currentEditingLectureScenarioItem = currentEditingLectureScenarioItem;
+      state.currentEditingLectureScenarioItemIndex = lectureElementIndex;
       Object.assign(
         state.lectureScenario[state.currentEditingLectureScenarioItemIndex],
         currentEditingLectureScenarioItem,
       );
-    },
-    changeCurrentEditingLectureScenarioItem(state, { lectureElementIndex }) {
-      state.currentEditingLectureScenarioItem = state.lectureScenario[lectureElementIndex];
-      state.currentEditingLectureScenarioItemIndex = lectureElementIndex;
     },
     deleteLectureScenarioItem(state, { lectureElementIndex }) {
       state.lectureScenario.splice(lectureElementIndex, 1);

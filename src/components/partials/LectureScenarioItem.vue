@@ -29,10 +29,11 @@ export default {
     // TODO: edit lecture element
     // TODO: add drag/drop function
     ...mapMutations('teacher', ['deleteLectureScenarioItem']),
-    ...mapMutations('teacher', ['changeCurrentEditingLectureScenarioItem']),
+    ...mapMutations('teacher', ['updateCurrentEditingLectureScenarioItem']),
     selected(index) {
       const vm = this;
-      vm.changeCurrentEditingLectureScenarioItem({
+      vm.updateCurrentEditingLectureScenarioItem({
+        currentEditingLectureScenarioItem: vm.lectureScenario[index],
         lectureElementIndex: index,
       });
     },
@@ -63,7 +64,7 @@ export default {
     },
   },
   computed: {
-    ...mapState('teacher', ['currentEditingLectureScenarioItemIndex']),
+    ...mapState('teacher', ['lectureScenario', 'currentEditingLectureScenarioItemIndex']),
   },
 };
 </script>
