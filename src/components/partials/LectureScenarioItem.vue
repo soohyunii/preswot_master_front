@@ -76,6 +76,10 @@ export default {
   margin: 8px 0px;
   padding: 5px 0px 5px 0px;
 
+  .selected {
+    background-color: #dcdfe6;
+  }
+
   .image {
     padding-bottom: 10px;
   }
@@ -112,8 +116,5 @@ export default {
     font-size: 16px;
     font-weight: 500;
   }
-}
-.selected {
-  background-color: #dcdfe6;
 }
 </style>
