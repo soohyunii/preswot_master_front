@@ -46,21 +46,21 @@
         <el-row :gutter="30">
           <el-col :span="16">
             <div>
-              <lecture-scenario />
+              <ls />
             </div>
           </el-col>
           <el-col :span="8">
             <div>
-              <lecture-scenario-item-adder />
+              <ls-item-adder />
             </div>
           </el-col>
         </el-row>
 
-        <div id="app_lecture_editor" v-show="!isLectureScenarioEmpty">
+        <div id="app_lecture_editor" v-show="!isLsEmpty">
           <el-row :gutter="30">
             <el-col :span="24">
               <!-- TODO: translation -->
-              <lecture-scenario-material-editor />
+              <ls-material-editor />
 
               <h2>활성화 시간 입력</h2>
               <el-row>
@@ -105,17 +105,17 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import LectureScenario from '../partials/LectureScenario';
-import LectureScenarioItemAdder from '../partials/LectureScenarioItemAdder';
-import LectureScenarioMaterialEditor from '../partials/LectureScenarioMaterialEditor';
+import Ls from '../partials/Ls';
+import LsItemAdder from '../partials/LsItemAdder';
+import LsMaterialEditor from '../partials/LsMaterialEditor';
 import TeachingClassList from '../partials/TeachingClassList';
 
 export default {
   name: 'TeacherNewLecture',
   components: {
-    LectureScenario,
-    LectureScenarioItemAdder,
-    LectureScenarioMaterialEditor,
+    Ls,
+    LsItemAdder,
+    LsMaterialEditor,
     TeachingClassList,
   },
   data() {
@@ -132,7 +132,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('teacher', ['isLectureScenarioEmpty']),
+    ...mapGetters('teacher', ['isLsEmpty']),
   },
   methods: {
     onClickLectureType(lectureType) {
