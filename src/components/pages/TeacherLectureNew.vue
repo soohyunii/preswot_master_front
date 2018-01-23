@@ -60,31 +60,9 @@
           <el-row :gutter="30">
             <el-col :span="24">
               <!-- TODO: translation -->
-              <lecture-scenario-material-editor />
-              <h2>내용</h2>
-
-              <el-row>
-                <el-col :span="6">
-                  파일 업로드
-                </el-col>
-                <el-col :span="18">
-                  TODO: 업로드 [ + ]
-                </el-col>
-              </el-row>
-
-              <el-row>
-                <el-col :span="6">
-                  설명
-                </el-col>
-                <el-col :span="18">
-                  <el-input
-                    type="textarea"
-                    :rows="3"
-                    v-model="description"
-                  >
-                  </el-input>
-                </el-col>
-              </el-row>
+              <lecture-scenario-material-editor
+                v-model="description"
+              />
 
               <h2>활성화 시간 입력</h2>
               <el-row>
