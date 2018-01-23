@@ -40,32 +40,26 @@
     </el-row>
     <h1>debug</h1>
     lecture scenario:
-    <pre>{{ lectureScenario }}</pre> <br />
+    <pre>{{ ls }}</pre> <br />
     description: {{ description }} <br />
-    currentEditingLectureScenarioItem: {{ currentEditingLectureScenarioItem }}
+    currentEditingLsItem: {{ currentEditingLsItem }}
   </div>
 </template>
 
 <script>
-import { mapGetters, mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 
 /**
  * @description 강의자료 에디터
  */
 export default {
-  name: 'LectureScenarioMaterialEditor',
-  data() {
-    const vm = this;
-    return {
-      url: vm.$route.path,
-    };
-  },
+  name: 'LsMaterialEditor',
   methods: {
     submitUpload() {
       this.$refs.upload.submit();
-      window.console.log('aaa');
+      window.console.log('upload Test');
     },
-    ...mapMutations('teacher', ['updateCurrentEditingLectureScenarioItem']),
+    ...mapMutations('teacher', ['updateCurrentEditingLsItem']),
     handleExceed(files, fileList) {
       // TODO: translate
       this.$message.warning(
@@ -84,25 +78,23 @@ export default {
     },
   },
   computed: {
-    ...mapState('teacher', ['lectureScenario', 'currentEditingLectureScenarioItem']),
-    ...mapState('teacher', ['currentEditingLectureScenarioItemIndex']),
-    ...mapGetters('teacher', ['isLectureScenarioEmpty']),
+    ...mapState('teacher', ['ls', 'currentEditingLsItem', 'currentEditingLsItemIndex']),
     description: {
       get() {
         const vm = this;
-        if (!!vm.currentEditingLectureScenarioItem) { // eslint-disable-line no-extra-boolean-cast
-          return vm.currentEditingLectureScenarioItem.description || '';
+        if (!!vm.currentEditingLsItem) { // eslint-disable-line no-extra-boolean-cast
+          return vm.currentEditingLsItem.description || '';
         }
         return '';
       },
       set(description) {
         const vm = this;
-        vm.updateCurrentEditingLectureScenarioItem({
-          currentEditingLectureScenarioItem: {
-            ...vm.currentEditingLectureScenarioItem,
+        vm.updateCurrentEditingLsItem({
+          currentEditingLsItem: {
+            ...vm.currentEditingLsItem,
             description,
           },
-          lectureElementIndex: vm.currentEditingLectureScenarioItemIndex,
+          lectureElementIndex: vm.currentEditingLsItemIndex,
         });
       },
     },
