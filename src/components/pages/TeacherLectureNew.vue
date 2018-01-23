@@ -84,11 +84,6 @@
             </el-col>
           </el-row>
         </div>
-
-        <h1>debug</h1>
-        lecture scenario:
-        <pre>{{ lectureScenario }}</pre> <br />
-        description: {{ description }}
       </el-main>
       <!-- 이 메인은 맞음 끝 -->
     </el-container>
@@ -106,7 +101,7 @@
 
 
 <script>
-import { mapGetters, mapState, mapMutations } from 'vuex';
+import { mapGetters } from 'vuex';
 import LectureScenario from '../partials/LectureScenario';
 import LectureScenarioItemAdder from '../partials/LectureScenarioItemAdder';
 import LectureScenarioMaterialEditor from '../partials/LectureScenarioMaterialEditor';
@@ -131,29 +126,9 @@ export default {
     };
   },
   computed: {
-    ...mapState('teacher', ['lectureScenario', 'currentEditingLectureScenarioItem']),
     ...mapGetters('teacher', ['isLectureScenarioEmpty']),
-    description: {
-      get() {
-        const vm = this;
-        if (!!vm.currentEditingLectureScenarioItem) { // eslint-disable-line no-extra-boolean-cast
-          return vm.currentEditingLectureScenarioItem.description || '';
-        }
-        return '';
-      },
-      set(description) {
-        const vm = this;
-        vm.updateCurrentEditingLectureScenarioItem({
-          currentEditingLectureScenarioItem: {
-            ...vm.currentEditingLectureScenarioItem,
-            description,
-          },
-        });
-      },
-    },
   },
   methods: {
-    ...mapMutations('teacher', ['updateCurrentEditingLectureScenarioItem']),
     onClickLectureType(lectureType) {
       const vm = this;
       vm.lectureType = lectureType;
