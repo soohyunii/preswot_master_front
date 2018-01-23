@@ -36,8 +36,6 @@ export default {
     },
     changeCurrentEditingLectureScenarioItem(state, { lectureElementIndex }) {
       state.currentEditingLectureScenarioItem = state.lectureScenario[lectureElementIndex];
-    },
-    changeCurrentEditingLectureScenarioItemIndex(state, { lectureElementIndex }) {
       state.currentEditingLectureScenarioItemIndex = lectureElementIndex;
     },
     deleteLectureScenarioItem(state, { lectureElementIndex }) {

@@ -28,7 +28,8 @@
     <h1>debug</h1>
     lecture scenario:
     <pre>{{ lectureScenario }}</pre> <br />
-    description: {{ description }}
+    description: {{ description }} <br />
+    currentEditingLectureScenarioItem: {{ currentEditingLectureScenarioItem }}
   </div>
 </template>
 

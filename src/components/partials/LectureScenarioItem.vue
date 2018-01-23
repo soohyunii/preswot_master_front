@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper" @click="selected(index)">
+  <div class="wrapper" :class="index === currentEditingLectureScenarioItemIndex ? selectedClass : ''" @click="selected(index)">
     <el-col align="center">
       <!-- TODO: change icons -->
       <div class="image">
@@ -15,22 +15,23 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'LectureScenarioItem',
   props: ['type', 'index'],
+  data() {
+    return {
+      selectedClass: 'selected',
+    };
+  },
   methods: {
     // TODO: edit lecture element
     // TODO: add drag/drop function
     ...mapMutations('teacher', ['deleteLectureScenarioItem']),
     ...mapMutations('teacher', ['changeCurrentEditingLectureScenarioItem']),
-    ...mapMutations('teacher', ['changeCurrentEditingLectureScenarioItemIndex']),
     selected(index) {
       const vm = this;
-      vm.changeCurrentEditingLectureScenarioItemIndex({
-        lectureElementIndex: index,
-      });
       vm.changeCurrentEditingLectureScenarioItem({
         lectureElementIndex: index,
       });
@@ -61,6 +62,9 @@ export default {
       return icon;
     },
   },
+  computed: {
+    ...mapState('teacher', ['currentEditingLectureScenarioItemIndex']),
+  },
 };
 </script>
 
@@ -68,8 +72,9 @@ export default {
 @import "~@/variables.scss";
 
 .wrapper {
-  background-color: rgba(255, 255, 255, 0);
+//  background-color: rgba(255, 255, 255, 0);
   margin: 8px 0px;
+  padding: 5px 0px 5px 0px;
 
   .image {
     padding-bottom: 10px;
@@ -107,7 +112,8 @@ export default {
     font-size: 16px;
     font-weight: 500;
   }
-
-
+}
+.selected {
+  background-color: #dcdfe6;
 }
 </style>
