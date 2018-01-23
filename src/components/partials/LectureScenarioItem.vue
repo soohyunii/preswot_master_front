@@ -1,10 +1,10 @@
 <template>
-  <div class="wrapper" :class="index === currentEditingLectureScenarioItemIndex ? selectedClass : ''" @click="selected(index)">
+  <div class="wrapper" :class="index === currentEditingLectureScenarioItemIndex ? selectedClass : ''" @click="onClick('selectLsItem',index)">
     <el-col align="center">
       <!-- TODO: change icons -->
       <div class="image">
         <i :class="getIconsByType(type)" class="main-image" ></i>
-        <i class="el-icon-error" style="color:red; vertical-align:top" @click="onClick(index)"></i><br/>
+        <i class="el-icon-error" style="color:red; vertical-align:top" @click="onClick('deleteIcon',index)"></i><br/>
       </div>
       <!-- TODO: change bg color, time variable -->
       <div class="label-time">05:00</div>
@@ -28,20 +28,27 @@ export default {
   methods: {
     // TODO: edit lecture element
     // TODO: add drag/drop function
-    ...mapMutations('teacher', ['deleteLectureScenarioItem']),
-    ...mapMutations('teacher', ['updateCurrentEditingLectureScenarioItem']),
-    selected(index) {
+    ...mapMutations('teacher', ['deleteLectureScenarioItem', 'updateCurrentEditingLectureScenarioItem']),
+    onClick(type, index) {
       const vm = this;
-      vm.updateCurrentEditingLectureScenarioItem({
-        currentEditingLectureScenarioItem: vm.lectureScenario[index],
-        lectureElementIndex: index,
-      });
-    },
-    onClick(index) {
-      const vm = this;
-      vm.deleteLectureScenarioItem({
-        lectureElementIndex: index,
-      });
+      switch (type) {
+        case 'selectLsItem': {
+          vm.updateCurrentEditingLectureScenarioItem({
+            currentEditingLectureScenarioItem: vm.lectureScenario[index],
+            lectureElementIndex: index,
+          });
+          break;
+        }
+        case 'deleteIcon': {
+          vm.deleteLectureScenarioItem({
+            lectureElementIndex: index,
+          });
+          break;
+        }
+        default : {
+          throw new Error('not defined type', type);
+        }
+      }
     },
     getIconsByType(type) {
       let icon;
@@ -73,7 +80,6 @@ export default {
 @import "~@/variables.scss";
 
 .wrapper {
-//  background-color: rgba(255, 255, 255, 0);
   margin: 8px 0px;
   padding: 5px 0px 5px 0px;
 
