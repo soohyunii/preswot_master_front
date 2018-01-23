@@ -2,45 +2,48 @@ const Guid = require('guid');
 
 export default {
   namespaced: true,
+  /**
+   * @var ls: shorthand for Ls
+   */
   state: {
-    lectureScenario: [], // TODO: fetch(init) from server if exists
+    ls: [], // TODO: fetch(init) from server if exists
     // TODO: Otherwise, init from localStorage (in case of server has no data)
-    // currentEditingLectureScenarioItem: 현재 저작 중인 강의 시나리오 아이템
-    currentEditingLectureScenarioItem: null, // TODO: init from localStorage
-    currentEditingLectureScenarioItemIndex: null,
+    // currentEditingLsItem: 현재 저작 중인 강의 시나리오 아이템
+    currentEditingLsItem: null, // TODO: init from localStorage
+    currentEditingLsItemIndex: null,
     // TODO: save currentEditingElement into localStorage inside Vue component using watch
     teachingClassList: [],
     currentEditingClass: null,
     // scenarioList: [],
   },
   getters: {
-    isLectureScenarioEmpty(state) {
-      return state.lectureScenario.length === 0;
+    isLsEmpty(state) {
+      return state.ls.length === 0;
     },
   },
   mutations: {
-    pushLectureScenarioItem(state, { type }) {
+    pushLsItem(state, { type }) {
       const key = Guid.create().toString();
-      const lectureScenarioItem = { type, key };
-      state.currentEditingLectureScenarioItem = lectureScenarioItem;
-      state.currentEditingLectureScenarioItemIndex = state.lectureScenario.length;
-      state.lectureScenario.push(lectureScenarioItem);
+      const lsItem = { type, key };
+      state.currentEditingLsItem = lsItem;
+      state.currentEditingLsItemIndex = state.ls.length;
+      state.ls.push(lsItem);
       // TODO: save lectureElementSequence using localForage
     },
-    updateCurrentEditingLectureScenarioItem(state, { currentEditingLectureScenarioItem }) {
-      state.currentEditingLectureScenarioItem = currentEditingLectureScenarioItem;
+    updateCurrentEditingLsItem(state, { currentEditingLsItem }) {
+      state.currentEditingLsItem = currentEditingLsItem;
       Object.assign(
-        state.lectureScenario[state.currentEditingLectureScenarioItemIndex],
-        currentEditingLectureScenarioItem,
+        state.ls[state.currentEditingLsItemIndex],
+        currentEditingLsItem,
       );
     },
-    deleteLectureScenarioItem(state, { lectureElementIndex }) {
-      state.lectureScenario.splice(lectureElementIndex, 1);
+    deleteLsItem(state, { lectureElementIndex }) {
+      state.ls.splice(lectureElementIndex, 1);
       // TODO: update localForage
     },
     // TODO: editLectureElement
-    updateLectureScenario(state, { lectureScenario }) {
-      state.lectureScenario = lectureScenario;
+    updateLs(state, { ls }) {
+      state.ls = ls;
     },
     updateCurrentEditingClass(state, { editingClass }) {
       state.currentEditingClass = editingClass;

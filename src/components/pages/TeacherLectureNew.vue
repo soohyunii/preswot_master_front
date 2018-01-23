@@ -56,7 +56,7 @@
           </el-col>
         </el-row>
 
-        <div id="app_lecture_editor" v-show="!isLectureScenarioEmpty">
+        <div id="app_lecture_editor" v-show="!isLsEmpty">
           <el-row :gutter="30">
             <el-col :span="24">
               <!-- TODO: translation -->
@@ -124,7 +124,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('teacher', ['isLectureScenarioEmpty']),
+    ...mapGetters('teacher', ['isLsEmpty']),
   },
   methods: {
     onClickLectureType(lectureType) {

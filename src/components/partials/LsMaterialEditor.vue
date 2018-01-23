@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 
 /**
  * @description 강의자료 에디터
@@ -41,24 +41,23 @@ import { mapGetters, mapState, mapMutations } from 'vuex';
 export default {
   name: 'LectureScenarioMaterialEditor',
   methods: {
-    ...mapMutations('teacher', ['updateCurrentEditingLectureScenarioItem']),
+    ...mapMutations('teacher', ['updateCurrentEditingLsItem']),
   },
   computed: {
-    ...mapState('teacher', ['lectureScenario', 'currentEditingLectureScenarioItem']),
-    ...mapGetters('teacher', ['isLectureScenarioEmpty']),
+    ...mapState('teacher', ['lectureScenario', 'currentEditingLsItem']),
     description: {
       get() {
         const vm = this;
-        if (!!vm.currentEditingLectureScenarioItem) { // eslint-disable-line no-extra-boolean-cast
-          return vm.currentEditingLectureScenarioItem.description || '';
+        if (!!vm.currentEditingLsItem) { // eslint-disable-line no-extra-boolean-cast
+          return vm.currentEditingLsItem.description || '';
         }
         return '';
       },
       set(description) {
         const vm = this;
-        vm.updateCurrentEditingLectureScenarioItem({
-          currentEditingLectureScenarioItem: {
-            ...vm.currentEditingLectureScenarioItem,
+        vm.updateCurrentEditingLsItem({
+          currentEditingLsItem: {
+            ...vm.currentEditingLsItem,
             description,
           },
         });
