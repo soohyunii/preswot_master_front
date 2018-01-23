@@ -60,25 +60,7 @@
           <el-row :gutter="30">
             <el-col :span="24">
               <!-- TODO: translation -->
-              <h2>내용</h2>
-
-              <el-row>
-                <el-col :span="6">
-                  파일 업로드
-                </el-col>
-                <el-col :span="18">
-                  TODO: 업로드 [ + ]
-                </el-col>
-              </el-row>
-
-              <el-row>
-                <el-col :span="6">
-                  설명
-                </el-col>
-                <el-col :span="18">
-                  TODO: 텍스트박스
-                </el-col>
-              </el-row>
+              <lecture-scenario-material-editor />
 
               <h2>활성화 시간 입력</h2>
               <el-row>
@@ -100,7 +82,6 @@
             </el-col>
           </el-row>
         </div>
-
       </el-main>
       <!-- 이 메인은 맞음 끝 -->
     </el-container>
@@ -121,6 +102,7 @@
 import { mapGetters } from 'vuex';
 import LectureScenario from '../partials/LectureScenario';
 import LectureScenarioItemAdder from '../partials/LectureScenarioItemAdder';
+import LectureScenarioMaterialEditor from '../partials/LectureScenarioMaterialEditor';
 import TeachingClassList from '../partials/TeachingClassList';
 
 export default {
@@ -128,6 +110,7 @@ export default {
   components: {
     LectureScenario,
     LectureScenarioItemAdder,
+    LectureScenarioMaterialEditor,
     TeachingClassList,
   },
   data() {
