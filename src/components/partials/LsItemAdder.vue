@@ -66,7 +66,7 @@
 import { mapMutations } from 'vuex';
 
 export default {
-  name: 'LectureScenarioItemAdder',
+  name: 'LsItemAdder',
   methods: {
     ...mapMutations('teacher', ['pushLectureScenarioItem']),
     onClick(type) {
