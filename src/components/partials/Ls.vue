@@ -110,7 +110,7 @@ import { mapGetters, mapMutations } from 'vuex';
 import LsItem from './LsItem';
 
 export default {
-  name: 'LectureScenario',
+  name: 'Ls',
   data() {
     return {
       drag: false,
