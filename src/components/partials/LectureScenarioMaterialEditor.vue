@@ -41,8 +41,8 @@
     <h1>debug</h1>
     lecture scenario:
     <pre>{{ lectureScenario }}</pre> <br />
-    <pre>{{fileList}}</pre>
-    description: {{ description }}
+    description: {{ description }} <br />
+    currentEditingLectureScenarioItem: {{ currentEditingLectureScenarioItem }}
   </div>
 </template>
 
@@ -85,6 +85,7 @@ export default {
   },
   computed: {
     ...mapState('teacher', ['lectureScenario', 'currentEditingLectureScenarioItem']),
+    ...mapState('teacher', ['currentEditingLectureScenarioItemIndex']),
     ...mapGetters('teacher', ['isLectureScenarioEmpty']),
     description: {
       get() {
@@ -101,6 +102,7 @@ export default {
             ...vm.currentEditingLectureScenarioItem,
             description,
           },
+          lectureElementIndex: vm.currentEditingLectureScenarioItemIndex,
         });
       },
     },

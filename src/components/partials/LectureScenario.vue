@@ -144,7 +144,7 @@ export default {
       const main = this.$refs.main;
       if (vm.isLectureScenarioEmpty) {
         vm.labelStyle.height = '154px';
-      } else if (vm.labelStyle.height > 114) {
+      } else if (main.clientHeight > 114) {
         vm.labelStyle.height = `${main.clientHeight + 40}px`;
       } else {
         vm.labelStyle.height = '154px';
