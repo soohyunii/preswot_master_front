@@ -18,7 +18,7 @@
 import { mapMutations } from 'vuex';
 
 export default {
-  name: 'LectureScenarioItem',
+  name: 'LsItem',
   props: ['type', 'index'],
   methods: {
     // TODO: edit lecture element
@@ -96,7 +96,5 @@ export default {
     font-size: 16px;
     font-weight: 500;
   }
-
-
 }
 </style>

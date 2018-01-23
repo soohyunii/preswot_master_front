@@ -25,7 +25,7 @@
                 @start="drag = true;"
                 @end="drag = false;">
                 <transition-group name="list-group">
-                  <lecture-scenario-item
+                  <ls-item
                     v-for="(item, index) in lectureScenario"
                     class="list-group-item"
                     :key="item.key"
@@ -107,7 +107,7 @@
 import draggable from 'vuedraggable';
 import { mapGetters, mapMutations } from 'vuex';
 
-import LectureScenarioItem from './LectureScenarioItem';
+import LsItem from './LsItem';
 
 export default {
   name: 'LectureScenario',
@@ -159,7 +159,7 @@ export default {
   },
   components: {
     draggable,
-    LectureScenarioItem,
+    LsItem,
   },
 };
 </script>
