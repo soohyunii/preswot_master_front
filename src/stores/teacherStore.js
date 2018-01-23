@@ -38,9 +38,6 @@ export default {
         currentEditingLsItem,
       );
     },
-    updateCurrentEditingLsItemIndex(state, { index }) {
-      state.currentEditingLsItemIndex = index;
-    },
     deleteLsItem(state, { lectureElementIndex }) {
       state.ls.splice(lectureElementIndex, 1);
       // TODO: update localForage
