@@ -60,6 +60,7 @@
           <el-row :gutter="30">
             <el-col :span="24">
               <!-- TODO: translation -->
+              <lecture-scenario-material-editor />
               <h2>내용</h2>
 
               <el-row>
@@ -130,6 +131,7 @@
 import { mapGetters, mapState, mapMutations } from 'vuex';
 import LectureScenario from '../partials/LectureScenario';
 import LectureScenarioItemAdder from '../partials/LectureScenarioItemAdder';
+import LectureScenarioMaterialEditor from '../partials/LectureScenarioMaterialEditor';
 import TeachingClassList from '../partials/TeachingClassList';
 
 export default {
@@ -137,6 +139,7 @@ export default {
   components: {
     LectureScenario,
     LectureScenarioItemAdder,
+    LectureScenarioMaterialEditor,
     TeachingClassList,
   },
   data() {
