@@ -101,19 +101,19 @@ export default {
     fileList: {
       get() {
         const vm = this;
-        if (!!vm.currentEditingLectureScenarioItem) { // eslint-disable-line no-extra-boolean-cast
-          return vm.currentEditingLectureScenarioItem.fileList || [];
+        if (!!vm.currentEditingLsItem) { // eslint-disable-line no-extra-boolean-cast
+          return vm.currentEditingLsItem.fileList || [];
         }
         return [];
       },
       set(fileList) {
         const vm = this;
-        vm.updateCurrentEditingLectureScenarioItem({
-          currentEditingLectureScenarioItem: {
-            ...vm.currentEditingLectureScenarioItem,
+        vm.updateCurrentEditingLsItem({
+          currentEditingLsItem: {
+            ...vm.currentEditingLsItem,
             fileList,
           },
-          lectureElementIndex: vm.currentEditingLectureScenarioItemIndex,
+          lectureElementIndex: vm.currentEditingLsItemIndex,
         });
       },
     },
