@@ -121,6 +121,7 @@ export default {
             ...vm.currentEditingLectureScenarioItem,
             fileList,
           },
+          lectureElementIndex: vm.currentEditingLectureScenarioItemIndex,
         });
       },
     },
