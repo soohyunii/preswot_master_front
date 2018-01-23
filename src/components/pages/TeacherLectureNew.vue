@@ -106,8 +106,9 @@
           </el-row>
         </div>
 
-        <h1>debugg</h1>
-        lecture scenario: {{ lectureScenario }} <br />
+        <h1>debug</h1>
+        lecture scenario:
+        <pre>{{ lectureScenario }}</pre> <br />
         description: {{ description }}
       </el-main>
       <!-- 이 메인은 맞음 끝 -->
