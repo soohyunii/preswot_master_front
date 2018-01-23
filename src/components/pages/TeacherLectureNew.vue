@@ -60,9 +60,7 @@
           <el-row :gutter="30">
             <el-col :span="24">
               <!-- TODO: translation -->
-              <lecture-scenario-material-editor
-                v-model="description"
-              />
+              <lecture-scenario-material-editor />
 
               <h2>활성화 시간 입력</h2>
               <el-row>
