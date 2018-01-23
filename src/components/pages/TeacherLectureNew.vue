@@ -108,7 +108,8 @@
 
         <h1>debugg</h1>
         lecture scenario: {{ lectureScenario }} <br />
-        description: {{ description }}
+        description: {{ description }} <br />
+        currentEditingLectureScenarioItem: {{ currentEditingLectureScenarioItem }}
       </el-main>
       <!-- 이 메인은 맞음 끝 -->
     </el-container>
