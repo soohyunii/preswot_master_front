@@ -14,14 +14,12 @@
           :on-change="handleChange"
           :file-list="fileList"
           multiple
-          :limit="3"
+          :limit="5"
           :on-exceed="handleExceed"
           :before-remove="beforeRemove"
           ref="upload">
-          <div>
-            <el-button size="small" type="primary">파일추가 [+]</el-button>
-            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">upload to server</el-button>
-          </div>
+          <el-button slot="trigger" size="small" type="primary">파일추가 [+]</el-button>
+          <el-button size="small" type="success" @click="submitUpload">upload Test</el-button>
         </el-upload>
       </el-col>
     </el-row>
@@ -65,6 +63,7 @@ export default {
   methods: {
     submitUpload() {
       this.$refs.upload.submit();
+      window.console.log('aaa');
     },
     ...mapMutations('teacher', ['updateCurrentEditingLectureScenarioItem']),
     handleExceed(files, fileList) {
