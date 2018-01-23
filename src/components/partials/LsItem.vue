@@ -1,10 +1,10 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper" :class="index === currentEditingLsItemIndex ? selectedClass : ''" @click="onClick('selectLsItem',index)">
     <el-col align="center">
       <!-- TODO: change icons -->
       <div class="image">
         <i :class="getIconsByType(type)" class="main-image" ></i>
-        <i class="el-icon-error" style="color:red; vertical-align:top" @click="onClick(index)"></i><br/>
+        <i class="el-icon-error" style="color:red; vertical-align:top" @click="onClick('deleteIcon',index)"></i><br/>
       </div>
       <!-- TODO: change bg color, time variable -->
       <div class="label-time">05:00</div>
@@ -15,20 +15,40 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 
 export default {
-  name: 'LectureScenarioItem',
+  name: 'LsItem',
   props: ['type', 'index'],
+  data() {
+    return {
+      selectedClass: 'selected',
+    };
+  },
   methods: {
     // TODO: edit lecture element
     // TODO: add drag/drop function
-    ...mapMutations('teacher', ['deleteLectureScenarioItem']),
-    onClick(index) {
+    ...mapMutations('teacher', ['deleteLsItem', 'updateCurrentEditingLsItem']),
+    onClick(type, index) {
       const vm = this;
-      vm.deleteLectureScenarioItem({
-        lectureElementIndex: index,
-      });
+      switch (type) {
+        case 'selectLsItem': {
+          vm.updateCurrentEditingLsItem({
+            currentEditingLsItem: vm.ls[index],
+            lectureElementIndex: index,
+          });
+          break;
+        }
+        case 'deleteIcon': {
+          vm.deleteLsItem({
+            lectureElementIndex: index,
+          });
+          break;
+        }
+        default : {
+          throw new Error('not defined type', type);
+        }
+      }
     },
     getIconsByType(type) {
       let icon;
@@ -50,6 +70,9 @@ export default {
       return icon;
     },
   },
+  computed: {
+    ...mapState('teacher', ['ls', 'currentEditingLsItemIndex']),
+  },
 };
 </script>
 
@@ -57,8 +80,12 @@ export default {
 @import "~@/variables.scss";
 
 .wrapper {
-  background-color: rgba(255, 255, 255, 0);
   margin: 8px 0px;
+  padding: 5px 0px 5px 0px;
+
+  .selected {
+    background-color: #dcdfe6;
+  }
 
   .image {
     padding-bottom: 10px;
@@ -96,7 +123,5 @@ export default {
     font-size: 16px;
     font-weight: 500;
   }
-
-
 }
 </style>

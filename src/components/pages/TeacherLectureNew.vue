@@ -46,21 +46,21 @@
         <el-row :gutter="30">
           <el-col :span="16">
             <div>
-              <lecture-scenario />
+              <ls />
             </div>
           </el-col>
           <el-col :span="8">
             <div>
-              <lecture-scenario-item-adder />
+              <ls-item-adder />
             </div>
           </el-col>
         </el-row>
 
-        <div id="app_lecture_editor" v-show="!isLectureScenarioEmpty">
+        <div id="app_lecture_editor" v-show="!isLsEmpty">
           <el-row :gutter="30">
             <el-col :span="24">
               <!-- TODO: translation -->
-              <lecture-scenario-material-editor />
+              <ls-material-editor />
 
               <h2>활성화 시간 입력</h2>
               <el-row>
@@ -68,6 +68,7 @@
                   활성화 되는 시각
                 </el-col>
                 <el-col :span="6">
+                  <el-time-picker v-model="activeTime" align="center"></el-time-picker>
                   TODO: Time picker hh:mm:ss
                 </el-col>
 
@@ -75,6 +76,7 @@
                   활성화 지속 시간
                 </el-col>
                 <el-col :span="6">
+                  <el-time-picker v-model="activeDurationTime" align="center" format="mm분 ss초"></el-time-picker>
                   TODO: Time picker mm:ss
                 </el-col>
               </el-row>
@@ -100,17 +102,17 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import LectureScenario from '../partials/LectureScenario';
-import LectureScenarioItemAdder from '../partials/LectureScenarioItemAdder';
-import LectureScenarioMaterialEditor from '../partials/LectureScenarioMaterialEditor';
+import Ls from '../partials/Ls';
+import LsItemAdder from '../partials/LsItemAdder';
+import LsMaterialEditor from '../partials/LsMaterialEditor';
 import TeachingClassList from '../partials/TeachingClassList';
 
 export default {
   name: 'TeacherNewLecture',
   components: {
-    LectureScenario,
-    LectureScenarioItemAdder,
-    LectureScenarioMaterialEditor,
+    Ls,
+    LsItemAdder,
+    LsMaterialEditor,
     TeachingClassList,
   },
   data() {
@@ -121,10 +123,12 @@ export default {
       inputFlag: false,
       currentClassName: '',
       lectureType: '강의',
+      activeTime: new Date(0, 0, 0),
+      activeDurationTime: new Date(0, 0, 0),
     };
   },
   computed: {
-    ...mapGetters('teacher', ['isLectureScenarioEmpty']),
+    ...mapGetters('teacher', ['isLsEmpty']),
   },
   methods: {
     onClickLectureType(lectureType) {
