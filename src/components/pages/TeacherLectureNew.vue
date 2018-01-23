@@ -60,30 +60,7 @@
           <el-row :gutter="30">
             <el-col :span="24">
               <!-- TODO: translation -->
-              <h2>내용</h2>
-
-              <el-row>
-                <el-col :span="6">
-                  파일 업로드
-                </el-col>
-                <el-col :span="18">
-                  TODO: 업로드 [ + ]
-                </el-col>
-              </el-row>
-
-              <el-row>
-                <el-col :span="6">
-                  설명
-                </el-col>
-                <el-col :span="18">
-                  <el-input
-                    type="textarea"
-                    :rows="3"
-                    v-model="description"
-                  >
-                  </el-input>
-                </el-col>
-              </el-row>
+              <lecture-scenario-material-editor />
 
               <h2>활성화 시간 입력</h2>
               <el-row>
@@ -105,10 +82,6 @@
             </el-col>
           </el-row>
         </div>
-
-        <h1>debugg</h1>
-        lecture scenario: {{ lectureScenario }} <br />
-        description: {{ description }}
       </el-main>
       <!-- 이 메인은 맞음 끝 -->
     </el-container>
@@ -126,9 +99,10 @@
 
 
 <script>
-import { mapGetters, mapState, mapMutations } from 'vuex';
+import { mapGetters } from 'vuex';
 import LectureScenario from '../partials/LectureScenario';
 import LectureScenarioItemAdder from '../partials/LectureScenarioItemAdder';
+import LectureScenarioMaterialEditor from '../partials/LectureScenarioMaterialEditor';
 import TeachingClassList from '../partials/TeachingClassList';
 
 export default {
@@ -136,6 +110,7 @@ export default {
   components: {
     LectureScenario,
     LectureScenarioItemAdder,
+    LectureScenarioMaterialEditor,
     TeachingClassList,
   },
   data() {
@@ -149,29 +124,9 @@ export default {
     };
   },
   computed: {
-    ...mapState('teacher', ['lectureScenario', 'currentEditingLectureScenarioItem']),
     ...mapGetters('teacher', ['isLectureScenarioEmpty']),
-    description: {
-      get() {
-        const vm = this;
-        if (!!vm.currentEditingLectureScenarioItem) { // eslint-disable-line no-extra-boolean-cast
-          return vm.currentEditingLectureScenarioItem.description || '';
-        }
-        return '';
-      },
-      set(description) {
-        const vm = this;
-        vm.updateCurrentEditingLectureScenarioItem({
-          currentEditingLectureScenarioItem: {
-            ...vm.currentEditingLectureScenarioItem,
-            description,
-          },
-        });
-      },
-    },
   },
   methods: {
-    ...mapMutations('teacher', ['updateCurrentEditingLectureScenarioItem']),
     onClickLectureType(lectureType) {
       const vm = this;
       vm.lectureType = lectureType;
