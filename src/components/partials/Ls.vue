@@ -129,7 +129,10 @@ export default {
         const vm = this;
         vm.updateLs({ ls });
         const index = ls.indexOf(vm.$store.state.teacher.currentEditingLsItem);
-        vm.updateCurrentEditingLsItemIndex({ index });
+        vm.updateCurrentEditingLsItem({
+          currentEditingLsItem: vm.$store.state.teacher.currentEditingLsItem,
+          lectureElementIndex: index,
+        });
       },
     },
     dragOptions() {
@@ -140,8 +143,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['updateLs']),
-    ...mapMutations('teacher', ['updateCurrentEditingLsItemIndex']),
+    ...mapMutations('teacher', ['updateLs', 'updateCurrentEditingLsItem']),
     updateLabelStyle() {
       const vm = this;
       const main = this.$refs.main;
