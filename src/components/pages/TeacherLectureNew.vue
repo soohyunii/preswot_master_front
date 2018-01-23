@@ -109,7 +109,8 @@
         <h1>debugg</h1>
         lecture scenario: {{ lectureScenario }} <br />
         description: {{ description }} <br />
-        currentEditingLectureScenarioItem: {{ currentEditingLectureScenarioItem }}
+        currentEditingLectureScenarioItem: {{ currentEditingLectureScenarioItem }} <br />
+        currentEditingLectureScenarioItemIndex: {{ currentEditingLectureScenarioItemIndex }}
       </el-main>
       <!-- 이 메인은 맞음 끝 -->
     </el-container>
@@ -151,6 +152,7 @@ export default {
   },
   computed: {
     ...mapState('teacher', ['lectureScenario', 'currentEditingLectureScenarioItem']),
+    ...mapState('teacher', ['lectureScenario', 'currentEditingLectureScenarioItemIndex']),
     ...mapGetters('teacher', ['isLectureScenarioEmpty']),
     description: {
       get() {

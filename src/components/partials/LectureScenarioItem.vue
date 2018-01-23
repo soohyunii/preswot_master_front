@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper" @click="selected(index)">
     <el-col align="center">
       <!-- TODO: change icons -->
       <div class="image">
@@ -24,6 +24,17 @@ export default {
     // TODO: edit lecture element
     // TODO: add drag/drop function
     ...mapMutations('teacher', ['deleteLectureScenarioItem']),
+    ...mapMutations('teacher', ['changeCurrentEditingLectureScenarioItem']),
+    ...mapMutations('teacher', ['changeCurrentEditingLectureScenarioItemIndex']),
+    selected(index) {
+      const vm = this;
+      vm.changeCurrentEditingLectureScenarioItemIndex({
+        lectureElementIndex: index,
+      });
+      vm.changeCurrentEditingLectureScenarioItem({
+        lectureElementIndex: index,
+      });
+    },
     onClick(index) {
       const vm = this;
       vm.deleteLectureScenarioItem({

@@ -34,6 +34,12 @@ export default {
         currentEditingLectureScenarioItem,
       );
     },
+    changeCurrentEditingLectureScenarioItem(state, { lectureElementIndex }) {
+      state.currentEditingLectureScenarioItem = state.lectureScenario[lectureElementIndex];
+    },
+    changeCurrentEditingLectureScenarioItemIndex(state, { lectureElementIndex }) {
+      state.currentEditingLectureScenarioItemIndex = lectureElementIndex;
+    },
     deleteLectureScenarioItem(state, { lectureElementIndex }) {
       state.lectureScenario.splice(lectureElementIndex, 1);
       // TODO: update localForage
