@@ -7,7 +7,22 @@
         파일 업로드
       </el-col>
       <el-col :span="18">
-        TODO: 업로드 [ + ]
+        <!-- TODO: action path -->
+        <el-upload
+          action="#"
+          :auto-upload="false"
+          :on-change="handleChange"
+          :file-list="fileList"
+          multiple
+          :limit="3"
+          :on-exceed="handleExceed"
+          :before-remove="beforeRemove"
+          ref="upload">
+          <div>
+            <el-button size="small" type="primary">파일추가 [+]</el-button>
+            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">upload to server</el-button>
+          </div>
+        </el-upload>
       </el-col>
     </el-row>
 
@@ -28,6 +43,7 @@
     <h1>debug</h1>
     lecture scenario:
     <pre>{{ lectureScenario }}</pre> <br />
+    <pre>{{fileList}}</pre>
     description: {{ description }}
   </div>
 </template>
@@ -40,8 +56,33 @@ import { mapGetters, mapState, mapMutations } from 'vuex';
  */
 export default {
   name: 'LectureScenarioMaterialEditor',
+  data() {
+    const vm = this;
+    return {
+      url: vm.$route.path,
+    };
+  },
   methods: {
+    submitUpload() {
+      this.$refs.upload.submit();
+    },
     ...mapMutations('teacher', ['updateCurrentEditingLectureScenarioItem']),
+    handleExceed(files, fileList) {
+      // TODO: translate
+      this.$message.warning(
+        `최대 3개의 파일을 업로드 할 수 있습니다.
+        ${files.length}개의 파일을 선택하셨습니다.
+        업로드 하려는 파일의 총 개수 : ${files.length + fileList.length}`,
+      );
+    },
+    beforeRemove(file) {
+      // TODO: translate
+      return this.$confirm(`${file.name} 파일을 삭제하시겠습니까？`);
+    },
+    handleChange(files, fileList) {
+      const vm = this;
+      vm.fileList = fileList;
+    },
   },
   computed: {
     ...mapState('teacher', ['lectureScenario', 'currentEditingLectureScenarioItem']),
@@ -60,6 +101,24 @@ export default {
           currentEditingLectureScenarioItem: {
             ...vm.currentEditingLectureScenarioItem,
             description,
+          },
+        });
+      },
+    },
+    fileList: {
+      get() {
+        const vm = this;
+        if (!!vm.currentEditingLectureScenarioItem) { // eslint-disable-line no-extra-boolean-cast
+          return vm.currentEditingLectureScenarioItem.fileList || [];
+        }
+        return [];
+      },
+      set(fileList) {
+        const vm = this;
+        vm.updateCurrentEditingLectureScenarioItem({
+          currentEditingLectureScenarioItem: {
+            ...vm.currentEditingLectureScenarioItem,
+            fileList,
           },
         });
       },
