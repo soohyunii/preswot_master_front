@@ -35,10 +35,12 @@ export default {
     updateCurrentEditingLsItem(state, { currentEditingLsItem, lectureElementIndex }) {
       state.currentEditingLsItem = currentEditingLsItem;
       state.currentEditingLsItemIndex = lectureElementIndex;
-      Object.assign(
-        state.ls[state.currentEditingLsItemIndex],
-        currentEditingLsItem,
-      );
+      if (lectureElementIndex !== -1) {
+        Object.assign(
+          state.ls[state.currentEditingLsItemIndex],
+          currentEditingLsItem,
+        );
+      }
     },
     deleteLsItem(state, { lectureElementIndex }) {
       state.ls.splice(lectureElementIndex, 1);
