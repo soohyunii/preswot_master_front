@@ -33,10 +33,17 @@ export default {
       const vm = this;
       switch (type) {
         case 'selectLsItem': {
-          vm.updateCurrentEditingLsItem({
-            currentEditingLsItem: vm.ls[index],
-            lectureElementIndex: index,
-          });
+          if (vm.ls.length > index) {
+            vm.updateCurrentEditingLsItem({
+              currentEditingLsItem: vm.ls[index],
+              lectureElementIndex: index,
+            });
+          } else {
+            vm.updateCurrentEditingLsItem({
+              currentEditingLsItem: { type: '', key: '' },
+              lectureElementIndex: -1,
+            });
+          }
           break;
         }
         case 'deleteIcon': {
