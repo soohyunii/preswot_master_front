@@ -18,7 +18,7 @@
 import { mapState, mapMutations } from 'vuex';
 
 export default {
-  name: 'LsItem',
+  name: 'ScItem',
   props: ['type', 'index'],
   data() {
     return {

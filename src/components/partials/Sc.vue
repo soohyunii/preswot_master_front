@@ -25,7 +25,7 @@
                 @start="drag = true;"
                 @end="drag = false;">
                 <transition-group name="list-group">
-                  <ls-item
+                  <sc-item
                     v-for="(item, index) in ls"
                     class="list-group-item"
                     :key="item.key"
@@ -107,7 +107,7 @@
 import draggable from 'vuedraggable';
 import { mapGetters, mapMutations } from 'vuex';
 
-import LsItem from './LsItem';
+import ScItem from './ScItem';
 
 export default {
   name: 'Cs',
@@ -168,7 +168,7 @@ export default {
   },
   components: {
     draggable,
-    LsItem,
+    ScItem,
   },
 };
 </script>
