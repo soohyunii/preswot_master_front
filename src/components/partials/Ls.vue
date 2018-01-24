@@ -127,12 +127,16 @@ export default {
       },
       set(ls) {
         const vm = this;
-        vm.updateLs({ ls });
-        const index = ls.indexOf(vm.$store.state.teacher.currentEditingLsItem);
-        vm.updateCurrentEditingLsItem({
-          currentEditingLsItem: vm.$store.state.teacher.currentEditingLsItem,
-          lectureElementIndex: index,
-        });
+        if (ls) {
+          vm.updateLs({ ls });
+        }
+        const index = ls.map(x => x.key).indexOf(vm.$store.state.teacher.currentEditingLsItem.key);
+        if (index !== -1) {
+          vm.updateCurrentEditingLsItem({
+            currentEditingLsItem: vm.$store.state.teacher.currentEditingLsItem,
+            lectureElementIndex: index,
+          });
+        }
       },
     },
     dragOptions() {
