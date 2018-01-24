@@ -66,7 +66,7 @@
 import { mapMutations } from 'vuex';
 
 export default {
-  name: 'LsItemAdder',
+  name: 'ScItemAdder',
   methods: {
     ...mapMutations('teacher', ['pushLsItem']),
     onClick(type) {
