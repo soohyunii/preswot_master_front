@@ -7,7 +7,7 @@
       </el-aside>
       <el-main>
         <div ref="main">
-          <div v-show="isLsEmpty">
+          <div v-show="isScEmpty">
             <!-- TODO: translation -->
             <el-row>
               <el-col :span="12" :offset="6">
@@ -17,16 +17,16 @@
               </el-col>
             </el-row>
           </div>
-          <div v-show="!isLsEmpty">
+          <div v-show="!isScEmpty">
             <el-row :gutter="10">
               <!-- TODO: middle bar between two Items -->
-              <draggable v-model="ls"
+              <draggable v-model="sc"
                 :options="dragOptions"
                 @start="drag = true;"
                 @end="drag = false;">
                 <transition-group name="list-group">
                   <sc-item
-                    v-for="(item, index) in ls"
+                    v-for="(item, index) in sc"
                     class="list-group-item"
                     :key="item.key"
                     :type="item.type"
@@ -110,7 +110,7 @@ import { mapGetters, mapMutations } from 'vuex';
 import ScItem from './ScItem';
 
 export default {
-  name: 'Cs',
+  name: 'Sc',
   data() {
     return {
       drag: false,
@@ -120,20 +120,20 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('teacher', ['isLsEmpty']),
-    ls: {
+    ...mapGetters('teacher', ['isScEmpty']),
+    sc: {
       get() {
-        return this.$store.state.teacher.ls;
+        return this.$store.state.teacher.sc;
       },
-      set(ls) {
+      set(sc) {
         const vm = this;
-        if (ls) {
-          vm.updateLs({ ls });
+        if (sc) {
+          vm.updateSc({ sc });
         }
-        const index = ls.map(x => x.key).indexOf(vm.$store.state.teacher.currentEditingLsItem.key);
+        const index = sc.map(x => x.key).indexOf(vm.$store.state.teacher.currentEditingScItem.key);
         if (index !== -1) {
-          vm.updateCurrentEditingLsItem({
-            currentEditingLsItem: vm.$store.state.teacher.currentEditingLsItem,
+          vm.updateCurrentEditingScItem({
+            currentEditingScItem: vm.$store.state.teacher.currentEditingScItem,
             lectureElementIndex: index,
           });
         }
@@ -147,11 +147,11 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['updateLs', 'updateCurrentEditingLsItem']),
+    ...mapMutations('teacher', ['updateSc', 'updateCurrentEditingScItem']),
     updateLabelStyle() {
       const vm = this;
       const main = this.$refs.main;
-      if (vm.isLsEmpty) {
+      if (vm.isScEmpty) {
         vm.labelStyle.height = '154px';
       } else if (main.clientHeight > 114) {
         vm.labelStyle.height = `${main.clientHeight + 40}px`;

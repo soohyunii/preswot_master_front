@@ -56,7 +56,7 @@
           </el-col>
         </el-row>
 
-        <div id="app_lecture_editor" v-show="!isLsEmpty">
+        <div id="app_lecture_editor" v-show="!isScEmpty">
           <el-row :gutter="30">
             <el-col :span="24">
               <!-- TODO: translation -->
@@ -129,49 +129,49 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('teacher', ['isLsEmpty']),
-    ...mapState('teacher', ['ls', 'currentEditingLsItem', 'currentEditingLsItemIndex']),
+    ...mapGetters('teacher', ['isScEmpty']),
+    ...mapState('teacher', ['currentEditingScItem', 'currentEditingScItemIndex']),
     activeTime: {
       get() {
         const vm = this;
-        if (!!vm.currentEditingLsItem) { // eslint-disable-line no-extra-boolean-cast
-          return vm.currentEditingLsItem.activeTime || new Date(0, 0, 0);
+        if (!!vm.currentEditingScItem) { // eslint-disable-line no-extra-boolean-cast
+          return vm.currentEditingScItem.activeTime || new Date(0, 0, 0);
         }
         return new Date(0, 0, 0);
       },
       set(activeTime) {
         const vm = this;
-        vm.updateCurrentEditingLsItem({
-          currentEditingLsItem: {
-            ...vm.currentEditingLsItem,
+        vm.updateCurrentEditingScItem({
+          currentEditingScItem: {
+            ...vm.currentEditingScItem,
             activeTime,
           },
-          lectureElementIndex: vm.currentEditingLsItemIndex,
+          lectureElementIndex: vm.currentEditingScItemIndex,
         });
       },
     },
     activeDurationTime: {
       get() {
         const vm = this;
-        if (!!vm.currentEditingLsItem) { // eslint-disable-line no-extra-boolean-cast
-          return vm.currentEditingLsItem.activeDurationTime || new Date(0, 0, 0);
+        if (!!vm.currentEditingScItem) { // eslint-disable-line no-extra-boolean-cast
+          return vm.currentEditingScItem.activeDurationTime || new Date(0, 0, 0);
         }
         return new Date(0, 0, 0);
       },
       set(activeDurationTime) {
         const vm = this;
-        vm.updateCurrentEditingLsItem({
-          currentEditingLsItem: {
-            ...vm.currentEditingLsItem,
+        vm.updateCurrentEditingScItem({
+          currentEditingScItem: {
+            ...vm.currentEditingScItem,
             activeDurationTime,
           },
-          lectureElementIndex: vm.currentEditingLsItemIndex,
+          lectureElementIndex: vm.currentEditingScItemIndex,
         });
       },
     },
   },
   methods: {
-    ...mapMutations('teacher', ['updateCurrentEditingLsItem']),
+    ...mapMutations('teacher', ['updateCurrentEditingScItem']),
     onClickLectureType(lectureType) {
       const vm = this;
       vm.lectureType = lectureType;
