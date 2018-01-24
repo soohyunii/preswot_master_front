@@ -60,7 +60,7 @@
           <el-row :gutter="30">
             <el-col :span="24">
               <!-- TODO: translation -->
-              <ls-material-editor />
+              <sc-material-editor />
 
               <h2>활성화 시간 입력</h2>
               <el-row>
@@ -106,7 +106,7 @@
 import { mapState, mapGetters, mapMutations } from 'vuex';
 import Sc from '../partials/Sc';
 import LsItemAdder from '../partials/LsItemAdder';
-import LsMaterialEditor from '../partials/LsMaterialEditor';
+import ScMaterialEditor from '../partials/ScMaterialEditor';
 import TeachingClassList from '../partials/TeachingClassList';
 
 export default {
@@ -114,7 +114,7 @@ export default {
   components: {
     Sc,
     LsItemAdder,
-    LsMaterialEditor,
+    ScMaterialEditor,
     TeachingClassList,
   },
   data() {

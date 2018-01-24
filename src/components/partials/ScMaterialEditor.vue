@@ -54,7 +54,7 @@ import { mapState, mapMutations } from 'vuex';
  * @description 강의자료 에디터
  */
 export default {
-  name: 'LsMaterialEditor',
+  name: 'ScMaterialEditor',
   methods: {
     submitUpload() {
       this.$refs.upload.submit();
