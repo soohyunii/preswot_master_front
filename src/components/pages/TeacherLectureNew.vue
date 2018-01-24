@@ -68,7 +68,7 @@
                   활성화 되는 시각
                 </el-col>
                 <el-col :span="6">
-                  <el-time-picker v-model="activeTime" :default-value="defaultTime">dasd</el-time-picker>
+                  <el-time-picker v-model="activeTime" :default-value="defaultTime" :clearable="false" placeholder="00:00:00"></el-time-picker>
                   <br/>{{activeTime}}<br/>
                   TODO: Time picker hh:mm:ss
                 </el-col>
@@ -77,9 +77,8 @@
                   활성화 지속 시간
                 </el-col>
                 <el-col :span="6">
-                  <el-time-picker v-model="activeDurationTime" :default-value="defaultTime" format="mm분 ss초"></el-time-picker>
+                  <el-time-picker v-model="activeDurationTime" :default-value="defaultTime" :clearable="false" format="mm분 ss초" placeholder="0분 0초"></el-time-picker>
                   <br/>{{activeDurationTime}}<br/>
-                  {{activeDurationTime.getMinutes()}}<br/>
                   TODO: Time picker mm:ss
                 </el-col>
               </el-row>
@@ -104,7 +103,7 @@
 
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState, mapGetters, mapMutations } from 'vuex';
 import Ls from '../partials/Ls';
 import LsItemAdder from '../partials/LsItemAdder';
 import LsMaterialEditor from '../partials/LsMaterialEditor';
@@ -127,14 +126,52 @@ export default {
       currentClassName: '',
       lectureType: '강의',
       defaultTime: new Date(0, 0, 0),
-      activeTime: new Date(0, 0, 0, 0, 0, 0),
-      activeDurationTime: new Date(0, 0, 0),
     };
   },
   computed: {
     ...mapGetters('teacher', ['isLsEmpty']),
+    ...mapState('teacher', ['ls', 'currentEditingLsItem', 'currentEditingLsItemIndex']),
+    activeTime: {
+      get() {
+        const vm = this;
+        if (!!vm.currentEditingLsItem) { // eslint-disable-line no-extra-boolean-cast
+          return vm.currentEditingLsItem.activeTime || null;
+        }
+        return [];
+      },
+      set(activeTime) {
+        const vm = this;
+        vm.updateCurrentEditingLsItem({
+          currentEditingLsItem: {
+            ...vm.currentEditingLsItem,
+            activeTime,
+          },
+          lectureElementIndex: vm.currentEditingLsItemIndex,
+        });
+      },
+    },
+    activeDurationTime: {
+      get() {
+        const vm = this;
+        if (!!vm.currentEditingLsItem) { // eslint-disable-line no-extra-boolean-cast
+          return vm.currentEditingLsItem.activeDurationTime || null;
+        }
+        return [];
+      },
+      set(activeDurationTime) {
+        const vm = this;
+        vm.updateCurrentEditingLsItem({
+          currentEditingLsItem: {
+            ...vm.currentEditingLsItem,
+            activeDurationTime,
+          },
+          lectureElementIndex: vm.currentEditingLsItemIndex,
+        });
+      },
+    },
   },
   methods: {
+    ...mapMutations('teacher', ['updateCurrentEditingLsItem']),
     onClickLectureType(lectureType) {
       const vm = this;
       vm.lectureType = lectureType;

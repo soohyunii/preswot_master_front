@@ -7,15 +7,15 @@
         <i class="el-icon-error" style="color:red; vertical-align:top" @click="onClick('deleteIcon',index)"></i><br/>
       </div>
       <!-- TODO: change bg color, time variable -->
-      <div class="label-time">05:00</div>
+      <div class="label-time">{{lsActiveTime}}</div>
       <!-- TODO: change bg color, duration variable -->
-      <div class="label-duration">3m</div>
+      <div class="label-duration">{{lsActiveDurationTime}}</div>
     </el-col>
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapGetters, mapMutations } from 'vuex';
 
 export default {
   name: 'LsItem',
@@ -71,7 +71,34 @@ export default {
     },
   },
   computed: {
-    ...mapState('teacher', ['ls', 'currentEditingLsItemIndex']),
+    ...mapState('teacher', ['ls', 'currentEditingLsItemIndex', 'currentEditingLsItem']),
+    ...mapGetters('teacher', ['test']),
+    lsActiveTime: {
+      get() {
+        const vm = this;
+        if (!!vm.currentEditingLsItem) { // eslint-disable-line no-extra-boolean-cast
+          const time = vm.ls[vm.index].activeTime;
+          if (time) {
+            return `${time.getHours() < 10 ? '0' : ''}${time.getHours()}:${time.getMinutes() < 10 ? '0' : ''}${time.getMinutes()}:${time.getSeconds() < 10 ? '0' : ''}${time.getSeconds()}`;
+          }
+          return '00:00:00';
+        }
+        return [];
+      },
+    },
+    lsActiveDurationTime: {
+      get() {
+        const vm = this;
+        if (!!vm.currentEditingLsItem) { // eslint-disable-line no-extra-boolean-cast
+          const time = vm.ls[vm.index].activeDurationTime;
+          if (time && (time.getMinutes() !== 0 || time.getSeconds() !== 0)) {
+            return `${time.getMinutes() !== 0 ? `${time.getMinutes()}m` : ''} ${time.getSeconds() !== 0 ? `${time.getSeconds()}s` : ''}`;
+          }
+          return '0s';
+        }
+        return [];
+      },
+    },
   },
 };
 </script>
