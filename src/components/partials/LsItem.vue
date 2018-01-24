@@ -7,9 +7,9 @@
         <i class="el-icon-error" style="color:red; vertical-align:top" @click="onClick('deleteIcon',index)"></i><br/>
       </div>
       <!-- TODO: change bg color, time variable -->
-      <div class="label-time">05:00</div>
+      <div class="label-time">{{lsActiveTime}}</div>
       <!-- TODO: change bg color, duration variable -->
-      <div class="label-duration">3m</div>
+      <div class="label-duration">{{lsActiveDurationTime}}</div>
     </el-col>
   </div>
 </template>
@@ -78,7 +78,27 @@ export default {
     },
   },
   computed: {
-    ...mapState('teacher', ['ls', 'currentEditingLsItemIndex']),
+    ...mapState('teacher', ['ls', 'currentEditingLsItemIndex', 'currentEditingLsItem']),
+    lsActiveTime: {
+      get() {
+        const vm = this;
+        const time = vm.ls[vm.index].activeTime;
+        if (time) {
+          return `${time.getHours() < 10 ? '0' : ''}${time.getHours()}:${time.getMinutes() < 10 ? '0' : ''}${time.getMinutes()}:${time.getSeconds() < 10 ? '0' : ''}${time.getSeconds()}`;
+        }
+        return '00:00:00';
+      },
+    },
+    lsActiveDurationTime: {
+      get() {
+        const vm = this;
+        const time = vm.ls[vm.index].activeDurationTime;
+        if (time && (time.getMinutes() !== 0 || time.getSeconds() !== 0)) {
+          return `${time.getMinutes() !== 0 ? `${time.getMinutes()}m` : ''} ${time.getSeconds() !== 0 ? `${time.getSeconds()}s` : ''}`;
+        }
+        return '0s';
+      },
+    },
   },
 };
 </script>

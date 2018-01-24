@@ -24,7 +24,9 @@ export default {
   mutations: {
     pushLsItem(state, { type }) {
       const key = Guid.create().toString();
-      const lsItem = { type, key };
+      const activeTime = new Date(0, 0, 0);
+      const activeDurationTime = new Date(0, 0, 0);
+      const lsItem = { type, key, activeTime, activeDurationTime };
       state.currentEditingLsItem = lsItem;
       state.currentEditingLsItemIndex = state.ls.length;
       state.ls.push(lsItem);
