@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'LsItem',
@@ -72,31 +72,24 @@ export default {
   },
   computed: {
     ...mapState('teacher', ['ls', 'currentEditingLsItemIndex', 'currentEditingLsItem']),
-    ...mapGetters('teacher', ['test']),
     lsActiveTime: {
       get() {
         const vm = this;
-        if (!!vm.currentEditingLsItem) { // eslint-disable-line no-extra-boolean-cast
-          const time = vm.ls[vm.index].activeTime;
-          if (time) {
-            return `${time.getHours() < 10 ? '0' : ''}${time.getHours()}:${time.getMinutes() < 10 ? '0' : ''}${time.getMinutes()}:${time.getSeconds() < 10 ? '0' : ''}${time.getSeconds()}`;
-          }
-          return '00:00:00';
+        const time = vm.ls[vm.index].activeTime;
+        if (time) {
+          return `${time.getHours() < 10 ? '0' : ''}${time.getHours()}:${time.getMinutes() < 10 ? '0' : ''}${time.getMinutes()}:${time.getSeconds() < 10 ? '0' : ''}${time.getSeconds()}`;
         }
-        return [];
+        return '00:00:00';
       },
     },
     lsActiveDurationTime: {
       get() {
         const vm = this;
-        if (!!vm.currentEditingLsItem) { // eslint-disable-line no-extra-boolean-cast
-          const time = vm.ls[vm.index].activeDurationTime;
-          if (time && (time.getMinutes() !== 0 || time.getSeconds() !== 0)) {
-            return `${time.getMinutes() !== 0 ? `${time.getMinutes()}m` : ''} ${time.getSeconds() !== 0 ? `${time.getSeconds()}s` : ''}`;
-          }
-          return '0s';
+        const time = vm.ls[vm.index].activeDurationTime;
+        if (time && (time.getMinutes() !== 0 || time.getSeconds() !== 0)) {
+          return `${time.getMinutes() !== 0 ? `${time.getMinutes()}m` : ''} ${time.getSeconds() !== 0 ? `${time.getSeconds()}s` : ''}`;
         }
-        return [];
+        return '0s';
       },
     },
   },

@@ -135,9 +135,9 @@ export default {
       get() {
         const vm = this;
         if (!!vm.currentEditingLsItem) { // eslint-disable-line no-extra-boolean-cast
-          return vm.currentEditingLsItem.activeTime || null;
+          return vm.currentEditingLsItem.activeTime || new Date(0, 0, 0);
         }
-        return [];
+        return new Date(0, 0, 0);
       },
       set(activeTime) {
         const vm = this;
@@ -154,9 +154,9 @@ export default {
       get() {
         const vm = this;
         if (!!vm.currentEditingLsItem) { // eslint-disable-line no-extra-boolean-cast
-          return vm.currentEditingLsItem.activeDurationTime || null;
+          return vm.currentEditingLsItem.activeDurationTime || new Date(0, 0, 0);
         }
-        return [];
+        return new Date(0, 0, 0);
       },
       set(activeDurationTime) {
         const vm = this;
