@@ -46,7 +46,7 @@
         <el-row :gutter="30">
           <el-col :span="16">
             <div>
-              <ls />
+              <sc />
             </div>
           </el-col>
           <el-col :span="8">
@@ -104,7 +104,7 @@
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex';
-import Ls from '../partials/Ls';
+import Sc from '../partials/Sc';
 import LsItemAdder from '../partials/LsItemAdder';
 import LsMaterialEditor from '../partials/LsMaterialEditor';
 import TeachingClassList from '../partials/TeachingClassList';
@@ -112,7 +112,7 @@ import TeachingClassList from '../partials/TeachingClassList';
 export default {
   name: 'TeacherNewLecture',
   components: {
-    Ls,
+    Sc,
     LsItemAdder,
     LsMaterialEditor,
     TeachingClassList,

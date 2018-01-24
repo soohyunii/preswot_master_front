@@ -110,7 +110,7 @@ import { mapGetters, mapMutations } from 'vuex';
 import LsItem from './LsItem';
 
 export default {
-  name: 'Ls',
+  name: 'Cs',
   data() {
     return {
       drag: false,
