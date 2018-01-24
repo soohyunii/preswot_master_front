@@ -68,7 +68,7 @@
                   활성화 되는 시각
                 </el-col>
                 <el-col :span="6">
-                  <el-time-picker v-model="activeTime" :default-value="defaultTime" :clearable="false" placeholder="00:00:00"></el-time-picker>
+                  <el-time-picker v-model="activeTime" :default-value="defaultTime" :clearable="false" placeholder="00:00:00" />
                   <br/>{{activeTime}}<br/>
                   TODO: Time picker hh:mm:ss
                 </el-col>
@@ -77,7 +77,7 @@
                   활성화 지속 시간
                 </el-col>
                 <el-col :span="6">
-                  <el-time-picker v-model="activeDurationTime" :default-value="defaultTime" :clearable="false" format="mm분 ss초" placeholder="0분 0초"></el-time-picker>
+                  <el-time-picker v-model="activeDurationTime" :default-value="defaultTime" :clearable="false" format="mm분 ss초" placeholder="0분 0초" />
                   <br/>{{activeDurationTime}}<br/>
                   TODO: Time picker mm:ss
                 </el-col>
