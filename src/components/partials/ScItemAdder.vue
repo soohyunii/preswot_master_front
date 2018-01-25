@@ -66,14 +66,14 @@
 import { mapMutations } from 'vuex';
 
 export default {
-  name: 'LsItemAdder',
+  name: 'ScItemAdder',
   methods: {
-    ...mapMutations('teacher', ['pushLsItem']),
+    ...mapMutations('teacher', ['pushScItem']),
     onClick(type) {
       const vm = this;
       const validTypeList = ['문제지', '강의자료', '숙제'];
       if (validTypeList.includes(type)) {
-        vm.pushLsItem({
+        vm.pushScItem({
           type,
         });
       } else {
