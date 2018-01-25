@@ -23,10 +23,7 @@ export default {
       return state.sc.length === 0;
     },
     currentEditingScItem(state) {
-      if (state.currentEditingScItemIndex !== null) {
-        return state.sc[state.currentEditingScItemIndex];
-      }
-      return false;
+      return state.sc[state.currentEditingScItemIndex];
     },
   },
   mutations: {
