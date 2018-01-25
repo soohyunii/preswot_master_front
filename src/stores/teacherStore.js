@@ -21,7 +21,10 @@ export default {
       return state.sc.length === 0;
     },
     currentEditingScItem(state) {
-      return state.sc[state.currentEditingScItemIndex];
+      if (state.currentEditingScItemIndex !== null) {
+        return state.sc[state.currentEditingScItemIndex];
+      }
+      return false;
     },
   },
   mutations: {
