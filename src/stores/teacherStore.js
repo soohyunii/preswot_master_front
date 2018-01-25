@@ -3,48 +3,52 @@ const Guid = require('guid');
 export default {
   namespaced: true,
   /**
-   * @var ls: shorthand for Ls
+   * @var Sc: shorthand for Scenario
    */
   state: {
-    ls: [], // TODO: fetch(init) from server if exists
+    sc: [], // TODO: fetch(init) from server if exists
     // TODO: Otherwise, init from localStorage (in case of server has no data)
-    // currentEditingLsItem: 현재 저작 중인 강의 시나리오 아이템
-    currentEditingLsItem: null, // TODO: init from localStorage
-    currentEditingLsItemIndex: null,
+    // currentEditingScItem: 현재 저작 중인 시나리오 아이템
+    currentEditingScItem: null, // TODO: init from localStorage
+    currentEditingScItemIndex: null,
     // TODO: save currentEditingElement into localStorage inside Vue component using watch
     teachingClassList: [],
     currentEditingClass: null,
     // scenarioList: [],
   },
   getters: {
-    isLsEmpty(state) {
-      return state.ls.length === 0;
+    isScEmpty(state) {
+      return state.sc.length === 0;
     },
   },
   mutations: {
-    pushLsItem(state, { type }) {
+    pushScItem(state, { type }) {
       const key = Guid.create().toString();
-      const lsItem = { type, key };
-      state.currentEditingLsItem = lsItem;
-      state.currentEditingLsItemIndex = state.ls.length;
-      state.ls.push(lsItem);
+      const activeTime = new Date(0, 0, 0);
+      const activeDurationTime = new Date(0, 0, 0);
+      const scItem = { type, key, activeTime, activeDurationTime };
+      state.currentEditingScItem = scItem;
+      state.currentEditingScItemIndex = state.sc.length;
+      state.sc.push(scItem);
       // TODO: save lectureElementSequence using localForage
     },
-    updateCurrentEditingLsItem(state, { currentEditingLsItem, lectureElementIndex }) {
-      state.currentEditingLsItem = currentEditingLsItem;
-      state.currentEditingLsItemIndex = lectureElementIndex;
-      Object.assign(
-        state.ls[state.currentEditingLsItemIndex],
-        currentEditingLsItem,
-      );
+    updateCurrentEditingScItem(state, { currentEditingScItem, lectureElementIndex }) {
+      state.currentEditingScItem = currentEditingScItem;
+      state.currentEditingScItemIndex = lectureElementIndex;
+      if (lectureElementIndex !== -1) {
+        Object.assign(
+          state.sc[state.currentEditingScItemIndex],
+          currentEditingScItem,
+        );
+      }
     },
-    deleteLsItem(state, { lectureElementIndex }) {
-      state.ls.splice(lectureElementIndex, 1);
+    deleteScItem(state, { lectureElementIndex }) {
+      state.sc.splice(lectureElementIndex, 1);
       // TODO: update localForage
     },
     // TODO: editLectureElement
-    updateLs(state, { ls }) {
-      state.ls = ls;
+    updateSc(state, { sc }) {
+      state.sc = sc;
     },
     updateCurrentEditingClass(state, { editingClass }) {
       state.currentEditingClass = editingClass;

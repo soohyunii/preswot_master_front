@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper" :class="index === currentEditingLsItemIndex ? selectedClass : ''" @click="onClick('selectLsItem',index)">
+  <div class="wrapper" :class="index === currentEditingScItemIndex ? selectedClass : ''" @click="onClick('SELECT_SC_ITEM',index)">
     <el-col align="center">
       <!-- TODO: change icons -->
       <div class="image">
@@ -7,9 +7,9 @@
         <i class="el-icon-error" style="color:red; vertical-align:top" @click="onClick('deleteIcon',index)"></i><br/>
       </div>
       <!-- TODO: change bg color, time variable -->
-      <div class="label-time">05:00</div>
+      <div class="label-time">{{ scActiveTime }}</div>
       <!-- TODO: change bg color, duration variable -->
-      <div class="label-duration">3m</div>
+      <div class="label-duration">{{ scActiveDurationTime }}</div>
     </el-col>
   </div>
 </template>
@@ -18,7 +18,7 @@
 import { mapState, mapMutations } from 'vuex';
 
 export default {
-  name: 'LsItem',
+  name: 'ScItem',
   props: ['type', 'index'],
   data() {
     return {
@@ -28,19 +28,26 @@ export default {
   methods: {
     // TODO: edit lecture element
     // TODO: add drag/drop function
-    ...mapMutations('teacher', ['deleteLsItem', 'updateCurrentEditingLsItem']),
+    ...mapMutations('teacher', ['deleteScItem', 'updateCurrentEditingScItem']),
     onClick(type, index) {
       const vm = this;
       switch (type) {
-        case 'selectLsItem': {
-          vm.updateCurrentEditingLsItem({
-            currentEditingLsItem: vm.ls[index],
-            lectureElementIndex: index,
-          });
+        case 'SELECT_SC_ITEM': {
+          if (vm.sc.length > index) {
+            vm.updateCurrentEditingScItem({
+              currentEditingScItem: vm.sc[index],
+              lectureElementIndex: index,
+            });
+          } else {
+            vm.updateCurrentEditingScItem({
+              currentEditingScItem: { type: '', key: '' },
+              lectureElementIndex: -1,
+            });
+          }
           break;
         }
         case 'deleteIcon': {
-          vm.deleteLsItem({
+          vm.deleteScItem({
             lectureElementIndex: index,
           });
           break;
@@ -71,7 +78,27 @@ export default {
     },
   },
   computed: {
-    ...mapState('teacher', ['ls', 'currentEditingLsItemIndex']),
+    ...mapState('teacher', ['sc', 'currentEditingScItemIndex', 'currentEditingScItem']),
+    scActiveTime: {
+      get() {
+        const vm = this;
+        const time = vm.sc[vm.index].activeTime;
+        if (time) {
+          return `${time.getHours() < 10 ? '0' : ''}${time.getHours()}:${time.getMinutes() < 10 ? '0' : ''}${time.getMinutes()}:${time.getSeconds() < 10 ? '0' : ''}${time.getSeconds()}`;
+        }
+        return '00:00:00';
+      },
+    },
+    scActiveDurationTime: {
+      get() {
+        const vm = this;
+        const time = vm.sc[vm.index].activeDurationTime;
+        if (time && (time.getMinutes() !== 0 || time.getSeconds() !== 0)) {
+          return `${time.getMinutes() !== 0 ? `${time.getMinutes()}m` : ''} ${time.getSeconds() !== 0 ? `${time.getSeconds()}s` : ''}`;
+        }
+        return '0s';
+      },
+    },
   },
 };
 </script>
