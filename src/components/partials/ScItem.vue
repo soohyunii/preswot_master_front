@@ -78,7 +78,7 @@ export default {
     },
   },
   computed: {
-    ...mapState('teacher', ['sc', 'currentEditingScItemIndex', 'currentEditingScItem']),
+    ...mapState('teacher', ['sc', 'currentEditingScItemIndex']),
     scActiveTime: {
       get() {
         const vm = this;

@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations, mapGetters } from 'vuex';
 
 /**
  * @description 강의자료 에디터
@@ -84,10 +84,12 @@ export default {
     },
   },
   computed: {
-    ...mapState('teacher', ['sc', 'currentEditingScItem', 'currentEditingScItemIndex']), // TODO: delete 'sc' from list
+    ...mapGetters('teacher', ['currentEditingScItem']),
+    ...mapState('teacher', ['sc', 'currentEditingScItemIndex']), // TODO: delete 'sc' from list
     description: {
       get() {
         const vm = this;
+        window.console.log(vm.currentEditingScItem);
         if (!!vm.currentEditingScItem) { // eslint-disable-line no-extra-boolean-cast
           return vm.currentEditingScItem.description || '';
         }
@@ -123,6 +125,10 @@ export default {
         });
       },
     },
+  },
+  updated() {
+    const vm = this;
+    vm.$nextTick();
   },
 };
 </script>
