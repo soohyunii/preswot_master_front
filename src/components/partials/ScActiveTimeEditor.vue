@@ -21,10 +21,21 @@
     <el-row>
       <el-col :span="6">
         History 기능 : <br/>
-        {{ scHistoryMode }}
+        scHistoryMode: {{ scHistoryMode }}
       </el-col>
       <el-col :span="6">
         <el-radio-group v-model="historyMode">
+          <el-radio-button label="true">켜기</el-radio-button>
+          <el-radio-button label="false">끄기</el-radio-button>
+        </el-radio-group>
+      </el-col>
+
+      <el-col :span="6">
+        선지별 선택비율 보이기 : <br/>
+        isShowingResult: {{ isShowingResult }}
+      </el-col>
+      <el-col :span="6">
+        <el-radio-group v-model="showingResultMode">
           <el-radio-button label="true">켜기</el-radio-button>
           <el-radio-button label="false">끄기</el-radio-button>
         </el-radio-group>
@@ -45,16 +56,10 @@ export default {
     };
   },
   methods: {
-    ...mapMutations('teacher', ['updateCurrentEditingScItem', 'updateHistoryMode']),
-    onClick(type) {
-      const vm = this;
-      vm.updateHistoryMode({
-        mode: type,
-      });
-    },
+    ...mapMutations('teacher', ['updateCurrentEditingScItem', 'updateHistoryMode', 'updateIsShowingResult']),
   },
   computed: {
-    ...mapState('teacher', ['currentEditingScItem', 'currentEditingScItemIndex', 'scHistoryMode']),
+    ...mapState('teacher', ['currentEditingScItem', 'currentEditingScItemIndex', 'scHistoryMode', 'isShowingResult']),
     activeTime: {
       get() {
         const vm = this;
@@ -101,6 +106,18 @@ export default {
       set(value) {
         const vm = this;
         vm.updateHistoryMode({
+          mode: value,
+        });
+      },
+    },
+    showingResultMode: {
+      get() {
+        const vm = this;
+        return vm.isShowingResult;
+      },
+      set(value) {
+        const vm = this;
+        vm.updateIsShowingResult({
           mode: value,
         });
       },
