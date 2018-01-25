@@ -4,7 +4,7 @@
       <!-- TODO: change icons -->
       <div class="image">
         <i :class="getIconsByType(type)" class="main-image" ></i>
-        <i class="el-icon-error" style="color:red; vertical-align:top" @click="onClick('deleteIcon',index)"></i><br/>
+        <i class="el-icon-error" style="color:red; vertical-align:top" @click.stop="onClick('deleteIcon',index)"></i><br/>
       </div>
       <!-- TODO: change bg color, time variable -->
       <div class="label-time">{{ scActiveTime }}</div>
