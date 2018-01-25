@@ -36,9 +36,6 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 
-/**
- * @description 강의자료 에디터
- */
 export default {
   name: 'ScActiveTimeEditor',
   data() {
