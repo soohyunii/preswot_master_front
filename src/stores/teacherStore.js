@@ -15,6 +15,7 @@ export default {
     teachingClassList: [],
     currentEditingClass: null,
     // scenarioList: [],
+    scHistoryMode: true,
   },
   getters: {
     isScEmpty(state) {
@@ -55,6 +56,9 @@ export default {
     },
     updateTeachingClassList(state, { classList }) {
       state.teachingClassList = classList;
+    },
+    updateHistoryMode(state, { mode }) {
+      state.scHistoryMode = mode;
     },
     /* updatescenarioList(state, { scenarioList }) {
       state.scenarioList = scenarioList;
