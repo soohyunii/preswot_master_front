@@ -90,7 +90,6 @@ export default {
       get() {
         const vm = this;
         if (!!vm.currentEditingScItem) { // eslint-disable-line no-extra-boolean-cast
-          // window.console.log('get : ', vm.currentEditingScItem.description || 'empty');
           return vm.currentEditingScItem.description || '';
         }
         return '';
@@ -104,9 +103,6 @@ export default {
           },
           lectureElementIndex: vm.currentEditingScItemIndex,
         });
-        // window.console.log('set : ', vm.currentEditingScItem.description);
-        vm.$nextTick(() => vm.$forceUpdate());
-        // window.console.log('description : ', vm.description);
       },
     },
     fileList: {
@@ -126,7 +122,6 @@ export default {
           },
           lectureElementIndex: vm.currentEditingScItemIndex,
         });
-        vm.$nextTick(() => vm.$forceUpdate());
       },
     },
   },

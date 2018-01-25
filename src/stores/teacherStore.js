@@ -32,7 +32,9 @@ export default {
       const key = Guid.create().toString();
       const activeTime = new Date(0, 0, 0);
       const activeDurationTime = new Date(0, 0, 0);
-      const scItem = { type, key, activeTime, activeDurationTime };
+      const description = '';
+      const fileList = [];
+      const scItem = { type, key, activeTime, activeDurationTime, description, fileList };
       // state.currentEditingScItem = scItem;
       state.currentEditingScItemIndex = state.sc.length;
       state.sc.push(scItem);
