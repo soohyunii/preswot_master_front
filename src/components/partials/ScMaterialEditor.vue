@@ -126,9 +126,5 @@ export default {
       },
     },
   },
-  updated() {
-    const vm = this;
-    vm.$nextTick();
-  },
 };
 </script>
