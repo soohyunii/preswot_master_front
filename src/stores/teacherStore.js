@@ -9,7 +9,7 @@ export default {
     sc: [], // TODO: fetch(init) from server if exists
     // TODO: Otherwise, init from localStorage (in case of server has no data)
     // currentEditingScItem: 현재 저작 중인 시나리오 아이템
-    currentEditingScItem: null, // TODO: init from localStorage
+    // currentEditingScItem: null, // TODO: init from localStorage
     currentEditingScItemIndex: null,
     // TODO: save currentEditingElement into localStorage inside Vue component using watch
     teachingClassList: [],
@@ -22,20 +22,25 @@ export default {
     isScEmpty(state) {
       return state.sc.length === 0;
     },
+    currentEditingScItem(state) {
+      return state.sc[state.currentEditingScItemIndex];
+    },
   },
   mutations: {
     pushScItem(state, { type }) {
       const key = Guid.create().toString();
       const activeTime = new Date(0, 0, 0);
       const activeDurationTime = new Date(0, 0, 0);
-      const scItem = { type, key, activeTime, activeDurationTime };
-      state.currentEditingScItem = scItem;
+      const description = '';
+      const fileList = [];
+      const scItem = { type, key, activeTime, activeDurationTime, description, fileList };
+      // state.currentEditingScItem = scItem;
       state.currentEditingScItemIndex = state.sc.length;
       state.sc.push(scItem);
       // TODO: save lectureElementSequence using localForage
     },
     updateCurrentEditingScItem(state, { currentEditingScItem, lectureElementIndex }) {
-      state.currentEditingScItem = currentEditingScItem;
+      // state.currentEditingScItem = currentEditingScItem;
       state.currentEditingScItemIndex = lectureElementIndex;
       if (lectureElementIndex !== -1) {
         Object.assign(
@@ -46,6 +51,9 @@ export default {
     },
     deleteScItem(state, { lectureElementIndex }) {
       state.sc.splice(lectureElementIndex, 1);
+      if (lectureElementIndex < state.currentEditingScItemIndex) {
+        state.currentEditingScItemIndex -= 1;
+      }
       // TODO: update localForage
     },
     // TODO: editLectureElement

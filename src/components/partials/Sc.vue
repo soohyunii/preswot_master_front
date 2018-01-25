@@ -120,20 +120,21 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('teacher', ['isScEmpty']),
+    ...mapGetters('teacher', ['isScEmpty', 'currentEditingScItem']),
     sc: {
       get() {
         return this.$store.state.teacher.sc;
       },
       set(sc) {
         const vm = this;
+        const beforeUpdateCurrentEditingScItem = vm.currentEditingScItem;
         if (sc) {
           vm.updateSc({ sc });
         }
-        const index = sc.map(x => x.key).indexOf(vm.$store.state.teacher.currentEditingScItem.key);
+        const index = sc.map(x => x.key).indexOf(beforeUpdateCurrentEditingScItem.key);
         if (index !== -1) {
           vm.updateCurrentEditingScItem({
-            currentEditingScItem: vm.$store.state.teacher.currentEditingScItem,
+            currentEditingScItem: beforeUpdateCurrentEditingScItem,
             lectureElementIndex: index,
           });
         }

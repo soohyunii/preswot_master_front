@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations, mapGetters } from 'vuex';
 
 /**
  * @description 강의자료 에디터
@@ -84,7 +84,8 @@ export default {
     },
   },
   computed: {
-    ...mapState('teacher', ['sc', 'currentEditingScItem', 'currentEditingScItemIndex']), // TODO: delete 'sc' from list
+    ...mapGetters('teacher', ['currentEditingScItem']),
+    ...mapState('teacher', ['sc', 'currentEditingScItemIndex']), // TODO: delete 'sc' from list
     description: {
       get() {
         const vm = this;
