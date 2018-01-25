@@ -46,21 +46,21 @@
         <el-row :gutter="30">
           <el-col :span="16">
             <div>
-              <ls />
+              <sc />
             </div>
           </el-col>
           <el-col :span="8">
             <div>
-              <ls-item-adder />
+              <sc-item-adder />
             </div>
           </el-col>
         </el-row>
 
-        <div id="app_lecture_editor" v-show="!isLsEmpty">
+        <div id="app_lecture_editor" v-show="!isScEmpty">
           <el-row :gutter="30">
             <el-col :span="24">
               <!-- TODO: translation -->
-              <ls-material-editor />
+              <sc-material-editor />
 
               <h2>활성화 시간 입력</h2>
               <el-row>
@@ -68,7 +68,8 @@
                   활성화 되는 시각
                 </el-col>
                 <el-col :span="6">
-                  <el-time-picker v-model="activeTime" align="center"></el-time-picker>
+                  <el-time-picker v-model="activeTime" :default-value="defaultTime" :clearable="false" placeholder="00:00:00" />
+                  <br/>{{activeTime}}<br/>
                   TODO: Time picker hh:mm:ss
                 </el-col>
 
@@ -76,7 +77,8 @@
                   활성화 지속 시간
                 </el-col>
                 <el-col :span="6">
-                  <el-time-picker v-model="activeDurationTime" align="center" format="mm분 ss초"></el-time-picker>
+                  <el-time-picker v-model="activeDurationTime" :default-value="defaultTime" :clearable="false" format="mm분 ss초" placeholder="0분 0초" />
+                  <br/>{{activeDurationTime}}<br/>
                   TODO: Time picker mm:ss
                 </el-col>
               </el-row>
@@ -101,18 +103,18 @@
 
 
 <script>
-import { mapGetters } from 'vuex';
-import Ls from '../partials/Ls';
-import LsItemAdder from '../partials/LsItemAdder';
-import LsMaterialEditor from '../partials/LsMaterialEditor';
+import { mapState, mapGetters, mapMutations } from 'vuex';
+import Sc from '../partials/Sc';
+import ScItemAdder from '../partials/ScItemAdder';
+import ScMaterialEditor from '../partials/ScMaterialEditor';
 import TeachingClassList from '../partials/TeachingClassList';
 
 export default {
   name: 'TeacherNewLecture',
   components: {
-    Ls,
-    LsItemAdder,
-    LsMaterialEditor,
+    Sc,
+    ScItemAdder,
+    ScMaterialEditor,
     TeachingClassList,
   },
   data() {
@@ -123,14 +125,53 @@ export default {
       inputFlag: false,
       currentClassName: '',
       lectureType: '강의',
-      activeTime: new Date(0, 0, 0),
-      activeDurationTime: new Date(0, 0, 0),
+      defaultTime: new Date(0, 0, 0),
     };
   },
   computed: {
-    ...mapGetters('teacher', ['isLsEmpty']),
+    ...mapGetters('teacher', ['isScEmpty']),
+    ...mapState('teacher', ['currentEditingScItem', 'currentEditingScItemIndex']),
+    activeTime: {
+      get() {
+        const vm = this;
+        if (!!vm.currentEditingScItem) { // eslint-disable-line no-extra-boolean-cast
+          return vm.currentEditingScItem.activeTime || new Date(0, 0, 0);
+        }
+        return new Date(0, 0, 0);
+      },
+      set(activeTime) {
+        const vm = this;
+        vm.updateCurrentEditingScItem({
+          currentEditingScItem: {
+            ...vm.currentEditingScItem,
+            activeTime,
+          },
+          lectureElementIndex: vm.currentEditingScItemIndex,
+        });
+      },
+    },
+    activeDurationTime: {
+      get() {
+        const vm = this;
+        if (!!vm.currentEditingScItem) { // eslint-disable-line no-extra-boolean-cast
+          return vm.currentEditingScItem.activeDurationTime || new Date(0, 0, 0);
+        }
+        return new Date(0, 0, 0);
+      },
+      set(activeDurationTime) {
+        const vm = this;
+        vm.updateCurrentEditingScItem({
+          currentEditingScItem: {
+            ...vm.currentEditingScItem,
+            activeDurationTime,
+          },
+          lectureElementIndex: vm.currentEditingScItemIndex,
+        });
+      },
+    },
   },
   methods: {
+    ...mapMutations('teacher', ['updateCurrentEditingScItem']),
     onClickLectureType(lectureType) {
       const vm = this;
       vm.lectureType = lectureType;
