@@ -33,6 +33,10 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 
 ![](./docs/design-scheme.png)
 
+## Design Pdfs by adoji
+
+https://drive.google.com/drive/folders/1yVfMShdReKwUEtyOWPCf6PFp0BQPZ9VA?usp=sharing
+
 ## Translation Spreadsheet Link
 
 https://docs.google.com/spreadsheets/d/16wNDS_wWfnZjBsf50sK1tVmtoxIU9dUWwr370CVbuXI/edit?usp=sharing
