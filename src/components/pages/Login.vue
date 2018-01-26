@@ -49,7 +49,7 @@ export default {
     return {
       input: {
         email: 'adoji92@gmail.com',
-        password: 'adojiadoji',
+        password: 'adjadj1234',
       },
     };
   },
@@ -64,7 +64,7 @@ export default {
           try {
             await vm.reqLogin({
               email: vm.input.email,
-              password: vm.input.email,
+              password: vm.input.password,
             });
             vm.openNoti('success', 'Login Success !!', 'Success');
             if (vm.redirectTo) {

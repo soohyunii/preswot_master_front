@@ -85,7 +85,7 @@
             <br />
             <br />
 
-            <el-button type="primary" @click="onClick()">회원가입</el-button>
+            <el-button type="primary" @click="submitForm('elForm')">회원가입</el-button>
             <br />
             <pre>{{ input }}</pre>
           </el-form>
@@ -175,17 +175,26 @@ export default {
         },
       }).open();
     },
-    async onClick() {
+    submitForm(formName) {
       const vm = this;
-      const baseURL = 'http://127.0.0.1:3000';
-      try {
-        const res = await vm.$http.post(`${baseURL}/users`, {
-          ...vm.input, address: vm.address,
-        });
-        await console.log(res); // eslint-disable-line
-      } catch (e) {
-        throw new Error('request error');
-      }
+      vm.$refs[formName].validate((valid) => {
+        if (valid) {
+          const baseURL = 'http://127.0.0.1:3000';
+          try {
+            vm.$http.post(`${baseURL}/users`, {
+              ...vm.input, address: vm.address,
+            });
+            vm.$router.push({ // LandingPage로 redirect
+              name: 'LandingPage',
+            });
+          } catch (e) {
+            throw new Error('request error');
+          }
+        } else {
+          console.log(vm.$refs[formName]);
+          console.log('error submit!!'); // eslint-disable-line
+        }
+      });
     },
   },
 };
