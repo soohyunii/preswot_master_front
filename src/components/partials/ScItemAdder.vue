@@ -1,22 +1,25 @@
 <template>
   <div class="wrapper">
     <el-row>
-      <el-col align="center" :span="8">
-        <!-- TODO: Translate, change icon -->
-        <el-button @click="onClick('문제지')" style="width: 100%;">
-          <i class="el-icon-question"></i><br/>문제지
+      <!-- TODO: change icon -->
+      <el-col align="center" :span="6">
+        <el-button @click="onClick('문항')" style="width: 100%;">
+          <i class="el-icon-question"></i><br/>{{$t('ITEM.QUESTION')}}
         </el-button>
       </el-col>
-      <el-col align="center" :span="8">
-        <!-- TODO: Translate, change icon -->
-        <el-button @click="onClick('강의자료')" style="width: 100%;">
-          <i class="el-icon-info"></i><br/>강의자료
+      <el-col align="center" :span="6">
+        <el-button @click="onClick('설문')" style="width: 100%;">
+          <i class="el-icon-edit-outline"></i><br/>{{$t('ITEM.SURVEY')}}
         </el-button>
       </el-col>
-      <el-col align="center" :span="8">
-        <!-- TODO: Translate, change icon -->
+      <el-col align="center" :span="6">
         <el-button @click="onClick('숙제')" style="width: 100%;">
-          <i class="el-icon-document"></i><br/>숙제
+          <i class="el-icon-document"></i><br/>{{$t('ITEM.HOMEWORK')}}
+        </el-button>
+      </el-col>
+      <el-col align="center" :span="6">
+        <el-button @click="onClick('강의자료')" style="width: 100%;">
+          <i class="el-icon-info"></i><br/>{{$t('ITEM.LECTURE_DATA')}}
         </el-button>
       </el-col>
     </el-row>
@@ -25,9 +28,8 @@
       <el-col :span="7">
         <hr/>
       </el-col>
-      <!-- TODO: Translate -->
       <el-col :span="10" align="center">
-        시퀀스 저작 도구
+        {{$t('ADDER.SEQUENCE_AUTHORING_TOOL')}}
       </el-col>
       <el-col :span="7">
         <hr/>
@@ -71,7 +73,7 @@ export default {
     ...mapMutations('teacher', ['pushScItem']),
     onClick(type) {
       const vm = this;
-      const validTypeList = ['문제지', '강의자료', '숙제'];
+      const validTypeList = ['문항', '설문', '숙제', '강의자료'];
       if (validTypeList.includes(type)) {
         vm.pushScItem({
           type,
@@ -100,15 +102,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-  .bg-white {
-    background-color: rgb(255, 255, 255);
-  }
-
-  .grid-content {
-    border-radius: 4px;
-    padding: 25px;
-    margin-bottom: 30px;
-  }
-</style>
