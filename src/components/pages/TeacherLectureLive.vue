@@ -112,23 +112,42 @@ export default {
       lectureName: '4강 (배열)', // TODO: replace
       currentClassName: '',
       lectureType: '강의', // TODO: replace
+      elapsedTimeMillisec: null,
+      elapsedTimeIntervalId: null,
     };
   },
   mounted() {
     const vm = this;
+    // TODO: replace dummy
     vm.updateCurrentLectureTimeMillisec({
       currentLectureTimeMillisec: 10000,
     });
+    // TODO: replace dummy
     vm.updateLiveStartTime({
       liveStartTime: new Date(),
     });
+
+    window.setInterval(() => {
+      vm.elapsedTimeMillisec = Date.now() - vm.liveStartTime.getTime();
+    }, 250);
+  },
+  beforeDestroy() {
+    const vm = this;
+    if (vm.elapsedTimeIntervalId) {
+      window.clearInterval(vm.elapsedTimeIntervalId);
+      vm.elapsedTimeIntervalId = null;
+    }
   },
   computed: {
-    ...mapState('teacher', ['currentLectureTimeMillisec']),
-    ...mapGetters('teacher', ['isScEmpty', 'elapsedTimeMillisec']),
+    ...mapState('teacher', ['currentLectureTimeMillisec', 'liveStartTime']),
+    ...mapGetters('teacher', ['isScEmpty']),
   },
   methods: {
     ...mapMutations('teacher', ['updateCurrentLectureTimeMillisec', 'updateLiveStartTime']),
+    getElapsedTimeMillisec() {
+      const vm = this;
+      return Date.now() - vm.liveStartTime.getTime();
+    },
   },
 };
 </script>
