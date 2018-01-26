@@ -13,26 +13,7 @@ export default {
         // eslint-disable-next-line
         password: password,
       },
-  // // TODO: CSRF 기능 나중에 손보기
-  // headers: {
-  //   'X-Requested-With': 'XMLHttpRequest',
-  //   'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-  // },
     });
-      // .then((response) => {
-      //   // window.console.log(response);
-      //   resolve({
-      //     status: true,
-      //     jwt: response.data.token,
-      //   });
-      // })
-      // // eslint-disable-next-line
-      // .catch((error) => {
-      //   // window.console.log(error);
-      //   resolve({
-      //     status: false,
-      //   });
-      // });
   },
   checkEmailDuplicated({ email }) {
     // TODO: Replace dummy with axios
