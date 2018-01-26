@@ -1,8 +1,20 @@
+import axios from 'axios';
+
 export default {
   login({ email, password }) {
-    console.log('service email, password', email, password); // eslint-disable-line
+    axios.post('http://127.0.0.1:3000/auth/login',
+      { email_id: email,
+        // eslint-disable-next-line
+        password: password,
+      },
+    )
+    .then((response) => {
+      window.console.log(response);
+    })
+    .catch((error) => {
+      window.console.log(error);
+    });
 
-    // TODO: Replace dummy with axios
     return new Promise((resolve) => {
       window.setTimeout(() => {
         resolve({
