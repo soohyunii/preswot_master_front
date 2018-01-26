@@ -1,26 +1,18 @@
 import axios from 'axios';
 
+import config from './config';
+
 export default {
   login({ email, password }) {
-    axios.post('http://127.0.0.1:3000/auth/login',
-      { email_id: email,
+    return axios({
+      method: 'post',
+      // TODO: 임시 url 주소 나중에 변경
+      url: `${config.serverUrl}/auth/login`,
+      data: {
+        email_id: email,
         // eslint-disable-next-line
         password: password,
       },
-    )
-    .then((response) => {
-      window.console.log(response);
-    })
-    .catch((error) => {
-      window.console.log(error);
-    });
-
-    return new Promise((resolve) => {
-      window.setTimeout(() => {
-        resolve({
-          jwt: 'blahblahblah_unexpired',
-        });
-      }, 500);
     });
   },
   checkEmailDuplicated({ email }) {
