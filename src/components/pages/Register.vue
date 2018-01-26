@@ -96,10 +96,8 @@
 </template>
 
 <script>
-import axios from 'axios';
-
 import generateRules from '../../validations/registerValidation';
-import config from '../../services/config';
+import authService from '../../services/authService';
 // id(string), password(string), name(string),
 // birth(1991-07-16 형식string), address(string), phone(string), major(string), belong(string소속)
 export default {
@@ -180,25 +178,22 @@ export default {
     },
     submitForm(formName) {
       const vm = this;
-      vm.$refs[formName].validate((valid) => {
-        if (valid) {
-          try {
-            axios({
-              method: 'post',
-              // TODO: 임시 url 주소 나중에 변경
-              url: `${config.serverUrl}/users`,
-              data: {
-                ...vm.input, address: vm.address,
-              },
-            });
-            vm.$router.push({ // LandingPage로 redirect
-              name: 'LandingPage',
-            });
-          } catch (e) {
-            throw new Error('request error');
-          }
-        } else {
+      vm.$refs[formName].validate(async (valid) => {
+        if (!valid) {
           console.log('error submit!!'); // eslint-disable-line
+          return;
+        }
+        try {
+          await authService.register({
+            input: {
+              ...vm.input, address: vm.address,
+            },
+          });
+          vm.$router.push({ // LandingPage로 redirect
+            name: 'LandingPage',
+          });
+        } catch (e) {
+          throw new Error('request error');
         }
       });
     },
