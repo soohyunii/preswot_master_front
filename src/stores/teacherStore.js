@@ -16,14 +16,10 @@ export default {
     currentTeachingScItemIndex: null,
     teachingClassList: [],
     currentEditingClass: null,
-<<<<<<< HEAD
     currentLectureTimeMillisec: null,
     liveStartTime: null,
     scHistoryMode: true,
     isShowingResult: true,
-=======
-    // scenarioList: [],
->>>>>>> teacher/master
   },
   getters: {
     isScEmpty(state) {
