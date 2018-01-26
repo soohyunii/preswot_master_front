@@ -33,7 +33,8 @@ export default {
       const res = await authService.login({ email, password });
 
       // TODO: need to validate jwt
-      const login = true;
+      // window.console.log(res);
+      const login = res.status;
       // jwt update 신호 주기위함
       if (login) {
         commit('updateJwt', {

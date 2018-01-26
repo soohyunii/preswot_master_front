@@ -2,23 +2,34 @@ import axios from 'axios';
 
 export default {
   login({ email, password }) {
-    axios.post('http://127.0.0.1:3000/auth/login',
-      { email_id: email,
-        // eslint-disable-next-line
-        password: password,
-      },
-    )
-    .then((response) => {
-      window.console.log(response);
-    })
-    .catch((error) => {
-      window.console.log(error);
-    });
-
     return new Promise((resolve) => {
       window.setTimeout(() => {
-        resolve({
-          jwt: 'blahblahblah_unexpired',
+        axios({
+          method: 'post',
+          url: 'http://127.0.0.1:3000/auth/login',
+          data: {
+            email_id: email,
+            // eslint-disable-next-line
+            password: password,
+          },
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+          },
+        })
+        .then((response) => {
+          // window.console.log(response);
+          resolve({
+            status: true,
+            jwt: response.data.token,
+          });
+        })
+        // eslint-disable-next-line
+        .catch((error) => {
+          // window.console.log(error);
+          resolve({
+            status: false,
+          });
         });
       }, 500);
     });
