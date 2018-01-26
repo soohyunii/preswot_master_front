@@ -1,7 +1,9 @@
 <template>
   <div>
     <el-container>
-      <teaching-class-list />
+      <el-aside width="150px">
+        <teaching-class-list />
+      </el-aside>
 
       <!-- 이 메인은 맞음 시작 -->
       <el-main>
