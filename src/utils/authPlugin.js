@@ -50,9 +50,7 @@ export default class AuthPlugin {
         return;
       }
 
-      // TODO: check jwt is present and valid
       const jwt = utils.getJwtFromLocalStorage();
-      // const loginRequired = 1; // Math.random() < 0.5;
       if (!jwt) {
         // TODO: show noti (notification that you're not logged in)
         next({
