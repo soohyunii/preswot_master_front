@@ -2,7 +2,7 @@ import Test from '../components/TestComponent';
 import Profile from '../components/pages/Profile';
 import TeacherHome from '../components/pages/TeacherHome';
 import TeacherLectureNew from '../components/pages/TeacherLectureNew';
-import StudentRealtime from '../components/pages/StudentRealtime';
+import StudentLectureLive from '../components/pages/StudentLectureLive';
 
 export default function authRoutes(root) {
   return [
@@ -52,11 +52,11 @@ export default function authRoutes(root) {
       },
     },
     {
-      path: '/student/lecture/realtime',
-      name: 'StudentRealtime',
-      component: StudentRealtime,
+      path: '/student/lecture/live',
+      name: 'StudentLectureLive',
+      component: StudentLectureLive,
       meta: {
-        title: 'Student RealTime',
+        title: 'Student Lecture Live',
         auth: true,
       },
     },
