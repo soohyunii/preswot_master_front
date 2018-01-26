@@ -49,7 +49,7 @@ export default {
     return {
       input: {
         email: 'adoji92@gmail.com',
-        password: 'adojiadoji',
+        password: 'adjadj1234',
       },
     };
   },
