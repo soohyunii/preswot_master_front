@@ -3,18 +3,27 @@ const Guid = require('guid');
 export default {
   namespaced: true,
   /**
-   * @var Sc: shorthand for Scenario
+   * @var sc: shorthand for Scenario
+   * @var currentEditingScItemIndex: 현재 생성/편집 중인 시나리오 아이템 인덱스
+   * @var currentTeachingScItemIndex: 강의 중에 현재 진행되고 있는 시나리오 아이템 인덱스
    */
   state: {
     sc: [], // TODO: fetch(init) from server if exists
     // TODO: Otherwise, init from localStorage (in case of server has no data)
-    // currentEditingScItem: 현재 저작 중인 시나리오 아이템
     // currentEditingScItem: null, // TODO: init from localStorage
     currentEditingScItemIndex: null,
     // TODO: save currentEditingElement into localStorage inside Vue component using watch
+    currentTeachingScItemIndex: null,
     teachingClassList: [],
     currentEditingClass: null,
+<<<<<<< HEAD
+    currentLectureTimeMillisec: null,
+    liveStartTime: null,
+    scHistoryMode: true,
+    isShowingResult: true,
+=======
     // scenarioList: [],
+>>>>>>> teacher/master
   },
   getters: {
     isScEmpty(state) {
@@ -23,6 +32,17 @@ export default {
     currentEditingScItem(state) {
       return state.sc[state.currentEditingScItemIndex];
     },
+    currentTeachingScItem(state) {
+      return state.sc[state.currentTeachingScItemIndex];
+    },
+    // 이걸 여기다 추가하니까, state.liveStartTime이 바뀌어야만 vuex getters가 갱신이 일어남.
+    // 그냥 component에서 method로 불러야할듯!!
+    // elapsedTimeMillisec(state) {
+    //   if (state.liveStartTime) {
+    //     return Date.now() - state.liveStartTime.getTime();
+    //   }
+    //   return null;
+    // },
   },
   mutations: {
     pushScItem(state, { type }) {
@@ -58,6 +78,9 @@ export default {
         );
       }
     },
+    updateCurrentTeachingScItemIndex(state, { index }) {
+      state.currentTeachingScItemIndex = index;
+    },
     deleteScItem(state, { lectureElementIndex }) {
       state.sc.splice(lectureElementIndex, 1);
       if (lectureElementIndex < state.currentEditingScItemIndex) {
@@ -81,8 +104,11 @@ export default {
     updateIsShowingResult(state, { mode }) {
       state.isShowingResult = mode;
     },
-    /* updatescenarioList(state, { scenarioList }) {
-      state.scenarioList = scenarioList;
-    }, */
+    updateCurrentLectureTimeMillisec(state, { currentLectureTimeMillisec }) {
+      state.currentLectureTimeMillisec = currentLectureTimeMillisec;
+    },
+    updateLiveStartTime(state, { liveStartTime }) {
+      state.liveStartTime = liveStartTime;
+    },
   },
 };

@@ -1,10 +1,13 @@
 import axios from 'axios';
 
+import config from './config';
+
 export default {
   login({ email, password }) {
     return axios({
       method: 'post',
-      url: '/auth/login',
+      // TODO: 임시 url 주소 나중에 변경
+      url: `${config.serverUrl}/auth/login`,
       data: {
         email_id: email,
         // eslint-disable-next-line
