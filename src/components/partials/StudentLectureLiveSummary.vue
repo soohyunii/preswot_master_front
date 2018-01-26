@@ -11,7 +11,7 @@
 <script>
 export default {
   // TODO: 전달되는 데이터 명 확인
-  name: 'StudentRealtimeSummary',
+  name: 'StudentLectureLiveSummary',
   props: ['SummaryData'],
 };
 </script>

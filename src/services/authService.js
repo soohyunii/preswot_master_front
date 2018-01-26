@@ -26,4 +26,12 @@ export default {
       }, 500);
     });
   },
+  register({ input }) {
+    return axios({
+      method: 'post',
+      // TODO: 임시 url 주소 나중에 변경
+      url: `${config.serverUrl}/users`,
+      data: input,
+    });
+  },
 };
