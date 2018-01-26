@@ -32,7 +32,7 @@ export default {
         const vm = this;
         switch (vm.type.from) {
           default:
-            return new Error(`not defined type ${vm.type.from}`);
+            throw new Error(`not defined type ${vm.type.from}`);
           case 'ScMaterialEditor': {
             // for fileList from ScMaterialEditor
             const index = vm.type.currentEditingScItemIndex;
