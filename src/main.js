@@ -8,7 +8,6 @@ import VueTheMask from 'vue-the-mask';
 import VueResize from 'vue-resize';
 import Vue2Filters from 'vue2-filters';
 import Vlf from 'vlf';
-import axios from 'axios';
 import authPlugin from './utils/authPlugin';
 
 import App from './App';
@@ -30,9 +29,6 @@ Vue.use(authPlugin, {
 Vue.use(VueResize);
 Vue.use(Vue2Filters);
 Vue.use(Vlf);
-Vue.prototype.$http = axios;
-
-axios.defaults.baseURL = 'http://127.0.0.1:3000';
 
 const defaultLocale = utils.getDefaultLocale();
 
