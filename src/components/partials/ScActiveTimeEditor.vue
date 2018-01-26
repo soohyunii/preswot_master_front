@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations, mapGetters } from 'vuex';
 
 export default {
   name: 'ScActiveTimeEditor',
@@ -57,12 +57,14 @@ export default {
     ...mapMutations('teacher', ['updateCurrentEditingScItem']),
   },
   computed: {
-    ...mapState('teacher', ['sc', 'currentEditingScItem', 'currentEditingScItemIndex']),
+    ...mapGetters('teacher', ['currentEditingScItem']),
+    ...mapState('teacher', ['sc', 'currentEditingScItemIndex']),
     activeTime: {
       get() {
         const vm = this;
         let time = null;
-        if (vm.currentEditingScItemIndex !== null) {
+        const index = vm.currentEditingScItemIndex;
+        if (index !== null && index > -1) {
           time = vm.sc[vm.currentEditingScItemIndex].activeTime;
         }
         if (time) {
@@ -85,7 +87,8 @@ export default {
       get() {
         const vm = this;
         let time = null;
-        if (vm.currentEditingScItemIndex !== null) {
+        const index = vm.currentEditingScItemIndex;
+        if (index !== null && index > -1) {
           time = vm.sc[vm.currentEditingScItemIndex].activeDurationTime;
         }
         if (time) {
@@ -108,7 +111,8 @@ export default {
       get() {
         const vm = this;
         let mode = null;
-        if (vm.currentEditingScItemIndex !== null) {
+        const index = vm.currentEditingScItemIndex;
+        if (index !== null && index > -1) {
           mode = vm.sc[vm.currentEditingScItemIndex].scHistoryMode;
         }
         if (mode) {
@@ -131,7 +135,8 @@ export default {
       get() {
         const vm = this;
         let mode = null;
-        if (vm.currentEditingScItemIndex !== null) {
+        const index = vm.currentEditingScItemIndex;
+        if (index !== null && index > -1) {
           mode = vm.sc[vm.currentEditingScItemIndex].isShowingResult;
         }
         if (mode) {
