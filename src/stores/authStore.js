@@ -34,11 +34,10 @@ export default {
 
       // TODO: need to validate jwt
       // window.console.log(res);
-      const login = res.status;
-      // jwt update 신호 주기위함
-      if (login) {
+      const status = res.status;
+      if (status === 200) {
         commit('updateJwt', {
-          jwt: res.jwt,
+          jwt: res.data.token,
         });
       } else {
         throw new Error('login failed');
