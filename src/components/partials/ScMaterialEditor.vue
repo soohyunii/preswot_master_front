@@ -68,25 +68,6 @@ export default {
         });
       },
     },
-    fileList: {
-      get() {
-        const vm = this;
-        if (!!vm.currentEditingScItem) { // eslint-disable-line no-extra-boolean-cast
-          return vm.currentEditingScItem.fileList || [];
-        }
-        return [];
-      },
-      set(fileList) {
-        const vm = this;
-        vm.updateCurrentEditingScItem({
-          currentEditingScItem: {
-            ...vm.currentEditingScItem,
-            fileList,
-          },
-          lectureElementIndex: vm.currentEditingScItemIndex,
-        });
-      },
-    },
   },
   components: {
     Upload,
