@@ -60,7 +60,7 @@ export default {
     getIconsByType(type) {
       let icon;
       switch (type) {
-        case '문제지': {
+        case '문항': {
           icon = 'el-icon-question';
           break;
         }
@@ -73,12 +73,16 @@ export default {
           icon = 'el-icon-document';
           break;
         }
+        case '설문': {
+          icon = 'el-icon-edit-outline';
+          break;
+        }
       }
       return icon;
     },
   },
   computed: {
-    ...mapState('teacher', ['sc', 'currentEditingScItemIndex', 'currentEditingScItem']),
+    ...mapState('teacher', ['sc', 'currentEditingScItemIndex']),
     scActiveTime: {
       get() {
         const vm = this;

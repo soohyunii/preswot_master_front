@@ -33,6 +33,10 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 
 ![](./docs/design-scheme.png)
 
+## Design Pdfs by adoji
+
+https://drive.google.com/drive/folders/1yVfMShdReKwUEtyOWPCf6PFp0BQPZ9VA?usp=sharing
+
 ## Translation Spreadsheet Link
 
 https://docs.google.com/spreadsheets/d/16wNDS_wWfnZjBsf50sK1tVmtoxIU9dUWwr370CVbuXI/edit?usp=sharing
@@ -40,6 +44,16 @@ https://docs.google.com/spreadsheets/d/16wNDS_wWfnZjBsf50sK1tVmtoxIU9dUWwr370CVb
 ## Asana Introduction
 
 https://docs.google.com/document/d/1a7OisDdvRJMxIufXmmlBKCNICD-XVTkmtfHfGHX9GfU/edit?usp=sharing
+
+## Asana Front-end Project Tag Description
+
+- pending: 다른 카드가 끝나야 진행이 가능해서 기다리고 있는 카드
+- planning: 현재 기획중
+- %main: 메인 모듈
+- %edit: 강사 저작 모듈
+- %teach: 강사 강의 모듈
+- %instructor: 강사 모듈 (teacher라고 하면 teach와 헷갈릴 것 같아서 일부러 구분)
+- $student: 학생 모듈 (학생 수강 모듈)
 
 ## LF, CRLF Issue
 
