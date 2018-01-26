@@ -16,7 +16,8 @@ export default {
     currentTeachingScItemIndex: null,
     teachingClassList: [],
     currentEditingClass: null,
-    // scenarioList: [],
+    currentLectureTimeMillisec: null,
+    liveStartTime: null,
     scHistoryMode: true,
     isShowingResult: true,
   },
@@ -29,6 +30,12 @@ export default {
     },
     currentTeachingScItem(state) {
       return state.sc[state.currentTeachingScItemIndex];
+    },
+    elapsedTimeMillisec(state) {
+      if (state.liveStartTime) {
+        return Date.now() - state.liveStartTime.getTime();
+      }
+      return null;
     },
   },
   mutations: {
@@ -80,8 +87,11 @@ export default {
     updateIsShowingResult(state, { mode }) {
       state.isShowingResult = mode;
     },
-    /* updatescenarioList(state, { scenarioList }) {
-      state.scenarioList = scenarioList;
-    }, */
+    updateCurrentLectureTimeMillisec(state, { currentLectureTimeMillisec }) {
+      state.currentLectureTimeMillisec = currentLectureTimeMillisec;
+    },
+    updateLiveStartTime(state, { liveStartTime }) {
+      state.liveStartTime = liveStartTime;
+    },
   },
 };

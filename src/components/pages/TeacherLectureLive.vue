@@ -17,26 +17,24 @@
             </el-button>
           </el-col>
 
-          <template v-if="inputFlag">
-            <el-col :span="6">
-              <el-input v-model="lectureName"></el-input>
-            </el-col>
-            <!-- TODO: translate -->
-            <el-col :span="2">
-              <el-button @click="changeLectureName()">확인</el-button>
-            </el-col>
-          </template>
+          <el-col :span="7">
+            <h3 class="lecture-name">
+              {{ lectureName }}
+              <!-- <i class="el-icon-edit" @click="changeLectureName()"></i> -->
+            </h3>
+          </el-col>
 
-          <template v-else>
-            <el-col :span="8">
-              <h3 class="lecture-name">
-                {{ lectureName }}
-                <!-- <i class="el-icon-edit" @click="changeLectureName()"></i> -->
-              </h3>
-            </el-col>
-          </template>
+          <el-col :span="7">
+            <h3 class="current-lecture-time">
+              {{ currentLectureTimeMillisec }}
+            </h3>
+          </el-col>
+          <el-col :span="7">
+            <h3 class="elapsed-time">
+              {{ elapsedTimeMillisec }}
+            </h3>
+          </el-col>
         </el-row>
-        <br v-if="inputFlag"/>
         <hr><br />
 
         <el-row :gutter="30">
@@ -75,10 +73,20 @@
   margin: 8px 0;
   // background-color: red;
 }
+
+.current-lecture-time {
+  margin: 8px 0;
+  background-color: red;
+}
+
+.elapsed-time {
+  margin: 8px 0;
+  background-color: pink;
+}
 </style>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState, mapGetters, mapMutations } from 'vuex';
 
 import Sc from '../partials/Sc';
 import ScItemAdder from '../partials/ScItemAdder';
@@ -101,14 +109,26 @@ export default {
     // TODO: translate
     return {
       teachingClassList: [],
-      lectureName: '4강 (배열)',
-      inputFlag: false,
+      lectureName: '4강 (배열)', // TODO: replace
       currentClassName: '',
-      lectureType: '강의',
+      lectureType: '강의', // TODO: replace
     };
   },
+  mounted() {
+    const vm = this;
+    vm.updateCurrentLectureTimeMillisec({
+      currentLectureTimeMillisec: 10000,
+    });
+    vm.updateLiveStartTime({
+      liveStartTime: new Date(),
+    });
+  },
   computed: {
-    ...mapGetters('teacher', ['isScEmpty']),
+    ...mapState('teacher', ['currentLectureTimeMillisec']),
+    ...mapGetters('teacher', ['isScEmpty', 'elapsedTimeMillisec']),
+  },
+  methods: {
+    ...mapMutations('teacher', ['updateCurrentLectureTimeMillisec', 'updateLiveStartTime']),
   },
 };
 </script>
