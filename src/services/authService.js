@@ -4,8 +4,7 @@ export default {
   login({ email, password }) {
     return axios({
       method: 'post',
-      // TODO: 임시 url 주소 나중에 변경
-      url: 'http://127.0.0.1:3000/auth/login',
+      url: '/auth/login',
       data: {
         email_id: email,
         // eslint-disable-next-line
