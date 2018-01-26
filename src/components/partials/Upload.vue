@@ -35,7 +35,8 @@ export default {
             return new Error('not defined type', vm.type.from);
           case 'ScMaterialEditor': {
             // for fileList from ScMaterialEditor
-            if (vm.type.currentEditingScItemIndex !== null) {
+            const index = vm.type.currentEditingScItemIndex;
+            if (index !== null && index > -1) {
               return vm.sc[vm.type.currentEditingScItemIndex].fileList || [];
             }
             return [];

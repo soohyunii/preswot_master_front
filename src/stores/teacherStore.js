@@ -50,10 +50,13 @@ export default {
       }
     },
     deleteScItem(state, { lectureElementIndex }) {
-      state.sc.splice(lectureElementIndex, 1);
-      if (lectureElementIndex < state.currentEditingScItemIndex) {
+      //eslint-disable-next-line
+      if (((state.currentEditingScItemIndex === lectureElementIndex) &&
+          (lectureElementIndex === state.sc.length - 1)) ||
+          (lectureElementIndex < state.currentEditingScItemIndex)) {
         state.currentEditingScItemIndex -= 1;
       }
+      state.sc.splice(lectureElementIndex, 1);
       // TODO: update localForage
     },
     // TODO: editLectureElement
