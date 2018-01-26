@@ -6,9 +6,7 @@
         <i :class="getIconsByType(type)" class="main-image" ></i>
         <i class="el-icon-error" style="color:red; vertical-align:top" @click.stop="onClick('deleteIcon',index)"></i><br/>
       </div>
-      <!-- TODO: change bg color, time variable -->
       <div class="label-time">{{ scActiveTime }}</div>
-      <!-- TODO: change bg color, duration variable -->
       <div class="label-duration">{{ scActiveDurationTime }}</div>
     </el-col>
   </div>
@@ -26,8 +24,6 @@ export default {
     };
   },
   methods: {
-    // TODO: edit lecture element
-    // TODO: add drag/drop function
     ...mapMutations('teacher', ['deleteScItem', 'updateCurrentEditingScItem']),
     onClick(type, index) {
       const vm = this;

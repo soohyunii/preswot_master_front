@@ -29,19 +29,17 @@ export default {
   },
   actions: {
     async reqLogin({ commit }, { email, password }) {
-      // TODO: try catch
       const res = await authService.login({ email, password });
+      window.console.log(res);
 
-      // TODO: need to validate jwt
-      const login = true;
-      // jwt update 신호 주기위함
-      if (login) {
+      if (res.data.success) {
         commit('updateJwt', {
-          jwt: res.jwt,
+          jwt: res.data.token,
         });
       } else {
         throw new Error('login failed');
       }
+      return res;
     },
   },
 };

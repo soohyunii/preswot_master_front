@@ -1,14 +1,18 @@
+import axios from 'axios';
+
+import config from './config';
+
 export default {
   login({ email, password }) {
-    console.log('service email, password', email, password); // eslint-disable-line
-
-    // TODO: Replace dummy with axios
-    return new Promise((resolve) => {
-      window.setTimeout(() => {
-        resolve({
-          jwt: 'blahblahblah_unexpired',
-        });
-      }, 500);
+    return axios({
+      method: 'post',
+      // TODO: 임시 url 주소 나중에 변경
+      url: `${config.serverUrl}/auth/login`,
+      data: {
+        email_id: email,
+        // eslint-disable-next-line
+        password: password,
+      },
     });
   },
   checkEmailDuplicated({ email }) {
