@@ -179,9 +179,8 @@ export default {
       const vm = this;
       vm.$refs[formName].validate((valid) => {
         if (valid) {
-          const baseURL = 'http://127.0.0.1:3000';
           try {
-            vm.$http.post(`${baseURL}/users`, {
+            vm.$http.post('/users', {
               ...vm.input, address: vm.address,
             });
             vm.$router.push({ // LandingPage로 redirect

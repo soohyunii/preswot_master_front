@@ -32,6 +32,8 @@ Vue.use(Vue2Filters);
 Vue.use(Vlf);
 Vue.prototype.$http = axios;
 
+axios.defaults.baseURL = 'http://127.0.0.1:3000';
+
 const defaultLocale = utils.getDefaultLocale();
 
 const i18n = new VueI18n({
