@@ -7,8 +7,8 @@
           <!-- TODO: change label-width according to locale
           (based on longest label length in current locale) -->
           <el-form :model="input" :rules="rules" ref="elForm" label-width="120px">
-            <el-form-item :label="$t('REG.EMAIL_LABEL')" prop="email">
-              <el-input :placeholder="$t('REG.EMAIL_PH')" v-model="input.email" type="email"></el-input>
+            <el-form-item :label="$t('REG.EMAIL_LABEL')" prop="email_id">
+              <el-input :placeholder="$t('REG.EMAIL_PH')" v-model="input.email_id" type="email"></el-input>
             </el-form-item>
 
             <el-form-item :label="$t('REG.PASSWORD_LABEL')" prop="password">
@@ -28,21 +28,21 @@
             </el-form-item>
 
 
-            <el-form-item :label="$t('REG.BIRTHDAY_LABEL')" prop="birthday">
-              <el-date-picker :placeholder="$t('REG.BIRTHDAY_PH')" v-model="input.birthday" type="date" id="user_birthday_input">
+            <el-form-item :label="$t('REG.BIRTHDAY_LABEL')" prop="birth">
+              <el-date-picker :placeholder="$t('REG.BIRTHDAY_PH')" v-model="input.birth" type="date" id="user_birthday_input">
               </el-date-picker>
             </el-form-item>
 
             <!-- TODO: 성별이 클릭이 되지 않은 상태 체크 -->
             <el-form-item :label="$t('REG.SEX_LABEL')" prop="sex">
               <el-radio-group v-model="input.sex" id="user_sex_input">
-                <el-radio-button label="male" >{{ $t('REG.SEX_LABEL_MALE') }}</el-radio-button>
-                <el-radio-button label="female" >{{ $t('REG.SEX_LABEL_FEMALE') }}</el-radio-button>
+                <el-radio-button label="0">{{ $t('REG.SEX_LABEL_MALE') }}</el-radio-button>
+                <el-radio-button label="1">{{ $t('REG.SEX_LABEL_FEMALE') }}</el-radio-button>
               </el-radio-group>
             </el-form-item>
 
-            <el-form-item :label="$t('REG.ADDRESS_LABEL')" prop="address">
-              <el-input type="string" :placeholder="$t('REG.ADDRESS_PH')" :value="combinedAddress" readonly>
+            <el-form-item :label="$t('REG.ADDRESS_LABEL')" prop="address1">
+              <el-input type="string" :placeholder="$t('REG.ADDRESS_PH')" :value="address" readonly>
               </el-input>
               <!-- TODO: Replace button position -->
               <el-button type="primary" @click="execDaumPostcode()">{{ $t('REG.ADDRESS_SEARCH_BUTTON') }}</el-button>
@@ -57,7 +57,7 @@
             <!-- TODO: 핸드폰 번호 -->
             <!-- 핸드폰 번호 인증 어떻게?? -->
             <el-form-item :label="$t('REG.PHONE_NUMBER_LABEL')" prop="phoneNumber">
-              <el-input :placeholder="$t('REG.PHONE_NUMBER_PH')" v-model="input.phoneNumber" v-mask="['###-####-####', '###-###-####']" type="tel"></el-input>
+              <el-input :placeholder="$t('REG.PHONE_NUMBER_PH')" v-model="input.phone" v-mask="['###-####-####', '###-###-####']" type="tel"></el-input>
             </el-form-item>
             <el-button type="primary" @click="dummy()">{{$t('REG.PHONE_NUMBER_VERIFY_BUTTON')}}</el-button>
 
@@ -85,7 +85,7 @@
             <br />
             <br />
 
-            <el-button type="primary" @click="onClick('LOGIN')">회원가입</el-button>
+            <el-button type="primary" @click="submitForm('elForm')">회원가입</el-button>
             <br />
             <pre>{{ input }}</pre>
           </el-form>
@@ -107,28 +107,28 @@ export default {
     return {
       focused: false,
       input: {
-        email: '',
+        email_id: '',
         password: '',
         password2: '',
         name: '',
-        birthday: '',
+        birth: '',
         postcode: '',
-        address: '', // 지역 주소
+        address1: '', // 지역 주소
         address2: '', // 상세 주소
-        phoneNumber: '',
+        phone: '',
         major: '',
         belong: '',
-        sex: '',
+        sex: '0',
         checkTou: false,
       },
       rules: generateRules(vm),
     };
   },
   computed: {
-    combinedAddress() {
+    address() {
       const vm = this;
-      const combinedAddress = `${vm.input.address} ${vm.input.address2} ${vm.input.postcode}`;
-      return combinedAddress.trim();
+      const address = `${vm.input.address1} ${vm.input.address2} ${vm.input.postcode}`;
+      return address.trim();
     },
   },
   methods: {
@@ -168,12 +168,31 @@ export default {
 
           // 우편번호와 주소 정보를 해당 필드에 넣는다.
           vm.input.postcode = data.zonecode; // 5자리 새우편번호 사용
-          vm.input.address = fullAddr;
+          vm.input.address1 = fullAddr;
 
           // 커서를 상세주소 필드로 이동한다.
           document.getElementById('detail').focus();
         },
       }).open();
+    },
+    submitForm(formName) {
+      const vm = this;
+      vm.$refs[formName].validate((valid) => {
+        if (valid) {
+          try {
+            vm.$http.post('/users', {
+              ...vm.input, address: vm.address,
+            });
+            vm.$router.push({ // LandingPage로 redirect
+              name: 'LandingPage',
+            });
+          } catch (e) {
+            throw new Error('request error');
+          }
+        } else {
+          console.log('error submit!!'); // eslint-disable-line
+        }
+      });
     },
   },
 };

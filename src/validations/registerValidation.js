@@ -2,7 +2,7 @@ import authService from '../services/authService';
 
 export default function generateRule(vm) {
   return {
-    email: [
+    email_id: [
       {
         required: true,
         message: vm.$t('FORM.ERR_REQUIRED'),
@@ -87,7 +87,7 @@ export default function generateRule(vm) {
           // console.log(value.match); // type of `value` = Date, not String
           window.setTimeout(() => {
             const strValue = document.getElementById('user_sex_input').value;
-            if (strValue.value === null) {
+            if (strValue === null) {
               const errMsg = vm.$t('REG.ERR_SEX_REQUIRED');
               callback(new Error(errMsg));
             } else {
@@ -116,7 +116,7 @@ export default function generateRule(vm) {
         trigger: 'change,blur',
       },
     ],
-    phoneNumber: [
+    phone: [
       {
         required: true,
         message: vm.$t('FORM.ERR_REQUIRED'),
@@ -142,7 +142,7 @@ export default function generateRule(vm) {
         trigger: 'change,blur',
       },
     ],
-    birthday: [
+    birth: [
       {
         required: true,
         message: vm.$t('FORM.ERR_REQUIRED'),
@@ -164,7 +164,7 @@ export default function generateRule(vm) {
         trigger: 'change',
       },
     ],
-    address: [
+    address1: [
       {
         required: true,
         message: vm.$t('FORM.ERR_REQUIRED'),

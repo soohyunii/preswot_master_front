@@ -20,8 +20,7 @@
     <br />
     <el-row>
       <el-col :span="6">
-        History 기능 : <br/>
-        scHistoryMode: {{ scHistoryMode }}
+        History 기능 :
       </el-col>
       <el-col :span="6">
         <el-radio-group v-model="historyMode">
@@ -31,8 +30,7 @@
       </el-col>
 
       <el-col :span="6">
-        선지별 선택비율 보이기 : <br/>
-        isShowingResult: {{ isShowingResult }}
+        선지별 선택비율 보이기 :
       </el-col>
       <el-col :span="6">
         <el-radio-group v-model="showingResultMode">
@@ -56,15 +54,19 @@ export default {
     };
   },
   methods: {
-    ...mapMutations('teacher', ['updateCurrentEditingScItem', 'updateHistoryMode', 'updateIsShowingResult']),
+    ...mapMutations('teacher', ['updateCurrentEditingScItem']),
   },
   computed: {
-    ...mapState('teacher', ['currentEditingScItem', 'currentEditingScItemIndex', 'scHistoryMode', 'isShowingResult']),
+    ...mapState('teacher', ['sc', 'currentEditingScItem', 'currentEditingScItemIndex']),
     activeTime: {
       get() {
         const vm = this;
-        if (!!vm.currentEditingScItem) { // eslint-disable-line no-extra-boolean-cast
-          return vm.currentEditingScItem.activeTime || new Date(0, 0, 0);
+        let time = null;
+        if (vm.currentEditingScItemIndex !== null) {
+          time = vm.sc[vm.currentEditingScItemIndex].activeTime;
+        }
+        if (time) {
+          return time || new Date(0, 0, 0);
         }
         return new Date(0, 0, 0);
       },
@@ -82,8 +84,12 @@ export default {
     activeDurationTime: {
       get() {
         const vm = this;
-        if (!!vm.currentEditingScItem) { // eslint-disable-line no-extra-boolean-cast
-          return vm.currentEditingScItem.activeDurationTime || new Date(0, 0, 0);
+        let time = null;
+        if (vm.currentEditingScItemIndex !== null) {
+          time = vm.sc[vm.currentEditingScItemIndex].activeDurationTime;
+        }
+        if (time) {
+          return time || new Date(0, 0, 0);
         }
         return new Date(0, 0, 0);
       },
@@ -101,24 +107,46 @@ export default {
     historyMode: {
       get() {
         const vm = this;
-        return vm.scHistoryMode;
+        let mode = null;
+        if (vm.currentEditingScItemIndex !== null) {
+          mode = vm.sc[vm.currentEditingScItemIndex].scHistoryMode;
+        }
+        if (mode) {
+          return mode || true;
+        }
+        return true;
       },
-      set(value) {
+      set(scHistoryMode) {
         const vm = this;
-        vm.updateHistoryMode({
-          mode: value,
+        vm.updateCurrentEditingScItem({
+          currentEditingScItem: {
+            ...vm.currentEditingScItem,
+            scHistoryMode,
+          },
+          lectureElementIndex: vm.currentEditingScItemIndex,
         });
       },
     },
     showingResultMode: {
       get() {
         const vm = this;
-        return vm.isShowingResult;
+        let mode = null;
+        if (vm.currentEditingScItemIndex !== null) {
+          mode = vm.sc[vm.currentEditingScItemIndex].isShowingResult;
+        }
+        if (mode) {
+          return mode || true;
+        }
+        return true;
       },
-      set(value) {
+      set(isShowingResult) {
         const vm = this;
-        vm.updateIsShowingResult({
-          mode: value,
+        vm.updateCurrentEditingScItem({
+          currentEditingScItem: {
+            ...vm.currentEditingScItem,
+            isShowingResult,
+          },
+          lectureElementIndex: vm.currentEditingScItemIndex,
         });
       },
     },
