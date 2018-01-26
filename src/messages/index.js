@@ -60,6 +60,15 @@ export default {
       "REDIRECT_MESSAGE1": "after ",
       "REDIRECT_MESSAGE2": "seconds, redirected to login page",
       "REDIRECT_MESSAGE": "{REDIRECT_MESSAGE1} {secondLeft}{REDIRECT_MESSAGE2}"
+    },
+    "ITEM": {
+      "QUESTION": "Question",
+      "SURVEY": "Survey",
+      "HOMEWORK": "Homework",
+      "LECTURE_DATA": "Lecture data"
+    },
+    "ADDER": {
+      "SEQUENCE_AUTHORING_TOOL": "Sequence authoring tool"
     }
   },
   "ko": {
@@ -122,6 +131,15 @@ export default {
       "REDIRECT_MESSAGE1": " ",
       "REDIRECT_MESSAGE2": "초 뒤 홈페이지로 이동합니다.",
       "REDIRECT_MESSAGE": "{REDIRECT_MESSAGE1} {secondLeft}{REDIRECT_MESSAGE2}"
+    },
+    "ITEM": {
+      "QUESTION": "문항",
+      "SURVEY": "설문",
+      "HOMEWORK": "숙제",
+      "LECTURE_DATA": "강의자료"
+    },
+    "ADDER": {
+      "SEQUENCE_AUTHORING_TOOL": "시퀀스 저작 도구"
     }
   }
 }
