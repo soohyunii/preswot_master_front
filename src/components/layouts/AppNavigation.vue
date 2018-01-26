@@ -68,36 +68,11 @@
       </el-submenu>
 
       <!-- TODO: Find a better place to be -->
-      <router-link to="/a/student/lecture/realtime">Student Realtime</router-link>
+      <router-link to="/a/student/lecture/realtime">Student Realtime</router-link> <br />
+      <router-link to="/a/teacher/lecture/live">Teacher Live</router-link> <br />
     </el-menu>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex';
-import studentService from '../../services/studentService';
-import teacherService from '../../services/teacherService';
-
-export default {
-  name: 'AppNavigation',
-  data() {
-    return {
-      // isCollapse: false,
-      truncateLength: 16,
-      attendingClassList: [],
-      teachingClassList: [],
-    };
-  },
-  computed: {
-    ...mapState('layout', ['isNavCollapsed']),
-  },
-  async mounted() {
-    const vm = this;
-    vm.attendingClassList = await studentService.fetchAttendingClassList();
-    vm.teachingClassList = await teacherService.fetchTeachingClassList();
-  },
-};
-</script>
 
 <style lang="scss">
 // * handling font awesome icons
@@ -133,3 +108,29 @@ export default {
   }
 }
 </style>
+
+<script>
+import { mapState } from 'vuex';
+import studentService from '../../services/studentService';
+import teacherService from '../../services/teacherService';
+
+export default {
+  name: 'AppNavigation',
+  data() {
+    return {
+      // isCollapse: false,
+      truncateLength: 16,
+      attendingClassList: [],
+      teachingClassList: [],
+    };
+  },
+  computed: {
+    ...mapState('layout', ['isNavCollapsed']),
+  },
+  async mounted() {
+    const vm = this;
+    vm.attendingClassList = await studentService.fetchAttendingClassList();
+    vm.teachingClassList = await teacherService.fetchTeachingClassList();
+  },
+};
+</script>
