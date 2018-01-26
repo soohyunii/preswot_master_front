@@ -26,12 +26,12 @@
 
           <el-col :span="7">
             <h3 class="current-lecture-time">
-              {{ currentLectureTimeMillisec }}
+              본 강의 활성화로부터: {{ currentLectureTimeMillisec }}
             </h3>
           </el-col>
           <el-col :span="7">
             <h3 class="elapsed-time">
-              {{ elapsedTimeMillisec }}
+              강의 시작으로부터: {{ (elapsedTimeMillisec / 1000).toFixed(0) }} 초
             </h3>
           </el-col>
         </el-row>
@@ -113,7 +113,7 @@ export default {
       currentClassName: '',
       lectureType: '강의', // TODO: replace
       elapsedTimeMillisec: null,
-      elapsedTimeIntervalId: null,
+      intervalId: null,
     };
   },
   mounted() {
@@ -127,15 +127,16 @@ export default {
       liveStartTime: new Date(),
     });
 
-    window.setInterval(() => {
+    vm.intervalId = window.setInterval(() => {
+      // TODO: update currentLectureTIme too???
       vm.elapsedTimeMillisec = Date.now() - vm.liveStartTime.getTime();
-    }, 250);
+    }, 498);
   },
   beforeDestroy() {
     const vm = this;
-    if (vm.elapsedTimeIntervalId) {
-      window.clearInterval(vm.elapsedTimeIntervalId);
-      vm.elapsedTimeIntervalId = null;
+    if (vm.intervalId) {
+      window.clearInterval(vm.intervalId);
+      vm.intervalId = null;
     }
   },
   computed: {
