@@ -6,12 +6,14 @@ export default {
       window.setTimeout(() => {
         axios({
           method: 'post',
+          // TODO: 임시 url 주소 나중에 변경
           url: 'http://127.0.0.1:3000/auth/login',
           data: {
             email_id: email,
             // eslint-disable-next-line
             password: password,
           },
+          // TODO: CSRF 기능 나중에 손보기
           headers: {
             'X-Requested-With': 'XMLHttpRequest',
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
