@@ -59,10 +59,11 @@ export default {
       }
     },
     deleteScItem(state, { lectureElementIndex }) {
-      //eslint-disable-next-line
-      if (((state.currentEditingScItemIndex === lectureElementIndex) &&
-          (lectureElementIndex === state.sc.length - 1)) ||
-          (lectureElementIndex < state.currentEditingScItemIndex)) {
+      const isCurrentEditingItem = state.currentEditingScItemIndex === lectureElementIndex;
+      const isLastItem = lectureElementIndex === state.sc.length - 1;
+      const isBeforeCurrentEditingItem = lectureElementIndex < state.currentEditingScItemIndex;
+
+      if ((isCurrentEditingItem && isLastItem) || isBeforeCurrentEditingItem) {
         state.currentEditingScItemIndex -= 1;
       }
       state.sc.splice(lectureElementIndex, 1);
