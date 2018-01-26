@@ -1,22 +1,28 @@
 <template>
   <div class="wrapper">
     <el-row>
-      <el-col align="center" :span="8">
+      <el-col align="center" :span="6">
         <!-- TODO: Translate, change icon -->
-        <el-button @click="onClick('문제지')" style="width: 100%;">
-          <i class="el-icon-question"></i><br/>문제지
+        <el-button @click="onClick('문항')" style="width: 100%;">
+          <i class="el-icon-question"></i><br/>문항
         </el-button>
       </el-col>
-      <el-col align="center" :span="8">
+      <el-col align="center" :span="6">
         <!-- TODO: Translate, change icon -->
-        <el-button @click="onClick('강의자료')" style="width: 100%;">
-          <i class="el-icon-info"></i><br/>강의자료
+        <el-button @click="onClick('설문')" style="width: 100%;">
+          <i class="el-icon-edit-outline"></i><br/>설문
         </el-button>
       </el-col>
-      <el-col align="center" :span="8">
+      <el-col align="center" :span="6">
         <!-- TODO: Translate, change icon -->
         <el-button @click="onClick('숙제')" style="width: 100%;">
           <i class="el-icon-document"></i><br/>숙제
+        </el-button>
+      </el-col>
+      <el-col align="center" :span="6">
+        <!-- TODO: Translate, change icon -->
+        <el-button @click="onClick('강의자료')" style="width: 100%;">
+          <i class="el-icon-info"></i><br/>강의자료
         </el-button>
       </el-col>
     </el-row>
@@ -71,7 +77,7 @@ export default {
     ...mapMutations('teacher', ['pushScItem']),
     onClick(type) {
       const vm = this;
-      const validTypeList = ['문제지', '강의자료', '숙제'];
+      const validTypeList = ['문항', '설문', '숙제', '강의자료'];
       if (validTypeList.includes(type)) {
         vm.pushScItem({
           type,

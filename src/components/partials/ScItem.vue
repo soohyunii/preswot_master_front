@@ -60,7 +60,7 @@ export default {
     getIconsByType(type) {
       let icon;
       switch (type) {
-        case '문제지': {
+        case '문항': {
           icon = 'el-icon-question';
           break;
         }
@@ -71,6 +71,10 @@ export default {
         }
         case '숙제': {
           icon = 'el-icon-document';
+          break;
+        }
+        case '설문': {
+          icon = 'el-icon-edit-outline';
           break;
         }
       }
