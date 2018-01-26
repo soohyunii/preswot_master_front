@@ -52,6 +52,10 @@
           </el-col>
         </el-row>
 
+        <div id="app_sc_item_summary">
+          <sc-item-summary />
+        </div>
+
         <div id="app_lecture_editor" v-show="!isScEmpty">
           <el-row :gutter="30">
             <el-col :span="24">
@@ -78,6 +82,7 @@ import { mapGetters } from 'vuex';
 
 import Sc from '../partials/Sc';
 import ScItemAdder from '../partials/ScItemAdder';
+import ScItemSummary from '../partials/ScItemSummary';
 import ScMaterialEditor from '../partials/ScMaterialEditor';
 import ScActiveTimeEditor from '../partials/ScActiveTimeEditor';
 import TeachingClassList from '../partials/TeachingClassList';
@@ -87,6 +92,7 @@ export default {
   components: {
     Sc,
     ScItemAdder,
+    ScItemSummary,
     ScMaterialEditor,
     ScActiveTimeEditor,
     TeachingClassList,
