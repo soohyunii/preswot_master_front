@@ -15,8 +15,6 @@ export default {
     teachingClassList: [],
     currentEditingClass: null,
     // scenarioList: [],
-    scHistoryMode: true,
-    isShowingResult: true,
   },
   getters: {
     isScEmpty(state) {
@@ -31,9 +29,20 @@ export default {
       const key = Guid.create().toString();
       const activeTime = new Date(0, 0, 0);
       const activeDurationTime = new Date(0, 0, 0);
+      const scHistoryMode = true;
+      const isShowingResult = true;
       const description = '';
       const fileList = [];
-      const scItem = { type, key, activeTime, activeDurationTime, description, fileList };
+      const scItem = {
+        type,
+        key,
+        activeTime,
+        activeDurationTime,
+        scHistoryMode,
+        isShowingResult,
+        description,
+        fileList,
+      };
       // state.currentEditingScItem = scItem;
       state.currentEditingScItemIndex = state.sc.length;
       state.sc.push(scItem);

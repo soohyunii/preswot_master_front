@@ -191,7 +191,6 @@ export default {
             throw new Error('request error');
           }
         } else {
-          console.log(vm.$refs[formName]);
           console.log('error submit!!'); // eslint-disable-line
         }
       });
