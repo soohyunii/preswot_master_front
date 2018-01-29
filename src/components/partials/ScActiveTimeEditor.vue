@@ -48,7 +48,6 @@ import { mapState, mapMutations, mapGetters } from 'vuex';
 export default {
   name: 'ScActiveTimeEditor',
   data() {
-    // TODO: translate
     return {
       defaultTime: new Date(0, 0, 0),
     };
@@ -87,8 +86,7 @@ export default {
         let time = null;
         const index = vm.currentEditingScItemIndex;
         if (index !== null && index > -1) {
-          // FIXME: replace `vm.sc[vm.currentEditingScItemIndex]` with `vm.currentEditingScItem`
-          time = vm.sc[vm.currentEditingScItemIndex].activeDurationTime;
+          time = vm.currentEditingScItem.activeDurationTime;
         }
         if (time) {
           return time || new Date(0, 0, 0);
@@ -110,8 +108,7 @@ export default {
         let mode = null;
         const index = vm.currentEditingScItemIndex;
         if (index !== null && index > -1) {
-          // FIXME: replace `vm.sc[vm.currentEditingScItemIndex]` with `vm.currentEditingScItem`
-          mode = vm.sc[vm.currentEditingScItemIndex].scHistoryMode;
+          mode = vm.currentEditingScItem.scHistoryMode;
         }
         if (mode) {
           return mode || true;
@@ -133,8 +130,7 @@ export default {
         let mode = null;
         const index = vm.currentEditingScItemIndex;
         if (index !== null && index > -1) {
-          // FIXME: replace `vm.sc[vm.currentEditingScItemIndex]` with `vm.currentEditingScItem`
-          mode = vm.sc[vm.currentEditingScItemIndex].isShowingResult;
+          mode = vm.currentEditingScItem.isShowingResult;
         }
         if (mode) {
           return mode || true;
