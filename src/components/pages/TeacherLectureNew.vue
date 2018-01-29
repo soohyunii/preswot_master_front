@@ -59,6 +59,7 @@
         <div id="app_lecture_editor" v-show="!isScEmpty">
           <el-row :gutter="30">
             <el-col :span="24">
+              <h1>아이템 편집</h1>
               <sc-common-editor />
               <sc-material-editor />
               <sc-active-time-editor />
