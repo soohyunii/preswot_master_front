@@ -15,20 +15,22 @@ export default function generateRule(vm) {
       },
       {
         async validator(rule, value, callback) {
-          // TODO: try catch
-          const res = await authService.checkEmailDuplicated({
-            email: value,
-          });
-          if (res.duplicated) {
-            const errMsg = vm.$t('REG.ERR_DUPLICATED_EMAIL');
-            callback(new Error(errMsg));
-          } else {
-            callback();
+          try {
+            const res = await authService.checkEmailDuplicated({
+              email: value,
+            });
+            if (res.duplicated) {
+              const errMsg = vm.$t('REG.ERR_DUPLICATED_EMAIL');
+              callback(new Error(errMsg));
+            } else {
+              callback();
+            }
+          } catch (error) {
+            throw new Error('E-mail duplicated check error');
           }
         },
         trigger: 'blur', // change 추가하면 서버에 너무 많이 요청하게 됨
       },
-
     ],
     password: [
       {
@@ -116,7 +118,7 @@ export default function generateRule(vm) {
         trigger: 'change,blur',
       },
     ],
-    phone: [
+    phoneNumber: [
       {
         required: true,
         message: vm.$t('FORM.ERR_REQUIRED'),
@@ -126,7 +128,7 @@ export default function generateRule(vm) {
         validator(rule, value, callback) {
           const pattern = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
           if (!pattern.test(value)) {
-            const errMsg = vm.$t('FORM.ERR_TYPE_PHONE');
+            const errMsg = vm.$t('FORM.ERR_TYPE_PHONE_NUMBER');
             callback(new Error(errMsg));
           } else {
             callback();
