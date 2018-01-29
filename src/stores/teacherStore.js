@@ -57,6 +57,7 @@ export default {
       const isShowingResult = true;
       const description = '';
       const fileList = [];
+      const surveyList = [];
       const scItem = {
         type,
         key,
@@ -66,6 +67,7 @@ export default {
         isShowingResult,
         description,
         fileList,
+        surveyList,
       };
       // state.currentEditingScItem = scItem;
       state.currentEditingScItemIndex = state.sc.length;
@@ -117,6 +119,18 @@ export default {
     },
     updateLiveStartTime(state, { liveStartTime }) {
       state.liveStartTime = liveStartTime;
+    },
+    updateSurveyList(state, { type }) {
+      const surveyItem = [];
+      const description = '';
+      const choices = [''];
+
+      if (type === 'objectiveItem') {
+        surveyItem.push({ description, choices });
+      } else {
+        surveyItem.push('');
+      }
+      state.sc[state.currentEditingScItemIndex].surveyList.push({ type, surveyItem });
     },
   },
 };
