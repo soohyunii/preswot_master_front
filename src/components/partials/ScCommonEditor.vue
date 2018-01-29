@@ -50,6 +50,7 @@ export default {
       set(scItemTitle) {
         const vm = this;
         // TODO: refactor! (not to update ectureElementIndex)
+        console.log('scItemTitle', scItemTitle);
         vm.updateCurrentEditingScItem({
           lectureElementIndex: vm.currentEditingScItemIndex,
           currentEditingScItem: {
@@ -70,6 +71,7 @@ export default {
       set(scItemDescription) {
         const vm = this;
         // TODO: refactor! (not to update lectureELementIndex)
+        console.log('scItemDescription', scItemDescription);
         vm.updateCurrentEditingScItem({
           lectureElementIndex: vm.currentEditingScItemIndex,
           currentEditingScItem: {
