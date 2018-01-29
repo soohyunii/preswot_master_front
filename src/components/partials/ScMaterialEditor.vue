@@ -1,67 +1,48 @@
 <template>
   <div>
-    <h1>Sc Material Editor Template</h1>
-    <h2>내용</h2>
     <el-row>
-      <el-col :span="6">
-        파일 업로드
-      </el-col>
-      <el-col :span="18">
-        <upload :type="{ from: 'ScMaterialEditor', currentEditingScItemIndex }"/>
+      <el-col style="max-width: 600px;">
+        <el-form ref="elForm" label-width="120px">
+          <el-form-item label="파일 업로드">
+            <upload :type="{ from: 'ScMaterialEditor', currentEditingScItemIndex }"/>
+          </el-form-item>
+        </el-form>
       </el-col>
     </el-row>
-
-    <el-row>
-      <el-col :span="6">
-        설명
-      </el-col>
-      <el-col :span="18">
-
-      </el-col>
-    </el-row>
-    <!-- TODO: delete debug -->
-    <h1>debug</h1>
-    lecture scenario:
-    <pre style="font-size: 70%;">{{ sc }}</pre> <br />
-    description: {{ description }} <br />
-    currentEditingScItem: {{ currentEditingScItem }}
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations, mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import Upload from './Upload';
 
-/**
- * @description 강의자료 에디터
- */
 export default {
   name: 'ScMaterialEditor',
   methods: {
-    ...mapMutations('teacher', ['updateCurrentEditingScItem']),
+    // ...mapMutations('teacher', ['updateCurrentEditingScItem']),
   },
   computed: {
-    ...mapGetters('teacher', ['currentEditingScItem']),
-    ...mapState('teacher', ['sc', 'currentEditingScItemIndex']), // TODO: delete 'sc' from list
-    description: {
-      get() {
-        const vm = this;
-        if (!!vm.currentEditingScItem) { // eslint-disable-line no-extra-boolean-cast
-          return vm.currentEditingScItem.description || '';
-        }
-        return '';
-      },
-      set(description) {
-        const vm = this;
-        vm.updateCurrentEditingScItem({
-          currentEditingScItem: {
-            ...vm.currentEditingScItem,
-            description,
-          },
-          lectureElementIndex: vm.currentEditingScItemIndex,
-        });
-      },
-    },
+    // FIXME: 굳이 upload의 prop으로 넘겨줄 이유가 있을까? Upload에서도 이렇게 받아오면 되는데
+    ...mapState('teacher', ['currentEditingScItemIndex']),
+    // description: {
+    //   get() {
+    //     const vm = this;
+    //     if (!!vm.currentEditingScItem) { // eslint-disable-line no-extra-boolean-cast
+    //       return vm.currentEditingScItem.description || '';
+    //     }
+    //     return '';
+    //   },
+    //   set(description) {
+    //     const vm = this;
+    //     vm.updateCurrentEditingScItem({
+    //       currentEditingScItem: {
+    //         ...vm.currentEditingScItem,
+    //         description,
+    //       },
+    //       lectureElementIndex: vm.currentEditingScItemIndex,
+    //     });
+    //   },
+    // },
   },
   components: {
     Upload,

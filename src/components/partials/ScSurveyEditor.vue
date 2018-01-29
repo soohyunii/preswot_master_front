@@ -45,6 +45,7 @@
                 <el-button type="primary" @click="onClick('addChoice', index, itemIndex)">선지 추가</el-button>
               </el-col>
             </el-row>
+            <br :key="key" />
           </template>
           <el-row>
             <el-col :span="18" :offset="6">
@@ -53,6 +54,7 @@
           </el-row>
         </div>
     </template>
+    <br />
     <el-row>
       <el-col :span="6">
         <!-- TODO: translate -->

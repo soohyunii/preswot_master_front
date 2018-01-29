@@ -9,7 +9,10 @@ export default {
    */
   state: {
     scTitle: null,
+    scType: null,
+    scStartDatetime: null,
     scDescription: null,
+    scKnowledgeMap: null,
     sc: [], // TODO: fetch(init) from server if exists
     // TODO: Otherwise, init from localStorage (in case of server has no data)
     // currentEditingScItem: null, // TODO: init from localStorage
@@ -20,8 +23,6 @@ export default {
     currentEditingClass: null,
     currentLectureTimeMillisec: null,
     liveStartTime: null,
-    scHistoryMode: true,
-    isShowingResult: true,
   },
   getters: {
     isScEmpty(state) {
@@ -32,6 +33,17 @@ export default {
     },
     currentTeachingScItem(state) {
       return state.sc[state.currentTeachingScItemIndex];
+    },
+    DEBUGscenarioServerWillReceive(state) { // TODO: delete
+      const res = {};
+      res.title = state.scTitle;
+      res.type = state.scType;
+      res.startDatetime = state.scStartDatetime;
+      res.description = state.scDescription;
+      res.knowledgeMap = state.scKnowledgeMap;
+
+      res.sc = state.sc;
+      return res;
     },
     // 이걸 여기다 추가하니까, state.liveStartTime이 바뀌어야만 vuex getters가 갱신이 일어남.
     // 그냥 component에서 method로 불러야할듯!!
@@ -46,47 +58,55 @@ export default {
     updateScTitle(state, { scTitle }) {
       state.scTitle = scTitle;
     },
+    updateScType(state, { scType }) {
+      state.scType = scType;
+    },
+    updateScStartDatetime(state, { scStartDatetime }) {
+      state.scStartDatetime = scStartDatetime;
+    },
     updateScDescription(state, { scDescription }) {
       state.scDescription = scDescription;
     },
     pushScItem(state, { type }) {
       const key = Guid.create().toString();
-      const activeTime = new Date(0, 0, 0);
-      const activeDurationTime = new Date(0, 0, 0);
-      const scHistoryMode = true;
-      const isShowingResult = true;
-      const description = '';
+      const activeStartDatetime = null;
+      const activeEndDatetime = null;
+      const isResultVisible = true;
+      const title = null;
+      const description = null;
+      const order = null;
       const fileList = [];
       const surveyList = [];
       const scItem = {
-        type,
         key,
-        activeTime,
-        activeDurationTime,
-        scHistoryMode,
-        isShowingResult,
+        title,
+        type,
+        order,
+        activeStartDatetime,
+        activeEndDatetime,
+        isResultVisible,
         description,
         fileList,
         surveyList,
       };
-      // state.currentEditingScItem = scItem;
       state.currentEditingScItemIndex = state.sc.length;
       state.sc.push(scItem);
       // TODO: save lectureElementSequence using localForage
     },
-    updateCurrentEditingScItem(state, { currentEditingScItem, lectureElementIndex }) {
-      // state.currentEditingScItem = currentEditingScItem;
-      state.currentEditingScItemIndex = lectureElementIndex;
-      if (lectureElementIndex !== -1) {
-        Object.assign(
-          state.sc[state.currentEditingScItemIndex],
-          currentEditingScItem,
-        );
-      }
+    updateCurrentEditingScItem(state, { currentEditingScItem }) {
+      // console.log('currentEditingScItem', currentEditingScItem);
+      Object.assign(
+        state.sc[state.currentEditingScItemIndex],
+        currentEditingScItem,
+      );
+    },
+    updateCurrentEditingScItemIndex(state, { currentEditingScItemIndex }) {
+      state.currentEditingScItemIndex = currentEditingScItemIndex;
     },
     updateCurrentTeachingScItemIndex(state, { index }) {
       state.currentTeachingScItemIndex = index;
     },
+    // FIXME: rename `lectureELementIndex` with `currentEditingScItemIndex`
     deleteScItem(state, { lectureElementIndex }) {
       const isCurrentEditingItem = state.currentEditingScItemIndex === lectureElementIndex;
       const isLastItem = lectureElementIndex === state.sc.length - 1;
@@ -107,12 +127,6 @@ export default {
     },
     updateTeachingClassList(state, { classList }) {
       state.teachingClassList = classList;
-    },
-    updateHistoryMode(state, { mode }) {
-      state.scHistoryMode = mode;
-    },
-    updateIsShowingResult(state, { mode }) {
-      state.isShowingResult = mode;
     },
     updateCurrentLectureTimeMillisec(state, { currentLectureTimeMillisec }) {
       state.currentLectureTimeMillisec = currentLectureTimeMillisec;
