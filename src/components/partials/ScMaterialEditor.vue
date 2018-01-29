@@ -19,49 +19,39 @@
 
       </el-col>
     </el-row>
-    <!-- TODO: delete debug -->
-    <h1>debug</h1>
-    lecture scenario:
-    <pre style="font-size: 70%;">{{ sc }}</pre> <br />
-    description: {{ description }} <br />
-    currentEditingScItem: {{ currentEditingScItem }}
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations, mapGetters } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import Upload from './Upload';
 
-/**
- * @description 강의자료 에디터
- */
 export default {
   name: 'ScMaterialEditor',
   methods: {
     ...mapMutations('teacher', ['updateCurrentEditingScItem']),
   },
   computed: {
-    ...mapGetters('teacher', ['currentEditingScItem']),
-    ...mapState('teacher', ['sc', 'currentEditingScItemIndex']), // TODO: delete 'sc' from list
-    description: {
-      get() {
-        const vm = this;
-        if (!!vm.currentEditingScItem) { // eslint-disable-line no-extra-boolean-cast
-          return vm.currentEditingScItem.description || '';
-        }
-        return '';
-      },
-      set(description) {
-        const vm = this;
-        vm.updateCurrentEditingScItem({
-          currentEditingScItem: {
-            ...vm.currentEditingScItem,
-            description,
-          },
-          lectureElementIndex: vm.currentEditingScItemIndex,
-        });
-      },
-    },
+    ...mapState('teacher', ['currentEditingScItemIndex']),
+    // description: {
+    //   get() {
+    //     const vm = this;
+    //     if (!!vm.currentEditingScItem) { // eslint-disable-line no-extra-boolean-cast
+    //       return vm.currentEditingScItem.description || '';
+    //     }
+    //     return '';
+    //   },
+    //   set(description) {
+    //     const vm = this;
+    //     vm.updateCurrentEditingScItem({
+    //       currentEditingScItem: {
+    //         ...vm.currentEditingScItem,
+    //         description,
+    //       },
+    //       lectureElementIndex: vm.currentEditingScItemIndex,
+    //     });
+    //   },
+    // },
   },
   components: {
     Upload,
