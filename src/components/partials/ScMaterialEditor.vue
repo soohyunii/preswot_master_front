@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
 import Upload from './Upload';
 
 export default {
@@ -23,6 +23,7 @@ export default {
     // ...mapMutations('teacher', ['updateCurrentEditingScItem']),
   },
   computed: {
+    // FIXME: 굳이 upload의 prop으로 넘겨줄 이유가 있을까? Upload에서도 이렇게 받아오면 되는데
     ...mapState('teacher', ['currentEditingScItemIndex']),
     // description: {
     //   get() {
