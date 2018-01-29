@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- TODO: translation -->
-    <h2>활성화 시간 입력</h2>
+    <h2>* 활성화 편집</h2>
     <el-row>
       <el-col style="max-width: 600px;">
         <el-form :model="input" ref="elForm" label-width="120px">
@@ -24,31 +24,14 @@
             >
             </el-date-picker>
           </el-form-item>
+
+          <el-form-item label="선지별 선택 비율">
+            <el-radio-group v-model="scItemIsResultVisible">
+              <el-radio-button label="true">보이기</el-radio-button>
+              <el-radio-button label="false">숨기기</el-radio-button>
+            </el-radio-group>
+          </el-form-item>
         </el-form>
-      </el-col>
-    </el-row>
-
-    <br />
-
-    <el-row>
-      <el-col :span="6">
-        History 기능 :
-      </el-col>
-      <el-col :span="6">
-        <el-radio-group v-model="historyMode">
-          <el-radio-button label="true">켜기</el-radio-button>
-          <el-radio-button label="false">끄기</el-radio-button>
-        </el-radio-group>
-      </el-col>
-
-      <el-col :span="6">
-        선지별 선택비율 보이기 :
-      </el-col>
-      <el-col :span="6">
-        <el-radio-group v-model="showingResultMode">
-          <el-radio-button label="true">켜기</el-radio-button>
-          <el-radio-button label="false">끄기</el-radio-button>
-        </el-radio-group>
       </el-col>
     </el-row>
   </div>
@@ -104,40 +87,20 @@ export default {
       res.scItemActiveEndtDatetime = vm.scItemActiveEndtDatetime;
       return res;
     },
-    historyMode: {
+    scItemIsResultVisible: {
       get() {
         const vm = this;
-        let mode = null;
-        const index = vm.currentEditingScItemIndex;
-        if (index !== null && index > -1) {
-          mode = vm.currentEditingScItem.scHistoryMode;
+        const item = vm.currentEditingScItem;
+        if (!item) {
+          return true;
         }
-        return mode || true;
+        return item.isResultVisible;
       },
-      set(scHistoryMode) {
+      set(scItemIsResultVisible) {
         const vm = this;
         vm.updateCurrentEditingScItem({
           currentEditingScItem: {
-            scHistoryMode,
-          },
-        });
-      },
-    },
-    showingResultMode: {
-      get() {
-        const vm = this;
-        let mode = null;
-        const index = vm.currentEditingScItemIndex;
-        if (index !== null && index > -1) {
-          mode = vm.currentEditingScItem.isShowingResult;
-        }
-        return mode || true;
-      },
-      set(isShowingResult) {
-        const vm = this;
-        vm.updateCurrentEditingScItem({
-          currentEditingScItem: {
-            isShowingResult,
+            isResultVisible: scItemIsResultVisible,
           },
         });
       },

@@ -71,7 +71,7 @@ export default {
       const key = Guid.create().toString();
       const activeStartDatetime = null;
       const activeEndDatetime = null;
-      const isShowingResult = true;
+      const isResultVisible = true;
       const title = null;
       const description = null;
       const order = null;
@@ -84,7 +84,7 @@ export default {
         order,
         activeStartDatetime,
         activeEndDatetime,
-        isShowingResult,
+        isResultVisible,
         description,
         fileList,
       };
