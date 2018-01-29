@@ -66,8 +66,8 @@ export default {
     },
     pushScItem(state, { type }) {
       const key = Guid.create().toString();
-      const activeTime = new Date(0, 0, 0);
-      const activeDurationTime = new Date(0, 0, 0);
+      const activeStartTime = null;
+      const activeEndTime = null;
       const scHistoryMode = true;
       const isShowingResult = true;
       const title = null;
@@ -80,8 +80,8 @@ export default {
         title,
         type,
         order,
-        activeTime,
-        activeDurationTime,
+        activeStartTime,
+        activeEndTime,
         scHistoryMode,
         isShowingResult,
         description,

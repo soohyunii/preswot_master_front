@@ -12,20 +12,35 @@
               <el-radio-button label="복습"></el-radio-button>
             </el-radio-group>
           </el-form-item>
+
+          <el-form-item label="활성화 시각">
+            <el-date-picker
+              v-model="activeTimeTest"
+              type="datetimerange"
+              range-separator="To"
+              start-placeholder="시작"
+              end-placeholder="종료"
+            >
+            </el-date-picker>
+
+            {{ activeTimeTest }}
+          </el-form-item>
         </el-form>
       </el-col>
+    </el-row>
+    <el-row>
       <el-col :span="6">
         활성화 되는 시각
       </el-col>
       <el-col :span="6">
-        <el-time-picker v-model="activeTime" :default-value="defaultTime" :clearable="false" placeholder="00:00:00" />
+        <el-time-picker v-model="activeStartTime" :default-value="defaultTime" :clearable="false" placeholder="00:00:00" />
       </el-col>
 
       <el-col :span="6">
         활성화 지속 시간
       </el-col>
       <el-col :span="6">
-        <el-time-picker v-model="activeDurationTime" :default-value="defaultTime" :clearable="false" format="mm분 ss초" placeholder="0분 0초" />
+        <el-time-picker v-model="activeEndTime" :default-value="defaultTime" :clearable="false" format="mm분 ss초" placeholder="0분 0초" />
       </el-col>
     </el-row>
     <br />
@@ -60,8 +75,9 @@ export default {
   name: 'ScActiveTimeEditor',
   data() {
     return {
-      defaultTime: new Date(0, 0, 0),
+      defaultTime: new Date(),
       scItemOrder: '본강의', // TODO: delete
+      activeTimeTest: null, // TODO: delete
     };
   },
   methods: {
@@ -78,40 +94,38 @@ export default {
       res.scItemActiveEndtDatetime = vm.scItemActiveEndtDatetime;
       return res;
     },
-    activeTime: {
+    activeStartTime: {
       get() {
         const vm = this;
-        let time = null;
-        const index = vm.currentEditingScItemIndex;
-        if (index !== null && index > -1) {
-          time = vm.sc[vm.currentEditingScItemIndex].activeTime;
+        const item = vm.currentEditingScItem;
+        if (!item) {
+          return new Date();
         }
-        return time || new Date(0, 0, 0);
+        return item.activeTimeStart;
       },
-      set(activeTime) {
+      set(activeStartTime) {
         const vm = this;
         vm.updateCurrentEditingScItem({
           currentEditingScItem: {
-            activeTime,
+            activeStartTime,
           },
         });
       },
     },
-    activeDurationTime: {
+    activeEndTime: {
       get() {
         const vm = this;
-        let time = null;
-        const index = vm.currentEditingScItemIndex;
-        if (index !== null && index > -1) {
-          time = vm.currentEditingScItem.activeDurationTime;
+        const item = vm.currentEditingScItem;
+        if (!item) {
+          return new Date();
         }
-        return time || new Date(0, 0, 0);
+        return item.activeEndTime;
       },
-      set(activeDurationTime) {
+      set(activeEndTime) {
         const vm = this;
         vm.updateCurrentEditingScItem({
           currentEditingScItem: {
-            activeDurationTime,
+            activeEndTime,
           },
         });
       },
