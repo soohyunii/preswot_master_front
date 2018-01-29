@@ -10,15 +10,6 @@
         <upload :type="{ from: 'ScMaterialEditor', currentEditingScItemIndex }"/>
       </el-col>
     </el-row>
-
-    <el-row>
-      <el-col :span="6">
-        설명
-      </el-col>
-      <el-col :span="18">
-
-      </el-col>
-    </el-row>
   </div>
 </template>
 
