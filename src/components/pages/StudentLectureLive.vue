@@ -40,7 +40,7 @@
                 </el-row>
                 <el-row>
                     <div id="statusbar" v-if="!isCloseStatusbar">
-                        <student-realtime-summary :SummaryData="SummaryData" />
+                        <student-lecture-live-summary :SummaryData="SummaryData" />
                         <el-col :span="5" style="text-align:right;">
                             <i class="el-icon-close" @click="onClick('CLOSE_STATUSBAR')" />
                         </el-col>
@@ -52,12 +52,12 @@
 </template>
 
 <script>
-import StudentRealtimeSummary from '../partials/StudentRealtimeSummary';
+import StudentLectureLiveSummary from '../partials/StudentLectureLiveSummary';
 
 export default {
-  name: 'StudentRealtime',
+  name: 'StudentLectureLive',
   components: {
-    StudentRealtimeSummary,
+    StudentLectureLiveSummary,
   },
   data() {
     return {

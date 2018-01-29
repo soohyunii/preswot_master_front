@@ -86,10 +86,14 @@ export default {
       state.currentTeachingScItemIndex = index;
     },
     deleteScItem(state, { lectureElementIndex }) {
-      state.sc.splice(lectureElementIndex, 1);
-      if (lectureElementIndex < state.currentEditingScItemIndex) {
+      const isCurrentEditingItem = state.currentEditingScItemIndex === lectureElementIndex;
+      const isLastItem = lectureElementIndex === state.sc.length - 1;
+      const isBeforeCurrentEditingItem = lectureElementIndex < state.currentEditingScItemIndex;
+
+      if ((isCurrentEditingItem && isLastItem) || isBeforeCurrentEditingItem) {
         state.currentEditingScItemIndex -= 1;
       }
+      state.sc.splice(lectureElementIndex, 1);
       // TODO: update localForage
     },
     // TODO: editLectureElement

@@ -7,21 +7,7 @@
         파일 업로드
       </el-col>
       <el-col :span="18">
-        <!-- TODO: action path -->
-        <el-upload
-          action="#"
-          :auto-upload="false"
-          :on-change="handleChange"
-          :on-remove="handleRemove"
-          :file-list="fileList"
-          multiple
-          :limit="5"
-          :on-exceed="handleExceed"
-          :before-remove="beforeRemove"
-          ref="upload">
-          <el-button slot="trigger" size="small" type="primary">파일추가 [+]</el-button>
-          <el-button size="small" type="success" @click="submitUpload">upload Test</el-button>
-        </el-upload>
+        <upload :type="{ from: 'ScMaterialEditor', currentEditingScItemIndex }"/>
       </el-col>
     </el-row>
 
@@ -44,6 +30,7 @@
 
 <script>
 import { mapState, mapMutations, mapGetters } from 'vuex';
+import Upload from './Upload';
 
 /**
  * @description 강의자료 에디터
@@ -52,30 +39,6 @@ export default {
   name: 'ScMaterialEditor',
   methods: {
     ...mapMutations('teacher', ['updateCurrentEditingScItem']),
-    submitUpload() {
-      this.$refs.upload.submit();
-      window.console.log('upload Test');
-    },
-    handleExceed(files, fileList) {
-      // TODO: translate
-      this.$message.warning(
-        `최대 3개의 파일을 업로드 할 수 있습니다.
-        ${files.length}개의 파일을 선택하셨습니다.
-        업로드 하려는 파일의 총 개수 : ${files.length + fileList.length}`,
-      );
-    },
-    beforeRemove(file) {
-      // TODO: translate
-      return this.$confirm(`${file.name} 파일을 삭제하시겠습니까？`);
-    },
-    handleRemove(file, fileList) {
-      const vm = this;
-      vm.fileList = fileList;
-    },
-    handleChange(files, fileList) {
-      const vm = this;
-      vm.fileList = fileList;
-    },
   },
   computed: {
     ...mapGetters('teacher', ['currentEditingScItem']),
@@ -99,25 +62,9 @@ export default {
         });
       },
     },
-    fileList: {
-      get() {
-        const vm = this;
-        if (!!vm.currentEditingScItem) { // eslint-disable-line no-extra-boolean-cast
-          return vm.currentEditingScItem.fileList || [];
-        }
-        return [];
-      },
-      set(fileList) {
-        const vm = this;
-        vm.updateCurrentEditingScItem({
-          currentEditingScItem: {
-            ...vm.currentEditingScItem,
-            fileList,
-          },
-          lectureElementIndex: vm.currentEditingScItemIndex,
-        });
-      },
-    },
+  },
+  components: {
+    Upload,
   },
 };
 </script>
