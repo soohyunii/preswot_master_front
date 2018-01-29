@@ -101,6 +101,7 @@ export default {
     updateCurrentTeachingScItemIndex(state, { index }) {
       state.currentTeachingScItemIndex = index;
     },
+    // FIXME: rename `lectureELementIndex` with `currentEditingScItemIndex`
     deleteScItem(state, { lectureElementIndex }) {
       const isCurrentEditingItem = state.currentEditingScItemIndex === lectureElementIndex;
       const isLastItem = lectureElementIndex === state.sc.length - 1;
