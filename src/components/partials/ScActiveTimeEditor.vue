@@ -66,10 +66,7 @@ export default {
         if (index !== null && index > -1) {
           time = vm.sc[vm.currentEditingScItemIndex].activeTime;
         }
-        if (time) {
-          return time || new Date(0, 0, 0);
-        }
-        return new Date(0, 0, 0);
+        return time || new Date(0, 0, 0);
       },
       set(activeTime) {
         const vm = this;
@@ -88,10 +85,7 @@ export default {
         if (index !== null && index > -1) {
           time = vm.currentEditingScItem.activeDurationTime;
         }
-        if (time) {
-          return time || new Date(0, 0, 0);
-        }
-        return new Date(0, 0, 0);
+        return time || new Date(0, 0, 0);
       },
       set(activeDurationTime) {
         const vm = this;
@@ -110,10 +104,7 @@ export default {
         if (index !== null && index > -1) {
           mode = vm.currentEditingScItem.scHistoryMode;
         }
-        if (mode) {
-          return mode || true;
-        }
-        return true;
+        return mode || true;
       },
       set(scHistoryMode) {
         const vm = this;
@@ -132,10 +123,7 @@ export default {
         if (index !== null && index > -1) {
           mode = vm.currentEditingScItem.isShowingResult;
         }
-        if (mode) {
-          return mode || true;
-        }
-        return true;
+        return mode || true;
       },
       set(isShowingResult) {
         const vm = this;
