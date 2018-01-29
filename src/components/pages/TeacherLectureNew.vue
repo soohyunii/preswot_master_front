@@ -1,11 +1,28 @@
 <template>
   <div>
     <el-container>
-      <teaching-class-list />
+      <el-aside width="150px">
+        <teaching-class-list />
+      </el-aside>
 
       <!-- 이 메인은 맞음 시작 -->
       <el-main>
         <el-row :gutter="5">
+          <el-col :span="3">
+            <!-- TODO: translate -->
+            <el-dropdown @command="onClickLectureType">
+              <el-button type="primary" size="medium">
+                분류 : {{ lectureType }}<i class="el-icon-arrow-down el-icon--right"></i>
+              </el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="강의">강의</el-dropdown-item>
+                <el-dropdown-item command="숙제">숙제</el-dropdown-item>
+                <el-dropdown-item command="퀴즈">퀴즈</el-dropdown-item>
+                <el-dropdown-item command="시험">시험</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </el-col>
+
           <template v-if="inputFlag">
             <el-col :span="6">
               <el-input v-model="lectureName"></el-input>
@@ -18,31 +35,25 @@
 
           <template v-else>
             <el-col :span="8">
-              <h3>
+              <h3 class="lecture-name">
                 {{ lectureName }}
                 <i class="el-icon-edit" @click="changeLectureName()"></i>
               </h3>
             </el-col>
           </template>
-
-          <el-col :span="4">
-            <!-- TODO: translate -->
-            <el-dropdown @command="onClickLectureType">
-              <el-button type="primary">
-                분류 : {{ lectureType }}<i class="el-icon-arrow-down el-icon--right"></i>
-              </el-button>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="강의">강의</el-dropdown-item>
-                <el-dropdown-item command="숙제">숙제</el-dropdown-item>
-                <el-dropdown-item command="퀴즈">퀴즈</el-dropdown-item>
-                <el-dropdown-item command="시험">시험</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </el-col>
         </el-row>
         <br v-if="inputFlag"/>
         <hr><br />
 
+        <!-- 시나리오 저작 -->
+        <sc-editor />
+
+        <!-- 구분선 -->
+        <br />
+        <hr />
+        <br />
+
+        <!-- 시나리오 아이템 저작 -->
         <el-row :gutter="30">
           <el-col :span="16">
             <div>
@@ -59,7 +70,7 @@
         <div id="app_lecture_editor" v-show="!isScEmpty">
           <el-row :gutter="30">
             <el-col :span="24">
-              <!-- TODO: translation -->
+              <sc-common-editor />
               <sc-material-editor />
               <sc-active-time-editor />
 
@@ -79,22 +90,31 @@
   padding: 0px 20px 20px 20px;
   background-color: white;
 }
+
+.lecture-name {
+  margin: 8px 0;
+  // background-color: red;
+}
 </style>
 
 
 <script>
 import { mapGetters } from 'vuex';
 import Sc from '../partials/Sc';
+import ScEditor from '../partials/ScEditor';
 import ScItemAdder from '../partials/ScItemAdder';
 import ScMaterialEditor from '../partials/ScMaterialEditor';
 import ScActiveTimeEditor from '../partials/ScActiveTimeEditor';
+import ScCommonEditor from '../partials/ScCommonEditor';
 import TeachingClassList from '../partials/TeachingClassList';
 
 export default {
   name: 'TeacherNewLecture',
   components: {
     Sc,
+    ScEditor,
     ScItemAdder,
+    ScCommonEditor,
     ScMaterialEditor,
     ScActiveTimeEditor,
     TeachingClassList,

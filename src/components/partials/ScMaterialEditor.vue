@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Lecture Scenario Material Editor template</h1>
+    <h1>Sc Material Editor Template</h1>
     <h2>내용</h2>
     <el-row>
       <el-col :span="6">
@@ -16,19 +16,13 @@
         설명
       </el-col>
       <el-col :span="18">
-        <el-input
-          type="textarea"
-          :rows="3"
-          v-model="description"
-        >
-          <!-- v-model="description" -->
-        </el-input>
+
       </el-col>
     </el-row>
     <!-- TODO: delete debug -->
     <h1>debug</h1>
     lecture scenario:
-    <pre>{{ sc }}</pre> <br />
+    <pre style="font-size: 70%;">{{ sc }}</pre> <br />
     description: {{ description }} <br />
     currentEditingScItem: {{ currentEditingScItem }}
   </div>
