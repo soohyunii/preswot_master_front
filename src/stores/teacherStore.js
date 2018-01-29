@@ -90,8 +90,6 @@ export default {
       // TODO: save lectureElementSequence using localForage
     },
     updateCurrentEditingScItem(state, { currentEditingScItem, lectureElementIndex }) {
-      console.log('called', currentEditingScItem);
-      // state.currentEditingScItem = currentEditingScItem;
       state.currentEditingScItemIndex = lectureElementIndex;
       if (lectureElementIndex !== -1) {
         Object.assign(
