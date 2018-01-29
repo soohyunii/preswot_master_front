@@ -7,7 +7,7 @@
             <el-input v-model="scTitle"></el-input>
           </el-form-item>
 
-          <el-form-item label="강의 활성화 시각" prop="scStartDatetime">
+          <el-form-item label="활성화 시각" prop="scStartDatetime">
             <el-date-picker
               v-model="scStartDatetime"
               value-format="yyyy-MM-dd HH:mm:ss"
