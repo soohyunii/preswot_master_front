@@ -23,8 +23,6 @@ export default {
     currentEditingClass: null,
     currentLectureTimeMillisec: null,
     liveStartTime: null,
-    scHistoryMode: true,
-    isShowingResult: true,
   },
   getters: {
     isScEmpty(state) {
@@ -128,12 +126,6 @@ export default {
     },
     updateTeachingClassList(state, { classList }) {
       state.teachingClassList = classList;
-    },
-    updateHistoryMode(state, { mode }) {
-      state.scHistoryMode = mode;
-    },
-    updateIsShowingResult(state, { mode }) {
-      state.isShowingResult = mode;
     },
     updateCurrentLectureTimeMillisec(state, { currentLectureTimeMillisec }) {
       state.currentLectureTimeMillisec = currentLectureTimeMillisec;
