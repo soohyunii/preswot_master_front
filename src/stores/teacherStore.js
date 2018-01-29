@@ -9,7 +9,9 @@ export default {
    */
   state: {
     scTitle: null,
+    scType: null,
     scDescription: null,
+    scKnowledgeMap: null,
     sc: [], // TODO: fetch(init) from server if exists
     // TODO: Otherwise, init from localStorage (in case of server has no data)
     // currentEditingScItem: null, // TODO: init from localStorage
@@ -33,6 +35,14 @@ export default {
     currentTeachingScItem(state) {
       return state.sc[state.currentTeachingScItemIndex];
     },
+    DEBUGscenarioServerWillReceive(state) { // TODO: delete
+      const res = {};
+      res.title = state.scTitle;
+      res.type = state.scType;
+      res.description = state.scDescription;
+      res.knowledgeMap = state.scKnowledgeMap;
+      return res;
+    },
     // 이걸 여기다 추가하니까, state.liveStartTime이 바뀌어야만 vuex getters가 갱신이 일어남.
     // 그냥 component에서 method로 불러야할듯!!
     // elapsedTimeMillisec(state) {
@@ -45,6 +55,9 @@ export default {
   mutations: {
     updateScTitle(state, { scTitle }) {
       state.scTitle = scTitle;
+    },
+    updateScType(state, { scType }) {
+      state.scType = scType;
     },
     updateScDescription(state, { scDescription }) {
       state.scDescription = scDescription;

@@ -10,7 +10,7 @@
         <el-row :gutter="5">
           <el-col :span="3">
             <!-- TODO: translate -->
-            <el-dropdown @command="onClickLectureType">
+            <el-dropdown @command="onClickScType">
               <el-button type="primary" size="medium">
                 분류 : {{ lectureType }}<i class="el-icon-arrow-down el-icon--right"></i>
               </el-button>
@@ -77,6 +77,12 @@
             </el-col>
           </el-row>
         </div>
+
+        <div>
+          <h2>debug</h2>
+          server will get this:
+          <pre style="font-size: 70%;">{{ DEBUGscenarioServerWillReceive }}</pre>
+        </div>
       </el-main>
       <!-- 이 메인은 맞음 끝 -->
     </el-container>
@@ -99,7 +105,7 @@
 
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 import Sc from '../partials/Sc';
 import ScEditor from '../partials/ScEditor';
 import ScItemAdder from '../partials/ScItemAdder';
@@ -126,16 +132,28 @@ export default {
       lectureName: '4강 (배열)',
       inputFlag: false,
       currentClassName: '',
-      lectureType: '강의',
     };
   },
   computed: {
-    ...mapGetters('teacher', ['isScEmpty']),
+    ...mapGetters('teacher', ['isScEmpty', 'DEBUGscenarioServerWillReceive']),
+    scType: {
+      get() {
+        const vm = this;
+        return vm.$store.state.teacher.scType;
+      },
+      set(scType) {
+        const vm = this;
+        vm.updateScType({
+          scType,
+        });
+      },
+    },
   },
   methods: {
-    onClickLectureType(lectureType) {
+    ...mapMutations('teacher', ['updateScType']),
+    onClickScType(scType) {
       const vm = this;
-      vm.lectureType = lectureType;
+      vm.scType = scType;
     },
     changeLectureName() {
       const vm = this;
