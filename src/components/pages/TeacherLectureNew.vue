@@ -64,7 +64,7 @@
               <!-- TODO: translation -->
               <sc-material-editor />
               <sc-active-time-editor />
-
+              <sc-problem-editor />
             </el-col>
           </el-row>
         </div>
@@ -95,6 +95,7 @@ import Sc from '../partials/Sc';
 import ScItemAdder from '../partials/ScItemAdder';
 import ScMaterialEditor from '../partials/ScMaterialEditor';
 import ScActiveTimeEditor from '../partials/ScActiveTimeEditor';
+import ScProblemEditor from '../partials/ScProblemEditor';
 import TeachingClassList from '../partials/TeachingClassList';
 
 export default {
@@ -104,6 +105,7 @@ export default {
     ScItemAdder,
     ScMaterialEditor,
     ScActiveTimeEditor,
+    ScProblemEditor,
     TeachingClassList,
   },
   data() {
