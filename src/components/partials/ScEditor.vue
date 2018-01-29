@@ -8,8 +8,12 @@
           </el-form-item>
 
           <el-form-item label="타입" prop="scType">
-            <!-- TODO: replace el-input with radio button -->
-            <el-input v-model="scType"></el-input>
+            <el-radio-group v-model="scType">
+              <el-radio-button label="강의"></el-radio-button>
+              <el-radio-button label="숙제"></el-radio-button>
+              <el-radio-button label="퀴즈"></el-radio-button>
+              <el-radio-button label="시험"></el-radio-button>
+            </el-radio-group>
           </el-form-item>
 
           <el-form-item label="설명" prop="scDescription">

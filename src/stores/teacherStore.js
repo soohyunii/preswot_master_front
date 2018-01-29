@@ -41,6 +41,8 @@ export default {
       res.type = state.scType;
       res.description = state.scDescription;
       res.knowledgeMap = state.scKnowledgeMap;
+
+      res.sc = state.sc;
       return res;
     },
     // 이걸 여기다 추가하니까, state.liveStartTime이 바뀌어야만 vuex getters가 갱신이 일어남.
