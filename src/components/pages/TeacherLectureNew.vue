@@ -94,7 +94,7 @@
 
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapMutations, mapState } from 'vuex';
 import Sc from '../partials/Sc';
 import ScEditor from '../partials/ScEditor';
 import ScItemAdder from '../partials/ScItemAdder';
@@ -130,31 +130,8 @@ export default {
     };
   },
   computed: {
+    ...mapState('teacher', ['scTitle', 'scType']),
     ...mapGetters('teacher', ['isScEmpty', 'DEBUGscenarioServerWillReceive']),
-    scType: {
-      get() {
-        const vm = this;
-        return vm.$store.state.teacher.scType;
-      },
-      set(scType) {
-        const vm = this;
-        vm.updateScType({
-          scType,
-        });
-      },
-    },
-    scTitle: {
-      get() {
-        const vm = this;
-        return vm.$store.state.teacher.scTitle;
-      },
-      set(scTitle) {
-        const vm = this;
-        vm.updateScTitle({
-          scTitle,
-        });
-      },
-    },
   },
   methods: {
     ...mapMutations('teacher', ['updateScType', 'updateScTitle']),
