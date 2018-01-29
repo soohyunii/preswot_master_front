@@ -24,20 +24,22 @@ export default {
     };
   },
   methods: {
-    ...mapMutations('teacher', ['deleteScItem', 'updateCurrentEditingScItem']),
+    ...mapMutations('teacher', [
+      'deleteScItem',
+      'updateCurrentEditingScItem',
+      'updateCurrentEditingScItemIndex',
+    ]),
     onClick(type, index) {
       const vm = this;
       switch (type) {
         case 'SELECT_SC_ITEM': {
           if (vm.sc.length > index) {
-            vm.updateCurrentEditingScItem({
-              currentEditingScItem: vm.sc[index],
-              lectureElementIndex: index,
+            vm.updateCurrentEditingScItemIndex({
+              currentEditingScItemIndex: index,
             });
           } else {
-            vm.updateCurrentEditingScItem({
-              currentEditingScItem: { type: '', key: '' },
-              lectureElementIndex: -1,
+            vm.updateCurrentEditingScItemIndex({
+              currentEditingScItemIndex: -1,
             });
           }
           break;
