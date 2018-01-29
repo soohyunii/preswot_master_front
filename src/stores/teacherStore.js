@@ -73,6 +73,7 @@ export default {
       const title = '';
       const description = '';
       const fileList = [];
+
       const scItem = {
         title,
         type,
@@ -84,7 +85,6 @@ export default {
         description,
         fileList,
       };
-      // state.currentEditingScItem = scItem;
       state.currentEditingScItemIndex = state.sc.length;
       state.sc.push(scItem);
       // TODO: save lectureElementSequence using localForage
