@@ -104,20 +104,6 @@ export default {
       res.scItemActiveEndtDatetime = vm.scItemActiveEndtDatetime;
       return res;
     },
-    // scActiveStartTime() {
-    //   const vm = this;
-    //   if (!vm.activeDatetimeInterval) {
-    //     return null;
-    //   }
-    //   return vm.activeDatetimeInterval[0];
-    // },
-    // scActiveEndTime() {
-    //   const vm = this;
-    //   if (!vm.activeDatetimeInterval) {
-    //     return null;
-    //   }
-    //   return vm.activeDatetimeInterval[1];
-    // },
     historyMode: {
       get() {
         const vm = this;
