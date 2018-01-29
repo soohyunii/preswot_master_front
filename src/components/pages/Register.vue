@@ -97,6 +97,7 @@
 
 <script>
 import generateRules from '../../validations/registerValidation';
+import authService from '../../services/authService';
 // id(string), password(string), name(string),
 // birth(1991-07-16 형식string), address(string), phone(string), major(string), belong(string소속)
 export default {
@@ -177,20 +178,22 @@ export default {
     },
     submitForm(formName) {
       const vm = this;
-      vm.$refs[formName].validate((valid) => {
-        if (valid) {
-          try {
-            vm.$http.post('/users', {
-              ...vm.input, address: vm.address,
-            });
-            vm.$router.push({ // LandingPage로 redirect
-              name: 'LandingPage',
-            });
-          } catch (e) {
-            throw new Error('request error');
-          }
-        } else {
+      vm.$refs[formName].validate(async (valid) => {
+        if (!valid) {
           console.log('error submit!!'); // eslint-disable-line
+          return;
+        }
+        try {
+          await authService.register({
+            input: {
+              ...vm.input, address: vm.address,
+            },
+          });
+          vm.$router.push({ // LandingPage로 redirect
+            name: 'LandingPage',
+          });
+        } catch (e) {
+          throw new Error('request error');
         }
       });
     },

@@ -30,8 +30,6 @@ export default {
   actions: {
     async reqLogin({ commit }, { email, password }) {
       const res = await authService.login({ email, password });
-      window.console.log(res);
-
       if (res.data.success) {
         commit('updateJwt', {
           jwt: res.data.token,

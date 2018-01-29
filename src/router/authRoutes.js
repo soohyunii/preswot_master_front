@@ -2,8 +2,7 @@
 import Profile from '../components/pages/Profile';
 import TeacherHome from '../components/pages/TeacherHome';
 import TeacherLectureNew from '../components/pages/TeacherLectureNew';
-import TeacherLectureLive from '../components/pages/TeacherLectureLive';
-import StudentRealtime from '../components/pages/StudentRealtime';
+import StudentLectureLive from '../components/pages/StudentLectureLive';
 
 export default function authRoutes(root) {
   return [
@@ -44,20 +43,11 @@ export default function authRoutes(root) {
       },
     },
     {
-      path: '/teacher/lecture/live',
-      name: 'TeacherLectureLive',
-      component: TeacherLectureLive,
+      path: '/student/lecture/live',
+      name: 'StudentLectureLive',
+      component: StudentLectureLive,
       meta: {
-        title: 'Teacher New Live', // TODO: import from i18n
-        auth: true,
-      },
-    },
-    {
-      path: '/student/lecture/realtime',
-      name: 'StudentRealtime',
-      component: StudentRealtime,
-      meta: {
-        title: 'Student RealTime',
+        title: 'Student Lecture Live',
         auth: true,
       },
     },
