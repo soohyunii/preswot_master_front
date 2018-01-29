@@ -45,6 +45,15 @@
         <br v-if="inputFlag"/>
         <hr><br />
 
+        <!-- 시나리오 저작 -->
+        <sc-editor />
+
+        <!-- 구분선 -->
+        <br />
+        <hr />
+        <br />
+
+        <!-- 시나리오 아이템 저작 -->
         <el-row :gutter="30">
           <el-col :span="16">
             <div>
@@ -61,7 +70,7 @@
         <div id="app_lecture_editor" v-show="!isScEmpty">
           <el-row :gutter="30">
             <el-col :span="24">
-              <!-- TODO: translation -->
+              <sc-common-editor />
               <sc-material-editor />
               <sc-active-time-editor />
 
@@ -92,16 +101,20 @@
 <script>
 import { mapGetters } from 'vuex';
 import Sc from '../partials/Sc';
+import ScEditor from '../partials/ScEditor';
 import ScItemAdder from '../partials/ScItemAdder';
 import ScMaterialEditor from '../partials/ScMaterialEditor';
 import ScActiveTimeEditor from '../partials/ScActiveTimeEditor';
+import ScCommonEditor from '../partials/ScCommonEditor';
 import TeachingClassList from '../partials/TeachingClassList';
 
 export default {
   name: 'TeacherNewLecture',
   components: {
     Sc,
+    ScEditor,
     ScItemAdder,
+    ScCommonEditor,
     ScMaterialEditor,
     ScActiveTimeEditor,
     TeachingClassList,

@@ -8,6 +8,8 @@ export default {
    * @var currentTeachingScItemIndex: 강의 중에 현재 진행되고 있는 시나리오 아이템 인덱스
    */
   state: {
+    scTitle: null,
+    scDescription: null,
     sc: [], // TODO: fetch(init) from server if exists
     // TODO: Otherwise, init from localStorage (in case of server has no data)
     // currentEditingScItem: null, // TODO: init from localStorage
@@ -41,6 +43,12 @@ export default {
     // },
   },
   mutations: {
+    updateScTitle(state, { scTitle }) {
+      state.scTitle = scTitle;
+    },
+    updateScDescription(state, { scDescription }) {
+      state.scDescription = scDescription;
+    },
     pushScItem(state, { type }) {
       const key = Guid.create().toString();
       const activeTime = new Date(0, 0, 0);
