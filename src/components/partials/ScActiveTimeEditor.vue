@@ -46,7 +46,7 @@ export default {
     const vm = this;
     return {
       defaultTime: vm.scStartDatetime,
-      scItemOrder: '본강의', // TODO: delete
+      // scItemOrder: '본강의', // TODO: delete
       activeDatetimeInterval: null,
     };
   },
@@ -83,9 +83,26 @@ export default {
       const res = {};
       const vm = this;
       res.scItemOrder = vm.scItemOrder;
-      res.scItemActiveStartDatetime = vm.scItemActiveStartDatetime;
-      res.scItemActiveEndtDatetime = vm.scItemActiveEndtDatetime;
+      res.activeDatetimeInterval = vm.activeDatetimeInterval;
       return res;
+    },
+    scItemOrder: {
+      get() {
+        const vm = this;
+        const item = vm.currentEditingScItem;
+        if (!item) {
+          return '본강의';
+        }
+        return item.order;
+      },
+      set(scItemOrder) {
+        const vm = this;
+        vm.updateCurrentEditingScItem({
+          currentEditingScItem: {
+            order: scItemOrder,
+          },
+        });
+      },
     },
     scItemIsResultVisible: {
       get() {
