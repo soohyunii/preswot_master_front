@@ -11,8 +11,8 @@
           <el-col :span="3">
             <!-- TODO: translate -->
             <el-dropdown @command="onClickScType">
-              <el-button type="primary" size="medium">
-                분류 : {{ lectureType }}<i class="el-icon-arrow-down el-icon--right"></i>
+              <el-button type="primary" size="medium" disabled>
+                분류 : {{ scType }}<i class="el-icon-edit el-icon--right"></i>
               </el-button>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="강의">강의</el-dropdown-item>
@@ -23,24 +23,13 @@
             </el-dropdown>
           </el-col>
 
-          <template v-if="inputFlag">
-            <el-col :span="6">
-              <el-input v-model="lectureName"></el-input>
-            </el-col>
-            <!-- TODO: translate -->
-            <el-col :span="2">
-              <el-button @click="changeLectureName()">확인</el-button>
-            </el-col>
-          </template>
+          <el-col :span="8">
+            <h3 class="lecture-name">
+              {{ scTitle }}
+              <i class="el-icon-edit"></i>
+            </h3>
+          </el-col>
 
-          <template v-else>
-            <el-col :span="8">
-              <h3 class="lecture-name">
-                {{ lectureName }}
-                <i class="el-icon-edit" @click="changeLectureName()"></i>
-              </h3>
-            </el-col>
-          </template>
         </el-row>
         <br v-if="inputFlag"/>
         <hr><br />
@@ -125,11 +114,17 @@ export default {
     ScActiveTimeEditor,
     TeachingClassList,
   },
+  mounted() {
+    const vm = this;
+    vm.updateScType({
+      scType: '강의', // TODO: delete?? 뭔가 지정해줘야하긴 하는데,
+      // 이 플로우는 마음에 별로 안드는 상황
+    });
+  },
   data() {
     // TODO: translate
     return {
       teachingClassList: [],
-      lectureName: '4강 (배열)',
       inputFlag: false,
       currentClassName: '',
     };
@@ -148,16 +143,24 @@ export default {
         });
       },
     },
+    scTitle: {
+      get() {
+        const vm = this;
+        return vm.$store.state.teacher.scTitle;
+      },
+      set(scTitle) {
+        const vm = this;
+        vm.updateScTitle({
+          scTitle,
+        });
+      },
+    },
   },
   methods: {
-    ...mapMutations('teacher', ['updateScType']),
+    ...mapMutations('teacher', ['updateScType', 'updateScTitle']),
     onClickScType(scType) {
       const vm = this;
       vm.scType = scType;
-    },
-    changeLectureName() {
-      const vm = this;
-      vm.inputFlag = !vm.inputFlag;
     },
   },
 };
