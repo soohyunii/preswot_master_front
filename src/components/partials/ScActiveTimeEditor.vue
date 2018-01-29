@@ -23,28 +23,13 @@
               end-placeholder="종료"
             >
             </el-date-picker>
-
-            <br />{{ activeDatetimeInterval }}
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
-    <el-row>
-      <el-col :span="6">
-        활성화 되는 시각
-      </el-col>
-      <el-col :span="6">
-        <el-time-picker v-model="scActiveStartTime" :default-value="defaultTime" :clearable="false" placeholder="00:00:00" />
-      </el-col>
 
-      <el-col :span="6">
-        활성화 지속 시간
-      </el-col>
-      <el-col :span="6">
-        <el-time-picker v-model="scActiveEndTime" :default-value="defaultTime" :clearable="false" format="mm분 ss초" placeholder="0분 0초" />
-      </el-col>
-    </el-row>
     <br />
+
     <el-row>
       <el-col :span="6">
         History 기능 :
@@ -82,6 +67,29 @@ export default {
       activeDatetimeInterval: null,
     };
   },
+  mounted() {
+    const vm = this;
+    vm.$watch('activeDatetimeInterval', (newVal) => {
+      if (newVal) {
+        if (newVal[0]) {
+          vm.updateCurrentEditingScItem({
+            currentEditingScItem: {
+              activeStartDatetime: newVal[0],
+            },
+          });
+        }
+        if (newVal[1]) {
+          vm.updateCurrentEditingScItem({
+            currentEditingScItem: {
+              activeEndDatetime: newVal[1],
+            },
+          });
+        }
+      }
+    }, {
+      deep: true,
+    });
+  },
   methods: {
     ...mapMutations('teacher', ['updateCurrentEditingScItem']),
   },
@@ -96,42 +104,20 @@ export default {
       res.scItemActiveEndtDatetime = vm.scItemActiveEndtDatetime;
       return res;
     },
-    scActiveStartTime: {
-      get() {
-        const vm = this;
-        const item = vm.currentEditingScItem;
-        if (!item) {
-          return new Date();
-        }
-        return item.activeTimeStart;
-      },
-      set(scActiveStartTime) {
-        const vm = this;
-        vm.updateCurrentEditingScItem({
-          currentEditingScItem: {
-            activeStartTime: scActiveStartTime,
-          },
-        });
-      },
-    },
-    scActiveEndTime: {
-      get() {
-        const vm = this;
-        const item = vm.currentEditingScItem;
-        if (!item) {
-          return new Date();
-        }
-        return item.scActiveEndTime;
-      },
-      set(scActiveEndTime) {
-        const vm = this;
-        vm.updateCurrentEditingScItem({
-          currentEditingScItem: {
-            activeEndTime: scActiveEndTime,
-          },
-        });
-      },
-    },
+    // scActiveStartTime() {
+    //   const vm = this;
+    //   if (!vm.activeDatetimeInterval) {
+    //     return null;
+    //   }
+    //   return vm.activeDatetimeInterval[0];
+    // },
+    // scActiveEndTime() {
+    //   const vm = this;
+    //   if (!vm.activeDatetimeInterval) {
+    //     return null;
+    //   }
+    //   return vm.activeDatetimeInterval[1];
+    // },
     historyMode: {
       get() {
         const vm = this;

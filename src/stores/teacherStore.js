@@ -71,8 +71,8 @@ export default {
     },
     pushScItem(state, { type }) {
       const key = Guid.create().toString();
-      const activeStartTime = null;
-      const activeEndTime = null;
+      const activeStartDatetime = null;
+      const activeEndDatetime = null;
       const scHistoryMode = true;
       const isShowingResult = true;
       const title = null;
@@ -85,8 +85,8 @@ export default {
         title,
         type,
         order,
-        activeStartTime,
-        activeEndTime,
+        activeStartDatetime,
+        activeEndDatetime,
         scHistoryMode,
         isShowingResult,
         description,
@@ -97,6 +97,7 @@ export default {
       // TODO: save lectureElementSequence using localForage
     },
     updateCurrentEditingScItem(state, { currentEditingScItem }) {
+      // console.log('currentEditingScItem', currentEditingScItem);
       Object.assign(
         state.sc[state.currentEditingScItemIndex],
         currentEditingScItem,
