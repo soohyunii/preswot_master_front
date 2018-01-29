@@ -70,14 +70,16 @@ export default {
       const activeDurationTime = new Date(0, 0, 0);
       const scHistoryMode = true;
       const isShowingResult = true;
-      const title = '';
-      const description = '';
+      const title = null;
+      const description = null;
+      const order = null;
       const fileList = [];
 
       const scItem = {
+        key,
         title,
         type,
-        key,
+        order,
         activeTime,
         activeDurationTime,
         scHistoryMode,

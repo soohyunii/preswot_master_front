@@ -3,6 +3,17 @@
     <!-- TODO: translation -->
     <h2>활성화 시간 입력</h2>
     <el-row>
+      <el-col style="max-width: 600px;">
+        <el-form :model="input" ref="elForm" label-width="120px">
+          <el-form-item label="순서">
+            <el-radio-group v-model="scItemOrder">
+              <el-radio-button label="예습"></el-radio-button>
+              <el-radio-button label="본강의"></el-radio-button>
+              <el-radio-button label="복습"></el-radio-button>
+            </el-radio-group>
+          </el-form-item>
+        </el-form>
+      </el-col>
       <el-col :span="6">
         활성화 되는 시각
       </el-col>
@@ -50,6 +61,7 @@ export default {
   data() {
     return {
       defaultTime: new Date(0, 0, 0),
+      scItemOrder: '본강의', // TODO: delete
     };
   },
   methods: {
@@ -58,6 +70,14 @@ export default {
   computed: {
     ...mapGetters('teacher', ['currentEditingScItem']),
     ...mapState('teacher', ['sc', 'currentEditingScItemIndex']),
+    input() {
+      const res = {};
+      const vm = this;
+      res.scItemOrder = vm.scItemOrder;
+      res.scItemActiveStartDatetime = vm.scItemActiveStartDatetime;
+      res.scItemActiveEndtDatetime = vm.scItemActiveEndtDatetime;
+      return res;
+    },
     activeTime: {
       get() {
         const vm = this;
