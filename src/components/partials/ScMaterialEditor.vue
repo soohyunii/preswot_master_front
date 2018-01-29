@@ -1,13 +1,12 @@
 <template>
   <div>
-    <h1>Sc Material Editor Template</h1>
-    <h2>내용</h2>
     <el-row>
-      <el-col :span="6">
-        파일 업로드
-      </el-col>
-      <el-col :span="18">
-        <upload :type="{ from: 'ScMaterialEditor', currentEditingScItemIndex }"/>
+      <el-col style="max-width: 600px;">
+        <el-form ref="elForm" label-width="120px">
+          <el-form-item label="파일 업로드">
+            <upload :type="{ from: 'ScMaterialEditor', currentEditingScItemIndex }"/>
+          </el-form-item>
+        </el-form>
       </el-col>
     </el-row>
   </div>
