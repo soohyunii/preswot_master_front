@@ -10,6 +10,7 @@ export default {
   state: {
     scTitle: null,
     scType: null,
+    scTeacherList: null,
     scStartDatetime: null,
     scDescription: null,
     scKnowledgeMap: null,
@@ -38,6 +39,7 @@ export default {
       const res = {};
       res.title = state.scTitle;
       res.type = state.scType;
+      res.teacherList = state.scTeacherList;
       res.startDatetime = state.scStartDatetime;
       res.description = state.scDescription;
       res.knowledgeMap = state.scKnowledgeMap;
@@ -60,6 +62,9 @@ export default {
     },
     updateScType(state, { scType }) {
       state.scType = scType;
+    },
+    updateScTeacherList(state, { scTeacherList }) {
+      state.scTeacherList = scTeacherList;
     },
     updateScStartDatetime(state, { scStartDatetime }) {
       state.scStartDatetime = scStartDatetime;

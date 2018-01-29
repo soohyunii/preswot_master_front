@@ -7,6 +7,10 @@
             <el-input v-model="scTitle"></el-input>
           </el-form-item>
 
+          <el-form-item label="참여 강사" prop="scTeacherList">
+            <el-input v-model="scTeacherList"></el-input>
+          </el-form-item>
+
           <el-form-item label="활성화 시각" prop="scStartDatetime">
             <el-date-picker
               v-model="scStartDatetime"
@@ -14,7 +18,6 @@
               type="datetime"
             >
             </el-date-picker>
-            <!-- {{ scStartDatetime }} -->
           </el-form-item>
 
           <el-form-item label="타입" prop="scType">
@@ -105,6 +108,18 @@ export default {
         });
       },
     },
+    scTeacherList: {
+      get() {
+        const vm = this;
+        return vm.$store.state.teacher.scTeacherList;
+      },
+      set(scTeacherList) {
+        const vm = this;
+        vm.updateScTeacherList({
+          scTeacherList,
+        });
+      },
+    },
     scDescription: {
       get() {
         const vm = this;
@@ -124,6 +139,7 @@ export default {
       'updateScDescription',
       'updateScType',
       'updateScStartDatetime',
+      'updateScTeacherList',
     ]),
   },
 };
