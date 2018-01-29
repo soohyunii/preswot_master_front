@@ -73,7 +73,6 @@ export default {
       const key = Guid.create().toString();
       const activeStartDatetime = null;
       const activeEndDatetime = null;
-      const scHistoryMode = true;
       const isShowingResult = true;
       const title = null;
       const description = null;
@@ -87,7 +86,6 @@ export default {
         order,
         activeStartDatetime,
         activeEndDatetime,
-        scHistoryMode,
         isShowingResult,
         description,
         fileList,
