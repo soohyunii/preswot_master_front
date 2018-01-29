@@ -10,6 +10,7 @@ export default {
   state: {
     scTitle: null,
     scType: null,
+    scStartDatetime: null,
     scDescription: null,
     scKnowledgeMap: null,
     sc: [], // TODO: fetch(init) from server if exists
@@ -39,6 +40,7 @@ export default {
       const res = {};
       res.title = state.scTitle;
       res.type = state.scType;
+      res.startDatetime = state.scStartDatetime;
       res.description = state.scDescription;
       res.knowledgeMap = state.scKnowledgeMap;
 
@@ -60,6 +62,9 @@ export default {
     },
     updateScType(state, { scType }) {
       state.scType = scType;
+    },
+    updateScStartDatetime(state, { scStartDatetime }) {
+      state.scStartDatetime = scStartDatetime;
     },
     updateScDescription(state, { scDescription }) {
       state.scDescription = scDescription;

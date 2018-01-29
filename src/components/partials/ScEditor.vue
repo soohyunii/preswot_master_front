@@ -7,6 +7,16 @@
             <el-input v-model="scTitle"></el-input>
           </el-form-item>
 
+          <el-form-item label="강의 활성화 시각" prop="scStartDatetime">
+            <el-date-picker
+              v-model="scStartDatetime"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              type="datetime"
+            >
+            </el-date-picker>
+            <!-- {{ scStartDatetime }} -->
+          </el-form-item>
+
           <el-form-item label="타입" prop="scType">
             <el-radio-group v-model="scType">
               <el-radio-button label="강의"></el-radio-button>
@@ -71,6 +81,18 @@ export default {
         });
       },
     },
+    scStartDatetime: {
+      get() {
+        const vm = this;
+        return vm.$store.state.teacher.scStartDatetime;
+      },
+      set(scStartDatetime) {
+        const vm = this;
+        vm.updateScStartDatetime({
+          scStartDatetime,
+        });
+      },
+    },
     scType: {
       get() {
         const vm = this;
@@ -101,6 +123,7 @@ export default {
       'updateScTitle',
       'updateScDescription',
       'updateScType',
+      'updateScStartDatetime',
     ]),
   },
 };

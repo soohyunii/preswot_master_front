@@ -17,13 +17,14 @@
             <el-date-picker
               v-model="activeTimeTest"
               type="datetimerange"
+              value-format="yyyy-MM-dd HH:mm:ss"
               range-separator="To"
               start-placeholder="시작"
               end-placeholder="종료"
             >
             </el-date-picker>
 
-            {{ activeTimeTest }}
+            <br />{{ activeTimeTest }}
           </el-form-item>
         </el-form>
       </el-col>
@@ -74,8 +75,9 @@ import { mapState, mapMutations, mapGetters } from 'vuex';
 export default {
   name: 'ScActiveTimeEditor',
   data() {
+    const vm = this;
     return {
-      defaultTime: new Date(),
+      defaultTime: vm.scStartDatetime,
       scItemOrder: '본강의', // TODO: delete
       activeTimeTest: null, // TODO: delete
     };
@@ -84,8 +86,8 @@ export default {
     ...mapMutations('teacher', ['updateCurrentEditingScItem']),
   },
   computed: {
+    ...mapState('teacher', ['sc', 'currentEditingScItemIndex', 'scStartDatetime']),
     ...mapGetters('teacher', ['currentEditingScItem']),
-    ...mapState('teacher', ['sc', 'currentEditingScItemIndex']),
     input() {
       const res = {};
       const vm = this;
