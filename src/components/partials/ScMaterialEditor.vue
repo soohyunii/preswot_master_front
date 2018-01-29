@@ -20,7 +20,7 @@ import Upload from './Upload';
 export default {
   name: 'ScMaterialEditor',
   methods: {
-    ...mapMutations('teacher', ['updateCurrentEditingScItem']),
+    // ...mapMutations('teacher', ['updateCurrentEditingScItem']),
   },
   computed: {
     ...mapState('teacher', ['currentEditingScItemIndex']),

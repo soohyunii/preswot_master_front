@@ -127,14 +127,14 @@ export default {
       },
       set(sc) {
         const vm = this;
-        const beforeUpdateCurrentEditingScItem = vm.currentEditingScItem;
+        const beforeUuuuuddateCurrentEditingScItem = vm.currentEditingScItem;
         if (sc) {
           vm.updateSc({ sc });
         }
-        const index = sc.map(x => x.key).indexOf(beforeUpdateCurrentEditingScItem.key);
+        const index = sc.map(x => x.key).indexOf(beforeUuuuuddateCurrentEditingScItem.key);
         if (index !== -1) {
           vm.updateCurrentEditingScItem({
-            currentEditingScItem: beforeUpdateCurrentEditingScItem,
+            currentEditingScItem: beforeUuuuuddateCurrentEditingScItem,
             lectureElementIndex: index,
           });
         }

@@ -76,10 +76,8 @@ export default {
         const vm = this;
         vm.updateCurrentEditingScItem({
           currentEditingScItem: {
-            ...vm.currentEditingScItem,
             activeTime,
           },
-          lectureElementIndex: vm.currentEditingScItemIndex,
         });
       },
     },
@@ -89,6 +87,7 @@ export default {
         let time = null;
         const index = vm.currentEditingScItemIndex;
         if (index !== null && index > -1) {
+          // FIXME: replace `vm.sc[vm.currentEditingScItemIndex]` with `vm.currentEditingScItem`
           time = vm.sc[vm.currentEditingScItemIndex].activeDurationTime;
         }
         if (time) {
@@ -100,10 +99,8 @@ export default {
         const vm = this;
         vm.updateCurrentEditingScItem({
           currentEditingScItem: {
-            ...vm.currentEditingScItem,
             activeDurationTime,
           },
-          lectureElementIndex: vm.currentEditingScItemIndex,
         });
       },
     },
@@ -113,6 +110,7 @@ export default {
         let mode = null;
         const index = vm.currentEditingScItemIndex;
         if (index !== null && index > -1) {
+          // FIXME: replace `vm.sc[vm.currentEditingScItemIndex]` with `vm.currentEditingScItem`
           mode = vm.sc[vm.currentEditingScItemIndex].scHistoryMode;
         }
         if (mode) {
@@ -124,10 +122,8 @@ export default {
         const vm = this;
         vm.updateCurrentEditingScItem({
           currentEditingScItem: {
-            ...vm.currentEditingScItem,
             scHistoryMode,
           },
-          lectureElementIndex: vm.currentEditingScItemIndex,
         });
       },
     },
@@ -137,6 +133,7 @@ export default {
         let mode = null;
         const index = vm.currentEditingScItemIndex;
         if (index !== null && index > -1) {
+          // FIXME: replace `vm.sc[vm.currentEditingScItemIndex]` with `vm.currentEditingScItem`
           mode = vm.sc[vm.currentEditingScItemIndex].isShowingResult;
         }
         if (mode) {
@@ -148,10 +145,8 @@ export default {
         const vm = this;
         vm.updateCurrentEditingScItem({
           currentEditingScItem: {
-            ...vm.currentEditingScItem,
             isShowingResult,
           },
-          lectureElementIndex: vm.currentEditingScItemIndex,
         });
       },
     },

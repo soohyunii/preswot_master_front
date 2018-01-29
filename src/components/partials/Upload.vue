@@ -51,10 +51,8 @@ export default {
             // for fileList of ScMaterialEditor
             vm.updateCurrentEditingScItem({
               currentEditingScItem: {
-                ...vm.sc[vm.type.currentEditingScItemIndex],
                 fileList,
               },
-              lectureElementIndex: vm.type.currentEditingScItemIndex,
             });
           }
         }
