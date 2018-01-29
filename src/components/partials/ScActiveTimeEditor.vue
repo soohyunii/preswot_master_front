@@ -1,42 +1,37 @@
 <template>
   <div>
     <!-- TODO: translation -->
-    <h2>활성화 시간 입력</h2>
+    <h2>* 활성화 편집</h2>
     <el-row>
-      <el-col :span="6">
-        활성화 되는 시각
-      </el-col>
-      <el-col :span="6">
-        <el-time-picker v-model="activeTime" :default-value="defaultTime" :clearable="false" placeholder="00:00:00" />
-      </el-col>
+      <el-col style="max-width: 600px;">
+        <el-form :model="input" ref="elForm" label-width="120px">
+          <el-form-item label="순서">
+            <el-radio-group v-model="scItemOrder">
+              <el-radio-button label="예습"></el-radio-button>
+              <el-radio-button label="본강의"></el-radio-button>
+              <el-radio-button label="복습"></el-radio-button>
+            </el-radio-group>
+          </el-form-item>
 
-      <el-col :span="6">
-        활성화 지속 시간
-      </el-col>
-      <el-col :span="6">
-        <el-time-picker v-model="activeDurationTime" :default-value="defaultTime" :clearable="false" format="mm분 ss초" placeholder="0분 0초" />
-      </el-col>
-    </el-row>
-    <br />
-    <el-row>
-      <el-col :span="6">
-        History 기능 :
-      </el-col>
-      <el-col :span="6">
-        <el-radio-group v-model="historyMode">
-          <el-radio-button label="true">켜기</el-radio-button>
-          <el-radio-button label="false">끄기</el-radio-button>
-        </el-radio-group>
-      </el-col>
+          <el-form-item label="활성화 시각">
+            <el-date-picker
+              v-model="activeDatetimeInterval"
+              type="datetimerange"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              range-separator="To"
+              start-placeholder="시작"
+              end-placeholder="종료"
+            >
+            </el-date-picker>
+          </el-form-item>
 
-      <el-col :span="6">
-        선지별 선택비율 보이기 :
-      </el-col>
-      <el-col :span="6">
-        <el-radio-group v-model="showingResultMode">
-          <el-radio-button label="true">켜기</el-radio-button>
-          <el-radio-button label="false">끄기</el-radio-button>
-        </el-radio-group>
+          <el-form-item label="선지별 선택 비율">
+            <el-radio-group v-model="scItemIsResultVisible">
+              <el-radio-button label="true">보이기</el-radio-button>
+              <el-radio-button label="false">숨기기</el-radio-button>
+            </el-radio-group>
+          </el-form-item>
+        </el-form>
       </el-col>
     </el-row>
   </div>
@@ -48,110 +43,82 @@ import { mapState, mapMutations, mapGetters } from 'vuex';
 export default {
   name: 'ScActiveTimeEditor',
   data() {
-    // TODO: translate
+    const vm = this;
     return {
-      defaultTime: new Date(0, 0, 0),
+      defaultTime: vm.scStartDatetime,
+      // scItemOrder: '본강의', // TODO: delete
+      activeDatetimeInterval: null,
     };
+  },
+  mounted() {
+    const vm = this;
+    vm.$watch('activeDatetimeInterval', (newVal) => {
+      if (newVal) {
+        if (newVal[0]) {
+          vm.updateCurrentEditingScItem({
+            currentEditingScItem: {
+              activeStartDatetime: newVal[0],
+            },
+          });
+        }
+        if (newVal[1]) {
+          vm.updateCurrentEditingScItem({
+            currentEditingScItem: {
+              activeEndDatetime: newVal[1],
+            },
+          });
+        }
+      }
+    }, {
+      deep: true,
+    });
   },
   methods: {
     ...mapMutations('teacher', ['updateCurrentEditingScItem']),
   },
   computed: {
+    ...mapState('teacher', ['sc', 'currentEditingScItemIndex', 'scStartDatetime']),
     ...mapGetters('teacher', ['currentEditingScItem']),
-    ...mapState('teacher', ['sc', 'currentEditingScItemIndex']),
-    activeTime: {
+    input() {
+      const res = {};
+      const vm = this;
+      res.scItemOrder = vm.scItemOrder;
+      res.activeDatetimeInterval = vm.activeDatetimeInterval;
+      return res;
+    },
+    scItemOrder: {
       get() {
         const vm = this;
-        let time = null;
-        const index = vm.currentEditingScItemIndex;
-        if (index !== null && index > -1) {
-          time = vm.sc[vm.currentEditingScItemIndex].activeTime;
+        const item = vm.currentEditingScItem;
+        if (!item) {
+          return '본강의';
         }
-        if (time) {
-          return time || new Date(0, 0, 0);
-        }
-        return new Date(0, 0, 0);
+        return item.order;
       },
-      set(activeTime) {
+      set(scItemOrder) {
         const vm = this;
         vm.updateCurrentEditingScItem({
           currentEditingScItem: {
-            ...vm.currentEditingScItem,
-            activeTime,
+            order: scItemOrder,
           },
-          lectureElementIndex: vm.currentEditingScItemIndex,
         });
       },
     },
-    activeDurationTime: {
+    scItemIsResultVisible: {
       get() {
         const vm = this;
-        let time = null;
-        const index = vm.currentEditingScItemIndex;
-        if (index !== null && index > -1) {
-          time = vm.sc[vm.currentEditingScItemIndex].activeDurationTime;
+        const item = vm.currentEditingScItem;
+        if (!item) {
+          return true;
         }
-        if (time) {
-          return time || new Date(0, 0, 0);
-        }
-        return new Date(0, 0, 0);
+        return item.isResultVisible;
       },
-      set(activeDurationTime) {
+      set(scItemIsResultVisible) {
         const vm = this;
         vm.updateCurrentEditingScItem({
           currentEditingScItem: {
-            ...vm.currentEditingScItem,
-            activeDurationTime,
+            isResultVisible: scItemIsResultVisible,
           },
-          lectureElementIndex: vm.currentEditingScItemIndex,
-        });
-      },
-    },
-    historyMode: {
-      get() {
-        const vm = this;
-        let mode = null;
-        const index = vm.currentEditingScItemIndex;
-        if (index !== null && index > -1) {
-          mode = vm.sc[vm.currentEditingScItemIndex].scHistoryMode;
-        }
-        if (mode) {
-          return mode || true;
-        }
-        return true;
-      },
-      set(scHistoryMode) {
-        const vm = this;
-        vm.updateCurrentEditingScItem({
-          currentEditingScItem: {
-            ...vm.currentEditingScItem,
-            scHistoryMode,
-          },
-          lectureElementIndex: vm.currentEditingScItemIndex,
-        });
-      },
-    },
-    showingResultMode: {
-      get() {
-        const vm = this;
-        let mode = null;
-        const index = vm.currentEditingScItemIndex;
-        if (index !== null && index > -1) {
-          mode = vm.sc[vm.currentEditingScItemIndex].isShowingResult;
-        }
-        if (mode) {
-          return mode || true;
-        }
-        return true;
-      },
-      set(isShowingResult) {
-        const vm = this;
-        vm.updateCurrentEditingScItem({
-          currentEditingScItem: {
-            ...vm.currentEditingScItem,
-            isShowingResult,
-          },
-          lectureElementIndex: vm.currentEditingScItemIndex,
         });
       },
     },

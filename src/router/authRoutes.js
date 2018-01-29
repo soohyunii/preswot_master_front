@@ -2,6 +2,7 @@
 import Profile from '../components/pages/Profile';
 import TeacherHome from '../components/pages/TeacherHome';
 import TeacherLectureNew from '../components/pages/TeacherLectureNew';
+import TeacherLectureLive from '../components/pages/TeacherLectureLive';
 import StudentLectureLive from '../components/pages/StudentLectureLive';
 
 export default function authRoutes(root) {
@@ -39,6 +40,15 @@ export default function authRoutes(root) {
       component: TeacherLectureNew,
       meta: {
         title: 'Teacher New Lecture', // TODO: import from i18n
+        auth: true,
+      },
+    },
+    {
+      path: '/teacher/lecture/live',
+      name: 'TeacherLectureLive',
+      component: TeacherLectureLive,
+      meta: {
+        title: 'Teacher New Live', // TODO: import from i18n
         auth: true,
       },
     },

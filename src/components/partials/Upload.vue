@@ -37,6 +37,7 @@ export default {
             // for fileList from ScMaterialEditor
             const index = vm.type.currentEditingScItemIndex;
             if (index !== null && index > -1) {
+              // FIXME: replace with currentEditingScItem
               return vm.sc[vm.type.currentEditingScItemIndex].fileList || [];
             }
             return [];
@@ -51,10 +52,8 @@ export default {
             // for fileList of ScMaterialEditor
             vm.updateCurrentEditingScItem({
               currentEditingScItem: {
-                ...vm.sc[vm.type.currentEditingScItemIndex],
                 fileList,
               },
-              lectureElementIndex: vm.type.currentEditingScItemIndex,
             });
           }
         }

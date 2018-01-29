@@ -10,9 +10,9 @@
         <el-row :gutter="5">
           <el-col :span="3">
             <!-- TODO: translate -->
-            <el-dropdown @command="onClickLectureType">
-              <el-button type="primary" size="medium">
-                분류 : {{ lectureType }}<i class="el-icon-arrow-down el-icon--right"></i>
+            <el-dropdown @command="onClickScType">
+              <el-button type="primary" size="medium" disabled>
+                분류 : {{ scType }}<i class="el-icon-edit el-icon--right"></i>
               </el-button>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="강의">강의</el-dropdown-item>
@@ -23,28 +23,26 @@
             </el-dropdown>
           </el-col>
 
-          <template v-if="inputFlag">
-            <el-col :span="6">
-              <el-input v-model="lectureName"></el-input>
-            </el-col>
-            <!-- TODO: translate -->
-            <el-col :span="2">
-              <el-button @click="changeLectureName()">확인</el-button>
-            </el-col>
-          </template>
+          <el-col :span="8">
+            <h3 class="lecture-name">
+              {{ scTitle }}
+              <i class="el-icon-edit"></i>
+            </h3>
+          </el-col>
 
-          <template v-else>
-            <el-col :span="8">
-              <h3 class="lecture-name">
-                {{ lectureName }}
-                <i class="el-icon-edit" @click="changeLectureName()"></i>
-              </h3>
-            </el-col>
-          </template>
         </el-row>
         <br v-if="inputFlag"/>
         <hr><br />
 
+        <!-- 시나리오 저작 -->
+        <sc-editor />
+
+        <!-- 구분선 -->
+        <br />
+        <hr />
+        <br />
+
+        <!-- 시나리오 아이템 저작 -->
         <el-row :gutter="30">
           <el-col :span="16">
             <div>
@@ -61,12 +59,19 @@
         <div id="app_lecture_editor" v-show="!isScEmpty">
           <el-row :gutter="30">
             <el-col :span="24">
-              <!-- TODO: translation -->
+              <h1>아이템 편집</h1>
+              <sc-common-editor />
               <sc-material-editor />
               <sc-active-time-editor />
               <sc-problem-editor />
             </el-col>
           </el-row>
+        </div>
+
+        <div>
+          <h2>debug</h2>
+          server will get this:
+          <pre style="font-size: 70%;">{{ DEBUGscenarioServerWillReceive }}</pre>
         </div>
       </el-main>
       <!-- 이 메인은 맞음 끝 -->
@@ -90,11 +95,13 @@
 
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations, mapState } from 'vuex';
 import Sc from '../partials/Sc';
+import ScEditor from '../partials/ScEditor';
 import ScItemAdder from '../partials/ScItemAdder';
 import ScMaterialEditor from '../partials/ScMaterialEditor';
 import ScActiveTimeEditor from '../partials/ScActiveTimeEditor';
+import ScCommonEditor from '../partials/ScCommonEditor';
 import ScProblemEditor from '../partials/ScProblemEditor';
 import TeachingClassList from '../partials/TeachingClassList';
 
@@ -102,33 +109,38 @@ export default {
   name: 'TeacherNewLecture',
   components: {
     Sc,
+    ScEditor,
     ScItemAdder,
+    ScCommonEditor,
     ScMaterialEditor,
     ScActiveTimeEditor,
     ScProblemEditor,
     TeachingClassList,
   },
+  mounted() {
+    const vm = this;
+    vm.updateScType({
+      scType: '강의', // TODO: delete?? 뭔가 지정해줘야하긴 하는데,
+      // 이 플로우는 마음에 별로 안드는 상황
+    });
+  },
   data() {
     // TODO: translate
     return {
       teachingClassList: [],
-      lectureName: '4강 (배열)',
       inputFlag: false,
       currentClassName: '',
-      lectureType: '강의',
     };
   },
   computed: {
-    ...mapGetters('teacher', ['isScEmpty']),
+    ...mapState('teacher', ['scTitle', 'scType']),
+    ...mapGetters('teacher', ['isScEmpty', 'DEBUGscenarioServerWillReceive']),
   },
   methods: {
-    onClickLectureType(lectureType) {
+    ...mapMutations('teacher', ['updateScType', 'updateScTitle']),
+    onClickScType(scType) {
       const vm = this;
-      vm.lectureType = lectureType;
-    },
-    changeLectureName() {
-      const vm = this;
-      vm.inputFlag = !vm.inputFlag;
+      vm.scType = scType;
     },
   },
 };
