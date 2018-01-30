@@ -52,7 +52,6 @@ export default {
         const vm = this;
         vm.updateCurrentEditingScItem({
           currentEditingScItem: {
-            ...vm.currentEditingScItem,
             survey,
           },
           lectureElementIndex: vm.currentEditingScItemIndex,
