@@ -15,7 +15,7 @@
 
           <el-form-item label="활성화 시작 시각">
             <el-date-picker
-              v-model="activeDatetimeInterval"
+              v-model="scActiveStartDatetime"
               type="datetime"
               value-format="yyyy-MM-dd HH:mm:ss"
               range-separator="To"
@@ -27,7 +27,7 @@
 
           <el-form-item label="활성화 종료 시각">
             <el-date-picker
-              v-model="activeDatetimeInterval"
+              v-model="scActiveEndDatetime"
               type="datetime"
               value-format="yyyy-MM-dd HH:mm:ss"
               range-separator="To"
@@ -60,51 +60,28 @@ import { mapState, mapMutations, mapGetters } from 'vuex';
 export default {
   name: 'ScActiveTimeEditor',
   data() {
-    const vm = this;
     return {
-      defaultTime: vm.scStartDatetime,
-      activeDatetimeInterval: null,
-      shouldDeactivated: false,
+      shouldDeactivated: true,
     };
-  },
-  mounted() {
-    const vm = this;
-    vm.$watch('activeDatetimeInterval', (newVal) => {
-      if (newVal) {
-        if (newVal[0]) {
-          vm.updateCurrentEditingScItem({
-            currentEditingScItem: {
-              activeStartDatetime: newVal[0],
-            },
-          });
-        }
-        if (newVal[1]) {
-          vm.updateCurrentEditingScItem({
-            currentEditingScItem: {
-              activeEndDatetime: newVal[1],
-            },
-          });
-        }
-      }
-    }, {
-      deep: true,
-    });
   },
   methods: {
     ...mapMutations('teacher', ['updateCurrentEditingScItem']),
     changeShouldDeactivated(label) {
-      console.log('label', label);
-      // TODO: change activeEndDatetime
+      const vm = this;
+      if (!label) {
+        vm.scActiveEndDatetime = null;
+      }
     },
   },
   computed: {
-    ...mapState('teacher', ['sc', 'currentEditingScItemIndex', 'scStartDatetime']),
+    ...mapState('teacher', ['sc']),
     ...mapGetters('teacher', ['currentEditingScItem']),
     input() {
       const res = {};
       const vm = this;
       res.scItemOrder = vm.scItemOrder;
-      res.activeDatetimeInterval = vm.activeDatetimeInterval;
+      res.scActiveStartDatetime = vm.scActiveStartDatetime;
+      res.scActiveEndDatetime = vm.scActiveEndDatetime;
       return res;
     },
     scItemOrder: {
@@ -139,6 +116,42 @@ export default {
         vm.updateCurrentEditingScItem({
           currentEditingScItem: {
             isResultVisible: scItemIsResultVisible,
+          },
+        });
+      },
+    },
+    scActiveStartDatetime: {
+      get() {
+        const vm = this;
+        const item = vm.currentEditingScItem;
+        if (!item) {
+          return null;
+        }
+        return item.activeStartDatetime;
+      },
+      set(scActiveStartDatetime) {
+        const vm = this;
+        vm.updateCurrentEditingScItem({
+          currentEditingScItem: {
+            activeStartDatetime: scActiveStartDatetime,
+          },
+        });
+      },
+    },
+    scActiveEndDatetime: {
+      get() {
+        const vm = this;
+        const item = vm.currentEditingScItem;
+        if (!item) {
+          return null;
+        }
+        return item.activeEndDatetime;
+      },
+      set(scActiveEndDatetime) {
+        const vm = this;
+        vm.updateCurrentEditingScItem({
+          currentEditingScItem: {
+            activeEndDatetime: scActiveEndDatetime,
           },
         });
       },
