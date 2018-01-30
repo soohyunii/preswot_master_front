@@ -13,10 +13,10 @@
             </el-radio-group>
           </el-form-item>
 
-          <el-form-item label="활성화 시각">
+          <el-form-item label="활성화 시작 시각">
             <el-date-picker
               v-model="activeDatetimeInterval"
-              type="datetimerange"
+              type="datetime"
               value-format="yyyy-MM-dd HH:mm:ss"
               range-separator="To"
               start-placeholder="시작"
@@ -25,10 +25,27 @@
             </el-date-picker>
           </el-form-item>
 
+          <el-form-item label="활성화 종료 시각">
+            <el-date-picker
+              v-model="activeDatetimeInterval"
+              type="datetime"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              range-separator="To"
+              start-placeholder="시작"
+              end-placeholder="종료"
+              :disabled="!shouldDeactivated"
+            >
+            </el-date-picker>
+            <el-radio-group v-model="shouldDeactivated" @change="changeShouldDeactivated">
+              <el-radio-button :label="true">비활성화</el-radio-button>
+              <el-radio-button :label="false">계속 활성화</el-radio-button>
+            </el-radio-group>
+          </el-form-item>
+
           <el-form-item label="선지별 선택 비율">
             <el-radio-group v-model="scItemIsResultVisible">
-              <el-radio-button label="true">보이기</el-radio-button>
-              <el-radio-button label="false">숨기기</el-radio-button>
+              <el-radio-button :label="true">보이기</el-radio-button>
+              <el-radio-button :label="false">숨기기</el-radio-button>
             </el-radio-group>
           </el-form-item>
         </el-form>
@@ -46,8 +63,8 @@ export default {
     const vm = this;
     return {
       defaultTime: vm.scStartDatetime,
-      // scItemOrder: '본강의', // TODO: delete
       activeDatetimeInterval: null,
+      shouldDeactivated: false,
     };
   },
   mounted() {
@@ -75,6 +92,10 @@ export default {
   },
   methods: {
     ...mapMutations('teacher', ['updateCurrentEditingScItem']),
+    changeShouldDeactivated(label) {
+      console.log('label', label);
+      // TODO: change activeEndDatetime
+    },
   },
   computed: {
     ...mapState('teacher', ['sc', 'currentEditingScItemIndex', 'scStartDatetime']),
