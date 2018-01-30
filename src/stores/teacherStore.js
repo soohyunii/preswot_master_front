@@ -77,6 +77,11 @@ export default {
       const order = null;
       const fileList = [];
       const survey = { choice: [] };
+      const descriptionOfProblem = null;
+      const answerVisibility = null;
+      const problemType = null;
+      const answer = null;
+
       const scItem = {
         key,
         title,
@@ -88,6 +93,10 @@ export default {
         description,
         fileList,
         survey,
+        descriptionOfProblem,
+        answerVisibility,
+        problemType,
+        answer,
       };
       state.currentEditingScItemIndex = state.sc.length;
       state.sc.push(scItem);
