@@ -1,5 +1,6 @@
 import getLocale from 'browser-locale';
 import jwtDecode from 'jwt-decode';
+import moment from 'moment';
 
 export default {
   getJwtFromLocalStorage() {
@@ -28,5 +29,10 @@ export default {
     // console.log('payload', payload);
     const payload = jwtDecode(jwt);
     return Date.now() < payload.exp;
+  },
+  formatDate(d) {
+    // console.log('formatDate', d, d.toLocaleDateString('en-US').split('-'));
+    // eslint-disable-next-line
+    return moment(d).format('YYYY-MM-DD HH:mm:ss');
   },
 };

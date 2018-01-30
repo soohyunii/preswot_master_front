@@ -56,6 +56,7 @@
 
 <script>
 import { mapState, mapMutations, mapGetters } from 'vuex';
+import utils from '../../utils';
 
 export default {
   name: 'ScActiveTimeEditor',
@@ -74,7 +75,7 @@ export default {
     },
   },
   computed: {
-    ...mapState('teacher', ['sc']),
+    ...mapState('teacher', ['sc', 'scStartDatetime']),
     ...mapGetters('teacher', ['currentEditingScItem']),
     input() {
       const res = {};
@@ -127,13 +128,35 @@ export default {
         if (!item) {
           return null;
         }
-        return item.activeStartDatetime;
+        if (!vm.scStartDatetime) {
+          return null;
+        }
+        const scStartDate = new Date(vm.scStartDatetime);
+        const startOffsetSec = item.activeStartOffsetSec;
+        if (!startOffsetSec) {
+          return null;
+        }
+        // console.log('startOffsetSec', startOffsetSec);
+        const resDate = new Date(scStartDate.getTime() + (startOffsetSec * 1000));
+        return utils.formatDate(resDate);
       },
       set(scActiveStartDatetime) {
         const vm = this;
+        if (!vm.scStartDatetime) {
+          vm.$notify({
+            // TODO: translate
+            title: '오류!',
+            message: '활성화 시각이 비어있음',
+            type: 'error',
+          });
+          return;
+        }
+        const scStartDate = new Date(vm.scStartDatetime);
+        const scActiveStartDate = new Date(scActiveStartDatetime);
+        const offsetSec = (scActiveStartDate.getTime() - scStartDate.getTime()) / 1000;
         vm.updateCurrentEditingScItem({
           currentEditingScItem: {
-            activeStartDatetime: scActiveStartDatetime,
+            activeStartOffsetSec: offsetSec,
           },
         });
       },
