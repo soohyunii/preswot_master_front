@@ -23,6 +23,8 @@ export default {
     currentEditingClass: null,
     currentLectureTimeMillisec: null,
     liveStartTime: null,
+    nodes: [],
+    edges: [],
   },
   getters: {
     isScEmpty(state) {
@@ -55,6 +57,18 @@ export default {
     // },
   },
   mutations: {
+    updateNodes(state, { nodes }) {
+      state.nodes = nodes;
+    },
+    updateEdges(state, { edges }) {
+      state.edges = edges;
+    },
+    deleteNodes(state, { nodeIndex }) {
+      state.nodes.splice(nodeIndex, 1);
+    },
+    deleteEdges(state, { edgeIndex }) {
+      state.nodes.splice(edgeIndex, 1);
+    },
     updateScTitle(state, { scTitle }) {
       state.scTitle = scTitle;
     },
