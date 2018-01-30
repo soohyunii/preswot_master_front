@@ -1,16 +1,19 @@
 <template>
   <div>
     <d3-network :net-nodes="nodes" :net-links="edges" :options="options"/>
+    <knowledge-map-node-editor></knowledge-map-node-editor>
   </div>
 </template>
 
 <script>
 // import { mapState } from 'vuex';
 import D3Network from 'vue-d3-network';
+import KnowledgeMapNodeEditor from './KnowledgeMapNodeEditor';
 
 export default {
   components: {
     D3Network,
+    KnowledgeMapNodeEditor,
   },
   data() {
     return {

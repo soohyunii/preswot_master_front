@@ -23,12 +23,15 @@ export default {
     currentEditingClass: null,
     currentLectureTimeMillisec: null,
     liveStartTime: null,
-    nodes: [],
+    nodes: [{ name: 'addNodeItem' }],
     edges: [],
   },
   getters: {
     isScEmpty(state) {
       return state.sc.length === 0;
+    },
+    isNodesEmpty(state) {
+      return state.nodes.length === 1;
     },
     currentEditingScItem(state) {
       return state.sc[state.currentEditingScItemIndex];
@@ -36,7 +39,8 @@ export default {
     currentTeachingScItem(state) {
       return state.sc[state.currentTeachingScItemIndex];
     },
-    DEBUGscenarioServerWillReceive(state) { // TODO: delete
+    DEBUGscenarioServerWillReceive(state) {
+      // TODO: delete
       const res = {};
       res.title = state.scTitle;
       res.type = state.scType;
@@ -62,6 +66,9 @@ export default {
     },
     updateEdges(state, { edges }) {
       state.edges = edges;
+    },
+    addNodes(state, { node }) {
+      state.nodes.push(node);
     },
     deleteNodes(state, { nodeIndex }) {
       state.nodes.splice(nodeIndex, 1);
@@ -122,9 +129,11 @@ export default {
     },
     // FIXME: rename `lectureELementIndex` with `currentEditingScItemIndex`
     deleteScItem(state, { lectureElementIndex }) {
-      const isCurrentEditingItem = state.currentEditingScItemIndex === lectureElementIndex;
+      const isCurrentEditingItem =
+        state.currentEditingScItemIndex === lectureElementIndex;
       const isLastItem = lectureElementIndex === state.sc.length - 1;
-      const isBeforeCurrentEditingItem = lectureElementIndex < state.currentEditingScItemIndex;
+      const isBeforeCurrentEditingItem =
+        lectureElementIndex < state.currentEditingScItemIndex;
 
       if ((isCurrentEditingItem && isLastItem) || isBeforeCurrentEditingItem) {
         state.currentEditingScItemIndex -= 1;
