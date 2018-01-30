@@ -23,8 +23,49 @@ export default {
     currentEditingClass: null,
     currentLectureTimeMillisec: null,
     liveStartTime: null,
-    nodes: [],
-    edges: [],
+    nodes: [
+      {
+        label: '배열',
+        weight: 30,
+        categories: [],
+      },
+      {
+        label: '포인터',
+        weight: 20,
+        categories: [],
+      },
+      {
+        label: '함수',
+        weight: 15,
+        categories: [],
+      },
+      {
+        label: '함수2',
+        weight: 10,
+        categories: [],
+      },
+      {
+        label: '파일입출력',
+        weight: 10,
+        categories: [],
+      }],
+    edges: [
+      {
+        sid: '배열',
+        tid: '포인터',
+        weight: 10,
+      },
+      {
+        sid: '포인터',
+        tid: '함수',
+        weight: 10,
+      },
+      {
+        sid: '함수',
+        tid: '함수2',
+        weight: 10,
+      },
+    ],
   },
   getters: {
     isScEmpty(state) {
