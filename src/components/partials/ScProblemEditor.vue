@@ -31,6 +31,25 @@
             </el-radio-group>
           </el-form-item>
           <template v-if="problemType === 'multipleChoice'">
+            <el-table
+              :data="answer"
+              style="width: 100%">
+              <el-table-column
+                prop="date"
+                label="Date"
+                width="180">
+              </el-table-column>
+              <el-table-column
+                prop="address"
+                label="Address">
+              </el-table-column>
+            </el-table>
+            <template v-for="(item, index, key) in answer">
+              <el-input :key="key">
+                <template slot="prepend">#{{ index + 1 }}</template>
+                <el-button slot="append" icon="el-icon-close" @click="onClick('deleteSelection', index)"></el-button>
+              </el-input>
+            </template>
             <el-form-item label="선지">
               <el-input
                 placeholder="Please input"
@@ -100,9 +119,8 @@ export default {
           // TODO: 만약 아직 정답 / 오답 체크를 하지 않았다면 경고창을 띄워야 할까?
           if (vm.boolean !== '') {
             const answer = vm.currentEditingScItem.answer;
-            const temp = [vm.localAnswer, vm.boolean];
+            const temp = { content: vm.localAnswer, answer: vm.boolean };
             answer.push(temp);
-            window.console.log(answer);
             vm.updateCurrentEditingScItem({
               currentEditingScItem: {
                 ...vm.currentEditingScItem,
