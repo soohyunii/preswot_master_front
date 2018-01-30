@@ -81,7 +81,7 @@ export default {
       const description = null;
       const order = null;
       const fileList = [];
-
+      const survey = { choice: [] };
       const scItem = {
         key,
         title,
@@ -92,6 +92,7 @@ export default {
         isResultVisible,
         description,
         fileList,
+        survey,
       };
       state.currentEditingScItemIndex = state.sc.length;
       state.sc.push(scItem);
