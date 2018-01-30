@@ -168,13 +168,38 @@ export default {
         if (!item) {
           return null;
         }
-        return item.activeEndDatetime;
+        if (!vm.scStartDatetime) {
+          return null;
+        }
+        const scStartDate = new Date(vm.scStartDatetime);
+        const endOffsetSec = item.activeEndOffsetSec;
+        if (!endOffsetSec) {
+          return null;
+        }
+        const resDate = new Date(scStartDate.getTime() + (endOffsetSec * 1000));
+        return utils.formatDate(resDate);
       },
       set(scActiveEndDatetime) {
         const vm = this;
+        if (!vm.scStartDatetime) {
+          vm.$notify({
+            // TODO: translate
+            title: '오류!',
+            message: '활성화 시각이 비어있음',
+            type: 'error',
+          });
+          return;
+        }
+        const scStartDate = new Date(vm.scStartDatetime);
+        const scActiveEndDate = new Date(scActiveEndDatetime);
+        let offsetSec = (scActiveEndDate.getTime() - scStartDate.getTime()) / 1000;
+        if (!scActiveEndDatetime) {
+           // * 계속 활성화를 눌렀을 때 scActiveDatetime이 null로 들어오는데, 그 처리.
+          offsetSec = null;
+        }
         vm.updateCurrentEditingScItem({
           currentEditingScItem: {
-            activeEndDatetime: scActiveEndDatetime,
+            activeEndOffsetSec: offsetSec,
           },
         });
       },
