@@ -15,6 +15,7 @@
         <template v-for="(item, index, key) in survey.choice">
           <el-input v-model="survey.choice[index]" :key="key">
             <template slot="prepend">#{{ index + 1 }}</template>
+            <el-button slot="append" icon="el-icon-close" @click="onClick('deleteSelection', index)"></el-button>
           </el-input>
         </template>
         <el-button type="primary" @click="onClick('addSelection')">(객관식)선지 추가하기 [+]</el-button>
@@ -61,11 +62,15 @@ export default {
   },
   methods: {
     ...mapMutations('teacher', ['updateCurrentEditingScItem']),
-    onClick(type) {
+    onClick(type, index) {
       const vm = this;
       switch (type) {
         case 'addSelection': {
           vm.currentEditingScItem.survey.choice.push('');
+          break;
+        }
+        case 'deleteSelection': {
+          vm.currentEditingScItem.survey.choice.splice(index, 1);
           break;
         }
         default: {
