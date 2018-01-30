@@ -47,6 +47,7 @@ export default {
       "SEX_LABEL": "Sex",
       "SEX_LABEL_MALE": "Male",
       "SEX_LABEL_FEMALE": "Female",
+      "TOU": "Terms of Use",
       "TOU_LABEL": "I agree to the terms and conditions",
       "ERR_TOU_REQUIRED": "Please check your agreement to the Terms and Conditions",
       "ERR_SEX_REQUIRED": "Please select your sex"
@@ -118,6 +119,7 @@ export default {
       "SEX_LABEL": "성별",
       "SEX_LABEL_MALE": "남성",
       "SEX_LABEL_FEMALE": "여성",
+      "TOU": "이용약관",
       "TOU_LABEL": "이용약관에 대해 동의합니다.",
       "ERR_TOU_REQUIRED": "필수 약관에 동의를 체크하셔야 합니다.",
       "ERR_SEX_REQUIRED": "성별을 골라주십시오."

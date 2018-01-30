@@ -1,54 +1,49 @@
 <template>
-  <div>
+  <div class="wrapper">
     <h2>{{ $t('REG.REG_TITLE') }}</h2>
     <el-container>
       <el-row>
-        <el-col style="max-width: 600px;">
-          <!-- TODO: change label-width according to locale
-          (based on longest label length in current locale) -->
-          <el-form :model="input" :rules="rules" ref="elForm" label-width="120px">
-            <el-form-item :label="$t('REG.EMAIL_LABEL')" prop="email_id">
+        <el-col style="max-width: 700px;">
+          <el-form :model="input" :rules="rules" ref="elForm" :label-width="getLabelWidth()">
+            <el-form-item :label="$t('REG.EMAIL_LABEL')" prop="email_id" id="email_id">
               <el-input :placeholder="$t('REG.EMAIL_PH')" v-model="input.email_id" type="email"></el-input>
             </el-form-item>
 
-            <el-form-item :label="$t('REG.PASSWORD_LABEL')" prop="password">
+            <el-form-item :label="$t('REG.PASSWORD_LABEL')" prop="password" id="password">
               <el-input :placeholder="$t('LOGIN.PASSWORD_PH')" v-model="input.password" type="password"></el-input>
             </el-form-item>
 
-            <el-form-item :label="$t('REG.PASSWORD_CHECK_LABEL')" prop="password2">
+            <el-form-item :label="$t('REG.PASSWORD_CHECK_LABEL')" prop="password2" id="password2">
               <el-input :placeholder="$t('LOGIN.PASSWORD_PH')" v-model="input.password2" type="password"></el-input>
             </el-form-item>
 
             <br />
             <br />
 
-            <el-form-item :label="$t('REG.NAME_LABEL')" prop="name">
+            <el-form-item :label="$t('REG.NAME_LABEL')" prop="name" id="name">
               <el-input :placeholder="$t('REG.NAME_PH')" v-model="input.name" type="string">
               </el-input>
             </el-form-item>
 
 
-            <el-form-item :label="$t('REG.BIRTHDAY_LABEL')" prop="birth">
+            <el-form-item :label="$t('REG.BIRTHDAY_LABEL')" prop="birth" id="birth">
               <el-date-picker :placeholder="$t('REG.BIRTHDAY_PH')" v-model="input.birth" type="date" id="user_birthday_input">
               </el-date-picker>
             </el-form-item>
 
-            <!-- TODO: 성별이 클릭이 되지 않은 상태 체크 -->
-            <el-form-item :label="$t('REG.SEX_LABEL')" prop="sex">
+            <el-form-item :label="$t('REG.SEX_LABEL')" prop="sex" id="sex">
               <el-radio-group v-model="input.sex" id="user_sex_input">
                 <el-radio-button label="0">{{ $t('REG.SEX_LABEL_MALE') }}</el-radio-button>
                 <el-radio-button label="1">{{ $t('REG.SEX_LABEL_FEMALE') }}</el-radio-button>
               </el-radio-group>
             </el-form-item>
 
-            <el-form-item :label="$t('REG.ADDRESS_LABEL')" prop="address1">
-              <el-input type="string" :placeholder="$t('REG.ADDRESS_PH')" :value="address" readonly>
-              </el-input>
-              <!-- TODO: Replace button position -->
+            <el-form-item :label="$t('REG.ADDRESS_LABEL')" prop="address1" id="address1">
+              <el-input type="string" :placeholder="$t('REG.ADDRESS_PH')" :value="address" readonly></el-input>
               <el-button type="primary" @click="execDaumPostcode()">{{ $t('REG.ADDRESS_SEARCH_BUTTON') }}</el-button>
             </el-form-item>
 
-            <el-form-item :label="$t('REG.ADDRESS2_LABEL')" prop="address2">
+            <el-form-item :label="$t('REG.ADDRESS2_LABEL')" prop="address2" id="address2">
               <el-input id="detail" :placeholder="$t('REG.ADDRESS2_PH')" v-model="input.address2">
               </el-input>
             </el-form-item>
@@ -56,30 +51,40 @@
 
             <!-- TODO: 핸드폰 번호 -->
             <!-- 핸드폰 번호 인증 어떻게?? -->
-            <el-form-item :label="$t('REG.PHONE_NUMBER_LABEL')" prop="phoneNumber">
-              <el-input :placeholder="$t('REG.PHONE_NUMBER_PH')" v-model="input.phone" v-mask="['###-####-####', '###-###-####']" type="tel"></el-input>
+            <el-form-item :label="$t('REG.PHONE_NUMBER_LABEL')" prop="phoneNumber" id="phoneNumber">
+              <el-input :placeholder="$t('REG.PHONE_NUMBER_PH')" v-model="input.phoneNumber" v-mask="['###-####-####', '###-###-####']" type="tel"></el-input>
+              <el-button type="primary" @click="dummy()">{{$t('REG.PHONE_NUMBER_VERIFY_BUTTON')}}</el-button>
             </el-form-item>
-            <el-button type="primary" @click="dummy()">{{$t('REG.PHONE_NUMBER_VERIFY_BUTTON')}}</el-button>
 
             <br />
             <br />
 
-            <el-form-item :label="$t('REG.MAJOR_LABEL')" prop="major">
+            <el-form-item :label="$t('REG.MAJOR_LABEL')" prop="major" id="major">
               <el-input :placeholder="$t('REG.MAJOR_PH')" v-model="input.major" type="string"></el-input>
             </el-form-item>
 
-            <el-form-item :label="$t('REG.BELONG_LABEL')" prop="belong">
+            <el-form-item :label="$t('REG.BELONG_LABEL')" prop="belong" id="belong">
               <el-input :placeholder="$t('REG.BELONG_PH')" v-model="input.belong" type="string"></el-input>
             </el-form-item>
 
             <br />
             <br />
-            <!-- TODO: terms of use / privacy policy text 주루루룩 -->
-            이용약관 <br />
-            <!-- TODO: 회원가입 버튼 누를 시 약관 동의 확인 필요 -->
-            <!-- http://element.eleme.io/#/en-US/component/checkbox#basic-usage -->
 
-            <el-form-item prop="checkTou">
+            <!-- TODO: terms of use / privacy policy text 주루루룩 -->
+            <el-form-item :label="$t('REG.TOU')" prop="checkTou" id="checkTou">
+              <div class="tos">
+                <p>
+                  이용 약관(영어: Terms of service terms of use이나
+                  terms and conditions으로도 알려짐,
+                  줄여서 ToS 또는 TOS라고 부르기도 함)은 서비스를
+                  이용하기 위해 동의해야만 하는 규칙이다.
+                </p>
+                <p>
+                  돈데기리기리 돈데기리기리 돈데돈데돈데 돈데크만
+                  카피카피 룸룸 카피카피 룸룸
+                  카피카피 룸룸 카피카피 룸룸
+                </p>
+              </div>
               <el-checkbox v-model="input.checkTou" id="user_tou_input">{{ $t('REG.TOU_LABEL') }}</el-checkbox>
             </el-form-item>
             <br />
@@ -87,6 +92,8 @@
 
             <el-button type="primary" @click="submitForm('elForm')">회원가입</el-button>
             <br />
+
+            <!-- TODO: delete -->
             <pre>{{ input }}</pre>
           </el-form>
         </el-col>
@@ -96,6 +103,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import generateRules from '../../validations/registerValidation';
 import authService from '../../services/authService';
 // id(string), password(string), name(string),
@@ -116,7 +124,7 @@ export default {
         postcode: '',
         address1: '', // 지역 주소
         address2: '', // 상세 주소
-        phone: '',
+        phoneNumber: '',
         major: '',
         belong: '',
         sex: '0',
@@ -126,6 +134,7 @@ export default {
     };
   },
   computed: {
+    ...mapState('auth', ['locale']),
     address() {
       const vm = this;
       const address = `${vm.input.address1} ${vm.input.address2} ${vm.input.postcode}`;
@@ -176,32 +185,115 @@ export default {
         },
       }).open();
     },
-    submitForm(formName) {
+    validator(formName, element) {
       const vm = this;
-      vm.$refs[formName].validate(async (valid) => {
-        if (!valid) {
-          console.log('error submit!!'); // eslint-disable-line
-          return;
-        }
-        try {
-          await authService.register({
-            input: {
-              ...vm.input, address: vm.address,
-            },
+      let isValid = true;
+      vm.$refs[formName].validateField(element, async (e) => {
+        if (e) {
+          vm.$scrollTo('#' + element, 500, { // eslint-disable-line
+            offset: -100,
           });
-          vm.$router.push({ // LandingPage로 redirect
-            name: 'LandingPage',
-          });
-        } catch (e) {
-          throw new Error('request error');
+          // window.console.log(e);
+          isValid = false;
         }
       });
+      return isValid;
+    },
+    async submitForm(formName) {
+      const vm = this;
+      const fieldList = [
+        'email_id',
+        'password',
+        'password2',
+        'name',
+        'birth',
+        'sex',
+        'address1',
+        'address2',
+        'phoneNumber',
+        'major',
+        'belong',
+        'checkTou',
+      ];
+
+      let allValid = true;
+      for (let i = 0; i < fieldList.length; i += 1) {
+        if (!vm.validator(formName, fieldList[i])) {
+          allValid = false;
+          break;
+        }
+      }
+
+      if (!allValid) {
+        console.log('error submit!!'); // eslint-disable-line
+        return;
+      }
+      try {
+        await authService.register({
+          input: {
+            ...vm.input, address: vm.address,
+          },
+        });
+        vm.$router.push({ // LandingPage로 redirect
+          name: 'LandingPage',
+        });
+      } catch (e) {
+        throw new Error('request error');
+      }
+    },
+    getLabelWidth() {
+      const vm = this;
+      const labelString = [
+        vm.$t('REG.EMAIL_LABEL'),
+        vm.$t('REG.PASSWORD_LABEL'),
+        vm.$t('REG.PASSWORD_CHECK_LABEL'),
+        vm.$t('REG.NAME_LABEL'),
+        vm.$t('REG.BIRTHDAY_LABEL'),
+        vm.$t('REG.SEX_LABEL'),
+        vm.$t('REG.ADDRESS_LABEL'),
+        vm.$t('REG.ADDRESS2_LABEL'),
+        vm.$t('REG.PHONE_NUMBER_LABEL'),
+        vm.$t('REG.MAJOR_LABEL'),
+        vm.$t('REG.BELONG_LABEL'),
+        vm.$t('REG.TOU'),
+      ];
+      const maxLabelLength = Math.max.apply(null, labelString.map(x => x.length));
+
+      let charPixel = 15;
+      switch (vm.locale) {
+        default:
+        case 'ko':
+          charPixel = 15;
+          break;
+        case 'en':
+          charPixel = 8;
+          break;
+      }
+      const width = maxLabelLength * charPixel + 'px' // eslint-disable-line
+      // window.console.log(width);
+
+      return width;
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.el-input {
+  width: 400px;
+}
+
+.el-button {
+  margin-left: 10px;
+}
+
+.tos {
+  background-color: white;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+
 h2 {
   color: red;
 }
