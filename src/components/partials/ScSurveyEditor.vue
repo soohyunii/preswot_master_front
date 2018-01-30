@@ -58,7 +58,6 @@ export default {
           currentEditingScItem: {
             survey,
           },
-          lectureElementIndex: vm.currentEditingScItemIndex,
         });
       },
     },
