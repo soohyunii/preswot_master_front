@@ -22,8 +22,6 @@ export default {
     currentTeachingScItemIndex: null,
     teachingClassList: [],
     currentEditingClass: null,
-    currentLectureTimeMillisec: null,
-    liveStartTime: null,
   },
   getters: {
     isScEmpty(state) {
@@ -132,12 +130,6 @@ export default {
     },
     updateTeachingClassList(state, { classList }) {
       state.teachingClassList = classList;
-    },
-    updateCurrentLectureTimeMillisec(state, { currentLectureTimeMillisec }) {
-      state.currentLectureTimeMillisec = currentLectureTimeMillisec;
-    },
-    updateLiveStartTime(state, { liveStartTime }) {
-      state.liveStartTime = liveStartTime;
     },
   },
 };

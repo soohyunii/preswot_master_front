@@ -20,11 +20,11 @@
           <el-col :span="7">
             <h3 class="lecture-name">
               {{ lectureName }}
-              <!-- <i class="el-icon-edit" @click="changeLectureName()"></i> -->
             </h3>
           </el-col>
 
-          <el-col :span="7">
+          <!-- TODO: 진짜 쓸모없어진것같으면 지우자 밑에꺼  -->
+          <!-- <el-col :span="7">
             <h3 class="current-lecture-time">
               본 강의 활성화로부터: {{ currentLectureTimeMillisec }}
             </h3>
@@ -33,7 +33,7 @@
             <h3 class="elapsed-time">
               강의 시작으로부터: {{ (elapsedTimeMillisec / 1000).toFixed(0) }} 초
             </h3>
-          </el-col>
+          </el-col> -->
         </el-row>
         <hr><br />
 
@@ -74,15 +74,15 @@
   // background-color: red;
 }
 
-.current-lecture-time {
-  margin: 8px 0;
-  background-color: red;
-}
+// .current-lecture-time {
+//   margin: 8px 0;
+//   background-color: red;
+// }
 
-.elapsed-time {
-  margin: 8px 0;
-  background-color: pink;
-}
+// .elapsed-time {
+//   margin: 8px 0;
+//   background-color: pink;
+// }
 </style>
 
 <script>
@@ -118,15 +118,6 @@ export default {
   },
   mounted() {
     const vm = this;
-    // TODO: replace dummy
-    vm.updateCurrentLectureTimeMillisec({
-      currentLectureTimeMillisec: 10000,
-    });
-    // TODO: replace dummy
-    vm.updateLiveStartTime({
-      liveStartTime: new Date(),
-    });
-
     vm.intervalId = window.setInterval(() => {
       // TODO: update currentLectureTIme too???
       vm.elapsedTimeMillisec = Date.now() - vm.liveStartTime.getTime();
@@ -144,7 +135,7 @@ export default {
     ...mapGetters('teacher', ['isScEmpty']),
   },
   methods: {
-    ...mapMutations('teacher', ['updateCurrentLectureTimeMillisec', 'updateLiveStartTime']),
+    ...mapMutations('teacher', ['updateCurrentLectureTimeMillisec']),
     getElapsedTimeMillisec() {
       const vm = this;
       return Date.now() - vm.liveStartTime.getTime();
