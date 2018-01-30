@@ -71,13 +71,14 @@ export default {
       state.scDescription = scDescription;
     },
     pushScItem(state, { type }) {
+      // TODO: 타입에 따라서 scItem Object에 들어가는 key 조정
       const key = Guid.create().toString();
-      const activeStartDatetime = null;
-      const activeEndDatetime = null;
-      const isResultVisible = true;
       const title = null;
+      const order = null; // 예습? 본강의? 복습?
       const description = null;
-      const order = null;
+      const activeStartOffsetSec = null; // 강의 활성화 시각 기준으로 몇초 뒤에 활성화되냐
+      const activeEndOffsetSec = null; // 강의 활성화 시각 기준으로 몇초 뒤에 비활성화되냐
+      const isResultVisible = true; // 설문이나 문항을 풀고 나서 수강생중 몇퍼가 1번 선택했고.. 뭐 그런게 결과인데, 결과가 보이냐 마냐
       const fileList = [];
       const survey = { choice: [] };
       const scItem = {
@@ -85,8 +86,8 @@ export default {
         title,
         type,
         order,
-        activeStartDatetime,
-        activeEndDatetime,
+        activeStartOffsetSec,
+        activeEndOffsetSec,
         isResultVisible,
         description,
         fileList,
