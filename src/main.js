@@ -8,6 +8,7 @@ import VueTheMask from 'vue-the-mask';
 import VueResize from 'vue-resize';
 import Vue2Filters from 'vue2-filters';
 import Vlf from 'vlf';
+import VueScrollTo from 'vue-scrollto';
 import authPlugin from './utils/authPlugin';
 
 import App from './App';
@@ -29,6 +30,7 @@ Vue.use(authPlugin, {
 Vue.use(VueResize);
 Vue.use(Vue2Filters);
 Vue.use(Vlf);
+Vue.use(VueScrollTo);
 
 const defaultLocale = utils.getDefaultLocale();
 
