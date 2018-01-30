@@ -62,6 +62,7 @@
               <h1>아이템 편집</h1>
               <sc-common-editor />
               <sc-material-editor />
+              <sc-survey-editor />
               <sc-active-time-editor />
 
             </el-col>
@@ -102,6 +103,7 @@ import ScItemAdder from '../partials/ScItemAdder';
 import ScMaterialEditor from '../partials/ScMaterialEditor';
 import ScActiveTimeEditor from '../partials/ScActiveTimeEditor';
 import ScCommonEditor from '../partials/ScCommonEditor';
+import ScSurveyEditor from '../partials/ScSurveyEditor';
 import TeachingClassList from '../partials/TeachingClassList';
 
 export default {
@@ -112,6 +114,7 @@ export default {
     ScItemAdder,
     ScCommonEditor,
     ScMaterialEditor,
+    ScSurveyEditor,
     ScActiveTimeEditor,
     TeachingClassList,
   },

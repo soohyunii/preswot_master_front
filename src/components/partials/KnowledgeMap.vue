@@ -44,10 +44,12 @@
 <script>
 import { mapState } from 'vuex';
 import D3Network from 'vue-d3-network';
+import KnowledgeMapNodeEditor from './KnowledgeMapNodeEditor';
 
 export default {
   components: {
     D3Network,
+    KnowledgeMapNodeEditor,
   },
   data() {
     return {
