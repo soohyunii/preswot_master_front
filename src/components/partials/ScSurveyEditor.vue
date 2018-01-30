@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!isScEmpty">
+  <div>
     <h1>
       Sc Survey Editor Template
     </h1>
