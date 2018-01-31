@@ -16,7 +16,11 @@
       <el-table-column label="Sid" align="center">
         <template slot-scope="scope">
           <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].sid">
-            <el-input v-model="edges[scope.$index].sid" />
+            <el-autocomplete
+              class="inline-input"
+              v-model="edges[scope.$index].sid"
+              :fetch-suggestions="querySearch"
+            />
             <el-button @click="onClick('changeEdgeSid', scope.$index)">확인</el-button>
           </div>
           <div v-else>
@@ -27,7 +31,11 @@
       <el-table-column label="Tid" align="center">
         <template slot-scope="scope">
           <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].tid">
-            <el-input v-model="edges[scope.$index].tid" />
+            <el-autocomplete
+              class="inline-input"
+              v-model="edges[scope.$index].tid"
+              :fetch-suggestions="querySearch"
+            />
             <el-button @click="onClick('changeEdgeTid', scope.$index)">확인</el-button>
           </div>
           <div v-else>
@@ -47,7 +55,7 @@
         </template>
       </el-table-column>
     </el-table>
-    {{ inputFlag }}
+    {{ edges }}
   </div>
 </template>
 
@@ -62,7 +70,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('teacher', ['edges']),
+    ...mapState('teacher', ['nodes', 'edges']),
   },
   methods: {
     ...mapMutations('teacher', ['updateEdges', 'addEdges', 'deleteEdges']),
@@ -90,6 +98,18 @@ export default {
           throw new Error('not defined type', type);
         }
       }
+    },
+    querySearch(queryString, cb) {
+      const vm = this;
+      const links = this.nodes;
+      const results = queryString ? links.filter(vm.createFilter(queryString)) : links;
+      // call callback function to return suggestions
+      cb(results);
+    },
+    createFilter(queryString) { // eslint-disable-next-line
+      return (link) => {
+        return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+      };
     },
   },
 };

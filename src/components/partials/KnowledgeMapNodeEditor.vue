@@ -15,12 +15,12 @@
       </template>
       <el-table-column label="Name" align="center">
         <template slot-scope="scope">
-          <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].name">
-            <el-input v-model="nodes[scope.$index].name" />
+          <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].value">
+            <el-input v-model="nodes[scope.$index].value" />
             <el-button @click="onClick('changeNodeName', scope.$index)">확인</el-button>
           </div>
           <div v-else>
-            <span>{{ scope.row.name }}<i class="el-icon-edit" @click="onClick('changeNodeName', scope.$index)" /></span>
+            <span>{{ scope.row.value }}<i class="el-icon-edit" @click="onClick('changeNodeName', scope.$index)" /></span>
           </div>
         </template>
       </el-table-column>
@@ -59,12 +59,12 @@ export default {
       const vm = this;
       switch (type) {
         case 'addNode': {
-          vm.addNodes({ node: { name: `노드 이름${index}`, weight: 50 } });
-          vm.inputFlag.push({ name: false, weight: false });
+          vm.addNodes({ node: { value: `노드 이름${index}`, weight: 50 } });
+          vm.inputFlag.push({ value: false, weight: false });
           break;
         }
         case 'changeNodeName': {
-          vm.inputFlag[index].name = !vm.inputFlag[index].name;
+          vm.inputFlag[index].value = !vm.inputFlag[index].value;
           break;
         }
         case 'changeNodeWeight': {
