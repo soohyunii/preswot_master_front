@@ -27,7 +27,7 @@
       <el-table-column label="Tid" align="center">
         <template slot-scope="scope">
           <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].tid">
-            <el-input v-model="edges[scope.$index].tid"></el-input>
+            <el-input v-model="edges[scope.$index].tid" />
             <el-button @click="onClick('changeEdgeTid', scope.$index)">확인</el-button>
           </div>
           <div v-else>
@@ -38,7 +38,7 @@
       <el-table-column label="Weight" align="center">
         <template slot-scope="scope">
           <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].weight">
-            <el-input v-model="edges[scope.$index].weight"></el-input>
+            <el-input type="number" v-model="edges[scope.$index].weight" />
             <el-button @click="onClick('changeEdgeWeight', scope.$index)">확인</el-button>
           </div>
           <div v-else>
@@ -47,7 +47,7 @@
         </template>
       </el-table-column>
     </el-table>
-    {{ edges }}
+    {{ inputFlag }}
   </div>
 </template>
 
@@ -71,7 +71,7 @@ export default {
       switch (type) {
         case 'addEdge': {
           vm.addEdges({ edge: { sid: `sid${index}`, tid: `tid${index}`, weight: 50 } });
-          vm.inputFlag.push({ sid: false, tid: false, wieght: false });
+          vm.inputFlag.push({ sid: false, tid: false, weight: false });
           break;
         }
         case 'changeEdgeSid': {

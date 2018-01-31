@@ -27,7 +27,7 @@
       <el-table-column label="Weight" align="center">
         <template slot-scope="scope">
           <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].weight">
-            <el-input v-model="nodes[scope.$index].weight"></el-input>
+            <el-input type="number" v-model="nodes[scope.$index].weight" />
             <el-button @click="onClick('changeNodeWeight', scope.$index)">확인</el-button>
           </div>
           <div v-else>
