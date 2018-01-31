@@ -3,7 +3,7 @@
     <h1>Teacher Lecture Live Template</h1>
     <el-container>
       <el-aside width="150px">
-        <teaching-class-list />
+        <teaching-class-list-aisde />
       </el-aside>
 
       <!-- 이 메인은 맞음 시작 -->
@@ -93,7 +93,7 @@ import ScItemAdder from '../partials/ScItemAdder';
 import ScItemSummary from '../partials/ScItemSummary';
 import ScMaterialEditor from '../partials/ScMaterialEditor';
 import ScActiveTimeEditor from '../partials/ScActiveTimeEditor';
-import TeachingClassList from '../partials/TeachingClassList';
+import TeachingClassListAside from '../partials/TeachingClassListAside';
 
 export default {
   name: 'TeacherLectureLive',
@@ -103,7 +103,7 @@ export default {
     ScItemSummary,
     ScMaterialEditor,
     ScActiveTimeEditor,
-    TeachingClassList,
+    TeachingClassListAside,
   },
   data() {
     // TODO: translate

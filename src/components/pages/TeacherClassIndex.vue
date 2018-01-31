@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-container>
-      <teaching-class-list @moveClass="changeScenario"/>
+      <teaching-class-list-aside @moveClass="changeScenario"/>
 
       <el-main>
         <h3>{{ currentEditingClass }}</h3><hr>
@@ -26,7 +26,7 @@
 import { mapState } from 'vuex';
 import ClassScenario from '../partials/ClassScenario';
 import LectureStatistics from '../partials/LectureStatistics';
-import TeachingClassList from '../partials/TeachingClassList';
+import TeachingClassListAside from '../partials/TeachingClassListAside';
 import teacherService from '../../services/teacherService';
 
 export default {
@@ -50,7 +50,7 @@ export default {
   components: {
     ClassScenario,
     LectureStatistics,
-    TeachingClassList,
+    TeachingClassListAside,
   },
 };
 
