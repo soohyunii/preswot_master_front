@@ -76,17 +76,31 @@ export default {
     ...mapState('teacher', ['nodes', 'edges']),
     network() {
       const vm = this;
+      const nodes = vm.nodes.map(node => ({
+        id: node.name,
+        name: node.name,
+        _size: node.weight,
+        pinned: vm.pinned,
+      }));
+
+      const edges = [];
+      const nodesNames = [];
+      for (let i = 0; i < vm.nodes.length; i += 1) {
+        nodesNames.push(vm.nodes[i].name);
+      }
+      for (let i = 0; i < vm.edges.length; i += 1) {
+        if (nodesNames.includes(vm.edges[i].sid) &&
+            nodesNames.includes(vm.edges[i].tid)) {
+          edges.push({
+            sid: vm.edges[i].sid,
+            tid: vm.edges[i].tid,
+            // weigth: vm.edges[i].weigth,
+          });
+        }
+      }
       return {
-        nodes: vm.nodes.map(node => ({
-          id: node.name,
-          name: node.name,
-          _size: node.weight,
-          pinned: vm.pinned,
-        })),
-        edges: vm.edges.map(edge => ({
-          sid: edge.sid,
-          tid: edge.tid,
-        })),
+        nodes,
+        edges,
       };
     },
     options() {

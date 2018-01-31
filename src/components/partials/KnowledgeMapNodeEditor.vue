@@ -54,12 +54,12 @@ export default {
     ...mapState('teacher', ['nodes', 'edges']),
   },
   methods: {
-    ...mapMutations('teacher', ['updateNodes', 'addNodes', 'deleteNodes']),
+    ...mapMutations('teacher', ['updateNodes', 'updateEdges', 'addNodes', 'deleteNodes']),
     onClick(type, index) {
       const vm = this;
       switch (type) {
         case 'addNode': {
-          vm.addNodes({ node: { name: `노드 이름${index}`, weight: 50 } });
+          vm.addNodes({ node: { name: `노드 이름${index}`, weight: 10 } });
           vm.inputFlag.push({ name: false, weight: false });
           vm.updateEdges({ edges: vm.edges });
           break;
