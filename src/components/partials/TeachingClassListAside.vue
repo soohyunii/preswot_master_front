@@ -7,6 +7,7 @@
         :key="index"
       >
         <!-- {{ item }} -->
+        <!-- {{ isCurrentClass(item, index) }} {{ index }} {{ currentClassIndex }} -->
         <!-- TODO: link to each class -->
         <el-tooltip
           effect="dark"
@@ -19,7 +20,7 @@
           <el-button
             class="class-btn"
             @click="clickClassButton(item, index)"
-            :type="isCurrentClass(item) ? 'info' : ''"
+            :type="isCurrentClass(item, index) ? 'info' : ''"
           >
             <i class="el-icon-document" style="font-size: 50px;"></i>
             <br />
@@ -53,7 +54,7 @@
 
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex';
+import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
 // import teacherService from '../../services/teacherService';
 
 export default {
@@ -66,6 +67,7 @@ export default {
   computed: {
     ...mapState('teacher', [
       'teachingClassList',
+      'currentClassIndex',
     ]),
   },
   methods: {
@@ -77,12 +79,12 @@ export default {
       const vm = this;
       vm.$router.push('/a/teacher/class/new');
     },
-    isCurrentClass(item) {
+    isCurrentClass(item, index) {
       const vm = this;
-      if (!vm.currentClass) {
+      if (vm.currentClassIndex === null) {
         return false;
       }
-      return item.name.class_id === vm.currentClass.class_id; // TODO: currentClass id
+      return index === vm.currentClassIndex; // TODO: currentClass id
     },
     clickClassButton(item, index) {
       const vm = this;
