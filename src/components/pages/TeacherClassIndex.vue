@@ -16,7 +16,7 @@
         <class-scenario :tableData="scenarioList"></class-scenario>
 
         <!-- TODO: Implement dummy response about lecture statistics -->
-        <lecture-statistics></lecture-statistics>
+        <class-statistics />
       </el-main>
     </el-container>
   </div>
@@ -25,7 +25,7 @@
 <script>
 import { mapState } from 'vuex';
 import ClassScenario from '../partials/ClassScenario';
-import LectureStatistics from '../partials/LectureStatistics';
+import ClassStatistics from '../partials/ClassStatistics';
 import TeachingClassListAside from '../partials/TeachingClassListAside';
 import teacherService from '../../services/teacherService';
 
@@ -49,7 +49,7 @@ export default {
   },
   components: {
     ClassScenario,
-    LectureStatistics,
+    ClassStatistics,
     TeachingClassListAside,
   },
 };
