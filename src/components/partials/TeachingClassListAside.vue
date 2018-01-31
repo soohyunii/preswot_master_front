@@ -55,7 +55,7 @@ import { mapState, mapMutations, mapActions } from 'vuex';
 // import teacherService from '../../services/teacherService';
 
 export default {
-  name: 'teachingClassList',
+  name: 'TeachingClassListAside',
   data() {
     return {
       truncateLength: 10,

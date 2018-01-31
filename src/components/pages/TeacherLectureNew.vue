@@ -2,7 +2,7 @@
   <div>
     <el-container>
       <el-aside width="150px">
-        <teaching-class-list-aisde />
+        <teaching-class-list-aside />
       </el-aside>
 
       <!-- 이 메인은 맞음 시작 -->
@@ -115,7 +115,7 @@ import ScSurveyEditor from '../partials/ScSurveyEditor';
 import TeachingClassListAside from '../partials/TeachingClassListAside';
 
 export default {
-  name: 'TeacherNewLecture',
+  name: 'TeacherLectureNew',
   components: {
     Sc,
     ScEditor,
