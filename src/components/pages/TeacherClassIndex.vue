@@ -17,7 +17,8 @@
           TODO: Select Class from left menus!
         </div>
         <div v-else>
-          <h3>{{ currentEditingClass }}</h3><hr>
+          currentClass: <pre style="font-size: 70%;">{{ currentClass }}</pre>
+          <h3>{{ currentClass.name }}</h3><hr>
 
           <!-- TODO: translation -->
           <!-- TODO: Link to each page per button-->
@@ -47,11 +48,11 @@
 </style>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
+import { mapGetters } from 'vuex';
 import ClassScenario from '../partials/ClassScenario';
 import ClassStatistics from '../partials/ClassStatistics';
 import TeachingClassListAside from '../partials/TeachingClassListAside';
-import teacherService from '../../services/teacherService';
+// import teacherService from '../../services/teacherService';
 // import classService from '../../services/classService';
 
 
@@ -64,19 +65,19 @@ export default {
     };
   },
   computed: {
-    ...mapState('teacher', ['currentEditingClass']),
     ...mapGetters('teacher', [
       'isTeachingClassListEmpty',
       'currentClass',
     ]),
   },
-  methods: {
-    async changeScenario() {
-      const vm = this;
-      const teachingClassName = vm.currentEditingClass;
-      vm.scenarioList = await teacherService.fetchScenarioList({ teachingClassName });
-    },
-  },
+  // TODO: delete
+  // methods: {
+  //   async changeScenario() {
+  //     const vm = this;
+  //     const teachingClassName = vm.currentEditingClass;
+  //     vm.scenarioList = await teacherService.fetchScenarioList({ teachingClassName });
+  //   },
+  // },
   // TODO: delete
   // async mounted() {
   //   const res = await classService.createClass();

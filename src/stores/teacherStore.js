@@ -36,7 +36,6 @@ export default {
     sc: [],
     currentEditingScItemIndex: null,
     currentTeachingScItemIndex: null,
-    // TODO: delete currentEditingClass located at other places
     // //////////////////////////절취선////////////////////////// //
   },
   getters: {

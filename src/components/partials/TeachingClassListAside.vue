@@ -54,7 +54,7 @@
 
 
 <script>
-import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 // import teacherService from '../../services/teacherService';
 
 export default {
