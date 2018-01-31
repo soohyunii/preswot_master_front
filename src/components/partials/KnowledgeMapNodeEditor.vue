@@ -8,31 +8,38 @@
         <tr>
           <td width="500px" align="center">
             <div class="cell">
-              <i class="el-icon-circle-plus-outline" @click="onClick('addNode', nodes.length + 1)" />
+              <i class="el-icon-circle-plus-outline" @click="onClick('addNode')" />
             </div>
           </td>
         </tr>
       </template>
       <el-table-column label="Name" align="center">
         <template slot-scope="scope">
-          <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].name">
-            <el-input v-model="nodes[scope.$index].name" />
+          <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].value">
+            <el-input v-model="nodes[scope.$index].value" />
             <el-button @click="onClick('changeNodeName', scope.$index)">확인</el-button>
           </div>
           <div v-else>
-            <span>{{ scope.row.name }}<i class="el-icon-edit" @click="onClick('changeNodeName', scope.$index)" /></span>
+            <span>{{ scope.row.value }}<i class="el-icon-edit" @click="onClick('changeNodeName', scope.$index)" /></span>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="Weight" align="center">
         <template slot-scope="scope">
           <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].weight">
-            <el-input v-model="nodes[scope.$index].weight"></el-input>
+            <el-input type="number" v-model="nodes[scope.$index].weight" />
             <el-button @click="onClick('changeNodeWeight', scope.$index)">확인</el-button>
           </div>
           <div v-else>
             <span>{{ scope.row.weight }}<i class="el-icon-edit" @click="onClick('changeNodeWeight', scope.$index)" /></span>
           </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="Operation" align="center">
+        <template slot-scope="scope">
+          <el-button size="mini" type="danger" @click="onClick('delete', scope.$index)">
+            delete
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -48,6 +55,7 @@ export default {
   data() {
     return {
       inputFlag: [],
+      count: 1,
     };
   },
   computed: {
@@ -59,17 +67,21 @@ export default {
       const vm = this;
       switch (type) {
         case 'addNode': {
-          vm.addNodes({ node: { name: `노드 이름${index}`, weight: 10 } });
-          vm.inputFlag.push({ name: false, weight: false });
-          vm.updateEdges({ edges: vm.edges });
+          vm.addNodes({ node: { value: `노드 이름${vm.count}`, weight: 50 } });
+          vm.inputFlag.push({ value: false, weight: false });
+          vm.count += 1;
           break;
         }
         case 'changeNodeName': {
-          vm.inputFlag[index].name = !vm.inputFlag[index].name;
+          vm.inputFlag[index].value = !vm.inputFlag[index].value;
           break;
         }
         case 'changeNodeWeight': {
           vm.inputFlag[index].weight = !vm.inputFlag[index].weight;
+          break;
+        }
+        case 'delete': {
+          vm.deleteNodes({ nodeIndex: index });
           break;
         }
         default: {

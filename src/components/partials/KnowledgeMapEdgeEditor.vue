@@ -8,7 +8,7 @@
         <tr>
           <td width="500px" align="center">
             <div class="cell">
-              <i class="el-icon-circle-plus-outline" @click="onClick('addEdge', edges.length + 1)" />
+              <i class="el-icon-circle-plus-outline" @click="onClick('addEdge')" />
             </div>
           </td>
         </tr>
@@ -16,7 +16,11 @@
       <el-table-column label="Sid" align="center">
         <template slot-scope="scope">
           <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].sid">
-            <el-input v-model="edges[scope.$index].sid" />
+            <el-autocomplete
+              class="inline-input"
+              v-model="edges[scope.$index].sid"
+              :fetch-suggestions="querySearch"
+            />
             <el-button @click="onClick('changeEdgeSid', scope.$index)">확인</el-button>
           </div>
           <div v-else>
@@ -27,7 +31,11 @@
       <el-table-column label="Tid" align="center">
         <template slot-scope="scope">
           <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].tid">
-            <el-input v-model="edges[scope.$index].tid"></el-input>
+            <el-autocomplete
+              class="inline-input"
+              v-model="edges[scope.$index].tid"
+              :fetch-suggestions="querySearch"
+            />
             <el-button @click="onClick('changeEdgeTid', scope.$index)">확인</el-button>
           </div>
           <div v-else>
@@ -38,12 +46,19 @@
       <el-table-column label="Weight" align="center">
         <template slot-scope="scope">
           <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].weight">
-            <el-input v-model="edges[scope.$index].weight"></el-input>
+            <el-input type="number" v-model="edges[scope.$index].weight" />
             <el-button @click="onClick('changeEdgeWeight', scope.$index)">확인</el-button>
           </div>
           <div v-else>
             <span>{{ scope.row.weight }}<i class="el-icon-edit" @click="onClick('changeEdgeWeight', scope.$index)" /></span>
           </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="Operation" align="center">
+        <template slot-scope="scope">
+          <el-button size="mini" type="danger" @click="onClick('delete', scope.$index)">
+            delete
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -59,10 +74,11 @@ export default {
   data() {
     return {
       inputFlag: [],
+      count: 1,
     };
   },
   computed: {
-    ...mapState('teacher', ['edges']),
+    ...mapState('teacher', ['nodes', 'edges']),
   },
   methods: {
     ...mapMutations('teacher', ['updateEdges', 'addEdges', 'deleteEdges']),
@@ -70,8 +86,9 @@ export default {
       const vm = this;
       switch (type) {
         case 'addEdge': {
-          vm.addEdges({ edge: { sid: `sid${index}`, tid: `tid${index}`, weight: 50 } });
-          vm.inputFlag.push({ sid: false, tid: false, wieght: false });
+          vm.addEdges({ edge: { sid: `sid${vm.count}`, tid: `tid${vm.count}`, weight: 50 } });
+          vm.inputFlag.push({ sid: false, tid: false, weight: false });
+          vm.count += 1;
           break;
         }
         case 'changeEdgeSid': {
@@ -86,10 +103,26 @@ export default {
           vm.inputFlag[index].weight = !vm.inputFlag[index].weight;
           break;
         }
+        case 'delete': {
+          vm.deleteEdges({ edgeIndex: index });
+          break;
+        }
         default: {
           throw new Error('not defined type', type);
         }
       }
+    },
+    querySearch(queryString, cb) {
+      const vm = this;
+      const links = this.nodes;
+      const results = queryString ? links.filter(vm.createFilter(queryString)) : links;
+      // call callback function to return suggestions
+      cb(results);
+    },
+    createFilter(queryString) { // eslint-disable-next-line
+      return (link) => {
+        return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+      };
     },
   },
 };
