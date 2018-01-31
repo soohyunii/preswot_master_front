@@ -2,7 +2,7 @@
   <div>
     <el-container>
       <el-aside width="150px">
-        <teaching-class-list-aside />
+        <!-- <teaching-class-list-aside /> -->
       </el-aside>
 
       <!-- 이 메인은 맞음 시작 -->
@@ -112,7 +112,6 @@ import ScMaterialEditor from '../partials/ScMaterialEditor';
 import ScActiveTimeEditor from '../partials/ScActiveTimeEditor';
 import ScCommonEditor from '../partials/ScCommonEditor';
 import ScSurveyEditor from '../partials/ScSurveyEditor';
-import TeachingClassListAside from '../partials/TeachingClassListAside';
 
 export default {
   name: 'TeacherLectureNew',
@@ -124,7 +123,6 @@ export default {
     ScMaterialEditor,
     ScSurveyEditor,
     ScActiveTimeEditor,
-    TeachingClassListAside,
   },
   mounted() {
     const vm = this;

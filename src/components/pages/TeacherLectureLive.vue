@@ -3,10 +3,8 @@
     <h1>Teacher Lecture Live Template</h1>
     <el-container>
       <el-aside width="150px">
-        <teaching-class-list-aisde />
+        <!-- <teaching-class-list-aside /> -->
       </el-aside>
-
-      <!-- 이 메인은 맞음 시작 -->
       <el-main>
         <el-row :gutter="5">
           <el-col :span="3">
@@ -63,7 +61,6 @@
           </el-row>
         </div>
       </el-main>
-      <!-- 이 메인은 맞음 끝 -->
     </el-container>
   </div>
 </template>
@@ -93,7 +90,6 @@ import ScItemAdder from '../partials/ScItemAdder';
 import ScItemSummary from '../partials/ScItemSummary';
 import ScMaterialEditor from '../partials/ScMaterialEditor';
 import ScActiveTimeEditor from '../partials/ScActiveTimeEditor';
-import TeachingClassListAside from '../partials/TeachingClassListAside';
 
 export default {
   name: 'TeacherLectureLive',
@@ -103,7 +99,6 @@ export default {
     ScItemSummary,
     ScMaterialEditor,
     ScActiveTimeEditor,
-    TeachingClassListAside,
   },
   data() {
     // TODO: translate
@@ -117,29 +112,29 @@ export default {
     };
   },
   mounted() {
-    const vm = this;
-    vm.intervalId = window.setInterval(() => {
-      // TODO: update currentLectureTIme too???
-      vm.elapsedTimeMillisec = Date.now() - vm.liveStartTime.getTime();
-    }, 498);
+    // const vm = this;
+    // vm.intervalId = window.setInterval(() => {
+    //   // TODO: update currentLectureTIme too???
+    //   vm.elapsedTimeMillisec = Date.now() - vm.liveStartTime.getTime();
+    // }, 498);
   },
-  beforeDestroy() {
-    const vm = this;
-    if (vm.intervalId) {
-      window.clearInterval(vm.intervalId);
-      vm.intervalId = null;
-    }
-  },
+  // beforeDestroy() {
+  //   const vm = this;
+  //   if (vm.intervalId) {
+  //     window.clearInterval(vm.intervalId);
+  //     vm.intervalId = null;
+  //   }
+  // },
   computed: {
-    ...mapState('teacher', ['currentLectureTimeMillisec', 'liveStartTime']),
+    ...mapState('teacher', ['currentLectureTimeMillisec']),
     ...mapGetters('teacher', ['isScEmpty']),
   },
   methods: {
     ...mapMutations('teacher', ['updateCurrentLectureTimeMillisec']),
-    getElapsedTimeMillisec() {
-      const vm = this;
-      return Date.now() - vm.liveStartTime.getTime();
-    },
+    // getElapsedTimeMillisec() {
+    //   const vm = this;
+    //   return Date.now() - vm.liveStartTime.getTime();
+    // },
   },
 };
 </script>
