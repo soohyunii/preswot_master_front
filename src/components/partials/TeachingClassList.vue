@@ -1,5 +1,5 @@
 <template>
-  <el-aside width="150px">
+  <el-aside width="150px" id="teacher_class_list_aside">
     <template v-for="(item, key) in teachingClassList">
       <el-row :key="key">
         <el-col align="center">
@@ -12,9 +12,14 @@
             :open-delay="800"
           >
             <!-- TODO: currentClass 모습, 나머지 class 모습 바꾸기 -->
-            <el-button @click="changeCurrentClass(item)" :type="isCurrentClass(item) ? 'info' : ''">
-            <i :class="dummyIcons()" style="font-size: 50px;"></i><br/>
-            {{ item.className | truncate(truncateLength) }}
+            <el-button
+              class="class-btn"
+              @click="changeCurrentClass(item)"
+              :type="isCurrentClass(item) ? 'info' : ''"
+            >
+              <i :class="dummyIcons()" style="font-size: 50px;"></i>
+              <br />
+              {{ item.className | truncate(truncateLength) }}
             </el-button>
           </el-tooltip>
         </el-col>
@@ -26,13 +31,25 @@
         <!-- TODO: Implement adding lecture part -->
         <!-- TODO: translation -->
         <el-button @click="dummyAddClass()">
-        <i class='el-icon-circle-plus' style="font-size: 50px;"></i><br/>
+        <i class='el-icon-circle-plus' style="font-size: 50px;"></i> <br/>
         과목 추가
         </el-button>
       </el-col>
     </el-row>
   </el-aside>
 </template>
+
+<style lang="scss" scoped>
+#teacher_class_list_aside {
+  .class-btn {
+    width: 120px;
+    i {
+      font-size: 50px;
+    }
+  }
+}
+</style>
+
 
 <script>
 import { mapState, mapMutations } from 'vuex';
@@ -42,7 +59,7 @@ export default {
   name: 'teachingClassList',
   data() {
     return {
-      truncateLength: 10,
+      truncateLength: 5,
     };
   },
   computed: {

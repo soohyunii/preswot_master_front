@@ -37,7 +37,7 @@
               </el-dropdown-menu>
             </el-dropdown>
 
-            <router-link to="/a/teacher" v-show="isJwtValid">
+            <router-link to="/a/teacher/class" v-show="isJwtValid">
               <el-button type="primary">
                 <i class="fa fa-pencil-square-o"></i>
               </el-button>
