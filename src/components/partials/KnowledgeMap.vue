@@ -17,27 +17,28 @@
         :options="options"
         :link-cb="lcb"
         @node-click="nodeClick"/>
-      <el-row :gutter="10">
-        <el-col :offset="20" :span="4">
+      <el-row :gutter="5">
+        <el-col :offset="20" :span="1.5">
+          <!-- TODO: translate -->
+          <el-checkbox v-model="pinned" border>고정</el-checkbox>
+        </el-col>
+        <!-- TODO: translate
+        <el-col :span="3">
           <el-radio-group v-model="mode">
-            <!-- TODO: translate -->
-            <!-- 수정 기능 ? -->
             <el-radio-button label="select">선택</el-radio-button>
-            <el-radio-button label="pin">고정</el-radio-button>
             <el-radio-button label="delete">삭제</el-radio-button>
             <el-radio-button label="link">링크</el-radio-button>
           </el-radio-group>
-        </el-col>
+        </el-col> -->
       </el-row>
       <knowledge-map-node-editor />
     </div>
     <h1>debug</h1>
     {{mode}}<br/>
-    <pre>
-      select node: {{selectedNode}}
-      nodes: {{network.nodes}}
-      edges: {{network.edges}}
-    </pre>
+  <pre>select node: {{selectedNode}}
+  nodes: {{network.nodes}}
+  edges: {{network.edges}}
+  </pre>
   </div>
 </template>
 
@@ -54,6 +55,7 @@ export default {
   data() {
     return {
       mode: 'select',
+      pinned: false,
       selectedNode: '',
       nodeSize: 10,
       canvas: false,
@@ -70,6 +72,7 @@ export default {
           id: node.name,
           name: node.name,
           _size: node.weight,
+          pinned: vm.pinned,
         })),
         edges: vm.edges.map(edge => ({
           sid: edge.sid,
@@ -90,6 +93,10 @@ export default {
     },
   },
   methods: {
+    pinning() {
+      const vm = this;
+      vm.pinned = !vm.pinned;
+    },
     nodeClick(event, node) {
       const vm = this;
       vm.selectedNode = node;
