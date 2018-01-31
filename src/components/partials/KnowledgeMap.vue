@@ -31,7 +31,14 @@
           </el-radio-group>
         </el-col> -->
       </el-row>
-      <knowledge-map-node-editor />
+      <el-row>
+        <el-col :span="12">
+          <knowledge-map-node-editor></knowledge-map-node-editor>
+        </el-col>
+        <el-col :span="12">
+          <knowledge-map-edge-editor></knowledge-map-edge-editor>
+        </el-col>
+      </el-row>
     </div>
     <h1>debug</h1>
     {{mode}}<br/>
@@ -46,11 +53,13 @@
 import { mapState } from 'vuex';
 import D3Network from 'vue-d3-network';
 import KnowledgeMapNodeEditor from './KnowledgeMapNodeEditor';
+import KnowledgeMapEdgeEditor from './KnowledgeMapEdgeEditor';
 
 export default {
   components: {
     D3Network,
     KnowledgeMapNodeEditor,
+    KnowledgeMapEdgeEditor,
   },
   data() {
     return {

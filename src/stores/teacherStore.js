@@ -23,59 +23,12 @@ export default {
     currentEditingClass: null,
     currentLectureTimeMillisec: null,
     liveStartTime: null,
-    nodes: [
-      {
-        name: '배열',
-        weight: 30,
-        categories: [],
-      },
-      {
-        name: '포인터',
-        weight: 20,
-        categories: [],
-      },
-      {
-        name: '함수',
-        weight: 15,
-        categories: [],
-      },
-      {
-        name: '함수2',
-        weight: 10,
-        categories: [],
-      },
-      {
-        name: '파일입출력',
-        weight: 10,
-        categories: [],
-      },
-      {
-        name: 'addNodeItem',
-      }],
-    edges: [
-      {
-        sid: '배열',
-        tid: '포인터',
-        weight: 10,
-      },
-      {
-        sid: '포인터',
-        tid: '함수',
-        weight: 10,
-      },
-      {
-        sid: '함수',
-        tid: '함수2',
-        weight: 10,
-      },
-    ],
+    nodes: [],
+    edges: [],
   },
   getters: {
     isScEmpty(state) {
       return state.sc.length === 0;
-    },
-    isNodesEmpty(state) {
-      return state.nodes.length === 1;
     },
     currentEditingScItem(state) {
       return state.sc[state.currentEditingScItemIndex];
@@ -114,11 +67,14 @@ export default {
     addNodes(state, { node }) {
       state.nodes.push(node);
     },
+    addEdges(state, { edge }) {
+      state.edges.push(edge);
+    },
     deleteNodes(state, { nodeIndex }) {
       state.nodes.splice(nodeIndex, 1);
     },
     deleteEdges(state, { edgeIndex }) {
-      state.nodes.splice(edgeIndex, 1);
+      state.edges.splice(edgeIndex, 1);
     },
     updateScTitle(state, { scTitle }) {
       state.scTitle = scTitle;
