@@ -51,10 +51,10 @@ export default {
     };
   },
   computed: {
-    ...mapState('teacher', ['nodes']),
+    ...mapState('teacher', ['nodes', 'edges']),
   },
   methods: {
-    ...mapMutations('teacher', ['updateNodes', 'addNodes', 'deleteNodes']),
+    ...mapMutations('teacher', ['updateNodes', 'updateEdges', 'addNodes', 'deleteNodes']),
     onClick(type, index) {
       const vm = this;
       switch (type) {
