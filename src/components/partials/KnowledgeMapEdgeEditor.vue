@@ -81,7 +81,7 @@ export default {
     ...mapState('teacher', ['nodes', 'edges']),
   },
   methods: {
-    ...mapMutations('teacher', ['updateEdges', 'addEdges', 'deleteEdges']),
+    ...mapMutations('teacher', ['addEdges', 'deleteEdges']),
     onClick(type, index) {
       const vm = this;
       switch (type) {

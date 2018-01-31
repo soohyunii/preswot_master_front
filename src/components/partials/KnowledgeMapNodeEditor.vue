@@ -16,22 +16,22 @@
       <el-table-column label="Name" align="center">
         <template slot-scope="scope">
           <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].value">
-            <el-input v-model="nodes[scope.$index].value" />
+            <el-input v-model="nodes[scope.$index].name" />
             <el-button @click="onClick('changeNodeName', scope.$index)">확인</el-button>
           </div>
           <div v-else>
-            <span>{{ scope.row.value }}<i class="el-icon-edit" @click="onClick('changeNodeName', scope.$index)" /></span>
+            <span>{{ scope.row.name }}<i class="el-icon-edit" @click="onClick('changeNodeName', scope.$index)" /></span>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="Weight" align="center">
         <template slot-scope="scope">
           <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].weight">
-            <el-input type="number" v-model="nodes[scope.$index].weight" />
+            <el-input type="number" v-model="nodes[scope.$index]._size" />
             <el-button @click="onClick('changeNodeWeight', scope.$index)">확인</el-button>
           </div>
           <div v-else>
-            <span>{{ scope.row.weight }}<i class="el-icon-edit" @click="onClick('changeNodeWeight', scope.$index)" /></span>
+            <span>{{ scope.row._size }}<i class="el-icon-edit" @click="onClick('changeNodeWeight', scope.$index)" /></span>
           </div>
         </template>
       </el-table-column>
@@ -62,17 +62,19 @@ export default {
     ...mapState('teacher', ['nodes', 'edges']),
   },
   methods: {
-    ...mapMutations('teacher', ['updateNodes', 'updateEdges', 'addNodes', 'deleteNodes']),
+    ...mapMutations('teacher', ['addNodes', 'deleteNodes']),
     onClick(type, index) {
       const vm = this;
       switch (type) {
         case 'addNode': {
-          vm.addNodes({ node: { value: `노드 이름${vm.count}`, weight: 50 } });
+          vm.addNodes({ node: { value: `노드 이름${vm.count}`, _size: 10 } });
           vm.inputFlag.push({ value: false, weight: false });
           vm.count += 1;
           break;
         }
         case 'changeNodeName': {
+          vm.nodes[index].id = vm.nodes[index].name;
+          vm.nodes[index].value = vm.nodes[index].name;
           vm.inputFlag[index].value = !vm.inputFlag[index].value;
           break;
         }

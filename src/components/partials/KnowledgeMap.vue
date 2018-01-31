@@ -12,8 +12,8 @@
     </svg>
     <div class="network">
       <d3-network
-        :net-nodes="network.nodes"
-        :net-links="network.edges"
+        :net-nodes="nodes"
+        :net-links="validEdges"
         :options="options"
         :link-cb="lcb"
         @node-click="nodeClick"/>
@@ -43,8 +43,8 @@
     <h1>debug</h1>
     {{mode}}<br/>
   <pre>select node: {{selectedNode}}
-  nodes: {{network.nodes}}
-  edges: {{network.edges}}
+  nodes: {{nodes}}
+  edges: {{validEdges}}
   </pre>
   </div>
 </template>
@@ -74,15 +74,8 @@ export default {
   },
   computed: {
     ...mapState('teacher', ['nodes', 'edges']),
-    network() {
+    validEdges() {
       const vm = this;
-      const nodes = vm.nodes.map(node => ({
-        id: node.name,
-        name: node.name,
-        _size: node.weight,
-        pinned: vm.pinned,
-      }));
-
       const edges = [];
       const nodesNames = [];
       for (let i = 0; i < vm.nodes.length; i += 1) {
@@ -98,10 +91,8 @@ export default {
           });
         }
       }
-      return {
-        nodes,
-        edges,
-      };
+      window.console.log(edges);
+      return edges;
     },
     options() {
       const vm = this;
