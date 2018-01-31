@@ -1,4 +1,5 @@
-const Guid = require('guid');
+import Guid from 'guid';
+// import classService from '../services/classService';
 
 export default {
   namespaced: true,

@@ -9,4 +9,18 @@ export default {
       headers: config.getHeaders(),
     });
   },
+  // TODO: add param
+  createClass() {
+    return axios({
+      method: 'post',
+      url: `${config.serverUrl}/classes`,
+      headers: config.getHeaders(),
+      data: {
+        name: 'ddddd',
+        description: 'dddd',
+        intendedLectureNum: 15,
+        teachers: [2],
+      },
+    });
+  },
 };

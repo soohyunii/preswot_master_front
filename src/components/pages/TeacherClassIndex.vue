@@ -52,6 +52,8 @@ import ClassScenario from '../partials/ClassScenario';
 import ClassStatistics from '../partials/ClassStatistics';
 import TeachingClassListAside from '../partials/TeachingClassListAside';
 import teacherService from '../../services/teacherService';
+// import classService from '../../services/classService';
+
 
 export default {
   name: 'TeacherClassIndex',
@@ -72,6 +74,11 @@ export default {
       vm.scenarioList = await teacherService.fetchScenarioList({ teachingClassName });
     },
   },
+  // TODO: delete
+  // async mounted() {
+  //   const res = await classService.createClass();
+  //   console.log(res);
+  // },
   components: {
     ClassScenario,
     ClassStatistics,
