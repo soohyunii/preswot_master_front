@@ -11,6 +11,12 @@ export default {
     teachingClassList: [],
     // //////////////////////////절취선////////////////////////// //
     /**
+     * TeacherClassIndex 관련 변수들
+     * @var {number} currentClassIndex: teachingClassList에서 선택된 과목의 index
+     */
+    currentClassIndex: null,
+    // //////////////////////////절취선////////////////////////// //
+    /**
      * TeacherLectureNew / TeacherLectureLive 관련 변수들
      * @var {string} scTitle
      * @var {string} scType
@@ -33,6 +39,16 @@ export default {
     // //////////////////////////절취선////////////////////////// //
   },
   getters: {
+    isTeachingClassListEmpty(state) {
+      return state.teachingClassList.length === 0;
+    },
+    currentClass(state) {
+      const index = state.currentClassIndex;
+      if (!index) {
+        return null;
+      }
+      return state.teachingClassList[index];
+    },
     isScEmpty(state) {
       return state.sc.length === 0;
     },
@@ -53,16 +69,11 @@ export default {
       res.sc = state.sc;
       return res;
     },
-    // 이걸 여기다 추가하니까, state.liveStartTime이 바뀌어야만 vuex getters가 갱신이 일어남.
-    // 그냥 component에서 method로 불러야할듯!!
-    // elapsedTimeMillisec(state) {
-    //   if (state.liveStartTime) {
-    //     return Date.now() - state.liveStartTime.getTime();
-    //   }
-    //   return null;
-    // },
   },
   mutations: {
+    updateCurrentClassIndex(state, { currentClassIndex }) {
+      state.currentClassIndex = currentClassIndex;
+    },
     updateScTitle(state, { scTitle }) {
       state.scTitle = scTitle;
     },

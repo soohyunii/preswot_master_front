@@ -40,6 +40,7 @@
 
 <style lang="scss" scoped>
 #teacher_class_list_aside {
+  padding-top: 20px;
   .class-btn {
     width: 120px;
     i {
