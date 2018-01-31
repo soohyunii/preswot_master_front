@@ -2,18 +2,25 @@
   <div>
     <el-table
       :data="nodes"
-      :span-method="arraySpanMethod"
       border
-      style="width: 30%">
+      style="width: 500px">
+      <template slot="append">
+        <tr>
+          <td width="500px" align="center">
+            <div class="cell">
+              <i class="el-icon-circle-plus-outline" @click="onClick('addNode', nodes.length + 1)" />
+            </div>
+          </td>
+        </tr>
+      </template>
       <el-table-column label="Name" align="center">
         <template slot-scope="scope">
           <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].name">
-            <el-input v-model="nodes[scope.$index].name"></el-input>
+            <el-input v-model="nodes[scope.$index].name" width="80%"></el-input>
             <el-button @click="onClick('changeNodeName', scope.$index)">확인</el-button>
           </div>
           <div v-else>
-            <i v-if="scope.row.name === 'addNodeItem'" class="el-icon-circle-plus-outline" @click="onClick('addNode')" />
-            <span v-else>{{ scope.row.name }}<i class="el-icon-edit" @click="onClick('changeNodeName', scope.$index)" /></span>
+            <span>{{ scope.row.name }}<i class="el-icon-edit" @click="onClick('changeNodeName', scope.$index)" /></span>
           </div>
         </template>
       </el-table-column>
@@ -40,6 +47,7 @@ export default {
   name: 'KnowledgeMapNodeEditor',
   data() {
     return {
+      addNodeItem: { name: 'addNodeItem', weight: 0 },
       inputFlag: [],
     };
   },
@@ -48,24 +56,11 @@ export default {
   },
   methods: {
     ...mapMutations('teacher', ['updateNodes', 'addNodes', 'deleteNodes']),
-    arraySpanMethod({ rowIndex, columnIndex }) {
-      const vm = this;
-      if (rowIndex === vm.nodes.length - 1) {
-        if (columnIndex === 0) {
-          return [1, 2];
-        } else if (columnIndex === 1) {
-          return [0, 0];
-        }
-      }
-      return [1, 1];
-    },
     onClick(type, index) {
       const vm = this;
       switch (type) {
         case 'addNode': {
-          vm.deleteNodes({ nodeIndex: vm.nodes.length - 1 });
-          vm.addNodes({ node: { name: '노드 이름', weight: 0 } });
-          vm.addNodes({ node: { name: 'addNodeItem' } });
+          vm.addNodes({ node: { name: `노드 이름${index}`, weight: 50 } });
           vm.inputFlag.push({ name: false, weight: false });
           break;
         }

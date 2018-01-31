@@ -23,7 +23,7 @@ export default {
     currentEditingClass: null,
     currentLectureTimeMillisec: null,
     liveStartTime: null,
-    nodes: [{ name: 'addNodeItem' }],
+    nodes: [],
     edges: [],
   },
   getters: {
@@ -31,7 +31,7 @@ export default {
       return state.sc.length === 0;
     },
     isNodesEmpty(state) {
-      return state.nodes.length === 1;
+      return state.nodes.length === 0;
     },
     currentEditingScItem(state) {
       return state.sc[state.currentEditingScItemIndex];
