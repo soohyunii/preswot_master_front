@@ -85,7 +85,6 @@ export default {
       const vm = this;
       const editingClass = item.className;
       vm.updateCurrentEditingClass({ editingClass });
-      vm.$emit('moveClass');
     },
   },
   mounted() {
@@ -105,8 +104,6 @@ export default {
     //     editingClass: vm.teachingClassList[0].className,
     //   });
     // }
-
-    vm.$emit('moveClass');
   },
 };
 </script>

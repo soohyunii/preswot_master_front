@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-container>
-      <teaching-class-list-aside @moveClass="changeScenario"/>
+      <teaching-class-list-aside />
 
       <el-main>
         <h3>{{ currentEditingClass }}</h3><hr>
