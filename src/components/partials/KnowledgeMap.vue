@@ -20,7 +20,7 @@
       <el-row :gutter="5">
         <el-col :offset="20" :span="1.5">
           <!-- TODO: translate -->
-          <el-checkbox v-model="pinned" border>고정</el-checkbox>
+          <el-checkbox v-model="pinningMode" border>고정</el-checkbox>
         </el-col>
         <!-- TODO: translate
         <el-col :span="3">
@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import D3Network from 'vue-d3-network';
 import KnowledgeMapNodeEditor from './KnowledgeMapNodeEditor';
 import KnowledgeMapEdgeEditor from './KnowledgeMapEdgeEditor';
@@ -64,7 +64,7 @@ export default {
   data() {
     return {
       mode: 'select',
-      pinned: false,
+      pinningMode: false,
       selectedNode: '',
       nodeSize: 10,
       canvas: false,
@@ -91,7 +91,7 @@ export default {
           });
         }
       }
-      window.console.log(edges);
+      // window.console.log(edges);
       return edges;
     },
     options() {
@@ -107,13 +107,11 @@ export default {
     },
   },
   methods: {
-    pinning() {
-      const vm = this;
-      vm.pinned = !vm.pinned;
-    },
+    ...mapMutations('teacher', ['pinning']),
     nodeClick(event, node) {
       const vm = this;
       vm.selectedNode = node;
+      vm.pinning({ pinned: vm.pinningMode, node });
     },
     lcb(link) {
       link._svgAttrs = { // eslint-disable-line

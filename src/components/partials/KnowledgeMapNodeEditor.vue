@@ -43,7 +43,6 @@
         </template>
       </el-table-column>
     </el-table>
-    {{ nodes }}
   </div>
 </template>
 

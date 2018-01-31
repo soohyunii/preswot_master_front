@@ -58,6 +58,27 @@ export default {
     // },
   },
   mutations: {
+    pinning(state, { pinned, node }) {
+      let index = -1;
+      state.nodes.forEach((item, idx) => {
+        if (item.id === node.id) {
+          index = idx;
+        }
+      });
+      if (index < 0) {
+        return;
+      }
+      // state.nodes[index].pinned = pinned;
+      if (pinned) {
+        state.nodes[index].pinned = true;
+        state.nodes[index].fx = state.nodes[index].x;
+        state.nodes[index].fy = state.nodes[index].y;
+      } else {
+        state.nodes[index].pinned = false;
+        state.nodes[index].fx = null;
+        state.nodes[index].fy = null;
+      }
+    },
     addNodes(state, { node }) {
       const lastNode = state.nodes[state.nodes.length - 1];
       let x;
@@ -76,6 +97,7 @@ export default {
         _size: node._size, // eslint-disable-line
         x,
         y,
+        pinned: false,
       };
       state.nodes.push(createNode);
     },
