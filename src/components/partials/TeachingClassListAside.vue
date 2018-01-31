@@ -51,8 +51,8 @@
 
 
 <script>
-import { mapState, mapMutations } from 'vuex';
-import teacherService from '../../services/teacherService';
+import { mapState, mapMutations, mapActions } from 'vuex';
+// import teacherService from '../../services/teacherService';
 
 export default {
   name: 'teachingClassList',
@@ -66,7 +66,10 @@ export default {
   },
   // TODO: Replace dummy functions
   methods: {
-    ...mapMutations('teacher', ['updateCurrentEditingClass', 'updateTeachingClassList']),
+    ...mapMutations('teacher', [
+      'updateCurrentEditingClass',
+    ]),
+    ...mapActions('user', ['fetchMyClassLists']),
     dummyIcons() {
       // TODO: Replace icons of classes
       return 'el-icon-document';
@@ -87,16 +90,21 @@ export default {
   },
   async mounted() {
     const vm = this;
-    const classList = await teacherService.fetchTeachingClassList();
-    console.log('classList', classList);
-    vm.updateTeachingClassList({ classList });
 
+    vm.fetchMyClassLists();
+    // vm.testAction({
+    //   scTitle: 'testACtionTitle',
+    // });
+
+    // const classList = await teacherService.fetchTeachingClassList();
+    // console.log('classList', classList);
+    // vm.updateTeachingClassList({ classList });
     // 강사 메인화면 페이지 접속 직후 주시하는 과목 없는 경우 제일 첫번째 과목 정보 나타냄
-    if (!vm.currentEditingClass && vm.teachingClassList) {
-      vm.updateCurrentEditingClass({
-        editingClass: vm.teachingClassList[0].className,
-      });
-    }
+    // if (!vm.currentEditingClass && vm.teachingClassList) {
+    //   vm.updateCurrentEditingClass({
+    //     editingClass: vm.teachingClassList[0].className,
+    //   });
+    // }
 
     vm.$emit('moveClass');
   },

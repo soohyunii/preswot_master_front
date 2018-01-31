@@ -124,8 +124,22 @@ export default {
     updateCurrentEditingClass(state, { editingClass }) {
       state.currentEditingClass = editingClass;
     },
-    updateTeachingClassList(state, { classList }) {
-      state.teachingClassList = classList;
+    /**
+     * 하나 넣거나, 여러개 넣거나
+     * @param {object} state
+     * @param {object} teachingClass?
+     * @param {Array[object]} teachingClassList?
+     */
+    pushTeachingClass(state, { teachingClass, teachingClassList }) {
+      if (teachingClass) {
+        state.teachingClassList.push(teachingClass);
+      }
+      if (teachingClassList) {
+        Array.prototype.push.apply(state.teachingClassList, teachingClassList);
+      }
+    },
+    deleteTeachingClass(state, { teachingClassIndex }) {
+      state.teachingClassList.splice(teachingClassIndex, 1);
     },
   },
 };
