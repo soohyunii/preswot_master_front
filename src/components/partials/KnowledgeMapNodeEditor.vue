@@ -8,7 +8,7 @@
         <tr>
           <td width="500px" align="center">
             <div class="cell">
-              <i class="el-icon-circle-plus-outline" @click="onClick('addNode', nodes.length + 1)" />
+              <i class="el-icon-circle-plus-outline" @click="onClick('addNode')" />
             </div>
           </td>
         </tr>
@@ -35,6 +35,13 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column label="Operation" align="center">
+        <template slot-scope="scope">
+          <el-button size="mini" type="danger" @click="onClick('delete', scope.$index)">
+            delete
+          </el-button>
+        </template>
+      </el-table-column>
     </el-table>
     {{ nodes }}
   </div>
@@ -48,6 +55,7 @@ export default {
   data() {
     return {
       inputFlag: [],
+      count: 1,
     };
   },
   computed: {
@@ -59,8 +67,9 @@ export default {
       const vm = this;
       switch (type) {
         case 'addNode': {
-          vm.addNodes({ node: { value: `노드 이름${index}`, weight: 50 } });
+          vm.addNodes({ node: { value: `노드 이름${vm.count}`, weight: 50 } });
           vm.inputFlag.push({ value: false, weight: false });
+          vm.count += 1;
           break;
         }
         case 'changeNodeName': {
@@ -69,6 +78,10 @@ export default {
         }
         case 'changeNodeWeight': {
           vm.inputFlag[index].weight = !vm.inputFlag[index].weight;
+          break;
+        }
+        case 'delete': {
+          vm.deleteNodes({ nodeIndex: index });
           break;
         }
         default: {
