@@ -4,6 +4,7 @@ import TeacherClassIndex from '../components/pages/TeacherClassIndex';
 import TeacherLectureNew from '../components/pages/TeacherLectureNew';
 import TeacherLectureLive from '../components/pages/TeacherLectureLive';
 import StudentLectureLive from '../components/pages/StudentLectureLive';
+import TeacherClassNew from '../components/pages/TeacherClassNew';
 
 export default function authRoutes(root) {
   return [
@@ -31,6 +32,15 @@ export default function authRoutes(root) {
       component: TeacherClassIndex,
       meta: {
         title: 'Teacher Class Index', // TODO: import from i18n
+        auth: true,
+      },
+    },
+    {
+      path: '/teacher/class/new',
+      name: 'TeacherClass',
+      component: TeacherClassNew,
+      meta: {
+        title: 'Teacher Class New', // TODO: import from i18n
         auth: true,
       },
     },

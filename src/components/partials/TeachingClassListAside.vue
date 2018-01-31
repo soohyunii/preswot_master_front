@@ -20,7 +20,7 @@
             @click="changeCurrentClass(item)"
             :type="isCurrentClass(item) ? 'info' : ''"
           >
-            <i :class="dummyIcons()" style="font-size: 50px;"></i>
+            <i class="el-icon-document" style="font-size: 50px;"></i>
             <br />
             {{ item.className | truncate(truncateLength) }}
           </el-button>
@@ -29,7 +29,7 @@
       <el-col align="center">
         <!-- TODO: Implement adding lecture part -->
         <!-- TODO: translation -->
-        <el-button class="class-btn" @click="dummyAddClass()">
+        <el-button class="class-btn" @click="clickAddButton()">
           <i class='el-icon-circle-plus' style="font-size: 50px;"></i> <br/>
           과목 추가
         </el-button>
@@ -65,18 +65,14 @@ export default {
   computed: {
     ...mapState('teacher', ['teachingClassList', 'currentEditingClass']),
   },
-  // TODO: Replace dummy functions
   methods: {
     ...mapMutations('teacher', [
       'updateCurrentEditingClass',
     ]),
     ...mapActions('user', ['fetchMyClassLists']),
-    dummyIcons() {
-      // TODO: Replace icons of classes
-      return 'el-icon-document';
-    },
-    dummyAddClass() {
-      // TODO: Link to adding class page
+    clickAddButton() {
+      const vm = this;
+      vm.$router.push('/a/teacher/class/new');
     },
     isCurrentClass(item) {
       const vm = this;
@@ -92,9 +88,6 @@ export default {
     const vm = this;
 
     vm.fetchMyClassLists();
-    // vm.testAction({
-    //   scTitle: 'testACtionTitle',
-    // });
 
     // const classList = await teacherService.fetchTeachingClassList();
     // console.log('classList', classList);
