@@ -30,7 +30,7 @@ import TeachingClassListAside from '../partials/TeachingClassListAside';
 import teacherService from '../../services/teacherService';
 
 export default {
-  name: 'TeacherHome',
+  name: 'TeacherClassIndex',
   // TODO: Replace dummy functions
   data() {
     return {
