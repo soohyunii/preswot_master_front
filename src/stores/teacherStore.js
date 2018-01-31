@@ -58,14 +58,26 @@ export default {
     // },
   },
   mutations: {
-    updateNodes(state, { nodes }) {
-      state.nodes = nodes;
-    },
-    updateEdges(state, { edges }) {
-      state.edges = edges;
-    },
     addNodes(state, { node }) {
-      state.nodes.push(node);
+      const lastNode = state.nodes[state.nodes.length - 1];
+      let x;
+      let y;
+      if (lastNode) {
+        x = lastNode.x + 50;
+        y = lastNode.y + 50;
+      } else {
+        x = 0;
+        y = 0;
+      }
+      const createNode = {
+        value: node.value,
+        id: node.value,
+        name: node.value,
+        _size: node._size, // eslint-disable-line
+        x,
+        y,
+      };
+      state.nodes.push(createNode);
     },
     addEdges(state, { edge }) {
       state.edges.push(edge);
