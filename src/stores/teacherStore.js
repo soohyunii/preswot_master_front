@@ -2,25 +2,35 @@ const Guid = require('guid');
 
 export default {
   namespaced: true,
-  /**
-   * @var sc: shorthand for Scenario
-   * @var currentEditingScItemIndex: 현재 생성/편집 중인 시나리오 아이템 인덱스
-   * @var currentTeachingScItemIndex: 강의 중에 현재 진행되고 있는 시나리오 아이템 인덱스
-   */
   state: {
+    // //////////////////////////절취선////////////////////////// //
+    /**
+     * Teacher store 공통 변수들
+     * @var {Array[class]} teachingClassList
+     */
+    teachingClassList: [],
+    // //////////////////////////절취선////////////////////////// //
+    /**
+     * TeacherLectureNew / TeacherLectureLive 관련 변수들
+     * @var {string} scTitle
+     * @var {string} scType
+     * @var {string} scStartDatetime: (e.g. "2018-01-31 23:59:59")
+     * @var {string} scDescription
+     * @var { nodes: Array[node], edges: Array[node] }
+     * @var {Array[scItem]} sc: shorthand for Scenario
+     * @var {number} currentEditingScItemIndex: 현재 생성/편집 중인 시나리오 아이템 인덱스
+     * @var {number} currentTeachingScItemIndex: 강의 중에 현재 진행되고 있는 시나리오 아이템 인덱스
+     */
     scTitle: null,
     scType: null,
     scStartDatetime: null,
     scDescription: null,
     scKnowledgeMap: null,
-    sc: [], // TODO: fetch(init) from server if exists
-    // TODO: Otherwise, init from localStorage (in case of server has no data)
-    // currentEditingScItem: null, // TODO: init from localStorage
+    sc: [],
     currentEditingScItemIndex: null,
-    // TODO: save currentEditingElement into localStorage inside Vue component using watch
     currentTeachingScItemIndex: null,
-    teachingClassList: [],
-    currentEditingClass: null,
+    // TODO: delete currentEditingClass located at other places
+    // //////////////////////////절취선////////////////////////// //
   },
   getters: {
     isScEmpty(state) {
@@ -120,9 +130,6 @@ export default {
     // TODO: editLectureElement
     updateSc(state, { sc }) {
       state.sc = sc;
-    },
-    updateCurrentEditingClass(state, { editingClass }) {
-      state.currentEditingClass = editingClass;
     },
     /**
      * 하나 넣거나, 여러개 넣거나
