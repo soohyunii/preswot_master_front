@@ -16,7 +16,7 @@
       <el-table-column label="Name" align="center">
         <template slot-scope="scope">
           <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].name">
-            <el-input v-model="nodes[scope.$index].name" width="80%"></el-input>
+            <el-input v-model="nodes[scope.$index].name" />
             <el-button @click="onClick('changeNodeName', scope.$index)">확인</el-button>
           </div>
           <div v-else>
@@ -47,7 +47,6 @@ export default {
   name: 'KnowledgeMapNodeEditor',
   data() {
     return {
-      addNodeItem: { name: 'addNodeItem', weight: 0 },
       inputFlag: [],
     };
   },
