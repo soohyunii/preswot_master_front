@@ -112,7 +112,7 @@
 <script>
 import { mapState } from 'vuex';
 import studentService from '../../services/studentService';
-import teacherService from '../../services/teacherService';
+// import teacherService from '../../services/teacherService';
 
 export default {
   name: 'AppNavigation',
@@ -130,7 +130,22 @@ export default {
   async mounted() {
     const vm = this;
     vm.attendingClassList = await studentService.fetchAttendingClassList();
-    vm.teachingClassList = await teacherService.fetchTeachingClassList();
+    // vm.teachingClassList = await teacherService.fetchTeachingClassList();
+    // TODO: replace with teacherService.fetchTeachingClassList
+    vm.teachingClassList = [
+      {
+        className: 'Vue.js',
+      },
+      {
+        className: 'Node.js',
+      },
+      {
+        className: 'TensorFlow with python and C++',
+      },
+      {
+        className: 'length_test_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+      },
+    ];
   },
 };
 </script>
