@@ -88,7 +88,7 @@ export default {
       vm.$emit('moveClass');
     },
   },
-  async mounted() {
+  mounted() {
     const vm = this;
 
     vm.fetchMyClassLists();
