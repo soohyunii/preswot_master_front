@@ -65,7 +65,10 @@ export default {
   },
   computed: {
     ...mapState('teacher', ['currentEditingClass']),
-    ...mapGetters('teacher', ['isTeachingClassListEmpty']),
+    ...mapGetters('teacher', [
+      'isTeachingClassListEmpty',
+      'currentClass',
+    ]),
   },
   methods: {
     async changeScenario() {

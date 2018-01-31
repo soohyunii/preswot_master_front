@@ -6,23 +6,24 @@
         v-for="(item, index) in teachingClassList"
         :key="index"
       >
+        <!-- {{ item }} -->
         <!-- TODO: link to each class -->
         <el-tooltip
           effect="dark"
-          :content="item.className"
-          :disabled="item.className.length < truncateLength"
+          :content="item.name"
+          :disabled="1 < truncateLength"
           placement="right"
           :open-delay="800"
         >
           <!-- TODO: currentClass 모습, 나머지 class 모습 바꾸기 -->
           <el-button
             class="class-btn"
-            @click="changeCurrentClass(item)"
+            @click="clickClassButton(item, index)"
             :type="isCurrentClass(item) ? 'info' : ''"
           >
             <i class="el-icon-document" style="font-size: 50px;"></i>
             <br />
-            {{ item.className | truncate(truncateLength) }}
+            {{ item.name | truncate(truncateLength) }}
           </el-button>
         </el-tooltip>
       </el-col>
@@ -63,11 +64,13 @@ export default {
     };
   },
   computed: {
-    ...mapState('teacher', ['teachingClassList', 'currentEditingClass']),
+    ...mapState('teacher', [
+      'teachingClassList',
+    ]),
   },
   methods: {
     ...mapMutations('teacher', [
-      'updateCurrentEditingClass',
+      'updateCurrentClassIndex',
     ]),
     ...mapActions('user', ['fetchMyClassLists']),
     clickAddButton() {
@@ -76,25 +79,29 @@ export default {
     },
     isCurrentClass(item) {
       const vm = this;
-      return item.className === vm.currentEditingClass;
+      if (!vm.currentClass) {
+        return false;
+      }
+      return item.name.class_id === vm.currentClass.class_id; // TODO: currentClass id
     },
-    changeCurrentClass(item) {
+    clickClassButton(item, index) {
       const vm = this;
-      const editingClass = item.className;
-      vm.updateCurrentEditingClass({ editingClass });
+      vm.updateCurrentClassIndex({
+        currentClassIndex: index,
+      });
     },
   },
-  mounted() {
+  async mounted() {
     const vm = this;
 
-    vm.fetchMyClassLists();
-
+    await vm.fetchMyClassLists();
+    vm.$forceUpdate();
     // const classList = await teacherService.fetchTeachingClassList();
     // console.log('classList', classList);
     // vm.updateTeachingClassList({ classList });
     // 강사 메인화면 페이지 접속 직후 주시하는 과목 없는 경우 제일 첫번째 과목 정보 나타냄
     // if (!vm.currentEditingClass && vm.teachingClassList) {
-    //   vm.updateCurrentEditingClass({
+    //   vm.updateCurrentEditingClass({ // TODO: delete updateCurrentEditingClass
     //     editingClass: vm.teachingClassList[0].className,
     //   });
     // }

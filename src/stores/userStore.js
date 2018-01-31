@@ -17,8 +17,8 @@ export default {
 
       const sc = res.data.studyingClasses;
       if (sc && sc.length !== 0) {
-        commit('student/pushStudyingClass', {
-          studyingClassList: res.data.studyingClasses,
+        commit('student/updateStudyingClassList', {
+          studyingClassList: sc,
         }, {
           root: true,
         });
@@ -26,8 +26,8 @@ export default {
 
       const tc = res.data.teachingClasses;
       if (tc && tc.length !== 0) {
-        commit('teacher/pushTeachingClass', {
-          teachingClassList: res.data.teachingClasses,
+        commit('teacher/updateTeachingClassList', {
+          teachingClassList: tc,
         }, {
           root: true,
         });

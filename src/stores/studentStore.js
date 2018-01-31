@@ -12,6 +12,9 @@ export default {
         Array.prototype.push.apply(state.studyingClassList, studyingClassList);
       }
     },
+    updateStudyingClassList(state, { studyingClassList }) {
+      state.studyingClassList = studyingClassList;
+    },
     deleteStudyingClass(state, { studyingClassIndex }) {
       state.studyingClassList.splice(studyingClassIndex, 1);
     },

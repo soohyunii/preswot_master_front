@@ -157,6 +157,9 @@ export default {
         Array.prototype.push.apply(state.teachingClassList, teachingClassList);
       }
     },
+    updateTeachingClassList(state, { teachingClassList }) {
+      state.teachingClassList = teachingClassList;
+    },
     deleteTeachingClass(state, { teachingClassIndex }) {
       state.teachingClassList.splice(teachingClassIndex, 1);
     },

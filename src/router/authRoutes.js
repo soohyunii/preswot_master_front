@@ -37,7 +37,7 @@ export default function authRoutes(root) {
     },
     {
       path: '/teacher/class/new',
-      name: 'TeacherClass',
+      name: 'TeacherClassNew',
       component: TeacherClassNew,
       meta: {
         title: 'Teacher Class New', // TODO: import from i18n
