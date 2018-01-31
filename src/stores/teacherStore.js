@@ -45,7 +45,7 @@ export default {
     },
     currentClass(state) {
       const index = state.currentClassIndex;
-      if (!index) {
+      if (index === null) {
         return null;
       }
       return state.teachingClassList[index];
