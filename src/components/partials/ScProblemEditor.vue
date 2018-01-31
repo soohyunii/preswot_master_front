@@ -32,24 +32,26 @@
           </el-form-item>
           <template v-if="problemType === 'multipleChoice'">
             <el-table
-              :data="answer"
-              style="width: 100%">
+            :data="answer"
+            style="width: 100%">
               <el-table-column
-                prop="date"
-                label="Date"
+                prop="content"
+                label="Example"
                 width="180">
               </el-table-column>
               <el-table-column
-                prop="address"
-                label="Address">
+                prop="answer"
+                label="answer">
+              </el-table-column>
+              <el-table-column
+                fixed="right"
+                label="Operations"
+                width="120">
+                <template slot-scope="scope">
+                  <el-button type="primary" icon="el-icon-delete" @click="handleDelete(scope.$index)"></el-button>
+                </template>
               </el-table-column>
             </el-table>
-            <template v-for="(item, index, key) in answer">
-              <el-input :key="key">
-                <template slot="prepend">#{{ index + 1 }}</template>
-                <el-button slot="append" icon="el-icon-close" @click="onClick('deleteSelection', index)"></el-button>
-              </el-input>
-            </template>
             <el-form-item label="선지">
               <el-input
                 placeholder="Please input"
@@ -135,6 +137,19 @@ export default {
           throw new Error(`not defined type ${type}`);
         }
       }
+    },
+    handleDelete(index) {
+      window.console.log(index);
+      const vm = this;
+      const answer = vm.currentEditingScItem.answer;
+      answer.splice(index, 1);
+      vm.updateCurrentEditingScItem({
+        currentEditingScItem: {
+          ...vm.currentEditingScItem,
+          answer,
+        },
+        lectureElementIndex: vm.currentEditingScItemIndex,
+      });
     },
   },
   computed: {
