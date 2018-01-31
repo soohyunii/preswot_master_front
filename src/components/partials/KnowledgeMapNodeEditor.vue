@@ -12,7 +12,7 @@
             <el-button @click="onClick('changeNodeName', scope.$index)">확인</el-button>
           </div>
           <div v-else>
-            <i v-if="scope.row.name === 'addNodeItem'" class="el-icon-circle-plus-outline" @click="onClick('addNode')" />
+            <i v-if="scope.row.name === 'addNodeItem'" class="el-icon-circle-plus-outline" @click="onClick('addNode', scope.$index)" />
             <span v-else>{{ scope.row.name }}<i class="el-icon-edit" @click="onClick('changeNodeName', scope.$index)" /></span>
           </div>
         </template>
@@ -44,10 +44,10 @@ export default {
     };
   },
   computed: {
-    ...mapState('teacher', ['nodes']),
+    ...mapState('teacher', ['nodes', 'edges']),
   },
   methods: {
-    ...mapMutations('teacher', ['updateNodes', 'addNodes', 'deleteNodes']),
+    ...mapMutations('teacher', ['updateNodes', 'addNodes', 'deleteNodes', 'updateEdges']),
     arraySpanMethod({ rowIndex, columnIndex }) {
       const vm = this;
       if (rowIndex === vm.nodes.length - 1) {
@@ -64,9 +64,10 @@ export default {
       switch (type) {
         case 'addNode': {
           vm.deleteNodes({ nodeIndex: vm.nodes.length - 1 });
-          vm.addNodes({ node: { name: '노드 이름', weight: 0 } });
+          vm.addNodes({ node: { name: `노드 이름${index}`, weight: 0 } });
           vm.addNodes({ node: { name: 'addNodeItem' } });
           vm.inputFlag.push({ name: false, weight: false });
+          vm.updateEdges({ edges: vm.edges });
           break;
         }
         case 'changeNodeName': {

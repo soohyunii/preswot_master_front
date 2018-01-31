@@ -12,8 +12,8 @@
     </svg>
     <div class="network">
       <d3-network
-        :net-nodes="netNodes"
-        :net-links="netEdges"
+        :net-nodes="network.nodes"
+        :net-links="network.edges"
         :options="options"
         :link-cb="lcb"
         @node-click="nodeClick"/>
@@ -29,14 +29,14 @@
           </el-radio-group>
         </el-col>
       </el-row>
+      <knowledge-map-node-editor />
     </div>
-
     <h1>debug</h1>
     {{mode}}<br/>
     <pre>
       select node: {{selectedNode}}
-      nodes: {{netNodes}}
-      edges: {{netEdges}}
+      nodes: {{network.nodes}}
+      edges: {{network.edges}}
     </pre>
   </div>
 </template>
@@ -55,28 +55,6 @@ export default {
     return {
       mode: 'select',
       selectedNode: '',
-      temp_nodes: [
-        { id: 1, name: 'my node 1' },
-        { id: 2, name: 'my node 2' },
-        { id: 3, _size: 20 },
-        { id: 4 },
-        { id: 5 },
-        { id: 6 },
-        { id: 7 },
-        { id: 8 },
-        { id: 9 },
-      ],
-      temp_edges: [
-        { sid: 1, tid: 2 },
-        { sid: 2, tid: 8 },
-        { sid: 3, tid: 4 },
-        { sid: 4, tid: 5 },
-        { sid: 5, tid: 6 },
-        { sid: 7, tid: 8 },
-        { sid: 5, tid: 8 },
-        { sid: 3, tid: 8 },
-        { sid: 7, tid: 9 },
-      ],
       nodeSize: 10,
       canvas: false,
       linkWidth: 2.5,
@@ -85,20 +63,19 @@ export default {
   },
   computed: {
     ...mapState('teacher', ['nodes', 'edges']),
-    netNodes() {
+    network() {
       const vm = this;
-      return vm.nodes.map(node => ({
-        id: node.label,
-        name: node.label,
-        _size: node.weight,
-      }));
-    },
-    netEdges() {
-      const vm = this;
-      return vm.edges.map(edge => ({
-        sid: edge.sid,
-        tid: edge.tid,
-      }));
+      return {
+        nodes: vm.nodes.map(node => ({
+          id: node.name,
+          name: node.name,
+          _size: node.weight,
+        })),
+        edges: vm.edges.map(edge => ({
+          sid: edge.sid,
+          tid: edge.tid,
+        })),
+      };
     },
     options() {
       const vm = this;

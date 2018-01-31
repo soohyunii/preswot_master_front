@@ -25,29 +25,32 @@ export default {
     liveStartTime: null,
     nodes: [
       {
-        label: '배열',
+        name: '배열',
         weight: 30,
         categories: [],
       },
       {
-        label: '포인터',
+        name: '포인터',
         weight: 20,
         categories: [],
       },
       {
-        label: '함수',
+        name: '함수',
         weight: 15,
         categories: [],
       },
       {
-        label: '함수2',
+        name: '함수2',
         weight: 10,
         categories: [],
       },
       {
-        label: '파일입출력',
+        name: '파일입출력',
         weight: 10,
         categories: [],
+      },
+      {
+        name: 'addNodeItem',
       }],
     edges: [
       {
