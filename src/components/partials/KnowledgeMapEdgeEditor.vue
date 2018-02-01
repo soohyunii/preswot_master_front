@@ -62,6 +62,7 @@
         </template>
       </el-table-column>
     </el-table>
+    {{edges}}
   </div>
 </template>
 
@@ -81,21 +82,106 @@ export default {
   },
   methods: {
     ...mapMutations('teacher', ['addEdges', 'deleteEdges']),
+    isValidEdge(sidInputFlag, tidInputFlag, index) {
+      const vm = this;
+      let isValid = true;
+
+      if (sidInputFlag && tidInputFlag) {
+        return isValid;
+      }
+
+      const inputSid = vm.edges[index].sid;
+      const inputTid = vm.edges[index].tid;
+      if (inputSid === inputTid) {
+        // TODO: translate
+        vm.$notify({
+          title: 'Equal',
+          message: 'source, target 다르게 좀...',
+          type: 'warning',
+        });
+        isValid = false;
+      }
+
+      vm.edges.forEach((edge, idx) => {
+        const isInputing = vm.inputFlag[idx].sid || vm.inputFlag[idx].tid;
+        const isMe = idx === index;
+        if (!isMe && !isInputing) {
+          const isduplicatedEdge = edge.sid === inputSid && edge.tid === inputTid;
+          const isduplicatedReverseEdge = edge.tid === inputSid && edge.sid === inputTid;
+          if (isduplicatedEdge || isduplicatedReverseEdge) {
+            // TODO: translate
+            vm.$notify({
+              title: 'Duplicated',
+              message: '이미 Edge가 존재하네요...',
+              type: 'warning',
+            });
+            isValid = false;
+          }
+        }
+      });
+
+      return isValid;
+    },
+    isValidEdgeId(id) {
+      const vm = this;
+
+      // Case of Empty value
+      if (!id) {
+        // TODO: transalte
+        vm.$notify({
+          title: 'Empty',
+          message: '입력값 필쑤..',
+          type: 'warning',
+        });
+        return false;
+      }
+
+      // Value is not in nodes(vuex)
+      const nodesNames = [];
+      for (let i = 0; i < vm.nodes.length; i += 1) {
+        nodesNames.push(vm.nodes[i].name);
+      }
+      if (!nodesNames.includes(id)) {
+        // TODO: transalte
+        vm.$notify({
+          title: 'Empty',
+          message: 'Node에 존재하는 값으로 좀..',
+          type: 'warning',
+        });
+        return false;
+      }
+
+      return true;
+    },
     onClick(type, index) {
       const vm = this;
       switch (type) {
         case 'addEdge': {
-          vm.addEdges({ edge: { sid: `sid${vm.count}`, tid: `tid${vm.count}`, weight: 50 } });
-          vm.inputFlag.push({ sid: false, tid: false, weight: false });
+          vm.addEdges({ edge: { sid: '', tid: '', weight: 50 } });
+          vm.inputFlag.push({ sid: true, tid: true, weight: false });
           vm.count += 1;
           break;
         }
         case 'changeEdgeSid': {
-          vm.inputFlag[index].sid = !vm.inputFlag[index].sid;
+          if (!vm.isValidEdgeId(vm.edges[index].sid)) {
+            break;
+          }
+          const sidInputFlag = vm.inputFlag[index].sid;
+          const tidInputFlag = vm.inputFlag[index].tid;
+          if (vm.isValidEdge(sidInputFlag, tidInputFlag, index)) {
+            vm.inputFlag[index].sid = !vm.inputFlag[index].sid;
+          }
           break;
         }
         case 'changeEdgeTid': {
-          vm.inputFlag[index].tid = !vm.inputFlag[index].tid;
+          if (!vm.isValidEdgeId(vm.edges[index].tid)) {
+            break;
+          }
+          const sidInputFlag = vm.inputFlag[index].sid;
+          const tidInputFlag = vm.inputFlag[index].tid;
+          if (vm.isValidEdge(sidInputFlag, tidInputFlag, index)) {
+            vm.inputFlag[index].tid = !vm.inputFlag[index].tid;
+          }
           break;
         }
         case 'changeEdgeWeight': {
