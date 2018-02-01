@@ -15,7 +15,7 @@
       </template>
       <el-table-column label="Name" align="center">
         <template slot-scope="scope">
-          <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].value">
+          <div v-if="nodesInputFlag[scope.$index] && nodesInputFlag[scope.$index].value">
             <el-input v-model="nodes[scope.$index].value" @focus="currentIndex = scope.$index"/>
             <el-button @click="onClick('setNodeName', scope.$index)">확인</el-button>
           </div>
@@ -26,7 +26,7 @@
       </el-table-column>
       <el-table-column label="Weight" align="center">
         <template slot-scope="scope">
-          <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].weight">
+          <div v-if="nodesInputFlag[scope.$index] && nodesInputFlag[scope.$index].weight">
             <el-input type="number" v-model="nodes[scope.$index]._size" />
             <el-button @click="onClick('changeNodeWeight', scope.$index)">확인</el-button>
           </div>
@@ -43,6 +43,7 @@
         </template>
       </el-table-column>
     </el-table>
+    {{ nodesInputFlag }}
   </div>
 </template>
 
@@ -54,28 +55,27 @@ export default {
   data() {
     return {
       currentIndex: -1,
-      inputFlag: [],
     };
   },
   computed: {
-    ...mapState('teacher', ['nodes', 'edges']),
+    ...mapState('teacher', ['nodes', 'nodesInputFlag']),
   },
   methods: {
-    ...mapMutations('teacher', ['addNodes', 'deleteNodes']),
+    ...mapMutations('teacher', ['addNodes', 'deleteNodes', 'addNodesInputFlag', 'deleteNodesInputFlag']),
     onClick(type, index) {
       const vm = this;
       switch (type) {
         case 'addNode': {
           vm.addNodes({ node: { value: '', _size: 10 } });
-          vm.inputFlag.push({ value: true, weight: false });
+          vm.addNodesInputFlag({ flag: { value: true, weight: false } });
           break;
         }
         case 'changeNodeName': {
-          vm.inputFlag[index].value = !vm.inputFlag[index].value;
+          vm.nodesInputFlag[index].value = !vm.nodesInputFlag[index].value;
           break;
         }
         case 'changeNodeWeight': {
-          vm.inputFlag[index].weight = !vm.inputFlag[index].weight;
+          vm.nodesInputFlag[index].weight = !vm.nodesInputFlag[index].weight;
           break;
         }
         case 'setNodeName': {
@@ -99,12 +99,12 @@ export default {
           }
           vm.nodes[index].id = vm.nodes[index].value;
           vm.nodes[index].name = vm.nodes[index].value;
-          vm.inputFlag[index].value = !vm.inputFlag[index].value;
+          vm.nodesInputFlag[index].value = !vm.nodesInputFlag[index].value;
           break;
         }
         case 'delete': {
           vm.deleteNodes({ nodeIndex: index });
-          vm.inputFlag.splice(index, 1);
+          vm.deleteNodesInputFlag({ index });
           break;
         }
         default: {
