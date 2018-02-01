@@ -73,6 +73,7 @@ export default {
   methods: {
     ...mapMutations('teacher', [
       'updateNewClass',
+      'assignNewClass',
     ]),
     ...mapActions('teacher', [
       'createClass',
@@ -125,7 +126,7 @@ export default {
       },
       set(title) {
         const vm = this;
-        vm.updateNewClass({
+        vm.assignNewClass({
           newClass: {
             title,
           },
@@ -142,7 +143,7 @@ export default {
       },
       set(teacherIdList) {
         const vm = this;
-        vm.updateNewClass({
+        vm.assignNewClass({
           newClass: {
             teacherIdList: teacherIdList.split(',')
               .map(value => value.trim())
@@ -160,7 +161,7 @@ export default {
       },
       set(description) {
         const vm = this;
-        vm.updateNewClass({
+        vm.assignNewClass({
           newClass: {
             description,
           },
@@ -175,7 +176,7 @@ export default {
       },
       set(activeStartDate) {
         const vm = this;
-        vm.updateNewClass({
+        vm.assignNewClass({
           newClass: {
             activeStartDate,
           },
@@ -189,7 +190,7 @@ export default {
       },
       set(activeEndDate) {
         const vm = this;
-        vm.updateNewClass({
+        vm.assignNewClass({
           newClass: {
             activeEndDate,
           },

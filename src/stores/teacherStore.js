@@ -130,6 +130,9 @@ export default {
       state.currentClassIndex = currentClassIndex;
     },
     updateNewClass(state, { newClass }) {
+      state.newClass = newClass;
+    },
+    assignNewClass(state, { newClass }) {
       Object.assign(
         state.newClass,
         newClass,
@@ -175,7 +178,6 @@ export default {
       // TODO: save lectureElementSequence using localForage
     },
     updateCurrentEditingScItem(state, { currentEditingScItem }) {
-      // console.log('currentEditingScItem', currentEditingScItem);
       Object.assign(
         state.sc[state.currentEditingScItemIndex],
         currentEditingScItem,
@@ -235,7 +237,7 @@ export default {
       if (res.data && res.data.success) {
         return res;
       }
-      throw new Error('create class failed');
+      throw new Error(`create class failed ${res.status}`);
     },
   },
 };
