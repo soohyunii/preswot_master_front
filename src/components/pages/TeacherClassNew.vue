@@ -40,7 +40,11 @@
 
           <el-form-item>
             <!-- TODO: use button loading -->
-            <el-button type="primary" @click="onSubmit">
+            <el-button
+              type="primary"
+              :disabled="!isNewClassValid"
+              @click="onSubmit"
+            >
               강의 생성하기
             </el-button>
           </el-form-item>
@@ -52,7 +56,7 @@
 </template>
 
 <script>
-import { mapMutations, mapState, mapActions } from 'vuex';
+import { mapMutations, mapState, mapActions, mapGetters } from 'vuex';
 // import authService from '../../services/authService';
 
 export default {
@@ -88,6 +92,9 @@ export default {
   computed: {
     ...mapState('teacher', [
       'newClass',
+    ]),
+    ...mapGetters('teacher', [
+      'isNewClassValid',
     ]),
     input() {
       const res = {};

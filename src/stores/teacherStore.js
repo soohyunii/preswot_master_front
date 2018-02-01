@@ -71,7 +71,14 @@ export default {
       if (!title) {
         return false;
       }
-      if (!teacherIdList || teacherIdList.length === 0) {
+      const isTeacherIdListNullOrEmpty = !teacherIdList || teacherIdList.length === 0;
+      if (isTeacherIdListNullOrEmpty) {
+        return false;
+      }
+      const isTeacherIdListAllNumber = teacherIdList.every(
+        value => (typeof value === 'number'),
+      );
+      if (!isTeacherIdListAllNumber) {
         return false;
       }
       if (!description) {
