@@ -26,15 +26,15 @@ export default {
      * @var {string} newClass.title: 과목 제목
      * @var {Array[number]} newClass.teacherIdList 강사 (user_id) 목록
      * @var {string} newClass.description: 과목 소개 (설명)
-     * @var {string} newClass.activeStartDatetime: 과목 활성화 시각
-     * @var {string} newClass.activeEndDatetime: 과목 비활성화 시각
+     * @var {Date} newClass.activeStartDate: 과목 활성화 시각
+     * @var {Date} newClass.activeEndDate: 과목 비활성화 시각
      */
     newClass: {
       title: null,
       teacherIdList: null,
       description: null,
-      activeStartDatetime: null,
-      activeEndDatetime: null,
+      activeStartDate: null,
+      activeEndDate: null,
     },
     // //////////////////////////절취선////////////////////////// //
     /**
@@ -59,6 +59,34 @@ export default {
     // //////////////////////////절취선////////////////////////// //
   },
   getters: {
+    isNewClassValid(state) {
+      const {
+        title,
+        teacherIdList,
+        description,
+        activeStartDatetime,
+        activeEndDatetime,
+      } = state.newClass;
+
+      if (!title) {
+        return false;
+      }
+      if (!teacherIdList || teacherIdList.length === 0) {
+        return false;
+      }
+      if (!description) {
+        return false;
+      }
+      if (!activeStartDatetime) {
+        return false;
+      }
+      if (activeEndDatetime) {
+        const start = activeStartDatetime.getTime();
+        const end = activeEndDatetime.getTime();
+        return start < end;
+      }
+      return true;
+    },
     isTeachingClassListEmpty(state) {
       return state.teachingClassList.length === 0;
     },
@@ -187,6 +215,11 @@ export default {
     },
     deleteTeachingClass(state, { teachingClassIndex }) {
       state.teachingClassList.splice(teachingClassIndex, 1);
+    },
+  },
+  actions: {
+    async createClass(context) {
+      console.log('context', context);
     },
   },
 };

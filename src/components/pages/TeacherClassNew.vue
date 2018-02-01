@@ -19,18 +19,16 @@
 
           <el-form-item label="과목 활성화 시각">
             <el-date-picker
-              v-model="activeStartDatetime"
+              v-model="activeStartDate"
               type="datetime"
-              value-format="yyyy-MM-dd HH:mm:ss"
             >
             </el-date-picker>
           </el-form-item>
 
           <el-form-item label="과목 비활성화 시각">
             <el-date-picker
-              v-model="activeEndDatetime"
+              v-model="activeEndDate"
               type="datetime"
-              value-format="yyyy-MM-dd HH:mm:ss"
               :disabled="!shouldDeactivated"
             >
             </el-date-picker>
@@ -40,6 +38,13 @@
             </el-radio-group>
           </el-form-item>
 
+          <el-form-item>
+            <!-- TODO: use button loading -->
+            <el-button type="primary" @click="onSubmit">
+              강의 생성하기
+            </el-button>
+          </el-form-item>
+
         </el-form>
       </el-col>
     </el-row>
@@ -47,7 +52,7 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapMutations, mapState, mapActions } from 'vuex';
 // import authService from '../../services/authService';
 
 export default {
@@ -66,11 +71,18 @@ export default {
     ...mapMutations('teacher', [
       'updateNewClass',
     ]),
+    ...mapActions('teacher', [
+      'createClass',
+    ]),
     changeShouldDeactivated(label) {
       const vm = this;
       if (!label) {
         vm.activeEndDatetime = null;
       }
+    },
+    onSubmit() {
+      const vm = this;
+      vm.createClass();
     },
   },
   computed: {
@@ -132,31 +144,31 @@ export default {
         });
       },
     },
-    activeStartDatetime: {
+    activeStartDate: {
       get() {
         const vm = this;
-        // const activeStartDate = new Date(vm.newClass.activeStartDatetime);
-        return vm.newClass.activeStartDatetime;
+        // const activeStartDate = new Date(vm.newClass.activeStartDate);
+        return vm.newClass.activeStartDate;
       },
-      set(activeStartDatetime) {
+      set(activeStartDate) {
         const vm = this;
         vm.updateNewClass({
           newClass: {
-            activeStartDatetime,
+            activeStartDate,
           },
         });
       },
     },
-    activeEndDatetime: {
+    activeEndDate: {
       get() {
         const vm = this;
-        return vm.newClass.activeEndDatetime;
+        return vm.newClass.activeEndDate;
       },
-      set(activeEndDatetime) {
+      set(activeEndDate) {
         const vm = this;
         vm.updateNewClass({
           newClass: {
-            activeEndDatetime,
+            activeEndDate,
           },
         });
       },
