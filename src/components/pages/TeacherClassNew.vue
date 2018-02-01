@@ -1,7 +1,6 @@
 <template>
   <div>
     <h1>과목 생성</h1>
-    {{ newClass }}
     <el-row>
       <el-col style="max-width: 600px;">
         <el-form :model="input" ref="elForm" label-width="125px">
@@ -84,9 +83,26 @@ export default {
         vm.activeEndDate = null;
       }
     },
-    onSubmit() {
+    async onSubmit() {
       const vm = this;
-      vm.createClass();
+      try {
+        await vm.createClass();
+        vm.$notify({
+          title: '과목 생성 성공',
+          message: '성공적으로 과목이 생성됨',
+          type: 'success',
+        });
+        vm.updateNewClass({
+          newClass: {},
+        });
+        vm.$router.push('/a/teacher/class');
+      } catch (error) {
+        vm.$notify({
+          title: '과목 생성 실패',
+          message: error.toString(),
+          type: 'error',
+        });
+      }
     },
   },
   computed: {

@@ -230,11 +230,12 @@ export default {
       if (!getters.isNewClassValid) {
         throw new Error('invalid');
       }
-      // TODO: intendedLectureNum
-      // TODO: activeStartDate
-      // TODO: activeEndDate
+      // TODO: pass intendedLectureNum
       const res = await classService.createClass(state.newClass);
-      console.log('res', res);
+      if (res.data && res.data.success) {
+        return res;
+      }
+      throw new Error('create class failed');
     },
   },
 };
