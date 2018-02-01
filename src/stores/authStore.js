@@ -1,3 +1,5 @@
+import jwtDecode from 'jwt-decode';
+
 import authService from '../services/authService';
 import utils from '../utils';
 
@@ -12,6 +14,10 @@ export default {
     isJwtValid(state) {
       // TODO: Implement jwt validation check
       return !!state.jwt;
+    },
+    userId(state) {
+      const payload = jwtDecode(state.jwt);
+      return payload.authId;
     },
   },
   mutations: {

@@ -137,7 +137,9 @@ export default {
           break;
         }
         case 'LOGOUT': {
-          vm.updateJwt('');
+          vm.updateJwt({
+            jwt: '',
+          });
           if (vm.$route.meta.auth) {
             vm.$router.push({
               name: 'LandingPage',

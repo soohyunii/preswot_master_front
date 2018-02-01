@@ -80,11 +80,11 @@
         </el-table-column>
         </el-table>
 
+        <br />
+        <br />
+
         <el-col align="center">
-          <router-link to="/a/teacher/lecture/new">
-          <br /><br />
-          <el-button>과목 시나리오 추가</el-button>
-          </router-link>
+          <el-button @click="clickAddScenario" type="primary">과목 시나리오 추가</el-button>
         </el-col>
       </div>
     </el-col>
@@ -92,10 +92,15 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: 'ClassScenario',
   props: ['tableData'],
   methods: {
+    ...mapActions('teacher', [
+      'createLecture',
+    ]),
     getType(type) {
       // 과목 시나리오 유형 분류 {{ A: 강의, B: 숙제, C: 퀴즈, D: 시험 }}
       // TODO: Translate
@@ -122,6 +127,12 @@ export default {
             type: 'info',
           };
       }
+    },
+    async clickAddScenario() {
+      console.log('clickAddScenario');
+      const vm = this;
+      await vm.createLecture();
+      // vm.$router.push('/a/teacher/lecture/new')
     },
   },
 };

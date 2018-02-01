@@ -1,5 +1,6 @@
 import Guid from 'guid';
 import classService from '../services/classService';
+import lectureService from '../services/lectureService';
 
 export default {
   namespaced: true,
@@ -39,6 +40,7 @@ export default {
     // //////////////////////////절취선////////////////////////// //
     /**
      * TeacherLectureNew / TeacherLectureLive 관련 변수들
+     * @var {number} scId: 백엔드 디비의 lectures 테이블의 lecture_id에 해당
      * @var {string} scTitle
      * @var {string} scType
      * @var {string} scStartDatetime: (e.g. "2018-01-31 23:59:59")
@@ -48,6 +50,7 @@ export default {
      * @var {number} currentEditingScItemIndex: 현재 생성/편집 중인 시나리오 아이템 인덱스
      * @var {number} currentTeachingScItemIndex: 강의 중에 현재 진행되고 있는 시나리오 아이템 인덱스
      */
+    scId: null,
     scTitle: null,
     scType: null,
     scStartDatetime: null,
@@ -144,6 +147,9 @@ export default {
         c,
         currentClass,
       );
+    },
+    updateScId(state, { scId }) {
+      state.scId = scId;
     },
     updateScTitle(state, { scTitle }) {
       state.scTitle = scTitle;
@@ -259,6 +265,22 @@ export default {
           scenarioList: res.data.Lectures,
         },
       });
+    },
+    async createLecture({ getters, rootGetters }) {
+      console.log('context', rootGetters);
+      const userId = rootGetters['auth/userId'];
+      const classId = getters.currentClass.class_id;
+
+      const res = await lectureService.postLecture({
+        classId,
+        teacherId: userId,
+      });
+      console.log('res', res);
+      // commit('updateScId', {
+      //   scId:
+      // });
+
+      console.log(1323123, userId, classId);
     },
   },
 };

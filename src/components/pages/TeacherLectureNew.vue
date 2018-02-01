@@ -3,6 +3,7 @@
     <el-container>
       <el-aside width="150px">
         <!-- <teaching-class-list-aside /> -->
+        <button @click="test">test</button>
       </el-aside>
 
       <!-- 이 메인은 맞음 시작 -->
@@ -160,6 +161,9 @@ export default {
     onClickScType(scType) {
       const vm = this;
       vm.scType = scType;
+    },
+    test() {
+      console.log('test');
     },
   },
 };
