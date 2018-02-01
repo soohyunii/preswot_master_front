@@ -5,9 +5,10 @@
         <marker id="m-end" markerWidth="10" markerHeight="10" refX="11" refY="3" orient="auto" markerUnits="strokeWidth" >
           <path d="M0,0 L0,6 L9,3 z"></path>
         </marker>
+        <!--
         <marker id="m-start" markerWidth="6" markerHeight="6" refX="-4" refY="3" orient="auto" markerUnits="strokeWidth" >
           <rect width="3" height="6"></rect>
-        </marker>
+        </marker>-->
       </defs>
     </svg>
     <div class="network">
@@ -111,7 +112,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['pinning', 'deleteNodes', 'addEdges']),
+    ...mapMutations('teacher', ['pinning', 'deleteNodes', 'addEdges', 'addEdgesInputFlag', 'deleteNodesInputFlag']),
     nodeClick(event, node) {
       const vm = this;
       vm.pinning({ pinned: vm.pinningMode, node });
@@ -128,6 +129,7 @@ export default {
         }
         case 'delete': {
           vm.deleteNodes({ nodeIndex: node.index });
+          vm.deleteNodesInputFlag({ index: node.index });
           break;
         }
         case 'link': {
@@ -135,6 +137,14 @@ export default {
           if (Object.keys(vm.selectedNode).length === 1) {
             const inputSid = vm.selectedNode[Object.keys(vm.selectedNode)[0]].id;
             const inputTid = node.id;
+            if (inputSid === inputTid) {
+              vm.$notify({
+                title: 'Same',
+                message: '쏘오쓰 타겟 다르게!!...',
+                type: 'warning',
+              });
+              break;
+            }
             let breakFlag = false;
             vm.validEdges.forEach((edge) => {
               const isduplicatedEdge = edge.sid === inputSid && edge.tid === inputTid;
@@ -146,8 +156,8 @@ export default {
                   message: '이미 Edge가 존재하네요...',
                   type: 'warning',
                 });
+                breakFlag = true;
               }
-              breakFlag = true;
             });
             if (breakFlag) {
               break;
@@ -157,8 +167,8 @@ export default {
               tid: inputTid,
               weight: 50,
             };
-            window.console.log(edge);
             vm.addEdges({ edge });
+            vm.addEdgesInputFlag({ flag: { sid: false, tid: false, weight: false } });
             vm.selectedNode = {};
           } else {
             if (vm.selectedNode) {

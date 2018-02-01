@@ -68,7 +68,6 @@ export default {
       switch (type) {
         case 'addNode': {
           const id = Guid.create().toString();
-          window.console.log(id);
           vm.addNodes({ node: { id, value: '', _size: 10 } });
           vm.addNodesInputFlag({ flag: { value: true, weight: false } });
           break;
@@ -117,7 +116,7 @@ export default {
     },
     isDuplicated(element, index) {
       const vm = this;
-      if (index !== vm.currentIndex && element.id === vm.nodes[vm.currentIndex].value) {
+      if (index !== vm.currentIndex && element.id === vm.nodes[vm.currentIndex].name) {
         return element;
       }
       return false;
