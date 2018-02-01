@@ -18,6 +18,20 @@ export default {
     currentClassIndex: null,
     // //////////////////////////절취선////////////////////////// //
     /**
+     * TeacherClassNew 관련 변수들
+     * ... 은 막 엄청 필요있을 것 같지가 않아서
+     * 일단 만들고 바로 서버로 생성되는 애들인데 굳이
+     * store에 귀찮게 하나하나 필드를 만들고 싶지 않고,
+     * 그냥 하나의 object @var {object} newClass 에 퉁치는 것으로!
+     * @var {string} newClass.classTitle: 과목 제목
+     * @var {Array[number]} newClass.teacherIdList 강사 (user_id) 목록
+     * @var {string} newClass.description: 과목 소개 (설명)
+     * @var {string} newClass.activeStartDatetime: 과목 활성화 시각
+     * @var {string} newClass.activeEndDatetime: 과목 비활성화 시각
+     */
+    newClass: {},
+    // //////////////////////////절취선////////////////////////// //
+    /**
      * TeacherLectureNew / TeacherLectureLive 관련 변수들
      * @var {string} scTitle
      * @var {string} scType
@@ -73,6 +87,12 @@ export default {
   mutations: {
     updateCurrentClassIndex(state, { currentClassIndex }) {
       state.currentClassIndex = currentClassIndex;
+    },
+    updateNewClass(state, { newClass }) {
+      Object.assign(
+        state.newClass,
+        newClass,
+      );
     },
     updateScTitle(state, { scTitle }) {
       state.scTitle = scTitle;
