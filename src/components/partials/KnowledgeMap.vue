@@ -15,6 +15,7 @@
         <d3-network
           :net-nodes="nodes"
           :net-links="validEdges"
+          :selection="{nodes: selectedNode}"
           :options="options"
           :link-cb="lcb"
           @node-click="nodeClick"/>
@@ -45,7 +46,6 @@
     <h1>debug</h1>
     {{mode}}<br/>
   <pre>select node: {{selectedNode}}
-  select node2: {{selectedNode2}}
   nodes: {{nodes}}
   edges: {{validEdges}}
   </pre>
@@ -68,8 +68,8 @@ export default {
     return {
       mode: 'select',
       pinningMode: false,
-      selectedNode: '',
-      selectedNode2: '',
+      selectedNode: {},
+      selectedNode2: {},
       nodeSize: 10,
       canvas: false,
       linkWidth: 2.5,
@@ -92,11 +92,11 @@ export default {
           edges.push({
             sid: vm.edges[i].sid,
             tid: vm.edges[i].tid,
-            // weigth: vm.edges[i].weigth,
+            // weight: vm.edges[i].weight,
           });
         }
       }
-      // window.console.log(edges);
+      window.console.log(edges);
       return edges;
     },
     options() {
@@ -121,7 +121,10 @@ export default {
         default:
         case 'select': {
           vm.resetFlag = false;
-          vm.selectedNode = node;
+          if (vm.selectedNode) {
+            vm.selectedNode = {};
+          }
+          vm.selectedNode[node.id] = node;
           break;
         }
         case 'delete': {
@@ -130,17 +133,39 @@ export default {
         }
         case 'link': {
           vm.resetFlag = false;
-          if (!vm.selectedNode) {
-            vm.selectedNode = node;
+          if (Object.keys(vm.selectedNode).length === 1) {
+            const inputSid = vm.selectedNode[Object.keys(vm.selectedNode)[0]].id;
+            const inputTid = node.id;
+            let breakFlag = false;
+            vm.validEdges.forEach((edge) => {
+              const isduplicatedEdge = edge.sid === inputSid && edge.tid === inputTid;
+              const isduplicatedReverseEdge = edge.tid === inputSid && edge.sid === inputTid;
+              if (isduplicatedEdge || isduplicatedReverseEdge) {
+                // TODO: translate
+                vm.$notify({
+                  title: 'Duplicated',
+                  message: '이미 Edge가 존재하네요...',
+                  type: 'warning',
+                });
+              }
+              breakFlag = true;
+            });
+            if (breakFlag) {
+              break;
+            }
+            const edge = {
+              sid: inputSid,
+              tid: inputTid,
+              weight: 50,
+            };
+            window.console.log(edge);
+            vm.addEdges({ edge });
+            vm.selectedNode = {};
           } else {
-            vm.selectedNode2 = node;
-          }
-
-          if (vm.selectedNode && vm.selectedNode2) {
-            // const edge =
-            // vm.addEdges(edge);
-            vm.selectedNode = '';
-            vm.selectedNode2 = '';
+            if (vm.selectedNode) {
+              vm.selectedNode = {};
+            }
+            vm.selectedNode[node.id] = node;
           }
           break;
         }
@@ -149,8 +174,7 @@ export default {
     selectReset() {
       const vm = this;
       if (vm.resetFlag) {
-        vm.selectedNode = '';
-        vm.selectedNode2 = '';
+        vm.selectedNode = {};
       }
       vm.resetFlag = true;
     },
@@ -178,6 +202,5 @@ export default {
   #m-end path, #m-start{
     fill: rgba(18, 120, 98, 0.8);
   }
-
 }
 </style>
