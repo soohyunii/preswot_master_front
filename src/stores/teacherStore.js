@@ -274,6 +274,7 @@ export default {
         classId,
         teacherId: userId,
       });
+      // 강의를 만들자마자 TeacherLectureNew로 이동할거기 떄문에 여기서 넣어준다
       commit('updateScId', {
         scId: res.data.lecture_id,
       });

@@ -129,10 +129,17 @@ export default {
       }
     },
     async clickAddScenario() {
-      console.log('clickAddScenario');
       const vm = this;
-      await vm.createLecture();
-      // vm.$router.push('/a/teacher/lecture/new')
+      try {
+        await vm.createLecture();
+        vm.$router.push('/a/teacher/lecture/new');
+      } catch (error) {
+        vm.$notify({
+          title: '강좌 생성 실패',
+          message: error.toString(),
+          type: 'error',
+        });
+      }
     },
   },
 };
