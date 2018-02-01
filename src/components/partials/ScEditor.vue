@@ -148,7 +148,6 @@ export default {
       'putScTitle',
     ]),
     onChange(type) {
-      console.log(`onChange() ${type}`);
       const vm = this;
       switch (type) {
         case 'TITLE': {

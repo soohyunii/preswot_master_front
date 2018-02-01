@@ -17,7 +17,6 @@
             <el-date-picker
               v-model="scItemStartDate"
               type="datetime"
-              value-format="yyyy-MM-dd HH:mm:ss"
             >
             </el-date-picker>
           </el-form-item>
@@ -26,7 +25,6 @@
             <el-date-picker
               v-model="scItemEndDate"
               type="datetime"
-              value-format="yyyy-MM-dd HH:mm:ss"
               :disabled="!shouldDeactivated"
             >
             </el-date-picker>
@@ -50,7 +48,6 @@
 
 <script>
 import { mapState, mapMutations, mapGetters } from 'vuex';
-import utils from '../../utils';
 
 export default {
   name: 'ScActiveTimeEditor',
@@ -130,8 +127,7 @@ export default {
           return null;
         }
         // console.log('startOffsetSec', startOffsetSec);
-        const resDate = new Date(vm.scStartDate.getTime() + (startOffsetSec * 1000));
-        return utils.formatDate(resDate);
+        return new Date(vm.scStartDate.getTime() + (startOffsetSec * 1000));
       },
       set(scItemStartDate) {
         const vm = this;
@@ -167,8 +163,7 @@ export default {
         if (!endOffsetSec) {
           return null;
         }
-        const resDate = new Date(vm.scStartDate.getTime() + (endOffsetSec * 1000));
-        return utils.formatDate(resDate);
+        return new Date(vm.scStartDate.getTime() + (endOffsetSec * 1000));
       },
       set(scItemEndDate) {
         const vm = this;
