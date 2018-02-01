@@ -14,7 +14,7 @@ export default {
     lectureId,
     lectureName,
   }) {
-    return http.post(`/lectures/${lectureId}/name`, {
+    return http.put(`/lectures/${lectureId}/name`, {
       value: lectureName,
     });
   },

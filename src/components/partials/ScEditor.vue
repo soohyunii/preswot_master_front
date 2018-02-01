@@ -125,13 +125,14 @@ export default {
       'updateScStartDatetime',
     ]),
     ...mapActions('teacher', [
-      'updateScTitle',
+      'putScTitle',
     ]),
     onChange(type) {
+      console.log(`onChange() ${type}`);
       const vm = this;
       switch (type) {
         case 'TITLE': {
-          vm.updateScTitle({
+          vm.putScTitle({
             scTitle: vm.scTitle,
           });
           break;

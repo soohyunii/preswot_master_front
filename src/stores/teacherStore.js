@@ -276,7 +276,7 @@ export default {
       });
       return res.data.lecture_id;
     },
-    async updateScTitle({ commit, state }, { scTitle }) {
+    async putScTitle({ commit, state }, { scTitle }) {
       await lectureService.putLectureName({
         lectureId: state.scId,
         lectureName: scTitle,

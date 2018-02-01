@@ -131,6 +131,9 @@ export default {
       scType: '강의', // TODO: delete?? 뭔가 지정해줘야하긴 하는데,
       // 이 플로우는 마음에 별로 안드는 상황
     });
+    vm.updateScId({
+      scId: Number.parseInt(vm.$route.params.scId, 10),
+    });
   },
   data() {
     // TODO: translate
@@ -157,7 +160,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['updateScType', 'updateScTitle']),
+    ...mapMutations('teacher', ['updateScType', 'updateScId']),
     onClickScType(scType) {
       const vm = this;
       vm.scType = scType;
