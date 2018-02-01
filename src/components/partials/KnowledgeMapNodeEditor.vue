@@ -84,10 +84,9 @@ export default {
           if (node.value === '') { // eslint-disable-next-line
             alert('empty not allowed');
             break;
-          } else if (vm.nodes.findIndex(k => k.id === node.value) !== -1 &&
-            vm.nodes[vm.currentIndex].id !== vm.nodes[vm.currentIndex].value) {
+          } else if (vm.nodes.findIndex(vm.isDuplicated) !== -1) {
             // eslint-disable-next-line
-            alert('duplicated name');
+            alert('duplicated node');
             break;
           }
           vm.nodes[index].id = vm.nodes[index].value;
@@ -104,6 +103,13 @@ export default {
           throw new Error('not defined type', type);
         }
       }
+    },
+    isDuplicated(element, index) {
+      const vm = this;
+      if (index !== vm.currentIndex && element.id === vm.nodes[vm.currentIndex].value) {
+        return element;
+      }
+      return false;
     },
   },
 };
