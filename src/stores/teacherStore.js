@@ -177,8 +177,8 @@ export default {
       }
       const createNode = {
         value: node.value,
-        id: node.value,
-        name: node.value,
+        id: node.id,
+        name: '이름을 바꿔주세요!',
         _size: node._size, // eslint-disable-line
         x,
         y,

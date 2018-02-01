@@ -16,7 +16,7 @@
       <el-table-column label="Name" align="center">
         <template slot-scope="scope">
           <div v-if="nodesInputFlag[scope.$index] && nodesInputFlag[scope.$index].value">
-            <el-input v-model="nodes[scope.$index].value" @focus="currentIndex = scope.$index"/>
+            <el-input v-model="nodes[scope.$index].name" @focus="currentIndex = scope.$index"/>
             <el-button @click="onClick('setNodeName', scope.$index)">확인</el-button>
           </div>
           <div v-else>
@@ -49,6 +49,7 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex';
+import Guid from 'guid';
 
 export default {
   name: 'KnowledgeMapNodeEditor',
@@ -66,7 +67,9 @@ export default {
       const vm = this;
       switch (type) {
         case 'addNode': {
-          vm.addNodes({ node: { value: '', _size: 10 } });
+          const id = Guid.create().toString();
+          window.console.log(id);
+          vm.addNodes({ node: { id, value: '', _size: 10 } });
           vm.addNodesInputFlag({ flag: { value: true, weight: false } });
           break;
         }
@@ -80,7 +83,7 @@ export default {
         }
         case 'setNodeName': {
           const node = vm.nodes[index];
-          if (node.value === '') {
+          if (node.name === '') {
             // TODO: translate
             vm.$notify({
               title: 'Equal',
@@ -97,8 +100,8 @@ export default {
             });
             break;
           }
-          vm.nodes[index].id = vm.nodes[index].value;
-          vm.nodes[index].name = vm.nodes[index].value;
+          vm.nodes[index].value = vm.nodes[index].name;
+          vm.nodes[index].id = vm.nodes[index].name;
           vm.nodesInputFlag[index].value = !vm.nodesInputFlag[index].value;
           break;
         }
