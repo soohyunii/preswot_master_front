@@ -138,6 +138,13 @@ export default {
         newClass,
       );
     },
+    assignCurrentClass(state, { currentClass }) {
+      const c = state.teachingClassList[state.currentClassIndex];
+      Object.assign(
+        c,
+        currentClass,
+      );
+    },
     updateScTitle(state, { scTitle }) {
       state.scTitle = scTitle;
     },
@@ -238,6 +245,20 @@ export default {
         return res;
       }
       throw new Error(`create class failed ${res.status}`);
+    },
+    async fetchClass({ state, getters, commit }) {
+      if (state.currentClassIndex === null) {
+        return;
+      }
+      const currentClass = getters.currentClass;
+      const res = await classService.fetchClass({
+        id: currentClass.class_id,
+      });
+      commit('assignCurrentClass', {
+        currentClass: {
+          scenarioList: res.data.Lectures,
+        },
+      });
     },
   },
 };

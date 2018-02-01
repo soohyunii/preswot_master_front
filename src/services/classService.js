@@ -20,4 +20,7 @@ export default {
       teachers: teacherIdList,
     });
   },
+  fetchClass({ id }) {
+    return http.get(`/classes/${id}`);
+  },
 };

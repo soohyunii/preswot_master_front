@@ -25,6 +25,9 @@ export default {
       }
 
       const tc = res.data.teachingClasses;
+      Object.assign(tc, {
+        scenarioList: null,
+      });
       if (tc && tc.length !== 0) {
         commit('teacher/updateTeachingClassList', {
           teachingClassList: tc,
