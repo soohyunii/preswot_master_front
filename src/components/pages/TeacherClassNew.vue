@@ -81,7 +81,7 @@ export default {
     changeShouldDeactivated(label) {
       const vm = this;
       if (!label) {
-        vm.activeEndDatetime = null;
+        vm.activeEndDate = null;
       }
     },
     onSubmit() {
