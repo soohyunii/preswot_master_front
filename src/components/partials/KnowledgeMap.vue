@@ -11,25 +11,27 @@
       </defs>
     </svg>
     <div class="network">
-      <d3-network
-        :net-nodes="nodes"
-        :net-links="validEdges"
-        :options="options"
-        :link-cb="lcb"
-        @node-click="nodeClick"/>
+      <div class="bg" @click="selectReset()">
+        <d3-network
+          :net-nodes="nodes"
+          :net-links="validEdges"
+          :options="options"
+          :link-cb="lcb"
+          @node-click="nodeClick"/>
+      </div>
       <el-row :gutter="5">
-        <el-col :offset="20" :span="1.5">
+        <el-col :span="1.5">
           <!-- TODO: translate -->
-          <el-checkbox v-model="pinned" border>고정</el-checkbox>
+          <el-checkbox v-model="pinningMode" border>고정</el-checkbox>
         </el-col>
-        <!-- TODO: translate
-        <el-col :span="3">
+        <!-- TODO: translate -->
+        <el-col :span="5">
           <el-radio-group v-model="mode">
             <el-radio-button label="select">선택</el-radio-button>
             <el-radio-button label="delete">삭제</el-radio-button>
             <el-radio-button label="link">링크</el-radio-button>
           </el-radio-group>
-        </el-col> -->
+        </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
@@ -43,6 +45,7 @@
     <h1>debug</h1>
     {{mode}}<br/>
   <pre>select node: {{selectedNode}}
+  select node2: {{selectedNode2}}
   nodes: {{nodes}}
   edges: {{validEdges}}
   </pre>
@@ -50,7 +53,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import D3Network from 'vue-d3-network';
 import KnowledgeMapNodeEditor from './KnowledgeMapNodeEditor';
 import KnowledgeMapEdgeEditor from './KnowledgeMapEdgeEditor';
@@ -64,12 +67,14 @@ export default {
   data() {
     return {
       mode: 'select',
-      pinned: false,
+      pinningMode: false,
       selectedNode: '',
+      selectedNode2: '',
       nodeSize: 10,
       canvas: false,
       linkWidth: 2.5,
       fontSize: 20,
+      resetFlag: true,
     };
   },
   computed: {
@@ -91,7 +96,7 @@ export default {
           });
         }
       }
-      window.console.log(edges);
+      // window.console.log(edges);
       return edges;
     },
     options() {
@@ -107,13 +112,47 @@ export default {
     },
   },
   methods: {
-    pinning() {
-      const vm = this;
-      vm.pinned = !vm.pinned;
-    },
+    ...mapMutations('teacher', ['pinning', 'deleteNodes', 'addEdges']),
     nodeClick(event, node) {
       const vm = this;
-      vm.selectedNode = node;
+      vm.pinning({ pinned: vm.pinningMode, node });
+
+      switch (vm.mode) {
+        default:
+        case 'select': {
+          vm.resetFlag = false;
+          vm.selectedNode = node;
+          break;
+        }
+        case 'delete': {
+          vm.deleteNodes({ nodeIndex: node.index });
+          break;
+        }
+        case 'link': {
+          vm.resetFlag = false;
+          if (!vm.selectedNode) {
+            vm.selectedNode = node;
+          } else {
+            vm.selectedNode2 = node;
+          }
+
+          if (vm.selectedNode && vm.selectedNode2) {
+            // const edge =
+            // vm.addEdges(edge);
+            vm.selectedNode = '';
+            vm.selectedNode2 = '';
+          }
+          break;
+        }
+      }
+    },
+    selectReset() {
+      const vm = this;
+      if (vm.resetFlag) {
+        vm.selectedNode = '';
+        vm.selectedNode2 = '';
+      }
+      vm.resetFlag = true;
     },
     lcb(link) {
       link._svgAttrs = { // eslint-disable-line
