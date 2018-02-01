@@ -15,18 +15,18 @@
       </template>
       <el-table-column label="Name" align="center">
         <template slot-scope="scope">
-          <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].value">
-            <el-input v-model="nodes[scope.$index].name" />
-            <el-button @click="onClick('changeNodeName', scope.$index)">확인</el-button>
+          <div v-if="nodesInputFlag[scope.$index] && nodesInputFlag[scope.$index].value">
+            <el-input v-model="nodes[scope.$index].value" @focus="currentIndex = scope.$index"/>
+            <el-button @click="onClick('setNodeName', scope.$index)">확인</el-button>
           </div>
           <div v-else>
-            <span>{{ scope.row.name }}<i class="el-icon-edit" @click="onClick('changeNodeName', scope.$index)" /></span>
+            <span>{{ scope.row.value }}<i class="el-icon-edit" @click="onClick('changeNodeName', scope.$index)" /></span>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="Weight" align="center">
         <template slot-scope="scope">
-          <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].weight">
+          <div v-if="nodesInputFlag[scope.$index] && nodesInputFlag[scope.$index].weight">
             <el-input type="number" v-model="nodes[scope.$index]._size" />
             <el-button @click="onClick('changeNodeWeight', scope.$index)">확인</el-button>
           </div>
@@ -43,6 +43,7 @@
         </template>
       </el-table-column>
     </el-table>
+    {{ nodesInputFlag }}
   </div>
 </template>
 
@@ -53,42 +54,70 @@ export default {
   name: 'KnowledgeMapNodeEditor',
   data() {
     return {
-      inputFlag: [],
-      count: 1,
+      currentIndex: -1,
     };
   },
   computed: {
-    ...mapState('teacher', ['nodes', 'edges']),
+    ...mapState('teacher', ['nodes', 'nodesInputFlag']),
   },
   methods: {
-    ...mapMutations('teacher', ['addNodes', 'deleteNodes']),
+    ...mapMutations('teacher', ['addNodes', 'deleteNodes', 'addNodesInputFlag', 'deleteNodesInputFlag']),
     onClick(type, index) {
       const vm = this;
       switch (type) {
         case 'addNode': {
-          vm.addNodes({ node: { value: `노드 이름${vm.count}`, _size: 10 } });
-          vm.inputFlag.push({ value: false, weight: false });
-          vm.count += 1;
+          vm.addNodes({ node: { value: '', _size: 10 } });
+          vm.addNodesInputFlag({ flag: { value: true, weight: false } });
           break;
         }
         case 'changeNodeName': {
-          vm.nodes[index].id = vm.nodes[index].name;
-          vm.nodes[index].value = vm.nodes[index].name;
-          vm.inputFlag[index].value = !vm.inputFlag[index].value;
+          vm.nodesInputFlag[index].value = !vm.nodesInputFlag[index].value;
           break;
         }
         case 'changeNodeWeight': {
-          vm.inputFlag[index].weight = !vm.inputFlag[index].weight;
+          vm.nodesInputFlag[index].weight = !vm.nodesInputFlag[index].weight;
+          break;
+        }
+        case 'setNodeName': {
+          const node = vm.nodes[index];
+          if (node.value === '') {
+            // TODO: translate
+            vm.$notify({
+              title: 'Equal',
+              message: '입력값 필쑤..',
+              type: 'warning',
+            });
+            break;
+          } else if (vm.nodes.findIndex(vm.isDuplicated) !== -1) {
+            // TODO: translate
+            vm.$notify({
+              title: 'Equal',
+              message: '이미 Node가 존재하네요...',
+              type: 'warning',
+            });
+            break;
+          }
+          vm.nodes[index].id = vm.nodes[index].value;
+          vm.nodes[index].name = vm.nodes[index].value;
+          vm.nodesInputFlag[index].value = !vm.nodesInputFlag[index].value;
           break;
         }
         case 'delete': {
           vm.deleteNodes({ nodeIndex: index });
+          vm.deleteNodesInputFlag({ index });
           break;
         }
         default: {
           throw new Error('not defined type', type);
         }
       }
+    },
+    isDuplicated(element, index) {
+      const vm = this;
+      if (index !== vm.currentIndex && element.id === vm.nodes[vm.currentIndex].value) {
+        return element;
+      }
+      return false;
     },
   },
 };

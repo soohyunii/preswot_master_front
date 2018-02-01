@@ -2,7 +2,7 @@
   <div>
     <el-container>
       <el-aside width="150px">
-        <teaching-class-list />
+        <!-- <teaching-class-list-aside /> -->
       </el-aside>
 
       <!-- 이 메인은 맞음 시작 -->
@@ -61,8 +61,14 @@
             <el-col :span="24">
               <h1>아이템 편집</h1>
               <sc-common-editor />
-              <sc-material-editor />
-              <sc-survey-editor />
+              <sc-material-editor
+                v-if="currentEditingScItemType === '강의자료'
+                || currentEditingScItemType === '숙제'"
+              />
+              <sc-survey-editor v-if="currentEditingScItemType === '설문'" />
+              <div v-if="currentEditingScItemType === '문항'">
+                TODO: 문항~~
+              </div>
               <sc-active-time-editor />
 
             </el-col>
@@ -73,6 +79,8 @@
           <h2>debug</h2>
           server will get this:
           <pre style="font-size: 70%;">{{ DEBUGscenarioServerWillReceive }}</pre>
+          currentEditingScItem: {{ currentEditingScItem }}<br/>
+          currentEditingScItemType: {{ currentEditingScItemType }}
         </div>
       </el-main>
       <!-- 이 메인은 맞음 끝 -->
@@ -104,10 +112,9 @@ import ScMaterialEditor from '../partials/ScMaterialEditor';
 import ScActiveTimeEditor from '../partials/ScActiveTimeEditor';
 import ScCommonEditor from '../partials/ScCommonEditor';
 import ScSurveyEditor from '../partials/ScSurveyEditor';
-import TeachingClassList from '../partials/TeachingClassList';
 
 export default {
-  name: 'TeacherNewLecture',
+  name: 'TeacherLectureNew',
   components: {
     Sc,
     ScEditor,
@@ -116,7 +123,6 @@ export default {
     ScMaterialEditor,
     ScSurveyEditor,
     ScActiveTimeEditor,
-    TeachingClassList,
   },
   mounted() {
     const vm = this;
@@ -135,7 +141,19 @@ export default {
   },
   computed: {
     ...mapState('teacher', ['scTitle', 'scType']),
-    ...mapGetters('teacher', ['isScEmpty', 'DEBUGscenarioServerWillReceive']),
+    ...mapGetters('teacher', [
+      'isScEmpty',
+      'DEBUGscenarioServerWillReceive',
+      'currentEditingScItem',
+    ]),
+    currentEditingScItemType() {
+      const vm = this;
+      const item = vm.currentEditingScItem;
+      if (!item) {
+        return null;
+      }
+      return item.type;
+    },
   },
   methods: {
     ...mapMutations('teacher', ['updateScType', 'updateScTitle']),

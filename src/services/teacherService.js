@@ -1,29 +1,11 @@
+// import axios from 'axios';
+// import config from './config';
+
 export default {
-  fetchTeachingClassList() {
-    // TODO: Replace dummy with axios
-    return new Promise((resolve) => {
-      window.setTimeout(() => {
-        resolve([
-          {
-            className: 'Vue.js',
-          },
-          {
-            className: 'Node.js',
-          },
-          {
-            className: 'TensorFlow with python and C++',
-          },
-          {
-            className: 'length_test_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-          },
-        ]);
-      }, 1500);
-    });
-  },
-  fetchScenarioList({ teachingClassName }) {
+  fetchScenarioList({ teachingClassName }) { // eslint-disable-line
     // teachingClass라는 과목에 대한 시나리오 정보
     // TODO: Replace dummy with axios
-    window.console.log(teachingClassName);
+    // window.console.log(teachingClassName);
     return new Promise((resolve) => {
       window.setTimeout(() => {
         resolve([

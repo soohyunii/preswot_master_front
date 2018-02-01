@@ -1,27 +1,31 @@
 <template>
-  <div v-if="!isScEmpty">
-    <h1>
-      Sc Survey Editor Template
-    </h1>
+  <div>
     <el-row>
-      <el-col :span="6">
-        <!-- TODO: translate -->
-        설문 내용
-      </el-col>
-      <el-col :span="18">
-        <el-input type="textarea" :rows="3" placeholder="Java 경험 얼마나?" v-model="survey.description" />
-      </el-col>
-      <el-col :span="18" :offset="6">
-        <template v-for="(item, index, key) in survey.choice">
-          <el-input v-model="survey.choice[index]" :key="key">
-            <template slot="prepend">#{{ index + 1 }}</template>
-            <el-button slot="append" icon="el-icon-close" @click="onClick('deleteSelection', index)"></el-button>
-          </el-input>
-        </template>
-        <el-button type="primary" @click="onClick('addSelection')">(객관식)선지 추가하기 [+]</el-button>
+      <el-col style="max-width: 600px;">
+        <el-form :model="survey" ref="elForm" label-width="120px">
+          <el-form-item label="설문 제목">
+            <el-input
+              type="textarea"
+              :rows="3"
+              placeholder="Java 경험 얼마나?"
+              v-model="survey.description"
+            />
+          </el-form-item>
+
+          <el-form-item label="설문 문항">
+            <template v-for="(item, index, key) in survey.choice">
+              <el-input v-model="survey.choice[index]" :key="key">
+                <template slot="prepend">#{{ index + 1 }}</template>
+                <el-button slot="append" icon="el-icon-close" @click="onClick('deleteSelection', index)"></el-button>
+              </el-input>
+            </template>
+            <br v-if="survey.choice.length" /> <br v-if="survey.choice.length" />
+            <el-button type="primary" @click="onClick('addSelection')">(객관식) 선지 추가하기 [+]</el-button>
+          </el-form-item>
+
+        </el-form>
       </el-col>
     </el-row>
-    {{ survey }}
   </div>
 </template>
 
@@ -50,18 +54,16 @@ export default {
       },
       set(survey) {
         const vm = this;
-        vm.updateCurrentEditingScItem({
+        vm.assignCurrentEditingScItem({
           currentEditingScItem: {
-            ...vm.currentEditingScItem,
             survey,
           },
-          lectureElementIndex: vm.currentEditingScItemIndex,
         });
       },
     },
   },
   methods: {
-    ...mapMutations('teacher', ['updateCurrentEditingScItem']),
+    ...mapMutations('teacher', ['assignCurrentEditingScItem']),
     onClick(type, index) {
       const vm = this;
       switch (type) {

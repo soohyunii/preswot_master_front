@@ -1,9 +1,10 @@
 // import Test from '../components/TestComponent';
 import Profile from '../components/pages/Profile';
-import TeacherHome from '../components/pages/TeacherHome';
+import TeacherClassIndex from '../components/pages/TeacherClassIndex';
 import TeacherLectureNew from '../components/pages/TeacherLectureNew';
 import TeacherLectureLive from '../components/pages/TeacherLectureLive';
 import StudentLectureLive from '../components/pages/StudentLectureLive';
+import TeacherClassNew from '../components/pages/TeacherClassNew';
 import KnowledgeMap from '../components/partials/KnowledgeMap';
 
 
@@ -37,11 +38,20 @@ export default function authRoutes(root) {
       },
     },
     {
-      path: '/teacher',
-      name: 'TeacherHome',
-      component: TeacherHome,
+      path: '/teacher/class/',
+      name: 'TeacherClass',
+      component: TeacherClassIndex,
       meta: {
-        title: 'Teacher Home', // TODO: import from i18n
+        title: 'Teacher Class Index', // TODO: import from i18n
+        auth: true,
+      },
+    },
+    {
+      path: '/teacher/class/new',
+      name: 'TeacherClassNew',
+      component: TeacherClassNew,
+      meta: {
+        title: 'Teacher Class New', // TODO: import from i18n
         auth: true,
       },
     },

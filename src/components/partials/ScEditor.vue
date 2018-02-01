@@ -14,7 +14,6 @@
               type="datetime"
             >
             </el-date-picker>
-            <!-- {{ scStartDatetime }} -->
           </el-form-item>
 
           <el-form-item label="타입" prop="scType">

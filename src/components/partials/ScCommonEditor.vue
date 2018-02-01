@@ -50,7 +50,7 @@ export default {
       set(scItemTitle) {
         const vm = this;
         // TODO: refactor! (not to update ectureElementIndex)
-        vm.updateCurrentEditingScItem({
+        vm.assignCurrentEditingScItem({
           currentEditingScItem: {
             title: scItemTitle,
           },
@@ -69,7 +69,7 @@ export default {
       set(scItemDescription) {
         const vm = this;
         // TODO: refactor! (not to update lectureELementIndex)
-        vm.updateCurrentEditingScItem({
+        vm.assignCurrentEditingScItem({
           currentEditingScItem: {
             description: scItemDescription,
           },
@@ -78,7 +78,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['updateCurrentEditingScItem']),
+    ...mapMutations('teacher', ['assignCurrentEditingScItem']),
   },
 };
 </script>
