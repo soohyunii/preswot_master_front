@@ -80,12 +80,21 @@ export default {
         }
         case 'setNodeName': {
           const node = vm.nodes[index];
-          if (node.value === '') { // eslint-disable-next-line
-            alert('empty not allowed');
+          if (node.value === '') {
+            // TODO: translate
+            vm.$notify({
+              title: 'Equal',
+              message: '입력값 필쑤..',
+              type: 'warning',
+            });
             break;
           } else if (vm.nodes.findIndex(vm.isDuplicated) !== -1) {
-            // eslint-disable-next-line
-            alert('duplicated node');
+            // TODO: translate
+            vm.$notify({
+              title: 'Equal',
+              message: '이미 Node가 존재하네요...',
+              type: 'warning',
+            });
             break;
           }
           vm.nodes[index].id = vm.nodes[index].value;

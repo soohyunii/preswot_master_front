@@ -22,7 +22,7 @@
               :fetch-suggestions="querySearch"
               @focus="currentIndex = scope.$index"
             />
-            <el-button @click="onClick('setEdgeSid', scope.$index)">확인</el-button>
+            <el-button @click="onClick('changeEdgeSid', scope.$index)">확인</el-button>
           </div>
           <div v-else>
             <span>{{ scope.row.sid }}<i class="el-icon-edit" @click="onClick('changeEdgeSid', scope.$index)" /></span>
@@ -38,7 +38,7 @@
               :fetch-suggestions="querySearch"
               @focus="currentIndex = scope.$index"
             />
-            <el-button @click="onClick('setEdgeTid', scope.$index)">확인</el-button>
+            <el-button @click="onClick('changeEdgeTid', scope.$index)">확인</el-button>
           </div>
           <div v-else>
             <span>{{ scope.row.tid }}<i class="el-icon-edit" @click="onClick('changeEdgeTid', scope.$index)" /></span>
@@ -64,7 +64,6 @@
         </template>
       </el-table-column>
     </el-table>
-    {{edges}}
   </div>
 </template>
 
@@ -187,46 +186,6 @@ export default {
         }
         case 'changeEdgeWeight': {
           vm.inputFlag[index].weight = !vm.inputFlag[index].weight;
-          break;
-        }
-        case 'setEdgeSid': {
-          let alertFlag = false;
-          if (vm.edges[index].sid === '') { // eslint-disable-next-line
-            alert('empty not allowed');
-            break;
-          }
-          vm.edges.forEach((item, idx) => {
-            if (idx !== vm.currentIndex &&
-            item.sid === vm.edges[index].sid &&
-            item.tid === vm.edges[index].tid) {
-            // eslint-disable-next-line
-              alert('duplicated edge');
-              alertFlag = true;
-            }
-          });
-          if (!alertFlag) {
-            vm.inputFlag[index].sid = !vm.inputFlag[index].sid;
-          }
-          break;
-        }
-        case 'setEdgeTid': {
-          let alertFlag = false;
-          if (vm.edges[index].tid === '') { // eslint-disable-next-line
-            alert('empty not allowed');
-            break;
-          }
-          vm.edges.forEach((item, idx) => {
-            if (idx !== vm.currentIndex &&
-            item.sid === vm.edges[index].sid &&
-            item.tid === vm.edges[index].tid) {
-            // eslint-disable-next-line
-              alert('duplicated edge');
-              alertFlag = true;
-            }
-          });
-          if (!alertFlag) {
-            vm.inputFlag[index].tid = !vm.inputFlag[index].tid;
-          }
           break;
         }
         case 'delete': {
