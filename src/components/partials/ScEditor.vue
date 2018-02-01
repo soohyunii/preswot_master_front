@@ -7,10 +7,17 @@
             <el-input v-model.lazy="scTitle" @change="onChange('TITLE')"></el-input>
           </el-form-item>
 
-          <el-form-item label="활성화 시각" prop="scStartDatetime">
+          <el-form-item label="활성화 시각" prop="scStartDate">
             <el-date-picker
-              v-model="scStartDatetime"
-              value-format="yyyy-MM-dd HH:mm:ss"
+              v-model="scStartDate"
+              type="datetime"
+            >
+            </el-date-picker>
+          </el-form-item>
+
+          <el-form-item label="비활성화 시각" prop="scEndDate">
+            <el-date-picker
+              v-model="scEndDate"
               type="datetime"
             >
             </el-date-picker>
@@ -80,15 +87,27 @@ export default {
         });
       },
     },
-    scStartDatetime: {
+    scStartDate: {
       get() {
         const vm = this;
-        return vm.$store.state.teacher.scStartDatetime;
+        return vm.$store.state.teacher.scStartDate;
       },
-      set(scStartDatetime) {
+      set(scStartDate) {
         const vm = this;
-        vm.updateScStartDatetime({
-          scStartDatetime,
+        vm.updateScStartDate({
+          scStartDate,
+        });
+      },
+    },
+    scEndDate: {
+      get() {
+        const vm = this;
+        return vm.$store.state.teacher.scEndDate;
+      },
+      set(scEndDate) {
+        const vm = this;
+        vm.updateScEndDate({
+          scEndDate,
         });
       },
     },
@@ -122,7 +141,8 @@ export default {
       'updateScTitle',
       'updateScDescription',
       'updateScType',
-      'updateScStartDatetime',
+      'updateScStartDate',
+      'updateScEndDate',
     ]),
     ...mapActions('teacher', [
       'putScTitle',

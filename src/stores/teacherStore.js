@@ -53,7 +53,8 @@ export default {
     scId: null,
     scTitle: null,
     scType: null,
-    scStartDatetime: null,
+    scStartDate: null,
+    scEndDate: null,
     scDescription: null,
     scKnowledgeMap: null,
     sc: [],
@@ -157,8 +158,11 @@ export default {
     updateScType(state, { scType }) {
       state.scType = scType;
     },
-    updateScStartDatetime(state, { scStartDatetime }) {
-      state.scStartDatetime = scStartDatetime;
+    updateScStartDate(state, { scStartDate }) {
+      state.scStartDate = scStartDate;
+    },
+    updateScEndDate(state, { scEndDate }) {
+      state.scEndDate = scEndDate;
     },
     updateScDescription(state, { scDescription }) {
       state.scDescription = scDescription;
