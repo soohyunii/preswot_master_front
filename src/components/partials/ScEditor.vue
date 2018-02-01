@@ -4,8 +4,12 @@
       <el-col style="max-width: 600px;">
         <el-form :model="input" ref="elForm" label-width="120px">
           <el-form-item label="제목" prop="scTitle">
-            <el-input v-model.lazy="scTitle" @change="onChange('TITLE')"></el-input>
+            <el-input
+              v-model.lazy="scTitle"
+              @change="onChange('TITLE')"
+            ></el-input>
           </el-form-item>
+          <i class="el-icon-loading" v-if="loading.TITLE" />
 
           <el-form-item label="활성화 시각" prop="scStartDate">
             <el-date-picker
@@ -61,10 +65,20 @@
 <script>
 import { mapMutations, mapActions } from 'vuex';
 
+function delay(delayMillisec) {
+  return new Promise((fulfill) => {
+    setTimeout(fulfill, delayMillisec);
+  });
+}
+
 export default {
   name: 'ScEditor',
   data() {
-    return {};
+    return {
+      loading: {
+        TITLE: false,
+      },
+    };
   },
   computed: {
     input() {
@@ -147,18 +161,30 @@ export default {
     ...mapActions('teacher', [
       'putScTitle',
     ]),
-    onChange(type) {
+    async onChange(type) {
       const vm = this;
-      switch (type) {
-        case 'TITLE': {
-          vm.putScTitle({
-            scTitle: vm.scTitle,
-          });
-          break;
+      try {
+        vm.loading[type] = true;
+        switch (type) {
+          case 'TITLE': {
+            await delay(1500); // TODO: delete
+            await vm.putScTitle({
+              scTitle: vm.scTitle,
+            });
+            break;
+          }
+          default: {
+            throw new Error(`not defined type ${type}`);
+          }
         }
-        default: {
-          throw new Error(`not defined type ${type}`);
-        }
+      } catch (error) {
+        vm.$notify({
+          title: '저장 실패',
+          message: error.toString(),
+          type: 'error',
+        });
+      } finally {
+        vm.loading[type] = false;
       }
     },
   },
