@@ -266,7 +266,7 @@ export default {
         },
       });
     },
-    async createLecture({ commit, getters, rootGetters }) {
+    async createSc({ getters, rootGetters }) {
       const userId = rootGetters['auth/userId'];
       const classId = getters.currentClass.class_id;
 
@@ -274,9 +274,15 @@ export default {
         classId,
         teacherId: userId,
       });
-      // 강의를 만들자마자 TeacherLectureNew로 이동할거기 떄문에 여기서 넣어준다
-      commit('updateScId', {
-        scId: res.data.lecture_id,
+      return res.data.lecture_id;
+    },
+    async updateScTitle({ commit, state }, { scTitle }) {
+      await lectureService.putLectureName({
+        lectureId: state.scId,
+        lectureName: scTitle,
+      });
+      commit('updateScTitle', {
+        scTitle,
       });
     },
   },

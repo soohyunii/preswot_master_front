@@ -99,7 +99,7 @@ export default {
   props: ['tableData'],
   methods: {
     ...mapActions('teacher', [
-      'createLecture',
+      'createSc',
     ]),
     getType(type) {
       // 과목 시나리오 유형 분류 {{ A: 강의, B: 숙제, C: 퀴즈, D: 시험 }}
@@ -131,8 +131,8 @@ export default {
     async clickAddScenario() {
       const vm = this;
       try {
-        await vm.createLecture();
-        vm.$router.push('/a/teacher/lecture/new');
+        const scId = await vm.createSc();
+        vm.$router.push(`/a/teacher/lecture/${scId}`);
       } catch (error) {
         vm.$notify({
           title: '강좌 생성 실패',

@@ -10,4 +10,12 @@ export default {
       teacherId,
     });
   },
+  putLectureName({
+    lectureId,
+    lectureName,
+  }) {
+    return http.post(`/lectures/${lectureId}/name`, {
+      value: lectureName,
+    });
+  },
 };

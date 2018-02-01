@@ -4,7 +4,7 @@
       <el-col style="max-width: 600px;">
         <el-form :model="input" ref="elForm" label-width="120px">
           <el-form-item label="제목" prop="scTitle">
-            <el-input v-model="scTitle"></el-input>
+            <el-input v-model.lazy="scTitle" @change="onChange('TITLE')"></el-input>
           </el-form-item>
 
           <el-form-item label="활성화 시각" prop="scStartDatetime">
@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapActions } from 'vuex';
 
 export default {
   name: 'ScEditor',
@@ -124,6 +124,23 @@ export default {
       'updateScType',
       'updateScStartDatetime',
     ]),
+    ...mapActions('teacher', [
+      'updateScTitle',
+    ]),
+    onChange(type) {
+      const vm = this;
+      switch (type) {
+        case 'TITLE': {
+          vm.updateScTitle({
+            scTitle: vm.scTitle,
+          });
+          break;
+        }
+        default: {
+          throw new Error(`not defined type ${type}`);
+        }
+      }
+    },
   },
 };
 </script>
