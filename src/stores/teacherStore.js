@@ -262,12 +262,11 @@ export default {
       });
       commit('assignCurrentClass', {
         currentClass: {
-          scenarioList: res.data.Lectures,
+          scenarioList: res.data.lectures,
         },
       });
     },
-    async createLecture({ getters, rootGetters }) {
-      console.log('context', rootGetters);
+    async createLecture({ commit, getters, rootGetters }) {
       const userId = rootGetters['auth/userId'];
       const classId = getters.currentClass.class_id;
 
@@ -275,12 +274,9 @@ export default {
         classId,
         teacherId: userId,
       });
-      console.log('res', res);
-      // commit('updateScId', {
-      //   scId:
-      // });
-
-      console.log(1323123, userId, classId);
+      commit('updateScId', {
+        scId: res.data.lecture_id,
+      });
     },
   },
 };
