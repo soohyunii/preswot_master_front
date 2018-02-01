@@ -15,7 +15,7 @@
         <d3-network
           :net-nodes="nodes"
           :net-links="validEdges"
-          :selection="{nodes: selectedNode}"
+          :selection="{nodes: selectedNode, links: {}}"
           :options="options"
           :link-cb="lcb"
           @node-click="nodeClick"/>
