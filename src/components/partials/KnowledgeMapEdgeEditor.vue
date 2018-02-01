@@ -20,8 +20,9 @@
               class="inline-input"
               v-model="edges[scope.$index].sid"
               :fetch-suggestions="querySearch"
+              @focus="currentIndex = scope.$index"
             />
-            <el-button @click="onClick('changeEdgeSid', scope.$index)">확인</el-button>
+            <el-button @click="onClick('setEdgeSid', scope.$index)">확인</el-button>
           </div>
           <div v-else>
             <span>{{ scope.row.sid }}<i class="el-icon-edit" @click="onClick('changeEdgeSid', scope.$index)" /></span>
@@ -35,8 +36,9 @@
               class="inline-input"
               v-model="edges[scope.$index].tid"
               :fetch-suggestions="querySearch"
+              @focus="currentIndex = scope.$index"
             />
-            <el-button @click="onClick('changeEdgeTid', scope.$index)">확인</el-button>
+            <el-button @click="onClick('setEdgeTid', scope.$index)">확인</el-button>
           </div>
           <div v-else>
             <span>{{ scope.row.tid }}<i class="el-icon-edit" @click="onClick('changeEdgeTid', scope.$index)" /></span>
@@ -73,8 +75,8 @@ export default {
   name: 'KnowledgeMapEdgeEditor',
   data() {
     return {
+      currentIndex: -1,
       inputFlag: [],
-      count: 1,
     };
   },
   computed: {
@@ -86,9 +88,8 @@ export default {
       const vm = this;
       switch (type) {
         case 'addEdge': {
-          vm.addEdges({ edge: { sid: `sid${vm.count}`, tid: `tid${vm.count}`, weight: 50 } });
-          vm.inputFlag.push({ sid: false, tid: false, weight: false });
-          vm.count += 1;
+          vm.addEdges({ edge: { sid: '', tid: '', weight: 50 } });
+          vm.inputFlag.push({ sid: true, tid: true, weight: false });
           break;
         }
         case 'changeEdgeSid': {
@@ -103,8 +104,49 @@ export default {
           vm.inputFlag[index].weight = !vm.inputFlag[index].weight;
           break;
         }
+        case 'setEdgeSid': {
+          let alertFlag = false;
+          if (vm.edges[index].sid === '') { // eslint-disable-next-line
+            alert('empty not allowed');
+            break;
+          }
+          vm.edges.forEach((item, idx) => {
+            if (idx !== vm.currentIndex &&
+            item.sid === vm.edges[index].sid &&
+            item.tid === vm.edges[index].tid) {
+            // eslint-disable-next-line
+              alert('duplicated edge');
+              alertFlag = true;
+            }
+          });
+          if (!alertFlag) {
+            vm.inputFlag[index].sid = !vm.inputFlag[index].sid;
+          }
+          break;
+        }
+        case 'setEdgeTid': {
+          let alertFlag = false;
+          if (vm.edges[index].tid === '') { // eslint-disable-next-line
+            alert('empty not allowed');
+            break;
+          }
+          vm.edges.forEach((item, idx) => {
+            if (idx !== vm.currentIndex &&
+            item.sid === vm.edges[index].sid &&
+            item.tid === vm.edges[index].tid) {
+            // eslint-disable-next-line
+              alert('duplicated edge');
+              alertFlag = true;
+            }
+          });
+          if (!alertFlag) {
+            vm.inputFlag[index].tid = !vm.inputFlag[index].tid;
+          }
+          break;
+        }
         case 'delete': {
           vm.deleteEdges({ edgeIndex: index });
+          vm.inputFlag.splice(index, 1);
           break;
         }
         default: {
