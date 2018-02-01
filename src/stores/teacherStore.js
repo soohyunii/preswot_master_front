@@ -23,13 +23,19 @@ export default {
      * 일단 만들고 바로 서버로 생성되는 애들인데 굳이
      * store에 귀찮게 하나하나 필드를 만들고 싶지 않고,
      * 그냥 하나의 object @var {object} newClass 에 퉁치는 것으로!
-     * @var {string} newClass.classTitle: 과목 제목
+     * @var {string} newClass.title: 과목 제목
      * @var {Array[number]} newClass.teacherIdList 강사 (user_id) 목록
      * @var {string} newClass.description: 과목 소개 (설명)
      * @var {string} newClass.activeStartDatetime: 과목 활성화 시각
      * @var {string} newClass.activeEndDatetime: 과목 비활성화 시각
      */
-    newClass: {},
+    newClass: {
+      title: null,
+      teacherIdList: null,
+      description: null,
+      activeStartDatetime: null,
+      activeEndDatetime: null,
+    },
     // //////////////////////////절취선////////////////////////// //
     /**
      * TeacherLectureNew / TeacherLectureLive 관련 변수들

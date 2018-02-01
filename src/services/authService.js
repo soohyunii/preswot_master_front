@@ -1,6 +1,9 @@
 import http from './http';
 
 export default {
+  test() {
+    return http.get('/users');
+  },
   login({ email, password }) {
     return http.post('/auth/login', {
       email_id: email,

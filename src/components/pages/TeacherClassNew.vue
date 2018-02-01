@@ -10,7 +10,7 @@
           </el-form-item>
 
           <el-form-item label="강사 목록">
-            <el-input v-model="test"></el-input>
+            <el-input v-model="teacherIdList"></el-input>
           </el-form-item>
 
           <el-form-item label="과목 소개">
@@ -47,9 +47,14 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex';
+// import authService from '../../services/authService';
 
 export default {
   name: 'TeacherClassNew',
+  // async mounted() {
+  //   const res = await authService.test();
+  //   console.log(res);
+  // },
   data() {
     return {
       test: null,
@@ -91,15 +96,27 @@ export default {
         });
       },
     },
-    // teacherIdList: {
-    //   get() {
-    //     const vm =this;
-    //     return
-    //   },
-    //   set(teacherIdList) {
-
-    //   },
-    // },
+    teacherIdList: {
+      get() {
+        const vm = this;
+        if (!vm.newClass.teacherIdList) {
+          return null;
+        }
+        return vm.newClass.teacherIdList.join(', ');
+      },
+      set(teacherIdList) {
+        const vm = this;
+        vm.updateNewClass({
+          newClass: {
+            teacherIdList: teacherIdList.split(',')
+              .map(value => value.trim())
+              .filter(value => value)
+              .map(value => Number.parseInt(value, 10))
+              .filter(value => !Number.isNaN(value)),
+          },
+        });
+      },
+    },
   },
 };
 </script>
