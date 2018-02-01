@@ -19,30 +19,11 @@ import Upload from './Upload';
 export default {
   name: 'ScMaterialEditor',
   methods: {
-    // ...mapMutations('teacher', ['updateCurrentEditingScItem']),
+    // ...mapMutations('teacher', ['assignCurrentEditingScItem']),
   },
   computed: {
     // FIXME: 굳이 upload의 prop으로 넘겨줄 이유가 있을까? Upload에서도 이렇게 받아오면 되는데
     ...mapState('teacher', ['currentEditingScItemIndex']),
-    // description: {
-    //   get() {
-    //     const vm = this;
-    //     if (!!vm.currentEditingScItem) { // eslint-disable-line no-extra-boolean-cast
-    //       return vm.currentEditingScItem.description || '';
-    //     }
-    //     return '';
-    //   },
-    //   set(description) {
-    //     const vm = this;
-    //     vm.updateCurrentEditingScItem({
-    //       currentEditingScItem: {
-    //         ...vm.currentEditingScItem,
-    //         description,
-    //       },
-    //       lectureElementIndex: vm.currentEditingScItemIndex,
-    //     });
-    //   },
-    // },
   },
   components: {
     Upload,

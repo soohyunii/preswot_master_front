@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: 'LectureStatistics',
+  name: 'ClassStatistics',
 };
 </script>
 

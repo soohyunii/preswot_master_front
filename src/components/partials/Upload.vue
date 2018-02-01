@@ -50,7 +50,7 @@ export default {
           default:
           case 'ScMaterialEditor': {
             // for fileList of ScMaterialEditor
-            vm.updateCurrentEditingScItem({
+            vm.assignCurrentEditingScItem({
               currentEditingScItem: {
                 fileList,
               },
@@ -61,7 +61,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['updateCurrentEditingScItem']),
+    ...mapMutations('teacher', ['assignCurrentEditingScItem']),
     submitUpload() {
       this.$refs.upload.submit();
       window.console.log('upload Test');

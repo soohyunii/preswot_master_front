@@ -26,19 +26,19 @@ export default {
   methods: {
     ...mapMutations('teacher', [
       'deleteScItem',
-      'updateCurrentEditingScItem',
-      'updateCurrentEditingScItemIndex',
+      'assignCurrentEditingScItem',
+      'assignCurrentEditingScItemIndex',
     ]),
     onClick(type, index) {
       const vm = this;
       switch (type) {
         case 'SELECT_SC_ITEM': {
           if (vm.sc.length > index) {
-            vm.updateCurrentEditingScItemIndex({
+            vm.assignCurrentEditingScItemIndex({
               currentEditingScItemIndex: index,
             });
           } else {
-            vm.updateCurrentEditingScItemIndex({
+            vm.assignCurrentEditingScItemIndex({
               currentEditingScItemIndex: -1,
             });
           }
