@@ -125,13 +125,12 @@ export default {
         if (!vm.scStartDate) {
           return null;
         }
-        const scStartDate = new Date(vm.scStartDate);
         const startOffsetSec = item.activeStartOffsetSec;
         if (!startOffsetSec) {
           return null;
         }
         // console.log('startOffsetSec', startOffsetSec);
-        const resDate = new Date(scStartDate.getTime() + (startOffsetSec * 1000));
+        const resDate = new Date(vm.scStartDate.getTime() + (startOffsetSec * 1000));
         return utils.formatDate(resDate);
       },
       set(scItemStartDate) {
@@ -145,9 +144,8 @@ export default {
           });
           return;
         }
-        const scStartDate = new Date(vm.scStartDate);
         const scActiveStartDate = new Date(scItemStartDate);
-        const offsetSec = (scActiveStartDate.getTime() - scStartDate.getTime()) / 1000;
+        const offsetSec = (scActiveStartDate.getTime() - vm.scStartDate.getTime()) / 1000;
         vm.assignCurrentEditingScItem({
           currentEditingScItem: {
             activeStartOffsetSec: offsetSec,
@@ -165,12 +163,11 @@ export default {
         if (!vm.scStartDate) {
           return null;
         }
-        const scStartDate = new Date(vm.scStartDate);
         const endOffsetSec = item.activeEndOffsetSec;
         if (!endOffsetSec) {
           return null;
         }
-        const resDate = new Date(scStartDate.getTime() + (endOffsetSec * 1000));
+        const resDate = new Date(vm.scStartDate.getTime() + (endOffsetSec * 1000));
         return utils.formatDate(resDate);
       },
       set(scItemEndDate) {
@@ -184,9 +181,8 @@ export default {
           });
           return;
         }
-        const scStartDate = new Date(vm.scStartDate);
         const scActiveEndDate = new Date(scItemEndDate);
-        let offsetSec = (scActiveEndDate.getTime() - scStartDate.getTime()) / 1000;
+        let offsetSec = (scActiveEndDate.getTime() - vm.scStartDate.getTime()) / 1000;
         if (!scItemEndDate) {
            // * 계속 활성화를 눌렀을 때 scActiveDatetime이 null로 들어오는데, 그 처리.
           offsetSec = null;
