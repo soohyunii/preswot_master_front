@@ -1,5 +1,5 @@
 import Guid from 'guid';
-// import classService from '../services/classService';
+import classService from '../services/classService';
 
 export default {
   namespaced: true,
@@ -64,8 +64,8 @@ export default {
         title,
         teacherIdList,
         description,
-        activeStartDatetime,
-        activeEndDatetime,
+        activeStartDate,
+        activeEndDate,
       } = state.newClass;
 
       if (!title) {
@@ -77,12 +77,12 @@ export default {
       if (!description) {
         return false;
       }
-      if (!activeStartDatetime) {
+      if (!activeStartDate) {
         return false;
       }
-      if (activeEndDatetime) {
-        const start = activeStartDatetime.getTime();
-        const end = activeEndDatetime.getTime();
+      if (activeEndDate) {
+        const start = activeStartDate.getTime();
+        const end = activeEndDate.getTime();
         return start < end;
       }
       return true;
@@ -218,8 +218,16 @@ export default {
     },
   },
   actions: {
-    async createClass(context) {
-      console.log('context', context);
+    async createClass({ state, getters }) {
+      // console.log('state', state);
+      if (!getters.isNewClassValid) {
+        throw new Error('invalid');
+      }
+      // TODO: intendedLectureNum
+      // TODO: activeStartDate
+      // TODO: activeEndDate
+      const res = await classService.createClass(state.newClass);
+      console.log('res', res);
     },
   },
 };

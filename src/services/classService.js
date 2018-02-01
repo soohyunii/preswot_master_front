@@ -7,12 +7,17 @@ export default {
     return http.get('/classes/my');
   },
   // TODO: add param
-  createClass() {
+  createClass({
+    title,
+    description,
+    intendedLectureNum,
+    teacherIdList,
+  }) {
     return http.post('/classes', {
-      name: 'ddddd',
-      description: 'dddd',
-      intendedLectureNum: 15,
-      teachers: [2],
+      name: title,
+      description,
+      intendedLectureNum,
+      teachers: teacherIdList,
     });
   },
 };
