@@ -133,7 +133,7 @@ export default {
         }
         const index = sc.map(x => x.key).indexOf(beforeUuuuuddateCurrentEditingScItem.key);
         if (index !== -1) {
-          vm.updateCurrentEditingScItem({
+          vm.assignCurrentEditingScItem({
             currentEditingScItem: beforeUuuuuddateCurrentEditingScItem,
             lectureElementIndex: index,
           });
@@ -148,7 +148,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['updateSc', 'updateCurrentEditingScItem']),
+    ...mapMutations('teacher', ['updateSc', 'assignCurrentEditingScItem']),
     updateLabelStyle() {
       const vm = this;
       const main = this.$refs.main;

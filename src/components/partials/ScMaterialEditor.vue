@@ -19,7 +19,7 @@ import Upload from './Upload';
 export default {
   name: 'ScMaterialEditor',
   methods: {
-    // ...mapMutations('teacher', ['updateCurrentEditingScItem']),
+    // ...mapMutations('teacher', ['assignCurrentEditingScItem']),
   },
   computed: {
     // FIXME: 굳이 upload의 prop으로 넘겨줄 이유가 있을까? Upload에서도 이렇게 받아오면 되는데

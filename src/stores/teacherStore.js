@@ -177,13 +177,13 @@ export default {
       state.sc.push(scItem);
       // TODO: save lectureElementSequence using localForage
     },
-    updateCurrentEditingScItem(state, { currentEditingScItem }) {
+    assignCurrentEditingScItem(state, { currentEditingScItem }) {
       Object.assign(
         state.sc[state.currentEditingScItemIndex],
         currentEditingScItem,
       );
     },
-    updateCurrentEditingScItemIndex(state, { currentEditingScItemIndex }) {
+    assignCurrentEditingScItemIndex(state, { currentEditingScItemIndex }) {
       state.currentEditingScItemIndex = currentEditingScItemIndex;
     },
     updateCurrentTeachingScItemIndex(state, { index }) {

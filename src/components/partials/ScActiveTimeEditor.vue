@@ -60,7 +60,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations('teacher', ['updateCurrentEditingScItem']),
+    ...mapMutations('teacher', ['assignCurrentEditingScItem']),
     changeShouldDeactivated(label) {
       const vm = this;
       if (!label) {
@@ -90,7 +90,7 @@ export default {
       },
       set(scItemOrder) {
         const vm = this;
-        vm.updateCurrentEditingScItem({
+        vm.assignCurrentEditingScItem({
           currentEditingScItem: {
             order: scItemOrder,
           },
@@ -108,7 +108,7 @@ export default {
       },
       set(scItemIsResultVisible) {
         const vm = this;
-        vm.updateCurrentEditingScItem({
+        vm.assignCurrentEditingScItem({
           currentEditingScItem: {
             isResultVisible: scItemIsResultVisible,
           },
@@ -148,7 +148,7 @@ export default {
         const scStartDate = new Date(vm.scStartDatetime);
         const scActiveStartDate = new Date(scActiveStartDatetime);
         const offsetSec = (scActiveStartDate.getTime() - scStartDate.getTime()) / 1000;
-        vm.updateCurrentEditingScItem({
+        vm.assignCurrentEditingScItem({
           currentEditingScItem: {
             activeStartOffsetSec: offsetSec,
           },
@@ -191,7 +191,7 @@ export default {
            // * 계속 활성화를 눌렀을 때 scActiveDatetime이 null로 들어오는데, 그 처리.
           offsetSec = null;
         }
-        vm.updateCurrentEditingScItem({
+        vm.assignCurrentEditingScItem({
           currentEditingScItem: {
             activeEndOffsetSec: offsetSec,
           },

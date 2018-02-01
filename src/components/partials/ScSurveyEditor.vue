@@ -54,7 +54,7 @@ export default {
       },
       set(survey) {
         const vm = this;
-        vm.updateCurrentEditingScItem({
+        vm.assignCurrentEditingScItem({
           currentEditingScItem: {
             survey,
           },
@@ -63,7 +63,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['updateCurrentEditingScItem']),
+    ...mapMutations('teacher', ['assignCurrentEditingScItem']),
     onClick(type, index) {
       const vm = this;
       switch (type) {
