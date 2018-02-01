@@ -7,7 +7,7 @@ const axiosConfig = {
     'Cache-Control': 'no-cache',
   },
   adapter: throttleAdapterEnhancer(
-    cacheAdapterEnhancer(axios.defaults.adapter, true),
+    cacheAdapterEnhancer(axios.defaults.adapter, false),
   ),
 };
 
