@@ -18,9 +18,6 @@
               v-model="scActiveStartDatetime"
               type="datetime"
               value-format="yyyy-MM-dd HH:mm:ss"
-              range-separator="To"
-              start-placeholder="시작"
-              end-placeholder="종료"
             >
             </el-date-picker>
           </el-form-item>
@@ -30,9 +27,6 @@
               v-model="scActiveEndDatetime"
               type="datetime"
               value-format="yyyy-MM-dd HH:mm:ss"
-              range-separator="To"
-              start-placeholder="시작"
-              end-placeholder="종료"
               :disabled="!shouldDeactivated"
             >
             </el-date-picker>
