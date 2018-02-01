@@ -3,10 +3,10 @@
     <el-table
       :data="edges"
       border
-      style="width: 500px">
+      style="width: 600px">
       <template slot="append">
         <tr>
-          <td width="500px" align="center">
+          <td width="600px" align="center">
             <div class="cell">
               <i class="el-icon-circle-plus-outline" @click="onClick('addEdge')" />
             </div>

@@ -16,17 +16,11 @@
       <el-table-column label="Name" align="center">
         <template slot-scope="scope">
           <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].value">
-            <el-form :model="nodes[scope.$index]" :rules="rules" ref="ruleForm" class="demo-ruleForm">
-              <el-form-item prop="name">
-                <el-input v-model="nodes[scope.$index].value" />
-              </el-form-item>
-              <el-form-item>
-                <el-button @click="onClick('changeNodeName', scope.$index)">확인</el-button>
-              </el-form-item>
-            </el-form>
+            <el-input v-model="nodes[scope.$index].value" @focus="currentIndex = scope.$index"/>
+            <el-button @click="onClick('setNodeName', scope.$index)">확인</el-button>
           </div>
           <div v-else>
-            <span>{{ scope.row.name }}<i class="el-icon-edit" @click="onClick('changeNodeName', scope.$index)" /></span>
+            <span>{{ scope.row.value }}<i class="el-icon-edit" @click="onClick('changeNodeName', scope.$index)" /></span>
           </div>
         </template>
       </el-table-column>
@@ -60,15 +54,8 @@ export default {
   name: 'KnowledgeMapNodeEditor',
   data() {
     return {
+      currentIndex: -1,
       inputFlag: [],
-      count: 1,
-      rules: {
-        name: {
-          required: true,
-          message: 'required',
-          trigger: 'change, blur',
-        },
-      },
     };
   },
   computed: {
@@ -80,19 +67,32 @@ export default {
       const vm = this;
       switch (type) {
         case 'addNode': {
-          vm.addNodes({ node: { value: `노드 이름${vm.count}`, _size: 10 } });
-          vm.inputFlag.push({ value: false, weight: false });
-          vm.count += 1;
+          vm.addNodes({ node: { value: '', _size: 10 } });
+          vm.inputFlag.push({ value: true, weight: false });
           break;
         }
         case 'changeNodeName': {
-          vm.nodes[index].id = vm.nodes[index].name;
-          vm.nodes[index].value = vm.nodes[index].name;
           vm.inputFlag[index].value = !vm.inputFlag[index].value;
           break;
         }
         case 'changeNodeWeight': {
           vm.inputFlag[index].weight = !vm.inputFlag[index].weight;
+          break;
+        }
+        case 'setNodeName': {
+          const node = vm.nodes[index];
+          if (node.value === '') { // eslint-disable-next-line
+            alert('empty not allowed');
+            break;
+          } else if (vm.nodes.findIndex(k => k.id === node.value) !== -1 &&
+            vm.nodes[vm.currentIndex].id !== vm.nodes[vm.currentIndex].value) {
+            // eslint-disable-next-line
+            alert('duplicated name');
+            break;
+          }
+          vm.nodes[index].id = vm.nodes[index].value;
+          vm.nodes[index].name = vm.nodes[index].value;
+          vm.inputFlag[index].value = !vm.inputFlag[index].value;
           break;
         }
         case 'delete': {
