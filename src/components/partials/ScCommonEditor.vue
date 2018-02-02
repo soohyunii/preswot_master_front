@@ -6,7 +6,7 @@
           <el-form-item label="아이템 제목" prop="scItemTitle">
             <el-input
               placeholder="아이템 제목"
-              v-model,lazy="scItemTitle"
+              v-model.lazy="scItemTitle"
               @change="onChange('TITLE')"
             >
             </el-input>
@@ -17,7 +17,7 @@
             <el-input
               type="textarea"
               :rows="3"
-              v-model="scItemDescription"
+              v-model.lazy="scItemDescription"
               placeholder="dd"
             >
             </el-input>
@@ -106,6 +106,7 @@ export default {
             break;
           }
           case 'DESCRIPTION': {
+            // TODO: putScItem으로 통일되면 챱
             break;
           }
           default: {

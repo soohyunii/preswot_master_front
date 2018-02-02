@@ -17,7 +17,6 @@
           TODO: Select Class from left menus!
         </div>
         <div v-else>
-          currentClass: <pre style="font-size: 70%;">{{ currentClass }}</pre>
           <h3>{{ currentClass.name }}</h3><hr>
 
           <!-- TODO: translation -->

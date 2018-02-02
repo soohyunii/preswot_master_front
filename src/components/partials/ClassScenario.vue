@@ -131,7 +131,7 @@ export default {
 
           const date = (() => {
             if (!sc.intended_start) {
-              return '미정'; // TODO: intended_start 꼭 있어야함!
+              return '미정 TODO: 미정 없어져야함'; // TODO: intended_start 꼭 있어야함!
             }
             const startDate = new Date(sc.intended_start);
             if (!sc.intended_end) {
@@ -193,7 +193,7 @@ export default {
       const vm = this;
       try {
         const scId = await vm.createSc();
-        vm.$router.push(`/a/teacher/lecture/${scId}`);
+        vm.$router.push(`/a/teacher/lecture/${scId}/edit`);
       } catch (error) {
         vm.$notify({
           title: '강좌 생성 실패',
