@@ -13,6 +13,9 @@
             label="번호"
             sortable
             width="70">
+            <template slot-scope="scope">
+              {{ scope.row.index + 1 }}
+            </template>
           </el-table-column>
           <el-table-column
             prop="type"
@@ -79,6 +82,17 @@
               </el-progress>
             </template>
           </el-table-column>
+          <el-table-column
+            prop="edit"
+            label="수정">
+            <template slot-scope="scope">
+              <el-button
+                @click="$router.push(`/a/teacher/lecture/${scope.row.scId}/edit`);"
+              >
+                수정
+              </el-button>
+            </template>
+          </el-table-column>
         </el-table>
 
         <br />
@@ -137,8 +151,9 @@ export default {
           })();
 
           return {
-            index: index + 1,
+            index,
             type,
+            scId: sc.lecture_id,
             scType: '실시간',
             teacher: sc.teacher_id,
             title: sc.name,
