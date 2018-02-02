@@ -199,6 +199,7 @@ export default {
           title: '강좌 생성 실패',
           message: error.toString(),
           type: 'error',
+          duration: 0,
         });
       }
     },

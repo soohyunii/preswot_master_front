@@ -93,6 +93,7 @@ export default {
           title: '생성 실패',
           message: error.toString(),
           type: 'error',
+          duration: 0,
         });
       }
     },

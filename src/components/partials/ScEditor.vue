@@ -231,6 +231,7 @@ export default {
           title: '저장 실패',
           message: error.toString(),
           type: 'error',
+          duration: 0,
         });
       } finally {
         vm.loading[type] = false;
