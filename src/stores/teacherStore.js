@@ -307,6 +307,9 @@ export default {
         lectureEndDate: scEndDate,
       });
     },
+    /**
+     * @param {string 강의|숙제|퀴즈|시험} scType
+     */
     async putScType({ state }, { scType }) {
       /* eslint-disable no-nested-ternary */
       const lectureType = scType === '강의' ? 0 :
@@ -320,6 +323,15 @@ export default {
       await lectureService.putLectureType({
         lectureId: state.scId,
         lectureType,
+      });
+    },
+    /**
+     * @param {string} scDescription
+     */
+    async putScDescription({ state }, { scDescription }) {
+      await lectureService.putLectureDescription({
+        lectureId: state.scId,
+        lectureDescrption: scDescription,
       });
     },
   },

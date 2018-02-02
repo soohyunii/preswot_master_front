@@ -45,4 +45,12 @@ export default {
       value: lectureType,
     });
   },
+  putLectureDescription({
+    lectureId,
+    lectureDescrption,
+  }) {
+    return http.put(`/lectures/${lectureId}/description`, {
+      value: lectureDescrption,
+    });
+  },
 };

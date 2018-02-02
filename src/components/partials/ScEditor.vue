@@ -51,11 +51,14 @@
             <el-input
               type="textarea"
               :rows="3"
-              v-model="scDescription"
+              v-model.lazy="scDescription"
               placeholder="dd"
+              @change="onChange('DESCRIPTION')"
             >
             </el-input>
           </el-form-item>
+          <i class="el-icon-loading" v-if="loading.DESCRIPTION" />
+
 
           <!-- TODO: implement 지식맵 -->
           <el-form-item label="지식맵" prop="scDescription">
@@ -178,6 +181,7 @@ export default {
       'putScStartDate',
       'putScEndDate',
       'putScType',
+      'putScDescription',
     ]),
     async onChange(type) {
       console.log('onChange', type);
@@ -210,6 +214,12 @@ export default {
             await delay(1500);
             await vm.putScType({
               scType: vm.scType,
+            });
+            break;
+          }
+          case 'DESCRIPTION': {
+            await vm.putScDescription({
+              scDescription: vm.scDescription,
             });
             break;
           }
