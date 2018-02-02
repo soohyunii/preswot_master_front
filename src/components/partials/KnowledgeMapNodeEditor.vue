@@ -16,7 +16,7 @@
       <el-table-column label="Name" align="center">
         <template slot-scope="scope">
           <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].value">
-            <el-input v-model="nodes[scope.$index].name"/>
+            <el-input v-model="nodes[scope.$index].name" placeholder="ex) 배열"/>
             <el-button @click="onClick('setNodeName', scope.$index)">확인</el-button>
           </div>
           <div v-else>
@@ -71,6 +71,7 @@ export default {
           const id = Guid.create().toString();
           vm.addNodes({ node: { id, value: '', _size: 20 } });
           vm.inputFlag.push({ value: true, weight: false });
+          vm.nodes[vm.nodes.length - 1].name = '\n';
           break;
         }
         case 'changeNodeName': {
@@ -84,7 +85,7 @@ export default {
         case 'setNodeName': {
           const node = vm.nodes[index];
           vm.currentIndex = index;
-          if (node.name === '') {
+          if (node.name === '' || node.name === '\n') {
             // TODO: translate
             vm.$notify({
               title: 'Equal',
