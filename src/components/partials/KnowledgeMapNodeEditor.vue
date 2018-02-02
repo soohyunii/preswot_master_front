@@ -69,7 +69,7 @@ export default {
       switch (type) {
         case 'addNode': {
           const id = Guid.create().toString();
-          vm.addNodes({ node: { id, value: '', _size: 10 } });
+          vm.addNodes({ node: { id, value: '', _size: 20 } });
           vm.inputFlag.push({ value: true, weight: false });
           break;
         }

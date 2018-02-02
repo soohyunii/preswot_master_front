@@ -66,8 +66,7 @@ export default {
     return {
       mode: 'select',
       selectedNode: {},
-      selectedNode2: {},
-      nodeSize: 10,
+      nodeSize: 20,
       canvas: false,
       linkWidth: 2.5,
       fontSize: 20,
