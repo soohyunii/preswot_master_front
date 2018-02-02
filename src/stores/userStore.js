@@ -25,6 +25,7 @@ export default {
       }
 
       const tc = res.data.teachingClasses;
+      console.log('tc', tc);
       Object.assign(tc, {
         scenarioList: null,
       });

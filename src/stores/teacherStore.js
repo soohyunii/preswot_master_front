@@ -310,6 +310,9 @@ export default {
      */
     async putScType({ state }, { scType }) {
       /* eslint-disable no-nested-ternary */
+      // TODO: replace '강의'  => 0 mapping according to server definition
+      // TODO: you should also change the mapping @ ClassScenario.vue
+      // (or.. it will be renamed as ScenarioTable)
       const lectureType = scType === '강의' ? 0 :
         scType === '숙제' ? 1 :
         scType === '퀴즈' ? 2 :

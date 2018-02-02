@@ -9,7 +9,7 @@
           :data="tableData"
           style="width: 100%">
           <el-table-column
-            prop="num"
+            prop="index"
             label="번호"
             sortable
             width="70">
@@ -93,13 +93,54 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'ClassScenario',
+  async mounted() {
+    const vm = this;
+    vm.$watch(
+      () => (vm.currentClass),
+      async () => {
+        await vm.fetchClass();
+        vm.$forceUpdate();
+      },
+    );
+  },
+  computed: {
+    ...mapGetters('teacher', [
+      'currentClass',
+    ]),
+    tableData: {
+      get() {
+        const vm = this;
+        console.log(JSON.stringify(vm.currentClass));
+        if (!vm.currentClass.scenarioList) {
+          return [];
+        }
+        return vm.currentClass.scenarioList.map((sc, index) => {
+          /* eslint-disable no-nested-ternary */
+          const type = sc.type === '강의' ? 0 :
+            sc.type === '숙제' ? 1 :
+            sc.type === '퀴즈' ? 2 :
+            sc.type === '시험' ? 3 : new Error(`not defined sc.type ${sc.type}`);
+          /* eslint-enable no-nested-ternary */
+
+          return {
+            index,
+            type,
+          };
+        });
+      },
+      // set(tableData) {
+
+      // },
+    },
+  },
   methods: {
     ...mapActions('teacher', [
       'createSc',
+      'fetchClass',
     ]),
     getType(type) {
       // 과목 시나리오 유형 분류 {{ A: 강의, B: 숙제, C: 퀴즈, D: 시험 }}

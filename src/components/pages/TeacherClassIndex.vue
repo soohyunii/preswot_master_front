@@ -48,7 +48,7 @@
 </style>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
 import ClassScenario from '../partials/ClassScenario';
 import ClassStatistics from '../partials/ClassStatistics';
 import TeachingClassListAside from '../partials/TeachingClassListAside';
@@ -63,24 +63,6 @@ export default {
       'isTeachingClassListEmpty',
       'currentClass',
     ]),
-  },
-  methods: {
-    ...mapActions('teacher', ['fetchClass']),
-  },
-  async mounted() {
-    const vm = this;
-    vm.$watch(
-      () => (vm.currentClass),
-      async () => {
-        await vm.fetchClass();
-        vm.$forceUpdate();
-        // console.log('ddd', vm.currentClass);
-        // const res = await classService.fetchClass({
-        //   id: vm.currentClass.class_id,
-        // });
-        // console.log('res', res);
-      },
-    );
   },
   components: {
     ClassScenario,
