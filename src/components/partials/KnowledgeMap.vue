@@ -21,17 +21,14 @@
           :link-cb="lcb"
           @node-click="nodeClick"/>
       </div>
-      <el-row :gutter="5">
-        <el-col :span="1.5">
-          <!-- TODO: translate -->
-          <el-checkbox v-model="pinningMode" border>고정</el-checkbox>
-        </el-col>
+      <el-row>
         <!-- TODO: translate -->
-        <el-col :span="5">
+        <el-col>
           <el-radio-group v-model="mode">
             <el-radio-button label="select">선택</el-radio-button>
-            <el-radio-button label="delete">삭제</el-radio-button>
-            <el-radio-button label="link">링크</el-radio-button>
+            <el-radio-button label="pinning">고정</el-radio-button>
+            <!-- <el-radio-button label="delete">삭제</el-radio-button> -->
+            <!-- <el-radio-button label="link">링크</el-radio-button> -->
           </el-radio-group>
         </el-col>
       </el-row>
@@ -68,7 +65,6 @@ export default {
   data() {
     return {
       mode: 'select',
-      pinningMode: false,
       selectedNode: {},
       selectedNode2: {},
       nodeSize: 10,
@@ -112,24 +108,29 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['pinning', 'deleteNodes', 'addEdges', 'addEdgesInputFlag', 'deleteNodesInputFlag']),
+    ...mapMutations('teacher', ['pinning', 'deleteNodes', 'addEdges']),
     nodeClick(event, node) {
       const vm = this;
-      vm.pinning({ pinned: vm.pinningMode, node });
 
       switch (vm.mode) {
         default:
         case 'select': {
           vm.resetFlag = false;
+          vm.pinning({ pinned: false, node });
           if (vm.selectedNode) {
-            vm.selectedNode = {};
+            vm.selectReset(true);
           }
           vm.selectedNode[node.id] = node;
           break;
         }
+        case 'pinning': {
+          vm.pinning({ pinned: true, node });
+          break;
+        }
+        /*
         case 'delete': {
           vm.deleteNodes({ nodeIndex: node.index });
-          vm.deleteNodesInputFlag({ index: node.index });
+          vm.inputFlag.splice(node.index, 1);
           break;
         }
         case 'link': {
@@ -169,23 +170,25 @@ export default {
             };
             vm.addEdges({ edge });
             vm.addEdgesInputFlag({ flag: { sid: false, tid: false, weight: false } });
-            vm.selectedNode = {};
+            vm.selectReset(true);
           } else {
             if (vm.selectedNode) {
-              vm.selectedNode = {};
+              vm.selectReset(true);
             }
             vm.selectedNode[node.id] = node;
           }
           break;
-        }
+        } */
       }
     },
-    selectReset() {
+    selectReset(immediately) {
       const vm = this;
-      if (vm.resetFlag) {
+      if (vm.resetFlag || immediately) {
         vm.selectedNode = {};
       }
-      vm.resetFlag = true;
+      if (!immediately) {
+        vm.resetFlag = true;
+      }
     },
     lcb(link) {
       link._svgAttrs = { // eslint-disable-line
