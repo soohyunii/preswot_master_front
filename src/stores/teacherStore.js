@@ -57,9 +57,7 @@ export default {
     currentEditingScItemIndex: null,
     currentTeachingScItemIndex: null,
     nodes: [],
-    nodesInputFlag: [],
     edges: [],
-    edgesInputFlag: [],
     // //////////////////////////절취선////////////////////////// //
   },
   getters: {
@@ -186,26 +184,14 @@ export default {
       };
       state.nodes.push(createNode);
     },
-    addNodesInputFlag(state, { flag }) {
-      state.nodesInputFlag.push(flag);
-    },
     addEdges(state, { edge }) {
       state.edges.push(edge);
-    },
-    addEdgesInputFlag(state, { flag }) {
-      state.edgesInputFlag.push(flag);
     },
     deleteNodes(state, { nodeIndex }) {
       state.nodes.splice(nodeIndex, 1);
     },
-    deleteNodesInputFlag(state, { index }) {
-      state.nodesInputFlag.splice(index, 1);
-    },
     deleteEdges(state, { edgeIndex }) {
       state.edges.splice(edgeIndex, 1);
-    },
-    deleteEdgesInputFlag(state, { index }) {
-      state.edgesInputFlag.splice(index, 1);
     },
     updateScTitle(state, { scTitle }) {
       state.scTitle = scTitle;
