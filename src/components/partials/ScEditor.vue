@@ -4,6 +4,7 @@
       <el-col style="max-width: 600px;">
         <el-form :model="input" ref="elForm" label-width="120px">
           <el-form-item label="제목" prop="scTitle">
+            <!-- :disabled during loading.TITLE -->
             <el-input
               v-model.lazy="scTitle"
               @change="onChange('TITLE')"
@@ -34,13 +35,17 @@
 
 
           <el-form-item label="타입" prop="scType">
-            <el-radio-group v-model="scType">
+            <el-radio-group
+              v-model.lazy="scType"
+              @change="onChange('TYPE')"
+            >
               <el-radio-button label="강의"></el-radio-button>
               <el-radio-button label="숙제"></el-radio-button>
               <el-radio-button label="퀴즈"></el-radio-button>
               <el-radio-button label="시험"></el-radio-button>
             </el-radio-group>
           </el-form-item>
+          <i class="el-icon-loading" v-if="loading.TYPE" />
 
           <el-form-item label="설명" prop="scDescription">
             <el-input
@@ -85,6 +90,8 @@ export default {
         TITLE: false,
         START_DATE: false,
         END_DATE: false,
+        TYPE: false,
+        DESCRIPTION: false,
       },
     };
   },
@@ -170,8 +177,10 @@ export default {
       'putScTitle',
       'putScStartDate',
       'putScEndDate',
+      'putScType',
     ]),
     async onChange(type) {
+      console.log('onChange', type);
       const vm = this;
       try {
         vm.loading[type] = true;
@@ -194,6 +203,13 @@ export default {
             // TODO: reject if scEndDate && scStartDate < scEndDate
             await vm.putScEndDate({
               scEndDate: vm.scEndDate,
+            });
+            break;
+          }
+          case 'TYPE': {
+            await delay(1500);
+            await vm.putScType({
+              scType: vm.scType,
             });
             break;
           }

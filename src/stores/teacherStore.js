@@ -307,5 +307,20 @@ export default {
         lectureEndDate: scEndDate,
       });
     },
+    async putScType({ state }, { scType }) {
+      /* eslint-disable no-nested-ternary */
+      const lectureType = scType === '강의' ? 0 :
+        scType === '숙제' ? 1 :
+        scType === '퀴즈' ? 2 :
+        scType === '시험' ? 3 : new Error(`not defined scType ${scType}`);
+      /* eslint-enable no-nested-ternary */
+      if (lectureType instanceof Error) {
+        throw lectureType;
+      }
+      await lectureService.putLectureType({
+        lectureId: state.scId,
+        lectureType,
+      });
+    },
   },
 };
