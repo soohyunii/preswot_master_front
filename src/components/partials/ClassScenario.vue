@@ -99,6 +99,9 @@ export default {
   name: 'ClassScenario',
   async mounted() {
     const vm = this;
+    await vm.fetchClass();
+    vm.$forceUpdate();
+
     vm.$watch(
       () => (vm.currentClass),
       async () => {
@@ -114,7 +117,6 @@ export default {
     tableData: {
       get() {
         const vm = this;
-        console.log(JSON.stringify(vm.currentClass));
         if (!vm.currentClass.scenarioList) {
           return [];
         }

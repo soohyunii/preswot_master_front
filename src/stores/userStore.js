@@ -25,10 +25,14 @@ export default {
       }
 
       const tc = res.data.teachingClasses;
-      console.log('tc', tc);
-      Object.assign(tc, {
-        scenarioList: null,
+      tc.map((item) => {
+        // eslint-disable-next-line
+        item.scenarioList = null;
+        return item;
       });
+      // Object.assign(tc, {
+      //   scenarioList: null,
+      // });
       if (tc && tc.length !== 0) {
         commit('teacher/updateTeachingClassList', {
           teachingClassList: tc,
