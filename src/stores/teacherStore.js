@@ -289,5 +289,14 @@ export default {
         scTitle,
       });
     },
+    /**
+     * @param {Date} param1.scStartDate
+     */
+    async putScStartDate({ commit, state }, { scStartDate }) {
+      await lectureService.putLectureIntendedStart({
+        lectureId: state.scId,
+        lectureStartDate: scStartDate,
+      });
+    },
   },
 };

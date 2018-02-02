@@ -18,4 +18,21 @@ export default {
       value: lectureName,
     });
   },
+  putLectureIntendedStart({
+    lectureId,
+    lectureStartDate,
+  }) {
+    return http.put(`/lectures/${lectureId}/intended_start`, {
+      value: lectureStartDate,
+      // value: lectureStartDate.toISOString(), // TODO: test
+    });
+  },
+  putLectureIntendedEnd({
+    lectureId,
+    lectureEndDate,
+  }) {
+    return http.put(`/lectures/${lectureId}/intended_end`, {
+      value: lectureEndDate.toISOString(),
+    });
+  },
 };

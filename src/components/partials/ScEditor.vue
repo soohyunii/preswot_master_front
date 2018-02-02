@@ -13,11 +13,14 @@
 
           <el-form-item label="활성화 시각" prop="scStartDate">
             <el-date-picker
-              v-model="scStartDate"
+              v-model.lazy="scStartDate"
               type="datetime"
+              @change="onChange('START_DATE')"
             >
             </el-date-picker>
           </el-form-item>
+          <i class="el-icon-loading" v-if="loading.START_DATE" />
+
 
           <el-form-item label="비활성화 시각" prop="scEndDate">
             <el-date-picker
@@ -77,6 +80,8 @@ export default {
     return {
       loading: {
         TITLE: false,
+        START_DATE: false,
+        END_DATE: false,
       },
     };
   },
@@ -160,6 +165,7 @@ export default {
     ]),
     ...mapActions('teacher', [
       'putScTitle',
+      'putScStartDate',
     ]),
     async onChange(type) {
       const vm = this;
@@ -170,6 +176,12 @@ export default {
             await delay(1500); // TODO: delete
             await vm.putScTitle({
               scTitle: vm.scTitle,
+            });
+            break;
+          }
+          case 'START_DATE': {
+            await vm.putScStartDate({
+              scStartDate: vm.scStartDate,
             });
             break;
           }
