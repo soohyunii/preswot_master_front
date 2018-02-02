@@ -27,8 +27,8 @@
             </template>
           </el-table-column>
           <el-table-column
-            prop="lectureType"
-            label="강의 타입"
+            prop="scType"
+            label="시나리오 타입"
             sortable>
           </el-table-column>
           <el-table-column
@@ -37,7 +37,7 @@
             sortable>
           </el-table-column>
           <el-table-column
-            prop="scenarioName"
+            prop="title"
             label="시나리오명"
             sortable>
           </el-table-column>
@@ -94,6 +94,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import utils from '../../utils';
 
 export default {
   name: 'ClassScenario',
@@ -128,9 +129,26 @@ export default {
             sc.type === '시험' ? 3 : new Error(`not defined sc.type ${sc.type}`);
           /* eslint-enable no-nested-ternary */
 
+          const date = (() => {
+            if (!sc.intended_start) {
+              return '미정'; // TODO: intended_start 꼭 있어야함!
+            }
+            const startDate = new Date(sc.intended_start);
+            if (!sc.intended_end) {
+              return `${utils.formatDate(startDate)} ~ 계속`;
+            }
+            const endDate = new Date(sc.intended_end);
+            return `${utils.formatDate(startDate)} ~ ${utils.formatDate(endDate)}`;
+          })();
+          console.log('date', date);
+
           return {
             index: index + 1,
             type,
+            scType: '실시간',
+            teacher: sc.teacher_id,
+            title: sc.name,
+            date,
           };
         });
       },
