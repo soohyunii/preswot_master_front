@@ -24,11 +24,14 @@
 
           <el-form-item label="비활성화 시각" prop="scEndDate">
             <el-date-picker
-              v-model="scEndDate"
+              v-model.lazy="scEndDate"
               type="datetime"
+              @change="onChange('END_DATE')"
             >
             </el-date-picker>
           </el-form-item>
+          <i class="el-icon-loading" v-if="loading.END_DATE" />
+
 
           <el-form-item label="타입" prop="scType">
             <el-radio-group v-model="scType">
@@ -166,6 +169,7 @@ export default {
     ...mapActions('teacher', [
       'putScTitle',
       'putScStartDate',
+      'putScEndDate',
     ]),
     async onChange(type) {
       const vm = this;
@@ -180,8 +184,16 @@ export default {
             break;
           }
           case 'START_DATE': {
+            // TODO: reset scStartDate if scEndDate not null && scStartDate < scEndDate
             await vm.putScStartDate({
               scStartDate: vm.scStartDate,
+            });
+            break;
+          }
+          case 'END_DATE': {
+            // TODO: reject if scEndDate && scStartDate < scEndDate
+            await vm.putScEndDate({
+              scEndDate: vm.scEndDate,
             });
             break;
           }

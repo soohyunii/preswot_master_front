@@ -24,7 +24,6 @@ export default {
   }) {
     return http.put(`/lectures/${lectureId}/intended_start`, {
       value: lectureStartDate,
-      // value: lectureStartDate.toISOString(), // TODO: test
     });
   },
   putLectureIntendedEnd({

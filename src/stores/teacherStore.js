@@ -290,12 +290,21 @@ export default {
       });
     },
     /**
-     * @param {Date} param1.scStartDate
+     * @param {Date} scStartDate
      */
-    async putScStartDate({ commit, state }, { scStartDate }) {
+    async putScStartDate({ state }, { scStartDate }) {
       await lectureService.putLectureIntendedStart({
         lectureId: state.scId,
         lectureStartDate: scStartDate,
+      });
+    },
+    /**
+     * @param {Date} scEndDate
+     */
+    async putScEndDate({ state }, { scEndDate }) {
+      await lectureService.putLectureIntendedEnd({
+        lectureId: state.scId,
+        lectureEndDate: scEndDate,
       });
     },
   },
