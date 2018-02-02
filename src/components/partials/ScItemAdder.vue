@@ -77,11 +77,13 @@ export default {
       try {
         const validTypeList = ['문항', '설문', '숙제', '강의자료'];
         if (validTypeList.includes(type)) {
-          await vm.postScItem({
+          const scItemId = await vm.postScItem({
             scItemType: type,
           });
+
           vm.pushScItem({
             type,
+            id: scItemId,
           });
         } else {
           throw new Error(`not defined type ${type}`);

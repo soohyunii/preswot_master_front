@@ -168,9 +168,7 @@ export default {
     updateScDescription(state, { scDescription }) {
       state.scDescription = scDescription;
     },
-    pushScItem(state, { type }) {
-      // TODO: 타입에 따라서 scItem Object에 들어가는 key 조정
-      const key = Guid.create().toString();
+    pushScItem(state, { type, id }) {
       const title = null;
       const order = null; // 예습? 본강의? 복습?
       const description = null;
@@ -180,7 +178,7 @@ export default {
       const fileList = [];
       const survey = { choice: [] };
       const scItem = {
-        key,
+        id,
         title,
         type,
         order,
@@ -348,10 +346,11 @@ export default {
       if (lectureItemType instanceof Error) {
         throw lectureItemType;
       }
-      await lectureItemService.postLectureItem({
+      const res = await lectureItemService.postLectureItem({
         lectureId: state.scId,
         lectureItemType,
       });
+      return res.data.lecture_item_id;
     },
   },
 };
