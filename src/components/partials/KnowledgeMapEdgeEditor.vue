@@ -15,7 +15,7 @@
       </template>
       <el-table-column label="Sid" align="center">
         <template slot-scope="scope">
-          <div v-if="edgesInputFlag[scope.$index] && edgesInputFlag[scope.$index].sid">
+          <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].sid">
             <el-autocomplete
               class="inline-input"
               v-model="edges[scope.$index].sid"
@@ -24,13 +24,13 @@
             <el-button @click="onClick('changeEdgeSid', scope.$index)">확인</el-button>
           </div>
           <div v-else>
-            <span>{{ scope.row.sid }}<i class="el-icon-edit" @click="onClick('changeEdgeSid', scope.$index)" /></span>
+            {{ scope.row.sid }}<i class="el-icon-edit" @click="onClick('changeEdgeSid', scope.$index)" />
           </div>
         </template>
       </el-table-column>
       <el-table-column label="Tid" align="center">
         <template slot-scope="scope">
-          <div v-if="edgesInputFlag[scope.$index] && edgesInputFlag[scope.$index].tid">
+          <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].tid">
             <el-autocomplete
               class="inline-input"
               v-model="edges[scope.$index].tid"
@@ -39,18 +39,18 @@
             <el-button @click="onClick('changeEdgeTid', scope.$index)">확인</el-button>
           </div>
           <div v-else>
-            <span>{{ scope.row.tid }}<i class="el-icon-edit" @click="onClick('changeEdgeTid', scope.$index)" /></span>
+            {{ scope.row.tid }}<i class="el-icon-edit" @click="onClick('changeEdgeTid', scope.$index)" />
           </div>
         </template>
       </el-table-column>
       <el-table-column label="Weight" align="center">
         <template slot-scope="scope">
-          <div v-if="edgesInputFlag[scope.$index] && edgesInputFlag[scope.$index].weight">
+          <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].weight">
             <el-input type="number" v-model="edges[scope.$index].weight" />
             <el-button @click="onClick('changeEdgeWeight', scope.$index)">확인</el-button>
           </div>
           <div v-else>
-            <span>{{ scope.row.weight }}<i class="el-icon-edit" @click="onClick('changeEdgeWeight', scope.$index)" /></span>
+            {{ scope.row.weight }}<i class="el-icon-edit" @click="onClick('changeEdgeWeight', scope.$index)" />
           </div>
         </template>
       </el-table-column>
@@ -62,7 +62,7 @@
         </template>
       </el-table-column>
     </el-table>
-    {{ edgesInputFlag }}
+    {{ edges }}
   </div>
 </template>
 
@@ -71,11 +71,16 @@ import { mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'KnowledgeMapEdgeEditor',
+  data() {
+    return {
+      inputFlag: [],
+    };
+  },
   computed: {
-    ...mapState('teacher', ['nodes', 'edges', 'edgesInputFlag']),
+    ...mapState('teacher', ['nodes', 'edges']),
   },
   methods: {
-    ...mapMutations('teacher', ['addEdges', 'deleteEdges', 'addEdgesInputFlag', 'deleteEdgesInputFlag']),
+    ...mapMutations('teacher', ['addEdges', 'deleteEdges']),
     isValidEdge(sidInputFlag, tidInputFlag, index) {
       const vm = this;
       let isValid = true;
@@ -97,7 +102,7 @@ export default {
       }
 
       vm.edges.forEach((edge, idx) => {
-        const isInputing = vm.edgesInputFlag[idx].sid || vm.edgesInputFlag[idx].tid;
+        const isInputing = vm.inputFlag[idx].sid || vm.inputFlag[idx].tid;
         const isMe = idx === index;
         if (!isMe && !isInputing) {
           const isduplicatedEdge = edge.sid === inputSid && edge.tid === inputTid;
@@ -152,17 +157,17 @@ export default {
       switch (type) {
         case 'addEdge': {
           vm.addEdges({ edge: { sid: '', tid: '', weight: 50 } });
-          vm.addEdgesInputFlag({ flag: { sid: true, tid: true, weight: false } });
+          vm.inputFlag.push({ sid: true, tid: true, weight: false });
           break;
         }
         case 'changeEdgeSid': {
           if (!vm.isValidEdgeId(vm.edges[index].sid)) {
             break;
           }
-          const sidInputFlag = vm.edgesInputFlag[index].sid;
-          const tidInputFlag = vm.edgesInputFlag[index].tid;
+          const sidInputFlag = vm.inputFlag[index].sid;
+          const tidInputFlag = vm.inputFlag[index].tid;
           if (vm.isValidEdge(sidInputFlag, tidInputFlag, index)) {
-            vm.edgesInputFlag[index].sid = !vm.edgesInputFlag[index].sid;
+            vm.inputFlag[index].sid = !vm.inputFlag[index].sid;
           }
           break;
         }
@@ -170,20 +175,20 @@ export default {
           if (!vm.isValidEdgeId(vm.edges[index].tid)) {
             break;
           }
-          const sidInputFlag = vm.edgesInputFlag[index].sid;
-          const tidInputFlag = vm.edgesInputFlag[index].tid;
+          const sidInputFlag = vm.inputFlag[index].sid;
+          const tidInputFlag = vm.inputFlag[index].tid;
           if (vm.isValidEdge(sidInputFlag, tidInputFlag, index)) {
-            vm.edgesInputFlag[index].tid = !vm.edgesInputFlag[index].tid;
+            vm.inputFlag[index].tid = !vm.inputFlag[index].tid;
           }
           break;
         }
         case 'changeEdgeWeight': {
-          vm.edgesInputFlag[index].weight = !vm.edgesInputFlag[index].weight;
+          vm.inputFlag[index].weight = !vm.inputFlag[index].weight;
           break;
         }
         case 'delete': {
           vm.deleteEdges({ edgeIndex: index });
-          vm.deleteEdgesInputFlag({ index });
+          vm.inputFlag.splice(index, 1);
           break;
         }
         default: {
@@ -203,6 +208,13 @@ export default {
         return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
       };
     },
+  },
+  async mounted() {
+    const vm = this;
+    await vm.$nextTick();
+    vm.nodes.forEach(() => {
+      vm.inputFlag.push({ sid: false, tid: false, weight: false });
+    });
   },
 };
 </script>
