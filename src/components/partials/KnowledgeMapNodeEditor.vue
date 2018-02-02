@@ -71,7 +71,6 @@ export default {
           const id = Guid.create().toString();
           vm.addNodes({ node: { id, value: '', _size: 20 } });
           vm.inputFlag.push({ value: true, weight: false });
-          vm.nodes[vm.nodes.length - 1].name = '\n';
           break;
         }
         case 'changeNodeName': {

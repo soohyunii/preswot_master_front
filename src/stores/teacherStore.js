@@ -176,7 +176,7 @@ export default {
       const createNode = {
         value: node.value,
         id: node.id,
-        name: '',
+        name: '\n',
         _size: node._size, // eslint-disable-line
         x,
         y,
