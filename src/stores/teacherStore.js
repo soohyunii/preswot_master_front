@@ -1,6 +1,7 @@
 import Guid from 'guid';
 import classService from '../services/classService';
 import lectureService from '../services/lectureService';
+import lectureItemService from '../services/lectureItemService';
 
 export default {
   namespaced: true,
@@ -332,6 +333,24 @@ export default {
       await lectureService.putLectureDescription({
         lectureId: state.scId,
         lectureDescrption: scDescription,
+      });
+    },
+    /**
+     * @param {string 문항|설문|강의자료|숙제} scItemType
+     */
+    async postScItem({ state }, { scItemType }) {
+      /* eslint-disable no-nested-ternary */
+      const lectureItemType = scItemType === '문항' ? 0 :
+        scItemType === '설문' ? 1 :
+        scItemType === '강의자료' ? 2 :
+        scItemType === '숙제' ? 3 : new Error(`not defined scItemType ${scItemType}`);
+      /* eslint-enable no-nested-ternary */
+      if (lectureItemType instanceof Error) {
+        throw lectureItemType;
+      }
+      await lectureItemService.postLectureItem({
+        lectureId: state.scId,
+        lectureItemType,
       });
     },
   },

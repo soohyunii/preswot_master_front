@@ -4,22 +4,22 @@
       <!-- TODO: change icon -->
       <el-col align="center" :span="6">
         <el-button @click="onClick('문항')" style="width: 100%;">
-          <i class="el-icon-question"></i><br/>{{$t('ITEM.QUESTION')}}
+          <i class="el-icon-question"></i><br />{{$t('ITEM.QUESTION')}}
         </el-button>
       </el-col>
       <el-col align="center" :span="6">
         <el-button @click="onClick('설문')" style="width: 100%;">
-          <i class="el-icon-edit-outline"></i><br/>{{$t('ITEM.SURVEY')}}
+          <i class="el-icon-edit-outline"></i><br />{{$t('ITEM.SURVEY')}}
         </el-button>
       </el-col>
       <el-col align="center" :span="6">
         <el-button @click="onClick('숙제')" style="width: 100%;">
-          <i class="el-icon-document"></i><br/>{{$t('ITEM.HOMEWORK')}}
+          <i class="el-icon-document"></i><br />{{$t('ITEM.HOMEWORK')}}
         </el-button>
       </el-col>
       <el-col align="center" :span="6">
         <el-button @click="onClick('강의자료')" style="width: 100%;">
-          <i class="el-icon-info"></i><br/>{{$t('ITEM.LECTURE_DATA')}}
+          <i class="el-icon-info"></i><br />{{$t('ITEM.LECTURE_DATA')}}
         </el-button>
       </el-col>
     </el-row>
@@ -65,39 +65,34 @@
 
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapActions } from 'vuex';
 
 export default {
   name: 'ScItemAdder',
   methods: {
     ...mapMutations('teacher', ['pushScItem']),
-    onClick(type) {
+    ...mapActions('teacher', ['postScItem']),
+    async onClick(type) {
       const vm = this;
-      const validTypeList = ['문항', '설문', '숙제', '강의자료'];
-      if (validTypeList.includes(type)) {
-        vm.pushScItem({
-          type,
+      try {
+        const validTypeList = ['문항', '설문', '숙제', '강의자료'];
+        if (validTypeList.includes(type)) {
+          await vm.postScItem({
+            scItemType: type,
+          });
+          vm.pushScItem({
+            type,
+          });
+        } else {
+          throw new Error(`not defined type ${type}`);
+        }
+      } catch (error) {
+        vm.$notify({
+          title: '생성 실패',
+          message: error.toString(),
+          type: 'error',
         });
-      } else {
-        throw new Error(`not defined type ${type}`);
       }
-      // switch (type) {
-      //   case 'A': {
-      //     break;
-      //   }
-      //   case 'B': {
-      //     break;
-      //   }
-      //   case 'C': {
-      //     break;
-      //   }
-      //   case 'D': {
-      //     break;
-      //   }
-      //   default: {
-      //     throw new Error(`not defined type ${type}`);
-      //   }
-      // }
     },
   },
 };
