@@ -184,7 +184,6 @@ export default {
       'putScDescription',
     ]),
     async onChange(type) {
-      console.log('onChange', type);
       const vm = this;
       try {
         vm.loading[type] = true;

@@ -129,7 +129,7 @@ export default {
           /* eslint-enable no-nested-ternary */
 
           return {
-            index,
+            index: index + 1,
             type,
           };
         });

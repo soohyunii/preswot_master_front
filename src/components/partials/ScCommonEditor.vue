@@ -95,7 +95,6 @@ export default {
       'putScItemTitle',
     ]),
     async onChange(type) {
-      console.log('onChange2', type);
       const vm = this;
       try {
         vm.loading[type] = true;

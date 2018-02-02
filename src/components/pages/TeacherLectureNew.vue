@@ -166,7 +166,7 @@ export default {
       vm.scType = scType;
     },
     test() {
-      console.log('test');
+      // console.log('test');
     },
   },
 };
