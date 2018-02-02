@@ -10,4 +10,12 @@ export default {
       type: lectureItemType,
     });
   },
+  putLectureItemName({
+    lectureItemId,
+    lectureItemName,
+  }) {
+    return http.put(`/lecture-items/${lectureItemId}/name`, {
+      value: lectureItemName,
+    });
+  },
 };

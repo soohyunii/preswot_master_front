@@ -4,7 +4,12 @@
       <el-col style="max-width: 600px;">
         <el-form :model="input" ref="elFrom" label-width="120px">
           <el-form-item label="아이템 제목" prop="scItemTitle">
-            <el-input placeholder="아이템 제목" v-model="scItemTitle"></el-input>
+            <el-input
+              placeholder="아이템 제목"
+              v-model,lazy="scItemTitle"
+              @change="onChange('TITLE')"
+            >
+            </el-input>
           </el-form-item>
           <i class="el-icon-loading" v-if="loading.TITLE" />
 
@@ -87,7 +92,7 @@ export default {
   methods: {
     ...mapMutations('teacher', ['assignCurrentEditingScItem']),
     ...mapActions('teacher', [
-      'postScItem',
+      'putScItemTitle',
     ]),
     async onChange(type) {
       console.log('onChange2', type);
@@ -96,6 +101,9 @@ export default {
         vm.loading[type] = true;
         switch (type) {
           case 'TITLE': {
+            await vm.putScItemTitle({
+              scItemTitle: vm.scItemTitle,
+            });
             break;
           }
           case 'DESCRIPTION': {

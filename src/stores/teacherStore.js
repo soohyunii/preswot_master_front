@@ -1,4 +1,3 @@
-import Guid from 'guid';
 import classService from '../services/classService';
 import lectureService from '../services/lectureService';
 import lectureItemService from '../services/lectureItemService';
@@ -351,6 +350,12 @@ export default {
         lectureItemType,
       });
       return res.data.lecture_item_id;
+    },
+    async putScItemTitle({ getters }, { scItemTitle }) {
+      await lectureItemService.putLectureItemName({
+        lectureItemId: getters.currentEditingScItem.id,
+        lectureItemName: scItemTitle,
+      });
     },
   },
 };
