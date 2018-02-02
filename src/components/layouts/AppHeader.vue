@@ -141,9 +141,7 @@ export default {
             jwt: '',
           });
           if (vm.$route.meta.auth) {
-            vm.$router.push({
-              name: 'LandingPage',
-            });
+            vm.$router.push('/');
           }
           // TODO: translation
           vm.$notify({
