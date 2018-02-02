@@ -16,11 +16,15 @@
       <el-table-column label="Name" align="center">
         <template slot-scope="scope">
           <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].value">
+<<<<<<< HEAD
             <el-input v-model="nodes[scope.$index].name" @focus="currentIndex = scope.$index"/>
+=======
+            <el-input v-model="nodes[scope.$index].name"/>
+>>>>>>> lmh
             <el-button @click="onClick('setNodeName', scope.$index)">확인</el-button>
           </div>
           <div v-else>
-            <span>{{ scope.row.value }}<i class="el-icon-edit" @click="onClick('changeNodeName', scope.$index)" /></span>
+            {{ scope.row.value }}<i class="el-icon-edit" @click="onClick('changeNodeName', scope.$index)" />
           </div>
         </template>
       </el-table-column>
@@ -31,7 +35,7 @@
             <el-button @click="onClick('changeNodeWeight', scope.$index)">확인</el-button>
           </div>
           <div v-else>
-            <span>{{ scope.row._size }}<i class="el-icon-edit" @click="onClick('changeNodeWeight', scope.$index)" /></span>
+            {{ scope.row._size }}<i class="el-icon-edit" @click="onClick('changeNodeWeight', scope.$index)" />
           </div>
         </template>
       </el-table-column>
@@ -43,7 +47,7 @@
         </template>
       </el-table-column>
     </el-table>
-    {{ inputFlag }}
+    {{ nodes }}
   </div>
 </template>
 
@@ -83,6 +87,7 @@ export default {
         }
         case 'setNodeName': {
           const node = vm.nodes[index];
+          vm.currentIndex = index;
           if (node.name === '') {
             // TODO: translate
             vm.$notify({

@@ -24,7 +24,7 @@
             <el-button @click="onClick('changeEdgeSid', scope.$index)">확인</el-button>
           </div>
           <div v-else>
-            <span>{{ scope.row.sid }}<i class="el-icon-edit" @click="onClick('changeEdgeSid', scope.$index)" /></span>
+            {{ scope.row.sid }}<i class="el-icon-edit" @click="onClick('changeEdgeSid', scope.$index)" />
           </div>
         </template>
       </el-table-column>
@@ -39,7 +39,7 @@
             <el-button @click="onClick('changeEdgeTid', scope.$index)">확인</el-button>
           </div>
           <div v-else>
-            <span>{{ scope.row.tid }}<i class="el-icon-edit" @click="onClick('changeEdgeTid', scope.$index)" /></span>
+            {{ scope.row.tid }}<i class="el-icon-edit" @click="onClick('changeEdgeTid', scope.$index)" />
           </div>
         </template>
       </el-table-column>
@@ -50,7 +50,7 @@
             <el-button @click="onClick('changeEdgeWeight', scope.$index)">확인</el-button>
           </div>
           <div v-else>
-            <span>{{ scope.row.weight }}<i class="el-icon-edit" @click="onClick('changeEdgeWeight', scope.$index)" /></span>
+            {{ scope.row.weight }}<i class="el-icon-edit" @click="onClick('changeEdgeWeight', scope.$index)" />
           </div>
         </template>
       </el-table-column>
@@ -62,7 +62,7 @@
         </template>
       </el-table-column>
     </el-table>
-    {{ inputFlag }}
+    {{ edges }}
   </div>
 </template>
 
@@ -212,7 +212,7 @@ export default {
   async mounted() {
     const vm = this;
     await vm.$nextTick();
-    vm.nodes.forEach(() => {
+    vm.edges.forEach(() => {
       vm.inputFlag.push({ sid: false, tid: false, weight: false });
     });
   },
