@@ -16,11 +16,7 @@
       <el-table-column label="Name" align="center">
         <template slot-scope="scope">
           <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].value">
-<<<<<<< HEAD
-            <el-input v-model="nodes[scope.$index].name" @focus="currentIndex = scope.$index"/>
-=======
             <el-input v-model="nodes[scope.$index].name"/>
->>>>>>> lmh
             <el-button @click="onClick('setNodeName', scope.$index)">확인</el-button>
           </div>
           <div v-else>
