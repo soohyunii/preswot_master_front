@@ -27,7 +27,7 @@
           <el-button>과목저널링</el-button>
           <br /><br />
 
-          <class-scenario :tableData="scenarioList"></class-scenario>
+          <class-scenario />
 
           <!-- TODO: Implement dummy response about class statistics -->
           <class-statistics />
@@ -58,12 +58,6 @@ import TeachingClassListAside from '../partials/TeachingClassListAside';
 
 export default {
   name: 'TeacherClassIndex',
-  // TODO: Replace dummy functions
-  data() {
-    return {
-      scenarioList: [],
-    };
-  },
   computed: {
     ...mapGetters('teacher', [
       'isTeachingClassListEmpty',
@@ -72,14 +66,7 @@ export default {
   },
   methods: {
     ...mapActions('teacher', ['fetchClass']),
-    // TODO: delete
-    //   async changeScenario() {
-  //     const vm = this;
-  //     const teachingClassName = vm.currentEditingClass;
-  //     vm.scenarioList = await teacherService.fetchScenarioList({ teachingClassName });
-  //   },
   },
-  // TODO: delete
   async mounted() {
     const vm = this;
     vm.$watch(
