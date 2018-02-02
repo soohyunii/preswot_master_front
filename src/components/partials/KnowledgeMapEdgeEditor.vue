@@ -212,7 +212,7 @@ export default {
   async mounted() {
     const vm = this;
     await vm.$nextTick();
-    vm.nodes.forEach(() => {
+    vm.edges.forEach(() => {
       vm.inputFlag.push({ sid: false, tid: false, weight: false });
     });
   },

@@ -16,7 +16,7 @@
       <el-table-column label="Name" align="center">
         <template slot-scope="scope">
           <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].value">
-            <el-input v-model="nodes[scope.$index].name" @focus="currentIndex = scope.$index"/>
+            <el-input v-model="nodes[scope.$index].name"/>
             <el-button @click="onClick('setNodeName', scope.$index)">확인</el-button>
           </div>
           <div v-else>
@@ -83,6 +83,7 @@ export default {
         }
         case 'setNodeName': {
           const node = vm.nodes[index];
+          vm.currentIndex = index;
           if (node.name === '') {
             // TODO: translate
             vm.$notify({
