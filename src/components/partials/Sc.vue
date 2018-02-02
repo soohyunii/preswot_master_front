@@ -148,7 +148,10 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['updateSc', 'assignCurrentEditingScItem']),
+    ...mapMutations('teacher', [
+      'updateSc',
+      'assignCurrentEditingScItem',
+    ]),
     updateLabelStyle() {
       const vm = this;
       const main = this.$refs.main;

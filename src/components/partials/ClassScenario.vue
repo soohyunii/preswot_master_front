@@ -122,12 +122,7 @@ export default {
           return [];
         }
         return vm.currentClass.scenarioList.map((sc, index) => {
-          /* eslint-disable no-nested-ternary */
-          const type = sc.type === '강의' ? 0 :
-            sc.type === '숙제' ? 1 :
-            sc.type === '퀴즈' ? 2 :
-            sc.type === '시험' ? 3 : new Error(`not defined sc.type ${sc.type}`);
-          /* eslint-enable no-nested-ternary */
+          const type = utils.convertScType(sc.type);
 
           const date = (() => {
             if (!sc.intended_start) {
@@ -140,7 +135,6 @@ export default {
             const endDate = new Date(sc.intended_end);
             return `${utils.formatDate(startDate)} ~ ${utils.formatDate(endDate)}`;
           })();
-          console.log('date', date);
 
           return {
             index: index + 1,

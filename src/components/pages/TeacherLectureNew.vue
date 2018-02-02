@@ -105,7 +105,7 @@
 
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex';
+import { mapGetters, mapMutations, mapState, mapActions } from 'vuex';
 import Sc from '../partials/Sc';
 import ScEditor from '../partials/ScEditor';
 import ScItemAdder from '../partials/ScItemAdder';
@@ -125,14 +125,18 @@ export default {
     ScSurveyEditor,
     ScActiveTimeEditor,
   },
+  async beforeMount() {
+    const vm = this;
+    vm.updateScId({
+      scId: Number.parseInt(vm.$route.params.scId, 10),
+    });
+    await vm.getSc();
+  },
   mounted() {
     const vm = this;
     vm.updateScType({
       scType: '강의', // TODO: delete?? 뭔가 지정해줘야하긴 하는데,
       // 이 플로우는 마음에 별로 안드는 상황
-    });
-    vm.updateScId({
-      scId: Number.parseInt(vm.$route.params.scId, 10),
     });
   },
   data() {
@@ -161,6 +165,9 @@ export default {
   },
   methods: {
     ...mapMutations('teacher', ['updateScType', 'updateScId']),
+    ...mapActions('teacher', [
+      'getSc',
+    ]),
     onClickScType(scType) {
       const vm = this;
       vm.scType = scType;

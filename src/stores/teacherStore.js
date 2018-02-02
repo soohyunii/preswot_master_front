@@ -2,6 +2,8 @@ import classService from '../services/classService';
 import lectureService from '../services/lectureService';
 import lectureItemService from '../services/lectureItemService';
 
+import utils from '../utils';
+
 export default {
   namespaced: true,
   state: {
@@ -268,6 +270,43 @@ export default {
         },
       });
     },
+    async getSc({ state, commit }) {
+      const res = await lectureService.getLecture({
+        lectureId: state.scId,
+      });
+      console.log('getSc res', res.data.lecture_items[0]); // eslint-disable-line
+      commit('updateScTitle', {
+        scTitle: res.data.name,
+      });
+      commit('updateScStartDate', {
+        scStartDate: res.data.intended_start,
+      });
+      commit('updateScEndDate', {
+        scEndDate: res.data.intended_end,
+      });
+      commit('updateScType', {
+        scType: utils.convertScType(res.data.type),
+      });
+      commit('updateScDescription', {
+        scDescription: res.data.description,
+      });
+      // eslint-disable-next-line
+      const sc = res.data.lecture_items.map((scItem) => {
+        return {
+          id: scItem.lecture_item_id,
+          title: scItem.name,
+          description: scItem.description,
+          type: utils.convertScItemType(scItem.type),
+          // TODO: map other keys
+        };
+      });
+      commit('updateSc', {
+        sc,
+      });
+      commit('assignCurrentEditingScItemIndex', {
+        currentEditingScItemIndex: 0,
+      });
+    },
     async createSc({ getters, rootGetters }) {
       const userId = rootGetters['auth/userId'];
       const classId = getters.currentClass.class_id;
@@ -312,11 +351,8 @@ export default {
       /* eslint-disable no-nested-ternary */
       // TODO: replace '강의'  => 0 mapping according to server definition
       // TODO: you should also change the mapping @ ClassScenario.vue
-      // (or.. it will be renamed as ScenarioTable)
-      const lectureType = scType === '강의' ? 0 :
-        scType === '숙제' ? 1 :
-        scType === '퀴즈' ? 2 :
-        scType === '시험' ? 3 : new Error(`not defined scType ${scType}`);
+      // (or.. it will be renamed as ScenarioTabl
+      const lectureType = utils.convertScType(scType);
       /* eslint-enable no-nested-ternary */
       if (lectureType instanceof Error) {
         throw lectureType;
@@ -339,12 +375,7 @@ export default {
      * @param {string 문항|설문|강의자료|숙제} scItemType
      */
     async postScItem({ state }, { scItemType }) {
-      /* eslint-disable no-nested-ternary */
-      const lectureItemType = scItemType === '문항' ? 0 :
-        scItemType === '설문' ? 1 :
-        scItemType === '강의자료' ? 2 :
-        scItemType === '숙제' ? 3 : new Error(`not defined scItemType ${scItemType}`);
-      /* eslint-enable no-nested-ternary */
+      const lectureItemType = utils.convertScItemType(scItemType);
       if (lectureItemType instanceof Error) {
         throw lectureItemType;
       }

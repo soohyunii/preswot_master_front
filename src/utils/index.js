@@ -35,4 +35,22 @@ export default {
     // eslint-disable-next-line
     return moment(d).format('YYYY-MM-DD HH:mm:ss');
   },
+  convertScType(scType) {
+    const mapping = ['강의', '숙제', '퀴즈', '시험'];
+    if (typeof scType === 'number') {
+      return mapping[scType];
+    } else if (typeof scType === 'string') {
+      return mapping.indexOf(scType);
+    }
+    return new Error(`not defined scType ${scType}`);
+  },
+  convertScItemType(scItemType) {
+    const mapping = ['문항', '설문', '강의자료', '숙제'];
+    if (typeof scItemType === 'number') {
+      return mapping[scItemType];
+    } else if (typeof scItemType === 'string') {
+      return mapping.indexOf(scItemType);
+    }
+    return new Error(`not defined scItemType ${scItemType}`);
+  },
 };
