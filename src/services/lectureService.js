@@ -18,6 +18,11 @@ export default {
       teacherId,
     });
   },
+  deleteLecture({
+    lectureId,
+  }) {
+    return http.delete(`/lectures/${lectureId}`);
+  },
   putLectureName({
     lectureId,
     lectureName,

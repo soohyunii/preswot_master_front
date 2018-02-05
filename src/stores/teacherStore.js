@@ -255,7 +255,7 @@ export default {
         currentEditingScItem,
       );
     },
-    assignCurrentEditingScItemIndex(state, { currentEditingScItemIndex }) {
+    updateCurrentEditingScItemIndex(state, { currentEditingScItemIndex }) {
       state.currentEditingScItemIndex = currentEditingScItemIndex;
     },
     updateCurrentTeachingScItemIndex(state, { index }) {
@@ -360,7 +360,7 @@ export default {
       commit('updateSc', {
         sc,
       });
-      commit('assignCurrentEditingScItemIndex', {
+      commit('updateCurrentEditingScItemIndex', {
         currentEditingScItemIndex: 0,
       });
     },
@@ -373,6 +373,36 @@ export default {
         teacherId: userId,
       });
       return res.data.lecture_id;
+    },
+    async deleteSc({ state, commit }) {
+      await lectureService.deleteLecture({
+        lectureId: state.scId,
+      });
+      // TODO: replace here if sc related variables are grouped together
+      commit('updateScId', {
+        scId: null,
+      });
+      commit('updateScTitle', {
+        scTitle: null,
+      });
+      commit('updateScType', {
+        scType: null,
+      });
+      commit('updateScStartDate', {
+        scStartDate: null,
+      });
+      commit('updateScEndDate', {
+        scEndDate: null,
+      });
+      commit('updateScDescription', {
+        scDescription: null,
+      });
+      commit('updateCurrentEditingScItemIndex', {
+        currentEditingScItemIndex: null,
+      });
+      commit('updateSc', {
+        sc: null,
+      });
     },
     async putScTitle({ commit, state }, { scTitle }) {
       await lectureService.putLectureName({
