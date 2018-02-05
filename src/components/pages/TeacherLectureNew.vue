@@ -74,6 +74,18 @@
                 </el-row>
               </div>
           </el-tab-pane>
+
+          <el-tab-pane label="시나리오 삭제" name="fourth">
+            <el-row>
+              <el-col style="max-width: 600px;">
+                <el-form label-width="120px">
+                  <el-form-item label="시나리오 삭제">
+                    <el-button type="danger" @click="onClickDelete">시나리오 삭제</el-button>
+                  </el-form-item>
+                </el-form>
+              </el-col>
+            </el-row>
+          </el-tab-pane>
         </el-tabs>
 
         <div>
@@ -183,6 +195,31 @@ export default {
     },
     test() {
       // console.log('test');
+    },
+    onClickDelete() {
+      const vm = this;
+      vm.$confirm('정말로 이 시나리오를 삭제하시겠습니까?', '시나리오 삭제', {
+        confirmButtonText: '예, 삭제합니다.',
+        cancelButtonText: '아니요, 삭제하지 않습니다.',
+        type: 'warning',
+      })
+        .then(() => {
+          vm.$notify({
+            title: '삭제됨',
+            message: '시나리오가 삭제됨',
+            type: 'success',
+            duration: 3000,
+          });
+          vm.$router.push('/a/teacher/class');
+        })
+        .catch(() => {
+          vm.$notify({
+            title: '취소됨',
+            message: '시나리오 삭제 취소됨',
+            type: 'info',
+            duration: 3000,
+          });
+        });
     },
   },
 };
