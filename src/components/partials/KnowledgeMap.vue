@@ -41,12 +41,6 @@
         </el-col>
       </el-row>
     </div>
-    <h1>debug</h1>
-    {{mode}}<br/>
-  <pre>select node: {{selectedNode}}
-  nodes: {{nodes}}
-  edges: {{validEdges}}
-  </pre>
   </div>
 </template>
 

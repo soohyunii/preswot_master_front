@@ -62,7 +62,6 @@
         </template>
       </el-table-column>
     </el-table>
-    {{ edges }}
   </div>
 </template>
 
