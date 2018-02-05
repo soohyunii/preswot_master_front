@@ -62,6 +62,8 @@ export default {
     sc: [],
     currentEditingScItemIndex: null,
     currentTeachingScItemIndex: null,
+    nodes: [],
+    edges: [],
     // //////////////////////////절취선////////////////////////// //
   },
   getters: {
@@ -119,7 +121,8 @@ export default {
     currentTeachingScItem(state) {
       return state.sc[state.currentTeachingScItemIndex];
     },
-    DEBUGscenarioServerWillReceive(state) { // TODO: delete
+    DEBUGscenarioServerWillReceive(state) {
+      // TODO: delete
       const res = {};
       res.title = state.scTitle;
       res.type = state.scType;
@@ -153,6 +156,58 @@ export default {
     },
     updateScId(state, { scId }) {
       state.scId = scId;
+    },
+    pinning(state, { pinned, node }) {
+      let index = -1;
+      state.nodes.forEach((item, idx) => {
+        if (item.id === node.id) {
+          index = idx;
+        }
+      });
+      if (index < 0) {
+        return;
+      }
+      // state.nodes[index].pinned = pinned;
+      if (pinned) {
+        state.nodes[index].pinned = true;
+        state.nodes[index].fx = state.nodes[index].x;
+        state.nodes[index].fy = state.nodes[index].y;
+      } else {
+        state.nodes[index].pinned = false;
+        state.nodes[index].fx = null;
+        state.nodes[index].fy = null;
+      }
+    },
+    addNodes(state, { node }) {
+      const lastNode = state.nodes[state.nodes.length - 1];
+      let x;
+      let y;
+      if (lastNode) {
+        x = lastNode.x + 50;
+        y = lastNode.y + 50;
+      } else {
+        x = 0;
+        y = 0;
+      }
+      const createNode = {
+        value: node.value,
+        id: node.id,
+        name: '\n',
+        _size: node._size, // eslint-disable-line
+        x,
+        y,
+        pinned: false,
+      };
+      state.nodes.push(createNode);
+    },
+    addEdges(state, { edge }) {
+      state.edges.push(edge);
+    },
+    deleteNodes(state, { nodeIndex }) {
+      state.nodes.splice(nodeIndex, 1);
+    },
+    deleteEdges(state, { edgeIndex }) {
+      state.edges.splice(edgeIndex, 1);
     },
     updateScTitle(state, { scTitle }) {
       state.scTitle = scTitle;
@@ -208,9 +263,11 @@ export default {
     },
     // FIXME: rename `lectureELementIndex` with `currentEditingScItemIndex`
     deleteScItem(state, { lectureElementIndex }) {
-      const isCurrentEditingItem = state.currentEditingScItemIndex === lectureElementIndex;
+      const isCurrentEditingItem =
+        state.currentEditingScItemIndex === lectureElementIndex;
       const isLastItem = lectureElementIndex === state.sc.length - 1;
-      const isBeforeCurrentEditingItem = lectureElementIndex < state.currentEditingScItemIndex;
+      const isBeforeCurrentEditingItem =
+        lectureElementIndex < state.currentEditingScItemIndex;
 
       if ((isCurrentEditingItem && isLastItem) || isBeforeCurrentEditingItem) {
         state.currentEditingScItemIndex -= 1;

@@ -5,6 +5,8 @@ import TeacherLectureNew from '../components/pages/TeacherLectureNew';
 import TeacherLectureLive from '../components/pages/TeacherLectureLive';
 import StudentLectureLive from '../components/pages/StudentLectureLive';
 import TeacherClassNew from '../components/pages/TeacherClassNew';
+import KnowledgeMap from '../components/partials/KnowledgeMap';
+
 
 export default function authRoutes(root) {
   return [
@@ -17,6 +19,15 @@ export default function authRoutes(root) {
     //     auth: true,
     //   },
     // },
+    {
+      path: '/teacher/lecture/knowledgeMap',
+      name: 'knowledgeMap',
+      component: KnowledgeMap,
+      meta: {
+        title: 'KnowledgeMap', // TODO: import from i18n
+        auth: true,
+      },
+    },
     {
       path: '/profile',
       name: 'Profile',
