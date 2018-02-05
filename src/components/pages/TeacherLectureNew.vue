@@ -138,13 +138,6 @@ export default {
       // 이 플로우는 마음에 별로 안드는 상황
     });
   },
-  data() {
-    // TODO: translate
-    return {
-      teachingClassList: [],
-      currentClassName: '',
-    };
-  },
   computed: {
     ...mapState('teacher', ['scTitle', 'scType']),
     ...mapGetters('teacher', [
