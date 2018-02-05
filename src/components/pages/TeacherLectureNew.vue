@@ -34,14 +34,14 @@
         </el-row>
         <hr><br />
 
-        <el-tabs v-model="activeTab">
-          <el-tab-pane label="시나리오 수정" name="first">
+        <el-tabs class="tabs" v-model="activeTab">
+          <el-tab-pane label="시나리오 수정" name="first" class="tab-pane">
             <!-- 시나리오 저작 -->
             <sc-editor />
           </el-tab-pane>
           <el-tab-pane label="시나리오 아이템 수정" name="second">
             <!-- 시나리오 아이템 저작 -->
-              <el-row :gutter="30">
+              <el-row :gutter="30" class="sc-row">
                 <el-col :span="16">
                   <div>
                     <sc />
@@ -90,6 +90,8 @@
 </template>
 
 <style lang="scss" scoped>
+@import "~@/variables.scss";
+
 #app_lecture_editor {
   margin-top: 2vh;
   padding: 0px 20px 20px 20px;
@@ -98,7 +100,15 @@
 
 .lecture-name {
   margin: 8px 0;
-  // background-color: red;
+}
+.tabs {
+  background-color: white;
+  padding: 1.5vh 2.5vw;
+  border-radius: 5px;
+}
+.sc-row {
+  padding: 20px;
+  background-color: $app-oatmeal;
 }
 </style>
 
