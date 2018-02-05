@@ -401,7 +401,7 @@ export default {
         currentEditingScItemIndex: null,
       });
       commit('updateSc', {
-        sc: null,
+        sc: [],
       });
     },
     async putScTitle({ commit, state }, { scTitle }) {

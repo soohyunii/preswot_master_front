@@ -190,6 +190,7 @@ export default {
     ...mapMutations('teacher', ['updateScType', 'updateScId']),
     ...mapActions('teacher', [
       'getSc',
+      'deleteSc',
     ]),
     onClickScType(scType) {
       const vm = this;
@@ -205,14 +206,24 @@ export default {
         cancelButtonText: '아니요, 삭제하지 않습니다.',
         type: 'warning',
       })
-        .then(() => {
-          vm.$notify({
-            title: '삭제됨',
-            message: '시나리오가 삭제됨',
-            type: 'success',
-            duration: 3000,
-          });
-          vm.$router.push('/a/teacher/class');
+        .then(async () => {
+          try {
+            await vm.deleteSc();
+            vm.$notify({
+              title: '삭제됨',
+              message: '시나리오가 삭제됨',
+              type: 'success',
+              duration: 3000,
+            });
+            vm.$router.push('/a/teacher/class');
+          } catch (error) {
+            vm.$notify({
+              title: '시나리오 삭제 실패',
+              message: error.toString(),
+              type: 'error',
+              duration: 3000,
+            });
+          }
         })
         .catch(() => {
           vm.$notify({
