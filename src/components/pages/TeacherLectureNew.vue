@@ -39,8 +39,8 @@
             <sc-editor />
           </el-tab-pane>
           <el-tab-pane label="시나리오 지식맵 수정" name="second">
-            <knowledge-map />
           </el-tab-pane>
+          <knowledge-map v-if="activeTab === 'second'" />
           <el-tab-pane label="시나리오 아이템 수정" name="third">
               <el-row :gutter="30" class="sc-row">
                 <el-col :span="16">
