@@ -32,7 +32,6 @@
           </el-col>
 
         </el-row>
-        <br v-if="inputFlag"/>
         <hr><br />
 
         <!-- 시나리오 저작 -->
@@ -143,7 +142,6 @@ export default {
     // TODO: translate
     return {
       teachingClassList: [],
-      inputFlag: false,
       currentClassName: '',
     };
   },
