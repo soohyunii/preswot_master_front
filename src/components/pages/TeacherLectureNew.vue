@@ -34,46 +34,46 @@
         </el-row>
         <hr><br />
 
-        <!-- 시나리오 저작 -->
-        <sc-editor />
+        <el-tabs v-model="activeTab">
+          <el-tab-pane label="시나리오 수정" name="first">
+            <!-- 시나리오 저작 -->
+            <sc-editor />
+          </el-tab-pane>
+          <el-tab-pane label="시나리오 아이템 수정" name="second">
+            <!-- 시나리오 아이템 저작 -->
+              <el-row :gutter="30">
+                <el-col :span="16">
+                  <div>
+                    <sc />
+                  </div>
+                </el-col>
+                <el-col :span="8">
+                  <div>
+                    <sc-item-adder />
+                  </div>
+                </el-col>
+              </el-row>
 
-        <!-- 구분선 -->
-        <br />
-        <hr />
-        <br />
+              <div id="app_lecture_editor" v-show="!isScEmpty">
+                <el-row :gutter="30">
+                  <el-col :span="24">
+                    <h1>아이템 편집</h1>
+                    <sc-common-editor />
+                    <sc-material-editor
+                      v-if="currentEditingScItemType === '강의자료'
+                      || currentEditingScItemType === '숙제'"
+                    />
+                    <sc-survey-editor v-if="currentEditingScItemType === '설문'" />
+                    <div v-if="currentEditingScItemType === '문항'">
+                      TODO: 문항~~
+                    </div>
+                    <sc-active-time-editor />
 
-        <!-- 시나리오 아이템 저작 -->
-        <el-row :gutter="30">
-          <el-col :span="16">
-            <div>
-              <sc />
-            </div>
-          </el-col>
-          <el-col :span="8">
-            <div>
-              <sc-item-adder />
-            </div>
-          </el-col>
-        </el-row>
-
-        <div id="app_lecture_editor" v-show="!isScEmpty">
-          <el-row :gutter="30">
-            <el-col :span="24">
-              <h1>아이템 편집</h1>
-              <sc-common-editor />
-              <sc-material-editor
-                v-if="currentEditingScItemType === '강의자료'
-                || currentEditingScItemType === '숙제'"
-              />
-              <sc-survey-editor v-if="currentEditingScItemType === '설문'" />
-              <div v-if="currentEditingScItemType === '문항'">
-                TODO: 문항~~
+                  </el-col>
+                </el-row>
               </div>
-              <sc-active-time-editor />
-
-            </el-col>
-          </el-row>
-        </div>
+          </el-tab-pane>
+        </el-tabs>
 
         <div>
           <h2>debug</h2>
@@ -123,6 +123,11 @@ export default {
     ScMaterialEditor,
     ScSurveyEditor,
     ScActiveTimeEditor,
+  },
+  data() {
+    return {
+      activeTab: 'first',
+    };
   },
   async beforeMount() {
     const vm = this;
