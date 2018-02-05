@@ -39,9 +39,9 @@
             <sc-editor />
           </el-tab-pane>
           <el-tab-pane label="시나리오 지식맵 수정" name="second">
-            시나리오 지식맵 수정
+            <knowledge-map />
           </el-tab-pane>
-          <el-tab-pane label="시나리오 아이템 수정" name="thrid">
+          <el-tab-pane label="시나리오 아이템 수정" name="third">
               <el-row :gutter="30" class="sc-row">
                 <el-col :span="16">
                   <div>
@@ -123,6 +123,7 @@ import ScMaterialEditor from '../partials/ScMaterialEditor';
 import ScActiveTimeEditor from '../partials/ScActiveTimeEditor';
 import ScCommonEditor from '../partials/ScCommonEditor';
 import ScSurveyEditor from '../partials/ScSurveyEditor';
+import KnowledgeMap from '../partials/KnowledgeMap';
 
 export default {
   name: 'TeacherLectureNew',
@@ -134,6 +135,7 @@ export default {
     ScMaterialEditor,
     ScSurveyEditor,
     ScActiveTimeEditor,
+    KnowledgeMap,
   },
   data() {
     return {
