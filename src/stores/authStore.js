@@ -1,5 +1,8 @@
+import jwtDecode from 'jwt-decode';
+
 import authService from '../services/authService';
 import utils from '../utils';
+import http from '../services/http';
 
 export default {
   namespaced: true,
@@ -13,11 +16,16 @@ export default {
       // TODO: Implement jwt validation check
       return !!state.jwt;
     },
+    userId(state) {
+      const payload = jwtDecode(state.jwt);
+      return payload.authId;
+    },
   },
   mutations: {
     updateJwt(state, { jwt }) {
       state.jwt = jwt;
       window.localStorage.setItem('jwt', jwt);
+      http.defaults.headers.common['x-access-token'] = jwt || null;
     },
     updateLocale(state, { locale }) {
       state.locale = locale;

@@ -19,7 +19,7 @@
           :selection="{nodes: selectedNode, links: {}}"
           :options="options"
           :link-cb="lcb"
-          @node-click="nodeClick"/>
+          @node-click="nodeClick" />
       </div>
       <el-row>
         <!-- TODO: translate -->
@@ -196,6 +196,7 @@ export default {
 
 <style src="vue-d3-network/dist/vue-d3-network.css"></style>
 <style lang="scss" scoped>
+// @import "~vue-d3-network/dist/vue-d3-network.css";
 
 .wrapper {
 

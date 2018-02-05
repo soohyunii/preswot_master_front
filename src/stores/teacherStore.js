@@ -1,5 +1,8 @@
-import Guid from 'guid';
 import classService from '../services/classService';
+import lectureService from '../services/lectureService';
+import lectureItemService from '../services/lectureItemService';
+
+import utils from '../utils';
 
 export default {
   namespaced: true,
@@ -39,6 +42,7 @@ export default {
     // //////////////////////////절취선////////////////////////// //
     /**
      * TeacherLectureNew / TeacherLectureLive 관련 변수들
+     * @var {number} scId: 백엔드 디비의 lectures 테이블의 lecture_id에 해당
      * @var {string} scTitle
      * @var {string} scType
      * @var {string} scStartDatetime: (e.g. "2018-01-31 23:59:59")
@@ -48,9 +52,11 @@ export default {
      * @var {number} currentEditingScItemIndex: 현재 생성/편집 중인 시나리오 아이템 인덱스
      * @var {number} currentTeachingScItemIndex: 강의 중에 현재 진행되고 있는 시나리오 아이템 인덱스
      */
+    scId: null,
     scTitle: null,
     scType: null,
-    scStartDatetime: null,
+    scStartDate: null,
+    scEndDate: null,
     scDescription: null,
     scKnowledgeMap: null,
     sc: [],
@@ -141,6 +147,16 @@ export default {
         newClass,
       );
     },
+    assignCurrentClass(state, { currentClass }) {
+      const c = state.teachingClassList[state.currentClassIndex];
+      Object.assign(
+        c,
+        currentClass,
+      );
+    },
+    updateScId(state, { scId }) {
+      state.scId = scId;
+    },
     pinning(state, { pinned, node }) {
       let index = -1;
       state.nodes.forEach((item, idx) => {
@@ -199,15 +215,16 @@ export default {
     updateScType(state, { scType }) {
       state.scType = scType;
     },
-    updateScStartDatetime(state, { scStartDatetime }) {
-      state.scStartDatetime = scStartDatetime;
+    updateScStartDate(state, { scStartDate }) {
+      state.scStartDate = scStartDate;
+    },
+    updateScEndDate(state, { scEndDate }) {
+      state.scEndDate = scEndDate;
     },
     updateScDescription(state, { scDescription }) {
       state.scDescription = scDescription;
     },
-    pushScItem(state, { type }) {
-      // TODO: 타입에 따라서 scItem Object에 들어가는 key 조정
-      const key = Guid.create().toString();
+    pushScItem(state, { type, id }) {
       const title = null;
       const order = null; // 예습? 본강의? 복습?
       const description = null;
@@ -217,7 +234,7 @@ export default {
       const fileList = [];
       const survey = { choice: [] };
       const scItem = {
-        key,
+        id,
         title,
         type,
         order,
@@ -295,6 +312,141 @@ export default {
         return res;
       }
       throw new Error(`create class failed ${res.status}`);
+    },
+    async fetchClass({ state, getters, commit }) {
+      if (state.currentClassIndex === null) {
+        return;
+      }
+      const currentClass = getters.currentClass;
+      const res = await classService.fetchClass({
+        id: currentClass.class_id,
+      });
+      commit('assignCurrentClass', {
+        currentClass: {
+          scenarioList: res.data.lectures,
+        },
+      });
+    },
+    async getSc({ state, commit }) {
+      const res = await lectureService.getLecture({
+        lectureId: state.scId,
+      });
+      console.log('getSc res', res.data.lecture_items[0]); // eslint-disable-line
+      commit('updateScTitle', {
+        scTitle: res.data.name,
+      });
+      commit('updateScStartDate', {
+        scStartDate: res.data.intended_start,
+      });
+      commit('updateScEndDate', {
+        scEndDate: res.data.intended_end,
+      });
+      commit('updateScType', {
+        scType: utils.convertScType(res.data.type),
+      });
+      commit('updateScDescription', {
+        scDescription: res.data.description,
+      });
+      // eslint-disable-next-line
+      const sc = res.data.lecture_items.map((scItem) => {
+        return {
+          id: scItem.lecture_item_id,
+          title: scItem.name,
+          description: scItem.description,
+          type: utils.convertScItemType(scItem.type),
+          // TODO: map other keys
+        };
+      });
+      commit('updateSc', {
+        sc,
+      });
+      commit('assignCurrentEditingScItemIndex', {
+        currentEditingScItemIndex: 0,
+      });
+    },
+    async createSc({ getters, rootGetters }) {
+      const userId = rootGetters['auth/userId'];
+      const classId = getters.currentClass.class_id;
+
+      const res = await lectureService.postLecture({
+        classId,
+        teacherId: userId,
+      });
+      return res.data.lecture_id;
+    },
+    async putScTitle({ commit, state }, { scTitle }) {
+      await lectureService.putLectureName({
+        lectureId: state.scId,
+        lectureName: scTitle,
+      });
+      commit('updateScTitle', {
+        scTitle,
+      });
+    },
+    /**
+     * @param {Date} scStartDate
+     */
+    async putScStartDate({ state }, { scStartDate }) {
+      await lectureService.putLectureIntendedStart({
+        lectureId: state.scId,
+        lectureStartDate: scStartDate,
+      });
+    },
+    /**
+     * @param {Date} scEndDate
+     */
+    async putScEndDate({ state }, { scEndDate }) {
+      await lectureService.putLectureIntendedEnd({
+        lectureId: state.scId,
+        lectureEndDate: scEndDate,
+      });
+    },
+    /**
+     * @param {string 강의|숙제|퀴즈|시험} scType
+     */
+    async putScType({ state }, { scType }) {
+      /* eslint-disable no-nested-ternary */
+      // TODO: replace '강의'  => 0 mapping according to server definition
+      // TODO: you should also change the mapping @ ClassScenario.vue
+      // (or.. it will be renamed as ScenarioTabl
+      const lectureType = utils.convertScType(scType);
+      /* eslint-enable no-nested-ternary */
+      if (lectureType instanceof Error) {
+        throw lectureType;
+      }
+      await lectureService.putLectureType({
+        lectureId: state.scId,
+        lectureType,
+      });
+    },
+    /**
+     * @param {string} scDescription
+     */
+    async putScDescription({ state }, { scDescription }) {
+      await lectureService.putLectureDescription({
+        lectureId: state.scId,
+        lectureDescrption: scDescription,
+      });
+    },
+    /**
+     * @param {string 문항|설문|강의자료|숙제} scItemType
+     */
+    async postScItem({ state }, { scItemType }) {
+      const lectureItemType = utils.convertScItemType(scItemType);
+      if (lectureItemType instanceof Error) {
+        throw lectureItemType;
+      }
+      const res = await lectureItemService.postLectureItem({
+        lectureId: state.scId,
+        lectureItemType,
+      });
+      return res.data.lecture_item_id;
+    },
+    async putScItemTitle({ getters }, { scItemTitle }) {
+      await lectureItemService.putLectureItemName({
+        lectureItemId: getters.currentEditingScItem.id,
+        lectureItemName: scItemTitle,
+      });
     },
   },
 };

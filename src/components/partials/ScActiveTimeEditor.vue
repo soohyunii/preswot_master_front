@@ -13,20 +13,18 @@
             </el-radio-group>
           </el-form-item>
 
-          <el-form-item label="활성화 시작 시각">
+          <el-form-item label="활성화 시각">
             <el-date-picker
-              v-model="scActiveStartDatetime"
+              v-model="scItemStartDate"
               type="datetime"
-              value-format="yyyy-MM-dd HH:mm:ss"
             >
             </el-date-picker>
           </el-form-item>
 
-          <el-form-item label="활성화 종료 시각">
+          <el-form-item label="비활성화 시각">
             <el-date-picker
-              v-model="scActiveEndDatetime"
+              v-model="scItemEndDate"
               type="datetime"
-              value-format="yyyy-MM-dd HH:mm:ss"
               :disabled="!shouldDeactivated"
             >
             </el-date-picker>
@@ -50,7 +48,6 @@
 
 <script>
 import { mapState, mapMutations, mapGetters } from 'vuex';
-import utils from '../../utils';
 
 export default {
   name: 'ScActiveTimeEditor',
@@ -64,19 +61,19 @@ export default {
     changeShouldDeactivated(label) {
       const vm = this;
       if (!label) {
-        vm.scActiveEndDatetime = null;
+        vm.scItemEndDate = null;
       }
     },
   },
   computed: {
-    ...mapState('teacher', ['sc', 'scStartDatetime']),
+    ...mapState('teacher', ['sc', 'scStartDate']),
     ...mapGetters('teacher', ['currentEditingScItem']),
     input() {
       const res = {};
       const vm = this;
       res.scItemOrder = vm.scItemOrder;
-      res.scActiveStartDatetime = vm.scActiveStartDatetime;
-      res.scActiveEndDatetime = vm.scActiveEndDatetime;
+      res.scItemStartDate = vm.scItemStartDate;
+      res.scItemEndDate = vm.scItemEndDate;
       return res;
     },
     scItemOrder: {
@@ -115,28 +112,26 @@ export default {
         });
       },
     },
-    scActiveStartDatetime: {
+    scItemStartDate: {
       get() {
         const vm = this;
         const item = vm.currentEditingScItem;
         if (!item) {
           return null;
         }
-        if (!vm.scStartDatetime) {
+        if (!vm.scStartDate) {
           return null;
         }
-        const scStartDate = new Date(vm.scStartDatetime);
         const startOffsetSec = item.activeStartOffsetSec;
         if (!startOffsetSec) {
           return null;
         }
         // console.log('startOffsetSec', startOffsetSec);
-        const resDate = new Date(scStartDate.getTime() + (startOffsetSec * 1000));
-        return utils.formatDate(resDate);
+        return new Date(vm.scStartDate.getTime() + (startOffsetSec * 1000));
       },
-      set(scActiveStartDatetime) {
+      set(scItemStartDate) {
         const vm = this;
-        if (!vm.scStartDatetime) {
+        if (!vm.scStartDate) {
           vm.$notify({
             // TODO: translate
             title: '오류!',
@@ -145,9 +140,8 @@ export default {
           });
           return;
         }
-        const scStartDate = new Date(vm.scStartDatetime);
-        const scActiveStartDate = new Date(scActiveStartDatetime);
-        const offsetSec = (scActiveStartDate.getTime() - scStartDate.getTime()) / 1000;
+        const scActiveStartDate = new Date(scItemStartDate);
+        const offsetSec = (scActiveStartDate.getTime() - vm.scStartDate.getTime()) / 1000;
         vm.assignCurrentEditingScItem({
           currentEditingScItem: {
             activeStartOffsetSec: offsetSec,
@@ -155,27 +149,25 @@ export default {
         });
       },
     },
-    scActiveEndDatetime: {
+    scItemEndDate: {
       get() {
         const vm = this;
         const item = vm.currentEditingScItem;
         if (!item) {
           return null;
         }
-        if (!vm.scStartDatetime) {
+        if (!vm.scStartDate) {
           return null;
         }
-        const scStartDate = new Date(vm.scStartDatetime);
         const endOffsetSec = item.activeEndOffsetSec;
         if (!endOffsetSec) {
           return null;
         }
-        const resDate = new Date(scStartDate.getTime() + (endOffsetSec * 1000));
-        return utils.formatDate(resDate);
+        return new Date(vm.scStartDate.getTime() + (endOffsetSec * 1000));
       },
-      set(scActiveEndDatetime) {
+      set(scItemEndDate) {
         const vm = this;
-        if (!vm.scStartDatetime) {
+        if (!vm.scStartDate) {
           vm.$notify({
             // TODO: translate
             title: '오류!',
@@ -184,10 +176,9 @@ export default {
           });
           return;
         }
-        const scStartDate = new Date(vm.scStartDatetime);
-        const scActiveEndDate = new Date(scActiveEndDatetime);
-        let offsetSec = (scActiveEndDate.getTime() - scStartDate.getTime()) / 1000;
-        if (!scActiveEndDatetime) {
+        const scActiveEndDate = new Date(scItemEndDate);
+        let offsetSec = (scActiveEndDate.getTime() - vm.scStartDate.getTime()) / 1000;
+        if (!scItemEndDate) {
            // * 계속 활성화를 눌렀을 때 scActiveDatetime이 null로 들어오는데, 그 처리.
           offsetSec = null;
         }

@@ -17,7 +17,6 @@
           TODO: Select Class from left menus!
         </div>
         <div v-else>
-          currentClass: <pre style="font-size: 70%;">{{ currentClass }}</pre>
           <h3>{{ currentClass.name }}</h3><hr>
 
           <!-- TODO: translation -->
@@ -27,7 +26,7 @@
           <el-button>과목저널링</el-button>
           <br /><br />
 
-          <class-scenario :tableData="scenarioList"></class-scenario>
+          <class-scenario />
 
           <!-- TODO: Implement dummy response about class statistics -->
           <class-statistics />
@@ -58,31 +57,12 @@ import TeachingClassListAside from '../partials/TeachingClassListAside';
 
 export default {
   name: 'TeacherClassIndex',
-  // TODO: Replace dummy functions
-  data() {
-    return {
-      scenarioList: [],
-    };
-  },
   computed: {
     ...mapGetters('teacher', [
       'isTeachingClassListEmpty',
       'currentClass',
     ]),
   },
-  // TODO: delete
-  // methods: {
-  //   async changeScenario() {
-  //     const vm = this;
-  //     const teachingClassName = vm.currentEditingClass;
-  //     vm.scenarioList = await teacherService.fetchScenarioList({ teachingClassName });
-  //   },
-  // },
-  // TODO: delete
-  // async mounted() {
-  //   const res = await classService.createClass();
-  //   console.log(res);
-  // },
   components: {
     ClassScenario,
     ClassStatistics,

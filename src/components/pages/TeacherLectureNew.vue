@@ -3,6 +3,7 @@
     <el-container>
       <el-aside width="150px">
         <!-- <teaching-class-list-aside /> -->
+        <button @click="test">test</button>
       </el-aside>
 
       <!-- 이 메인은 맞음 시작 -->
@@ -31,49 +32,49 @@
           </el-col>
 
         </el-row>
-        <br v-if="inputFlag"/>
         <hr><br />
 
-        <!-- 시나리오 저작 -->
-        <sc-editor />
+        <el-tabs class="tabs" v-model="activeTab">
+          <el-tab-pane label="시나리오 수정" name="first">
+            <sc-editor />
+          </el-tab-pane>
+          <el-tab-pane label="시나리오 지식맵 수정" name="second">
+            <knowledge-map />
+          </el-tab-pane>
+          <el-tab-pane label="시나리오 아이템 수정" name="third">
+              <el-row :gutter="30" class="sc-row">
+                <el-col :span="16">
+                  <div>
+                    <sc />
+                  </div>
+                </el-col>
+                <el-col :span="8">
+                  <div>
+                    <sc-item-adder />
+                  </div>
+                </el-col>
+              </el-row>
 
-        <!-- 구분선 -->
-        <br />
-        <hr />
-        <br />
+              <div id="app_lecture_editor" v-show="!isScEmpty">
+                <el-row :gutter="30">
+                  <el-col :span="24">
+                    <h1>아이템 편집</h1>
+                    <sc-common-editor />
+                    <sc-material-editor
+                      v-if="currentEditingScItemType === '강의자료'
+                      || currentEditingScItemType === '숙제'"
+                    />
+                    <sc-survey-editor v-if="currentEditingScItemType === '설문'" />
+                    <div v-if="currentEditingScItemType === '문항'">
+                      TODO: 문항~~
+                    </div>
+                    <sc-active-time-editor />
 
-        <!-- 시나리오 아이템 저작 -->
-        <el-row :gutter="30">
-          <el-col :span="16">
-            <div>
-              <sc />
-            </div>
-          </el-col>
-          <el-col :span="8">
-            <div>
-              <sc-item-adder />
-            </div>
-          </el-col>
-        </el-row>
-
-        <div id="app_lecture_editor" v-show="!isScEmpty">
-          <el-row :gutter="30">
-            <el-col :span="24">
-              <h1>아이템 편집</h1>
-              <sc-common-editor />
-              <sc-material-editor
-                v-if="currentEditingScItemType === '강의자료'
-                || currentEditingScItemType === '숙제'"
-              />
-              <sc-survey-editor v-if="currentEditingScItemType === '설문'" />
-              <div v-if="currentEditingScItemType === '문항'">
-                TODO: 문항~~
+                  </el-col>
+                </el-row>
               </div>
-              <sc-active-time-editor />
-
-            </el-col>
-          </el-row>
-        </div>
+          </el-tab-pane>
+        </el-tabs>
 
         <div>
           <h2>debug</h2>
@@ -90,6 +91,8 @@
 </template>
 
 <style lang="scss" scoped>
+@import "~@/variables.scss";
+
 #app_lecture_editor {
   margin-top: 2vh;
   padding: 0px 20px 20px 20px;
@@ -98,13 +101,21 @@
 
 .lecture-name {
   margin: 8px 0;
-  // background-color: red;
+}
+.tabs {
+  background-color: white;
+  padding: 1.5vh 2.5vw;
+  border-radius: 5px;
+}
+.sc-row {
+  padding: 20px;
+  background-color: $app-oatmeal;
 }
 </style>
 
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex';
+import { mapGetters, mapMutations, mapState, mapActions } from 'vuex';
 import Sc from '../partials/Sc';
 import ScEditor from '../partials/ScEditor';
 import ScItemAdder from '../partials/ScItemAdder';
@@ -112,6 +123,7 @@ import ScMaterialEditor from '../partials/ScMaterialEditor';
 import ScActiveTimeEditor from '../partials/ScActiveTimeEditor';
 import ScCommonEditor from '../partials/ScCommonEditor';
 import ScSurveyEditor from '../partials/ScSurveyEditor';
+import KnowledgeMap from '../partials/KnowledgeMap';
 
 export default {
   name: 'TeacherLectureNew',
@@ -123,6 +135,19 @@ export default {
     ScMaterialEditor,
     ScSurveyEditor,
     ScActiveTimeEditor,
+    KnowledgeMap,
+  },
+  data() {
+    return {
+      activeTab: 'first',
+    };
+  },
+  async beforeMount() {
+    const vm = this;
+    vm.updateScId({
+      scId: Number.parseInt(vm.$route.params.scId, 10),
+    });
+    await vm.getSc();
   },
   mounted() {
     const vm = this;
@@ -130,14 +155,6 @@ export default {
       scType: '강의', // TODO: delete?? 뭔가 지정해줘야하긴 하는데,
       // 이 플로우는 마음에 별로 안드는 상황
     });
-  },
-  data() {
-    // TODO: translate
-    return {
-      teachingClassList: [],
-      inputFlag: false,
-      currentClassName: '',
-    };
   },
   computed: {
     ...mapState('teacher', ['scTitle', 'scType']),
@@ -156,10 +173,16 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['updateScType', 'updateScTitle']),
+    ...mapMutations('teacher', ['updateScType', 'updateScId']),
+    ...mapActions('teacher', [
+      'getSc',
+    ]),
     onClickScType(scType) {
       const vm = this;
       vm.scType = scType;
+    },
+    test() {
+      // console.log('test');
     },
   },
 };

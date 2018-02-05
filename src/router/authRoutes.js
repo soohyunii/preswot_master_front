@@ -56,7 +56,7 @@ export default function authRoutes(root) {
       },
     },
     {
-      path: '/teacher/lecture/new',
+      path: '/teacher/lecture/:scId/edit',
       name: 'TeacherLectureNew',
       component: TeacherLectureNew,
       meta: {
