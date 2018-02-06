@@ -5,7 +5,7 @@ import TeacherLectureNew from '../components/pages/TeacherLectureNew';
 import TeacherLectureLive from '../components/pages/TeacherLectureLive';
 import StudentLectureLive from '../components/pages/StudentLectureLive';
 import TeacherClassNew from '../components/pages/TeacherClassNew';
-import KnowledgeMap from '../components/partials/KnowledgeMap';
+import wordCloud from '../components/partials/wordCloud';
 
 
 export default function authRoutes(root) {
@@ -20,11 +20,11 @@ export default function authRoutes(root) {
     //   },
     // },
     {
-      path: '/teacher/lecture/knowledgeMap',
-      name: 'knowledgeMap',
-      component: KnowledgeMap,
+      path: '/teacher/lecture/wordCloud',
+      name: 'wordCloud',
+      component: wordCloud,
       meta: {
-        title: 'KnowledgeMap', // TODO: import from i18n
+        title: 'wordCloud', // TODO: import from i18n
         auth: true,
       },
     },
