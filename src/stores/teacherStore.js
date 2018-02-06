@@ -193,6 +193,7 @@ export default {
         value: node.value,
         id: node.id,
         name: '\n',
+        _cssClass: 'import',
         _size: node._size, // eslint-disable-line
         x,
         y,
