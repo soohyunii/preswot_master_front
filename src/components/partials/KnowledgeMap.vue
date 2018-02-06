@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper" ref="wrapper">
     <svg style="width: 0px; height: 0px; float: left;">
       <defs>
         <marker id="m-end" markerWidth="10" markerHeight="10" refX="11" refY="3" orient="auto" markerUnits="strokeWidth" >
@@ -65,6 +65,10 @@ export default {
       linkWidth: 2.5,
       fontSize: 20,
       resetFlag: true,
+      size: {
+        w: 600,
+        h: 600,
+      },
     };
   },
   computed: {
@@ -97,6 +101,7 @@ export default {
         canvas: vm.canvas,
         linkWidth: vm.linkWidth,
         fontSize: vm.fontSize,
+        size: vm.size,
       };
     },
   },
@@ -190,6 +195,12 @@ export default {
       };
       return link;
     },
+  },
+  updated() {
+    const vm = this;
+    vm.$nextTick(() => {
+      vm.size.w = vm.$refs.wrapper.clientWidth;
+    });
   },
 };
 </script>
