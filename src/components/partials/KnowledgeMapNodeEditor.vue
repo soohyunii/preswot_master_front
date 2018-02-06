@@ -62,13 +62,13 @@ export default {
     ...mapState('teacher', ['nodes']),
   },
   methods: {
-    ...mapMutations('teacher', ['addNodes', 'deleteNodes']),
+    ...mapMutations('teacher', ['addNode', 'deleteNode']),
     onClick(type, index) {
       const vm = this;
       switch (type) {
         case 'addNode': {
           const id = Guid.create().toString();
-          vm.addNodes({ node: { id, value: '', _size: 20 } });
+          vm.addNode({ node: { id, value: '', _size: 20 } });
           vm.inputFlag.push({ value: true, weight: false });
           break;
         }
@@ -106,7 +106,7 @@ export default {
           break;
         }
         case 'delete': {
-          vm.deleteNodes({ nodeIndex: index });
+          vm.deleteNode({ nodeIndex: index });
           vm.inputFlag.splice(index, 1);
           break;
         }

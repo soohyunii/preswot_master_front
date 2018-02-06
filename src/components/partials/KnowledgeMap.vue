@@ -25,8 +25,8 @@
         <!-- TODO: translate -->
         <el-col>
           <el-radio-group v-model="mode">
-            <el-radio-button label="select">선택</el-radio-button>
-            <el-radio-button label="pinning">고정</el-radio-button>
+            <el-radio-button label="NOT_PINNED">선택</el-radio-button>
+            <el-radio-button label="PINNED">고정</el-radio-button>
             <!-- <el-radio-button label="delete">삭제</el-radio-button> -->
             <!-- <el-radio-button label="link">링크</el-radio-button> -->
           </el-radio-group>
@@ -106,77 +106,25 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['pinning', 'deleteNodes', 'addEdges']),
+    ...mapMutations('teacher', ['setNodesPinned']),
     nodeClick(event, node) {
       const vm = this;
 
       switch (vm.mode) {
         default:
-        case 'select': {
+        case 'NOT_PINNED': {
           vm.resetFlag = false;
-          vm.pinning({ pinned: false, node });
+          vm.setNodesPinned({ pinned: false, node });
           if (vm.selectedNode) {
             vm.selectReset(true);
           }
           vm.selectedNode[node.id] = node;
           break;
         }
-        case 'pinning': {
-          vm.pinning({ pinned: true, node });
+        case 'PINNED': {
+          vm.setNodesPinned({ pinned: true, node });
           break;
         }
-        /*
-        case 'delete': {
-          vm.deleteNodes({ nodeIndex: node.index });
-          vm.inputFlag.splice(node.index, 1);
-          break;
-        }
-        case 'link': {
-          vm.resetFlag = false;
-          if (Object.keys(vm.selectedNode).length === 1) {
-            const inputSid = vm.selectedNode[Object.keys(vm.selectedNode)[0]].id;
-            const inputTid = node.id;
-            if (inputSid === inputTid) {
-              vm.$notify({
-                title: 'Same',
-                message: '쏘오쓰 타겟 다르게!!...',
-                type: 'warning',
-              });
-              break;
-            }
-            let breakFlag = false;
-            vm.validEdges.forEach((edge) => {
-              const isduplicatedEdge = edge.sid === inputSid && edge.tid === inputTid;
-              const isduplicatedReverseEdge = edge.tid === inputSid && edge.sid === inputTid;
-              if (isduplicatedEdge || isduplicatedReverseEdge) {
-                // TODO: translate
-                vm.$notify({
-                  title: 'Duplicated',
-                  message: '이미 Edge가 존재하네요...',
-                  type: 'warning',
-                });
-                breakFlag = true;
-              }
-            });
-            if (breakFlag) {
-              break;
-            }
-            const edge = {
-              sid: inputSid,
-              tid: inputTid,
-              weight: 50,
-            };
-            vm.addEdges({ edge });
-            vm.addEdgesInputFlag({ flag: { sid: false, tid: false, weight: false } });
-            vm.selectReset(true);
-          } else {
-            if (vm.selectedNode) {
-              vm.selectReset(true);
-            }
-            vm.selectedNode[node.id] = node;
-          }
-          break;
-        } */
       }
     },
     selectReset(immediately) {

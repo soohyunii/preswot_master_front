@@ -51,6 +51,8 @@ export default {
      * @var {Array[scItem]} sc: shorthand for Scenario
      * @var {number} currentEditingScItemIndex: 현재 생성/편집 중인 시나리오 아이템 인덱스
      * @var {number} currentTeachingScItemIndex: 강의 중에 현재 진행되고 있는 시나리오 아이템 인덱스
+     * @var {Array[node]} 시나리오 지식맵에서의 키워드
+     * @var {Array[edge]} 시나리오 지식맵에서의 릴레이션
      */
     scId: null,
     scTitle: null,
@@ -157,7 +159,7 @@ export default {
     updateScId(state, { scId }) {
       state.scId = scId;
     },
-    pinning(state, { pinned, node }) {
+    setNodesPinned(state, { pinned, node }) {
       let index = -1;
       state.nodes.forEach((item, idx) => {
         if (item.id === node.id) {
@@ -178,7 +180,7 @@ export default {
         state.nodes[index].fy = null;
       }
     },
-    addNodes(state, { node }) {
+    addNode(state, { node }) {
       const lastNode = state.nodes[state.nodes.length - 1];
       let x;
       let y;
@@ -200,13 +202,13 @@ export default {
       };
       state.nodes.push(createNode);
     },
-    addEdges(state, { edge }) {
+    addEdge(state, { edge }) {
       state.edges.push(edge);
     },
-    deleteNodes(state, { nodeIndex }) {
+    deleteNode(state, { nodeIndex }) {
       state.nodes.splice(nodeIndex, 1);
     },
-    deleteEdges(state, { edgeIndex }) {
+    deleteEdge(state, { edgeIndex }) {
       state.edges.splice(edgeIndex, 1);
     },
     updateScTitle(state, { scTitle }) {
