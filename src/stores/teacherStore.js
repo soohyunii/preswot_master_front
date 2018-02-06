@@ -492,7 +492,7 @@ export default {
       });
       const lectureRelations = state.edges.map(item => ({
         node1: item.sid,
-        node2: item.tig,
+        node2: item.tid,
         weight: item.weight,
       }));
       console.log('lectureRelations', lectureRelations);

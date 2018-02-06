@@ -105,8 +105,9 @@ export default {
         const isMe = idx === index;
         if (!isMe && !isInputing) {
           const isduplicatedEdge = edge.sid === inputSid && edge.tid === inputTid;
-          const isduplicatedReverseEdge = edge.tid === inputSid && edge.sid === inputTid;
-          if (isduplicatedEdge || isduplicatedReverseEdge) {
+          // const isduplicatedReverseEdge = edge.tid === inputSid && edge.sid === inputTid;
+          // if (isduplicatedEdge || isduplicatedReverseEdge) {
+          if (isduplicatedEdge) {
             // TODO: translate
             vm.$notify({
               title: 'Duplicated',
