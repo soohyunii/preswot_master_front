@@ -161,6 +161,8 @@ export default {
     vm.updateScId({
       scId: Number.parseInt(vm.$route.params.scId, 10),
     });
+    // TODO: handle if scId doens't exists
+    // TODO: handle if scId exists but don't have the authorization
     await vm.getSc();
   },
   mounted() {
