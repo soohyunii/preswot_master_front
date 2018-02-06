@@ -1,5 +1,6 @@
 <template>
-  <div class="wordCloud" v-resize="onResize"></div>
+  <!-- <div class="wordCloud" v-resize="onResize"></div> -->
+  <div class="wordCloud"></div>
 </template>
 
 <script>
@@ -118,6 +119,7 @@ export default {
   watch: {
     words: {
       handler: function (val, oldVal) {
+        window.console.log('word update');
         this.update();
       },
       deep: true,
@@ -212,15 +214,15 @@ export default {
               .attr('transform', (d) => { return 'translate(' + [d.x, d.y] + ')rotate(' + d.rotate + ')'; })
               .text(d => d.text);
       text.on('click', (d) => {
-        wordClick(d, vm);
+        wordClick(d.text, vm);
       });
     },
     update() {
       const { words, layout, fontSizeScale, chart, valueKey } = this;
       const { width, height } = this.size;
-      if (words.length) {
-        fontSizeScale.domain([+words[words.length - 1][valueKey] || 1, +words[0][valueKey]]);
-      }
+      // if (words.length) {
+      //  fontSizeScale.domain([+words[words.length - 1][valueKey] || 1, +words[0][valueKey]]);
+      // }
       // clear chart
       chart.select('g').remove();
       layout.stop().size([width, height]).words(words).start();
