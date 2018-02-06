@@ -39,7 +39,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <div id="statusbar" v-if="!isCloseStatusbar">
+          <div class="statusbar" v-if="!isCloseStatusbar">
             <student-lecture-live-summary :SummaryData="SummaryData" />
             <el-col :span="5" style="text-align:right;">
               <i class="el-icon-close" @click="onClick('CLOSE_STATUSBAR')" />
@@ -91,8 +91,8 @@ export default {
 };
 </script>
 
-<style scoped>
-#statusbar {
+<style lang="scss" scoped>
+.statusbar {
    position:fixed;
    left:0px;
    bottom:0px;

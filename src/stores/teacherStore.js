@@ -480,5 +480,26 @@ export default {
         lectureItemName: scItemTitle,
       });
     },
+    async postKnowledgeMapData({ state }) {
+      const lectureKeywords = state.nodes.map(item => ({
+        keyword: item.name,
+        weight: Number.parseInt(item._size, 10), // eslint-disable-line
+      }));
+      console.log('lectureKeywords', lectureKeywords);
+      await lectureService.postLectureKeywords({
+        lectureId: state.scId,
+        lectureKeywords,
+      });
+      const lectureRelations = state.edges.map(item => ({
+        node1: item.sid,
+        node2: item.tig,
+        weight: item.weight,
+      }));
+      console.log('lectureRelations', lectureRelations);
+      await lectureService.postLectureKeywordRelations({
+        lectureId: state.scId,
+        lectureRelations,
+      });
+    },
   },
 };

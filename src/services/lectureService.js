@@ -63,4 +63,20 @@ export default {
       value: lectureDescrption,
     });
   },
+  postLectureKeywords({
+    lectureId,
+    lectureKeywords,
+  }) {
+    return http.post(`/lectures/${lectureId}/keywords`, {
+      data: lectureKeywords,
+    });
+  },
+  postLectureKeywordRelations({
+    lectureId,
+    lectureRelations,
+  }) {
+    return http.post(`/lectures/${lectureId}/keyword-relations`, {
+      data: lectureRelations,
+    });
+  },
 };

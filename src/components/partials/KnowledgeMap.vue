@@ -23,15 +23,23 @@
       </div>
       <el-row>
         <!-- TODO: translate -->
-        <el-col>
-          <el-radio-group v-model="mode">
-            <el-radio-button label="NOT_PINNED">선택</el-radio-button>
-            <el-radio-button label="PINNED">고정</el-radio-button>
-            <!-- <el-radio-button label="delete">삭제</el-radio-button> -->
-            <!-- <el-radio-button label="link">링크</el-radio-button> -->
-          </el-radio-group>
+        <el-col :span="4">
+          <el-switch
+            v-model="mode"
+            active-color="#13ce66"
+            active-value="PINNED"
+            active-text="선택 노드 고정"
+            inactive-value="NOT_PINNED"
+          >
+          </el-switch>
+        </el-col>
+        <el-col :span="4">
+          <el-button @click="save" type="primary">
+            강의 지식맵 저장
+          </el-button>
         </el-col>
       </el-row>
+      <br />
       <el-row>
         <el-col :span="12">
           <knowledge-map-node-editor></knowledge-map-node-editor>
@@ -45,7 +53,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 import D3Network from 'vue-d3-network';
 import KnowledgeMapNodeEditor from './KnowledgeMapNodeEditor';
 import KnowledgeMapEdgeEditor from './KnowledgeMapEdgeEditor';
@@ -58,7 +66,7 @@ export default {
   },
   data() {
     return {
-      mode: 'select',
+      mode: 'NOT_PINNED',
       selectedNode: {},
       nodeSize: 20,
       canvas: false,
@@ -107,6 +115,7 @@ export default {
   },
   methods: {
     ...mapMutations('teacher', ['setNodesPinned']),
+    ...mapActions('teacher', ['postKnowledgeMapData']),
     nodeClick(event, node) {
       const vm = this;
 
@@ -142,6 +151,10 @@ export default {
         'marker-start': 'url(#m-start)',
       };
       return link;
+    },
+    async save() {
+      const vm = this;
+      await vm.postKnowledgeMapData(); // TODO: try catch
     },
   },
   updated() {
