@@ -161,6 +161,8 @@ export default {
       scTitle: '4강 (배열)', // TODO: replace
       scType: '강의', // TODO: replace
       SummaryData: [],
+      isCloseMovie: false,
+      isCloseStatusbar: false,
     };
   },
   computed: {
