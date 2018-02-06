@@ -58,18 +58,6 @@
             </el-input>
           </el-form-item>
           <i class="el-icon-loading" v-if="loading.DESCRIPTION" />
-
-
-          <!-- TODO: implement 지식맵 -->
-          <el-form-item label="지식맵" prop="scDescription">
-            <el-input
-              type="textarea"
-              :rows="3"
-              v-model="scDescription"
-              placeholder="dd"
-            >
-            </el-input>
-          </el-form-item>
         </el-form>
       </el-col>
     </el-row>
