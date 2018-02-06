@@ -223,7 +223,7 @@ export default {
     transition: fill .5s ease;
     fill: #dcfaf3
 }
-.import {
+.node.import {
   stroke: rgba(255, 0, 0, .7);
 }
 .node.selected {
