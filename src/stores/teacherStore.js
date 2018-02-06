@@ -480,6 +480,17 @@ export default {
         lectureItemName: scItemTitle,
       });
     },
+    async getKnowledgeMapData({ state }) {
+      const res1 = await lectureService.getLectureKeywords({
+        lectureId: state.scId,
+      });
+      console.log('res1', res1);
+      // TODO: commit actions
+      const res2 = await lectureService.getLectureKeywordRelations({
+        lectureId: state.scId,
+      });
+      console.log('res2', res2);
+    },
     async postKnowledgeMapData({ state }) {
       const lectureKeywords = state.nodes.map(item => ({
         keyword: item.name,

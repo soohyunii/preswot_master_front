@@ -63,6 +63,11 @@ export default {
       value: lectureDescrption,
     });
   },
+  getLectureKeywords({
+    lectureId,
+  }) {
+    return http.get(`/lectures/${lectureId}/keywords`);
+  },
   postLectureKeywords({
     lectureId,
     lectureKeywords,
@@ -70,6 +75,11 @@ export default {
     return http.post(`/lectures/${lectureId}/keywords`, {
       data: lectureKeywords,
     });
+  },
+  getLectureKeywordRelations({
+    lectureId,
+  }) {
+    return http.get(`/lectures/${lectureId}/keyword-relations`);
   },
   postLectureKeywordRelations({
     lectureId,
