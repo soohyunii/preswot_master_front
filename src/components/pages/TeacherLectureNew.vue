@@ -82,7 +82,7 @@
               <el-col style="max-width: 600px;">
                 <el-form label-width="120px">
                   <el-form-item label="시나리오 삭제">
-                    <el-button type="danger" @click="onClickDelete">시나리오 삭제</el-button>
+                    <el-button type="primary" @click="onClickDelete">시나리오 삭제</el-button>
                   </el-form-item>
                 </el-form>
               </el-col>
@@ -201,7 +201,7 @@ export default {
     },
     onClickDelete() {
       const vm = this;
-      vm.$confirm('정말로 이 시나리오를 삭제하시겠습니까?', '시나리오 삭제', {
+      vm.$confirm('정말로 이 시나리오를 삭제하시겠습니까?', `${vm.scTitle || ''} 삭제`, {
         confirmButtonText: '예, 삭제합니다.',
         cancelButtonText: '아니요, 삭제하지 않습니다.',
         type: 'warning',
