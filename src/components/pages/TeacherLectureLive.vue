@@ -91,12 +91,30 @@
             </el-row>
           </el-tab-pane> -->
         </el-tabs>
+        <el-row>
+          <div class="statusbar" v-if="!isCloseStatusbar">
+            <student-lecture-live-summary :SummaryData="SummaryData" />
+            <el-col :span="5" style="text-align:right;">
+              <i class="el-icon-close" @click="onClick('CLOSE_STATUSBAR')" />
+            </el-col>
+          </div>
+        </el-row>
       </el-main>
     </el-container>
   </div>
 </template>
 
 <style lang="scss" scoped>
+.statusbar {
+   position:fixed;
+   left:0px;
+   bottom:0px;
+   width:100%;
+   padding: 8px 0px 5px 0px;
+   background:rgba(0, 0, 0, 0.6);
+   color: white;
+}
+
 .lecture-name {
   margin: 8px 0;
   // background-color: red;
@@ -122,7 +140,7 @@ import ScItemSummary from '../partials/ScItemSummary';
 import ScMaterialEditor from '../partials/ScMaterialEditor';
 import ScActiveTimeEditor from '../partials/ScActiveTimeEditor';
 import ScCommonEditor from '../partials/ScCommonEditor';
-
+import StudentLectureLiveSummary from '../partials/StudentLectureLiveSummary';
 
 
 export default {
@@ -134,6 +152,7 @@ export default {
     ScCommonEditor,
     ScMaterialEditor,
     ScActiveTimeEditor,
+    StudentLectureLiveSummary,
   },
   data() {
     // TODO: translate
@@ -141,6 +160,7 @@ export default {
       activeTab: 'first',
       scTitle: '4강 (배열)', // TODO: replace
       scType: '강의', // TODO: replace
+      SummaryData: [],
     };
   },
   computed: {
