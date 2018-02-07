@@ -11,13 +11,13 @@ export default {
     title,
     description,
     intendedLectureNum,
-    teacherIdList,
+    teacherEmailList,
   }) {
     return http.post('/classes', {
       name: title,
       description,
       intendedLectureNum,
-      teachers: teacherIdList,
+      teachers: teacherEmailList,
     });
   },
   fetchClass({ id }) {

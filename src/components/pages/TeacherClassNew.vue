@@ -9,7 +9,10 @@
           </el-form-item>
 
           <el-form-item label="강사 목록">
-            <el-input v-model="teacherIdList"></el-input>
+            <el-input
+              v-model="teacherEmailList"
+              placeholder="abc@example.com, qwerty@example.com">
+            </el-input>
           </el-form-item>
 
           <el-form-item label="과목 소개">
@@ -135,20 +138,19 @@ export default {
         });
       },
     },
-    teacherIdList: {
+    teacherEmailList: {
       get() {
         const vm = this;
-        if (!vm.newClass.teacherIdList) {
+        if (!vm.newClass.teacherEmailList) {
           return null;
         }
-        return vm.newClass.teacherIdList.join(', ');
+        return vm.newClass.teacherEmailList.join(', ');
       },
-      set(teacherIdList) {
+      set(teacherEmailList) {
         const vm = this;
         vm.assignNewClass({
           newClass: {
-            // FIXME: rename teacherIdList => teacherEmailList
-            teacherIdList: teacherIdList.split(',')
+            teacherEmailList: teacherEmailList.split(',')
               .map(value => value.trim())
               .filter(value => utils.isValidEmail(value)),
           },

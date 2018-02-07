@@ -27,14 +27,14 @@ export default {
      * store에 귀찮게 하나하나 필드를 만들고 싶지 않고,
      * 그냥 하나의 object @var {object} newClass 에 퉁치는 것으로!
      * @var {string} newClass.title: 과목 제목
-     * @var {Array[number]} newClass.teacherIdList 강사 (user_id) 목록
+     * @var {Array[string]} newClass.teacherEmailList 강사 이메일 목록
      * @var {string} newClass.description: 과목 소개 (설명)
      * @var {Date} newClass.activeStartDate: 과목 활성화 시각
      * @var {Date} newClass.activeEndDate: 과목 비활성화 시각
      */
     newClass: {
       title: null,
-      teacherIdList: null,
+      teacherEmailList: null,
       description: null,
       activeStartDate: null,
       activeEndDate: null,
@@ -72,7 +72,7 @@ export default {
     isNewClassValid(state) {
       const {
         title,
-        teacherIdList,
+        teacherEmailList,
         description,
         activeStartDate,
         activeEndDate,
@@ -81,14 +81,14 @@ export default {
       if (!title) {
         return false;
       }
-      const isTeacherIdListNullOrEmpty = !teacherIdList || teacherIdList.length === 0;
-      if (isTeacherIdListNullOrEmpty) {
+      const isteacherEmailListNullOrEmpty = !teacherEmailList || teacherEmailList.length === 0;
+      if (isteacherEmailListNullOrEmpty) {
         return false;
       }
-      const isTeacherIdListAllNumber = teacherIdList.every(
+      const isteacherEmailListAllNumber = teacherEmailList.every(
         value => utils.isValidEmail(value),
       );
-      if (!isTeacherIdListAllNumber) {
+      if (!isteacherEmailListAllNumber) {
         return false;
       }
       if (!description) {
