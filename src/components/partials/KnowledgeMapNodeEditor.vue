@@ -16,7 +16,11 @@
       <el-table-column label="Name" align="center">
         <template slot-scope="scope">
           <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].value">
-            <el-input v-model="nodes[scope.$index].name" placeholder="ex) 배열"/>
+            <el-input
+              v-model="nodes[scope.$index].name"
+              placeholder="ex) 배열"
+              @focus="assignCurrentEditingNodeIndex({ currentEditingNodeIndex: scope.$index })"
+            />
             <el-button @click="onClick('setNodeName', scope.$index)">확인</el-button>
           </div>
           <div v-else>
@@ -43,6 +47,8 @@
         </template>
       </el-table-column>
     </el-table>
+    current index: {{ currentEditingNodeIndex }} <br/>
+    nodes: {{ nodes }}
   </div>
 </template>
 
@@ -54,25 +60,37 @@ export default {
   name: 'KnowledgeMapNodeEditor',
   data() {
     return {
-      currentIndex: -1,
       inputFlag: [],
     };
   },
   computed: {
-    ...mapState('teacher', ['nodes']),
+    ...mapState('teacher', ['currentEditingNodeIndex']),
+    nodes: {
+      get() {
+        const vm = this;
+        return vm.$store.state.teacher.nodes;
+      },
+      set(nodes) {
+        const vm = this;
+        vm.updateNodes({ nodes });
+      },
+    },
   },
   methods: {
-    ...mapMutations('teacher', ['addNodes', 'deleteNodes']),
+    ...mapMutations('teacher', ['pushNode', 'updateNodes', 'deleteNodes', 'assignCurrentEditingNode', 'assignCurrentEditingNodeIndex']),
     onClick(type, index) {
       const vm = this;
       switch (type) {
         case 'addNode': {
           const id = Guid.create().toString();
-          vm.addNodes({ node: { id, value: '', _size: 20 } });
+          vm.pushNode({ node: { id, value: '', _size: 20 } });
           vm.inputFlag.push({ value: true, weight: false });
           break;
         }
         case 'changeNodeName': {
+          vm.assignCurrentEditingNodeIndex({
+            currentEditingNodeIndex: index,
+          });
           vm.inputFlag[index].value = !vm.inputFlag[index].value;
           break;
         }
@@ -82,7 +100,6 @@ export default {
         }
         case 'setNodeName': {
           const node = vm.nodes[index];
-          vm.currentIndex = index;
           if (node.name === '' || node.name === '\n') {
             // TODO: translate
             vm.$notify({
@@ -100,8 +117,12 @@ export default {
             });
             break;
           }
-          vm.nodes[index].value = vm.nodes[index].name;
-          vm.nodes[index].id = vm.nodes[index].name;
+          vm.assignCurrentEditingNode({
+            currentEditingNode: {
+              id: vm.nodes[index].name,
+              value: vm.nodes[index].name,
+            },
+          });
           vm.inputFlag[index].value = !vm.inputFlag[index].value;
           break;
         }
@@ -117,7 +138,8 @@ export default {
     },
     isDuplicated(element, index) {
       const vm = this;
-      if (index !== vm.currentIndex && element.id === vm.nodes[vm.currentIndex].name) {
+      if (index !== vm.currentEditingNodeIndex
+      && element.id === vm.nodes[vm.currentEditingNodeIndex].name) {
         return element;
       }
       return false;

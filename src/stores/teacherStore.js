@@ -62,6 +62,7 @@ export default {
     sc: [],
     currentEditingScItemIndex: null,
     currentTeachingScItemIndex: null,
+    currentEditingNodeIndex: null,
     nodes: [],
     edges: [],
     // //////////////////////////절취선////////////////////////// //
@@ -121,6 +122,9 @@ export default {
     currentTeachingScItem(state) {
       return state.sc[state.currentTeachingScItemIndex];
     },
+    currentEditingNode(state) {
+      return state.nodes[state.currentEditingNodeIndex];
+    },
     DEBUGscenarioServerWillReceive(state) {
       // TODO: delete
       const res = {};
@@ -178,7 +182,7 @@ export default {
         state.nodes[index].fy = null;
       }
     },
-    addNodes(state, { node }) {
+    pushNode(state, { node }) {
       const lastNode = state.nodes[state.nodes.length - 1];
       let x;
       let y;
@@ -200,6 +204,18 @@ export default {
         pinned: false,
       };
       state.nodes.push(createNode);
+    },
+    assignCurrentEditingNode(state, { currentEditingNode }) {
+      Object.assign(
+        state.nodes[state.currentEditingNodeIndex],
+        currentEditingNode,
+      );
+    },
+    updateNodes(state, { nodes }) {
+      state.nodes = nodes;
+    },
+    assignCurrentEditingNodeIndex(state, { currentEditingNodeIndex }) {
+      state.currentEditingNodeIndex = currentEditingNodeIndex;
     },
     addEdges(state, { edge }) {
       state.edges.push(edge);
