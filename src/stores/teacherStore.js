@@ -429,60 +429,6 @@ export default {
         sc: [],
       });
     },
-    async putScTitle({ commit, state }, { scTitle }) {
-      await lectureService.putLectureName({
-        lectureId: state.scId,
-        lectureName: scTitle,
-      });
-      // commit('updateScTitle', {
-      //   scTitle,
-      // });
-    },
-    /**
-     * @param {Date} scStartDate
-     */
-    async putScStartDate({ state }, { scStartDate }) {
-      await lectureService.putLectureIntendedStart({
-        lectureId: state.scId,
-        lectureStartDate: scStartDate,
-      });
-    },
-    /**
-     * @param {Date} scEndDate
-     */
-    async putScEndDate({ state }, { scEndDate }) {
-      await lectureService.putLectureIntendedEnd({
-        lectureId: state.scId,
-        lectureEndDate: scEndDate,
-      });
-    },
-    /**
-     * @param {string 강의|숙제|퀴즈|시험} scType
-     */
-    async putScType({ state }, { scType }) {
-      /* eslint-disable no-nested-ternary */
-      // TODO: replace '강의'  => 0 mapping according to server definition
-      // TODO: you should also change the mapping @ ClassScenario.vue
-      // (or.. it will be renamed as ScenarioTabl
-      const lectureType = utils.convertScType(scType);
-      /* eslint-enable no-nested-ternary */
-      if (lectureType instanceof Error) {
-        throw lectureType;
-      }
-      await lectureService.putLectureType({
-        lectureId: state.scId,
-        lectureType,
-      });
-    },
-    /**
-     * @param {string} scDescription
-     */
-    async putScDescription({ state }, { scDescription }) {
-      await lectureService.putLectureDescription({
-        lectureId: state.scId,
-        lectureDescrption: scDescription,
-      });
-    },
     /**
      * @param {string 문항|설문|강의자료|숙제} scItemType
      */

@@ -22,10 +22,9 @@
             label="분류"
             sortable
             width="70">
-            <template slot-scope="typeScope">
-              <el-tag
-                :type="getType(typeScope.row.type).type">
-                {{ getType(typeScope.row.type).name }}
+            <template slot-scope="scope">
+              <el-tag>
+                {{ scope.row.type }}
               </el-tag>
             </template>
           </el-table-column>
@@ -171,33 +170,33 @@ export default {
       'createSc',
       'fetchClass',
     ]),
-    getType(type) {
-      // 과목 시나리오 유형 분류 {{ A: 강의, B: 숙제, C: 퀴즈, D: 시험 }}
-      // TODO: Translate
-      switch (type) {
-        default:
-        case 'A':
-          return {
-            name: '강의',
-            type: '',
-          };
-        case 'B':
-          return {
-            name: '숙제',
-            type: 'warning',
-          };
-        case 'C':
-          return {
-            name: '퀴즈',
-            type: 'danger',
-          };
-        case 'D':
-          return {
-            name: '시험',
-            type: 'info',
-          };
-      }
-    },
+    // getType(type) {
+    //   // 과목 시나리오 유형 분류 {{ A: 강의, B: 숙제, C: 퀴즈, D: 시험 }}
+    //   // TODO: Translate
+    //   switch (type) {
+    //     default:
+    //     case 'A':
+    //       return {
+    //         name: '강의',
+    //         type: '',
+    //       };
+    //     case 'B':
+    //       return {
+    //         name: '숙제',
+    //         type: 'warning',
+    //       };
+    //     case 'C':
+    //       return {
+    //         name: '퀴즈',
+    //         type: 'danger',
+    //       };
+    //     case 'D':
+    //       return {
+    //         name: '시험',
+    //         type: 'info',
+    //       };
+    //   }
+    // },
     async clickAddScenario() {
       const vm = this;
       try {
