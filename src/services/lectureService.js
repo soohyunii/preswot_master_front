@@ -77,4 +77,11 @@ export default {
       data: lectureRelations,
     });
   },
+  deleteLectureKeywordRelation({
+    lectureId,
+    node1,
+    node2,
+  }) {
+    return http.delete(`/lecture/${lectureId}/${node1}/${node2}`);
+  },
 };

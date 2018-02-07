@@ -453,12 +453,12 @@ export default {
       const res1 = await lectureService.getLectureKeywords({
         lectureId: state.scId,
       });
-      console.log('res1', res1);
+      console.log('res1', res1.data);
       // TODO: commit actions
       const res2 = await lectureService.getLectureKeywordRelations({
         lectureId: state.scId,
       });
-      console.log('res2', res2);
+      console.log('res2', res2.data);
     },
     async postKnowledgeMapData({ state }) {
       const lectureKeywords = state.nodes.map(item => ({
@@ -481,5 +481,11 @@ export default {
         lectureRelations,
       });
     },
+    // async deleteKnowledgeEdge({ state }, { edgeIndex }) {
+    //   await lectureService.deleteLectureKeywordRelation({
+    //     lectureId: state.scId,
+    //     node:
+    //   });
+    // },
   },
 };
