@@ -86,7 +86,7 @@ export default {
         return false;
       }
       const isTeacherIdListAllNumber = teacherIdList.every(
-        value => (typeof value === 'number'),
+        value => utils.isValidEmail(value),
       );
       if (!isTeacherIdListAllNumber) {
         return false;

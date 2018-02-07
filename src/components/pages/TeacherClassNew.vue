@@ -57,6 +57,7 @@
 <script>
 import { mapMutations, mapState, mapActions, mapGetters } from 'vuex';
 // import authService from '../../services/authService';
+import utils from '../../utils';
 
 export default {
   name: 'TeacherClassNew',
@@ -146,11 +147,10 @@ export default {
         const vm = this;
         vm.assignNewClass({
           newClass: {
+            // FIXME: rename teacherIdList => teacherEmailList
             teacherIdList: teacherIdList.split(',')
               .map(value => value.trim())
-              .filter(value => value)
-              .map(value => Number.parseInt(value, 10))
-              .filter(value => !Number.isNaN(value)),
+              .filter(value => utils.isValidEmail(value)),
           },
         });
       },

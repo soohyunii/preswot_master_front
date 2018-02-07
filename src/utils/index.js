@@ -2,6 +2,9 @@ import getLocale from 'browser-locale';
 import jwtDecode from 'jwt-decode';
 import moment from 'moment';
 
+// eslint-disable-next-line
+const re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+
 export default {
   getJwtFromLocalStorage() {
     const jwt = localStorage.getItem('jwt') || '';
@@ -52,5 +55,8 @@ export default {
       return mapping.indexOf(scItemType);
     }
     return new Error(`not defined scItemType ${scItemType}`);
+  },
+  isValidEmail(emailString) {
+    return re.test(emailString);
   },
 };

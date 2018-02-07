@@ -164,6 +164,7 @@ export default {
     // TODO: handle if scId doens't exists
     // TODO: handle if scId exists but don't have the authorization
     await vm.getSc();
+    await vm.getKnowledgeMapData();
   },
   mounted() {
     const vm = this;
@@ -193,6 +194,7 @@ export default {
     ...mapActions('teacher', [
       'getSc',
       'deleteSc',
+      'getKnowledgeMapData',
     ]),
     onClickScType(scType) {
       const vm = this;
