@@ -79,7 +79,7 @@ export default {
     ...mapState('teacher', ['nodes', 'edges']),
   },
   methods: {
-    ...mapMutations('teacher', ['addEdges', 'deleteEdges']),
+    ...mapMutations('teacher', ['addEdge', 'deleteEdge']),
     isValidEdge(sidInputFlag, tidInputFlag, index) {
       const vm = this;
       let isValid = true;
@@ -105,8 +105,9 @@ export default {
         const isMe = idx === index;
         if (!isMe && !isInputing) {
           const isduplicatedEdge = edge.sid === inputSid && edge.tid === inputTid;
-          const isduplicatedReverseEdge = edge.tid === inputSid && edge.sid === inputTid;
-          if (isduplicatedEdge || isduplicatedReverseEdge) {
+          // const isduplicatedReverseEdge = edge.tid === inputSid && edge.sid === inputTid;
+          // if (isduplicatedEdge || isduplicatedReverseEdge) {
+          if (isduplicatedEdge) {
             // TODO: translate
             vm.$notify({
               title: 'Duplicated',
@@ -155,7 +156,7 @@ export default {
       const vm = this;
       switch (type) {
         case 'addEdge': {
-          vm.addEdges({ edge: { sid: '', tid: '', weight: 50 } });
+          vm.addEdge({ edge: { sid: '', tid: '', weight: 50 } });
           vm.inputFlag.push({ sid: true, tid: true, weight: false });
           break;
         }
@@ -186,7 +187,7 @@ export default {
           break;
         }
         case 'delete': {
-          vm.deleteEdges({ edgeIndex: index });
+          vm.deleteEdge({ edgeIndex: index });
           vm.inputFlag.splice(index, 1);
           break;
         }

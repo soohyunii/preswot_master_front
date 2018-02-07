@@ -2,6 +2,9 @@ import getLocale from 'browser-locale';
 import jwtDecode from 'jwt-decode';
 import moment from 'moment';
 
+// eslint-disable-next-line
+const re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+
 export default {
   getJwtFromLocalStorage() {
     const jwt = localStorage.getItem('jwt') || '';
@@ -27,8 +30,17 @@ export default {
     // console.log('encodedPayload', encodedPayload);
     // const payload = JSON.parse(atob(encodedPayload));
     // console.log('payload', payload);
+    // TODO: try cath jwtDecode
     const payload = jwtDecode(jwt);
     return Date.now() < payload.exp;
+  },
+  getEmailFromJwt() {
+    const jwt = this.getJwtFromLocalStorage();
+    if (jwt.length === 0) {
+      return null;
+    }
+    // TODO: try cath jwtDecode
+    return jwtDecode(jwt).email_id;
   },
   formatDate(d) {
     // console.log('formatDate', d, d.toLocaleDateString('en-US').split('-'));
@@ -52,5 +64,8 @@ export default {
       return mapping.indexOf(scItemType);
     }
     return new Error(`not defined scItemType ${scItemType}`);
+  },
+  isValidEmail(emailString) {
+    return re.test(emailString);
   },
 };

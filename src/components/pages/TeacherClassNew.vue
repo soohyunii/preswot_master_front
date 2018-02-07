@@ -9,7 +9,10 @@
           </el-form-item>
 
           <el-form-item label="강사 목록">
-            <el-input v-model="teacherIdList"></el-input>
+            <el-input
+              v-model="teacherEmailList"
+              placeholder="abc@example.com, qwerty@example.com">
+            </el-input>
           </el-form-item>
 
           <el-form-item label="과목 소개">
@@ -57,6 +60,7 @@
 <script>
 import { mapMutations, mapState, mapActions, mapGetters } from 'vuex';
 // import authService from '../../services/authService';
+import utils from '../../utils';
 
 export default {
   name: 'TeacherClassNew',
@@ -134,23 +138,21 @@ export default {
         });
       },
     },
-    teacherIdList: {
+    teacherEmailList: {
       get() {
         const vm = this;
-        if (!vm.newClass.teacherIdList) {
+        if (!vm.newClass.teacherEmailList) {
           return null;
         }
-        return vm.newClass.teacherIdList.join(', ');
+        return vm.newClass.teacherEmailList.join(', ');
       },
-      set(teacherIdList) {
+      set(teacherEmailList) {
         const vm = this;
         vm.assignNewClass({
           newClass: {
-            teacherIdList: teacherIdList.split(',')
+            teacherEmailList: teacherEmailList.split(',')
               .map(value => value.trim())
-              .filter(value => value)
-              .map(value => Number.parseInt(value, 10))
-              .filter(value => !Number.isNaN(value)),
+              .filter(value => utils.isValidEmail(value)),
           },
         });
       },

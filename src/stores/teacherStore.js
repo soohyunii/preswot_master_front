@@ -27,14 +27,14 @@ export default {
      * store에 귀찮게 하나하나 필드를 만들고 싶지 않고,
      * 그냥 하나의 object @var {object} newClass 에 퉁치는 것으로!
      * @var {string} newClass.title: 과목 제목
-     * @var {Array[number]} newClass.teacherIdList 강사 (user_id) 목록
+     * @var {Array[string]} newClass.teacherEmailList 강사 이메일 목록
      * @var {string} newClass.description: 과목 소개 (설명)
      * @var {Date} newClass.activeStartDate: 과목 활성화 시각
      * @var {Date} newClass.activeEndDate: 과목 비활성화 시각
      */
     newClass: {
       title: null,
-      teacherIdList: null,
+      teacherEmailList: null,
       description: null,
       activeStartDate: null,
       activeEndDate: null,
@@ -51,6 +51,8 @@ export default {
      * @var {Array[scItem]} sc: shorthand for Scenario
      * @var {number} currentEditingScItemIndex: 현재 생성/편집 중인 시나리오 아이템 인덱스
      * @var {number} currentTeachingScItemIndex: 강의 중에 현재 진행되고 있는 시나리오 아이템 인덱스
+     * @var {Array[node]} 시나리오 지식맵에서의 키워드
+     * @var {Array[edge]} 시나리오 지식맵에서의 릴레이션
      */
     scId: null,
     scTitle: null,
@@ -70,7 +72,7 @@ export default {
     isNewClassValid(state) {
       const {
         title,
-        teacherIdList,
+        teacherEmailList,
         description,
         activeStartDate,
         activeEndDate,
@@ -79,14 +81,14 @@ export default {
       if (!title) {
         return false;
       }
-      const isTeacherIdListNullOrEmpty = !teacherIdList || teacherIdList.length === 0;
-      if (isTeacherIdListNullOrEmpty) {
+      const isteacherEmailListNullOrEmpty = !teacherEmailList || teacherEmailList.length === 0;
+      if (isteacherEmailListNullOrEmpty) {
         return false;
       }
-      const isTeacherIdListAllNumber = teacherIdList.every(
-        value => (typeof value === 'number'),
+      const isteacherEmailListAllNumber = teacherEmailList.every(
+        value => utils.isValidEmail(value),
       );
-      if (!isTeacherIdListAllNumber) {
+      if (!isteacherEmailListAllNumber) {
         return false;
       }
       if (!description) {
@@ -157,7 +159,7 @@ export default {
     updateScId(state, { scId }) {
       state.scId = scId;
     },
-    pinning(state, { pinned, node }) {
+    setNodesPinned(state, { pinned, node }) {
       let index = -1;
       state.nodes.forEach((item, idx) => {
         if (item.id === node.id) {
@@ -178,7 +180,7 @@ export default {
         state.nodes[index].fy = null;
       }
     },
-    addNodes(state, { node }) {
+    addNode(state, { node }) {
       const lastNode = state.nodes[state.nodes.length - 1];
       let x;
       let y;
@@ -201,13 +203,13 @@ export default {
       };
       state.nodes.push(createNode);
     },
-    addEdges(state, { edge }) {
+    addEdge(state, { edge }) {
       state.edges.push(edge);
     },
-    deleteNodes(state, { nodeIndex }) {
+    deleteNode(state, { nodeIndex }) {
       state.nodes.splice(nodeIndex, 1);
     },
-    deleteEdges(state, { edgeIndex }) {
+    deleteEdge(state, { edgeIndex }) {
       state.edges.splice(edgeIndex, 1);
     },
     updateScTitle(state, { scTitle }) {
@@ -256,7 +258,7 @@ export default {
         currentEditingScItem,
       );
     },
-    assignCurrentEditingScItemIndex(state, { currentEditingScItemIndex }) {
+    updateCurrentEditingScItemIndex(state, { currentEditingScItemIndex }) {
       state.currentEditingScItemIndex = currentEditingScItemIndex;
     },
     updateCurrentTeachingScItemIndex(state, { index }) {
@@ -361,7 +363,7 @@ export default {
       commit('updateSc', {
         sc,
       });
-      commit('assignCurrentEditingScItemIndex', {
+      commit('updateCurrentEditingScItemIndex', {
         currentEditingScItemIndex: 0,
       });
     },
@@ -375,14 +377,67 @@ export default {
       });
       return res.data.lecture_id;
     },
+    async putSc({
+      state,
+      // commit,
+    }) {
+      const type = utils.convertScType(state.scType);
+      console.log('type', type); // eslint-disable-line
+      if (type instanceof Error) {
+        throw type;
+      }
+      await lectureService.putLecture({
+        lectureId: state.scId,
+        name: state.scTitle,
+        description: state.scDescription,
+        startDate: state.scStartDate,
+        endDate: state.scEndDate,
+        // TODO: add state.scLocation
+        location: null,
+        // TODO: add state.scIsOpen,
+        opened: true,
+        teacherEmail: utils.getEmailFromJwt(),
+        type,
+      });
+    },
+    async deleteSc({ state, commit }) {
+      await lectureService.deleteLecture({
+        lectureId: state.scId,
+      });
+      // TODO: replace here if sc related variables are grouped together
+      commit('updateScId', {
+        scId: null,
+      });
+      commit('updateScTitle', {
+        scTitle: null,
+      });
+      commit('updateScType', {
+        scType: null,
+      });
+      commit('updateScStartDate', {
+        scStartDate: null,
+      });
+      commit('updateScEndDate', {
+        scEndDate: null,
+      });
+      commit('updateScDescription', {
+        scDescription: null,
+      });
+      commit('updateCurrentEditingScItemIndex', {
+        currentEditingScItemIndex: null,
+      });
+      commit('updateSc', {
+        sc: [],
+      });
+    },
     async putScTitle({ commit, state }, { scTitle }) {
       await lectureService.putLectureName({
         lectureId: state.scId,
         lectureName: scTitle,
       });
-      commit('updateScTitle', {
-        scTitle,
-      });
+      // commit('updateScTitle', {
+      //   scTitle,
+      // });
     },
     /**
      * @param {Date} scStartDate
@@ -447,6 +502,38 @@ export default {
       await lectureItemService.putLectureItemName({
         lectureItemId: getters.currentEditingScItem.id,
         lectureItemName: scItemTitle,
+      });
+    },
+    async getKnowledgeMapData({ state }) {
+      const res1 = await lectureService.getLectureKeywords({
+        lectureId: state.scId,
+      });
+      console.log('res1', res1); // eslint-disable-line
+      // TODO: commit actions
+      const res2 = await lectureService.getLectureKeywordRelations({
+        lectureId: state.scId,
+      });
+      console.log('res2', res2); // eslint-disable-line
+    },
+    async postKnowledgeMapData({ state }) {
+      const lectureKeywords = state.nodes.map(item => ({
+        keyword: item.name,
+        weight: Number.parseInt(item._size, 10), // eslint-disable-line
+      }));
+      console.log('lectureKeywords', lectureKeywords); // eslint-disable-line
+      await lectureService.postLectureKeywords({
+        lectureId: state.scId,
+        lectureKeywords,
+      });
+      const lectureRelations = state.edges.map(item => ({
+        node1: item.sid,
+        node2: item.tid,
+        weight: item.weight,
+      }));
+      console.log('lectureRelations', lectureRelations); // eslint-disable-line
+      await lectureService.postLectureKeywordRelations({
+        lectureId: state.scId,
+        lectureRelations,
       });
     },
   },
