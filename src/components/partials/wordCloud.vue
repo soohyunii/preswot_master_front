@@ -206,8 +206,8 @@ export default {
               .style('font-size', d => d.size + 'px')
               .style('font-family', d => d.font)
               .style('fill', (d, i) => fill(i))
-              .style('opacity', d => d.understand ? '1' : '0.1')
-              .attr('class', 'text')
+              .attr('class', d => 'text' + d.understand)
+              // .attr('class', d => d.understand ? 'text' : 'text notUnderstand')
               .attr('text-anchor', 'middle');
       text.transition()
               .duration(500)
@@ -243,6 +243,9 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
+  }
+  .text, .notUnderstand {
+    transition: .5s;
   }
 }
 </style>
