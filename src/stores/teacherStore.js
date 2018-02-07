@@ -206,6 +206,9 @@ export default {
     addEdge(state, { edge }) {
       state.edges.push(edge);
     },
+    updateEdges(state, { edge }) {
+      state.edges = edge;
+    },
     deleteNode(state, { nodeIndex }) {
       state.nodes.splice(nodeIndex, 1);
     },
