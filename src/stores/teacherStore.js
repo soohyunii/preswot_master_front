@@ -222,8 +222,8 @@ export default {
     addEdges(state, { edge }) {
       state.edges.push(edge);
     },
-    updateEdges(state, { edge }) {
-      state.edges = edge;
+    updateEdges(state, { edges }) {
+      state.edges = edges;
     },
     deleteNode(state, { nodeIndex }) {
       state.nodes.splice(nodeIndex, 1);
@@ -523,7 +523,7 @@ export default {
         lectureItemName: scItemTitle,
       });
     },
-    async getKnowledgeMapData({ state }) {
+    async getKnowledgeMapData({ state, commit }) {
       const res1 = await lectureService.getLectureKeywords({
         lectureId: state.scId,
       });
@@ -533,6 +533,14 @@ export default {
         lectureId: state.scId,
       });
       console.log('res2', res2); // eslint-disable-line
+      if (res2) {
+        const edges = res2.data.map(item => ({
+          sid: item.node1,
+          tid: item.node2,
+          weight: item.weight,
+        }));
+        commit('updateEdges', { edges });
+      }
     },
     async postKnowledgeMapData({ state }) {
       const lectureKeywords = state.nodes.map(item => ({

@@ -84,7 +84,7 @@ export default {
       set(edges) {
         const vm = this;
         if (edges) {
-          vm.updateEdges(edges);
+          vm.updateEdges({ edges });
         }
       },
     },
