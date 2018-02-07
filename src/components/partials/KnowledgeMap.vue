@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper" ref="wrapper">
     <svg style="width: 0px; height: 0px; float: left;">
       <defs>
         <marker id="m-end" markerWidth="10" markerHeight="10" refX="11" refY="3" orient="auto" markerUnits="strokeWidth" >
@@ -23,15 +23,23 @@
       </div>
       <el-row>
         <!-- TODO: translate -->
-        <el-col>
-          <el-radio-group v-model="mode">
-            <el-radio-button label="select">선택</el-radio-button>
-            <el-radio-button label="pinning">고정</el-radio-button>
-            <!-- <el-radio-button label="delete">삭제</el-radio-button> -->
-            <!-- <el-radio-button label="link">링크</el-radio-button> -->
-          </el-radio-group>
+        <el-col :span="4">
+          <el-switch
+            v-model="mode"
+            active-color="#13ce66"
+            active-value="PINNED"
+            active-text="선택 노드 고정"
+            inactive-value="NOT_PINNED"
+          >
+          </el-switch>
+        </el-col>
+        <el-col :span="4">
+          <el-button @click="save" type="primary">
+            강의 지식맵 저장
+          </el-button>
         </el-col>
       </el-row>
+      <br />
       <el-row>
         <el-col :span="12">
           <knowledge-map-node-editor></knowledge-map-node-editor>
@@ -45,7 +53,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 import D3Network from 'vue-d3-network';
 import KnowledgeMapNodeEditor from './KnowledgeMapNodeEditor';
 import KnowledgeMapEdgeEditor from './KnowledgeMapEdgeEditor';
@@ -58,13 +66,17 @@ export default {
   },
   data() {
     return {
-      mode: 'select',
+      mode: 'NOT_PINNED',
       selectedNode: {},
       nodeSize: 20,
       canvas: false,
       linkWidth: 2.5,
       fontSize: 20,
       resetFlag: true,
+      size: {
+        w: 600,
+        h: 600,
+      },
     };
   },
   computed: {
@@ -97,81 +109,31 @@ export default {
         canvas: vm.canvas,
         linkWidth: vm.linkWidth,
         fontSize: vm.fontSize,
+        size: vm.size,
       };
     },
   },
   methods: {
-    ...mapMutations('teacher', ['pinning', 'deleteNodes', 'addEdges']),
+    ...mapMutations('teacher', ['setNodesPinned']),
+    ...mapActions('teacher', ['postKnowledgeMapData']),
     nodeClick(event, node) {
       const vm = this;
 
       switch (vm.mode) {
         default:
-        case 'select': {
+        case 'NOT_PINNED': {
           vm.resetFlag = false;
-          vm.pinning({ pinned: false, node });
+          vm.setNodesPinned({ pinned: false, node });
           if (vm.selectedNode) {
             vm.selectReset(true);
           }
           vm.selectedNode[node.id] = node;
           break;
         }
-        case 'pinning': {
-          vm.pinning({ pinned: true, _color: 'red', node });
+        case 'PINNED': {
+          vm.setNodesPinned({ pinned: true, node });
           break;
         }
-        /*
-        case 'delete': {
-          vm.deleteNodes({ nodeIndex: node.index });
-          vm.inputFlag.splice(node.index, 1);
-          break;
-        }
-        case 'link': {
-          vm.resetFlag = false;
-          if (Object.keys(vm.selectedNode).length === 1) {
-            const inputSid = vm.selectedNode[Object.keys(vm.selectedNode)[0]].id;
-            const inputTid = node.id;
-            if (inputSid === inputTid) {
-              vm.$notify({
-                title: 'Same',
-                message: '쏘오쓰 타겟 다르게!!...',
-                type: 'warning',
-              });
-              break;
-            }
-            let breakFlag = false;
-            vm.validEdges.forEach((edge) => {
-              const isduplicatedEdge = edge.sid === inputSid && edge.tid === inputTid;
-              const isduplicatedReverseEdge = edge.tid === inputSid && edge.sid === inputTid;
-              if (isduplicatedEdge || isduplicatedReverseEdge) {
-                // TODO: translate
-                vm.$notify({
-                  title: 'Duplicated',
-                  message: '이미 Edge가 존재하네요...',
-                  type: 'warning',
-                });
-                breakFlag = true;
-              }
-            });
-            if (breakFlag) {
-              break;
-            }
-            const edge = {
-              sid: inputSid,
-              tid: inputTid,
-              weight: 50,
-            };
-            vm.addEdges({ edge });
-            vm.addEdgesInputFlag({ flag: { sid: false, tid: false, weight: false } });
-            vm.selectReset(true);
-          } else {
-            if (vm.selectedNode) {
-              vm.selectReset(true);
-            }
-            vm.selectedNode[node.id] = node;
-          }
-          break;
-        } */
       }
     },
     selectReset(immediately) {
@@ -190,6 +152,16 @@ export default {
       };
       return link;
     },
+    async save() {
+      const vm = this;
+      await vm.postKnowledgeMapData(); // TODO: try catch
+    },
+  },
+  updated() {
+    const vm = this;
+    vm.$nextTick(() => {
+      vm.size.w = vm.$refs.wrapper.clientWidth;
+    });
   },
 };
 </script>

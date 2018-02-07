@@ -58,18 +58,6 @@
             </el-input>
           </el-form-item>
           <i class="el-icon-loading" v-if="loading.DESCRIPTION" />
-
-
-          <!-- TODO: implement 지식맵 -->
-          <el-form-item label="지식맵" prop="scDescription">
-            <el-input
-              type="textarea"
-              :rows="3"
-              v-model="scDescription"
-              placeholder="dd"
-            >
-            </el-input>
-          </el-form-item>
         </el-form>
       </el-col>
     </el-row>
@@ -79,11 +67,11 @@
 <script>
 import { mapMutations, mapActions } from 'vuex';
 
-function delay(delayMillisec) {
-  return new Promise((fulfill) => {
-    setTimeout(fulfill, delayMillisec);
-  });
-}
+// function delay(delayMillisec) {
+//   return new Promise((fulfill) => {
+//     setTimeout(fulfill, delayMillisec);
+//   });
+// }
 
 export default {
   name: 'ScEditor',
@@ -182,50 +170,50 @@ export default {
       'putScEndDate',
       'putScType',
       'putScDescription',
+      'putSc',
     ]),
     async onChange(type) {
       const vm = this;
       try {
         vm.loading[type] = true;
-        switch (type) {
-          case 'TITLE': {
-            await delay(1500); // TODO: delete
-            await vm.putScTitle({
-              scTitle: vm.scTitle,
-            });
-            break;
-          }
-          case 'START_DATE': {
-            // TODO: reset scStartDate if scEndDate not null && scStartDate < scEndDate
-            await vm.putScStartDate({
-              scStartDate: vm.scStartDate,
-            });
-            break;
-          }
-          case 'END_DATE': {
-            // TODO: reject if scEndDate && scStartDate < scEndDate
-            await vm.putScEndDate({
-              scEndDate: vm.scEndDate,
-            });
-            break;
-          }
-          case 'TYPE': {
-            await delay(1500);
-            await vm.putScType({
-              scType: vm.scType,
-            });
-            break;
-          }
-          case 'DESCRIPTION': {
-            await vm.putScDescription({
-              scDescription: vm.scDescription,
-            });
-            break;
-          }
-          default: {
-            throw new Error(`not defined type ${type}`);
-          }
-        }
+        await vm.putSc();
+        // switch (type) {
+        //   case 'TITLE': {
+        //     await vm.putScTitle({
+        //       scTitle: vm.scTitle,
+        //     });
+        //     break;
+        //   }
+        //   case 'START_DATE': {
+        //     // TODO: reset scStartDate if scEndDate not null && scStartDate < scEndDate
+        //     await vm.putScStartDate({
+        //       scStartDate: vm.scStartDate,
+        //     });
+        //     break;
+        //   }
+        //   case 'END_DATE': {
+        //     // TODO: reject if scEndDate && scStartDate < scEndDate
+        //     await vm.putScEndDate({
+        //       scEndDate: vm.scEndDate,
+        //     });
+        //     break;
+        //   }
+        //   case 'TYPE': {
+        //     await vm.putScType({
+        //       scType: vm.scType,
+        //     });
+        //     break;
+        //   }
+        //   case 'DESCRIPTION': {
+        //     await vm.putScDescription({
+        //       scDescription: vm.scDescription,
+        //     });
+        //     break;
+        //   }
+        //   default: {
+        //     throw new Error(`not defined type ${type}`);
+        //   }
+        // }
       } catch (error) {
         vm.$notify({
           title: '저장 실패',

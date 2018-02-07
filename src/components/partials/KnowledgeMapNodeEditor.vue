@@ -127,7 +127,7 @@ export default {
           break;
         }
         case 'delete': {
-          vm.deleteNodes({ nodeIndex: index });
+          vm.deleteNode({ nodeIndex: index });
           vm.inputFlag.splice(index, 1);
           break;
         }

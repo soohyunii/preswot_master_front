@@ -19,7 +19,7 @@
       </el-col>
       <el-col align="center" :span="6">
         <el-button @click="onClick('강의자료')" style="width: 100%;">
-          <i class="el-icon-info"></i><br />{{$t('ITEM.LECTURE_DATA')}}
+          <i class="el-icon-info"></i><br />{{$t('ITEM.MATERIAL')}}
         </el-button>
       </el-col>
     </el-row>
@@ -29,7 +29,7 @@
         <hr/>
       </el-col>
       <el-col :span="10" align="center">
-        {{$t('ADDER.SEQUENCE_AUTHORING_TOOL')}}
+        {{$t('ADDER.ITEM_ADDER')}}
       </el-col>
       <el-col :span="7">
         <hr/>
