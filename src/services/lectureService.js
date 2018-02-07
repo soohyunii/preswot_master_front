@@ -1,3 +1,4 @@
+import isNil from 'lodash.isnil';
 import http from './http';
 
 /**
@@ -22,6 +23,33 @@ export default {
     lectureId,
   }) {
     return http.delete(`/lectures/${lectureId}`);
+  },
+  putLecture({
+    lectureId,
+    type,
+    name,
+    description,
+    location,
+    startDate,
+    endDate,
+    opened,
+    teacherEmail,
+  }) {
+    const param = {};
+    /* eslint-disable no-unused-expressions */
+    const oa = Object.assign;
+    !isNil(type) ? oa(param, { type }) : null;
+    !isNil(name) ? oa(param, { name }) : null;
+    !isNil(description) ? oa(param, { description }) : null;
+    !isNil(location) ? oa(param, { location }) : null;
+    !isNil(startDate) ? oa(param, { intended_start: startDate }) : null;
+    !isNil(endDate) ? oa(param, { intended_end: endDate }) : null;
+    !isNil(opened) ? oa(param, { opened }) : null;
+    !isNil(teacherEmail) ? oa(param, { teacher_email: teacherEmail }) : null;
+    /* eslint-enable no-unused-expressions */
+
+    // console.log('param', param);
+    return http.put(`/lectures/${lectureId}`, param);
   },
   putLectureName({
     lectureId,

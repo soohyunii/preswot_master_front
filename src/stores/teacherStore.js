@@ -376,6 +376,29 @@ export default {
       });
       return res.data.lecture_id;
     },
+    async putSc({
+      state,
+      // commit,
+    }) {
+      const type = utils.convertScType(state.scType);
+      console.log('type', type);
+      if (type instanceof Error) {
+        throw type;
+      }
+      await lectureService.putLecture({
+        lectureId: state.scId,
+        name: state.scTitle,
+        description: state.scDescription,
+        startDate: state.scStartDate,
+        endDate: state.scEndDate,
+        // TODO: add state.scLocation
+        location: null,
+        // TODO: add state.scIsOpen,
+        opened: true,
+        teacherEmail: utils.getEmailFromJwt(),
+        type,
+      });
+    },
     async deleteSc({ state, commit }) {
       await lectureService.deleteLecture({
         lectureId: state.scId,
@@ -411,9 +434,9 @@ export default {
         lectureId: state.scId,
         lectureName: scTitle,
       });
-      commit('updateScTitle', {
-        scTitle,
-      });
+      // commit('updateScTitle', {
+      //   scTitle,
+      // });
     },
     /**
      * @param {Date} scStartDate

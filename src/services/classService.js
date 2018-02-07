@@ -6,7 +6,6 @@ export default {
   fetchingMyClassList() {
     return http.get('/classes/my');
   },
-  // TODO: add param
   createClass({
     title,
     description,

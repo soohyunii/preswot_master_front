@@ -30,8 +30,17 @@ export default {
     // console.log('encodedPayload', encodedPayload);
     // const payload = JSON.parse(atob(encodedPayload));
     // console.log('payload', payload);
+    // TODO: try cath jwtDecode
     const payload = jwtDecode(jwt);
     return Date.now() < payload.exp;
+  },
+  getEmailFromJwt() {
+    const jwt = this.getJwtFromLocalStorage();
+    if (jwt.length === 0) {
+      return null;
+    }
+    // TODO: try cath jwtDecode
+    return jwtDecode(jwt).email_id;
   },
   formatDate(d) {
     // console.log('formatDate', d, d.toLocaleDateString('en-US').split('-'));
