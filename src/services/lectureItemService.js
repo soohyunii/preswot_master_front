@@ -18,7 +18,7 @@ export default {
     startTime,
     endTime,
     order,
-    // result, // TODO: get from user
+    result, // TODO: get from user
     // opened, // TODO: get from user? 이건 좀 애매한데
   }) {
     const param = {};
@@ -28,9 +28,9 @@ export default {
     utils.assignIfNotNil(param, { startTime }, 'start_time');
     utils.assignIfNotNil(param, { endTime }, 'end_time');
     utils.assignIfNotNil(param, { order });
+    utils.assignIfNotNil(param, { result });
     // TODO: rename prepare_lesson_review
     Object.assign(param, {
-      result: 1,
       opened: 3, // TODO: 동일이형이랑 얘기하고 지우려면 지우자
     });
     return http.put(`lecture-items/${lectureItemId}`, param);

@@ -360,8 +360,8 @@ export default {
           activeStartOffsetSec: scItem.time,
           activeEndOffsetSec: scItem.time + scItem.interval,
           order: utils.convertScItemOrder(scItem.order),
-          isResultVisible: scItem.result,
-          opened: 3,
+          isResultVisible: utils.convertBoolean(scItem.result),
+          opened: scItem.opened,
         };
       });
       commit('updateSc', {
@@ -458,6 +458,7 @@ export default {
         startTime: scItem.activeStartOffsetSec,
         endTime: scItem.activeEndOffsetSec,
         order: utils.convertScItemOrder(scItem.order),
+        result: utils.convertBoolean(scItem.isResultVisible),
       });
     },
     async getKnowledgeMapData({ state }) {
