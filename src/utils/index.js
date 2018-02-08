@@ -66,6 +66,15 @@ export default {
     }
     return new Error(`not defined scItemType ${scItemType}`);
   },
+  convertScItemOrder(scItemOrder) {
+    const mapping = ['예습', '본강의', '복습'];
+    if (typeof scItemOrder === 'number') {
+      return mapping[scItemOrder];
+    } else if (typeof scItemOrder === 'string') {
+      return mapping.indexOf(scItemOrder);
+    }
+    return new Error(`not defined scItemOrder ${scItemOrder}`);
+  },
   isValidEmail(emailString) {
     return re.test(emailString);
   },
