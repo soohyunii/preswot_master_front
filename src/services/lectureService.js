@@ -37,8 +37,6 @@ export default {
   }) {
     const param = {};
 
-    console.log('startDate', startDate);
-
     utils.assignIfNotNil(param, { name });
     utils.assignIfNotNil(param, { type });
     utils.assignIfNotNil(param, { name });
@@ -49,7 +47,7 @@ export default {
     utils.assignIfNotNil(param, { opened });
     utils.assignIfNotNil(param, { teacherEmail }, 'teacher_email');
 
-    console.log('param', param);
+    // console.log('param', param);
     return http.put(`/lectures/${lectureId}`, param);
   },
   getLectureKeywords({

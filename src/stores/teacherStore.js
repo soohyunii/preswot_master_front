@@ -351,7 +351,7 @@ export default {
       });
       // eslint-disable-next-line
       const sc = res.data.lecture_items.map((scItem) => {
-        console.log('getSc scItem', scItem);
+        // console.log('getSc scItem', scItem);
         return {
           id: scItem.lecture_item_id,
           title: scItem.name,
@@ -386,7 +386,6 @@ export default {
       // commit,
     }) {
       const type = utils.convertScType(state.scType);
-      console.log('type', type);
       if (type instanceof Error) {
         throw type;
       }
@@ -450,7 +449,7 @@ export default {
     },
     async putScItem({ getters }) {
       const scItem = getters.currentEditingScItem;
-      console.log('putScItem scItem', scItem);
+      // console.log('putScItem scItem', scItem);
       await lectureItemService.putLectureItem({
         lectureItemId: getters.currentEditingScItem.id,
         name: scItem.title,
@@ -465,11 +464,16 @@ export default {
       const res1 = await lectureService.getLectureKeywords({
         lectureId: state.scId,
       });
+      // TODO: delete
+      // eslint-disable-next-line
       console.log('res1', res1.data);
       // TODO: commit actions
+
       const res2 = await lectureService.getLectureKeywordRelations({
         lectureId: state.scId,
       });
+      // TODO: delete
+      // eslint-disable-next-line
       console.log('res2', res2.data);
     },
     async postKnowledgeMapData({ state }) {
@@ -477,7 +481,7 @@ export default {
         keyword: item.name,
         weight: Number.parseInt(item._size, 10), // eslint-disable-line
       }));
-      console.log('lectureKeywords', lectureKeywords);
+      // console.log('lectureKeywords', lectureKeywords);
       await lectureService.postLectureKeywords({
         lectureId: state.scId,
         lectureKeywords,
@@ -487,7 +491,7 @@ export default {
         node2: item.tid,
         weight: item.weight,
       }));
-      console.log('lectureRelations', lectureRelations);
+      // console.log('lectureRelations', lectureRelations);
       await lectureService.postLectureKeywordRelations({
         lectureId: state.scId,
         lectureRelations,

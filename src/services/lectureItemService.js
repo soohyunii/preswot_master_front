@@ -34,7 +34,7 @@ export default {
     Object.assign(param, {
       opened: 3, // TODO: 동일이형이랑 얘기하고 지우려면 지우자
     });
-    console.log('putLectureItem param', param);
+    // console.log('putLectureItem param', param);
     return http.put(`lecture-items/${lectureItemId}`, param);
   },
   putLectureItemName({
