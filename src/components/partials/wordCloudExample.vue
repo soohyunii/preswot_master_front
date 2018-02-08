@@ -32,8 +32,14 @@ export default {
       vm.userUnderstandWordCloud = !vm.userUnderstandWordCloud;
       const notUnderstandClass = document.getElementsByClassName('notUnderstand');
       const understandClass = document.getElementsByClassName('understand');
+      if (vm.notUnderstandWordColor.length === 0) {
+        for (let i = 0; i < notUnderstandClass.length; i += 1) {
+          vm.notUnderstandWordColor.push(notUnderstandClass.item(i).style.fill);
+        }
+      }
       for (let i = 0; i < notUnderstandClass.length; i += 1) {
         notUnderstandClass.item(i).style.opacity = vm.userUnderstandWordCloud ? '0.1' : '1';
+        notUnderstandClass.item(i).style.fill = vm.userUnderstandWordCloud ? 'gray' : vm.notUnderstandWordColor[i];
       }
       for (let i = 0; i < understandClass.length; i += 1) {
         understandClass.item(i).style.textShadow = vm.userUnderstandWordCloud ? '0 0 10px #000' : '';
@@ -62,6 +68,7 @@ export default {
   data() {
     return {
       userUnderstandWordCloud: false,
+      notUnderstandWordColor: [],
     };
   },
 };
