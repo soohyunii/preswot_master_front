@@ -226,6 +226,15 @@ export default {
     updateEdges(state, { edges }) {
       state.edges = edges;
     },
+    updateEdgeId(state, { oldNodeId, newNodeId }) {
+      state.edges.forEach((item, index) => {
+        if (item.tid === oldNodeId) {
+          state.edges[index].tid = newNodeId;
+        } else if (item.sid === oldNodeId) {
+          state.edges[index].sid = newNodeId;
+        }
+      });
+    },
     deleteNode(state, { nodeIndex }) {
       state.nodes.splice(nodeIndex, 1);
     },

@@ -75,7 +75,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['pushNode', 'updateNodes', 'deleteNode', 'assignCurrentEditingNode', 'assignCurrentEditingNodeIndex']),
+    ...mapMutations('teacher', ['pushNode', 'updateNodes', 'deleteNode', 'assignCurrentEditingNode', 'assignCurrentEditingNodeIndex', 'updateEdgeId']),
     onClick(type, index) {
       const vm = this;
       switch (type) {
@@ -95,6 +95,7 @@ export default {
         }
         case 'setNodeName': {
           const node = vm.nodes[index];
+          const oldNodeId = vm.nodes[index].id;
           if (node.name === '' || node.name === '\n') {
             // TODO: translate
             vm.$notify({
@@ -112,6 +113,10 @@ export default {
             });
             break;
           }
+          vm.updateEdgeId({
+            oldNodeId,
+            newNodeId: vm.nodes[index].name,
+          });
           vm.assignCurrentEditingNode({
             currentEditingNode: {
               id: vm.nodes[index].name,
