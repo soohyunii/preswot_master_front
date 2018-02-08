@@ -19,34 +19,31 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations, mapGetters } from 'vuex';
 
 
 export default {
   name: 'Upload',
-  props: ['type'],
+  props: ['from'],
   computed: {
     ...mapState('teacher', ['sc']),
+    ...mapGetters('teacher', ['currentEditingScItem']),
     fileList: {
       get() {
         const vm = this;
-        switch (vm.type.from) {
+        switch (vm.from) {
           default:
-            throw new Error(`not defined type ${vm.type.from}`);
+            throw new Error(`not defined from ${vm.type.from}`);
           case 'ScMaterialEditor': {
             // for fileList from ScMaterialEditor
-            const index = vm.type.currentEditingScItemIndex;
-            if (index !== null && index > -1) {
-              // FIXME: replace with currentEditingScItem
-              return vm.sc[vm.type.currentEditingScItemIndex].fileList || [];
-            }
-            return [];
+            const scItem = vm.currentEditingScItem;
+            return scItem ? scItem.fileList : [];
           }
         }
       },
       set(fileList) {
         const vm = this;
-        switch (vm.type.from) {
+        switch (vm.from) {
           default:
           case 'ScMaterialEditor': {
             // for fileList of ScMaterialEditor
