@@ -245,7 +245,7 @@ export default {
     left: 0;
   }
   .text, .notUnderstand {
-    transition: .5s;
+    transition: .4s;
   }
 }
 </style>
