@@ -15,6 +15,7 @@
               <el-radio-button label="복습"></el-radio-button>
             </el-radio-group>
           </el-form-item>
+          <i class="el-icon-loading" v-if="loading.ORDER" />
 
           <el-form-item label="활성화 시각">
             <el-date-picker
@@ -24,6 +25,7 @@
             >
             </el-date-picker>
           </el-form-item>
+          <i class="el-icon-loading" v-if="loading.START_DATE" />
 
           <el-form-item label="비활성화 시각">
             <el-date-picker
@@ -38,6 +40,8 @@
               <el-radio-button :label="false">계속 활성화</el-radio-button>
             </el-radio-group>
           </el-form-item>
+          <i class="el-icon-loading" v-if="loading.END_DATE" />
+
 
           <el-form-item label="선지별 선택 비율">
             <el-radio-group v-model="scItemIsResultVisible" @change="onChange('RESULT')">
@@ -45,6 +49,8 @@
               <el-radio-button :label="false">숨기기</el-radio-button>
             </el-radio-group>
           </el-form-item>
+          <i class="el-icon-loading" v-if="loading.RESULT" />
+
         </el-form>
       </el-col>
     </el-row>
@@ -75,6 +81,7 @@ export default {
       if (!label) {
         vm.scItemEndDate = null;
       }
+      vm.onChange('END_DATE');
     },
     async onChange(type) {
       const vm = this;
