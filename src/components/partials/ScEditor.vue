@@ -177,43 +177,6 @@ export default {
       try {
         vm.loading[type] = true;
         await vm.putSc();
-        // switch (type) {
-        //   case 'TITLE': {
-        //     await vm.putScTitle({
-        //       scTitle: vm.scTitle,
-        //     });
-        //     break;
-        //   }
-        //   case 'START_DATE': {
-        //     // TODO: reset scStartDate if scEndDate not null && scStartDate < scEndDate
-        //     await vm.putScStartDate({
-        //       scStartDate: vm.scStartDate,
-        //     });
-        //     break;
-        //   }
-        //   case 'END_DATE': {
-        //     // TODO: reject if scEndDate && scStartDate < scEndDate
-        //     await vm.putScEndDate({
-        //       scEndDate: vm.scEndDate,
-        //     });
-        //     break;
-        //   }
-        //   case 'TYPE': {
-        //     await vm.putScType({
-        //       scType: vm.scType,
-        //     });
-        //     break;
-        //   }
-        //   case 'DESCRIPTION': {
-        //     await vm.putScDescription({
-        //       scDescription: vm.scDescription,
-        //     });
-        //     break;
-        //   }
-        //   default: {
-        //     throw new Error(`not defined type ${type}`);
-        //   }
-        // }
       } catch (error) {
         vm.$notify({
           title: '저장 실패',

@@ -1,5 +1,5 @@
-import isNil from 'lodash.isnil';
 import http from './http';
+import utils from '../utils';
 
 /**
  * service 관련 documentation은 구글 스프레드 시트를 참조하는게 빠름!
@@ -36,19 +36,20 @@ export default {
     teacherEmail,
   }) {
     const param = {};
-    /* eslint-disable no-unused-expressions */
-    const oa = Object.assign;
-    !isNil(type) ? oa(param, { type }) : null;
-    !isNil(name) ? oa(param, { name }) : null;
-    !isNil(description) ? oa(param, { description }) : null;
-    !isNil(location) ? oa(param, { location }) : null;
-    !isNil(startDate) ? oa(param, { intended_start: startDate }) : null;
-    !isNil(endDate) ? oa(param, { intended_end: endDate }) : null;
-    !isNil(opened) ? oa(param, { opened }) : null;
-    !isNil(teacherEmail) ? oa(param, { teacher_email: teacherEmail }) : null;
-    /* eslint-enable no-unused-expressions */
 
-    // console.log('param', param);
+    console.log('startDate', startDate);
+
+    utils.assignIfNotNil(param, { name });
+    utils.assignIfNotNil(param, { type });
+    utils.assignIfNotNil(param, { name });
+    utils.assignIfNotNil(param, { description });
+    utils.assignIfNotNil(param, { location });
+    utils.assignIfNotNil(param, { startDate }, 'intended_start');
+    utils.assignIfNotNil(param, { endDate }, 'intended_end');
+    utils.assignIfNotNil(param, { opened });
+    utils.assignIfNotNil(param, { teacherEmail }, 'teacher_email');
+
+    console.log('param', param);
     return http.put(`/lectures/${lectureId}`, param);
   },
   getLectureKeywords({

@@ -338,10 +338,10 @@ export default {
         scTitle: res.data.name,
       });
       commit('updateScStartDate', {
-        scStartDate: res.data.intended_start,
+        scStartDate: res.data.intended_start ? new Date(res.data.intended_start) : null,
       });
       commit('updateScEndDate', {
-        scEndDate: res.data.intended_end,
+        scEndDate: res.data.intended_end ? new Date(res.data.intended_end) : null,
       });
       commit('updateScType', {
         scType: utils.convertScType(res.data.type),
@@ -351,12 +351,17 @@ export default {
       });
       // eslint-disable-next-line
       const sc = res.data.lecture_items.map((scItem) => {
+        console.log('getSc scItem', scItem);
         return {
           id: scItem.lecture_item_id,
           title: scItem.name,
           description: scItem.description,
           type: utils.convertScItemType(scItem.type),
-          // TODO: map other keys
+          activeStartOffsetSec: scItem.time,
+          activeEndOffsetSec: scItem.time + scItem.interval,
+          order: scItem.order,
+          isResultVisible: scItem.result,
+          opened: 3,
         };
       });
       commit('updateSc', {
@@ -443,10 +448,16 @@ export default {
       });
       return res.data.lecture_item_id;
     },
-    async putScItemTitle({ getters }, { scItemTitle }) {
-      await lectureItemService.putLectureItemName({
+    async putScItem({ getters }) {
+      const scItem = getters.currentEditingScItem;
+      console.log('putScItem scItem', scItem);
+      await lectureItemService.putLectureItem({
         lectureItemId: getters.currentEditingScItem.id,
-        lectureItemName: scItemTitle,
+        name: scItem.title,
+        description: scItem.description,
+        startTime: scItem.activeStartOffsetSec,
+        endTime: scItem.activeEndOffsetSec,
+        order: scItem.order,
       });
     },
     async getKnowledgeMapData({ state }) {

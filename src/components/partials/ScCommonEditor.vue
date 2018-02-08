@@ -18,7 +18,7 @@
               type="textarea"
               :rows="3"
               v-model.lazy="scItemDescription"
-              placeholder="dd"
+              @change="onChange('DESCRIPTION')"
             >
             </el-input>
           </el-form-item>
@@ -92,27 +92,13 @@ export default {
   methods: {
     ...mapMutations('teacher', ['assignCurrentEditingScItem']),
     ...mapActions('teacher', [
-      'putScItemTitle',
+      'putScItem',
     ]),
     async onChange(type) {
       const vm = this;
       try {
         vm.loading[type] = true;
-        switch (type) {
-          case 'TITLE': {
-            await vm.putScItemTitle({
-              scItemTitle: vm.scItemTitle,
-            });
-            break;
-          }
-          case 'DESCRIPTION': {
-            // TODO: putScItem으로 통일되면 챱
-            break;
-          }
-          default: {
-            throw new Error(`not defined scItemType ${type}`);
-          }
-        }
+        await vm.putScItem();
       } catch (error) {
         vm.$notify({
           title: '저장 실패',
