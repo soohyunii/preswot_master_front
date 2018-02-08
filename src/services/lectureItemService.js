@@ -37,12 +37,9 @@ export default {
     // console.log('putLectureItem param', param);
     return http.put(`lecture-items/${lectureItemId}`, param);
   },
-  putLectureItemName({
+  deleteLectureItem({
     lectureItemId,
-    lectureItemName,
   }) {
-    return http.put(`/lecture-items/${lectureItemId}/name`, {
-      value: lectureItemName,
-    });
+    return http.delete(`/lecture-items/${lectureItemId}`);
   },
 };
