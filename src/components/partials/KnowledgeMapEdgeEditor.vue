@@ -76,10 +76,21 @@ export default {
     };
   },
   computed: {
-    ...mapState('teacher', ['nodes', 'edges']),
+    ...mapState('teacher', ['nodes']),
+    edges: {
+      get() {
+        return this.$store.state.teacher.edges;
+      },
+      set(edges) {
+        const vm = this;
+        if (edges) {
+          vm.updateEdges({ edges });
+        }
+      },
+    },
   },
   methods: {
-    ...mapMutations('teacher', ['addEdge', 'deleteEdge']),
+    ...mapMutations('teacher', ['pushEdge', 'updateEdges', 'deleteEdge']),
     isValidEdge(sidInputFlag, tidInputFlag, index) {
       const vm = this;
       let isValid = true;
@@ -156,7 +167,7 @@ export default {
       const vm = this;
       switch (type) {
         case 'addEdge': {
-          vm.addEdge({ edge: { sid: '', tid: '', weight: 50 } });
+          vm.pushEdge({ edge: { sid: '', tid: '', weight: 50 } });
           vm.inputFlag.push({ sid: true, tid: true, weight: false });
           break;
         }

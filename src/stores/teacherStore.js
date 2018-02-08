@@ -51,6 +51,7 @@ export default {
      * @var {Array[scItem]} sc: shorthand for Scenario
      * @var {number} currentEditingScItemIndex: 현재 생성/편집 중인 시나리오 아이템 인덱스
      * @var {number} currentTeachingScItemIndex: 강의 중에 현재 진행되고 있는 시나리오 아이템 인덱스
+     * @var {number} currentEditingNodeIndex: 현재 편집 중인 노드 인덱스
      * @var {Array[node]} 시나리오 지식맵에서의 키워드
      * @var {Array[edge]} 시나리오 지식맵에서의 릴레이션
      */
@@ -64,6 +65,7 @@ export default {
     sc: [],
     currentEditingScItemIndex: null,
     currentTeachingScItemIndex: null,
+    currentEditingNodeIndex: null,
     nodes: [],
     edges: [],
     // //////////////////////////절취선////////////////////////// //
@@ -123,6 +125,9 @@ export default {
     currentTeachingScItem(state) {
       return state.sc[state.currentTeachingScItemIndex];
     },
+    currentEditingNode(state) {
+      return state.nodes[state.currentEditingNodeIndex];
+    },
     DEBUGscenarioServerWillReceive(state) {
       // TODO: delete
       const res = {};
@@ -180,7 +185,7 @@ export default {
         state.nodes[index].fy = null;
       }
     },
-    addNode(state, { node }) {
+    pushNode(state, { node }) {
       const lastNode = state.nodes[state.nodes.length - 1];
       let x;
       let y;
@@ -195,6 +200,7 @@ export default {
         value: node.value,
         id: node.id,
         name: '\n',
+        _cssClass: '',
         _size: node._size, // eslint-disable-line
         x,
         y,
@@ -202,8 +208,32 @@ export default {
       };
       state.nodes.push(createNode);
     },
-    addEdge(state, { edge }) {
+    assignCurrentEditingNode(state, { currentEditingNode }) {
+      Object.assign(
+        state.nodes[state.currentEditingNodeIndex],
+        currentEditingNode,
+      );
+    },
+    updateNodes(state, { nodes }) {
+      state.nodes = nodes;
+    },
+    assignCurrentEditingNodeIndex(state, { currentEditingNodeIndex }) {
+      state.currentEditingNodeIndex = currentEditingNodeIndex;
+    },
+    pushEdge(state, { edge }) {
       state.edges.push(edge);
+    },
+    updateEdges(state, { edges }) {
+      state.edges = edges;
+    },
+    updateEdgeId(state, { oldNodeId, newNodeId }) {
+      state.edges.forEach((item, index) => {
+        if (item.tid === oldNodeId) {
+          state.edges[index].tid = newNodeId;
+        } else if (item.sid === oldNodeId) {
+          state.edges[index].sid = newNodeId;
+        }
+      });
     },
     deleteNode(state, { nodeIndex }) {
       state.nodes.splice(nodeIndex, 1);
@@ -467,28 +497,37 @@ export default {
         lectureItemId: scItem.id,
       });
     },
-    async getKnowledgeMapData({ state }) {
+    async getKnowledgeMapData({ state, commit }) {
       const res1 = await lectureService.getLectureKeywords({
         lectureId: state.scId,
       });
-      // TODO: delete
-      // eslint-disable-next-line
-      console.log('res1', res1.data);
-      // TODO: commit actions
-
+      console.log('res1', res1); // eslint-disable-line
+      const nodes = res1.data.map(item => ({
+        value: item.keyword,
+        id: item.keyword,
+        name: item.keyword,
+        _size: item.weight,
+      }));
+      commit('updateNodes', { nodes });
       const res2 = await lectureService.getLectureKeywordRelations({
         lectureId: state.scId,
       });
-      // TODO: delete
-      // eslint-disable-next-line
-      console.log('res2', res2.data);
+      console.log('res2', res2); // eslint-disable-line
+      if (res2) {
+        const edges = res2.data.map(item => ({
+          sid: item.node1,
+          tid: item.node2,
+          weight: item.weight,
+        }));
+        commit('updateEdges', { edges });
+      }
     },
     async postKnowledgeMapData({ state }) {
       const lectureKeywords = state.nodes.map(item => ({
         keyword: item.name,
         weight: Number.parseInt(item._size, 10), // eslint-disable-line
       }));
-      // console.log('lectureKeywords', lectureKeywords);
+      console.log('lectureKeywords', lectureKeywords); // eslint-disable-line
       await lectureService.postLectureKeywords({
         lectureId: state.scId,
         lectureKeywords,
@@ -498,7 +537,7 @@ export default {
         node2: item.tid,
         weight: item.weight,
       }));
-      // console.log('lectureRelations', lectureRelations);
+      console.log('lectureRelations', lectureRelations); // eslint-disable-line
       await lectureService.postLectureKeywordRelations({
         lectureId: state.scId,
         lectureRelations,

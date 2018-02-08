@@ -166,10 +166,7 @@ export default {
 };
 </script>
 
-<style src="vue-d3-network/dist/vue-d3-network.css"></style>
 <style lang="scss" scoped>
-// @import "~vue-d3-network/dist/vue-d3-network.css";
-
 .wrapper {
 
   .network {
@@ -180,5 +177,61 @@ export default {
   #m-end path, #m-start{
     fill: rgba(18, 120, 98, 0.8);
   }
+
+  .test {
+    fill: rgb(255, 0, 0);
+  }
+}
+</style>
+
+<style lang="scss">
+.net {
+    height: 100%;
+    margin: 0;
+}
+.node {
+    stroke: rgba(18, 120, 98, .7);
+    stroke-width: 3px;
+    transition: fill .5s ease;
+    fill: #dcfaf3
+}
+.node.import {
+  stroke: rgba(255, 0, 0, .7);
+}
+.node.selected {
+    stroke: #caa455;
+}
+.node.pinned {
+    stroke: rgba(58, 56, 190, 0.6);
+}
+.link {
+    stroke: rgba(18, 120, 98, .3);
+}
+.link, .node {
+    stroke-linecap: round;
+}
+.link:hover, .node:hover {
+    stroke: #be385d;
+    stroke-width: 5px
+}
+.link.selected {
+    stroke: rgba(202, 164, 85, .6);
+}
+.curve {
+    fill: none;
+}
+.link-label, .node-label {
+    fill: #127862;
+}
+.link-label {
+    -webkit-transform: translateY(-.5em);
+    -ms-transform: translateY(-.5em);
+    transform: translateY(-.5em);
+    text-anchor: middle;
+}
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 </style>
