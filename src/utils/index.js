@@ -1,6 +1,9 @@
 import getLocale from 'browser-locale';
 import jwtDecode from 'jwt-decode';
 import moment from 'moment';
+import isNil from 'lodash.isnil';
+import isBoolean from 'lodash.isboolean';
+import isNumber from 'lodash.isnumber';
 
 // eslint-disable-next-line
 const re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
@@ -65,7 +68,32 @@ export default {
     }
     return new Error(`not defined scItemType ${scItemType}`);
   },
+  convertScItemOrder(scItemOrder) {
+    const mapping = ['예습', '본강의', '복습'];
+    if (typeof scItemOrder === 'number') {
+      return mapping[scItemOrder];
+    } else if (typeof scItemOrder === 'string') {
+      return mapping.indexOf(scItemOrder);
+    }
+    return new Error(`not defined scItemOrder ${scItemOrder}`);
+  },
+  convertBoolean(b) {
+    if (isBoolean(b)) {
+      return b === true ? 1 : 0;
+    } else if (isNumber(b)) {
+      return b === 1;
+    }
+    return new Error(`not defined b ${b}`);
+  },
   isValidEmail(emailString) {
     return re.test(emailString);
+  },
+  assignIfNotNil(p, variable, newKey) {
+    const originalKey = Object.keys(variable)[0];
+    const key = newKey || originalKey;
+    // console.log('assignIfNotNil', key, variable);
+    if (!isNil(variable[originalKey])) {
+      Object.assign(p, { [key]: variable[originalKey] });
+    }
   },
 };

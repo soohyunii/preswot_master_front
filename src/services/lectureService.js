@@ -1,5 +1,5 @@
-import isNil from 'lodash.isnil';
 import http from './http';
+import utils from '../utils';
 
 /**
  * service 관련 documentation은 구글 스프레드 시트를 참조하는게 빠름!
@@ -36,60 +36,19 @@ export default {
     teacherEmail,
   }) {
     const param = {};
-    /* eslint-disable no-unused-expressions */
-    const oa = Object.assign;
-    !isNil(type) ? oa(param, { type }) : null;
-    !isNil(name) ? oa(param, { name }) : null;
-    !isNil(description) ? oa(param, { description }) : null;
-    !isNil(location) ? oa(param, { location }) : null;
-    !isNil(startDate) ? oa(param, { intended_start: startDate }) : null;
-    !isNil(endDate) ? oa(param, { intended_end: endDate }) : null;
-    !isNil(opened) ? oa(param, { opened }) : null;
-    !isNil(teacherEmail) ? oa(param, { teacher_email: teacherEmail }) : null;
-    /* eslint-enable no-unused-expressions */
+
+    utils.assignIfNotNil(param, { name });
+    utils.assignIfNotNil(param, { type });
+    utils.assignIfNotNil(param, { name });
+    utils.assignIfNotNil(param, { description });
+    utils.assignIfNotNil(param, { location });
+    utils.assignIfNotNil(param, { startDate }, 'intended_start');
+    utils.assignIfNotNil(param, { endDate }, 'intended_end');
+    utils.assignIfNotNil(param, { opened });
+    utils.assignIfNotNil(param, { teacherEmail }, 'teacher_email');
 
     // console.log('param', param);
     return http.put(`/lectures/${lectureId}`, param);
-  },
-  putLectureName({
-    lectureId,
-    lectureName,
-  }) {
-    return http.put(`/lectures/${lectureId}/name`, {
-      value: lectureName,
-    });
-  },
-  putLectureIntendedStart({
-    lectureId,
-    lectureStartDate,
-  }) {
-    return http.put(`/lectures/${lectureId}/intended_start`, {
-      value: lectureStartDate,
-    });
-  },
-  putLectureIntendedEnd({
-    lectureId,
-    lectureEndDate,
-  }) {
-    return http.put(`/lectures/${lectureId}/intended_end`, {
-      value: lectureEndDate.toISOString(),
-    });
-  },
-  putLectureType({
-    lectureId,
-    lectureType,
-  }) {
-    return http.put(`/lectures/${lectureId}/type`, {
-      value: lectureType,
-    });
-  },
-  putLectureDescription({
-    lectureId,
-    lectureDescrption,
-  }) {
-    return http.put(`/lectures/${lectureId}/description`, {
-      value: lectureDescrption,
-    });
   },
   getLectureKeywords({
     lectureId,
@@ -116,5 +75,12 @@ export default {
     return http.post(`/lectures/${lectureId}/keyword-relations`, {
       data: lectureRelations,
     });
+  },
+  deleteLectureKeywordRelation({
+    lectureId,
+    node1,
+    node2,
+  }) {
+    return http.delete(`/lecture/${lectureId}/${node1}/${node2}`);
   },
 };

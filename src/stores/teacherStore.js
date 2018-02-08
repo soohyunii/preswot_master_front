@@ -258,7 +258,7 @@ export default {
     },
     pushScItem(state, { type, id }) {
       const title = null;
-      const order = null; // 예습? 본강의? 복습?
+      const order = 0; // 예습 = 0 / 본강의 = 1 / 복습 = 2
       const description = null;
       const activeStartOffsetSec = null; // 강의 활성화 시각 기준으로 몇초 뒤에 활성화되냐
       const activeEndOffsetSec = null; // 강의 활성화 시각 기준으로 몇초 뒤에 비활성화되냐
@@ -294,7 +294,7 @@ export default {
       state.currentTeachingScItemIndex = index;
     },
     // FIXME: rename `lectureELementIndex` with `currentEditingScItemIndex`
-    deleteScItem(state, { lectureElementIndex }) {
+    removeScItem(state, { lectureElementIndex }) {
       const isCurrentEditingItem =
         state.currentEditingScItemIndex === lectureElementIndex;
       const isLastItem = lectureElementIndex === state.sc.length - 1;
@@ -368,10 +368,10 @@ export default {
         scTitle: res.data.name,
       });
       commit('updateScStartDate', {
-        scStartDate: res.data.intended_start,
+        scStartDate: res.data.intended_start ? new Date(res.data.intended_start) : null,
       });
       commit('updateScEndDate', {
-        scEndDate: res.data.intended_end,
+        scEndDate: res.data.intended_end ? new Date(res.data.intended_end) : null,
       });
       commit('updateScType', {
         scType: utils.convertScType(res.data.type),
@@ -381,12 +381,17 @@ export default {
       });
       // eslint-disable-next-line
       const sc = res.data.lecture_items.map((scItem) => {
+        // console.log('getSc scItem', scItem);
         return {
           id: scItem.lecture_item_id,
           title: scItem.name,
           description: scItem.description,
           type: utils.convertScItemType(scItem.type),
-          // TODO: map other keys
+          activeStartOffsetSec: scItem.start_time,
+          activeEndOffsetSec: scItem.end_time,
+          order: utils.convertScItemOrder(scItem.order),
+          isResultVisible: utils.convertBoolean(scItem.result),
+          opened: scItem.opened,
         };
       });
       commit('updateSc', {
@@ -411,7 +416,6 @@ export default {
       // commit,
     }) {
       const type = utils.convertScType(state.scType);
-      console.log('type', type); // eslint-disable-line
       if (type instanceof Error) {
         throw type;
       }
@@ -459,60 +463,6 @@ export default {
         sc: [],
       });
     },
-    async putScTitle({ commit, state }, { scTitle }) {
-      await lectureService.putLectureName({
-        lectureId: state.scId,
-        lectureName: scTitle,
-      });
-      // commit('updateScTitle', {
-      //   scTitle,
-      // });
-    },
-    /**
-     * @param {Date} scStartDate
-     */
-    async putScStartDate({ state }, { scStartDate }) {
-      await lectureService.putLectureIntendedStart({
-        lectureId: state.scId,
-        lectureStartDate: scStartDate,
-      });
-    },
-    /**
-     * @param {Date} scEndDate
-     */
-    async putScEndDate({ state }, { scEndDate }) {
-      await lectureService.putLectureIntendedEnd({
-        lectureId: state.scId,
-        lectureEndDate: scEndDate,
-      });
-    },
-    /**
-     * @param {string 강의|숙제|퀴즈|시험} scType
-     */
-    async putScType({ state }, { scType }) {
-      /* eslint-disable no-nested-ternary */
-      // TODO: replace '강의'  => 0 mapping according to server definition
-      // TODO: you should also change the mapping @ ClassScenario.vue
-      // (or.. it will be renamed as ScenarioTabl
-      const lectureType = utils.convertScType(scType);
-      /* eslint-enable no-nested-ternary */
-      if (lectureType instanceof Error) {
-        throw lectureType;
-      }
-      await lectureService.putLectureType({
-        lectureId: state.scId,
-        lectureType,
-      });
-    },
-    /**
-     * @param {string} scDescription
-     */
-    async putScDescription({ state }, { scDescription }) {
-      await lectureService.putLectureDescription({
-        lectureId: state.scId,
-        lectureDescrption: scDescription,
-      });
-    },
     /**
      * @param {string 문항|설문|강의자료|숙제} scItemType
      */
@@ -527,10 +477,24 @@ export default {
       });
       return res.data.lecture_item_id;
     },
-    async putScItemTitle({ getters }, { scItemTitle }) {
-      await lectureItemService.putLectureItemName({
+    async putScItem({ getters }) {
+      const scItem = getters.currentEditingScItem;
+      // console.log('putScItem scItem', scItem);
+      await lectureItemService.putLectureItem({
         lectureItemId: getters.currentEditingScItem.id,
-        lectureItemName: scItemTitle,
+        name: scItem.title,
+        description: scItem.description,
+        startTime: scItem.activeStartOffsetSec,
+        endTime: scItem.activeEndOffsetSec,
+        order: utils.convertScItemOrder(scItem.order),
+        result: utils.convertBoolean(scItem.isResultVisible),
+      });
+    },
+    async deleteScItem({ state }, { scItemIndex }) {
+      const scItem = state.sc[scItemIndex];
+      // console.log(scItem);
+      await lectureItemService.deleteLectureItem({
+        lectureItemId: scItem.id,
       });
     },
     async getKnowledgeMapData({ state, commit }) {
@@ -538,7 +502,6 @@ export default {
         lectureId: state.scId,
       });
       console.log('res1', res1); // eslint-disable-line
-      // TODO: commit actions
       const nodes = res1.data.map(item => ({
         value: item.keyword,
         id: item.keyword,
@@ -580,5 +543,11 @@ export default {
         lectureRelations,
       });
     },
+    // async deleteKnowledgeEdge({ state }, { edgeIndex }) {
+    //   await lectureService.deleteLectureKeywordRelation({
+    //     lectureId: state.scId,
+    //     node:
+    //   });
+    // },
   },
 };
