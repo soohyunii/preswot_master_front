@@ -27,7 +27,7 @@ export default {
     utils.assignIfNotNil(param, { description });
     utils.assignIfNotNil(param, { startTime }, 'start_time');
     utils.assignIfNotNil(param, { endTime }, 'end_time');
-    utils.assignIfNotNil(param, { order }, 'prepare_lesson_review');
+    utils.assignIfNotNil(param, { order });
     // TODO: rename prepare_lesson_review
     Object.assign(param, {
       result: 1,

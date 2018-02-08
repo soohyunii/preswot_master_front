@@ -228,7 +228,7 @@ export default {
     },
     pushScItem(state, { type, id }) {
       const title = null;
-      const order = null; // 예습? 본강의? 복습?
+      const order = 0; // 예습 = 0 / 본강의 = 1 / 복습 = 2
       const description = null;
       const activeStartOffsetSec = null; // 강의 활성화 시각 기준으로 몇초 뒤에 활성화되냐
       const activeEndOffsetSec = null; // 강의 활성화 시각 기준으로 몇초 뒤에 비활성화되냐
@@ -359,7 +359,7 @@ export default {
           type: utils.convertScItemType(scItem.type),
           activeStartOffsetSec: scItem.time,
           activeEndOffsetSec: scItem.time + scItem.interval,
-          order: scItem.order,
+          order: utils.convertScItemOrder(scItem.order),
           isResultVisible: scItem.result,
           opened: 3,
         };
@@ -457,7 +457,7 @@ export default {
         description: scItem.description,
         startTime: scItem.activeStartOffsetSec,
         endTime: scItem.activeEndOffsetSec,
-        order: scItem.order,
+        order: utils.convertScItemOrder(scItem.order),
       });
     },
     async getKnowledgeMapData({ state }) {
