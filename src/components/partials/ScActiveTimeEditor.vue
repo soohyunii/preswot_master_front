@@ -6,26 +6,33 @@
       <el-col style="max-width: 600px;">
         <el-form :model="input" ref="elForm" label-width="120px">
           <el-form-item label="순서">
-            <el-radio-group v-model="scItemOrder">
+            <el-radio-group
+              v-model="scItemOrder"
+              @change="onChange('ORDER')"
+            >
               <el-radio-button label="예습"></el-radio-button>
               <el-radio-button label="본강의"></el-radio-button>
               <el-radio-button label="복습"></el-radio-button>
             </el-radio-group>
           </el-form-item>
+          <i class="el-icon-loading" v-if="loading.ORDER" />
 
           <el-form-item label="활성화 시각">
             <el-date-picker
               v-model="scItemStartDate"
               type="datetime"
+              @change="onChange('START_DATE')"
             >
             </el-date-picker>
           </el-form-item>
+          <i class="el-icon-loading" v-if="loading.START_DATE" />
 
           <el-form-item label="비활성화 시각">
             <el-date-picker
               v-model="scItemEndDate"
               type="datetime"
               :disabled="!shouldDeactivated"
+              @change="onChange('END_DATE')"
             >
             </el-date-picker>
             <el-radio-group v-model="shouldDeactivated" @change="changeShouldDeactivated">
@@ -33,13 +40,17 @@
               <el-radio-button :label="false">계속 활성화</el-radio-button>
             </el-radio-group>
           </el-form-item>
+          <i class="el-icon-loading" v-if="loading.END_DATE" />
+
 
           <el-form-item label="선지별 선택 비율">
-            <el-radio-group v-model="scItemIsResultVisible">
+            <el-radio-group v-model="scItemIsResultVisible" @change="onChange('RESULT')">
               <el-radio-button :label="true">보이기</el-radio-button>
               <el-radio-button :label="false">숨기기</el-radio-button>
             </el-radio-group>
           </el-form-item>
+          <i class="el-icon-loading" v-if="loading.RESULT" />
+
         </el-form>
       </el-col>
     </el-row>
@@ -47,21 +58,45 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapGetters } from 'vuex';
+import { mapState, mapMutations, mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'ScActiveTimeEditor',
   data() {
     return {
       shouldDeactivated: true,
+      loading: {
+        ORDER: false,
+        START_DATE: false,
+        END_DATE: false,
+        RESULT: false,
+      },
     };
   },
   methods: {
     ...mapMutations('teacher', ['assignCurrentEditingScItem']),
+    ...mapActions('teacher', ['putScItem']),
     changeShouldDeactivated(label) {
       const vm = this;
       if (!label) {
         vm.scItemEndDate = null;
+      }
+      vm.onChange('END_DATE');
+    },
+    async onChange(type) {
+      const vm = this;
+      try {
+        vm.loading[type] = true;
+        await vm.putScItem();
+      } catch (error) {
+        vm.$notify({
+          title: '저장 실패',
+          message: error.toString(),
+          type: 'error',
+          duration: 0,
+        });
+      } finally {
+        vm.loading[type] = false;
       }
     },
   },

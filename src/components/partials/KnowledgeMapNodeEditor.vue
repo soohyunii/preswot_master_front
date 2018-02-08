@@ -7,8 +7,8 @@
       <template slot="append">
         <tr>
           <td width="500px" align="center">
-            <div class="cell">
-              <i class="el-icon-circle-plus-outline" @click="onClick('addNode')" />
+            <div class="cell" @click="onClick('addNode')">
+              <i class="el-icon-circle-plus-outline" />
             </div>
           </td>
         </tr>
