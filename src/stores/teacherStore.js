@@ -1,6 +1,7 @@
 import classService from '../services/classService';
 import lectureService from '../services/lectureService';
 import lectureItemService from '../services/lectureItemService';
+import fileService from '../services/fileService';
 
 import utils from '../utils';
 
@@ -496,6 +497,12 @@ export default {
       await lectureItemService.deleteLectureItem({
         lectureItemId: scItem.id,
       });
+    },
+    async postFile({ commit }, { file }) {
+      const res = await fileService.postFile({
+        file,
+      });
+      console.log('res', res);
     },
     async getKnowledgeMapData({ state, commit }) {
       const res1 = await lectureService.getLectureKeywords({
