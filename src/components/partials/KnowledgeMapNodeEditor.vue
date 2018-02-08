@@ -19,7 +19,7 @@
             <el-input
               v-model="nodes[scope.$index].name"
               placeholder="ex) 배열"
-              @focus="assignCurrentEditingNodeIndex({ currentEditingNodeIndex: scope.$index })"
+              @focus="onClick('setCurrentEditingNodeIndex', scope.$index)"
             />
             <el-button @click="onClick('setNodeName', scope.$index)">확인</el-button>
           </div>
@@ -47,8 +47,6 @@
         </template>
       </el-table-column>
     </el-table>
-    current index: {{ currentEditingNodeIndex }} <br/>
-    nodes: {{ nodes }}
   </div>
 </template>
 
@@ -77,7 +75,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['pushNode', 'updateNodes', 'deleteNodes', 'assignCurrentEditingNode', 'assignCurrentEditingNodeIndex']),
+    ...mapMutations('teacher', ['pushNode', 'updateNodes', 'deleteNode', 'assignCurrentEditingNode', 'assignCurrentEditingNodeIndex']),
     onClick(type, index) {
       const vm = this;
       switch (type) {
@@ -88,9 +86,6 @@ export default {
           break;
         }
         case 'changeNodeName': {
-          vm.assignCurrentEditingNodeIndex({
-            currentEditingNodeIndex: index,
-          });
           vm.inputFlag[index].value = !vm.inputFlag[index].value;
           break;
         }
@@ -129,6 +124,10 @@ export default {
         case 'delete': {
           vm.deleteNode({ nodeIndex: index });
           vm.inputFlag.splice(index, 1);
+          break;
+        }
+        case 'setCurrentEditingNodeIndex': {
+          vm.assignCurrentEditingNodeIndex({ currentEditingNodeIndex: index });
           break;
         }
         default: {

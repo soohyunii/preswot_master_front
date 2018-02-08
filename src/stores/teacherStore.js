@@ -51,6 +51,7 @@ export default {
      * @var {Array[scItem]} sc: shorthand for Scenario
      * @var {number} currentEditingScItemIndex: 현재 생성/편집 중인 시나리오 아이템 인덱스
      * @var {number} currentTeachingScItemIndex: 강의 중에 현재 진행되고 있는 시나리오 아이템 인덱스
+     * @var {number} currentEditingNodeIndex: 현재 편집 중인 노드 인덱스
      * @var {Array[node]} 시나리오 지식맵에서의 키워드
      * @var {Array[edge]} 시나리오 지식맵에서의 릴레이션
      */
@@ -219,7 +220,7 @@ export default {
     assignCurrentEditingNodeIndex(state, { currentEditingNodeIndex }) {
       state.currentEditingNodeIndex = currentEditingNodeIndex;
     },
-    addEdges(state, { edge }) {
+    pushEdge(state, { edge }) {
       state.edges.push(edge);
     },
     updateEdges(state, { edges }) {
@@ -529,6 +530,13 @@ export default {
       });
       console.log('res1', res1); // eslint-disable-line
       // TODO: commit actions
+      const nodes = res1.data.map(item => ({
+        value: item.keyword,
+        id: item.keyword,
+        name: item.keyword,
+        _size: item.weight,
+      }));
+      commit('updateNodes', { nodes });
       const res2 = await lectureService.getLectureKeywordRelations({
         lectureId: state.scId,
       });

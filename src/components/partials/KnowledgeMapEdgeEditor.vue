@@ -90,7 +90,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['addEdge', 'updateEdges', 'deleteEdge']),
+    ...mapMutations('teacher', ['pushEdge', 'updateEdges', 'deleteEdge']),
     isValidEdge(sidInputFlag, tidInputFlag, index) {
       const vm = this;
       let isValid = true;
@@ -167,7 +167,7 @@ export default {
       const vm = this;
       switch (type) {
         case 'addEdge': {
-          vm.addEdge({ edge: { sid: '', tid: '', weight: 50 } });
+          vm.pushEdge({ edge: { sid: '', tid: '', weight: 50 } });
           vm.inputFlag.push({ sid: true, tid: true, weight: false });
           break;
         }
