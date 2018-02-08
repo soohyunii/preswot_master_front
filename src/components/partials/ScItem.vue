@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations, mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'ScItem',
@@ -25,10 +25,11 @@ export default {
   },
   methods: {
     ...mapMutations('teacher', [
-      'deleteScItem',
+      'removeScItem',
       'assignCurrentEditingScItem',
       'updateCurrentEditingScItemIndex',
     ]),
+    ...mapActions('teacher', ['deleteScItem']),
     onClick(type, index) {
       const vm = this;
       switch (type) {
@@ -45,9 +46,42 @@ export default {
           break;
         }
         case 'deleteIcon': {
-          vm.deleteScItem({
-            lectureElementIndex: index,
-          });
+          vm.$confirm('정말로 이 시나리오 아이템을 삭제하시겠습니까?', `${vm.currentEditingScItem || ''} 삭제`, {
+            confirmButtonText: '예, 삭제합니다.',
+            cancelButtonText: '아니요, 삭제하지 않습니다.',
+            type: 'warning',
+          })
+            .then(async () => {
+              try {
+                await vm.deleteScItem({
+                  scItemIndex: index,
+                });
+                vm.removeScItem({
+                  lectureElementIndex: index,
+                });
+                vm.$notify({
+                  title: '삭제됨',
+                  message: '시나리오 아이템이 삭제됨',
+                  type: 'success',
+                  duration: 3000,
+                });
+              } catch (error) {
+                vm.$notify({
+                  title: '시나리오 아이템 삭제 실패',
+                  message: error.toString(),
+                  type: 'error',
+                  duration: 3000,
+                });
+              }
+            })
+            .catch(() => {
+              vm.$notify({
+                title: '취소됨',
+                message: '시나리오 아이템 삭제 취소됨',
+                type: 'info',
+                duration: 3000,
+              });
+            });
           break;
         }
         default : {
@@ -81,6 +115,7 @@ export default {
   },
   computed: {
     ...mapState('teacher', ['sc', 'currentEditingScItemIndex']),
+    ...mapGetters('teacher', ['currentEditingScItem']),
     scActiveTime: {
       get() {
         const vm = this;

@@ -264,7 +264,7 @@ export default {
       state.currentTeachingScItemIndex = index;
     },
     // FIXME: rename `lectureELementIndex` with `currentEditingScItemIndex`
-    deleteScItem(state, { lectureElementIndex }) {
+    removeScItem(state, { lectureElementIndex }) {
       const isCurrentEditingItem =
         state.currentEditingScItemIndex === lectureElementIndex;
       const isLastItem = lectureElementIndex === state.sc.length - 1;
@@ -458,6 +458,13 @@ export default {
         endTime: scItem.activeEndOffsetSec,
         order: utils.convertScItemOrder(scItem.order),
         result: utils.convertBoolean(scItem.isResultVisible),
+      });
+    },
+    async deleteScItem({ state }, { scItemIndex }) {
+      const scItem = state.sc[scItemIndex];
+      // console.log(scItem);
+      await lectureItemService.deleteLectureItem({
+        lectureItemId: scItem.id,
       });
     },
     async getKnowledgeMapData({ state }) {
