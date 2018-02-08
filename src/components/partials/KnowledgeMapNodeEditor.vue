@@ -16,7 +16,11 @@
       <el-table-column label="Name" align="center">
         <template slot-scope="scope">
           <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].value">
-            <el-input v-model="nodes[scope.$index].name" placeholder="ex) 배열"/>
+            <el-input
+              v-model="nodes[scope.$index].name"
+              placeholder="ex) 배열"
+              @focus="onClick('setCurrentEditingNodeIndex', scope.$index)"
+            />
             <el-button @click="onClick('setNodeName', scope.$index)">확인</el-button>
           </div>
           <div v-else>
@@ -54,21 +58,30 @@ export default {
   name: 'KnowledgeMapNodeEditor',
   data() {
     return {
-      currentIndex: -1,
       inputFlag: [],
     };
   },
   computed: {
-    ...mapState('teacher', ['nodes']),
+    ...mapState('teacher', ['currentEditingNodeIndex']),
+    nodes: {
+      get() {
+        const vm = this;
+        return vm.$store.state.teacher.nodes;
+      },
+      set(nodes) {
+        const vm = this;
+        vm.updateNodes({ nodes });
+      },
+    },
   },
   methods: {
-    ...mapMutations('teacher', ['addNodes', 'deleteNodes']),
+    ...mapMutations('teacher', ['pushNode', 'updateNodes', 'deleteNode', 'assignCurrentEditingNode', 'assignCurrentEditingNodeIndex', 'updateEdgeId']),
     onClick(type, index) {
       const vm = this;
       switch (type) {
         case 'addNode': {
           const id = Guid.create().toString();
-          vm.addNodes({ node: { id, value: '', _size: 20 } });
+          vm.pushNode({ node: { id, value: '', _size: 20 } });
           vm.inputFlag.push({ value: true, weight: false });
           break;
         }
@@ -82,7 +95,7 @@ export default {
         }
         case 'setNodeName': {
           const node = vm.nodes[index];
-          vm.currentIndex = index;
+          const oldNodeId = vm.nodes[index].id;
           if (node.name === '' || node.name === '\n') {
             // TODO: translate
             vm.$notify({
@@ -100,14 +113,26 @@ export default {
             });
             break;
           }
-          vm.nodes[index].value = vm.nodes[index].name;
-          vm.nodes[index].id = vm.nodes[index].name;
+          vm.updateEdgeId({
+            oldNodeId,
+            newNodeId: vm.nodes[index].name,
+          });
+          vm.assignCurrentEditingNode({
+            currentEditingNode: {
+              id: vm.nodes[index].name,
+              value: vm.nodes[index].name,
+            },
+          });
           vm.inputFlag[index].value = !vm.inputFlag[index].value;
           break;
         }
         case 'delete': {
-          vm.deleteNodes({ nodeIndex: index });
+          vm.deleteNode({ nodeIndex: index });
           vm.inputFlag.splice(index, 1);
+          break;
+        }
+        case 'setCurrentEditingNodeIndex': {
+          vm.assignCurrentEditingNodeIndex({ currentEditingNodeIndex: index });
           break;
         }
         default: {
@@ -117,7 +142,8 @@ export default {
     },
     isDuplicated(element, index) {
       const vm = this;
-      if (index !== vm.currentIndex && element.id === vm.nodes[vm.currentIndex].name) {
+      if (index !== vm.currentEditingNodeIndex
+      && element.id === vm.nodes[vm.currentEditingNodeIndex].name) {
         return element;
       }
       return false;

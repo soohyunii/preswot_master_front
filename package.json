@@ -26,6 +26,7 @@
     "guid": "0.0.12",
     "jwt-decode": "^2.2.0",
     "localforage": "^1.5.5",
+    "lodash.isnil": "^4.0.0",
     "moment": "^2.20.1",
     "normalize.css": "^7.0.0",
     "vlf": "^1.0.3",

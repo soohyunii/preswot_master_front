@@ -74,6 +74,18 @@
                 </el-row>
               </div>
           </el-tab-pane>
+
+          <el-tab-pane label="시나리오 삭제" name="fourth">
+            <el-row>
+              <el-col style="max-width: 600px;">
+                <el-form label-width="120px">
+                  <el-form-item label="시나리오 삭제">
+                    <el-button type="primary" @click="onClickDelete">시나리오 삭제</el-button>
+                  </el-form-item>
+                </el-form>
+              </el-col>
+            </el-row>
+          </el-tab-pane>
         </el-tabs>
 
         <div>
@@ -147,7 +159,10 @@ export default {
     vm.updateScId({
       scId: Number.parseInt(vm.$route.params.scId, 10),
     });
+    // TODO: handle if scId doens't exists
+    // TODO: handle if scId exists but don't have the authorization
     await vm.getSc();
+    await vm.getKnowledgeMapData();
   },
   mounted() {
     const vm = this;
@@ -176,6 +191,8 @@ export default {
     ...mapMutations('teacher', ['updateScType', 'updateScId']),
     ...mapActions('teacher', [
       'getSc',
+      'deleteSc',
+      'getKnowledgeMapData',
     ]),
     onClickScType(scType) {
       const vm = this;
@@ -183,6 +200,41 @@ export default {
     },
     test() {
       // console.log('test');
+    },
+    onClickDelete() {
+      const vm = this;
+      vm.$confirm('정말로 이 시나리오를 삭제하시겠습니까?', `${vm.scTitle || ''} 삭제`, {
+        confirmButtonText: '예, 삭제합니다.',
+        cancelButtonText: '아니요, 삭제하지 않습니다.',
+        type: 'warning',
+      })
+        .then(async () => {
+          try {
+            await vm.deleteSc();
+            vm.$notify({
+              title: '삭제됨',
+              message: '시나리오가 삭제됨',
+              type: 'success',
+              duration: 3000,
+            });
+            vm.$router.push('/a/teacher/class');
+          } catch (error) {
+            vm.$notify({
+              title: '시나리오 삭제 실패',
+              message: error.toString(),
+              type: 'error',
+              duration: 3000,
+            });
+          }
+        })
+        .catch(() => {
+          vm.$notify({
+            title: '취소됨',
+            message: '시나리오 삭제 취소됨',
+            type: 'info',
+            duration: 3000,
+          });
+        });
     },
   },
 };
