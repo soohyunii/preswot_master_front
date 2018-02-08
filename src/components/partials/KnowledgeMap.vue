@@ -73,10 +73,6 @@ export default {
       linkWidth: 2.5,
       fontSize: 20,
       resetFlag: true,
-      size: {
-        w: 600,
-        h: 600,
-      },
     };
   },
   computed: {
@@ -109,7 +105,6 @@ export default {
         canvas: vm.canvas,
         linkWidth: vm.linkWidth,
         fontSize: vm.fontSize,
-        size: vm.size,
       };
     },
   },
@@ -156,12 +151,6 @@ export default {
       const vm = this;
       await vm.postKnowledgeMapData(); // TODO: try catch
     },
-  },
-  updated() {
-    const vm = this;
-    vm.$nextTick(() => {
-      vm.size.w = vm.$refs.wrapper.clientWidth;
-    });
   },
 };
 </script>
