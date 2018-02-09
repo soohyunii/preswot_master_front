@@ -385,7 +385,7 @@ export default {
       });
       // eslint-disable-next-line
       const sc = res.data.lecture_items.map((scItem) => {
-        console.log('getSc scItem', scItem);
+        window.console.log('getSc scItem', scItem);
         return {
           id: scItem.lecture_item_id,
           title: scItem.name,
@@ -480,19 +480,25 @@ export default {
         lectureItemId: scItemId,
       });
 
-      console.log('getScItem res', res);
+      window.console.log('getScItem res', res);
 
       // * Commit mutations from res3.data (which is scItem)
       const lectureItemType = res.data.type;
       switch (lectureItemType) {
         case 0: { // * 문항
           const question = res.data.questions[0];
-          const answer = question.answer.split(',')
+          let answer = [];
+          if (question.answer.length !== 0) {
+            answer = question.answer[0].split(',')
             .map(token => token.trim())
             .filter(token => token.length !== 0);
-          const choice = question.choice.split(',')
+          }
+          let choice = [];
+          if (question.choice.length !== 0) {
+            choice = question.choice[0].split(',')
             .map(token => token.trim())
             .filter(token => token.length !== 0);
+          }
           commit('assignCurrentEditingScItem', {
             currentEditingScItem: {
               type: utils.convertScItemType(lectureItemType),
@@ -503,9 +509,10 @@ export default {
                 type: question.type,
                 answer,
                 choice,
-                qustion: question.question,
+                question: question.question,
                 difficulty: question.difficulty,
                 isOrderingAnswer: question.is_ordering_answer,
+                score: question.score,
                 // * order: 이거는 question이 여러개 들어올 때를 가정해서 만들어진거라 패스
                 // * showing_order: 위와 같음
                 // * timer: 애매해서 일단 뻄
@@ -545,7 +552,7 @@ export default {
           throw new Error(`not defined lectureItemType ${lectureItemType}`);
         }
       }
-      console.log(123);
+      window.console.log(123);
       // await dispatch('getScItem', {
       //   scItemId,
       // });
@@ -575,14 +582,18 @@ export default {
       const res = await fileService.postFile({
         file,
       });
-      console.log('res', res);
+      window.console.log('res', res);
     },
     async putQuestion({ getters }) {
       const q = getters.currentEditingScItem.question;
-      console.log('putQuestion', q);
       await questionService.putQuestion({
         questionId: q.id,
         question: q.question,
+        choice: q.choice,
+        answer: q.answer,
+        isOrderingAnswer: q.isOrderingAnswer,
+        score: q.score,
+        difficulty: q.difficulty,
       });
     },
     async putQuestionType({ getters }) {
