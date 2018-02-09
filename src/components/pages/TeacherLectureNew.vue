@@ -61,9 +61,9 @@
                     <h1>아이템 편집</h1>
                     <sc-common-editor />
                     <sc-material-editor
-                      v-if="currentEditingScItemType === '강의자료'
-                      || currentEditingScItemType === '숙제'"
+                      v-if="currentEditingScItemType === '강의자료'"
                     />
+                    <sc-homework-editor v-if="currentEditingScItemType === '숙제'" />
                     <sc-survey-editor v-if="currentEditingScItemType === '설문'" />
                     <sc-question-editor v-if="currentEditingScItemType === '문항'" />
                     <sc-active-time-editor />
@@ -134,6 +134,7 @@ import ScActiveTimeEditor from '../partials/ScActiveTimeEditor';
 import ScCommonEditor from '../partials/ScCommonEditor';
 import ScSurveyEditor from '../partials/ScSurveyEditor';
 import ScQuestionEditor from '../partials/ScQuestionEditor';
+import ScHomeworkEditor from '../partials/ScHomeworkEditor';
 import KnowledgeMap from '../partials/KnowledgeMap';
 
 export default {
@@ -145,6 +146,7 @@ export default {
     ScCommonEditor,
     ScQuestionEditor,
     ScMaterialEditor,
+    ScHomeworkEditor,
     ScSurveyEditor,
     ScActiveTimeEditor,
     KnowledgeMap,

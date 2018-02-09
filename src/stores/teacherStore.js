@@ -4,6 +4,7 @@ import lectureItemService from '../services/lectureItemService';
 import fileService from '../services/fileService';
 import questionService from '../services/questionService';
 import materialService from '../services/materialService';
+import homeworkService from '../services/homeworkService';
 import { baseURL } from '../services/http';
 
 import utils from '../utils';
@@ -270,6 +271,7 @@ export default {
       const fileList = [];
       const survey = { choice: [] };
       const question = {};
+      const homework = {};
       const scItem = {
         id,
         title,
@@ -282,6 +284,7 @@ export default {
         fileList,
         survey,
         question,
+        homework,
       };
       state.currentEditingScItemIndex = state.sc.length;
       state.sc.push(scItem);
@@ -401,18 +404,21 @@ export default {
           opened: scItem.opened,
           question: {},
           material: {},
+          homework: {},
           fileList: [],
         };
       });
       commit('updateSc', {
         sc,
       });
-      commit('updateCurrentEditingScItemIndex', {
-        currentEditingScItemIndex: 0,
-      });
-      await dispatch('getScItem', {
-        scItemId: getters.currentEditingScItem.id,
-      });
+      if (sc.length !== 0) {
+        commit('updateCurrentEditingScItemIndex', {
+          currentEditingScItemIndex: 0,
+        });
+        await dispatch('getScItem', {
+          scItemId: getters.currentEditingScItem.id,
+        });
+      }
     },
     async createSc({ getters, rootGetters }) {
       const userId = rootGetters['auth/userId'];
@@ -547,8 +553,33 @@ export default {
           });
           break;
         }
+        case 3: { // * 숙제
+          const homework = res.data.homework[0];
+          commit('assignCurrentEditingScItem', {
+            currentEditingScItem: {
+              type: utils.convertScItemType(lectureItemType),
+              id: scItemId,
+              fileList: homework.files.map((item) => {
+                const tokens = item.client_path.split('/')
+                  .map(t => t.trim())
+                  .filter(t => t.length !== 0);
+
+                const fileName = tokens.pop();
+                return {
+                  name: fileName,
+                  url: `${baseURL}${item.client_path}`,
+                  guid: item.file_guid,
+                };
+              }),
+              homework: {
+                id: homework.homework_id,
+              },
+            },
+          });
+          break;
+        }
         default: {
-          throw new Error(`not defined lectureItemType ${lectureItemType}`);
+          throw new Error(`not defined lectureItemType2 ${lectureItemType}`);
         }
       }
     },
@@ -580,8 +611,14 @@ export default {
           });
           break;
         }
+        case 3: { // * 숙제
+          await homeworkService.postHomework({
+            lectureItemId: scItemId,
+          });
+          break;
+        }
         default: {
-          throw new Error(`not defined lectureItemType ${lectureItemType}`);
+          throw new Error(`not defined lectureItemType1 ${lectureItemType}`);
         }
       }
       // await dispatch('getScItem', {
