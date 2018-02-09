@@ -5,10 +5,8 @@
         <!-- <teaching-class-list-aside /> -->
       </el-aside>
       <el-main>
-        <el-row>
-          <el-col :span="24">
-            <h1>TODO: 여기 유튜브</h1>
-          </el-col>
+        <el-row class="video">
+          <iframe width="100%" height="500px" src="https://www.youtube.com/embed/DAHsPaR-tAU?autoplay=1" frameborder="0" allowfullscreen autoplay></iframe>
         </el-row>
         <el-row :gutter="5">
           <el-col :span="3">
@@ -92,11 +90,8 @@
           </el-tab-pane> -->
         </el-tabs>
         <el-row>
-          <div class="statusbar" v-if="!isCloseStatusbar">
-            <student-lecture-live-summary :SummaryData="SummaryData" />
-            <el-col :span="5" style="text-align:right;">
-              <i class="el-icon-close" @click="onClick('CLOSE_STATUSBAR')" />
-            </el-col>
+          <div class="statusbar"  v-bind:class="{ activeInfo: isActiveInfo}" @click="onClick('OPEN_STATUS_INFO')">
+            <teacher-lecture-live-summary :SummaryData="SummaryData" />
           </div>
         </el-row>
       </el-main>
@@ -105,72 +100,98 @@
 </template>
 
 <style lang="scss" scoped>
-.statusbar {
-   position:fixed;
-   left:0px;
-   bottom:0px;
-   width:100%;
-   padding: 8px 0px 5px 0px;
-   background:rgba(0, 0, 0, 0.6);
-   color: white;
-}
+  .statusbar {
+    position:fixed;
+    left:0px;
+    bottom:0px;
+    width:100%;
+    padding: 8px 0px 5px 0px;
+    background:rgba(0, 0, 0, 0.6);
+    color: white;
+    -webkit-transition: max-height 1s;
+    -moz-transition: max-height 1s;
+    -ms-transition: max-height 1s;
+    -o-transition: max-height 1s;
+    transition: max-height 1s;
+    overflow: hidden;
+    height:100%;
+    max-height:25px;
+  }
+  .video {
+    background-color: black;
+    min-height: 500px;
+  }
+  .statusbar.activeInfo{
+    max-height: 85%;
 
-.lecture-name {
-  margin: 8px 0;
-  // background-color: red;
-}
+  }
 
-// .current-lecture-time {
-//   margin: 8px 0;
-//   background-color: red;
-// }
+  .lecture-name {
+    margin: 8px 0;
+    // background-color: red;
+  }
 
-// .elapsed-time {
-//   margin: 8px 0;
-//   background-color: pink;
-// }
+  // .current-lecture-time {
+  //   margin: 8px 0;
+  //   background-color: red;
+  // }
+
+  // .elapsed-time {
+  //   margin: 8px 0;
+  //   background-color: pink;
+  // }
 </style>
 
 <script>
-import { mapGetters } from 'vuex';
+  import { mapGetters } from 'vuex';
 
-import Sc from '../partials/Sc';
-import ScItemAdder from '../partials/ScItemAdder';
-import ScItemSummary from '../partials/ScItemSummary';
-import ScMaterialEditor from '../partials/ScMaterialEditor';
-import ScActiveTimeEditor from '../partials/ScActiveTimeEditor';
-import ScCommonEditor from '../partials/ScCommonEditor';
-import StudentLectureLiveSummary from '../partials/StudentLectureLiveSummary';
+  import Sc from '../partials/Sc';
+  import ScItemAdder from '../partials/ScItemAdder';
+  import ScItemSummary from '../partials/ScItemSummary';
+  import ScMaterialEditor from '../partials/ScMaterialEditor';
+  import ScActiveTimeEditor from '../partials/ScActiveTimeEditor';
+  import ScCommonEditor from '../partials/ScCommonEditor';
+  import TeacherLectureLiveSummary from '../partials/TeacherLectureLiveSummary';
 
 
-export default {
-  name: 'TeacherLectureLive',
-  components: {
-    Sc,
-    ScItemAdder,
-    ScItemSummary,
-    ScCommonEditor,
-    ScMaterialEditor,
-    ScActiveTimeEditor,
-    StudentLectureLiveSummary,
-  },
-  data() {
-    // TODO: translate
-    return {
-      activeTab: 'first',
-      scTitle: '4강 (배열)', // TODO: replace
-      scType: '강의', // TODO: replace
-      SummaryData: [],
-      isCloseMovie: false,
-      isCloseStatusbar: false,
-    };
-  },
-  computed: {
-    ...mapGetters('teacher', [
-      'isScEmpty',
-      // 'scType', // TODO: uncomment
-    ]),
-  },
-};
+  export default {
+    name: 'TeacherLectureLive',
+    components: {
+      Sc,
+      ScItemAdder,
+      ScItemSummary,
+      ScCommonEditor,
+      ScMaterialEditor,
+      ScActiveTimeEditor,
+      TeacherLectureLiveSummary,
+    },
+    data() {
+      // TODO: translate
+      return {
+        activeTab: 'first',
+        scTitle: '4강 (배열)', // TODO: replace
+        scType: '강의', // TODO: replace
+        SummaryData: [],
+        isCloseMovie: false,
+        isCloseStatusbar: false,
+        isActiveInfo: false,
+      };
+    },
+    methods: {
+      onClick(type) {
+        const vm = this;
+        switch (type) {
+          case 'OPEN_STATUS_INFO': {
+            vm.isActiveInfo = !vm.isActiveInfo;
+          }
+        }
+      },
+    },
+    computed: {
+      ...mapGetters('teacher', [
+        'isScEmpty',
+        // 'scType', // TODO: uncomment
+      ]),
+    },
+  };
 </script>
-
