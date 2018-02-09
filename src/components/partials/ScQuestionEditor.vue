@@ -16,6 +16,14 @@
           </el-form-item>
           <i class="el-icon-loading" v-if="loading.TYPE" />
 
+          TODO: 문제 <br />
+          TODO: 보기 <br />
+          TODO: 답 <br />
+          TODO: 답 순서 중요 <br />
+          TODO: 배점 <br />
+          TODO: 난이도 <br />
+          TODO:  <br />
+
         </el-form>
       </el-col>
     </el-row>

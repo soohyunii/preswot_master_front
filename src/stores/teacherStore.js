@@ -480,6 +480,8 @@ export default {
         lectureItemId: scItemId,
       });
 
+      console.log('getScItem res', res);
+
       // * Commit mutations from res3.data (which is scItem)
       const lectureItemType = res.data.type;
       switch (lectureItemType) {
