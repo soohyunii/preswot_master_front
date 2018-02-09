@@ -84,24 +84,26 @@ export default {
       // TODO: translate
       return this.$confirm(`${file.name} 파일을 삭제하시겠습니까？`);
     },
-    handleRemove(file, fileList) {
+    handleRemove(file) {
       const vm = this;
-      vm.fileList = fileList;
+      vm.deleteFile({
+        fileGuid: file.guid,
+      });
     },
-    handleSuccess(res, file, fileList) {
+    handleSuccess(res, file) {
       const vm = this;
       vm.loading = false;
-      console.log(res, file, fileList);
+      // console.log(res, file, fileList);
       vm.$notify({
         title: '업로드 성공',
         message: `${file.name} 업로드 성공`,
         type: 'success',
       });
     },
-    handleError(err, file, fileList) {
+    handleError(err, file) {
       const vm = this;
       vm.loading = false;
-      console.log(err, file, fileList);
+      // console.log(err, file, fileList);
       vm.$notify({
         title: '업로드 실패',
         message: `${file.name} ${err}`,
@@ -110,11 +112,12 @@ export default {
     },
     // handleChange(file, fileList) {
     //   const vm = this;
-    //   vm.fileList = fileList;
+    //   // vm.fileList.push(file);
+    //   // vm.fileList = fileList;
     //   console.log('handleChange', file, fileList);
     // },
     async doUpload(req) {
-      console.log('req', req);
+      // console.log('req', req);
       const vm = this;
       vm.loading = true;
       // await vm.postFile({
@@ -131,7 +134,6 @@ export default {
           throw new Error(`not defined from ${vm.from}`);
         }
       }
-      console.log('here');
     },
   },
 };

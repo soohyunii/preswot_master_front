@@ -387,6 +387,7 @@ export default {
       });
       // eslint-disable-next-line
       const sc = res.data.lecture_items.map((scItem) => {
+        // eslint-disable-next-line
         console.log('getSc scItem', scItem);
         return {
           id: scItem.lecture_item_id,
@@ -484,6 +485,7 @@ export default {
         lectureItemId: scItemId,
       });
 
+      // eslint-disable-next-line
       console.log('getScItem res data', res.data);
 
       // * Commit mutations from res3.data (which is scItem)
@@ -530,10 +532,10 @@ export default {
                   .filter(t => t.length !== 0);
 
                 const fileName = tokens.pop();
-                console.log('fileName', fileName);
                 return {
                   name: fileName,
                   url: `${baseURL}${item.client_path}`,
+                  guid: item.file_guid,
                 };
               }),
               material: {
@@ -582,7 +584,6 @@ export default {
           throw new Error(`not defined lectureItemType ${lectureItemType}`);
         }
       }
-      console.log(123);
       // await dispatch('getScItem', {
       //   scItemId,
       // });
@@ -608,15 +609,8 @@ export default {
         lectureItemId: scItem.id,
       });
     },
-    async postFile({ commit }, { file }) {
-      const res = await fileService.postFile({
-        file,
-      });
-      console.log('res', res);
-    },
     async putQuestion({ getters }) {
       const q = getters.currentEditingScItem.question;
-      console.log('putQuestion', q);
       await questionService.putQuestion({
         questionId: q.id,
         question: q.question,
@@ -629,13 +623,17 @@ export default {
         type: q.type,
       });
     },
+    async deleteFile(__empty__, { fileGuid }) {
+      await fileService.deleteFile({
+        fileGuid,
+      });
+    },
     async postMaterialFile({ commit, getters }, { file }) {
       const res = await materialService.postMaterialFile({
         file,
         materialId: getters.currentEditingScItem.material.id,
       });
       const newFileList = getters.currentEditingScItem.fileList;
-      newFileList.pop(); // * delete file that element-ui added
       const tokens = res.data.file.client_path.split('/')
         .map(t => t.trim())
         .filter(t => t.length !== 0);
@@ -643,6 +641,9 @@ export default {
       newFileList.push({
         name: fileName,
         url: `${baseURL}${res.data.file.client_path}`,
+        status: 'success',
+        uid: file.uid,
+        guid: res.data.file.file_guid,
       });
       commit('assignCurrentEditingScItem', {
         currentEditingScItem: {
