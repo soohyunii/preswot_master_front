@@ -34,9 +34,10 @@ export default {
     pType: { // * Problem Type
       get() {
         const vm = this;
-        console.log('ptype get', vm.currentEditingScItem);
-        // return vm.currentEditingScItem.question.type;
-        return 0;
+        console.log('ptype get', vm.currentEditingScItem, vm.currentEditingScItem.question);
+        const q = vm.currentEditingScItem.question;
+        return q ? q.type : 0;
+        // return 0;
       },
       set(pType) {
 

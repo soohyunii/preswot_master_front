@@ -29,14 +29,17 @@ export default {
       'assignCurrentEditingScItem',
       'updateCurrentEditingScItemIndex',
     ]),
-    ...mapActions('teacher', ['deleteScItem']),
-    onClick(type, index) {
+    ...mapActions('teacher', ['deleteScItem', 'getScItem']),
+    async onClick(type, index) {
       const vm = this;
       switch (type) {
         case 'SELECT_SC_ITEM': {
           if (vm.sc.length > index) {
             vm.updateCurrentEditingScItemIndex({
               currentEditingScItemIndex: index,
+            });
+            vm.getScItem({
+              scItemId: vm.currentEditingScItem.id,
             });
           } else {
             vm.updateCurrentEditingScItemIndex({

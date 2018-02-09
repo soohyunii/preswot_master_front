@@ -267,6 +267,7 @@ export default {
       const isResultVisible = true; // 설문이나 문항을 풀고 나서 수강생중 몇퍼가 1번 선택했고.. 뭐 그런게 결과인데, 결과가 보이냐 마냐
       const fileList = [];
       const survey = { choice: [] };
+      const question = {};
       const scItem = {
         id,
         title,
@@ -278,6 +279,7 @@ export default {
         description,
         fileList,
         survey,
+        question,
       };
       state.currentEditingScItemIndex = state.sc.length;
       state.sc.push(scItem);
@@ -394,6 +396,7 @@ export default {
           order: scItem.order,
           isResultVisible: utils.convertBoolean(scItem.result),
           opened: scItem.opened,
+          question: {},
         };
       });
       commit('updateSc', {
