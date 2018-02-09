@@ -2,6 +2,7 @@ import classService from '../services/classService';
 import lectureService from '../services/lectureService';
 import lectureItemService from '../services/lectureItemService';
 import fileService from '../services/fileService';
+import questionService from '../services/questionService';
 
 import utils from '../utils';
 
@@ -503,6 +504,11 @@ export default {
         file,
       });
       console.log('res', res);
+    },
+    async postQuestion({ commit }, { scItemId }) {
+      await questionService.postQuestion({
+        lectureItemId: scItemId,
+      });
     },
     async getKnowledgeMapData({ state, commit }) {
       const res1 = await lectureService.getLectureKeywords({
