@@ -103,7 +103,7 @@ export default {
       console.log(err, file, fileList);
       vm.$notify({
         title: '업로드 실패',
-        message: `${file.name}${err}`,
+        message: `${file.name} ${err}`,
         type: 'error',
       });
     },
