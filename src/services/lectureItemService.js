@@ -2,6 +2,11 @@ import http from './http';
 import utils from '../utils';
 
 export default {
+  getLectureItem({
+    lectureItemId,
+  }) {
+    return http.get(`/lecture-items/${lectureItemId}`);
+  },
   postLectureItem({
     lectureId,
     lectureItemType,
