@@ -4,7 +4,6 @@
     <el-upload
       action="#"
       :auto-upload="true"
-      :on-change="handleChange"
       :on-remove="handleRemove"
       :file-list="fileList"
       multiple
@@ -68,7 +67,11 @@ export default {
   },
   methods: {
     ...mapMutations('teacher', ['assignCurrentEditingScItem']),
-    ...mapActions('teacher', ['postFile', 'deleteFile']),
+    ...mapActions('teacher', [
+      'postFile',
+      'postMaterialFile',
+      'deleteFile',
+    ]),
     handleExceed(files, fileList) {
       // TODO: translate
       this.$message.warning(
@@ -105,18 +108,30 @@ export default {
         type: 'error',
       });
     },
-    handleChange(file, fileList) {
-      const vm = this;
-      vm.fileList = fileList;
-      console.log('handleChange', file, fileList);
-    },
+    // handleChange(file, fileList) {
+    //   const vm = this;
+    //   vm.fileList = fileList;
+    //   console.log('handleChange', file, fileList);
+    // },
     async doUpload(req) {
       console.log('req', req);
       const vm = this;
       vm.loading = true;
-      await vm.postFile({
-        file: req.file,
-      });
+      // await vm.postFile({
+      //   file: req.file,
+      // });
+      switch (vm.from) {
+        case 'ScMaterialEditor': {
+          await vm.postMaterialFile({
+            file: req.file,
+          });
+          break;
+        }
+        default: {
+          throw new Error(`not defined from ${vm.from}`);
+        }
+      }
+      console.log('here');
     },
   },
 };

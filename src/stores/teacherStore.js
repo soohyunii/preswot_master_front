@@ -3,6 +3,8 @@ import lectureService from '../services/lectureService';
 import lectureItemService from '../services/lectureItemService';
 import fileService from '../services/fileService';
 import questionService from '../services/questionService';
+import materialService from '../services/materialService';
+import { baseURL } from '../services/http';
 
 import utils from '../utils';
 
@@ -397,6 +399,8 @@ export default {
           isResultVisible: utils.convertBoolean(scItem.result),
           opened: scItem.opened,
           question: {},
+          material: {},
+          fileList: [],
         };
       });
       commit('updateSc', {
@@ -480,7 +484,7 @@ export default {
         lectureItemId: scItemId,
       });
 
-      console.log('getScItem res', res);
+      console.log('getScItem res data', res.data);
 
       // * Commit mutations from res3.data (which is scItem)
       const lectureItemType = res.data.type;
@@ -514,6 +518,33 @@ export default {
           });
           break;
         }
+        case 2: { // * 강의자료
+          const material = res.data.materials[0];
+          commit('assignCurrentEditingScItem', {
+            currentEditingScItem: {
+              type: utils.convertScItemType(lectureItemType),
+              id: scItemId,
+              fileList: material.files.map((item) => {
+                const tokens = item.client_path.split('/')
+                  .map(t => t.trim())
+                  .filter(t => t.length !== 0);
+
+                const fileName = tokens.pop();
+                console.log('fileName', fileName);
+                return {
+                  name: fileName,
+                  url: `${baseURL}${item.client_path}`,
+                };
+              }),
+              material: {
+                id: material.material_id,
+                // score ?머 하는거임 이거?
+                // comment ? 얘도 머임?
+              },
+            },
+          });
+          break;
+        }
         default: {
           throw new Error(`not defined lectureItemType ${lectureItemType}`);
         }
@@ -537,6 +568,12 @@ export default {
       switch (lectureItemType) {
         case 0: { // * 문항
           await questionService.postQuestion({
+            lectureItemId: scItemId,
+          });
+          break;
+        }
+        case 2: { // * 강의자료
+          await materialService.postMaterial({
             lectureItemId: scItemId,
           });
           break;
@@ -591,6 +628,28 @@ export default {
         questionId: q.id,
         type: q.type,
       });
+    },
+    async postMaterialFile({ commit, getters }, { file }) {
+      const res = await materialService.postMaterialFile({
+        file,
+        materialId: getters.currentEditingScItem.material.id,
+      });
+      const newFileList = getters.currentEditingScItem.fileList;
+      newFileList.pop(); // * delete file that element-ui added
+      const tokens = res.data.file.client_path.split('/')
+        .map(t => t.trim())
+        .filter(t => t.length !== 0);
+      const fileName = tokens.pop();
+      newFileList.push({
+        name: fileName,
+        url: `${baseURL}${res.data.file.client_path}`,
+      });
+      commit('assignCurrentEditingScItem', {
+        currentEditingScItem: {
+          fileList: newFileList,
+        },
+      });
+      // console.log('teacherStore action postMaterialFile', res);
     },
     async getKnowledgeMapData({ state, commit }) {
       const res1 = await lectureService.getLectureKeywords({
