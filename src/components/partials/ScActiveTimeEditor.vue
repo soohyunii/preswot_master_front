@@ -10,9 +10,9 @@
               v-model="scItemOrder"
               @change="onChange('ORDER')"
             >
-              <el-radio-button label="예습"></el-radio-button>
-              <el-radio-button label="본강의"></el-radio-button>
-              <el-radio-button label="복습"></el-radio-button>
+              <el-radio-button :label="0">예습</el-radio-button>
+              <el-radio-button :label="1">본강의</el-radio-button>
+              <el-radio-button :label="2">복습</el-radio-button>
             </el-radio-group>
           </el-form-item>
           <i class="el-icon-loading" v-if="loading.ORDER" />
@@ -116,7 +116,7 @@ export default {
         const vm = this;
         const item = vm.currentEditingScItem;
         if (!item) {
-          return '본강의';
+          return 1;
         }
         return item.order;
       },
