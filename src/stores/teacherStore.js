@@ -408,9 +408,6 @@ export default {
       await dispatch('getScItem', {
         scItemId: getters.currentEditingScItem.id,
       });
-      // TODO: call getScItem then fill question 뭐 그런거 채워넣기
-      // const currentEditingScItem = getters.currentEditingScItem;
-//
     },
     async createSc({ getters, rootGetters }) {
       const userId = rootGetters['auth/userId'];
@@ -474,17 +471,17 @@ export default {
         sc: [],
       });
     },
+    /**
+     * 서버로부터 scItem을 받아와서 현재 scItem에 갱신한다.
+     */
     async getScItem({ commit, state }, { scItemId }) {
-      console.log('getScItem index', state.currentEditingScItemIndex);
       // * Get lectureItem with questions || surveys || homeworks || materials
       const res = await lectureItemService.getLectureItem({
         lectureItemId: scItemId,
       });
-      console.log('res3', res.data);
-
-      const lectureItemType = res.data.type;
 
       // * Commit mutations from res3.data (which is scItem)
+      const lectureItemType = res.data.type;
       switch (lectureItemType) {
         case 0: { // * 문항
           const question = res.data.questions[0];
@@ -520,10 +517,6 @@ export default {
         }
       }
     },
-    // async test(context) {
-    //   console.log('test context', context);
-    //   window.context = context;
-    // },
     /**
      * @param {string 문항|설문|강의자료|숙제} scItemType
      */
@@ -582,11 +575,20 @@ export default {
       });
       console.log('res', res);
     },
-    async postQuestion({ commit }, { scItemId }) {
-      const res = await questionService.postQuestion({
-        lectureItemId: scItemId,
+    async putQuestion({ getters }) {
+      const q = getters.currentEditingScItem.question;
+      console.log('putQuestion', q);
+      await questionService.putQuestion({
+        questionId: q.id,
+        question: q.question,
       });
-      return res.data.question_id;
+    },
+    async putQuestionType({ getters }) {
+      const q = getters.currentEditingScItem.question;
+      await questionService.putQuestionType({
+        questionId: q.id,
+        type: q.type,
+      });
     },
     async getKnowledgeMapData({ state, commit }) {
       const res1 = await lectureService.getLectureKeywords({

@@ -43,4 +43,12 @@ export default {
 
     return http.put(`/questions/${questionId}`, param);
   },
+  putQuestionType({
+    questionId,
+    type,
+  }) {
+    return http.put(`/questions/${questionId}/type`, {
+      type,
+    });
+  },
 };

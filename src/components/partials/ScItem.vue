@@ -30,7 +30,7 @@ export default {
       'updateCurrentEditingScItemIndex',
     ]),
     ...mapActions('teacher', ['deleteScItem', 'getScItem']),
-    async onClick(type, index) {
+    onClick(type, index) {
       const vm = this;
       switch (type) {
         case 'SELECT_SC_ITEM': {
