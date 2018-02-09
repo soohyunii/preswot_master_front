@@ -35,17 +35,16 @@ export default {
       get() {
         const vm = this;
         console.log('ptype get', vm.currentEditingScItem);
-        return 1;
+        // return vm.currentEditingScItem.question.type;
+        return 0;
       },
       set(pType) {
 
       },
     },
   },
-  methods: {
-    onChange(type) {
-      console.log('onChange');
-    },
-  },
+  // methods: {
+  //   ...mapActions('teacher', ['test']),
+  // },
 };
 </script>

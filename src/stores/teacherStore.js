@@ -361,7 +361,7 @@ export default {
         },
       });
     },
-    async getSc({ state, commit }) {
+    async getSc({ state, commit, dispatch, getters }) {
       const res = await lectureService.getLecture({
         lectureId: state.scId,
       });
@@ -391,7 +391,7 @@ export default {
           type: utils.convertScItemType(scItem.type),
           activeStartOffsetSec: scItem.start_time,
           activeEndOffsetSec: scItem.end_time,
-          order: utils.convertScItemOrder(scItem.order),
+          order: scItem.order,
           isResultVisible: utils.convertBoolean(scItem.result),
           opened: scItem.opened,
         };
@@ -402,6 +402,12 @@ export default {
       commit('updateCurrentEditingScItemIndex', {
         currentEditingScItemIndex: 0,
       });
+      await dispatch('getScItem', {
+        scItemId: getters.currentEditingScItem.id,
+      });
+      // TODO: call getScItem then fill question 뭐 그런거 채워넣기
+      // const currentEditingScItem = getters.currentEditingScItem;
+//
     },
     async createSc({ getters, rootGetters }) {
       const userId = rootGetters['auth/userId'];
@@ -465,19 +471,87 @@ export default {
         sc: [],
       });
     },
+    async getScItem({ commit, state }, { scItemId }) {
+      console.log('getScItem index', state.currentEditingScItemIndex);
+      // * Get lectureItem with questions || surveys || homeworks || materials
+      const res = await lectureItemService.getLectureItem({
+        lectureItemId: scItemId,
+      });
+      console.log('res3', res.data);
+
+      const lectureItemType = res.data.type;
+
+      // * Commit mutations from res3.data (which is scItem)
+      switch (lectureItemType) {
+        case 0: { // * 문항
+          const question = res.data.questions[0];
+          const answer = question.answer.split(',')
+            .map(token => token.trim())
+            .filter(token => token.length !== 0);
+          const choice = question.choice.split(',')
+            .map(token => token.trim())
+            .filter(token => token.length !== 0);
+          commit('assignCurrentEditingScItem', {
+            currentEditingScItem: {
+              type: utils.convertScItemType(lectureItemType),
+              id: scItemId,
+              fileList: question.files,
+              question: {
+                id: question.question_id,
+                type: question.type,
+                answer,
+                choice,
+                qustion: question.question,
+                difficulty: question.difficulty,
+                isOrderingAnswer: question.is_ordering_answer,
+                // * order: 이거는 question이 여러개 들어올 때를 가정해서 만들어진거라 패스
+                // * showing_order: 위와 같음
+                // * timer: 애매해서 일단 뻄
+              },
+            },
+          });
+          break;
+        }
+        default: {
+          throw new Error(`not defined lectureItemType ${lectureItemType}`);
+        }
+      }
+    },
+    // async test(context) {
+    //   console.log('test context', context);
+    //   window.context = context;
+    // },
     /**
      * @param {string 문항|설문|강의자료|숙제} scItemType
      */
-    async postScItem({ state }, { scItemType }) {
+    async postScItem({ state, dispatch }, { scItemType }) {
       const lectureItemType = utils.convertScItemType(scItemType);
       if (lectureItemType instanceof Error) {
         throw lectureItemType;
       }
-      const res = await lectureItemService.postLectureItem({
+      const res1 = await lectureItemService.postLectureItem({
         lectureId: state.scId,
         lectureItemType,
       });
-      return res.data.lecture_item_id;
+      const scItemId = res1.data.lecture_item_id;
+
+      // * Post question || survey || homework || material
+      switch (lectureItemType) {
+        case 0: { // * 문항
+          await questionService.postQuestion({
+            lectureItemId: scItemId,
+          });
+          break;
+        }
+        default: {
+          throw new Error(`not defined lectureItemType ${lectureItemType}`);
+        }
+      }
+      console.log(123);
+      // await dispatch('getScItem', {
+      //   scItemId,
+      // });
+      return scItemId;
     },
     async putScItem({ getters }) {
       const scItem = getters.currentEditingScItem;
@@ -488,7 +562,7 @@ export default {
         description: scItem.description,
         startTime: scItem.activeStartOffsetSec,
         endTime: scItem.activeEndOffsetSec,
-        order: utils.convertScItemOrder(scItem.order),
+        order: scItem.order,
         result: utils.convertBoolean(scItem.isResultVisible),
       });
     },
@@ -506,9 +580,10 @@ export default {
       console.log('res', res);
     },
     async postQuestion({ commit }, { scItemId }) {
-      await questionService.postQuestion({
+      const res = await questionService.postQuestion({
         lectureItemId: scItemId,
       });
+      return res.data.question_id;
     },
     async getKnowledgeMapData({ state, commit }) {
       const res1 = await lectureService.getLectureKeywords({
