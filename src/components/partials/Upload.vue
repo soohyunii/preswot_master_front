@@ -84,11 +84,29 @@ export default {
       // TODO: translate
       return this.$confirm(`${file.name} 파일을 삭제하시겠습니까？`);
     },
-    handleRemove(file) {
+    async handleRemove(file) {
       const vm = this;
-      vm.deleteFile({
-        fileGuid: file.guid,
-      });
+      try {
+        vm.loading = true;
+        vm.deleteFile({
+          fileGuid: file.guid,
+        });
+        vm.$notify({
+          title: '삭제 성공',
+          message: `${file.name} 삭제 성공`,
+          type: 'success',
+          duration: 3000,
+        });
+      } catch (error) {
+        vm.$notify({
+          title: `${file.name} 삭제 실패`,
+          message: error.toString(),
+          type: 'error',
+          duration: 0,
+        });
+      } finally {
+        vm.loading = false;
+      }
     },
     handleSuccess(res, file) {
       const vm = this;
