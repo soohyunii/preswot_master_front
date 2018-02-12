@@ -124,7 +124,7 @@ export default {
         const vm = this;
         // console.log('ptype get', vm.currentEditingScItem, vm.currentEditingScItem.question);
         const q = vm.currentEditingScItem.question;
-        return q.type ? q.type : 0;
+        return q ? q.type : 0;
       },
       set(pType) {
         const vm = this;
