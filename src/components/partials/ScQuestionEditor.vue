@@ -16,65 +16,74 @@
           </el-form-item>
           <i class="el-icon-loading" v-if="loading.TYPE" />
 
-          <el-form-item label="문제" prop="pQuestion">
-            <el-input
-              type="textarea"
-              :rows="3"
-              v-model.lazy="pQuestion"
-              @change="onChange('QUESTION')"
-            />
-          </el-form-item>
-          <i class="el-icon-loading" v-if="loading.QUESTION" />
+          <template v-if="[0, 1, 2].includes(pType)">
+            <el-form-item label="문제" prop="pQuestion">
+              <el-input
+                type="textarea"
+                :rows="3"
+                v-model.lazy="pQuestion"
+                @change="onChange('QUESTION')"
+              />
+            </el-form-item>
+            <i class="el-icon-loading" v-if="loading.QUESTION" />
+          </template>
 
-          <el-form-item label="보기" prop="pChoice">
-            <el-input
-              type="textarea"
-              :rows="3"
-              v-model.lazy="pChoice"
-              @change="onChange('CHOICE')"
-            />
-          </el-form-item>
-          <i class="el-icon-loading" v-if="loading.CHOICE" />
+          <template v-if="[0].includes(pType)">
+            <el-form-item label="보기" prop="pChoice">
+              <el-input
+                type="textarea"
+                :rows="3"
+                v-model.lazy="pChoice"
+                @change="onChange('CHOICE')"
+              />
+            </el-form-item>
+            <i class="el-icon-loading" v-if="loading.CHOICE" />
+          </template>
 
-          <el-form-item label="답" prop="pAnswer">
-            <el-input
-              type="textarea"
-              :rows="3"
-              v-model.lazy="pAnswer"
-              @change="onChange('ANSWER')"
-            />
-          </el-form-item>
-          <i class="el-icon-loading" v-if="loading.ANSWER" />
+          <template v-if="[0, 1, 2].includes(pType)">
+            <el-form-item label="답" prop="pAnswer">
+              <el-input
+                :type="pType === 1 ? 'input' : 'textarea'"
+                :rows="3"
+                v-model.lazy="pAnswer"
+                @change="onChange('ANSWER')"
+              />
+            </el-form-item>
+            <i class="el-icon-loading" v-if="loading.ANSWER" />
+          </template>
 
-          <el-form-item label="답 순서 중요">
-            <el-radio-group
-              v-model="pIsOrderingAnswer"
-              @change="onChange('ISORDERINGANSWER')"
-            >
-              <el-radio-button :label="0">아니요</el-radio-button>
-              <el-radio-button :label="1">예</el-radio-button>
-            </el-radio-group>
-          </el-form-item>
-          <i class="el-icon-loading" v-if="loading.ISORDERINGANSWER" />
+          <template v-if="[0].includes(pType)">
+            <el-form-item label="답 순서 중요">
+              <el-radio-group
+                v-model="pIsOrderingAnswer"
+                @change="onChange('ISORDERINGANSWER')"
+              >
+                <el-radio-button :label="0">아니요</el-radio-button>
+                <el-radio-button :label="1">예</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+            <i class="el-icon-loading" v-if="loading.ISORDERINGANSWER" />
+          </template>
 
-          <el-form-item label="배점" prop="pScore">
-            <el-input
-              value='number'
-              v-model.lazy="pScore"
-              @change="onChange('SCORE')"
-            />
-          </el-form-item>
-          <i class="el-icon-loading" v-if="loading.SCORE" />
+          <template v-if="[0, 1, 2].includes(pType)">
+            <el-form-item label="배점" prop="pScore">
+              <el-input
+                value='number'
+                v-model.lazy="pScore"
+                @change="onChange('SCORE')"
+              />
+            </el-form-item>
+            <i class="el-icon-loading" v-if="loading.SCORE" />
 
-          <el-form-item label="난이도" prop="pDifficulty">
-            <el-rate
-              v-model.lazy="pDifficulty"
-              :max="maxRate"
-              @change="onChange('DIFFICULTY')"
-            />
-          </el-form-item>
-          <i class="el-icon-loading" v-if="loading.DIFFICULTY" />
-
+            <el-form-item label="난이도" prop="pDifficulty">
+              <el-rate
+                v-model.lazy="pDifficulty"
+                :max="maxRate"
+                @change="onChange('DIFFICULTY')"
+              />
+            </el-form-item>
+            <i class="el-icon-loading" v-if="loading.DIFFICULTY" />
+          </template>
         </el-form>
       </el-col>
     </el-row>
@@ -181,13 +190,20 @@ export default {
       },
       set(pAnswer) {
         const vm = this;
+        let answer;
+        if (vm.pType === 0) {
+          answer = pAnswer.split(',')
+                .map(value => value.trim())
+                .filter(value => value.length !== 0);
+        } else if ([1, 2].includes(vm.pType)) {
+          answer = [];
+          answer.push(pAnswer.trim());
+        }
         vm.assignCurrentEditingScItem({
           currentEditingScItem: {
             question: {
               ...vm.currentEditingScItem.question,
-              answer: pAnswer.split(',')
-                .map(value => value.trim())
-                .filter(value => value.length !== 0),
+              answer,
             },
           },
         });
