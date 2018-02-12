@@ -210,6 +210,13 @@ export default {
       };
       state.nodes.push(createNode);
     },
+    pushQuesetionKeyword(state, { keyword }) {
+      state.sc[state.currentEditingScItemIndex].questionKeywords.push(keyword);
+    },
+    updateQuestionKeywords(state, { keywords }) {
+      state.sc[state.currentEditingScItemIndex].questionKeywords = keywords;
+      console.log(state.sc[state.currentEditingScItemIndex].questionKeywords); // eslint-disable-line
+    },
     assignCurrentEditingNode(state, { currentEditingNode }) {
       Object.assign(
         state.nodes[state.currentEditingNodeIndex],
@@ -268,6 +275,7 @@ export default {
       const fileList = [];
       const survey = { choice: [] };
       const question = {};
+      const questionKeywords = [];
       const scItem = {
         id,
         title,
@@ -280,6 +288,7 @@ export default {
         fileList,
         survey,
         question,
+        questionKeywords,
       };
       state.currentEditingScItemIndex = state.sc.length;
       state.sc.push(scItem);
@@ -397,6 +406,7 @@ export default {
           isResultVisible: utils.convertBoolean(scItem.result),
           opened: scItem.opened,
           question: {},
+          questionKeywords: [],
         };
       });
       commit('updateSc', {
@@ -408,6 +418,7 @@ export default {
       await dispatch('getScItem', {
         scItemId: getters.currentEditingScItem.id,
       });
+      await dispatch('getQuestionKeywords');
     },
     async createSc({ getters, rootGetters }) {
       const userId = rootGetters['auth/userId'];
@@ -655,5 +666,15 @@ export default {
     //     node:
     //   });
     // },
+    async getQuestionKeywords({ commit, getters }) {
+      const q = getters.currentEditingScItem.question;
+      const res = await lectureItemService.getQuestionKeywords({
+        questionId: q.id,
+      });
+      const keywords = res.data.map(item => ({
+        keyword: item.keyword,
+      }));
+      commit('updateQuestionKeywords', { keywords });
+    },
   },
 };

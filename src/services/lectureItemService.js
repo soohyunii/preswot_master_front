@@ -47,4 +47,9 @@ export default {
   }) {
     return http.delete(`/lecture-items/${lectureItemId}`);
   },
+  getQuestionKeywords({
+    questionId,
+  }) {
+    return http.get(`/questions/${questionId}/keywords`);
+  },
 };
