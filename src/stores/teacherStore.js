@@ -1,6 +1,8 @@
 import classService from '../services/classService';
 import lectureService from '../services/lectureService';
 import lectureItemService from '../services/lectureItemService';
+import fileService from '../services/fileService';
+import questionService from '../services/questionService';
 
 import utils from '../utils';
 
@@ -265,6 +267,7 @@ export default {
       const isResultVisible = true; // 설문이나 문항을 풀고 나서 수강생중 몇퍼가 1번 선택했고.. 뭐 그런게 결과인데, 결과가 보이냐 마냐
       const fileList = [];
       const survey = { choice: [] };
+      const question = {};
       const scItem = {
         id,
         title,
@@ -276,6 +279,7 @@ export default {
         description,
         fileList,
         survey,
+        question,
       };
       state.currentEditingScItemIndex = state.sc.length;
       state.sc.push(scItem);
@@ -359,7 +363,7 @@ export default {
         },
       });
     },
-    async getSc({ state, commit }) {
+    async getSc({ state, commit, dispatch, getters }) {
       const res = await lectureService.getLecture({
         lectureId: state.scId,
       });
@@ -381,7 +385,7 @@ export default {
       });
       // eslint-disable-next-line
       const sc = res.data.lecture_items.map((scItem) => {
-        // console.log('getSc scItem', scItem);
+        window.console.log('getSc scItem', scItem);
         return {
           id: scItem.lecture_item_id,
           title: scItem.name,
@@ -389,9 +393,10 @@ export default {
           type: utils.convertScItemType(scItem.type),
           activeStartOffsetSec: scItem.start_time,
           activeEndOffsetSec: scItem.end_time,
-          order: utils.convertScItemOrder(scItem.order),
+          order: scItem.order,
           isResultVisible: utils.convertBoolean(scItem.result),
           opened: scItem.opened,
+          question: {},
         };
       });
       commit('updateSc', {
@@ -399,6 +404,9 @@ export default {
       });
       commit('updateCurrentEditingScItemIndex', {
         currentEditingScItemIndex: 0,
+      });
+      await dispatch('getScItem', {
+        scItemId: getters.currentEditingScItem.id,
       });
     },
     async createSc({ getters, rootGetters }) {
@@ -464,18 +472,91 @@ export default {
       });
     },
     /**
+     * 서버로부터 scItem을 받아와서 현재 scItem에 갱신한다.
+     */
+    async getScItem({ commit, state }, { scItemId }) {
+      // * Get lectureItem with questions || surveys || homeworks || materials
+      const res = await lectureItemService.getLectureItem({
+        lectureItemId: scItemId,
+      });
+
+      window.console.log('getScItem res', res);
+
+      // * Commit mutations from res3.data (which is scItem)
+      const lectureItemType = res.data.type;
+      switch (lectureItemType) {
+        case 0: { // * 문항
+          const question = res.data.questions[0];
+          let answer = [];
+          if (question.answer.length !== 0) {
+            answer = question.answer[0].split(',')
+            .map(token => token.trim())
+            .filter(token => token.length !== 0);
+          }
+          let choice = [];
+          if (question.choice.length !== 0) {
+            choice = question.choice[0].split(',')
+            .map(token => token.trim())
+            .filter(token => token.length !== 0);
+          }
+          commit('assignCurrentEditingScItem', {
+            currentEditingScItem: {
+              type: utils.convertScItemType(lectureItemType),
+              id: scItemId,
+              fileList: question.files,
+              question: {
+                id: question.question_id,
+                type: question.type,
+                answer,
+                choice,
+                question: question.question,
+                difficulty: question.difficulty,
+                isOrderingAnswer: question.is_ordering_answer,
+                score: question.score,
+                // * order: 이거는 question이 여러개 들어올 때를 가정해서 만들어진거라 패스
+                // * showing_order: 위와 같음
+                // * timer: 애매해서 일단 뻄
+              },
+            },
+          });
+          break;
+        }
+        default: {
+          throw new Error(`not defined lectureItemType ${lectureItemType}`);
+        }
+      }
+    },
+    /**
      * @param {string 문항|설문|강의자료|숙제} scItemType
      */
-    async postScItem({ state }, { scItemType }) {
+    async postScItem({ state, dispatch }, { scItemType }) {
       const lectureItemType = utils.convertScItemType(scItemType);
       if (lectureItemType instanceof Error) {
         throw lectureItemType;
       }
-      const res = await lectureItemService.postLectureItem({
+      const res1 = await lectureItemService.postLectureItem({
         lectureId: state.scId,
         lectureItemType,
       });
-      return res.data.lecture_item_id;
+      const scItemId = res1.data.lecture_item_id;
+
+      // * Post question || survey || homework || material
+      switch (lectureItemType) {
+        case 0: { // * 문항
+          await questionService.postQuestion({
+            lectureItemId: scItemId,
+          });
+          break;
+        }
+        default: {
+          throw new Error(`not defined lectureItemType ${lectureItemType}`);
+        }
+      }
+      window.console.log(123);
+      // await dispatch('getScItem', {
+      //   scItemId,
+      // });
+      return scItemId;
     },
     async putScItem({ getters }) {
       const scItem = getters.currentEditingScItem;
@@ -486,7 +567,7 @@ export default {
         description: scItem.description,
         startTime: scItem.activeStartOffsetSec,
         endTime: scItem.activeEndOffsetSec,
-        order: utils.convertScItemOrder(scItem.order),
+        order: scItem.order,
         result: utils.convertBoolean(scItem.isResultVisible),
       });
     },
@@ -495,6 +576,31 @@ export default {
       // console.log(scItem);
       await lectureItemService.deleteLectureItem({
         lectureItemId: scItem.id,
+      });
+    },
+    async postFile({ commit }, { file }) {
+      const res = await fileService.postFile({
+        file,
+      });
+      window.console.log('res', res);
+    },
+    async putQuestion({ getters }) {
+      const q = getters.currentEditingScItem.question;
+      await questionService.putQuestion({
+        questionId: q.id,
+        question: q.question,
+        choice: q.choice,
+        answer: q.answer,
+        isOrderingAnswer: q.isOrderingAnswer,
+        score: q.score,
+        difficulty: q.difficulty,
+      });
+    },
+    async putQuestionType({ getters }) {
+      const q = getters.currentEditingScItem.question;
+      await questionService.putQuestionType({
+        questionId: q.id,
+        type: q.type,
       });
     },
     async getKnowledgeMapData({ state, commit }) {

@@ -65,9 +65,7 @@
                       || currentEditingScItemType === '숙제'"
                     />
                     <sc-survey-editor v-if="currentEditingScItemType === '설문'" />
-                    <div v-if="currentEditingScItemType === '문항'">
-                      TODO: 문항~~
-                    </div>
+                    <sc-question-editor v-if="currentEditingScItemType === '문항'" />
                     <sc-active-time-editor />
 
                   </el-col>
@@ -135,6 +133,7 @@ import ScMaterialEditor from '../partials/ScMaterialEditor';
 import ScActiveTimeEditor from '../partials/ScActiveTimeEditor';
 import ScCommonEditor from '../partials/ScCommonEditor';
 import ScSurveyEditor from '../partials/ScSurveyEditor';
+import ScQuestionEditor from '../partials/ScQuestionEditor';
 import KnowledgeMap from '../partials/KnowledgeMap';
 
 export default {
@@ -144,6 +143,7 @@ export default {
     ScEditor,
     ScItemAdder,
     ScCommonEditor,
+    ScQuestionEditor,
     ScMaterialEditor,
     ScSurveyEditor,
     ScActiveTimeEditor,
@@ -151,7 +151,7 @@ export default {
   },
   data() {
     return {
-      activeTab: 'first',
+      activeTab: 'third', // TODO: change to first
     };
   },
   async beforeMount() {
