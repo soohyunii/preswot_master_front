@@ -78,7 +78,6 @@
         </el-form>
       </el-col>
     </el-row>
-    {{ currentEditingScItem.question }}
   </div>
 </template>
 
