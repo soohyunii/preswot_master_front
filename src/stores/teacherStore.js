@@ -4,6 +4,7 @@ import lectureItemService from '../services/lectureItemService';
 import fileService from '../services/fileService';
 import questionService from '../services/questionService';
 import materialService from '../services/materialService';
+import surveyService from '../services/surveyService';
 import homeworkService from '../services/homeworkService';
 import { baseURL } from '../services/http';
 
@@ -533,6 +534,32 @@ export default {
           });
           break;
         }
+        case 1: { // * 설문
+          const survey = res.data.surveys[0];
+          commit('assignCurrentEditingScItem', {
+            currentEditingScItem: {
+              type: utils.convertScItemType(lectureItemType),
+              id: scItemId,
+              fileList: survey.files.map((item) => {
+                const tokens = item.client_path.split('/')
+                  .map(t => t.trim())
+                  .filter(t => t.length !== 0);
+
+                const fileName = tokens.pop();
+                return {
+                  name: fileName,
+                  url: `${baseURL}${item.client_path}`,
+                  guid: item.file_guid,
+                };
+              }),
+              survey: {
+                id: survey.survey_id,
+                // comment 제외
+              },
+            },
+          });
+          break;
+        }
         case 2: { // * 강의자료
           const material = res.data.materials[0];
           commit('assignCurrentEditingScItem', {
@@ -608,6 +635,12 @@ export default {
       switch (lectureItemType) {
         case 0: { // * 문항
           await questionService.postQuestion({
+            lectureItemId: scItemId,
+          });
+          break;
+        }
+        case 1: { // * 설문
+          await surveyService.postSurvey({
             lectureItemId: scItemId,
           });
           break;
