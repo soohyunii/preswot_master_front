@@ -68,7 +68,6 @@ export default {
   methods: {
     ...mapMutations('teacher', ['assignCurrentEditingScItem']),
     ...mapActions('teacher', [
-      'postFile',
       'postMaterialFile',
       'deleteFile',
     ]),
@@ -138,9 +137,6 @@ export default {
       // console.log('req', req);
       const vm = this;
       vm.loading = true;
-      // await vm.postFile({
-      //   file: req.file,
-      // });
       switch (vm.from) {
         case 'ScMaterialEditor': {
           await vm.postMaterialFile({
