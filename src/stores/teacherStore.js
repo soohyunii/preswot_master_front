@@ -586,7 +586,7 @@ export default {
     /**
      * @param {string 문항|설문|강의자료|숙제} scItemType
      */
-    async postScItem({ state, dispatch }, { scItemType }) {
+    async postScItem({ state }, { scItemType }) {
       const lectureItemType = utils.convertScItemType(scItemType);
       if (lectureItemType instanceof Error) {
         throw lectureItemType;
@@ -621,9 +621,6 @@ export default {
           throw new Error(`not defined lectureItemType1 ${lectureItemType}`);
         }
       }
-      // await dispatch('getScItem', {
-      //   scItemId,
-      // });
       return scItemId;
     },
     async putScItem({ getters }) {
