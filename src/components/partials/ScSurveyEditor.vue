@@ -2,7 +2,7 @@
   <div>
     <el-row>
       <el-col style="max-width: 600px;">
-        <el-form :model="survey" ref="elForm" label-width="120px">
+        <el-form ref="elForm" label-width="120px">
           <el-form-item label="파일 업로드">
             <upload from="ScSurveyEditor"/>
           </el-form-item>
