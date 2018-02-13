@@ -146,6 +146,9 @@ export default {
       const vm = this;
       vm.loading = true;
       switch (vm.from) {
+        case 'ScQuestionEditor':
+        case 'ScSurveyEditor':
+        case 'ScHomeworkEditor':
         case 'ScMaterialEditor': {
           await vm.postFile({
             file: req.file,

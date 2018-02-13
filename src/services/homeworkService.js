@@ -21,7 +21,7 @@ export default {
   }) {
     const form = new FormData();
     form.append('file', file, file.name);
-    return http.post(`/homework/${homeworkId}`, form, {
+    return http.post(`/homework/${homeworkId}/file`, form, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
