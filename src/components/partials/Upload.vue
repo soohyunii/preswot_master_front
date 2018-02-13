@@ -39,8 +39,10 @@ export default {
       get() {
         const vm = this;
         switch (vm.from) {
+          case 'ScQuestionEditor':
+          case 'ScSurveyEditor':
+          case 'ScHomeworkEditor':
           case 'ScMaterialEditor': {
-            // for fileList from ScMaterialEditor
             const scItem = vm.currentEditingScItem;
             return scItem ? scItem.fileList : [];
           }
@@ -52,7 +54,9 @@ export default {
       set(fileList) {
         const vm = this;
         switch (vm.from) {
-          default:
+          case 'ScQuestionEditor':
+          case 'ScSurveyEditor':
+          case 'ScHomeworkEditor':
           case 'ScMaterialEditor': {
             // for fileList of ScMaterialEditor
             vm.assignCurrentEditingScItem({
@@ -60,6 +64,10 @@ export default {
                 fileList,
               },
             });
+            break;
+          }
+          default: {
+            break;
           }
         }
       },
@@ -68,7 +76,7 @@ export default {
   methods: {
     ...mapMutations('teacher', ['assignCurrentEditingScItem']),
     ...mapActions('teacher', [
-      'postMaterialFile',
+      'postFile',
       'deleteFile',
     ]),
     handleExceed(files, fileList) {
@@ -139,7 +147,7 @@ export default {
       vm.loading = true;
       switch (vm.from) {
         case 'ScMaterialEditor': {
-          await vm.postMaterialFile({
+          await vm.postFile({
             file: req.file,
           });
           break;

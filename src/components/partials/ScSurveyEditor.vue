@@ -3,6 +3,10 @@
     <el-row>
       <el-col style="max-width: 600px;">
         <el-form :model="survey" ref="elForm" label-width="120px">
+          <el-form-item label="파일 업로드">
+            <upload from="ScSurveyEditor"/>
+          </el-form-item>
+
           <el-form-item label="설문 제목">
             <el-input
               type="textarea"
@@ -32,8 +36,13 @@
 <script>
 import { mapState, mapMutations, mapGetters } from 'vuex';
 
+import Upload from './Upload';
+
 export default {
   name: 'ScSurveyEditor',
+  components: {
+    Upload,
+  },
   data() {
     return {
       surveyDescription: '',

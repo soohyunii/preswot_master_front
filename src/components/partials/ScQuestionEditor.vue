@@ -3,6 +3,10 @@
     <el-row>
       <el-col style="max-width: 600px;">
         <el-form label-width="120px">
+          <el-form-item label="파일 업로드">
+            <upload from="ScQuestionEditor"/>
+          </el-form-item>
+
           <el-form-item label="문항 유형">
             <el-radio-group
               v-model="pType"
@@ -201,9 +205,14 @@
 
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex';
+import Upload from './Upload';
+
 
 export default {
   name: 'ScQuestionEditor',
+  components: {
+    Upload,
+  },
   data() {
     return {
       languageList: [{

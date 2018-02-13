@@ -720,11 +720,41 @@ export default {
         fileGuid,
       });
     },
-    async postMaterialFile({ commit, getters }, { file }) {
-      const res = await materialService.postMaterialFile({
-        file,
-        materialId: getters.currentEditingScItem.material.id,
-      });
+    async postFile({ commit, getters }, { file }) {
+      let res;
+      switch (getters.currentEditingScItem.type) {
+        case '강의자료': {
+          res = await materialService.postMaterialFile({
+            file,
+            materialId: getters.currentEditingScItem.material.id,
+          });
+          break;
+        }
+        case '설문': {
+          res = await surveyService.postSurveyFile({
+            file,
+            surveyId: getters.currentEditingScItem.survey.id,
+          });
+          break;
+        }
+        case '문항': {
+          res = await questionService.postQuestionFile({
+            file,
+            questionId: getters.currentEditingScItem.question.id,
+          });
+          break;
+        }
+        case '숙제': {
+          res = await homeworkService.postHomeworkFile({
+            file,
+            homeworkId: getters.currentEditingScItem.homework.id,
+          });
+          break;
+        }
+        default: {
+          throw new Error(`not defined scItemType ${getters.currentEditingScItem.type}`);
+        }
+      }
       const newFileList = getters.currentEditingScItem.fileList;
       const tokens = res.data.file.client_path.split('/')
         .map(t => t.trim())
