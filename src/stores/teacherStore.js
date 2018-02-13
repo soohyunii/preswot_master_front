@@ -210,8 +210,11 @@ export default {
       };
       state.nodes.push(createNode);
     },
-    pushQuesetionKeyword(state, { keyword }) {
-      state.sc[state.currentEditingScItemIndex].questionKeywords.push(keyword);
+    pushQuestionKeyword(state, { keyword, score }) {
+      state.sc[state.currentEditingScItemIndex].questionKeywords.push({
+        keyword,
+        score,
+      });
     },
     updateQuestionKeywords(state, { keywords }) {
       state.sc[state.currentEditingScItemIndex].questionKeywords = keywords;
@@ -550,7 +553,6 @@ export default {
         lectureItemType,
       });
       const scItemId = res1.data.lecture_item_id;
-
       // * Post question || survey || homework || material
       switch (lectureItemType) {
         case 0: { // * 문항
@@ -673,8 +675,22 @@ export default {
       });
       const keywords = res.data.map(item => ({
         keyword: item.keyword,
+        score: item.score_portion,
       }));
       commit('updateQuestionKeywords', { keywords });
+    },
+    async postQuestionKeyword({ getters }, { questionId }) {
+      const data = getters.currentEditingScItem.questionKeywords;
+      const res = await lectureItemService.postQuestionKeywords({
+        questionId,
+        data,
+      });
+      window.console.log('res qk', res);
+    },
+    async deleteQuestionKeywords({ commit }, { questionId }) {
+      await lectureItemService.deleteQuestionKeywords({
+        questionId,
+      });
     },
   },
 };

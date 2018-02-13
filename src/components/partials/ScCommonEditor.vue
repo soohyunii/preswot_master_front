@@ -3,26 +3,6 @@
     <el-row>
       <el-col style="max-width: 600px;">
         <el-form :model="input" ref="elFrom" label-width="120px">
-          <el-form-item label="키워드" prop="keywords">
-            <el-tag
-              :key="index"
-              v-for="(item, index) in scQuestionKeywords"
-              closable
-              :disable-transitions="false"
-              @close="handleClose(item)">
-              {{ item.keyword }}
-          </el-tag>
-          <el-input
-            class="input-new-tag"
-            v-if="inputVisible"
-            v-model="inputValue"
-            ref="saveTagInput"
-            size="mini"
-            @keyup.enter.native="handleInputConfirm"
-            @blur="handleInputConfirm"
-          />
-          <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
-          </el-form-item>
           <el-form-item label="아이템 제목" prop="scItemTitle">
             <el-input
               placeholder="아이템 제목"
@@ -61,8 +41,6 @@ export default {
         TITLE: false,
         DESCRIPTION: false,
       },
-      inputVisible: false,
-      inputValue: '',
     };
   },
   computed: {
@@ -110,27 +88,11 @@ export default {
         });
       },
     },
-    scQuestionKeywords: {
-      get() {
-        const vm = this;
-        const item = vm.currentEditingScItem;
-        if (!item) {
-          return [];
-        }
-        return item.questionKeywords;
-      },
-      set(scQuestionKeywords) {
-        const vm = this;
-        vm.assignCurrentEditingScItem({
-          currentEditingScItem: {
-            questionKeywords: scQuestionKeywords,
-          },
-        });
-      },
-    },
   },
   methods: {
-    ...mapMutations('teacher', ['assignCurrentEditingScItem']),
+    ...mapMutations('teacher', [
+      'assignCurrentEditingScItem',
+    ]),
     ...mapActions('teacher', [
       'putScItem',
     ]),
@@ -150,27 +112,6 @@ export default {
         vm.loading[type] = false;
       }
     },
-    handleClose(tag) {
-      this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
-    },
   },
 };
 </script>
-
-<style scoped>
-  .el-tag + .el-tag {
-    margin-left: 10px;
-  }
-  .button-new-tag {
-    margin-left: 10px;
-    height: 32px;
-    line-height: 30px;
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-  .input-new-tag {
-    width: 90px;
-    margin-left: 10px;
-    vertical-align: bottom;
-  }
-</style>
