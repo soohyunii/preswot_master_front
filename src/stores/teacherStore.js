@@ -670,8 +670,9 @@ export default {
     // },
     async getItemKeywords({ commit, getters }) {
       const item = getters.currentEditingScItem;
-      switch (item.type) {
-        case '문항': {
+      const lectureItemType = utils.convertScItemType(item.type);
+      switch (lectureItemType) {
+        case 0: {
           const q = item.question;
           const res = await lectureItemService.getQuestionKeywords({
             questionId: q.id,
@@ -683,7 +684,7 @@ export default {
           commit('updateItemKeywords', { keywords });
           break;
         }
-        case '강의자료': {
+        case 2: {
           const m = item.material;
           const res = await lectureItemService.getMaterialKeywords({
             materialId: m.id,
@@ -703,15 +704,16 @@ export default {
     async postItemKeywords({ getters }, { id }) {
       const item = getters.currentEditingScItem;
       const data = getters.currentEditingScItem.itemKeywords;
-      switch (item.type) {
-        case '문항': {
+      const lectureItemType = utils.convertScItemType(item.type);
+      switch (lectureItemType) {
+        case 0: {
           await lectureItemService.postQuestionKeywords({
             questionId: id,
             data,
           });
           break;
         }
-        case '강의자료': {
+        case 2: {
           await lectureItemService.postMaterialKeywords({
             materialId: id,
             data,
@@ -725,14 +727,15 @@ export default {
     },
     async deleteItemKeywords({ getters }, { id }) {
       const item = getters.currentEditingScItem;
-      switch (item.type) {
-        case '문항': {
+      const lectureItemType = utils.convertScItemType(item.type);
+      switch (lectureItemType) {
+        case 0: {
           await lectureItemService.deleteQuestionKeywords({
             questionId: id,
           });
           break;
         }
-        case '강의자료': {
+        case 2: {
           await lectureItemService.deleteMaterialKeywords({
             materialId: id,
           });
