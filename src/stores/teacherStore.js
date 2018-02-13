@@ -210,15 +210,15 @@ export default {
       };
       state.nodes.push(createNode);
     },
-    pushQuestionKeyword(state, { keyword, score }) {
-      state.sc[state.currentEditingScItemIndex].questionKeywords.push({
+    pushItemKeyword(state, { keyword, score }) {
+      state.sc[state.currentEditingScItemIndex].itemKeywords.push({
         keyword,
         score,
       });
     },
-    updateQuestionKeywords(state, { keywords }) {
-      state.sc[state.currentEditingScItemIndex].questionKeywords = keywords;
-      console.log(state.sc[state.currentEditingScItemIndex].questionKeywords); // eslint-disable-line
+    updateItemKeywords(state, { keywords }) {
+      state.sc[state.currentEditingScItemIndex].itemKeywords = keywords;
+      console.log(state.sc[state.currentEditingScItemIndex].itemKeywords); // eslint-disable-line
     },
     assignCurrentEditingNode(state, { currentEditingNode }) {
       Object.assign(
@@ -278,7 +278,7 @@ export default {
       const fileList = [];
       const survey = { choice: [] };
       const question = {};
-      const questionKeywords = [];
+      const itemKeywords = [];
       const scItem = {
         id,
         title,
@@ -291,7 +291,7 @@ export default {
         fileList,
         survey,
         question,
-        questionKeywords,
+        itemKeywords,
       };
       state.currentEditingScItemIndex = state.sc.length;
       state.sc.push(scItem);
@@ -409,7 +409,7 @@ export default {
           isResultVisible: utils.convertBoolean(scItem.result),
           opened: scItem.opened,
           question: {},
-          questionKeywords: [],
+          itemKeywords: [],
         };
       });
       commit('updateSc', {
@@ -421,7 +421,7 @@ export default {
       await dispatch('getScItem', {
         scItemId: getters.currentEditingScItem.id,
       });
-      await dispatch('getQuestionKeywords');
+      await dispatch('getItemKeywords');
     },
     async createSc({ getters, rootGetters }) {
       const userId = rootGetters['auth/userId'];
@@ -668,29 +668,80 @@ export default {
     //     node:
     //   });
     // },
-    async getQuestionKeywords({ commit, getters }) {
-      const q = getters.currentEditingScItem.question;
-      const res = await lectureItemService.getQuestionKeywords({
-        questionId: q.id,
-      });
-      const keywords = res.data.map(item => ({
-        keyword: item.keyword,
-        score: item.score_portion,
-      }));
-      commit('updateQuestionKeywords', { keywords });
+    async getItemKeywords({ commit, getters }) {
+      const item = getters.currentEditingScItem;
+      switch (item.type) {
+        case '문항': {
+          const q = item.question;
+          const res = await lectureItemService.getQuestionKeywords({
+            questionId: q.id,
+          });
+          const keywords = res.data.map(element => ({
+            keyword: element.keyword,
+            score: element.score_portion,
+          }));
+          commit('updateItemKeywords', { keywords });
+          break;
+        }
+        case '강의자료': {
+          const m = item.material;
+          const res = await lectureItemService.getMaterialKeywords({
+            materialId: m.id,
+          });
+          const keywords = res.data.map(element => ({
+            keyword: element.keyword,
+            score: element.score_portion,
+          }));
+          commit('updateItemKeywords', { keywords });
+          break;
+        }
+        default: {
+          throw new Error('not defined type', item.type);
+        }
+      }
     },
-    async postQuestionKeyword({ getters }, { questionId }) {
-      const data = getters.currentEditingScItem.questionKeywords;
-      const res = await lectureItemService.postQuestionKeywords({
-        questionId,
-        data,
-      });
-      window.console.log('res qk', res);
+    async postItemKeywords({ getters }, { id }) {
+      const item = getters.currentEditingScItem;
+      const data = getters.currentEditingScItem.itemKeywords;
+      switch (item.type) {
+        case '문항': {
+          await lectureItemService.postQuestionKeywords({
+            questionId: id,
+            data,
+          });
+          break;
+        }
+        case '강의자료': {
+          await lectureItemService.postMaterialKeywords({
+            materialId: id,
+            data,
+          });
+          break;
+        }
+        default: {
+          throw new Error('not defined type', item.type);
+        }
+      }
     },
-    async deleteQuestionKeywords({ commit }, { questionId }) {
-      await lectureItemService.deleteQuestionKeywords({
-        questionId,
-      });
+    async deleteItemKeywords({ getters }, { id }) {
+      const item = getters.currentEditingScItem;
+      switch (item.type) {
+        case '문항': {
+          await lectureItemService.deleteQuestionKeywords({
+            questionId: id,
+          });
+          break;
+        }
+        case '강의자료': {
+          await lectureItemService.deleteMaterialKeywords({
+            materialId: id,
+          });
+          break;
+        }
+        default: {
+          throw new Error('not defined type', item.type);
+        }
+      }
     },
   },
 };

@@ -2,7 +2,7 @@
   <div>
     <el-tag
       :key="index"
-      v-for="(item, index) in scQuestionKeywords"
+      v-for="(item, index) in scItemKeywords"
       closable
       :disable-transitions="false"
       @close="handleClose(item)">
@@ -51,20 +51,20 @@ export default {
   },
   computed: {
     ...mapGetters('teacher', ['currentEditingScItem']),
-    scQuestionKeywords: {
+    scItemKeywords: {
       get() {
         const vm = this;
         const item = vm.currentEditingScItem;
         if (!item) {
           return [];
         }
-        return item.questionKeywords;
+        return item.itemKeywords;
       },
-      set(scQuestionKeywords) {
+      set(scItemKeywords) {
         const vm = this;
         vm.assignCurrentEditingScItem({
           currentEditingScItem: {
-            questionKeywords: scQuestionKeywords,
+            itemKeywords: scItemKeywords,
           },
         });
       },
@@ -83,17 +83,17 @@ export default {
   methods: {
     ...mapMutations('teacher', [
       'assignCurrentEditingScItem',
-      'pushQuestionKeyword',
+      'pushItemKeyword',
     ]),
     ...mapActions('teacher', [
       'putScItem',
-      'postQuestionKeyword',
-      'deleteQuestionKeywords',
+      'postItemKeywords',
+      'deleteItemKeywords',
     ]),
     handleClose(item) {
       const vm = this;
-      const questionKeywords = vm.currentEditingScItem.questionKeywords;
-      questionKeywords.splice(questionKeywords.findIndex(k => k.keyword === item.keyword), 1);
+      const itemKeywords = vm.currentEditingScItem.itemKeywords;
+      itemKeywords.splice(itemKeywords.findIndex(k => k.keyword === item.keyword), 1);
     },
     async showInput() {
       const vm = this;
@@ -109,7 +109,7 @@ export default {
       for (let i = 0; i < vm.nodes.length; i += 1) {
         nodesNames.push(vm.nodes[i].name);
       }
-      if (!nodesNames.includes(inputValue)) {
+      if (!nodesNames.includes(inputValue) && inputValue) {
         // TODO: transalte
         vm.$notify({
           title: 'Empty',
@@ -117,7 +117,7 @@ export default {
           type: 'warning',
         });
         return;
-      } else if (vm.currentEditingScItem.questionKeywords.findIndex(
+      } else if (vm.currentEditingScItem.itemKeywords.findIndex(
         k => k.keyword === inputValue) !== -1) {
         // TODO: transalte
         vm.$notify({
@@ -128,7 +128,7 @@ export default {
         return;
       }
       if (inputValue && inputScore) {
-        await vm.pushQuestionKeyword({
+        await vm.pushItemKeyword({
           keyword: inputValue,
           score: inputScore,
         });
@@ -140,12 +140,28 @@ export default {
     async save() {
       const vm = this;
       const item = vm.currentEditingScItem;
-      const questionId = item.question.id;
       let scoreSum = 0;
-      item.questionKeywords.forEach((keyword) => {
+      item.itemKeywords.forEach((keyword) => {
         scoreSum += keyword.score;
       });
-      if (scoreSum !== item.question.score) {
+      let id = null;
+      let itemScore = 0;
+      switch (item.type) {
+        case '문항': {
+          id = item.question.id;
+          itemScore = item.question.score;
+          break;
+        }
+        case '강의자료': {
+          id = item.material.id;
+          itemScore = item.material.score;
+          break;
+        }
+        default: {
+          throw new Error('not defined type', item.type);
+        }
+      }
+      if (scoreSum !== itemScore) {
         // TODO: transalte
         vm.$notify({
           title: '406',
@@ -154,8 +170,8 @@ export default {
         });
         return;
       }
-      await vm.deleteQuestionKeywords({ questionId }); // TODO: try catch
-      vm.postQuestionKeyword({ questionId }); // TODO: try catch
+      await vm.deleteItemKeywords({ id }); // TODO: try catch
+      vm.postItemKeywords({ id }); // TODO: try catch
     },
     querySearch(queryString, cb) {
       const vm = this;

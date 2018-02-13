@@ -90,9 +90,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', [
-      'assignCurrentEditingScItem',
-    ]),
+    ...mapMutations('teacher', ['assignCurrentEditingScItem']),
     ...mapActions('teacher', [
       'putScItem',
     ]),

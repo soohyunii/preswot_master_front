@@ -29,7 +29,7 @@ export default {
       'assignCurrentEditingScItem',
       'updateCurrentEditingScItemIndex',
     ]),
-    ...mapActions('teacher', ['deleteScItem', 'getScItem', 'getQuestionKeywords']),
+    ...mapActions('teacher', ['deleteScItem', 'getScItem', 'getItemKeywords']),
     async onClick(type, index) {
       const vm = this;
       switch (type) {
@@ -41,7 +41,7 @@ export default {
             await vm.getScItem({
               scItemId: vm.currentEditingScItem.id,
             });
-            vm.getQuestionKeywords();
+            vm.getItemKeywords();
           } else {
             vm.updateCurrentEditingScItemIndex({
               currentEditingScItemIndex: -1,
