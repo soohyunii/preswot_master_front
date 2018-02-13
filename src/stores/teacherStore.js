@@ -211,6 +211,16 @@ export default {
       };
       state.nodes.push(createNode);
     },
+    pushItemKeyword(state, { keyword, score }) {
+      state.sc[state.currentEditingScItemIndex].itemKeywords.push({
+        keyword,
+        score,
+      });
+    },
+    updateItemKeywords(state, { keywords }) {
+      state.sc[state.currentEditingScItemIndex].itemKeywords = keywords;
+      console.log(state.sc[state.currentEditingScItemIndex].itemKeywords); // eslint-disable-line
+    },
     assignCurrentEditingNode(state, { currentEditingNode }) {
       Object.assign(
         state.nodes[state.currentEditingNodeIndex],
@@ -269,6 +279,7 @@ export default {
       const fileList = [];
       const survey = {};
       const question = {};
+      const itemKeywords = [];
       const scItem = {
         id,
         title,
@@ -281,6 +292,7 @@ export default {
         fileList,
         survey,
         question,
+        itemKeywords,
       };
       state.currentEditingScItemIndex = state.sc.length;
       state.sc.push(scItem);
@@ -399,6 +411,7 @@ export default {
           opened: scItem.opened,
           question: {},
           survey: {},
+          itemKeywords: [],
         };
       });
       commit('updateSc', {
@@ -410,6 +423,7 @@ export default {
       await dispatch('getScItem', {
         scItemId: getters.currentEditingScItem.id,
       });
+      await dispatch('getItemKeywords');
     },
     async createSc({ getters, rootGetters }) {
       const userId = rootGetters['auth/userId'];
@@ -564,7 +578,6 @@ export default {
         lectureItemType,
       });
       const scItemId = res1.data.lecture_item_id;
-
       // * Post question || survey || homework || material
       switch (lectureItemType) {
         case 0: { // * 문항
@@ -695,5 +708,83 @@ export default {
     //     node:
     //   });
     // },
+    async getItemKeywords({ commit, getters }) {
+      const item = getters.currentEditingScItem;
+      const lectureItemType = utils.convertScItemType(item.type);
+      switch (lectureItemType) {
+        case 0: {
+          const q = item.question;
+          const res = await lectureItemService.getQuestionKeywords({
+            questionId: q.id,
+          });
+          const keywords = res.data.map(element => ({
+            keyword: element.keyword,
+            score: element.score_portion,
+          }));
+          commit('updateItemKeywords', { keywords });
+          break;
+        }
+        case 2: {
+          const m = item.material;
+          const res = await lectureItemService.getMaterialKeywords({
+            materialId: m.id,
+          });
+          const keywords = res.data.map(element => ({
+            keyword: element.keyword,
+            score: element.score_portion,
+          }));
+          commit('updateItemKeywords', { keywords });
+          break;
+        }
+        default: {
+          throw new Error(`not defined type ${item.type}`);
+        }
+      }
+    },
+    async postItemKeywords({ getters }, { id }) {
+      const item = getters.currentEditingScItem;
+      const data = getters.currentEditingScItem.itemKeywords;
+      const lectureItemType = utils.convertScItemType(item.type);
+      switch (lectureItemType) {
+        case 0: {
+          await lectureItemService.postQuestionKeywords({
+            questionId: id,
+            data,
+          });
+          break;
+        }
+        case 2: {
+          await lectureItemService.postMaterialKeywords({
+            materialId: id,
+            data,
+          });
+          break;
+        }
+        default: {
+          throw new Error(`not defined type ${item.type}`);
+        }
+      }
+    },
+    async deleteItemKeywords({ getters }, { id }) {
+      const item = getters.currentEditingScItem;
+      const lectureItemType = utils.convertScItemType(item.type);
+      switch (lectureItemType) {
+        case 0: {
+          await lectureItemService.deleteQuestionKeywords({
+            questionId: id,
+          });
+          break;
+        }
+        case 2: {
+          await lectureItemService.deleteMaterialKeywords({
+            materialId: id,
+          });
+          break;
+        }
+        default: {
+          throw new Error(`not defined type ${item.type}`);
+        }
+      }
+    },
   },
 };
