@@ -172,7 +172,7 @@ export default {
     });
   },
   computed: {
-    ...mapState('teacher', ['scTitle', 'scType']),
+    ...mapState('sc', ['scTitle', 'scType']),
     ...mapGetters('teacher', [
       'isScEmpty',
       'DEBUGscenarioServerWillReceive',
