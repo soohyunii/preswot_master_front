@@ -3,6 +3,7 @@ import lectureService from '../services/lectureService';
 import lectureItemService from '../services/lectureItemService';
 import fileService from '../services/fileService';
 import questionService from '../services/questionService';
+import surveyService from '../services/surveyService';
 
 import utils from '../utils';
 
@@ -276,7 +277,7 @@ export default {
       const activeEndOffsetSec = null; // 강의 활성화 시각 기준으로 몇초 뒤에 비활성화되냐
       const isResultVisible = true; // 설문이나 문항을 풀고 나서 수강생중 몇퍼가 1번 선택했고.. 뭐 그런게 결과인데, 결과가 보이냐 마냐
       const fileList = [];
-      const survey = { choice: [] };
+      const survey = {};
       const question = {};
       const itemKeywords = [];
       const scItem = {
@@ -409,6 +410,7 @@ export default {
           isResultVisible: utils.convertBoolean(scItem.result),
           opened: scItem.opened,
           question: {},
+          survey: {},
           itemKeywords: [],
         };
       });
@@ -535,6 +537,29 @@ export default {
           });
           break;
         }
+        case 1: { // * 설문
+          const survey = res.data.surveys[0];
+          let choice = [];
+          if (survey.choice.length !== 0) {
+            choice = survey.choice[0].split(',')
+            .map(token => token.trim())
+            .filter(token => token.length !== 0);
+          }
+          commit('assignCurrentEditingScItem', {
+            currentEditingScItem: {
+              type: utils.convertScItemType(lectureItemType),
+              id: scItemId,
+              fileList: survey.files,
+              survey: {
+                id: survey.survey_id,
+                type: survey.type,
+                comment: survey.comment,
+                choice,
+              },
+            },
+          });
+          break;
+        }
         default: {
           throw new Error(`not defined lectureItemType ${lectureItemType}`);
         }
@@ -557,6 +582,12 @@ export default {
       switch (lectureItemType) {
         case 0: { // * 문항
           await questionService.postQuestion({
+            lectureItemId: scItemId,
+          });
+          break;
+        }
+        case 1: { // * 설문
+          await surveyService.postSurvey({
             lectureItemId: scItemId,
           });
           break;
@@ -614,6 +645,15 @@ export default {
       await questionService.putQuestionType({
         questionId: q.id,
         type: q.type,
+      });
+    },
+    async putSurvey({ getters }) {
+      const s = getters.currentEditingScItem.survey;
+      await surveyService.putSurvey({
+        surveyId: s.id,
+        comment: s.comment,
+        choice: s.choice,
+        type: s.type,
       });
     },
     async getKnowledgeMapData({ state, commit }) {
