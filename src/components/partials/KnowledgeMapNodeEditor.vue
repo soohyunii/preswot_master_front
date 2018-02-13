@@ -75,7 +75,14 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['pushNode', 'updateNodes', 'deleteNode', 'assignCurrentEditingNode', 'assignCurrentEditingNodeIndex', 'updateEdgeId']),
+    ...mapMutations('sc', [
+      'pushNode',
+      'updateNodes',
+      'deleteNode',
+      'assignCurrentEditingNode',
+      'assignCurrentEditingNodeIndex',
+      'updateEdgeId',
+    ]),
     onClick(type, index) {
       const vm = this;
       switch (type) {

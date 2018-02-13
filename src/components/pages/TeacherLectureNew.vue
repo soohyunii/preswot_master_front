@@ -188,8 +188,8 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['updateScType', 'updateScId']),
-    ...mapActions('teacher', [
+    ...mapMutations('sc', ['updateScType', 'updateScId']),
+    ...mapActions('sc', [
       'getSc',
       'deleteSc',
       'getKnowledgeMapData',

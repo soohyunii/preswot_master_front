@@ -109,7 +109,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['setNodesPinned']),
+    ...mapMutations('sc', ['setNodesPinned']),
     ...mapActions('teacher', ['postKnowledgeMapData']),
     nodeClick(event, node) {
       const vm = this;
