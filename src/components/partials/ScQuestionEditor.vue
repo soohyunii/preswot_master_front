@@ -7,6 +7,10 @@
             <upload from="ScQuestionEditor"/>
           </el-form-item>
 
+          <el-form-item label="키워드">
+            <keyword-editor></keyword-editor>
+          </el-form-item>
+
           <el-form-item label="문항 유형">
             <el-radio-group
               v-model="pType"
@@ -206,13 +210,15 @@
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 import Upload from './Upload';
+import keywordEditor from './keywordEditor';
 
 
 export default {
-  name: 'ScQuestionEditor',
   components: {
+    keywordEditor,
     Upload,
   },
+  name: 'ScQuestionEditor',
   data() {
     return {
       languageList: [{

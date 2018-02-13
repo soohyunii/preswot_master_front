@@ -214,6 +214,16 @@ export default {
       };
       state.nodes.push(createNode);
     },
+    pushItemKeyword(state, { keyword, score }) {
+      state.sc[state.currentEditingScItemIndex].itemKeywords.push({
+        keyword,
+        score,
+      });
+    },
+    updateItemKeywords(state, { keywords }) {
+      state.sc[state.currentEditingScItemIndex].itemKeywords = keywords;
+      console.log(state.sc[state.currentEditingScItemIndex].itemKeywords); // eslint-disable-line
+    },
     assignCurrentEditingNode(state, { currentEditingNode }) {
       Object.assign(
         state.nodes[state.currentEditingNodeIndex],
@@ -270,9 +280,10 @@ export default {
       const activeEndOffsetSec = null; // 강의 활성화 시각 기준으로 몇초 뒤에 비활성화되냐
       const isResultVisible = true; // 설문이나 문항을 풀고 나서 수강생중 몇퍼가 1번 선택했고.. 뭐 그런게 결과인데, 결과가 보이냐 마냐
       const fileList = [];
-      const survey = { choice: [] };
+      const survey = {};
       const question = {};
       const homework = {};
+      const itemKeywords = [];
       const scItem = {
         id,
         title,
@@ -286,6 +297,7 @@ export default {
         survey,
         question,
         homework,
+        itemKeywords,
       };
       state.currentEditingScItemIndex = state.sc.length;
       state.sc.push(scItem);
@@ -406,6 +418,8 @@ export default {
           question: {},
           material: {},
           homework: {},
+          survey: {},
+          itemKeywords: [],
           fileList: [],
         };
       });
@@ -419,6 +433,7 @@ export default {
         await dispatch('getScItem', {
           scItemId: getters.currentEditingScItem.id,
         });
+        await dispatch('getItemKeywords');
       }
     },
     async createSc({ getters, rootGetters }) {
@@ -542,6 +557,12 @@ export default {
         }
         case 1: { // * 설문
           const survey = res.data.surveys[0];
+          let choice = [];
+          if (survey.choice.length !== 0) {
+            choice = survey.choice[0].split(',')
+            .map(token => token.trim())
+            .filter(token => token.length !== 0);
+          }
           commit('assignCurrentEditingScItem', {
             currentEditingScItem: {
               type: utils.convertScItemType(lectureItemType),
@@ -560,6 +581,9 @@ export default {
               }),
               survey: {
                 id: survey.survey_id,
+                type: survey.type,
+                comment: survey.comment,
+                choice,
                 // comment 제외
               },
             },
@@ -636,7 +660,6 @@ export default {
         lectureItemType,
       });
       const scItemId = res1.data.lecture_item_id;
-
       // * Post question || survey || homework || material
       switch (lectureItemType) {
         case 0: { // * 문항
@@ -774,6 +797,15 @@ export default {
       });
       // console.log('teacherStore action postMaterialFile', res);
     },
+    async putSurvey({ getters }) {
+      const s = getters.currentEditingScItem.survey;
+      await surveyService.putSurvey({
+        surveyId: s.id,
+        comment: s.comment,
+        choice: s.choice,
+        type: s.type,
+      });
+    },
     async getKnowledgeMapData({ state, commit }) {
       const res1 = await lectureService.getLectureKeywords({
         lectureId: state.scId,
@@ -826,5 +858,83 @@ export default {
     //     node:
     //   });
     // },
+    async getItemKeywords({ commit, getters }) {
+      const item = getters.currentEditingScItem;
+      const lectureItemType = utils.convertScItemType(item.type);
+      switch (lectureItemType) {
+        case 0: {
+          const q = item.question;
+          const res = await lectureItemService.getQuestionKeywords({
+            questionId: q.id,
+          });
+          const keywords = res.data.map(element => ({
+            keyword: element.keyword,
+            score: element.score_portion,
+          }));
+          commit('updateItemKeywords', { keywords });
+          break;
+        }
+        case 2: {
+          const m = item.material;
+          const res = await lectureItemService.getMaterialKeywords({
+            materialId: m.id,
+          });
+          const keywords = res.data.map(element => ({
+            keyword: element.keyword,
+            score: element.score_portion,
+          }));
+          commit('updateItemKeywords', { keywords });
+          break;
+        }
+        default: {
+          throw new Error(`not defined type ${item.type}`);
+        }
+      }
+    },
+    async postItemKeywords({ getters }, { id }) {
+      const item = getters.currentEditingScItem;
+      const data = getters.currentEditingScItem.itemKeywords;
+      const lectureItemType = utils.convertScItemType(item.type);
+      switch (lectureItemType) {
+        case 0: {
+          await lectureItemService.postQuestionKeywords({
+            questionId: id,
+            data,
+          });
+          break;
+        }
+        case 2: {
+          await lectureItemService.postMaterialKeywords({
+            materialId: id,
+            data,
+          });
+          break;
+        }
+        default: {
+          throw new Error(`not defined type ${item.type}`);
+        }
+      }
+    },
+    async deleteItemKeywords({ getters }, { id }) {
+      const item = getters.currentEditingScItem;
+      const lectureItemType = utils.convertScItemType(item.type);
+      switch (lectureItemType) {
+        case 0: {
+          await lectureItemService.deleteQuestionKeywords({
+            questionId: id,
+          });
+          break;
+        }
+        case 2: {
+          await lectureItemService.deleteMaterialKeywords({
+            materialId: id,
+          });
+          break;
+        }
+        default: {
+          throw new Error(`not defined type ${item.type}`);
+        }
+      }
+    },
   },
 };
