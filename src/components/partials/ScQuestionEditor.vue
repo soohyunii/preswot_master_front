@@ -3,6 +3,9 @@
     <el-row>
       <el-col style="max-width: 600px;">
         <el-form label-width="120px">
+          <el-form-item label="키워드">
+            <keyword-editor></keyword-editor>
+          </el-form-item>
           <el-form-item label="문항 유형">
             <el-radio-group
               v-model="pType"
@@ -96,8 +99,12 @@
 
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex';
+import keywordEditor from './keywordEditor';
 
 export default {
+  components: {
+    keywordEditor,
+  },
   name: 'ScQuestionEditor',
   data() {
     return {
