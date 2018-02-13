@@ -23,3 +23,5 @@ if (jwt) {
 }
 
 export default axios.create(axiosConfig);
+
+export const baseURL = axiosConfig.baseURL;
