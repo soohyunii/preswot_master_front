@@ -2,26 +2,40 @@
   <div>
     <el-row>
       <el-col style="max-width: 600px;">
-        <el-form :model="survey" ref="elForm" label-width="120px">
+        <el-form ref="elForm" label-width="120px">
+          <el-form-item label="문항 유형">
+            <el-radio-group
+              v-model="pType"
+              @change="onChange('TYPE')"
+            >
+              <el-radio-button :label="0">객관</el-radio-button>
+              <el-radio-button :label="1">서술</el-radio-button>
+            </el-radio-group>
+          </el-form-item>
+          <i class="el-icon-loading" v-if="loading.TYPE" />
+
           <el-form-item label="설문 제목">
             <el-input
               type="textarea"
               :rows="3"
               placeholder="Java 경험 얼마나?"
-              v-model="survey.description"
+              v-model.lazy="pComment"
+              @change="onChange('COMMENT')"
             />
           </el-form-item>
+          <i class="el-icon-loading" v-if="loading.COMMENT" />
 
-          <el-form-item label="설문 문항">
-            <template v-for="(item, index, key) in survey.choice">
-              <el-input v-model="survey.choice[index]" :key="key">
-                <template slot="prepend">#{{ index + 1 }}</template>
-                <el-button slot="append" icon="el-icon-close" @click="onClick('deleteSelection', index)"></el-button>
-              </el-input>
-            </template>
-            <br v-if="survey.choice.length" /> <br v-if="survey.choice.length" />
-            <el-button type="primary" @click="onClick('addSelection')">(객관식) 선지 추가하기 [+]</el-button>
-          </el-form-item>
+          <template v-if="[0].includes(pType)">
+            <el-form-item label="보기" prop="pChoice">
+              <el-input
+                type="textarea"
+                :rows="3"
+                v-model.lazy="pChoice"
+                @change="onChange('CHOICE')"
+              />
+            </el-form-item>
+            <i class="el-icon-loading" v-if="loading.CHOICE" />
+          </template>
 
         </el-form>
       </el-col>
@@ -30,33 +44,76 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapGetters } from 'vuex';
+import { mapMutations, mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'ScSurveyEditor',
   data() {
     return {
-      surveyDescription: '',
-      surveyItemIndex: -1,
+      loading: {
+        TYPE: false,
+        COMMENT: false,
+        CHOICE: false,
+      },
     };
   },
   computed: {
-    ...mapState('teacher', ['sc']),
-    ...mapGetters('teacher', ['isScEmpty', 'currentEditingScItem']),
-    survey: {
+    ...mapGetters('teacher', ['currentEditingScItem']),
+    pComment: {
       get() {
         const vm = this;
-        const item = vm.currentEditingScItem;
-        if (!item) { // eslint-disable-line no-extra-boolean-cast
-          return null;
-        }
-        return item.survey;
+        const s = vm.currentEditingScItem.comment;
+        return s ? s.comment : '';
       },
-      set(survey) {
+      set(pComment) {
         const vm = this;
         vm.assignCurrentEditingScItem({
           currentEditingScItem: {
-            survey,
+            survey: {
+              ...vm.currentEditingScItem.survey,
+              comment: pComment,
+            },
+          },
+        });
+      },
+    },
+    pType: { // * Problem Type
+      get() {
+        const vm = this;
+        const s = vm.currentEditingScItem.survey;
+        return s ? s.type : 0;
+      },
+      set(pType) {
+        const vm = this;
+        vm.assignCurrentEditingScItem({
+          currentEditingScItem: {
+            survey: {
+              ...vm.currentEditingScItem.survey,
+              type: pType,
+            },
+          },
+        });
+      },
+    },
+    pChoice: {
+      get() {
+        const vm = this;
+        const s = vm.currentEditingScItem.survey;
+        if (!s.choice) {
+          return null;
+        }
+        return s.choice.join(', ');
+      },
+      set(pChoice) {
+        const vm = this;
+        vm.assignCurrentEditingScItem({
+          currentEditingScItem: {
+            survey: {
+              ...vm.currentEditingScItem.survey,
+              choice: pChoice.split(',')
+                .map(value => value.trim())
+                .filter(value => value.length !== 0),
+            },
           },
         });
       },
@@ -64,20 +121,21 @@ export default {
   },
   methods: {
     ...mapMutations('teacher', ['assignCurrentEditingScItem']),
-    onClick(type, index) {
+    ...mapActions('teacher', ['putSurvey', 'putSurveyType']),
+    async onChange(type) {
       const vm = this;
-      switch (type) {
-        case 'addSelection': {
-          vm.currentEditingScItem.survey.choice.push('');
-          break;
-        }
-        case 'deleteSelection': {
-          vm.currentEditingScItem.survey.choice.splice(index, 1);
-          break;
-        }
-        default: {
-          throw new Error(`not defined type ${type}`);
-        }
+      try {
+        vm.loading[type] = true;
+        await vm.putSurvey();
+      } catch (error) {
+        vm.$notify({
+          title: '저장 실패',
+          message: error.toString(),
+          type: 'error',
+          duration: 0,
+        });
+      } finally {
+        vm.loading[type] = false;
       }
     },
   },
