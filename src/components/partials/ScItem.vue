@@ -41,7 +41,9 @@ export default {
             await vm.getScItem({
               scItemId: vm.currentEditingScItem.id,
             });
-            vm.getItemKeywords();
+            if (['문항', '강의자료'].includes(type)) {
+              await vm.getItemKeywords();
+            }
           } else {
             vm.updateCurrentEditingScItemIndex({
               currentEditingScItemIndex: -1,
