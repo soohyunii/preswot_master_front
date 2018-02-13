@@ -697,7 +697,7 @@ export default {
           break;
         }
         default: {
-          throw new Error('not defined type', item.type);
+          throw new Error(`not defined type ${item.type}`);
         }
       }
     },
@@ -721,7 +721,7 @@ export default {
           break;
         }
         default: {
-          throw new Error('not defined type', item.type);
+          throw new Error(`not defined type ${item.type}`);
         }
       }
     },
@@ -742,7 +742,7 @@ export default {
           break;
         }
         default: {
-          throw new Error('not defined type', item.type);
+          throw new Error(`not defined type ${item.type}`);
         }
       }
     },
