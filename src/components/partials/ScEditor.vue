@@ -157,7 +157,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', [
+    ...mapMutations('sc', [
       'updateScTitle',
       'updateScDescription',
       'updateScType',

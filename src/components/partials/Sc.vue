@@ -120,7 +120,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('teacher', ['isScEmpty', 'currentEditingScItem']),
+    ...mapGetters('teacher', [
+      'currentEditingScItem',
+      'isScEmpty',
+    ]),
     sc: {
       get() {
         return this.$store.state.teacher.sc;
@@ -147,8 +150,8 @@ export default {
     },
   },
   methods: {
+    ...mapMutations('sc', ['updateSc']),
     ...mapMutations('teacher', [
-      'updateSc',
       'assignCurrentEditingScItem',
       'updateCurrentEditingScItemIndex',
     ]),
