@@ -16,7 +16,7 @@
           </el-form-item>
           <i class="el-icon-loading" v-if="loading.TYPE" />
 
-          <template v-if="[0, 1, 2].includes(pType)">
+          <template v-if="[0, 1, 2, 3].includes(pType)">
             <el-form-item label="문제" prop="pQuestion">
               <el-input
                 type="textarea"
@@ -65,7 +65,30 @@
             <i class="el-icon-loading" v-if="loading.ISORDERINGANSWER" />
           </template>
 
-          <template v-if="[0, 1, 2].includes(pType)">
+          <!-- 코딩 -->
+          <template v-if="[3].includes(pType)">
+            <el-form-item label="언어" prop="languageTest">
+              <el-select
+                type="textarea"
+                :rows="3"
+                v-model.lazy="languageTest"
+                multiple
+                size="large"
+                @change="onChange('LANGUAGE')"
+              >
+                <el-option
+                  v-for="item in languageList"
+                  :key="item.value"
+                  :value="item.value"
+                  :label="item.label"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <i class="el-icon-loading" v-if="loading.LANGUAGE" />
+          </template>
+
+          <template v-if="[0, 1, 2, 3].includes(pType)">
             <el-form-item label="배점" prop="pScore">
               <el-input
                 value='number'
@@ -101,6 +124,35 @@ export default {
   name: 'ScQuestionEditor',
   data() {
     return {
+      languageList: [{
+        value: 'c',
+        label: 'C',
+      }, {
+        value: 'cpp',
+        label: 'C++',
+      }, {
+        value: 'cshop',
+        label: 'C#',
+      }, {
+        value: 'java',
+        label: 'Java',
+      }, {
+        value: 'python3',
+        label: 'Python3',
+      }, {
+        value: 'shell_script',
+        label: 'Shell Script',
+      }, {
+        value: 'free_basic',
+        label: 'Free Basic',
+      }, {
+        value: 'go',
+        label: 'Go',
+      }, {
+        value: 'php',
+        label: 'PHP',
+      }],
+      languageTest: [],
       maxRate: 10,
       loading: {
         TYPE: false,
@@ -110,6 +162,7 @@ export default {
         ISORDERINGANSWER: false,
         SCORE: false,
         DIFFICULTY: false,
+        LANGUAGE: false,
       },
     };
   },
@@ -227,6 +280,13 @@ export default {
         });
       },
     },
+    // pLangauge: {
+    //   get() {
+    //     const vm = this;
+    //     const q = vm.currentEditingScItem.question;
+    //     return q ? q.language : null;
+    //   },
+    // },
     pScore: {
       get() {
         const vm = this;
@@ -269,8 +329,8 @@ export default {
     ...mapActions('teacher', ['putQuestion', 'putQuestionType']),
     async onChange(type) {
       const vm = this;
-      // eslint-disable-next-line
-      console.log('type', type, vm.currentEditingScItem.question.type);
+      // // eslint-disable-next-line
+      // console.log('type', type, vm.currentEditingScItem.question.type);
       try {
         vm.loading[type] = true;
         if (type === 'TYPE') {
