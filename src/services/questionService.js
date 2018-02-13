@@ -51,4 +51,16 @@ export default {
       type,
     });
   },
+  postQuestionFile({
+    questionId,
+    file,
+  }) {
+    const form = new FormData();
+    form.append('file', file, file.name);
+    return http.post(`/questions/${questionId}/file`, form, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  },
 };

@@ -3,9 +3,14 @@
     <el-row>
       <el-col style="max-width: 600px;">
         <el-form label-width="120px">
+          <el-form-item label="파일 업로드">
+            <upload from="ScQuestionEditor"/>
+          </el-form-item>
+
           <el-form-item label="키워드">
             <keyword-editor></keyword-editor>
           </el-form-item>
+
           <el-form-item label="문항 유형">
             <el-radio-group
               v-model="pType"
@@ -19,7 +24,7 @@
           </el-form-item>
           <i class="el-icon-loading" v-if="loading.TYPE" />
 
-          <template v-if="[0, 1, 2].includes(pType)">
+          <template v-if="[0, 1, 2, 3].includes(pType)">
             <el-form-item label="문제" prop="pQuestion">
               <el-input
                 type="textarea"
@@ -68,7 +73,112 @@
             <i class="el-icon-loading" v-if="loading.ISORDERINGANSWER" />
           </template>
 
-          <template v-if="[0, 1, 2].includes(pType)">
+          <!-- 코딩 -->
+          <template v-if="[3].includes(pType)">
+            <el-form-item label="언어" prop="languageTest">
+              <el-select
+                type="textarea"
+                :rows="3"
+                v-model.lazy="languageTest"
+                multiple
+                size="large"
+                @change="onChange('LANGUAGE')"
+              >
+                <el-option
+                  v-for="item in languageList"
+                  :key="item.value"
+                  :value="item.value"
+                  :label="item.label"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <i class="el-icon-loading" v-if="loading.LANGUAGE" />
+          </template>
+
+          <template v-if="[3].includes(pType)">
+            <el-form-item label="입력 설명" prop="pInputDescription">
+              <el-input
+                type="textarea"
+                :rows="3"
+                v-model.lazy="pInputDescription"
+                @change="onChange('INPUT_DESCRIPTION')"
+              />
+            </el-form-item>
+            <i class="el-icon-loading" v-if="loading.INPUT_DESCRIPTION" />
+          </template>
+
+          <template v-if="[3].includes(pType)">
+            <el-form-item label="출력 설명" prop="pOutputDescription">
+              <el-input
+                type="textarea"
+                :rows="3"
+                v-model.lazy="pOutputDescription"
+                @change="onChange('OUTPUT_DESCRIPTION')"
+              />
+            </el-form-item>
+            <i class="el-icon-loading" v-if="loading.OUTPUT_DESCRIPTION" />
+          </template>
+
+          <template v-if="[3].includes(pType)">
+            <el-form-item label="샘플 입력" prop="pSampleInput">
+              <el-input
+                type="textarea"
+                :rows="3"
+                v-model.lazy="pSampleInput"
+                @change="onChange('SAMPLE_INPUT')"
+              />
+            </el-form-item>
+            <i class="el-icon-loading" v-if="loading.SAMPLE_INPUT" />
+          </template>
+
+          <template v-if="[3].includes(pType)">
+            <el-form-item label="샘플 출력" prop="pSampleOutput">
+              <el-input
+                type="textarea"
+                :rows="3"
+                v-model.lazy="pSampleOutput"
+                @change="onChange('SAMPLE_OUTPUT')"
+              />
+            </el-form-item>
+            <i class="el-icon-loading" v-if="loading.SAMPLE_OUTPUT" />
+          </template>
+
+          <h1>TODO: 테스트 케이스 입력</h1>
+
+          <!-- <template v-if="[3].includes(pType)">
+            <el-form-item label="출력 설명" prop="pOutputDescription">
+              <el-input
+                type="textarea"
+                :rows="3"
+                v-model.lazy="pOutputDescription"
+                @change="onChange('OUTPUT_DESCRIPTION')"
+              />
+            </el-form-item>
+            <i class="el-icon-loading" v-if="loading.OUTPUT_DESCRIPTION" />
+          </template> -->
+
+          <template v-if="[3].includes(pType)">
+            <el-form-item label="메모리 제한 (MB)" prop="pMemoryLimit">
+              <el-input
+                v-model.lazy="pMemoryLimit"
+                @change="onChange('MEMORY_LIMIT')"
+              />
+            </el-form-item>
+            <i class="el-icon-loading" v-if="loading.MEMORY_LIMIT" />
+          </template>
+
+          <template v-if="[3].includes(pType)">
+            <el-form-item label="시간 제한 (초)" prop="pTimeLimit">
+              <el-input
+                v-model.lazy="pTimeLimit"
+                @change="onChange('TIME_LIMIT')"
+              />
+            </el-form-item>
+            <i class="el-icon-loading" v-if="loading.TIME_LIMIT" />
+          </template>
+
+          <template v-if="[0, 1, 2, 3].includes(pType)">
             <el-form-item label="배점" prop="pScore">
               <el-input
                 value='number'
@@ -99,15 +209,47 @@
 
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex';
+import Upload from './Upload';
 import keywordEditor from './keywordEditor';
+
 
 export default {
   components: {
     keywordEditor,
+    Upload,
   },
   name: 'ScQuestionEditor',
   data() {
     return {
+      languageList: [{
+        value: 'c',
+        label: 'C',
+      }, {
+        value: 'cpp',
+        label: 'C++',
+      }, {
+        value: 'cshop',
+        label: 'C#',
+      }, {
+        value: 'java',
+        label: 'Java',
+      }, {
+        value: 'python3',
+        label: 'Python3',
+      }, {
+        value: 'shell_script',
+        label: 'Shell Script',
+      }, {
+        value: 'free_basic',
+        label: 'Free Basic',
+      }, {
+        value: 'go',
+        label: 'Go',
+      }, {
+        value: 'php',
+        label: 'PHP',
+      }],
+      languageTest: [],
       maxRate: 10,
       loading: {
         TYPE: false,
@@ -117,6 +259,13 @@ export default {
         ISORDERINGANSWER: false,
         SCORE: false,
         DIFFICULTY: false,
+        LANGUAGE: false,
+        INPUT_DESCRIPTION: false,
+        OUTPUT_DESCRIPTION: false,
+        SAMPLE_INPUT: false,
+        SAMPLE_OUTPUT: false,
+        MEMORY_LIMIT: false,
+        TIME_LIMIT: false,
       },
     };
   },
@@ -234,6 +383,121 @@ export default {
         });
       },
     },
+    // pLangauge: {
+    //   get() {
+    //     const vm = this;
+    //     const q = vm.currentEditingScItem.question;
+    //     return q ? q.language : null;
+    //   },
+    // },
+    pInputDescription: {
+      get() {
+        const vm = this;
+        const q = vm.currentEditingScItem.question;
+        return q ? q.inputDescription : null;
+      },
+      set(pInputDescription) {
+        const vm = this;
+        vm.assignCurrentEditingScItem({
+          currentEditingScItem: {
+            question: {
+              ...vm.currentEditingScItem.question,
+              inputDescription: pInputDescription,
+            },
+          },
+        });
+      },
+    },
+    pOutputDescription: {
+      get() {
+        const vm = this;
+        const q = vm.currentEditingScItem.question;
+        return q ? q.outputDescription : null;
+      },
+      set(pOutputDescription) {
+        const vm = this;
+        vm.assignCurrentEditingScItem({
+          currentEditingScItem: {
+            question: {
+              ...vm.currentEditingScItem.question,
+              outputDescription: pOutputDescription,
+            },
+          },
+        });
+      },
+    },
+    pSampleInput: {
+      get() {
+        const vm = this;
+        const q = vm.currentEditingScItem.question;
+        return q ? q.sampleInput : null;
+      },
+      set(pSampleInput) {
+        const vm = this;
+        vm.assignCurrentEditingScItem({
+          currentEditingScItem: {
+            question: {
+              ...vm.currentEditingScItem.question,
+              sampleInput: pSampleInput,
+            },
+          },
+        });
+      },
+    },
+    pSampleOutput: {
+      get() {
+        const vm = this;
+        const q = vm.currentEditingScItem.question;
+        return q ? q.sampleOutput : null;
+      },
+      set(pSampleOutput) {
+        const vm = this;
+        vm.assignCurrentEditingScItem({
+          currentEditingScItem: {
+            question: {
+              ...vm.currentEditingScItem.question,
+              sampleOutput: pSampleOutput,
+            },
+          },
+        });
+      },
+    },
+    pMemoryLimit: {
+      get() {
+        const vm = this;
+        const q = vm.currentEditingScItem.question;
+        return q ? q.memoryLimit : null;
+      },
+      set(pMemoryLimit) {
+        const vm = this;
+        vm.assignCurrentEditingScItem({
+          currentEditingScItem: {
+            question: {
+              ...vm.currentEditingScItem.question,
+              memoryLimit: pMemoryLimit,
+            },
+          },
+        });
+      },
+    },
+    pTimeLimit: {
+      get() {
+        const vm = this;
+        const q = vm.currentEditingScItem.question;
+        return q ? q.timeLimit : null;
+      },
+      set(pTimeLimit) {
+        const vm = this;
+        vm.assignCurrentEditingScItem({
+          currentEditingScItem: {
+            question: {
+              ...vm.currentEditingScItem.question,
+              timeLimit: pTimeLimit,
+            },
+          },
+        });
+      },
+    },
     pScore: {
       get() {
         const vm = this;
@@ -276,8 +540,8 @@ export default {
     ...mapActions('teacher', ['putQuestion', 'putQuestionType']),
     async onChange(type) {
       const vm = this;
-      // eslint-disable-next-line
-      console.log('type', type, vm.currentEditingScItem.question.type);
+      // // eslint-disable-next-line
+      // console.log('type', type, vm.currentEditingScItem.question.type);
       try {
         vm.loading[type] = true;
         if (type === 'TYPE') {

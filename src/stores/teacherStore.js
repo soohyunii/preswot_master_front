@@ -3,7 +3,10 @@ import lectureService from '../services/lectureService';
 import lectureItemService from '../services/lectureItemService';
 import fileService from '../services/fileService';
 import questionService from '../services/questionService';
+import materialService from '../services/materialService';
 import surveyService from '../services/surveyService';
+import homeworkService from '../services/homeworkService';
+import { baseURL } from '../services/http';
 
 import utils from '../utils';
 
@@ -279,6 +282,7 @@ export default {
       const fileList = [];
       const survey = {};
       const question = {};
+      const homework = {};
       const itemKeywords = [];
       const scItem = {
         id,
@@ -292,6 +296,7 @@ export default {
         fileList,
         survey,
         question,
+        homework,
         itemKeywords,
       };
       state.currentEditingScItemIndex = state.sc.length;
@@ -398,7 +403,8 @@ export default {
       });
       // eslint-disable-next-line
       const sc = res.data.lecture_items.map((scItem) => {
-        window.console.log('getSc scItem', scItem);
+        // eslint-disable-next-line
+        console.log('getSc scItem', scItem);
         return {
           id: scItem.lecture_item_id,
           title: scItem.name,
@@ -410,20 +416,25 @@ export default {
           isResultVisible: utils.convertBoolean(scItem.result),
           opened: scItem.opened,
           question: {},
+          material: {},
+          homework: {},
           survey: {},
           itemKeywords: [],
+          fileList: [],
         };
       });
       commit('updateSc', {
         sc,
       });
-      commit('updateCurrentEditingScItemIndex', {
-        currentEditingScItemIndex: 0,
-      });
-      await dispatch('getScItem', {
-        scItemId: getters.currentEditingScItem.id,
-      });
-      await dispatch('getItemKeywords');
+      if (sc.length !== 0) {
+        commit('updateCurrentEditingScItemIndex', {
+          currentEditingScItemIndex: 0,
+        });
+        await dispatch('getScItem', {
+          scItemId: getters.currentEditingScItem.id,
+        });
+        await dispatch('getItemKeywords');
+      }
     },
     async createSc({ getters, rootGetters }) {
       const userId = rootGetters['auth/userId'];
@@ -496,7 +507,8 @@ export default {
         lectureItemId: scItemId,
       });
 
-      window.console.log('getScItem res', res);
+      // eslint-disable-next-line
+      console.log('getScItem res data', res.data);
 
       // * Commit mutations from res3.data (which is scItem)
       const lectureItemType = res.data.type;
@@ -529,6 +541,12 @@ export default {
                 difficulty: question.difficulty,
                 isOrderingAnswer: question.is_ordering_answer,
                 score: question.score,
+                inputDescription: question.input_description,
+                outputDescription: question.output_description,
+                memoryLimit: question.memory_limit,
+                timeLimit: question.time_limit,
+                sampleInput: question.sample_input,
+                sampleOutput: question.sample_output,
                 // * order: 이거는 question이 여러개 들어올 때를 가정해서 만들어진거라 패스
                 // * showing_order: 위와 같음
                 // * timer: 애매해서 일단 뻄
@@ -549,26 +567,90 @@ export default {
             currentEditingScItem: {
               type: utils.convertScItemType(lectureItemType),
               id: scItemId,
-              fileList: survey.files,
+              fileList: survey.files.map((item) => {
+                const tokens = item.client_path.split('/')
+                  .map(t => t.trim())
+                  .filter(t => t.length !== 0);
+
+                const fileName = tokens.pop();
+                return {
+                  name: fileName,
+                  url: `${baseURL}${item.client_path}`,
+                  guid: item.file_guid,
+                };
+              }),
               survey: {
                 id: survey.survey_id,
                 type: survey.type,
                 comment: survey.comment,
                 choice,
+                // comment 제외
+              },
+            },
+          });
+          break;
+        }
+        case 2: { // * 강의자료
+          const material = res.data.materials[0];
+          commit('assignCurrentEditingScItem', {
+            currentEditingScItem: {
+              type: utils.convertScItemType(lectureItemType),
+              id: scItemId,
+              fileList: material.files.map((item) => {
+                const tokens = item.client_path.split('/')
+                  .map(t => t.trim())
+                  .filter(t => t.length !== 0);
+
+                const fileName = tokens.pop();
+                return {
+                  name: fileName,
+                  url: `${baseURL}${item.client_path}`,
+                  guid: item.file_guid,
+                };
+              }),
+              material: {
+                id: material.material_id,
+                // score ?머 하는거임 이거?
+                // comment ? 얘도 머임?
+              },
+            },
+          });
+          break;
+        }
+        case 3: { // * 숙제
+          const homework = res.data.homework[0];
+          commit('assignCurrentEditingScItem', {
+            currentEditingScItem: {
+              type: utils.convertScItemType(lectureItemType),
+              id: scItemId,
+              fileList: homework.files.map((item) => {
+                const tokens = item.client_path.split('/')
+                  .map(t => t.trim())
+                  .filter(t => t.length !== 0);
+
+                const fileName = tokens.pop();
+                return {
+                  name: fileName,
+                  url: `${baseURL}${item.client_path}`,
+                  guid: item.file_guid,
+                };
+              }),
+              homework: {
+                id: homework.homework_id,
               },
             },
           });
           break;
         }
         default: {
-          throw new Error(`not defined lectureItemType ${lectureItemType}`);
+          throw new Error(`not defined lectureItemType2 ${lectureItemType}`);
         }
       }
     },
     /**
      * @param {string 문항|설문|강의자료|숙제} scItemType
      */
-    async postScItem({ state, dispatch }, { scItemType }) {
+    async postScItem({ state }, { scItemType }) {
       const lectureItemType = utils.convertScItemType(scItemType);
       if (lectureItemType instanceof Error) {
         throw lectureItemType;
@@ -592,14 +674,22 @@ export default {
           });
           break;
         }
+        case 2: { // * 강의자료
+          await materialService.postMaterial({
+            lectureItemId: scItemId,
+          });
+          break;
+        }
+        case 3: { // * 숙제
+          await homeworkService.postHomework({
+            lectureItemId: scItemId,
+          });
+          break;
+        }
         default: {
-          throw new Error(`not defined lectureItemType ${lectureItemType}`);
+          throw new Error(`not defined lectureItemType1 ${lectureItemType}`);
         }
       }
-      window.console.log(123);
-      // await dispatch('getScItem', {
-      //   scItemId,
-      // });
       return scItemId;
     },
     async putScItem({ getters }) {
@@ -622,12 +712,6 @@ export default {
         lectureItemId: scItem.id,
       });
     },
-    async postFile({ commit }, { file }) {
-      const res = await fileService.postFile({
-        file,
-      });
-      window.console.log('res', res);
-    },
     async putQuestion({ getters }) {
       const q = getters.currentEditingScItem.question;
       await questionService.putQuestion({
@@ -638,6 +722,13 @@ export default {
         isOrderingAnswer: q.isOrderingAnswer,
         score: q.score,
         difficulty: q.difficulty,
+        // timer는 건너 뛰고
+        inputDescription: q.inputDescription,
+        outputDescription: q.outputDescription,
+        sampleInput: q.sampleInput,
+        sampleOutput: q.sampleOutput,
+        memoryLimit: q.memoryLimit,
+        timeLimit: q.timeLimit,
       });
     },
     async putQuestionType({ getters }) {
@@ -646,6 +737,65 @@ export default {
         questionId: q.id,
         type: q.type,
       });
+    },
+    async deleteFile(__empty__, { fileGuid }) {
+      await fileService.deleteFile({
+        fileGuid,
+      });
+    },
+    async postFile({ commit, getters }, { file }) {
+      let res;
+      switch (getters.currentEditingScItem.type) {
+        case '강의자료': {
+          res = await materialService.postMaterialFile({
+            file,
+            materialId: getters.currentEditingScItem.material.id,
+          });
+          break;
+        }
+        case '설문': {
+          res = await surveyService.postSurveyFile({
+            file,
+            surveyId: getters.currentEditingScItem.survey.id,
+          });
+          break;
+        }
+        case '문항': {
+          res = await questionService.postQuestionFile({
+            file,
+            questionId: getters.currentEditingScItem.question.id,
+          });
+          break;
+        }
+        case '숙제': {
+          res = await homeworkService.postHomeworkFile({
+            file,
+            homeworkId: getters.currentEditingScItem.homework.id,
+          });
+          break;
+        }
+        default: {
+          throw new Error(`not defined scItemType ${getters.currentEditingScItem.type}`);
+        }
+      }
+      const newFileList = getters.currentEditingScItem.fileList;
+      const tokens = res.data.file.client_path.split('/')
+        .map(t => t.trim())
+        .filter(t => t.length !== 0);
+      const fileName = tokens.pop();
+      newFileList.push({
+        name: fileName,
+        url: `${baseURL}${res.data.file.client_path}`,
+        status: 'success',
+        uid: file.uid,
+        guid: res.data.file.file_guid,
+      });
+      commit('assignCurrentEditingScItem', {
+        currentEditingScItem: {
+          fileList: newFileList,
+        },
+      });
+      // console.log('teacherStore action postMaterialFile', res);
     },
     async putSurvey({ getters }) {
       const s = getters.currentEditingScItem.survey;
