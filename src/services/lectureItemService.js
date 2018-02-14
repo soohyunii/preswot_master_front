@@ -2,6 +2,11 @@ import http from './http';
 import utils from '../utils';
 
 export default {
+  getLectureItem({
+    lectureItemId,
+  }) {
+    return http.get(`/lecture-items/${lectureItemId}`);
+  },
   postLectureItem({
     lectureId,
     lectureItemType,
@@ -41,5 +46,41 @@ export default {
     lectureItemId,
   }) {
     return http.delete(`/lecture-items/${lectureItemId}`);
+  },
+  getQuestionKeywords({
+    questionId,
+  }) {
+    return http.get(`/questions/${questionId}/keywords`);
+  },
+  getMaterialKeywords({
+    materialId,
+  }) {
+    return http.get(`/materials/${materialId}/keywords`);
+  },
+  postQuestionKeywords({
+    questionId,
+    data,
+  }) {
+    return http.post(`/questions/${questionId}/keywords`, {
+      data,
+    });
+  },
+  postMaterialKeywords({
+    materialId,
+    data,
+  }) {
+    return http.post(`/materials/${materialId}/keywords`, {
+      data,
+    });
+  },
+  deleteQuestionKeywords({
+    questionId,
+  }) {
+    return http.delete(`/questions/${questionId}/keywords`);
+  },
+  deleteMaterialKeywords({
+    materialId,
+  }) {
+    return http.delete(`/materials/${materialId}/keywords`);
   },
 };

@@ -65,13 +65,16 @@
 
 
 <script>
-import { mapMutations, mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 
 export default {
   name: 'ScItemAdder',
   methods: {
-    ...mapMutations('teacher', ['pushScItem']),
-    ...mapActions('teacher', ['postScItem']),
+    ...mapMutations('scItem', ['pushScItem']),
+    ...mapActions('scItem', [
+      'getScItem',
+      'postScItem',
+    ]),
     async onClick(type) {
       const vm = this;
       try {
@@ -81,9 +84,15 @@ export default {
             scItemType: type,
           });
 
+          // * push scItem into sc
           vm.pushScItem({
             type,
             id: scItemId,
+          });
+
+          // * Then this will update currentEditingScItem
+          await vm.getScItem({
+            scItemId,
           });
         } else {
           throw new Error(`not defined type ${type}`);

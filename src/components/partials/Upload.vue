@@ -4,7 +4,6 @@
     <el-upload
       action="#"
       :auto-upload="true"
-      :on-change="handleChange"
       :on-remove="handleRemove"
       :file-list="fileList"
       multiple
@@ -22,30 +21,30 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex';
+import { mapState, mapMutations, mapGetters, mapActions } from 'vuex';
+
 
 export default {
   name: 'Upload',
-  props: ['type'],
+  props: ['from'],
   data() {
     return {
       loading: false,
     };
   },
   computed: {
-    ...mapState('teacher', ['sc']),
+    ...mapState('scItem', ['sc']),
+    ...mapGetters('scItem', ['currentEditingScItem']),
     fileList: {
       get() {
         const vm = this;
-        switch (vm.type.from) {
+        switch (vm.from) {
+          case 'ScQuestionEditor':
+          case 'ScSurveyEditor':
+          case 'ScHomeworkEditor':
           case 'ScMaterialEditor': {
-            // for fileList from ScMaterialEditor
-            const index = vm.type.currentEditingScItemIndex;
-            if (index !== null && index > -1) {
-              // FIXME: replace with currentEditingScItem
-              return vm.sc[vm.type.currentEditingScItemIndex].fileList || [];
-            }
-            return [];
+            const scItem = vm.currentEditingScItem;
+            return scItem ? scItem.fileList : [];
           }
           default: {
             throw new Error(`not defined type ${vm.type.from}`);
@@ -54,8 +53,10 @@ export default {
       },
       set(fileList) {
         const vm = this;
-        switch (vm.type.from) {
-          default:
+        switch (vm.from) {
+          case 'ScQuestionEditor':
+          case 'ScSurveyEditor':
+          case 'ScHomeworkEditor':
           case 'ScMaterialEditor': {
             // for fileList of ScMaterialEditor
             vm.assignCurrentEditingScItem({
@@ -63,14 +64,21 @@ export default {
                 fileList,
               },
             });
+            break;
+          }
+          default: {
+            break;
           }
         }
       },
     },
   },
   methods: {
-    ...mapMutations('teacher', ['assignCurrentEditingScItem']),
-    ...mapActions('teacher', ['postFile', 'deleteFile']),
+    ...mapMutations('scItem', ['assignCurrentEditingScItem']),
+    ...mapActions('scItem', [
+      'postFile',
+      'deleteFile',
+    ]),
     handleExceed(files, fileList) {
       // TODO: translate
       this.$message.warning(
@@ -83,42 +91,74 @@ export default {
       // TODO: translate
       return this.$confirm(`${file.name} 파일을 삭제하시겠습니까？`);
     },
-    handleRemove(file, fileList) {
+    async handleRemove(file) {
       const vm = this;
-      vm.fileList = fileList;
+      try {
+        vm.loading = true;
+        vm.deleteFile({
+          fileGuid: file.guid,
+        });
+        vm.$notify({
+          title: '삭제 성공',
+          message: `${file.name} 삭제 성공`,
+          type: 'success',
+          duration: 3000,
+        });
+      } catch (error) {
+        vm.$notify({
+          title: `${file.name} 삭제 실패`,
+          message: error.toString(),
+          type: 'error',
+          duration: 0,
+        });
+      } finally {
+        vm.loading = false;
+      }
     },
-    handleSuccess(res, file, fileList) {
+    handleSuccess(res, file) {
       const vm = this;
       vm.loading = false;
-      console.log(res, file, fileList);
+      // console.log(res, file, fileList);
       vm.$notify({
         title: '업로드 성공',
         message: `${file.name} 업로드 성공`,
         type: 'success',
       });
     },
-    handleError(err, file, fileList) {
+    handleError(err, file) {
       const vm = this;
       vm.loading = false;
-      console.log(err, file, fileList);
+      // console.log(err, file, fileList);
       vm.$notify({
         title: '업로드 실패',
         message: `${file.name} ${err}`,
         type: 'error',
       });
     },
-    handleChange(file, fileList) {
-      const vm = this;
-      vm.fileList = fileList;
-      console.log('handleChange', file, fileList);
-    },
+    // handleChange(file, fileList) {
+    //   const vm = this;
+    //   // vm.fileList.push(file);
+    //   // vm.fileList = fileList;
+    //   console.log('handleChange', file, fileList);
+    // },
     async doUpload(req) {
-      console.log('req', req);
+      // console.log('req', req);
       const vm = this;
       vm.loading = true;
-      await vm.postFile({
-        file: req.file,
-      });
+      switch (vm.from) {
+        case 'ScQuestionEditor':
+        case 'ScSurveyEditor':
+        case 'ScHomeworkEditor':
+        case 'ScMaterialEditor': {
+          await vm.postFile({
+            file: req.file,
+          });
+          break;
+        }
+        default: {
+          throw new Error(`not defined from ${vm.from}`);
+        }
+      }
     },
   },
 };

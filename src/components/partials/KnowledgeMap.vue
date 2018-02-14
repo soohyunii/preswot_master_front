@@ -73,14 +73,10 @@ export default {
       linkWidth: 2.5,
       fontSize: 20,
       resetFlag: true,
-      size: {
-        w: 600,
-        h: 600,
-      },
     };
   },
   computed: {
-    ...mapState('teacher', ['nodes', 'edges']),
+    ...mapState('sc', ['nodes', 'edges']),
     validEdges() {
       const vm = this;
       const edges = [];
@@ -109,13 +105,12 @@ export default {
         canvas: vm.canvas,
         linkWidth: vm.linkWidth,
         fontSize: vm.fontSize,
-        size: vm.size,
       };
     },
   },
   methods: {
-    ...mapMutations('teacher', ['setNodesPinned']),
-    ...mapActions('teacher', ['postKnowledgeMapData']),
+    ...mapMutations('sc', ['setNodesPinned']),
+    ...mapActions('sc', ['postKnowledgeMapData']),
     nodeClick(event, node) {
       const vm = this;
 
@@ -156,12 +151,6 @@ export default {
       const vm = this;
       await vm.postKnowledgeMapData(); // TODO: try catch
     },
-  },
-  updated() {
-    const vm = this;
-    vm.$nextTick(() => {
-      vm.size.w = vm.$refs.wrapper.clientWidth;
-    });
   },
 };
 </script>

@@ -37,7 +37,7 @@ export default {
   }) {
     const param = {};
 
-    utils.assignIfNotNil(param, { name });
+    utils.assignIfNotNil(param, { lectureId });
     utils.assignIfNotNil(param, { type });
     utils.assignIfNotNil(param, { name });
     utils.assignIfNotNil(param, { description });

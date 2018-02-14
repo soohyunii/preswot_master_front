@@ -7,7 +7,7 @@
         <i class="el-icon-error" style="color:red; vertical-align:top" @click.stop="onClick('deleteIcon',index)"></i><br/>
       </div>
       <div class="label-time">{{ scActiveTime }}</div>
-      <div class="label-duration">{{ scActiveDurationTime }}</div>
+      <div class="label-duration">{{ scOrder }}</div>
     </el-col>
   </div>
 </template>
@@ -24,20 +24,26 @@ export default {
     };
   },
   methods: {
-    ...mapMutations('teacher', [
+    ...mapMutations('scItem', [
       'removeScItem',
       'assignCurrentEditingScItem',
       'updateCurrentEditingScItemIndex',
     ]),
-    ...mapActions('teacher', ['deleteScItem']),
-    onClick(type, index) {
+    ...mapActions('scItem', ['deleteScItem', 'getScItem', 'getItemKeywords']),
+    async onClick(type, index) {
       const vm = this;
       switch (type) {
         case 'SELECT_SC_ITEM': {
           if (vm.sc.length > index) {
-            vm.updateCurrentEditingScItemIndex({
+            await vm.updateCurrentEditingScItemIndex({
               currentEditingScItemIndex: index,
             });
+            await vm.getScItem({
+              scItemId: vm.currentEditingScItem.id,
+            });
+            if (['문항', '강의자료'].includes(type)) {
+              await vm.getItemKeywords();
+            }
           } else {
             vm.updateCurrentEditingScItemIndex({
               currentEditingScItemIndex: -1,
@@ -114,26 +120,47 @@ export default {
     },
   },
   computed: {
-    ...mapState('teacher', ['sc', 'currentEditingScItemIndex']),
-    ...mapGetters('teacher', ['currentEditingScItem']),
+    ...mapState('scItem', ['sc', 'currentEditingScItemIndex']),
+    ...mapGetters('scItem', ['currentEditingScItem']),
     scActiveTime: {
       get() {
         const vm = this;
-        const time = vm.sc[vm.index].activeTime;
+        const time = vm.sc[vm.index].activeStartOffsetSec;
         if (time) {
-          return `${time.getHours() < 10 ? '0' : ''}${time.getHours()}:${time.getMinutes() < 10 ? '0' : ''}${time.getMinutes()}:${time.getSeconds() < 10 ? '0' : ''}${time.getSeconds()}`;
+          let hours = Math.floor(time / 3600);
+          let minutes = Math.floor((time - (hours * 3600)) / 60);
+          let seconds = time - (hours * 3600) - (minutes * 60);
+          if (hours < 10) { hours = `0${hours}`; }
+          if (minutes < 10) { minutes = `0${minutes}`; }
+          if (seconds < 10) { seconds = `0${seconds}`; }
+          return `${hours}:${minutes}:${seconds}`;
         }
         return '00:00:00';
       },
     },
-    scActiveDurationTime: {
+    scOrder: {
       get() {
         const vm = this;
-        const time = vm.sc[vm.index].activeDurationTime;
-        if (time && (time.getMinutes() !== 0 || time.getSeconds() !== 0)) {
-          return `${time.getMinutes() !== 0 ? `${time.getMinutes()}m` : ''} ${time.getSeconds() !== 0 ? `${time.getSeconds()}s` : ''}`;
+        const order = vm.sc[vm.index].order;
+        let scOrder = '';
+        switch (order) {
+          case 0: {
+            scOrder = '예습';
+            break;
+          }
+          case 1: {
+            scOrder = '본강의';
+            break;
+          }
+          case 2: {
+            scOrder = '복습';
+            break;
+          }
+          default: {
+            throw new Error(`not defined order ${order}`);
+          }
         }
-        return '0s';
+        return scOrder;
       },
     },
   },

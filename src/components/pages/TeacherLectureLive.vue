@@ -160,8 +160,6 @@
   import ScCommonEditor from '../partials/ScCommonEditor';
   import TeacherLectureLiveSummary from '../partials/TeacherLectureLiveSummary';
 
-
-
   export default {
     name: 'TeacherLectureLive',
     components: {

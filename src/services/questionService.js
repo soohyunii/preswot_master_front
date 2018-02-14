@@ -43,4 +43,24 @@ export default {
 
     return http.put(`/questions/${questionId}`, param);
   },
+  putQuestionType({
+    questionId,
+    type,
+  }) {
+    return http.put(`/questions/${questionId}/type`, {
+      type,
+    });
+  },
+  postQuestionFile({
+    questionId,
+    file,
+  }) {
+    const form = new FormData();
+    form.append('file', file, file.name);
+    return http.post(`/questions/${questionId}/file`, form, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  },
 };

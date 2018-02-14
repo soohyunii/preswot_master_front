@@ -44,7 +44,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('teacher', ['currentEditingScItem']),
+    ...mapGetters('scItem', ['currentEditingScItem']),
     input() {
       const res = {};
       const vm = this;
@@ -90,8 +90,8 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['assignCurrentEditingScItem']),
-    ...mapActions('teacher', [
+    ...mapMutations('scItem', ['assignCurrentEditingScItem']),
+    ...mapActions('scItem', [
       'putScItem',
     ]),
     async onChange(type) {
