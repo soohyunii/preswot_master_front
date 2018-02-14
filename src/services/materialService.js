@@ -20,4 +20,12 @@ export default {
       },
     });
   },
+  putMaterial({
+    materialId,
+    score,
+  }) {
+    return http.put(`/materials/${materialId}`, {
+      score,
+    });
+  },
 };

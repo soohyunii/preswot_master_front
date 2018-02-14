@@ -166,7 +166,8 @@ export default {
       vm.updateCurrentEditingScItemIndex({
         currentEditingScItemIndex: 0,
       });
-      vm.getScItem({
+      // 문항, 강의자료의 id가 이 단계에서 얻어짐 => getItemKeywords() 함수에서 이 id를 이용
+      await vm.getScItem({
         scItemId: vm.currentEditingScItem.id,
       });
       if (['문항', '강의자료'].includes(vm.currentEditingScItemType)) {
