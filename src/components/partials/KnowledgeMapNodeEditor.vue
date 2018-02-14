@@ -80,7 +80,7 @@ export default {
       'updateNodes',
       'deleteNode',
       'assignCurrentEditingNode',
-      'assignCurrentEditingNodeIndex',
+      'updateCurrentEditingNodeIndex',
       'updateEdgeId',
     ]),
     onClick(type, index) {
@@ -139,7 +139,7 @@ export default {
           break;
         }
         case 'setCurrentEditingNodeIndex': {
-          vm.assignCurrentEditingNodeIndex({ currentEditingNodeIndex: index });
+          vm.updateCurrentEditingNodeIndex({ currentEditingNodeIndex: index });
           break;
         }
         default: {
