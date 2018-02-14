@@ -232,7 +232,7 @@ export default {
               }),
               material: {
                 id: material.material_id,
-                // score ?머 하는거임 이거?
+                score: material.score,
                 // comment ? 얘도 머임?
               },
             },
@@ -426,6 +426,13 @@ export default {
         comment: s.comment,
         choice: s.choice,
         type: s.type,
+      });
+    },
+    async putMaterial({ getters }) {
+      const m = getters.currentEditingScItem.material;
+      await materialService.putMaterial({
+        materialId: m.id,
+        score: m.score,
       });
     },
     // async deleteKnowledgeEdge({ state }, { edgeIndex }) {

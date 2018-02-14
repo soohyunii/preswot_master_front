@@ -181,7 +181,7 @@
           <template v-if="[0, 1, 2, 3].includes(pType)">
             <el-form-item label="배점" prop="pScore">
               <el-input
-                value='number'
+                type='number'
                 v-model.lazy="pScore"
                 @change="onChange('SCORE')"
               />
