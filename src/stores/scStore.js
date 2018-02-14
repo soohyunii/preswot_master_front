@@ -99,7 +99,7 @@ export default {
     updateNodes(state, { nodes }) {
       state.nodes = nodes;
     },
-    assignCurrentEditingNodeIndex(state, { currentEditingNodeIndex }) {
+    updateCurrentEditingNodeIndex(state, { currentEditingNodeIndex }) {
       state.currentEditingNodeIndex = currentEditingNodeIndex;
     },
     pushEdge(state, { edge }) {

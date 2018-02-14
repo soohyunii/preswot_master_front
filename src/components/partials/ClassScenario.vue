@@ -166,8 +166,10 @@ export default {
     },
   },
   methods: {
-    ...mapActions('teacher', [
+    ...mapActions('sc', [
       'createSc',
+    ]),
+    ...mapActions('teacher', [
       'fetchClass',
     ]),
     // getType(type) {
