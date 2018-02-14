@@ -184,7 +184,7 @@ export default {
   },
   computed: {
     ...mapState('sc', ['scTitle', 'scType']),
-    ...mapGetters('teacher', [
+    ...mapGetters('scItem', [
       'isScEmpty',
       'DEBUGscenarioServerWillReceive',
       'currentEditingScItem',
@@ -203,7 +203,7 @@ export default {
       'updateScType',
       'updateScId',
     ]),
-    ...mapMutations('teacher', [
+    ...mapMutations('scItem', [
       'updateCurrentEditingScItemIndex',
     ]),
     ...mapActions('sc', [
@@ -211,7 +211,7 @@ export default {
       'deleteSc',
       'getKnowledgeMapData',
     ]),
-    ...mapActions('teacher', [
+    ...mapActions('scItem', [
       'getScItem',
       'getItemKeywords',
     ]),

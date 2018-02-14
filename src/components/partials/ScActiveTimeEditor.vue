@@ -74,8 +74,8 @@ export default {
     };
   },
   methods: {
-    ...mapMutations('teacher', ['assignCurrentEditingScItem']),
-    ...mapActions('teacher', ['putScItem']),
+    ...mapMutations('scItem', ['assignCurrentEditingScItem']),
+    ...mapActions('scItem', ['putScItem']),
     changeShouldDeactivated(label) {
       const vm = this;
       if (!label) {
@@ -101,8 +101,8 @@ export default {
     },
   },
   computed: {
-    ...mapState('teacher', ['sc', 'scStartDate']),
-    ...mapGetters('teacher', ['currentEditingScItem']),
+    ...mapState('scItem', ['sc', 'scStartDate']),
+    ...mapGetters('scItem', ['currentEditingScItem']),
     input() {
       const res = {};
       const vm = this;

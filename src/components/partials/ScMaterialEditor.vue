@@ -23,7 +23,7 @@ import keywordEditor from './keywordEditor';
 export default {
   name: 'ScMaterialEditor',
   methods: {
-    // ...mapMutations('teacher', ['assignCurrentEditingScItem']),
+    // ...mapMutations('scItem', ['assignCurrentEditingScItem']),
   },
   components: {
     Upload,

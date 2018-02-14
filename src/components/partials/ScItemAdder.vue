@@ -70,8 +70,8 @@ import { mapActions, mapMutations } from 'vuex';
 export default {
   name: 'ScItemAdder',
   methods: {
-    ...mapMutations('teacher', ['pushScItem']),
-    ...mapActions('teacher', [
+    ...mapMutations('scItem', ['pushScItem']),
+    ...mapActions('scItem', [
       'getScItem',
       'postScItem',
     ]),

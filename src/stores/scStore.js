@@ -173,7 +173,7 @@ export default {
           fileList: [],
         };
       });
-      commit('teacher/updateSc', {
+      commit('scItem/updateSc', {
         sc,
       }, {
         root: true,
@@ -247,7 +247,7 @@ export default {
       commit('updateCurrentEditingScItemIndex', {
         currentEditingScItemIndex: null,
       });
-      commit('teacher/updateSc', {
+      commit('scItem/updateSc', {
         sc: [],
       }, {
         root: true,

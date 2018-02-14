@@ -50,7 +50,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('teacher', ['currentEditingScItem']),
+    ...mapGetters('scItem', ['currentEditingScItem']),
     scItemKeywords: {
       get() {
         const vm = this;
@@ -81,11 +81,11 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', [
+    ...mapMutations('scItem', [
       'assignCurrentEditingScItem',
       'pushItemKeyword',
     ]),
-    ...mapActions('teacher', [
+    ...mapActions('scItem', [
       'putScItem',
       'postItemKeywords',
       'deleteItemKeywords',

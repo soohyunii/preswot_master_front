@@ -3,8 +3,8 @@ import Vuex from 'vuex';
 
 import auth from './authStore';
 import layout from './layoutStore';
-import teacher from './teacherStore';
 import sc from './scStore';
+import scItem from './scItemStore';
 import sibalClassIsReservedWord from './classStore';
 
 Vue.use(Vuex);
@@ -13,7 +13,7 @@ export default new Vuex.Store({
   modules: {
     auth,
     layout,
-    teacher,
+    scItem,
     sc,
     class: sibalClassIsReservedWord,
   },
