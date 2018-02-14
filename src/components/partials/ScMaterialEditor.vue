@@ -36,7 +36,6 @@ export default {
   },
   data() {
     return {
-      maxRate: 10,
       loading: {
         SCORE: false,
       },
