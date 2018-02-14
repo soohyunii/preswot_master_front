@@ -125,7 +125,7 @@ export default {
     );
   },
   computed: {
-    ...mapGetters('teacher', [
+    ...mapGetters('class', [
       'currentClass',
     ]),
     tableData: {
@@ -169,7 +169,7 @@ export default {
     ...mapActions('sc', [
       'createSc',
     ]),
-    ...mapActions('teacher', [
+    ...mapActions('class', [
       'fetchClass',
     ]),
     // getType(type) {

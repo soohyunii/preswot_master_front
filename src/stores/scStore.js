@@ -189,9 +189,9 @@ export default {
       //   await dispatch('getItemKeywords');
       // }
     },
-    async createSc({ getters, rootGetters }) {
+    async createSc({ rootGetters }) {
       const userId = rootGetters['auth/userId'];
-      const classId = getters.currentClass.class_id;
+      const classId = rootGetters['class/currentClass'].class_id;
 
       const res = await lectureService.postLecture({
         classId,
