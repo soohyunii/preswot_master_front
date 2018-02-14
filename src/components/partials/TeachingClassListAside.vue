@@ -65,16 +65,18 @@ export default {
     };
   },
   computed: {
-    ...mapState('teacher', [
-      'teachingClassList',
+    ...mapState('class', [
       'currentClassIndex',
+      'teachingClassList',
     ]),
   },
   methods: {
-    ...mapMutations('teacher', [
+    ...mapMutations('class', [
       'updateCurrentClassIndex',
     ]),
-    ...mapActions('user', ['fetchMyClassLists']),
+    ...mapActions('class', [
+      'fetchMyClassLists',
+    ]),
     clickAddButton() {
       const vm = this;
       vm.$router.push('/a/teacher/class/new');

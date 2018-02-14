@@ -75,11 +75,11 @@ export default {
     };
   },
   methods: {
-    ...mapMutations('teacher', [
+    ...mapMutations('class', [
       'updateNewClass',
       'assignNewClass',
     ]),
-    ...mapActions('teacher', [
+    ...mapActions('class', [
       'createClass',
     ]),
     changeShouldDeactivated(label) {
@@ -112,10 +112,10 @@ export default {
     },
   },
   computed: {
-    ...mapState('teacher', [
+    ...mapState('class', [
       'newClass',
     ]),
-    ...mapGetters('teacher', [
+    ...mapGetters('class', [
       'isNewClassValid',
     ]),
     input() {

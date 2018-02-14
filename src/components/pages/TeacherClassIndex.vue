@@ -58,9 +58,9 @@ import TeachingClassListAside from '../partials/TeachingClassListAside';
 export default {
   name: 'TeacherClassIndex',
   computed: {
-    ...mapGetters('teacher', [
-      'isTeachingClassListEmpty',
+    ...mapGetters('class', [
       'currentClass',
+      'isTeachingClassListEmpty',
     ]),
   },
   components: {
