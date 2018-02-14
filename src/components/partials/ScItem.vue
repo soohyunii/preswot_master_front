@@ -24,12 +24,12 @@ export default {
     };
   },
   methods: {
-    ...mapMutations('teacher', [
+    ...mapMutations('scItem', [
       'removeScItem',
       'assignCurrentEditingScItem',
       'updateCurrentEditingScItemIndex',
     ]),
-    ...mapActions('teacher', ['deleteScItem', 'getScItem', 'getItemKeywords']),
+    ...mapActions('scItem', ['deleteScItem', 'getScItem', 'getItemKeywords']),
     async onClick(type, index) {
       const vm = this;
       switch (type) {
@@ -120,8 +120,8 @@ export default {
     },
   },
   computed: {
-    ...mapState('teacher', ['sc', 'currentEditingScItemIndex']),
-    ...mapGetters('teacher', ['currentEditingScItem']),
+    ...mapState('scItem', ['sc', 'currentEditingScItemIndex']),
+    ...mapGetters('scItem', ['currentEditingScItem']),
     scActiveTime: {
       get() {
         const vm = this;

@@ -270,7 +270,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('teacher', ['currentEditingScItem']),
+    ...mapGetters('scItem', ['currentEditingScItem']),
     input() {
       const res = {};
       return res;
@@ -536,8 +536,8 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['assignCurrentEditingScItem']),
-    ...mapActions('teacher', ['putQuestion', 'putQuestionType']),
+    ...mapMutations('scItem', ['assignCurrentEditingScItem']),
+    ...mapActions('scItem', ['putQuestion', 'putQuestionType']),
     async onChange(type) {
       const vm = this;
       // // eslint-disable-next-line

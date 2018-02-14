@@ -166,7 +166,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('teacher', [
+    ...mapGetters('scItem', [
       'isScEmpty',
       // 'scType', // TODO: uncomment
     ]),
