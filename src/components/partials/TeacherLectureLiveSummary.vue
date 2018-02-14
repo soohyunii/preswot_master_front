@@ -11,260 +11,29 @@
       </el-col>
     </el-row>
     <el-row>
-      <el-button type="primary" size="medium">
+      <el-button type="primary" size="medium" @click="onClick('GET_LECTURE_SCORE_ORDER_BY_CONCENTRATION')">
         집중도순
       </el-button>
-      <el-button type="primary" size="medium">
+      <el-button type="primary" size="medium" @click="onClick('GET_LECTURE_SCORE_ORDER_BY_PARTICIPATION')">
         참여도순
       </el-button>
-      <el-button type="primary" size="medium">
+      <el-button type="primary" size="medium" @click="onClick('GET_LECTURE_SCORE_ORDER_BY_UNDERSTANDING')">
         이해도순
       </el-button>
     </el-row>
-    <el-row :gutter="20">
-      <el-col :span="3">
+    <el-row :gutter="20" id="student_score">
+      <el-col :span="3" v-for="item in forLoopData">
         <div class="one_user">
-          <div class="user_pic" style="background-image:url('https://khneedssleep.com:8000//uploads/student_lecture_faces/1_1_2018-02-07 04-19-47.jpg')"></div>
+          <div class="user_pic" v-bind:style='{ backgroundImage: "url(" + item.latest_pic_path + ")", }'></div>
           <div class="user_info">
-            <div class="user_name">박명욱</div>
-            <div class="participation_score">참여도: 33</div>
-            <div class="concentration_score">집중도: 25</div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="3">
-        <div class="one_user">
-          <div class="user_pic" style="background-image:url('https://khneedssleep.com:8000//uploads/student_lecture_faces/1_1_2018-02-07 04-19-47.jpg')"></div>
-          <div class="user_info">
-            <div class="user_name">박명욱</div>
-            <div class="participation_score">참여도: 33</div>
-            <div class="concentration_score">집중도: 25</div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="3">
-        <div class="one_user">
-          <div class="user_pic" style="background-image:url('https://khneedssleep.com:8000//uploads/student_lecture_faces/1_1_2018-02-07 04-19-47.jpg')"></div>
-          <div class="user_info">
-            <div class="user_name">박명욱</div>
-            <div class="participation_score">참여도: 33</div>
-            <div class="concentration_score">집중도: 25</div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="3">
-        <div class="one_user">
-          <div class="user_pic" style="background-image:url('https://khneedssleep.com:8000//uploads/student_lecture_faces/1_1_2018-02-07 04-19-47.jpg')"></div>
-          <div class="user_info">
-            <div class="user_name">박명욱</div>
-            <div class="participation_score">참여도: 33</div>
-            <div class="concentration_score">집중도: 25</div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="3">
-        <div class="one_user">
-          <div class="user_pic" style="background-image:url('https://khneedssleep.com:8000//uploads/student_lecture_faces/1_1_2018-02-07 04-19-47.jpg')"></div>
-          <div class="user_info">
-            <div class="user_name">박명욱</div>
-            <div class="participation_score">참여도: 33</div>
-            <div class="concentration_score">집중도: 25</div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="3">
-        <div class="one_user">
-          <div class="user_pic" style="background-image:url('https://khneedssleep.com:8000//uploads/student_lecture_faces/1_1_2018-02-07 04-19-47.jpg')"></div>
-          <div class="user_info">
-            <div class="user_name">박명욱</div>
-            <div class="participation_score">참여도: 33</div>
-            <div class="concentration_score">집중도: 25</div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="3">
-        <div class="one_user">
-          <div class="user_pic" style="background-image:url('https://khneedssleep.com:8000//uploads/student_lecture_faces/1_1_2018-02-07 04-19-47.jpg')"></div>
-          <div class="user_info">
-            <div class="user_name">박명욱</div>
-            <div class="participation_score">참여도: 33</div>
-            <div class="concentration_score">집중도: 25</div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="3">
-        <div class="one_user">
-          <div class="user_pic" style="background-image:url('https://khneedssleep.com:8000//uploads/student_lecture_faces/1_1_2018-02-07 04-19-47.jpg')"></div>
-          <div class="user_info">
-            <div class="user_name">박명욱</div>
-            <div class="participation_score">참여도: 33</div>
-            <div class="concentration_score">집중도: 25</div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="3">
-        <div class="one_user">
-          <div class="user_pic" style="background-image:url('https://khneedssleep.com:8000//uploads/student_lecture_faces/1_1_2018-02-07 04-19-47.jpg')"></div>
-          <div class="user_info">
-            <div class="user_name">박명욱</div>
-            <div class="participation_score">참여도: 33</div>
-            <div class="concentration_score">집중도: 25</div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="3">
-        <div class="one_user">
-          <div class="user_pic" style="background-image:url('https://khneedssleep.com:8000//uploads/student_lecture_faces/1_1_2018-02-07 04-19-47.jpg')"></div>
-          <div class="user_info">
-            <div class="user_name">박명욱</div>
-            <div class="participation_score">참여도: 33</div>
-            <div class="concentration_score">집중도: 25</div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="3">
-        <div class="one_user">
-          <div class="user_pic" style="background-image:url('https://khneedssleep.com:8000//uploads/student_lecture_faces/1_1_2018-02-07 04-19-47.jpg')"></div>
-          <div class="user_info">
-            <div class="user_name">박명욱</div>
-            <div class="participation_score">참여도: 33</div>
-            <div class="concentration_score">집중도: 25</div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="3">
-        <div class="one_user">
-          <div class="user_pic" style="background-image:url('https://khneedssleep.com:8000//uploads/student_lecture_faces/1_1_2018-02-07 04-19-47.jpg')"></div>
-          <div class="user_info">
-            <div class="user_name">박명욱</div>
-            <div class="participation_score">참여도: 33</div>
-            <div class="concentration_score">집중도: 25</div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="3">
-        <div class="one_user">
-          <div class="user_pic" style="background-image:url('https://khneedssleep.com:8000//uploads/student_lecture_faces/1_1_2018-02-07 04-19-47.jpg')"></div>
-          <div class="user_info">
-            <div class="user_name">박명욱</div>
-            <div class="participation_score">참여도: 33</div>
-            <div class="concentration_score">집중도: 25</div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="3">
-        <div class="one_user">
-          <div class="user_pic" style="background-image:url('https://khneedssleep.com:8000//uploads/student_lecture_faces/1_1_2018-02-07 04-19-47.jpg')"></div>
-          <div class="user_info">
-            <div class="user_name">박명욱</div>
-            <div class="participation_score">참여도: 33</div>
-            <div class="concentration_score">집중도: 25</div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="3">
-        <div class="one_user">
-          <div class="user_pic" style="background-image:url('https://khneedssleep.com:8000//uploads/student_lecture_faces/1_1_2018-02-07 04-19-47.jpg')"></div>
-          <div class="user_info">
-            <div class="user_name">박명욱</div>
-            <div class="participation_score">참여도: 33</div>
-            <div class="concentration_score">집중도: 25</div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="3">
-        <div class="one_user">
-          <div class="user_pic" style="background-image:url('https://khneedssleep.com:8000//uploads/student_lecture_faces/1_1_2018-02-07 04-19-47.jpg')"></div>
-          <div class="user_info">
-            <div class="user_name">박명욱</div>
-            <div class="participation_score">참여도: 33</div>
-            <div class="concentration_score">집중도: 25</div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="3">
-        <div class="one_user">
-          <div class="user_pic" style="background-image:url('https://khneedssleep.com:8000//uploads/student_lecture_faces/1_1_2018-02-07 04-19-47.jpg')"></div>
-          <div class="user_info">
-            <div class="user_name">박명욱</div>
-            <div class="participation_score">참여도: 33</div>
-            <div class="concentration_score">집중도: 25</div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="3">
-        <div class="one_user">
-          <div class="user_pic" style="background-image:url('https://khneedssleep.com:8000//uploads/student_lecture_faces/1_1_2018-02-07 04-19-47.jpg')"></div>
-          <div class="user_info">
-            <div class="user_name">박명욱</div>
-            <div class="participation_score">참여도: 33</div>
-            <div class="concentration_score">집중도: 25</div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="3">
-        <div class="one_user">
-          <div class="user_pic" style="background-image:url('https://khneedssleep.com:8000//uploads/student_lecture_faces/1_1_2018-02-07 04-19-47.jpg')"></div>
-          <div class="user_info">
-            <div class="user_name">박명욱</div>
-            <div class="participation_score">참여도: 33</div>
-            <div class="concentration_score">집중도: 25</div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="3">
-        <div class="one_user">
-          <div class="user_pic" style="background-image:url('https://khneedssleep.com:8000//uploads/student_lecture_faces/1_1_2018-02-07 04-19-47.jpg')"></div>
-          <div class="user_info">
-            <div class="user_name">박명욱</div>
-            <div class="participation_score">참여도: 33</div>
-            <div class="concentration_score">집중도: 25</div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="3">
-        <div class="one_user">
-          <div class="user_pic" style="background-image:url('https://khneedssleep.com:8000//uploads/student_lecture_faces/1_1_2018-02-07 04-19-47.jpg')"></div>
-          <div class="user_info">
-            <div class="user_name">박명욱</div>
-            <div class="participation_score">참여도: 33</div>
-            <div class="concentration_score">집중도: 25</div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="3">
-        <div class="one_user">
-          <div class="user_pic" style="background-image:url('https://khneedssleep.com:8000//uploads/student_lecture_faces/1_1_2018-02-07 04-19-47.jpg')"></div>
-          <div class="user_info">
-            <div class="user_name">박명욱</div>
-            <div class="participation_score">참여도: 33</div>
-            <div class="concentration_score">집중도: 25</div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="3">
-        <div class="one_user">
-          <div class="user_pic" style="background-image:url('https://khneedssleep.com:8000//uploads/student_lecture_faces/1_1_2018-02-07 04-19-47.jpg')"></div>
-          <div class="user_info">
-            <div class="user_name">박명욱</div>
-            <div class="participation_score">참여도: 33</div>
-            <div class="concentration_score">집중도: 25</div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="3">
-        <div class="one_user">
-          <div class="user_pic" style="background-image:url('https://khneedssleep.com:8000//uploads/student_lecture_faces/1_1_2018-02-07 04-19-47.jpg')"></div>
-          <div class="user_info">
-            <div class="user_name">박명욱</div>
-            <div class="participation_score">참여도: 33</div>
-            <div class="concentration_score">집중도: 25</div>
+            <div class="user_name">{{item.name}}</div>
+            <div class="participation_score">참여도: {{item.participation_score}}</div>
+            <div class="concentration_score">집중도: {{item.concentration_score}}</div>
           </div>
         </div>
       </el-col>
     </el-row>
   </div>
-
 </template>
 
 <style lang="scss" scoped>
@@ -326,11 +95,68 @@
 
 </style>
 <script>
+  import realtimeLectureService from '../../services/realtimeLectureService';
+
+
   export default {
     // TODO: 전달되는 데이터 명 확인
     name: 'TeacherLectureLiveSummary',
     props: ['SummaryData'],
+    data() {
+      return {
+        forLoopData: null,
+        loopInterval: 0,
+      };
+    },
     methods: {
+      async getLectureStat() {
+        const vm = this;
+        try {
+          var lectureData = await realtimeLectureService.getStudentLectureLog({
+            lectureId: vm.lectureId, opt: vm.opt,
+          });
+          for (var i = 0; i < lectureData.data.length; i += 1) {
+            // eslint-disable-next-line
+            lectureData.data[i].latest_pic_path = '"'+ lectureData.data[i].latest_pic_path + '"';
+            // eslint-disable-next-line
+            console.log(lectureData.data[i].latest_pic_path);
+          }
+
+          vm.forLoopData = lectureData.data;
+        } catch (e) {
+          throw new Error('request error');
+        }
+      },
+      onClick(type) {
+        const vm = this;
+        switch (type) {
+          case 'GET_LECTURE_SCORE_ORDER_BY_CONCENTRATION': {
+            vm.lectureId = 1; // 강의 아이디를 여기에다가 넣어야됨
+            vm.opt = 0;
+            vm.getLectureStat();
+            break;
+          }
+          case 'GET_LECTURE_SCORE_ORDER_BY_PARTICIPATION': {
+            vm.lectureId = 1; // 강의 아이디를 여기에다가 넣어야됨
+            vm.opt = 1;
+            vm.getLectureStat();
+            break;
+          }
+          case 'GET_LECTURE_SCORE_ORDER_BY_UNDERSTANDING': {
+            vm.lectureId = 1; // 강의 아이디를 여기에다가 넣어야됨
+            vm.opt = 2;
+            vm.getLectureStat();
+            break;
+          }
+          case 'OPEN_STATUS_INFO': {
+            vm.isActiveInfo = !vm.isActiveInfo;
+            break;
+          }
+          default: {
+            break;
+          }
+        }
+      },
     },
   };
 </script>

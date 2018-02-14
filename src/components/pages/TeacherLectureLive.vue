@@ -90,7 +90,8 @@
           </el-tab-pane> -->
         </el-tabs>
         <el-row>
-          <div class="statusbar"  v-bind:class="{ activeInfo: isActiveInfo}" @click="onClick('OPEN_STATUS_INFO')">
+          <div class="statusbar" v-bind:class="{ activeInfo: isActiveInfo}">
+            <div class="statusbar_for_click" @click="onClick('OPEN_STATUS_INFO')"></div>
             <teacher-lecture-live-summary :SummaryData="SummaryData" />
           </div>
         </el-row>
@@ -117,14 +118,20 @@
     height:100%;
     max-height:25px;
   }
+  .statusbar_for_click{
+    width:100%;
+    height:30px;
+    position:absolute;
+    z-index:999;
+  }
+  .statusbar.activeInfo{
+    max-height: 85%;
+  }
   .video {
     background-color: black;
     min-height: 500px;
   }
-  .statusbar.activeInfo{
-    max-height: 85%;
 
-  }
 
   .lecture-name {
     margin: 8px 0;
@@ -152,6 +159,7 @@
   import ScActiveTimeEditor from '../partials/ScActiveTimeEditor';
   import ScCommonEditor from '../partials/ScCommonEditor';
   import TeacherLectureLiveSummary from '../partials/TeacherLectureLiveSummary';
+
 
 
   export default {
@@ -183,6 +191,10 @@
         switch (type) {
           case 'OPEN_STATUS_INFO': {
             vm.isActiveInfo = !vm.isActiveInfo;
+            break;
+          }
+          default: {
+            break;
           }
         }
       },

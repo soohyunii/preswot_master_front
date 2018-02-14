@@ -45,6 +45,14 @@ export default {
     // TODO: try cath jwtDecode
     return jwtDecode(jwt).email_id;
   },
+  getUserIdFromJwt() {
+    const jwt = this.getJwtFromLocalStorage();
+    if (jwt.length === 0) {
+      return null;
+    }
+    // TODO: try cath jwtDecode
+    return jwtDecode(jwt).authId;
+  },
   formatDate(d) {
     // console.log('formatDate', d, d.toLocaleDateString('en-US').split('-'));
     // eslint-disable-next-line
