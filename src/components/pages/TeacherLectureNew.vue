@@ -166,14 +166,14 @@ export default {
       vm.updateCurrentEditingScItemIndex({
         currentEditingScItemIndex: 0,
       });
-      await vm.getScItem({
+      vm.getScItem({
         scItemId: vm.currentEditingScItem.id,
       });
       if (['문항', '강의자료'].includes(vm.currentEditingScItemType)) {
-        await vm.getItemKeywords();
+        vm.getItemKeywords();
       }
     }
-    await vm.getKnowledgeMapData();
+    vm.getKnowledgeMapData();
   },
   mounted() {
     const vm = this;
