@@ -202,6 +202,8 @@ export default {
     ...mapMutations('sc', [
       'updateScType',
       'updateScId',
+    ]),
+    ...mapMutations('teacher', [
       'updateCurrentEditingScItemIndex',
     ]),
     ...mapActions('sc', [

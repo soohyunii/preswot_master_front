@@ -272,13 +272,13 @@ export default {
     /**
      * @param {string 문항|설문|강의자료|숙제} scItemType
      */
-    async postScItem({ state }, { scItemType }) {
+    async postScItem({ rootState }, { scItemType }) {
       const lectureItemType = utils.convertScItemType(scItemType);
       if (lectureItemType instanceof Error) {
         throw lectureItemType;
       }
       const res1 = await lectureItemService.postLectureItem({
-        lectureId: state.scId,
+        lectureId: rootState.sc.scId,
         lectureItemType,
       });
       const scItemId = res1.data.lecture_item_id;
