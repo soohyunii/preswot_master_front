@@ -172,7 +172,7 @@ export default {
     });
   },
   computed: {
-    ...mapState('teacher', ['scTitle', 'scType']),
+    ...mapState('sc', ['scTitle', 'scType']),
     ...mapGetters('teacher', [
       'isScEmpty',
       'DEBUGscenarioServerWillReceive',
@@ -188,8 +188,8 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['updateScType', 'updateScId']),
-    ...mapActions('teacher', [
+    ...mapMutations('sc', ['updateScType', 'updateScId']),
+    ...mapActions('sc', [
       'getSc',
       'deleteSc',
       'getKnowledgeMapData',

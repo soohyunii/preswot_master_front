@@ -98,7 +98,7 @@ export default {
     scTitle: {
       get() {
         const vm = this;
-        return vm.$store.state.teacher.scTitle;
+        return vm.$store.state.sc.scTitle;
       },
       set(scTitle) {
         const vm = this;
@@ -110,7 +110,7 @@ export default {
     scStartDate: {
       get() {
         const vm = this;
-        return vm.$store.state.teacher.scStartDate;
+        return vm.$store.state.sc.scStartDate;
       },
       set(scStartDate) {
         const vm = this;
@@ -122,7 +122,7 @@ export default {
     scEndDate: {
       get() {
         const vm = this;
-        return vm.$store.state.teacher.scEndDate;
+        return vm.$store.state.sc.scEndDate;
       },
       set(scEndDate) {
         const vm = this;
@@ -134,7 +134,7 @@ export default {
     scType: {
       get() {
         const vm = this;
-        return vm.$store.state.teacher.scType;
+        return vm.$store.state.sc.scType;
       },
       set(scType) {
         const vm = this;
@@ -146,7 +146,7 @@ export default {
     scDescription: {
       get() {
         const vm = this;
-        return vm.$store.state.teacher.scDescription;
+        return vm.$store.state.sc.scDescription;
       },
       set(scDescription) {
         const vm = this;
@@ -157,14 +157,14 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', [
+    ...mapMutations('sc', [
       'updateScTitle',
       'updateScDescription',
       'updateScType',
       'updateScStartDate',
       'updateScEndDate',
     ]),
-    ...mapActions('teacher', [
+    ...mapActions('sc', [
       'putScTitle',
       'putScStartDate',
       'putScEndDate',
