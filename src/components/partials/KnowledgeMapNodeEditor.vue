@@ -62,11 +62,11 @@ export default {
     };
   },
   computed: {
-    ...mapState('teacher', ['currentEditingNodeIndex']),
+    ...mapState('sc', ['currentEditingNodeIndex']),
     nodes: {
       get() {
         const vm = this;
-        return vm.$store.state.teacher.nodes;
+        return vm.$store.state.sc.nodes;
       },
       set(nodes) {
         const vm = this;
@@ -75,7 +75,14 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['pushNode', 'updateNodes', 'deleteNode', 'assignCurrentEditingNode', 'assignCurrentEditingNodeIndex', 'updateEdgeId']),
+    ...mapMutations('sc', [
+      'pushNode',
+      'updateNodes',
+      'deleteNode',
+      'assignCurrentEditingNode',
+      'updateCurrentEditingNodeIndex',
+      'updateEdgeId',
+    ]),
     onClick(type, index) {
       const vm = this;
       switch (type) {
@@ -132,7 +139,7 @@ export default {
           break;
         }
         case 'setCurrentEditingNodeIndex': {
-          vm.assignCurrentEditingNodeIndex({ currentEditingNodeIndex: index });
+          vm.updateCurrentEditingNodeIndex({ currentEditingNodeIndex: index });
           break;
         }
         default: {

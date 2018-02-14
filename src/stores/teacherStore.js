@@ -1,5 +1,3 @@
-import classService from '../services/classService';
-import lectureService from '../services/lectureService';
 import lectureItemService from '../services/lectureItemService';
 import fileService from '../services/fileService';
 import questionService from '../services/questionService';
@@ -15,113 +13,18 @@ export default {
   state: {
     // //////////////////////////절취선////////////////////////// //
     /**
-     * Teacher store 공통 변수들
-     * @var {Array[class]} teachingClassList
-     */
-    teachingClassList: [],
-    // //////////////////////////절취선////////////////////////// //
-    /**
-     * TeacherClassIndex 관련 변수들
-     * @var {number} currentClassIndex: teachingClassList에서 선택된 과목의 index
-     */
-    currentClassIndex: null,
-    // //////////////////////////절취선////////////////////////// //
-    /**
-     * TeacherClassNew 관련 변수들
-     * ... 은 막 엄청 필요있을 것 같지가 않아서
-     * 일단 만들고 바로 서버로 생성되는 애들인데 굳이
-     * store에 귀찮게 하나하나 필드를 만들고 싶지 않고,
-     * 그냥 하나의 object @var {object} newClass 에 퉁치는 것으로!
-     * @var {string} newClass.title: 과목 제목
-     * @var {Array[string]} newClass.teacherEmailList 강사 이메일 목록
-     * @var {string} newClass.description: 과목 소개 (설명)
-     * @var {Date} newClass.activeStartDate: 과목 활성화 시각
-     * @var {Date} newClass.activeEndDate: 과목 비활성화 시각
-     */
-    newClass: {
-      title: null,
-      teacherEmailList: null,
-      description: null,
-      activeStartDate: null,
-      activeEndDate: null,
-    },
-    // //////////////////////////절취선////////////////////////// //
-    /**
      * TeacherLectureNew / TeacherLectureLive 관련 변수들
-     * @var {number} scId: 백엔드 디비의 lectures 테이블의 lecture_id에 해당
-     * @var {string} scTitle
-     * @var {string} scType
-     * @var {string} scStartDatetime: (e.g. "2018-01-31 23:59:59")
-     * @var {string} scDescription
-     * @var { nodes: Array[node], edges: Array[node] }
      * @var {Array[scItem]} sc: shorthand for Scenario
      * @var {number} currentEditingScItemIndex: 현재 생성/편집 중인 시나리오 아이템 인덱스
      * @var {number} currentTeachingScItemIndex: 강의 중에 현재 진행되고 있는 시나리오 아이템 인덱스
-     * @var {number} currentEditingNodeIndex: 현재 편집 중인 노드 인덱스
-     * @var {Array[node]} 시나리오 지식맵에서의 키워드
-     * @var {Array[edge]} 시나리오 지식맵에서의 릴레이션
      */
-    scId: null,
-    scTitle: null,
-    scType: null,
-    scStartDate: null,
-    scEndDate: null,
-    scDescription: null,
-    scKnowledgeMap: null,
     sc: [],
     currentEditingScItemIndex: null,
     currentTeachingScItemIndex: null,
-    currentEditingNodeIndex: null,
-    nodes: [],
-    edges: [],
     // //////////////////////////절취선////////////////////////// //
   },
   getters: {
-    isNewClassValid(state) {
-      const {
-        title,
-        teacherEmailList,
-        description,
-        activeStartDate,
-        activeEndDate,
-      } = state.newClass;
 
-      if (!title) {
-        return false;
-      }
-      const isteacherEmailListNullOrEmpty = !teacherEmailList || teacherEmailList.length === 0;
-      if (isteacherEmailListNullOrEmpty) {
-        return false;
-      }
-      const isteacherEmailListAllNumber = teacherEmailList.every(
-        value => utils.isValidEmail(value),
-      );
-      if (!isteacherEmailListAllNumber) {
-        return false;
-      }
-      if (!description) {
-        return false;
-      }
-      if (!activeStartDate) {
-        return false;
-      }
-      if (activeEndDate) {
-        const start = activeStartDate.getTime();
-        const end = activeEndDate.getTime();
-        return start < end;
-      }
-      return true;
-    },
-    isTeachingClassListEmpty(state) {
-      return state.teachingClassList.length === 0;
-    },
-    currentClass(state) {
-      const index = state.currentClassIndex;
-      if (index === null) {
-        return null;
-      }
-      return state.teachingClassList[index];
-    },
     isScEmpty(state) {
       return state.sc.length === 0;
     },
@@ -130,9 +33,6 @@ export default {
     },
     currentTeachingScItem(state) {
       return state.sc[state.currentTeachingScItemIndex];
-    },
-    currentEditingNode(state) {
-      return state.nodes[state.currentEditingNodeIndex];
     },
     DEBUGscenarioServerWillReceive(state) {
       // TODO: delete
@@ -148,72 +48,6 @@ export default {
     },
   },
   mutations: {
-    updateCurrentClassIndex(state, { currentClassIndex }) {
-      state.currentClassIndex = currentClassIndex;
-    },
-    updateNewClass(state, { newClass }) {
-      state.newClass = newClass;
-    },
-    assignNewClass(state, { newClass }) {
-      Object.assign(
-        state.newClass,
-        newClass,
-      );
-    },
-    assignCurrentClass(state, { currentClass }) {
-      const c = state.teachingClassList[state.currentClassIndex];
-      Object.assign(
-        c,
-        currentClass,
-      );
-    },
-    updateScId(state, { scId }) {
-      state.scId = scId;
-    },
-    setNodesPinned(state, { pinned, node }) {
-      let index = -1;
-      state.nodes.forEach((item, idx) => {
-        if (item.id === node.id) {
-          index = idx;
-        }
-      });
-      if (index < 0) {
-        return;
-      }
-      // state.nodes[index].pinned = pinned;
-      if (pinned) {
-        state.nodes[index].pinned = true;
-        state.nodes[index].fx = state.nodes[index].x;
-        state.nodes[index].fy = state.nodes[index].y;
-      } else {
-        state.nodes[index].pinned = false;
-        state.nodes[index].fx = null;
-        state.nodes[index].fy = null;
-      }
-    },
-    pushNode(state, { node }) {
-      const lastNode = state.nodes[state.nodes.length - 1];
-      let x;
-      let y;
-      if (lastNode) {
-        x = lastNode.x + 50;
-        y = lastNode.y + 50;
-      } else {
-        x = 0;
-        y = 0;
-      }
-      const createNode = {
-        value: node.value,
-        id: node.id,
-        name: '\n',
-        _cssClass: '',
-        _size: node._size, // eslint-disable-line
-        x,
-        y,
-        pinned: false,
-      };
-      state.nodes.push(createNode);
-    },
     pushItemKeyword(state, { keyword, score }) {
       state.sc[state.currentEditingScItemIndex].itemKeywords.push({
         keyword,
@@ -223,54 +57,6 @@ export default {
     updateItemKeywords(state, { keywords }) {
       state.sc[state.currentEditingScItemIndex].itemKeywords = keywords;
       console.log(state.sc[state.currentEditingScItemIndex].itemKeywords); // eslint-disable-line
-    },
-    assignCurrentEditingNode(state, { currentEditingNode }) {
-      Object.assign(
-        state.nodes[state.currentEditingNodeIndex],
-        currentEditingNode,
-      );
-    },
-    updateNodes(state, { nodes }) {
-      state.nodes = nodes;
-    },
-    assignCurrentEditingNodeIndex(state, { currentEditingNodeIndex }) {
-      state.currentEditingNodeIndex = currentEditingNodeIndex;
-    },
-    pushEdge(state, { edge }) {
-      state.edges.push(edge);
-    },
-    updateEdges(state, { edges }) {
-      state.edges = edges;
-    },
-    updateEdgeId(state, { oldNodeId, newNodeId }) {
-      state.edges.forEach((item, index) => {
-        if (item.tid === oldNodeId) {
-          state.edges[index].tid = newNodeId;
-        } else if (item.sid === oldNodeId) {
-          state.edges[index].sid = newNodeId;
-        }
-      });
-    },
-    deleteNode(state, { nodeIndex }) {
-      state.nodes.splice(nodeIndex, 1);
-    },
-    deleteEdge(state, { edgeIndex }) {
-      state.edges.splice(edgeIndex, 1);
-    },
-    updateScTitle(state, { scTitle }) {
-      state.scTitle = scTitle;
-    },
-    updateScType(state, { scType }) {
-      state.scType = scType;
-    },
-    updateScStartDate(state, { scStartDate }) {
-      state.scStartDate = scStartDate;
-    },
-    updateScEndDate(state, { scEndDate }) {
-      state.scEndDate = scEndDate;
-    },
-    updateScDescription(state, { scDescription }) {
-      state.scDescription = scDescription;
     },
     pushScItem(state, { type, id }) {
       const title = null;
@@ -329,175 +115,11 @@ export default {
       state.sc.splice(lectureElementIndex, 1);
       // TODO: update localForage
     },
-    // TODO: editLectureElement
     updateSc(state, { sc }) {
       state.sc = sc;
     },
-    /**
-     * 하나 넣거나, 여러개 넣거나
-     * @param {object} state
-     * @param {object} teachingClass?
-     * @param {Array[object]} teachingClassList?
-     */
-    pushTeachingClass(state, { teachingClass, teachingClassList }) {
-      if (teachingClass) {
-        state.teachingClassList.push(teachingClass);
-      }
-      if (teachingClassList) {
-        Array.prototype.push.apply(state.teachingClassList, teachingClassList);
-      }
-    },
-    updateTeachingClassList(state, { teachingClassList }) {
-      state.teachingClassList = teachingClassList;
-    },
-    deleteTeachingClass(state, { teachingClassIndex }) {
-      state.teachingClassList.splice(teachingClassIndex, 1);
-    },
   },
   actions: {
-    async createClass({ state, getters }) {
-      // console.log('state', state);
-      if (!getters.isNewClassValid) {
-        throw new Error('invalid');
-      }
-      // TODO: pass intendedLectureNum
-      const res = await classService.createClass(state.newClass);
-      if (res.data && res.data.success) {
-        return res;
-      }
-      throw new Error(`create class failed ${res.status}`);
-    },
-    async fetchClass({ state, getters, commit }) {
-      if (state.currentClassIndex === null) {
-        return;
-      }
-      const currentClass = getters.currentClass;
-      const res = await classService.fetchClass({
-        id: currentClass.class_id,
-      });
-      commit('assignCurrentClass', {
-        currentClass: {
-          scenarioList: res.data.lectures,
-        },
-      });
-    },
-    async getSc({ state, commit, dispatch, getters }) {
-      const res = await lectureService.getLecture({
-        lectureId: state.scId,
-      });
-      console.log('getSc res', res.data.lecture_items[0]); // eslint-disable-line
-      commit('updateScTitle', {
-        scTitle: res.data.name,
-      });
-      commit('updateScStartDate', {
-        scStartDate: res.data.intended_start ? new Date(res.data.intended_start) : null,
-      });
-      commit('updateScEndDate', {
-        scEndDate: res.data.intended_end ? new Date(res.data.intended_end) : null,
-      });
-      commit('updateScType', {
-        scType: utils.convertScType(res.data.type),
-      });
-      commit('updateScDescription', {
-        scDescription: res.data.description,
-      });
-      // eslint-disable-next-line
-      const sc = res.data.lecture_items.map((scItem) => {
-        // eslint-disable-next-line
-        console.log('getSc scItem', scItem);
-        return {
-          id: scItem.lecture_item_id,
-          title: scItem.name,
-          description: scItem.description,
-          type: utils.convertScItemType(scItem.type),
-          activeStartOffsetSec: scItem.start_time,
-          activeEndOffsetSec: scItem.end_time,
-          order: scItem.order,
-          isResultVisible: utils.convertBoolean(scItem.result),
-          opened: scItem.opened,
-          question: {},
-          material: {},
-          homework: {},
-          survey: {},
-          itemKeywords: [],
-          fileList: [],
-        };
-      });
-      commit('updateSc', {
-        sc,
-      });
-      if (sc.length !== 0) {
-        commit('updateCurrentEditingScItemIndex', {
-          currentEditingScItemIndex: 0,
-        });
-        await dispatch('getScItem', {
-          scItemId: getters.currentEditingScItem.id,
-        });
-        await dispatch('getItemKeywords');
-      }
-    },
-    async createSc({ getters, rootGetters }) {
-      const userId = rootGetters['auth/userId'];
-      const classId = getters.currentClass.class_id;
-
-      const res = await lectureService.postLecture({
-        classId,
-        teacherId: userId,
-      });
-      return res.data.lecture_id;
-    },
-    async putSc({
-      state,
-      // commit,
-    }) {
-      const type = utils.convertScType(state.scType);
-      if (type instanceof Error) {
-        throw type;
-      }
-      await lectureService.putLecture({
-        lectureId: state.scId,
-        name: state.scTitle,
-        description: state.scDescription,
-        startDate: state.scStartDate,
-        endDate: state.scEndDate,
-        // TODO: add state.scLocation
-        location: null,
-        // TODO: add state.scIsOpen,
-        opened: true,
-        teacherEmail: utils.getEmailFromJwt(),
-        type,
-      });
-    },
-    async deleteSc({ state, commit }) {
-      await lectureService.deleteLecture({
-        lectureId: state.scId,
-      });
-      // TODO: replace here if sc related variables are grouped together
-      commit('updateScId', {
-        scId: null,
-      });
-      commit('updateScTitle', {
-        scTitle: null,
-      });
-      commit('updateScType', {
-        scType: null,
-      });
-      commit('updateScStartDate', {
-        scStartDate: null,
-      });
-      commit('updateScEndDate', {
-        scEndDate: null,
-      });
-      commit('updateScDescription', {
-        scDescription: null,
-      });
-      commit('updateCurrentEditingScItemIndex', {
-        currentEditingScItemIndex: null,
-      });
-      commit('updateSc', {
-        sc: [],
-      });
-    },
     /**
      * 서버로부터 scItem을 받아와서 현재 scItem에 갱신한다.
      */
@@ -650,13 +272,13 @@ export default {
     /**
      * @param {string 문항|설문|강의자료|숙제} scItemType
      */
-    async postScItem({ state }, { scItemType }) {
+    async postScItem({ rootState }, { scItemType }) {
       const lectureItemType = utils.convertScItemType(scItemType);
       if (lectureItemType instanceof Error) {
         throw lectureItemType;
       }
       const res1 = await lectureItemService.postLectureItem({
-        lectureId: state.scId,
+        lectureId: rootState.sc.scId,
         lectureItemType,
       });
       const scItemId = res1.data.lecture_item_id;
@@ -804,52 +426,6 @@ export default {
         comment: s.comment,
         choice: s.choice,
         type: s.type,
-      });
-    },
-    async getKnowledgeMapData({ state, commit }) {
-      const res1 = await lectureService.getLectureKeywords({
-        lectureId: state.scId,
-      });
-      console.log('res1', res1); // eslint-disable-line
-      const nodes = res1.data.map(item => ({
-        value: item.keyword,
-        id: item.keyword,
-        name: item.keyword,
-        _size: item.weight,
-      }));
-      commit('updateNodes', { nodes });
-      const res2 = await lectureService.getLectureKeywordRelations({
-        lectureId: state.scId,
-      });
-      console.log('res2', res2); // eslint-disable-line
-      if (res2) {
-        const edges = res2.data.map(item => ({
-          sid: item.node1,
-          tid: item.node2,
-          weight: item.weight,
-        }));
-        commit('updateEdges', { edges });
-      }
-    },
-    async postKnowledgeMapData({ state }) {
-      const lectureKeywords = state.nodes.map(item => ({
-        keyword: item.name,
-        weight: Number.parseInt(item._size, 10), // eslint-disable-line
-      }));
-      console.log('lectureKeywords', lectureKeywords); // eslint-disable-line
-      await lectureService.postLectureKeywords({
-        lectureId: state.scId,
-        lectureKeywords,
-      });
-      const lectureRelations = state.edges.map(item => ({
-        node1: item.sid,
-        node2: item.tid,
-        weight: item.weight,
-      }));
-      console.log('lectureRelations', lectureRelations); // eslint-disable-line
-      await lectureService.postLectureKeywordRelations({
-        lectureId: state.scId,
-        lectureRelations,
       });
     },
     // async deleteKnowledgeEdge({ state }, { edgeIndex }) {

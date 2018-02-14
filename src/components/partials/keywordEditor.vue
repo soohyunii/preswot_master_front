@@ -72,11 +72,11 @@ export default {
     nodes: {
       get() {
         const vm = this;
-        return vm.$store.state.teacher.nodes;
+        return vm.$store.state.sc.nodes;
       },
       set(nodes) {
         const vm = this;
-        vm.updateNodes({ nodes });
+        vm.updateNodes({ nodes }); // FIXME: 이거 mapMutation으로 안받아오는데..?
       },
     },
   },

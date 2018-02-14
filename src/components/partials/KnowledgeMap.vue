@@ -76,7 +76,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('teacher', ['nodes', 'edges']),
+    ...mapState('sc', ['nodes', 'edges']),
     validEdges() {
       const vm = this;
       const edges = [];
@@ -109,8 +109,8 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['setNodesPinned']),
-    ...mapActions('teacher', ['postKnowledgeMapData']),
+    ...mapMutations('sc', ['setNodesPinned']),
+    ...mapActions('sc', ['postKnowledgeMapData']),
     nodeClick(event, node) {
       const vm = this;
 
