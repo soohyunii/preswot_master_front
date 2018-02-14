@@ -6,7 +6,7 @@ export default {
   state: {
     // //////////////////////////절취선////////////////////////// //
     /**
-     * Teacher store 공통 변수들
+     * 공통 변수들
      * @var {Array[class]} teachingClassList
      */
     studyingClassList: [],

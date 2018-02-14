@@ -162,6 +162,17 @@ export default {
     // TODO: handle if scId doens't exists
     // TODO: handle if scId exists but don't have the authorization
     await vm.getSc();
+    if (!vm.isScEmpty) {
+      vm.updateCurrentEditingScItemIndex({
+        currentEditingScItemIndex: 0,
+      });
+      await vm.getScItem({
+        scItemId: vm.currentEditingScItem.id,
+      });
+      if (['문항', '강의자료'].includes(vm.currentEditingScItemType)) {
+        await vm.getItemKeywords();
+      }
+    }
     await vm.getKnowledgeMapData();
   },
   mounted() {
@@ -188,11 +199,19 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('sc', ['updateScType', 'updateScId']),
+    ...mapMutations('sc', [
+      'updateScType',
+      'updateScId',
+      'updateCurrentEditingScItemIndex',
+    ]),
     ...mapActions('sc', [
       'getSc',
       'deleteSc',
       'getKnowledgeMapData',
+    ]),
+    ...mapActions('teacher', [
+      'getScItem',
+      'getItemKeywords',
     ]),
     onClickScType(scType) {
       const vm = this;
