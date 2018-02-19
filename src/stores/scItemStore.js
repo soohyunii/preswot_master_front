@@ -176,12 +176,14 @@ export default {
                 difficulty: question.difficulty,
                 isOrderingAnswer: question.is_ordering_answer,
                 score: question.score,
-                inputDescription: question.input,
-                outputDescription: question.output,
+                inputDescription: question.input_description,
+                outputDescription: question.output_description,
                 memoryLimit: question.memory_limit,
                 timeLimit: question.time_limit,
                 sampleInput: question.sample_input,
                 sampleOutput: question.sample_output,
+                languageList: question.accept_language || [],
+                testCaseList: question.problem_testcases || [],
                 // * order: 이거는 question이 여러개 들어올 때를 가정해서 만들어진거라 패스
                 // * showing_order: 위와 같음
                 // * timer: 애매해서 일단 뻄
@@ -364,14 +366,64 @@ export default {
         sampleOutput: q.sampleOutput,
         memoryLimit: q.memoryLimit,
         timeLimit: q.timeLimit,
+        languageList: q.languageList,
       });
     },
     async putQuestionType({ getters }) {
       const q = getters.currentEditingScItem.question;
-      console.log('store putQuestionType', q);
       await questionService.putQuestionType({
         questionId: q.id,
         type: q.type,
+      });
+    },
+    async postQuestionTestCase({ getters, commit }) {
+      const q = getters.currentEditingScItem.question;
+      const res = await questionService.postQuestionTestCase({
+        questionId: q.id,
+      });
+      // console.log('postQuestionTestCase res', res);
+      const newTestCaseList = q.testCaseList;
+      newTestCaseList.push({
+        num: res.data.num,
+        input: null,
+        output: null,
+      });
+      commit('assignCurrentEditingScItem', {
+        currentEditingScItem: {
+          question: {
+            ...q,
+            testCaseList: newTestCaseList,
+          },
+        },
+      });
+    },
+    async putQuestionTestCase({ getters, commit }, { index }) {
+      const q = getters.currentEditingScItem.question;
+      const tc = q.testCaseList[index];
+      await questionService.putQuestionTestCase({
+        questionId: q.id,
+        num: tc.num,
+        input: tc.input,
+        output: tc.output,
+      });
+      // console.log('putQuestionTestCase', res);
+    },
+    async deleteQuestionTestCase({ getters, commit }, { index }) {
+      const q = getters.currentEditingScItem.question;
+      const tc = q.testCaseList[index];
+      await questionService.deleteQuestionTestCase({
+        questionId: q.id,
+        num: tc.num,
+      });
+      const newTestCaseList = q.testCaseList;
+      newTestCaseList.splice(index, 1);
+      commit('assignCurrentEditingScItem', {
+        currentEditingScItem: {
+          question: {
+            ...q,
+            testCaseList: newTestCaseList,
+          },
+        },
       });
     },
     async deleteFile(__empty__, { fileGuid }) {

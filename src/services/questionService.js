@@ -24,6 +24,7 @@ export default {
     sampleOutput,
     timeLimit,
     memoryLimit,
+    languageList,
   }) {
     const param = {};
 
@@ -40,6 +41,7 @@ export default {
     utils.assignIfNotNil(param, { sampleOutput });
     utils.assignIfNotNil(param, { timeLimit });
     utils.assignIfNotNil(param, { memoryLimit });
+    utils.assignIfNotNil(param, { languageList }, 'acceptLanguage');
 
     return http.put(`/questions/${questionId}`, param);
   },
@@ -50,6 +52,28 @@ export default {
     return http.put(`/questions/${questionId}/type`, {
       type,
     });
+  },
+  postQuestionTestCase({
+    questionId,
+  }) {
+    return http.post(`/questions/${questionId}/testcases`);
+  },
+  putQuestionTestCase({
+    questionId,
+    num,
+    input,
+    output,
+  }) {
+    return http.put(`/questions/${questionId}/testcases/${num}`, {
+      input,
+      output,
+    });
+  },
+  deleteQuestionTestCase({
+    questionId,
+    num,
+  }) {
+    return http.delete(`/questions/${questionId}/testcases/${num}`);
   },
   postQuestionFile({
     questionId,

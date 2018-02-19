@@ -11,6 +11,8 @@
             <keyword-editor></keyword-editor>
           </el-form-item>
 
+          <br />
+
           <el-form-item label="문항 유형">
             <el-radio-group
               v-model="pType"
@@ -75,17 +77,17 @@
 
           <!-- 코딩 -->
           <template v-if="[3].includes(pType)">
-            <el-form-item label="언어" prop="languageTest">
+            <el-form-item label="언어" prop="languageList">
               <el-select
                 type="textarea"
                 :rows="3"
-                v-model.lazy="languageTest"
+                v-model.lazy="pLanguageList"
                 multiple
                 size="large"
-                @change="onChange('LANGUAGE')"
+                @change="onChange('LANGUAGE_LIST')"
               >
                 <el-option
-                  v-for="item in languageList"
+                  v-for="item in supportedLanguageList"
                   :key="item.value"
                   :value="item.value"
                   :label="item.label"
@@ -93,10 +95,12 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <i class="el-icon-loading" v-if="loading.LANGUAGE" />
+            <i class="el-icon-loading" v-if="loading.LANGUAGE_LIST" />
           </template>
 
           <template v-if="[3].includes(pType)">
+            <br />
+            <br />
             <el-form-item label="입력 설명" prop="pInputDescription">
               <el-input
                 type="textarea"
@@ -144,19 +148,48 @@
             <i class="el-icon-loading" v-if="loading.SAMPLE_OUTPUT" />
           </template>
 
-          <h1>TODO: 테스트 케이스 입력</h1>
 
-          <!-- <template v-if="[3].includes(pType)">
-            <el-form-item label="출력 설명" prop="pOutputDescription">
-              <el-input
-                type="textarea"
-                :rows="3"
-                v-model.lazy="pOutputDescription"
-                @change="onChange('OUTPUT_DESCRIPTION')"
-              />
-            </el-form-item>
-            <i class="el-icon-loading" v-if="loading.OUTPUT_DESCRIPTION" />
-          </template> -->
+          <template v-if="[3].includes(pType)">
+            <h3>테스트케이스</h3>
+            <template v-for="(item, index) in pTestCaseList">
+              <el-form-item :label="`테스트 케이스${index + 1} 입력`" :key="`${item.num}i`">
+                <el-input
+                  type="textarea"
+                  :rows="3"
+                  v-model.lazy="pTestCaseList[index].input"
+                  @change="onChange('TEST_CASE', index, 'INPUT')"
+                />
+              </el-form-item>
+              <i class="el-icon-loading" :key="`${item.num}il`" v-if="loading.TEST_CASE_INPUT[index]" />
+
+              <el-form-item :label="`테스트 케이스${index + 1} 출력`" :key="`${item.num}o`">
+                <el-input
+                  type="textarea"
+                  :rows="3"
+                  v-model.lazy="pTestCaseList[index].output"
+                  @change="onChange('TEST_CASE', index, 'OUTPUT')"
+                />
+              </el-form-item>
+              <i class="el-icon-loading" :key="`${item.num}ol`" v-if="loading.TEST_CASE_OUTPUT[index]" />
+
+              <br :key="`${item.num}b0`" />
+
+              <el-button
+                type="danger"
+                :key="`${item.num}b`"
+                @click="onClick('DELETE_TEST_CASE', index)"
+              >
+                테스트 케이스{{ index + 1 }} 삭제
+              </el-button>
+              <br :key="`${item.num}b1`" />
+              <br :key="`${item.num}b2`" />
+
+            </template>
+            <el-button type="primary" @click="onClick('ADD_TEST_CASE')">테스트 케이스 추가</el-button>
+
+            <br />
+            <br />
+          </template>
 
           <template v-if="[3].includes(pType)">
             <el-form-item label="메모리 제한 (MB)" prop="pMemoryLimit">
@@ -221,7 +254,7 @@ export default {
   name: 'ScQuestionEditor',
   data() {
     return {
-      languageList: [{
+      supportedLanguageList: [{
         value: 'c',
         label: 'C',
       }, {
@@ -259,13 +292,28 @@ export default {
         ISORDERINGANSWER: false,
         SCORE: false,
         DIFFICULTY: false,
-        LANGUAGE: false,
+        LANGUAGE_LIST: false,
         INPUT_DESCRIPTION: false,
         OUTPUT_DESCRIPTION: false,
         SAMPLE_INPUT: false,
         SAMPLE_OUTPUT: false,
         MEMORY_LIMIT: false,
         TIME_LIMIT: false,
+        // 설마 5개 이상 만드는 새끼가 있겠어?
+        TEST_CASE_INPUT: {
+          0: false,
+          1: false,
+          2: false,
+          3: false,
+          4: false,
+        },
+        TEST_CASE_OUTPUT: {
+          0: false,
+          1: false,
+          2: false,
+          3: false,
+          4: false,
+        },
       },
     };
   },
@@ -383,13 +431,24 @@ export default {
         });
       },
     },
-    // pLangauge: {
-    //   get() {
-    //     const vm = this;
-    //     const q = vm.currentEditingScItem.question;
-    //     return q ? q.language : null;
-    //   },
-    // },
+    pLanguageList: {
+      get() {
+        const vm = this;
+        const q = vm.currentEditingScItem.question;
+        return q ? q.languageList : null;
+      },
+      set(pLanguageList) {
+        const vm = this;
+        vm.assignCurrentEditingScItem({
+          currentEditingScItem: {
+            question: {
+              ...vm.currentEditingScItem.question,
+              languageList: pLanguageList,
+            },
+          },
+        });
+      },
+    },
     pInputDescription: {
       get() {
         const vm = this;
@@ -425,6 +484,14 @@ export default {
           },
         });
       },
+    },
+    /**
+     * testCaseList가 simple value가 아니라 array라서 디텍션 감지가 안됨
+     */
+    pTestCaseList() {
+      const vm = this;
+      const q = vm.currentEditingScItem.question;
+      return q ? q.testCaseList : [];
     },
     pSampleInput: {
       get() {
@@ -537,15 +604,33 @@ export default {
   },
   methods: {
     ...mapMutations('scItem', ['assignCurrentEditingScItem']),
-    ...mapActions('scItem', ['putQuestion', 'putQuestionType']),
-    async onChange(type) {
+    ...mapActions('scItem', [
+      'putQuestion',
+      'putQuestionType',
+      'postQuestionTestCase',
+      'putQuestionTestCase',
+      'deleteQuestionTestCase',
+    ]),
+    async onChange(type, index, subtype) {
       const vm = this;
       // // eslint-disable-next-line
       // console.log('type', type, vm.currentEditingScItem.question.type);
       try {
-        vm.loading[type] = true;
+        if (type === 'TEST_CASE') {
+          if (subtype === 'INPUT') {
+            vm.loading.TEST_CASE_INPUT[index] = true;
+          } else if (subtype === 'OUTPUT') {
+            vm.loading.TEST_CASE_OUTPUT[index] = true;
+          } else {
+            throw new Error(`not defined subtype ${subtype}`);
+          }
+        } else {
+          vm.loading[type] = true;
+        }
         if (type === 'TYPE') {
           await vm.putQuestionType();
+        } else if (type === 'TEST_CASE') {
+          await vm.putQuestionTestCase({ index });
         } else {
           await vm.putQuestion();
         }
@@ -557,7 +642,31 @@ export default {
           duration: 0,
         });
       } finally {
-        vm.loading[type] = false;
+        if (type === 'TEST_CASE') {
+          if (subtype === 'INPUT') {
+            vm.loading.TEST_CASE_INPUT[index] = false;
+          } else if (subtype === 'OUTPUT') {
+            vm.loading.TEST_CASE_OUTPUT[index] = false;
+          }
+        } else {
+          vm.loading[type] = false;
+        }
+      }
+    },
+    async onClick(type, index) {
+      const vm = this;
+      switch (type) {
+        case 'ADD_TEST_CASE': {
+          await vm.postQuestionTestCase();
+          break;
+        }
+        case 'DELETE_TEST_CASE': {
+          await vm.deleteQuestionTestCase({ index });
+          break;
+        }
+        default: {
+          throw new Error(`not defined type ${type}`);
+        }
       }
     },
   },
