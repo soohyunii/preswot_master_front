@@ -181,7 +181,7 @@
           <template v-if="[0, 1, 2, 3].includes(pType)">
             <el-form-item label="배점" prop="pScore">
               <el-input
-                value='number'
+                type='number'
                 v-model.lazy="pScore"
                 @change="onChange('SCORE')"
               />
@@ -270,7 +270,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('teacher', ['currentEditingScItem']),
+    ...mapGetters('scItem', ['currentEditingScItem']),
     input() {
       const res = {};
       return res;
@@ -536,8 +536,8 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['assignCurrentEditingScItem']),
-    ...mapActions('teacher', ['putQuestion', 'putQuestionType']),
+    ...mapMutations('scItem', ['assignCurrentEditingScItem']),
+    ...mapActions('scItem', ['putQuestion', 'putQuestionType']),
     async onChange(type) {
       const vm = this;
       // // eslint-disable-next-line

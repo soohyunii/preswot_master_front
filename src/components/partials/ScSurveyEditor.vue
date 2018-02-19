@@ -67,7 +67,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('teacher', ['currentEditingScItem']),
+    ...mapGetters('scItem', ['currentEditingScItem']),
     pComment: {
       get() {
         const vm = this;
@@ -129,8 +129,8 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['assignCurrentEditingScItem']),
-    ...mapActions('teacher', ['putSurvey', 'putSurveyType']),
+    ...mapMutations('scItem', ['assignCurrentEditingScItem']),
+    ...mapActions('scItem', ['putSurvey', 'putSurveyType']),
     async onChange(type) {
       const vm = this;
       try {

@@ -33,8 +33,8 @@ export default {
     };
   },
   computed: {
-    ...mapState('teacher', ['sc']),
-    ...mapGetters('teacher', ['currentEditingScItem']),
+    ...mapState('scItem', ['sc']),
+    ...mapGetters('scItem', ['currentEditingScItem']),
     fileList: {
       get() {
         const vm = this;
@@ -74,8 +74,8 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['assignCurrentEditingScItem']),
-    ...mapActions('teacher', [
+    ...mapMutations('scItem', ['assignCurrentEditingScItem']),
+    ...mapActions('scItem', [
       'postFile',
       'deleteFile',
     ]),

@@ -162,7 +162,19 @@ export default {
     // TODO: handle if scId doens't exists
     // TODO: handle if scId exists but don't have the authorization
     await vm.getSc();
-    await vm.getKnowledgeMapData();
+    if (!vm.isScEmpty) {
+      vm.updateCurrentEditingScItemIndex({
+        currentEditingScItemIndex: 0,
+      });
+      // 문항, 강의자료의 id가 이 단계에서 얻어짐 => getItemKeywords() 함수에서 이 id를 이용
+      await vm.getScItem({
+        scItemId: vm.currentEditingScItem.id,
+      });
+      if (['문항', '강의자료'].includes(vm.currentEditingScItemType)) {
+        vm.getItemKeywords();
+      }
+    }
+    vm.getKnowledgeMapData();
   },
   mounted() {
     const vm = this;
@@ -172,8 +184,8 @@ export default {
     });
   },
   computed: {
-    ...mapState('teacher', ['scTitle', 'scType']),
-    ...mapGetters('teacher', [
+    ...mapState('sc', ['scTitle', 'scType']),
+    ...mapGetters('scItem', [
       'isScEmpty',
       'DEBUGscenarioServerWillReceive',
       'currentEditingScItem',
@@ -188,11 +200,21 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['updateScType', 'updateScId']),
-    ...mapActions('teacher', [
+    ...mapMutations('sc', [
+      'updateScType',
+      'updateScId',
+    ]),
+    ...mapMutations('scItem', [
+      'updateCurrentEditingScItemIndex',
+    ]),
+    ...mapActions('sc', [
       'getSc',
       'deleteSc',
       'getKnowledgeMapData',
+    ]),
+    ...mapActions('scItem', [
+      'getScItem',
+      'getItemKeywords',
     ]),
     onClickScType(scType) {
       const vm = this;

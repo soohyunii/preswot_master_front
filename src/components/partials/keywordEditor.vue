@@ -50,7 +50,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('teacher', ['currentEditingScItem']),
+    ...mapGetters('scItem', ['currentEditingScItem']),
     scItemKeywords: {
       get() {
         const vm = this;
@@ -72,20 +72,20 @@ export default {
     nodes: {
       get() {
         const vm = this;
-        return vm.$store.state.teacher.nodes;
+        return vm.$store.state.sc.nodes;
       },
       set(nodes) {
         const vm = this;
-        vm.updateNodes({ nodes });
+        vm.updateNodes({ nodes }); // FIXME: 이거 mapMutation으로 안받아오는데..?
       },
     },
   },
   methods: {
-    ...mapMutations('teacher', [
+    ...mapMutations('scItem', [
       'assignCurrentEditingScItem',
       'pushItemKeyword',
     ]),
-    ...mapActions('teacher', [
+    ...mapActions('scItem', [
       'putScItem',
       'postItemKeywords',
       'deleteItemKeywords',

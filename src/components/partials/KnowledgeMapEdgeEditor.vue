@@ -76,10 +76,10 @@ export default {
     };
   },
   computed: {
-    ...mapState('teacher', ['nodes']),
+    ...mapState('sc', ['nodes']),
     edges: {
       get() {
-        return this.$store.state.teacher.edges;
+        return this.$store.state.sc.edges;
       },
       set(edges) {
         const vm = this;
@@ -90,7 +90,11 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['pushEdge', 'updateEdges', 'deleteEdge']),
+    ...mapMutations('sc', [
+      'pushEdge',
+      'updateEdges',
+      'deleteEdge',
+    ]),
     isValidEdge(sidInputFlag, tidInputFlag, index) {
       const vm = this;
       let isValid = true;
