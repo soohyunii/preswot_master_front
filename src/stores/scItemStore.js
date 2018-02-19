@@ -176,8 +176,8 @@ export default {
                 difficulty: question.difficulty,
                 isOrderingAnswer: question.is_ordering_answer,
                 score: question.score,
-                inputDescription: question.input_description,
-                outputDescription: question.output_description,
+                inputDescription: question.input,
+                outputDescription: question.output,
                 memoryLimit: question.memory_limit,
                 timeLimit: question.time_limit,
                 sampleInput: question.sample_input,
@@ -368,6 +368,7 @@ export default {
     },
     async putQuestionType({ getters }) {
       const q = getters.currentEditingScItem.question;
+      console.log('store putQuestionType', q);
       await questionService.putQuestionType({
         questionId: q.id,
         type: q.type,
