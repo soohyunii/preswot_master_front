@@ -100,8 +100,33 @@ export default {
     // window.console.log('sort: idx', currentEditingScItemIndex);
     const beforeSortedScItem = sc[currentEditingScItemIndex];
     // window.console.log('sort: item', beforeSortedScItem);
-    const activeSortedSc = sc.sort((a, b) => a.activeStartOffsetSec - b.activeStartOffsetSec);
-    const orderSortedSc = activeSortedSc.sort((a, b) => a.order - b.order);
+    for (let i = 0; i < sc.length; i += 1) {
+      window.console.log(sc[i].id);
+    }
+    const activeSortedSc = sc.sort((a, b) => {
+      const activeA = a.activeStartOffsetSec ? a.activeStartOffsetSec : 0;
+      const activeB = b.activeStartOffsetSec ? b.activeStartOffsetSec : 0;
+      let rtn;
+      if (activeA < activeB) {
+        rtn = -1;
+      } else if (activeA > activeB) {
+        rtn = 1;
+      } else {
+        rtn = 0;
+      }
+      window.console.log('ab', a.id, ' & ', b.id, ' : ', rtn);
+      return rtn;
+    });
+    for (let i = 0; i < sc.length; i += 1) {
+      window.console.log(sc[i].id);
+    }
+    const orderSortedSc = activeSortedSc.sort((a, b) => {
+      window.console.log(a.order - b.order ? 'a' : 'b');
+      return a.order - b.order;
+    });
+    for (let i = 0; i < sc.length; i += 1) {
+      window.console.log(sc[i].id);
+    }
     const changedCurrentEditingScItemIndex = sc.map(x => x.id).indexOf(beforeSortedScItem.id);
     // window.console.log('sort: rtn1', orderSortedSc);
     // window.console.log('sort: rtn2', changedCurrentEditingScItemIndex);
