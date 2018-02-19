@@ -151,7 +151,6 @@
 
           <template v-if="[3].includes(pType)">
             <h3>테스트케이스</h3>
-            {{ loading.TEST_CASE_INPUT }}
             <template v-for="(item, index) in pTestCaseList">
               <el-form-item :label="`테스트 케이스${index + 1} 입력`" :key="`${item.num}i`">
                 <el-input
@@ -175,7 +174,13 @@
 
               <br :key="`${item.num}b0`" />
 
-              <el-button type="danger" :key="`${item.num}b`">테스트 케이스{{ index + 1 }} 삭제</el-button>
+              <el-button
+                type="danger"
+                :key="`${item.num}b`"
+                @click="onClick('DELETE_TEST_CASE', index)"
+              >
+                테스트 케이스{{ index + 1 }} 삭제
+              </el-button>
               <br :key="`${item.num}b1`" />
               <br :key="`${item.num}b2`" />
 
@@ -480,23 +485,13 @@ export default {
         });
       },
     },
-    pTestCaseList: {
-      get() {
-        const vm = this;
-        const q = vm.currentEditingScItem.question;
-        return q ? q.testCaseList : [];
-      },
-      set(pTestCaseList) {
-        const vm = this;
-        vm.assignCurrentEditingScItem({
-          currentEditingScItem: {
-            question: {
-              ...vm.currentEditingScItem.question,
-              testCaseList: pTestCaseList,
-            },
-          },
-        });
-      },
+    /**
+     * testCaseList가 simple value가 아니라 array라서 디텍션 감지가 안됨
+     */
+    pTestCaseList() {
+      const vm = this;
+      const q = vm.currentEditingScItem.question;
+      return q ? q.testCaseList : [];
     },
     pSampleInput: {
       get() {
@@ -658,13 +653,15 @@ export default {
         }
       }
     },
-    async onClick(type) {
+    async onClick(type, index) {
       const vm = this;
       switch (type) {
         case 'ADD_TEST_CASE': {
           await vm.postQuestionTestCase();
-          vm.loading.TEST_CASE_INPUT.push(false);
-          vm.loading.TEST_CASE_OUTPUT.push(false);
+          break;
+        }
+        case 'DELETE_TEST_CASE': {
+          await vm.deleteQuestionTestCase({ index });
           break;
         }
         default: {

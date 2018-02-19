@@ -368,7 +368,7 @@ export default {
       const res = await questionService.postQuestionTestCase({
         questionId: q.id,
       });
-      console.log('postQuestionTestCase res', res);
+      // console.log('postQuestionTestCase res', res);
       const newTestCaseList = q.testCaseList;
       newTestCaseList.push({
         num: res.data.num,
@@ -387,13 +387,31 @@ export default {
     async putQuestionTestCase({ getters, commit }, { index }) {
       const q = getters.currentEditingScItem.question;
       const tc = q.testCaseList[index];
-      const res = await questionService.putQuestionTestCase({
+      await questionService.putQuestionTestCase({
         questionId: q.id,
         num: tc.num,
         input: tc.input,
         output: tc.output,
       });
-      console.log('putQuestionTestCase', res);
+      // console.log('putQuestionTestCase', res);
+    },
+    async deleteQuestionTestCase({ getters, commit }, { index }) {
+      const q = getters.currentEditingScItem.question;
+      const tc = q.testCaseList[index];
+      await questionService.deleteQuestionTestCase({
+        questionId: q.id,
+        num: tc.num,
+      });
+      const newTestCaseList = q.testCaseList;
+      newTestCaseList.splice(index, 1);
+      commit('assignCurrentEditingScItem', {
+        currentEditingScItem: {
+          question: {
+            ...q,
+            testCaseList: newTestCaseList,
+          },
+        },
+      });
     },
     async deleteFile(__empty__, { fileGuid }) {
       await fileService.deleteFile({
