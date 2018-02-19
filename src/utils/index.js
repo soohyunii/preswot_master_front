@@ -96,4 +96,12 @@ export default {
       Object.assign(p, { [key]: variable[originalKey] });
     }
   },
+  sortSc(sc, currentEditingItem) {
+    const beforeSortedScItem = currentEditingItem;
+    const activeSortedSc = sc.sort((a, b) => a.activeStartOffsetSec - b.activeStartOffsetSec);
+    const orderSortedSc = activeSortedSc.sort((a, b) => a.order - b.order);
+    const currentEditingIndex = sc.map(x => x.id).indexOf(beforeSortedScItem.id);
+    console.log('gg', currentEditingIndex); // eslint-disable-line
+    return { orderSortedSc, currentEditingIndex };
+  },
 };

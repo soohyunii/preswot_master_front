@@ -301,6 +301,16 @@ export default {
       };
       state.currentEditingScItemIndex = state.sc.length;
       state.sc.push(scItem);
+      // 여기까지만 진행됨..
+      // 생성실패 노티 어디서?
+      const {
+        sc,
+        currentEditingScItemIndex,
+      } = utils.sortSc(state.sc, state.currentEditingScItem);
+      console.log('idx1', state.currentEditingScItemIndex); // eslint-disable-line
+
+      state.updateSc({ sc });
+      state.updateCurrentEditingScItemIndex({ currentEditingScItemIndex });
       // TODO: save lectureElementSequence using localForage
     },
     assignCurrentEditingScItem(state, { currentEditingScItem }) {
