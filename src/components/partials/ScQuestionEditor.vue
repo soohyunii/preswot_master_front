@@ -152,20 +152,23 @@
           <template v-if="[3].includes(pType)">
             <h3>테스트케이스</h3>
             <template v-for="(item, index) in pTestCaseList">
-              <el-form-item :label="`테스트 케이스 입력 ${index + 1}`" :key="`${item.num}i`">
+              <el-form-item :label="`테스트 케이스${index + 1} 입력`" :key="`${item.num}i`">
                 <el-input
                   type="textarea"
                   :rows="3"
                   v-model.lazy="pTestCaseList[index].input"
                 />
               </el-form-item>
-              <el-form-item :label="`테스트 케이스 출력 ${index + 1}`" :key="`${item.num}o`">
+              <el-form-item :label="`테스트 케이스${index + 1} 출력`" :key="`${item.num}o`">
                 <el-input
                   type="textarea"
                   :rows="3"
                   v-model.lazy="pTestCaseList[index].output"
                 />
               </el-form-item>
+              <el-button type="danger" :key="`${item.num}b`">테스트 케이스{{ index + 1 }} 삭제</el-button>
+              <br :key="`${item.num}b1`" />
+              <br :key="`${item.num}b2`" />
 
             </template>
             <el-button type="primary" @click="onClick('ADD_TEST_CASE')">테스트 케이스 추가</el-button>
