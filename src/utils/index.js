@@ -96,12 +96,15 @@ export default {
       Object.assign(p, { [key]: variable[originalKey] });
     }
   },
-  sortSc(sc, currentEditingItem) {
-    const beforeSortedScItem = currentEditingItem;
+  sortSc(sc, currentEditingScItemIndex) {
+    // window.console.log('sort: idx', currentEditingScItemIndex);
+    const beforeSortedScItem = sc[currentEditingScItemIndex];
+    // window.console.log('sort: item', beforeSortedScItem);
     const activeSortedSc = sc.sort((a, b) => a.activeStartOffsetSec - b.activeStartOffsetSec);
     const orderSortedSc = activeSortedSc.sort((a, b) => a.order - b.order);
-    const currentEditingIndex = sc.map(x => x.id).indexOf(beforeSortedScItem.id);
-    console.log('gg', currentEditingIndex); // eslint-disable-line
-    return { orderSortedSc, currentEditingIndex };
+    const changedCurrentEditingScItemIndex = sc.map(x => x.id).indexOf(beforeSortedScItem.id);
+    // window.console.log('sort: rtn1', orderSortedSc);
+    // window.console.log('sort: rtn2', changedCurrentEditingScItemIndex);
+    return { orderSortedSc, changedCurrentEditingScItemIndex };
   },
 };
