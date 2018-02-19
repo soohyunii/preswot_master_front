@@ -7,7 +7,7 @@
         <i class="el-icon-error" style="color:red; vertical-align:top" @click.stop="onClick('deleteIcon',index)"></i><br/>
       </div>
       <div class="label-time">{{ scActiveTime }}</div>
-      <div class="label-duration">{{ scId }}</div>
+      <div class="label-duration">{{ scOrder }}</div>
     </el-col>
   </div>
 </template>
@@ -162,10 +162,6 @@ export default {
         }
         return scOrder;
       },
-    },
-    scId() {
-      const vm = this;
-      return vm.sc[vm.index].id;
     },
   },
 };

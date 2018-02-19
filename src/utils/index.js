@@ -97,39 +97,31 @@ export default {
     }
   },
   sortSc(sc, currentEditingScItemIndex) {
-    // window.console.log('sort: idx', currentEditingScItemIndex);
     const beforeSortedScItem = sc[currentEditingScItemIndex];
-    // window.console.log('sort: item', beforeSortedScItem);
-    for (let i = 0; i < sc.length; i += 1) {
-      window.console.log(sc[i].id);
-    }
+    let tempMap = new Map();
+    sc.forEach((item, index) => {
+      tempMap.set(item, index);
+    });
+    // for (let i = 0; i < sc.length; i += 1) { window.console.log('before sort', sc[i].id); }
     const activeSortedSc = sc.sort((a, b) => {
-      const activeA = a.activeStartOffsetSec ? a.activeStartOffsetSec : 0;
-      const activeB = b.activeStartOffsetSec ? b.activeStartOffsetSec : 0;
-      let rtn;
-      if (activeA < activeB) {
-        rtn = -1;
-      } else if (activeA > activeB) {
-        rtn = 1;
-      } else {
-        rtn = 0;
-      }
-      window.console.log('ab', a.id, ' & ', b.id, ' : ', rtn);
-      return rtn;
+      const diff = a.activeStartOffsetSec - b.activeStartOffsetSec;
+      if (diff !== 0) { return diff; }
+      return tempMap.get(a) - tempMap.get(b);
     });
-    for (let i = 0; i < sc.length; i += 1) {
-      window.console.log(sc[i].id);
-    }
+    // for (let i = 0; i < sc.length; i += 1) { window.console.log('active sort', sc[i].id); }
+
+    tempMap = new Map();
+    activeSortedSc.forEach((item, index) => {
+      tempMap.set(item, index);
+    });
     const orderSortedSc = activeSortedSc.sort((a, b) => {
-      window.console.log(a.order - b.order ? 'a' : 'b');
-      return a.order - b.order;
+      const diff = a.order - b.order;
+      if (diff !== 0) { return diff; }
+      return tempMap.get(a) - tempMap.get(b);
     });
-    for (let i = 0; i < sc.length; i += 1) {
-      window.console.log(sc[i].id);
-    }
+    // for (let i = 0; i < sc.length; i += 1) { window.console.log('order sort', sc[i].id); }
+
     const changedCurrentEditingScItemIndex = sc.map(x => x.id).indexOf(beforeSortedScItem.id);
-    // window.console.log('sort: rtn1', orderSortedSc);
-    // window.console.log('sort: rtn2', changedCurrentEditingScItemIndex);
     return { orderSortedSc, changedCurrentEditingScItemIndex };
   },
 };
