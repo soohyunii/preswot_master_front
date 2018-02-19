@@ -101,7 +101,8 @@ export default {
     },
   },
   computed: {
-    ...mapState('scItem', ['sc', 'scStartDate']),
+    ...mapState('sc', ['scStartDate']),
+    ...mapState('scItem', ['sc']),
     ...mapGetters('scItem', ['currentEditingScItem']),
     input() {
       const res = {};
