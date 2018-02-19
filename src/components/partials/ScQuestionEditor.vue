@@ -99,6 +99,8 @@
           </template>
 
           <template v-if="[3].includes(pType)">
+            <br />
+            <br />
             <el-form-item label="입력 설명" prop="pInputDescription">
               <el-input
                 type="textarea"
@@ -146,19 +148,31 @@
             <i class="el-icon-loading" v-if="loading.SAMPLE_OUTPUT" />
           </template>
 
-          <h1>TODO: 테스트 케이스 입력</h1>
 
-          <!-- <template v-if="[3].includes(pType)">
-            <el-form-item label="출력 설명" prop="pOutputDescription">
-              <el-input
-                type="textarea"
-                :rows="3"
-                v-model.lazy="pOutputDescription"
-                @change="onChange('OUTPUT_DESCRIPTION')"
-              />
-            </el-form-item>
-            <i class="el-icon-loading" v-if="loading.OUTPUT_DESCRIPTION" />
-          </template> -->
+          <template v-if="[3].includes(pType)">
+            <h3>테스트케이스</h3>
+            <template v-for="(item, index) in pTestCaseList">
+              <el-form-item :label="`테스트 케이스 입력 ${index + 1}`" :key="`${item.num}i`">
+                <el-input
+                  type="textarea"
+                  :rows="3"
+                  v-model.lazy="pTestCaseList[index].input"
+                />
+              </el-form-item>
+              <el-form-item :label="`테스트 케이스 출력 ${index + 1}`" :key="`${item.num}o`">
+                <el-input
+                  type="textarea"
+                  :rows="3"
+                  v-model.lazy="pTestCaseList[index].output"
+                />
+              </el-form-item>
+
+            </template>
+            <el-button type="primary" @click="onClick('ADD_TEST_CASE')">테스트 케이스 추가</el-button>
+
+            <br />
+            <br />
+          </template>
 
           <template v-if="[3].includes(pType)">
             <el-form-item label="메모리 제한 (MB)" prop="pMemoryLimit">
@@ -439,6 +453,24 @@ export default {
         });
       },
     },
+    pTestCaseList: {
+      get() {
+        const vm = this;
+        const q = vm.currentEditingScItem.question;
+        return q ? q.testCaseList : [];
+      },
+      set(pTestCaseList) {
+        const vm = this;
+        vm.assignCurrentEditingScItem({
+          currentEditingScItem: {
+            question: {
+              ...vm.currentEditingScItem.question,
+              testCaseList: pTestCaseList,
+            },
+          },
+        });
+      },
+    },
     pSampleInput: {
       get() {
         const vm = this;
@@ -550,7 +582,11 @@ export default {
   },
   methods: {
     ...mapMutations('scItem', ['assignCurrentEditingScItem']),
-    ...mapActions('scItem', ['putQuestion', 'putQuestionType']),
+    ...mapActions('scItem', [
+      'putQuestion',
+      'putQuestionType',
+      'postQuestionTestCase',
+    ]),
     async onChange(type) {
       const vm = this;
       // // eslint-disable-next-line
@@ -571,6 +607,18 @@ export default {
         });
       } finally {
         vm.loading[type] = false;
+      }
+    },
+    async onClick(type) {
+      const vm = this;
+      switch (type) {
+        case 'ADD_TEST_CASE': {
+          await vm.postQuestionTestCase();
+          break;
+        }
+        default: {
+          throw new Error(`not defined type ${type}`);
+        }
       }
     },
   },

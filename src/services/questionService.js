@@ -53,6 +53,11 @@ export default {
       type,
     });
   },
+  postQuestionTestCase({
+    questionId,
+  }) {
+    return http.post(`/questions/${questionId}/testcases`);
+  },
   postQuestionFile({
     questionId,
     file,

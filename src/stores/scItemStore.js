@@ -170,6 +170,7 @@ export default {
                 sampleInput: question.sample_input,
                 sampleOutput: question.sample_output,
                 languageList: question.accept_language || [],
+                testCaseList: question.problem_testcases || [],
                 // * order: 이거는 question이 여러개 들어올 때를 가정해서 만들어진거라 패스
                 // * showing_order: 위와 같음
                 // * timer: 애매해서 일단 뻄
@@ -357,10 +358,30 @@ export default {
     },
     async putQuestionType({ getters }) {
       const q = getters.currentEditingScItem.question;
-      console.log('store putQuestionType', q);
       await questionService.putQuestionType({
         questionId: q.id,
         type: q.type,
+      });
+    },
+    async postQuestionTestCase({ getters, commit }) {
+      const q = getters.currentEditingScItem.question;
+      const res = await questionService.postQuestionTestCase({
+        questionId: q.id,
+      });
+      console.log('postQuestionTestCase res', res);
+      const newTestCaseList = q.testCaseList;
+      newTestCaseList.push({
+        num: res.data.num,
+        input: null,
+        output: null,
+      });
+      commit('assignCurrentEditingScItem', {
+        currentEditingScItem: {
+          question: {
+            ...q,
+            testCaseList: newTestCaseList,
+          },
+        },
       });
     },
     async deleteFile(__empty__, { fileGuid }) {
