@@ -58,6 +58,23 @@ export default {
   }) {
     return http.post(`/questions/${questionId}/testcases`);
   },
+  putQuestionTestCase({
+    questionId,
+    num,
+    input,
+    output,
+  }) {
+    return http.put(`/questions/${questionId}/testcases/${num}`, {
+      input,
+      output,
+    });
+  },
+  deleteQuestionTestCase({
+    questionId,
+    num,
+  }) {
+    return http.delete(`/questions/${questionId}/testcases/${num}`);
+  },
   postQuestionFile({
     questionId,
     file,

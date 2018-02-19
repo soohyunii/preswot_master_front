@@ -151,21 +151,30 @@
 
           <template v-if="[3].includes(pType)">
             <h3>테스트케이스</h3>
+            {{ loading.TEST_CASE_INPUT }}
             <template v-for="(item, index) in pTestCaseList">
               <el-form-item :label="`테스트 케이스${index + 1} 입력`" :key="`${item.num}i`">
                 <el-input
                   type="textarea"
                   :rows="3"
                   v-model.lazy="pTestCaseList[index].input"
+                  @change="onChange('TEST_CASE', index, 'INPUT')"
                 />
               </el-form-item>
+              <i class="el-icon-loading" :key="`${item.num}il`" v-if="loading.TEST_CASE_INPUT[index]" />
+
               <el-form-item :label="`테스트 케이스${index + 1} 출력`" :key="`${item.num}o`">
                 <el-input
                   type="textarea"
                   :rows="3"
                   v-model.lazy="pTestCaseList[index].output"
+                  @change="onChange('TEST_CASE', index, 'OUTPUT')"
                 />
               </el-form-item>
+              <i class="el-icon-loading" :key="`${item.num}ol`" v-if="loading.TEST_CASE_OUTPUT[index]" />
+
+              <br :key="`${item.num}b0`" />
+
               <el-button type="danger" :key="`${item.num}b`">테스트 케이스{{ index + 1 }} 삭제</el-button>
               <br :key="`${item.num}b1`" />
               <br :key="`${item.num}b2`" />
@@ -285,6 +294,21 @@ export default {
         SAMPLE_OUTPUT: false,
         MEMORY_LIMIT: false,
         TIME_LIMIT: false,
+        // 설마 5개 이상 만드는 새끼가 있겠어?
+        TEST_CASE_INPUT: {
+          0: false,
+          1: false,
+          2: false,
+          3: false,
+          4: false,
+        },
+        TEST_CASE_OUTPUT: {
+          0: false,
+          1: false,
+          2: false,
+          3: false,
+          4: false,
+        },
       },
     };
   },
@@ -589,15 +613,29 @@ export default {
       'putQuestion',
       'putQuestionType',
       'postQuestionTestCase',
+      'putQuestionTestCase',
+      'deleteQuestionTestCase',
     ]),
-    async onChange(type) {
+    async onChange(type, index, subtype) {
       const vm = this;
       // // eslint-disable-next-line
       // console.log('type', type, vm.currentEditingScItem.question.type);
       try {
-        vm.loading[type] = true;
+        if (type === 'TEST_CASE') {
+          if (subtype === 'INPUT') {
+            vm.loading.TEST_CASE_INPUT[index] = true;
+          } else if (subtype === 'OUTPUT') {
+            vm.loading.TEST_CASE_OUTPUT[index] = true;
+          } else {
+            throw new Error(`not defined subtype ${subtype}`);
+          }
+        } else {
+          vm.loading[type] = true;
+        }
         if (type === 'TYPE') {
           await vm.putQuestionType();
+        } else if (type === 'TEST_CASE') {
+          await vm.putQuestionTestCase({ index });
         } else {
           await vm.putQuestion();
         }
@@ -609,7 +647,15 @@ export default {
           duration: 0,
         });
       } finally {
-        vm.loading[type] = false;
+        if (type === 'TEST_CASE') {
+          if (subtype === 'INPUT') {
+            vm.loading.TEST_CASE_INPUT[index] = false;
+          } else if (subtype === 'OUTPUT') {
+            vm.loading.TEST_CASE_OUTPUT[index] = false;
+          }
+        } else {
+          vm.loading[type] = false;
+        }
       }
     },
     async onClick(type) {
@@ -617,6 +663,8 @@ export default {
       switch (type) {
         case 'ADD_TEST_CASE': {
           await vm.postQuestionTestCase();
+          vm.loading.TEST_CASE_INPUT.push(false);
+          vm.loading.TEST_CASE_OUTPUT.push(false);
           break;
         }
         default: {

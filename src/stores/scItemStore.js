@@ -384,6 +384,17 @@ export default {
         },
       });
     },
+    async putQuestionTestCase({ getters, commit }, { index }) {
+      const q = getters.currentEditingScItem.question;
+      const tc = q.testCaseList[index];
+      const res = await questionService.putQuestionTestCase({
+        questionId: q.id,
+        num: tc.num,
+        input: tc.input,
+        output: tc.output,
+      });
+      console.log('putQuestionTestCase', res);
+    },
     async deleteFile(__empty__, { fileGuid }) {
       await fileService.deleteFile({
         fileGuid,
