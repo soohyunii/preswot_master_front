@@ -11,6 +11,8 @@
             <keyword-editor></keyword-editor>
           </el-form-item>
 
+          <br />
+
           <el-form-item label="문항 유형">
             <el-radio-group
               v-model="pType"
@@ -75,17 +77,17 @@
 
           <!-- 코딩 -->
           <template v-if="[3].includes(pType)">
-            <el-form-item label="언어" prop="languageTest">
+            <el-form-item label="언어" prop="languageList">
               <el-select
                 type="textarea"
                 :rows="3"
-                v-model.lazy="languageTest"
+                v-model.lazy="pLanguageList"
                 multiple
                 size="large"
-                @change="onChange('LANGUAGE')"
+                @change="onChange('LANGUAGE_LIST')"
               >
                 <el-option
-                  v-for="item in languageList"
+                  v-for="item in supportedLanguageList"
                   :key="item.value"
                   :value="item.value"
                   :label="item.label"
@@ -93,7 +95,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <i class="el-icon-loading" v-if="loading.LANGUAGE" />
+            <i class="el-icon-loading" v-if="loading.LANGUAGE_LIST" />
           </template>
 
           <template v-if="[3].includes(pType)">
@@ -221,7 +223,7 @@ export default {
   name: 'ScQuestionEditor',
   data() {
     return {
-      languageList: [{
+      supportedLanguageList: [{
         value: 'c',
         label: 'C',
       }, {
@@ -259,7 +261,7 @@ export default {
         ISORDERINGANSWER: false,
         SCORE: false,
         DIFFICULTY: false,
-        LANGUAGE: false,
+        LANGUAGE_LIST: false,
         INPUT_DESCRIPTION: false,
         OUTPUT_DESCRIPTION: false,
         SAMPLE_INPUT: false,
@@ -383,13 +385,24 @@ export default {
         });
       },
     },
-    // pLangauge: {
-    //   get() {
-    //     const vm = this;
-    //     const q = vm.currentEditingScItem.question;
-    //     return q ? q.language : null;
-    //   },
-    // },
+    pLanguageList: {
+      get() {
+        const vm = this;
+        const q = vm.currentEditingScItem.question;
+        return q ? q.languageList : null;
+      },
+      set(pLanguageList) {
+        const vm = this;
+        vm.assignCurrentEditingScItem({
+          currentEditingScItem: {
+            question: {
+              ...vm.currentEditingScItem.question,
+              languageList: pLanguageList,
+            },
+          },
+        });
+      },
+    },
     pInputDescription: {
       get() {
         const vm = this;

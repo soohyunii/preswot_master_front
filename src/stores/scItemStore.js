@@ -163,12 +163,13 @@ export default {
                 difficulty: question.difficulty,
                 isOrderingAnswer: question.is_ordering_answer,
                 score: question.score,
-                inputDescription: question.input,
-                outputDescription: question.output,
+                inputDescription: question.input_description,
+                outputDescription: question.output_description,
                 memoryLimit: question.memory_limit,
                 timeLimit: question.time_limit,
                 sampleInput: question.sample_input,
                 sampleOutput: question.sample_output,
+                languageList: question.accept_language || [],
                 // * order: 이거는 question이 여러개 들어올 때를 가정해서 만들어진거라 패스
                 // * showing_order: 위와 같음
                 // * timer: 애매해서 일단 뻄
@@ -351,6 +352,7 @@ export default {
         sampleOutput: q.sampleOutput,
         memoryLimit: q.memoryLimit,
         timeLimit: q.timeLimit,
+        languageList: q.languageList,
       });
     },
     async putQuestionType({ getters }) {
