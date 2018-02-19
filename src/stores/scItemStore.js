@@ -87,6 +87,13 @@ export default {
       };
       state.currentEditingScItemIndex = state.sc.length;
       state.sc.push(scItem);
+
+      const {
+        orderSortedSc,
+        changedCurrentEditingScItemIndex,
+      } = utils.sortSc(state.sc, state.currentEditingScItemIndex);
+      state.sc = orderSortedSc;
+      state.currentEditingScItemIndex = changedCurrentEditingScItemIndex;
       // TODO: save lectureElementSequence using localForage
     },
     assignCurrentEditingScItem(state, { currentEditingScItem }) {
@@ -94,6 +101,12 @@ export default {
         state.sc[state.currentEditingScItemIndex],
         currentEditingScItem,
       );
+      const {
+        orderSortedSc,
+        changedCurrentEditingScItemIndex,
+      } = utils.sortSc(state.sc, state.currentEditingScItemIndex);
+      state.sc = orderSortedSc;
+      state.currentEditingScItemIndex = changedCurrentEditingScItemIndex;
     },
     updateCurrentEditingScItemIndex(state, { currentEditingScItemIndex }) {
       state.currentEditingScItemIndex = currentEditingScItemIndex;
@@ -169,6 +182,8 @@ export default {
                 timeLimit: question.time_limit,
                 sampleInput: question.sample_input,
                 sampleOutput: question.sample_output,
+                languageList: question.accept_language || [],
+                testCaseList: question.problem_testcases || [],
                 // * order: 이거는 question이 여러개 들어올 때를 가정해서 만들어진거라 패스
                 // * showing_order: 위와 같음
                 // * timer: 애매해서 일단 뻄
@@ -232,7 +247,7 @@ export default {
               }),
               material: {
                 id: material.material_id,
-                // score ?머 하는거임 이거?
+                score: material.score,
                 // comment ? 얘도 머임?
               },
             },
@@ -351,6 +366,7 @@ export default {
         sampleOutput: q.sampleOutput,
         memoryLimit: q.memoryLimit,
         timeLimit: q.timeLimit,
+        languageList: q.languageList,
       });
     },
     async putQuestionType({ getters }) {
@@ -358,6 +374,56 @@ export default {
       await questionService.putQuestionType({
         questionId: q.id,
         type: q.type,
+      });
+    },
+    async postQuestionTestCase({ getters, commit }) {
+      const q = getters.currentEditingScItem.question;
+      const res = await questionService.postQuestionTestCase({
+        questionId: q.id,
+      });
+      // console.log('postQuestionTestCase res', res);
+      const newTestCaseList = q.testCaseList;
+      newTestCaseList.push({
+        num: res.data.num,
+        input: null,
+        output: null,
+      });
+      commit('assignCurrentEditingScItem', {
+        currentEditingScItem: {
+          question: {
+            ...q,
+            testCaseList: newTestCaseList,
+          },
+        },
+      });
+    },
+    async putQuestionTestCase({ getters, commit }, { index }) {
+      const q = getters.currentEditingScItem.question;
+      const tc = q.testCaseList[index];
+      await questionService.putQuestionTestCase({
+        questionId: q.id,
+        num: tc.num,
+        input: tc.input,
+        output: tc.output,
+      });
+      // console.log('putQuestionTestCase', res);
+    },
+    async deleteQuestionTestCase({ getters, commit }, { index }) {
+      const q = getters.currentEditingScItem.question;
+      const tc = q.testCaseList[index];
+      await questionService.deleteQuestionTestCase({
+        questionId: q.id,
+        num: tc.num,
+      });
+      const newTestCaseList = q.testCaseList;
+      newTestCaseList.splice(index, 1);
+      commit('assignCurrentEditingScItem', {
+        currentEditingScItem: {
+          question: {
+            ...q,
+            testCaseList: newTestCaseList,
+          },
+        },
       });
     },
     async deleteFile(__empty__, { fileGuid }) {
@@ -426,6 +492,13 @@ export default {
         comment: s.comment,
         choice: s.choice,
         type: s.type,
+      });
+    },
+    async putMaterial({ getters }) {
+      const m = getters.currentEditingScItem.material;
+      await materialService.putMaterial({
+        materialId: m.id,
+        score: m.score,
       });
     },
     // async deleteKnowledgeEdge({ state }, { edgeIndex }) {
