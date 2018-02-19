@@ -87,6 +87,13 @@ export default {
       };
       state.currentEditingScItemIndex = state.sc.length;
       state.sc.push(scItem);
+
+      const {
+        orderSortedSc,
+        changedCurrentEditingScItemIndex,
+      } = utils.sortSc(state.sc, state.currentEditingScItemIndex);
+      state.sc = orderSortedSc;
+      state.currentEditingScItemIndex = changedCurrentEditingScItemIndex;
       // TODO: save lectureElementSequence using localForage
     },
     assignCurrentEditingScItem(state, { currentEditingScItem }) {
@@ -94,6 +101,12 @@ export default {
         state.sc[state.currentEditingScItemIndex],
         currentEditingScItem,
       );
+      const {
+        orderSortedSc,
+        changedCurrentEditingScItemIndex,
+      } = utils.sortSc(state.sc, state.currentEditingScItemIndex);
+      state.sc = orderSortedSc;
+      state.currentEditingScItemIndex = changedCurrentEditingScItemIndex;
     },
     updateCurrentEditingScItemIndex(state, { currentEditingScItemIndex }) {
       state.currentEditingScItemIndex = currentEditingScItemIndex;
