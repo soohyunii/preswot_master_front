@@ -34,8 +34,8 @@ export default {
     utils.assignIfNotNil(param, { score });
     utils.assignIfNotNil(param, { difficulty });
     utils.assignIfNotNil(param, { timer });
-    utils.assignIfNotNil(param, { inputDescription });
-    utils.assignIfNotNil(param, { outputDescription });
+    utils.assignIfNotNil(param, { inputDescription }, 'input');
+    utils.assignIfNotNil(param, { outputDescription }, 'output');
     utils.assignIfNotNil(param, { sampleInput });
     utils.assignIfNotNil(param, { sampleOutput });
     utils.assignIfNotNil(param, { timeLimit });
