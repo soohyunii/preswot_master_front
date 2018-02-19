@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="ts">
     <!-- TODO: translation -->
     <el-row>
       <el-col :offset="6" :span="2" style="text-align:center;"><div>수강생 평균 집중도</div></el-col>
@@ -29,6 +29,7 @@
             <div class="user_name">{{item.name}}</div>
             <div class="participation_score">참여도: {{item.participation_score}}</div>
             <div class="concentration_score">집중도: {{item.concentration_score}}</div>
+            <div class="concentration_score">이해도: {{item.understanding_score}}</div>
           </div>
         </div>
       </el-col>
@@ -37,6 +38,11 @@
 </template>
 
 <style lang="scss" scoped>
+  .ts{
+    background:rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 8px 0px 5px 0px;
+  }
   .el-row {
     margin-bottom: 20px;
     padding-left:30px;
@@ -101,7 +107,7 @@
   export default {
     // TODO: 전달되는 데이터 명 확인
     name: 'TeacherLectureLiveSummary',
-    props: ['SummaryData'],
+    props: ['SummaryData', 'lectureId'],
     data() {
       return {
         forLoopData: null,
@@ -131,25 +137,24 @@
         const vm = this;
         switch (type) {
           case 'GET_LECTURE_SCORE_ORDER_BY_CONCENTRATION': {
-            vm.lectureId = 1; // 강의 아이디를 여기에다가 넣어야됨
+            //vm.lectureId = 1; // 강의 아이디를 여기에다가 넣어야됨
             vm.opt = 0;
             vm.getLectureStat();
             break;
           }
           case 'GET_LECTURE_SCORE_ORDER_BY_PARTICIPATION': {
-            vm.lectureId = 1; // 강의 아이디를 여기에다가 넣어야됨
+            //vm.lectureId = 1; // 강의 아이디를 여기에다가 넣어야됨
             vm.opt = 1;
             vm.getLectureStat();
             break;
           }
           case 'GET_LECTURE_SCORE_ORDER_BY_UNDERSTANDING': {
-            vm.lectureId = 1; // 강의 아이디를 여기에다가 넣어야됨
+            //vm.lectureId = 1; // 강의 아이디를 여기에다가 넣어야됨
             vm.opt = 2;
             vm.getLectureStat();
             break;
           }
-          case 'OPEN_STATUS_INFO': {
-            vm.isActiveInfo = !vm.isActiveInfo;
+          case 'CLOSE_STATUSBAR': {
             break;
           }
           default: {

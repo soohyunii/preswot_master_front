@@ -6,7 +6,7 @@ import layout from './layoutStore';
 import sc from './scStore';
 import scItem from './scItemStore';
 import sibalClassIsReservedWord from './classStore';
-import analaysis from './analysisStore';
+import analysis from './analysisStore';
 
 Vue.use(Vuex);
 
@@ -17,6 +17,6 @@ export default new Vuex.Store({
     scItem,
     sc,
     class: sibalClassIsReservedWord,
-    analaysis,
+    analysis,
   },
 });

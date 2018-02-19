@@ -7,6 +7,7 @@ import StudentLectureLive from '../components/pages/StudentLectureLive';
 import TeacherClassNew from '../components/pages/TeacherClassNew';
 import wordCloudExample from '../components/partials/wordCloudExample';
 import StudentClassJournal from '../components/pages/StudentClassJournal';
+import TeacherClassJournal from '../components/pages/TeacherClassJournal';
 import test from '../components/partials/test';
 
 
@@ -99,6 +100,15 @@ export default function authRoutes(root) {
       component: StudentClassJournal,
       meta: {
         title: 'Student Class Journal',
+        auth: true,
+      },
+    },
+    {
+      path: '/teacher/class/journal',
+      name: 'TeacherClassJournal',
+      component: TeacherClassJournal,
+      meta: {
+        title: 'Teacher Class Journal',
         auth: true,
       },
     },

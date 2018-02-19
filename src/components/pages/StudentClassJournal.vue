@@ -1,6 +1,8 @@
 <template>
   <div>
-   <div class="classTitle">{{analysisData.name}}</div>
+    <div class="classTitle">과목명: {{ analysisData[0].class_name }}</div>
+    <div class="num_student">수강 인원: {{ analysisData[0].class_num_student }}</div>
+    <line-chart :chartData = "analysisData" />
   <el-row :gutter="20">
     <el-col :span="3">
       <div class="emptyDiv"></div>
@@ -15,18 +17,18 @@
       <div class="journalingTitle">참여도</div>
     </el-col>
   </el-row>
-  <el-row :gutter="20" v-for="item in analysisData.lectures">
+  <el-row :gutter="20" v-for="item in analysisData" @click="onClick('DETAIL_ANALYSIS')">
     <el-col :span="3">
     <div class="lectureTitle">{{item.name}}</div>
     </el-col>
     <el-col :span="6">
-      <el-slider v-model="value5" :step="25" disabled show-stops></el-slider>
+      <el-slider v-model="item.understanding_score" :step="25" :show-tooltip="false" disabled show-stops></el-slider>
     </el-col>
     <el-col :span="6">
-      <el-slider v-model="value5" :step="25" disabled show-stops></el-slider>
+      <el-slider v-model="item.concentration_score" :step="25" :show-tooltip="false" disabled show-stops></el-slider>
     </el-col>
     <el-col :span="6">
-      <el-slider v-model="value5" :step="25" disabled show-stops></el-slider>
+      <el-slider v-model="item.participation_score" :step="25" :show-tooltip="false" disabled show-stops></el-slider>
     </el-col>
   </el-row>
   </div>
@@ -45,24 +47,17 @@
 <script>
   import { mapActions, mapState, mapMutations } from 'vuex';
   import utils from '../../utils';
+  import LineChart from '../partials/LineChart';
 
   export default {
-    name: 'TeacherLectureLive',
+    name: 'StudentClassJournal',
     components: {
+      LineChart,
     },
     data() {
       return {
-        value5: 42,
+        defaultValue: 0,
       };
-    },
-    methods: {
-      ...mapActions('analysis', [
-        'getAnalysisData',
-      ]),
-      ...mapMutations('analysis', ['updateClassId', 'updateUserId']),
-    },
-    computed: {
-      ...mapState('analysis', ['analysisData']),
     },
     async beforeMount() {
       const vm = this;
@@ -72,7 +67,32 @@
       vm.updateUserId({
         userId: utils.getUserIdFromJwt(),
       });
+      vm.updateIsStudent({
+        isStudent: 1,
+      });
       await vm.getAnalysisData();
+      console.log(vm.analysisData);
+    },
+    methods: {
+      ...mapMutations('analysis', ['updateClassId', 'updateUserId', 'updateIsStudent']),
+      ...mapActions('analysis', [
+        'getAnalysisData',
+      ]),
+      onClick(type) {
+        const vm = this;
+        switch (type) {
+          case 'DETAIL_ANALYSIS': {
+            vm.isCloseMovie = true;
+            break;
+          }
+          default: {
+            throw new Error('not defined type', type);
+          }
+        }
+      },
+    },
+    computed: {
+      ...mapState('analysis', ['analysisData']),
     },
   };
 </script>

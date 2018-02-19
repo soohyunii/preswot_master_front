@@ -3,9 +3,16 @@ import analysisService from '../services/analysisService';
 export default {
   namespaced: true,
   state: {
-    analysisData: null,
+    analysisData: {},
     classId: null,
     userId: null,
+    isStudent: false,
+  },
+  getters: {
+    // eslint-disable-next-line
+    getAnalysisData: function (state) {
+      return state.analysisData;
+    },
   },
   mutations: {
     updateAnalysisData(state, { analysisData }) {
@@ -17,20 +24,19 @@ export default {
     updateUserId(state, { userId }) {
       state.userId = userId;
     },
+    updateIsStudent(state, { isStudent }) {
+      state.isStudent = isStudent;
+    },
   },
   actions: {
     async getAnalysisData({ state, commit }) {
       try {
-        var analysisData = await analysisService.getStudentLogAnalysis({
-          classId: state.classId, userId: state.userId,
+        const res = await analysisService.getLogAnalysis({
+          classId: state.classId, userId: state.userId, isStudent: state.isStudent,
         });
-        console.log(analysisData.data);
         commit('updateAnalysisData', {
-          analysisData: analysisData.data,
+          analysisData: res.data,
         });
-        /* for (var i = 0; i < vm.journalingData.lectures.length; i += 1){
-
-         } */
       } catch (e) {
         throw new Error('request error');
       }

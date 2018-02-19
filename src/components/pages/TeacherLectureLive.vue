@@ -92,7 +92,7 @@
         <el-row>
           <div class="statusbar" v-bind:class="{ activeInfo: isActiveInfo}">
             <div class="statusbar_for_click" @click="onClick('OPEN_STATUS_INFO')"></div>
-            <teacher-lecture-live-summary :SummaryData="SummaryData" />
+            <teacher-lecture-live-summary :lectureId= "lectureId"/>
           </div>
         </el-row>
       </el-main>
@@ -181,6 +181,7 @@
         isCloseMovie: false,
         isCloseStatusbar: false,
         isActiveInfo: false,
+        lectureId: 1,
       };
     },
     methods: {
