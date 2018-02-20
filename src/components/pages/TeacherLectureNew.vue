@@ -151,7 +151,7 @@ export default {
   },
   data() {
     return {
-      activeTab: 'third', // TODO: change to first
+      activeTab: 'first', // TODO: change to first
     };
   },
   async beforeMount() {
