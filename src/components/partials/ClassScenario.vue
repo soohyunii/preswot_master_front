@@ -164,7 +164,7 @@ export default {
       scId: null,
       isModalVisible: false,
       input: {
-        youtubeLink: '',
+        youtubeLink: 'https://www.youtube.com/embed/P-Ov-WcQYTw?autoplay=1',
       },
     };
   },
@@ -235,14 +235,14 @@ export default {
             // TODO: send link to backend server
 
             // If Success
-            vm.input.youtubeLink = '';
-            vm.isModalVisible = false;
             vm.$router.push({
               path: `/a/teacher/lecture/${vm.scId}/live`,
-              params: {
-                youtubeLink: vm.input.youtubeLink,
+              query: {
+                link: vm.input.youtubeLink,
               },
             });
+            vm.isModalVisible = false;
+            vm.input.youtubeLink = '';
             vm.scId = null;
           } catch (error) {
             // TODO: show noti

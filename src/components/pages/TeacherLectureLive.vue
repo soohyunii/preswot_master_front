@@ -5,17 +5,6 @@
         <!-- <teaching-class-list-aside /> -->
       </el-aside>
       <el-main>
-        <el-row class="video">
-          <iframe
-            width="100%"
-            height="500px"
-            src="https://www.youtube.com/embed/DAHsPaR-tAU?autoplay=1"
-            frameborder="0"
-            allowfullscreen
-            autoplay
-          >
-          </iframe>
-        </el-row>
         <el-row :gutter="5">
           <el-col :span="3">
             <el-dropdown>
@@ -98,6 +87,18 @@
           </el-tab-pane> -->
         </el-tabs>
         <el-row>
+          <div id="video_wrapper">
+            <button>ddd</button> <br/>
+            <iframe
+              width="500px"
+              height="300px"
+              :src="streamingLink"
+              frameborder="0"
+              allowfullscreen
+              autoplay
+            >
+            </iframe>
+          </div>
           <div class="statusbar" v-bind:class="{ activeInfo: isActiveInfo}">
             <div class="statusbar_for_click" @click="onClick('OPEN_STATUS_INFO')"></div>
             <teacher-lecture-live-summary :lectureId= "lectureId"/>
@@ -109,6 +110,14 @@
 </template>
 
 <style lang="scss" scoped>
+  #video_wrapper {
+    position: fixed;
+    right: 0;
+    bottom: 30px;
+    text-align: right;
+    // max-width: 600px;
+    // max-height: 400px;
+  }
   .statusbar {
     position:fixed;
     left:0px;
@@ -135,10 +144,10 @@
   .statusbar.activeInfo{
     max-height: 85%;
   }
-  .video {
-    background-color: black;
-    min-height: 500px;
-  }
+  // .video {
+  //   background-color: black;
+  //   min-height: 500px;
+  // }
 
 
   .lecture-name {
@@ -158,59 +167,65 @@
 </style>
 
 <script>
-  import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex';
 
-  import Sc from '../partials/Sc';
-  import ScItemAdder from '../partials/ScItemAdder';
-  import ScItemSummary from '../partials/ScItemSummary';
-  import ScMaterialEditor from '../partials/ScMaterialEditor';
-  import ScActiveTimeEditor from '../partials/ScActiveTimeEditor';
-  import ScCommonEditor from '../partials/ScCommonEditor';
-  import TeacherLectureLiveSummary from '../partials/TeacherLectureLiveSummary';
+import Sc from '../partials/Sc';
+import ScItemAdder from '../partials/ScItemAdder';
+import ScItemSummary from '../partials/ScItemSummary';
+import ScMaterialEditor from '../partials/ScMaterialEditor';
+import ScActiveTimeEditor from '../partials/ScActiveTimeEditor';
+import ScCommonEditor from '../partials/ScCommonEditor';
+import TeacherLectureLiveSummary from '../partials/TeacherLectureLiveSummary';
 
-  export default {
-    name: 'TeacherLectureLive',
-    components: {
-      Sc,
-      ScItemAdder,
-      ScItemSummary,
-      ScCommonEditor,
-      ScMaterialEditor,
-      ScActiveTimeEditor,
-      TeacherLectureLiveSummary,
-    },
-    data() {
-      // TODO: translate
-      return {
-        activeTab: 'first',
-        scTitle: '4강 (배열)', // TODO: replace
-        scType: '강의', // TODO: replace
-        SummaryData: [],
-        isCloseMovie: false,
-        isCloseStatusbar: false,
-        isActiveInfo: false,
-        lectureId: 1,
-      };
-    },
-    methods: {
-      onClick(type) {
-        const vm = this;
-        switch (type) {
-          case 'OPEN_STATUS_INFO': {
-            vm.isActiveInfo = !vm.isActiveInfo;
-            break;
-          }
-          default: {
-            break;
-          }
+export default {
+  name: 'TeacherLectureLive',
+  components: {
+    Sc,
+    ScItemAdder,
+    ScItemSummary,
+    ScCommonEditor,
+    ScMaterialEditor,
+    ScActiveTimeEditor,
+    TeacherLectureLiveSummary,
+  },
+  mounted() {
+    const vm = this;
+    console.log(vm.$route);
+    vm.streamingLink = vm.$route.query.link;
+  },
+  data() {
+    // TODO: translate
+    return {
+      activeTab: 'first',
+      scTitle: '4강 (배열)', // TODO: replace
+      scType: '강의', // TODO: replace
+      SummaryData: [],
+      isCloseMovie: false,
+      isCloseStatusbar: false,
+      isActiveInfo: false,
+      lectureId: 1,
+      streamingLink: '',
+    };
+  },
+  methods: {
+    onClick(type) {
+      const vm = this;
+      switch (type) {
+        case 'OPEN_STATUS_INFO': {
+          vm.isActiveInfo = !vm.isActiveInfo;
+          break;
         }
-      },
+        default: {
+          break;
+        }
+      }
     },
-    computed: {
-      ...mapGetters('teacher', [
-        'isScEmpty',
-        // 'scType', // TODO: uncomment
-      ]),
-    },
-  };
+  },
+  computed: {
+    ...mapGetters('scItem', [
+      'isScEmpty',
+      // 'scType', // TODO: uncomment
+    ]),
+  },
+};
 </script>
