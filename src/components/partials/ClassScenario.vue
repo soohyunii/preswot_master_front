@@ -96,11 +96,11 @@
             prop="live"
             label="강의">
             <template slot-scope="scope">
-              <el-button
-                @click="$router.push(`/a/teacher/lecture/${scope.row.scId}/live`);"
-              >
-                강의
-              </el-button>
+              <router-link :to="`/a/teacher/lecture/${scope.row.scId}/live`">
+                <el-button>
+                  강의
+                </el-button>
+              </router-link>
             </template>
           </el-table-column>
         </el-table>
