@@ -88,7 +88,11 @@
         </el-tabs>
         <el-row>
           <div class="video-wrapper">
-            <i :class="iconClass" @click="onClick('PLAYER_TOGGLE')"></i>
+            <i v-show="!isInfoVisible"
+              :class="iconClass"
+              @click="onClick('PLAYER_TOGGLE')"
+            >
+            </i>
             <div v-show="isPlayerVisible">
               <youtube
                 id="video"
@@ -112,8 +116,8 @@
             >
             </iframe> -->
           </div>
-          <div class="statusbar" v-bind:class="{ activeInfo: isActiveInfo}">
-            <div class="statusbar_for_click" @click="onClick('OPEN_STATUS_INFO')"></div>
+          <div class="statusbar" v-bind:class="{ activeInfo: isInfoVisible}">
+            <div class="statusbar_for_click" @click="onClick('TOGGLE_STATUS_INFO')"></div>
             <teacher-lecture-live-summary :lectureId= "lectureId"/>
           </div>
         </el-row>
@@ -218,9 +222,7 @@ export default {
       scTitle: '4강 (배열)', // TODO: replace
       scType: '강의', // TODO: replace
       SummaryData: [],
-      isCloseMovie: false,
-      isCloseStatusbar: false,
-      isActiveInfo: false,
+      isInfoVisible: false,
       lectureId: 1,
       youtubeId: '',
       isPlayerVisible: true,
@@ -230,8 +232,9 @@ export default {
     onClick(type) {
       const vm = this;
       switch (type) {
-        case 'OPEN_STATUS_INFO': {
-          vm.isActiveInfo = !vm.isActiveInfo;
+        case 'TOGGLE_STATUS_INFO': {
+          vm.isInfoVisible = !vm.isInfoVisible;
+          vm.isPlayerVisible = false;
           break;
         }
         case 'PLAYER_TOGGLE': {
