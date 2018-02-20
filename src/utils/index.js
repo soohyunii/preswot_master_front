@@ -34,8 +34,12 @@ export default {
     // const payload = JSON.parse(atob(encodedPayload));
     // console.log('payload', payload);
     // TODO: try cath jwtDecode
-    const payload = jwtDecode(jwt);
-    return Date.now() < payload.exp;
+    try {
+      const payload = jwtDecode(jwt);
+      return Date.now() < payload.exp;
+    } catch (error) {
+      return true;
+    }
   },
   getEmailFromJwt() {
     const jwt = this.getJwtFromLocalStorage();
@@ -43,7 +47,11 @@ export default {
       return null;
     }
     // TODO: try cath jwtDecode
-    return jwtDecode(jwt).email_id;
+    try {
+      return jwtDecode(jwt).email_id;
+    } catch (error) {
+      return null;
+    }
   },
   formatDate(d) {
     // console.log('formatDate', d, d.toLocaleDateString('en-US').split('-'));
