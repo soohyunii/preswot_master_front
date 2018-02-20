@@ -17,7 +17,12 @@
         <div class="journalingTitle">참여도</div>
       </el-col>
     </el-row>
-    <el-row :gutter="20" v-for="item in analysisData" @click="onClick('DETAIL_ANALYSIS')">
+    <el-row
+      :gutter="20"
+      v-for="item in analysisData"
+      @click="onClick('DETAIL_ANALYSIS')"
+      :key="item"
+    >
       <el-col :span="3">
         <div class="lectureTitle">{{item.name}}</div>
       </el-col>
@@ -81,7 +86,7 @@
         isStudent: 0,
       });
       await vm.getAnalysisData();
-      console.log(vm.analysisData);
+      // console.log(vm.analysisData);
     },
     methods: {
       ...mapMutations('analysis', ['updateClassId', 'updateUserId', 'updateIsStudent']),

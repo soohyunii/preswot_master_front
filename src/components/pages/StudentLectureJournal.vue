@@ -16,7 +16,10 @@
         <div class="journalingTitle">참여도</div>
       </el-col>
     </el-row>
-    <el-row :gutter="20" v-for="item in analysisData">
+    <el-row :gutter="20"
+      v-for="item in analysisData"
+      :key="item"
+    >
       <el-col :span="3">
         <div class="lectureTitle">{{item.name}}</div>
       </el-col>
