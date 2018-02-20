@@ -54,13 +54,14 @@ export default {
       if (!title) {
         return false;
       }
+      /*
       const isteacherEmailListNullOrEmpty = !teacherEmailList || teacherEmailList.length === 0;
       if (isteacherEmailListNullOrEmpty) {
         return false;
-      }
-      const isteacherEmailListAllNumber = teacherEmailList.every(
+      } */
+      const isteacherEmailListAllNumber = teacherEmailList ? teacherEmailList.every(
         value => utils.isValidEmail(value),
-      );
+      ) : true;
       if (!isteacherEmailListAllNumber) {
         return false;
       }

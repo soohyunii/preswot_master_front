@@ -17,25 +17,25 @@ export default {
     title,
     description,
     intendedLectureNum,
-    startTime,
-    endTime,
+    activeStartDate,
+    activeEndDate,
     teacherEmailList,
   }) {
     return http.post('/classes', {
       name: title,
       description,
       intendedLectureNum,
-      startTime,
-      endTime,
-      teachers: teacherEmailList,
+      start_time: activeStartDate,
+      end_time: activeEndDate,
+      teachers: teacherEmailList ? teacherEmailList : [], // eslint-disable-line
     });
   },
   putClass({
     name,
     description,
     intendedLectureNum,
-    startTime,
-    endTime,
+    activeStartDate,
+    activeEndDate,
     opened,
     id,
   }) {
@@ -43,8 +43,8 @@ export default {
     utils.assignIfNotNil(param, { name });
     utils.assignIfNotNil(param, { description });
     utils.assignIfNotNil(param, { intendedLectureNum });
-    utils.assignIfNotNil(param, { startTime });
-    Object.assign(param, { end_time: endTime });
+    utils.assignIfNotNil(param, { start_time: activeStartDate });
+    Object.assign(param, { end_time: activeEndDate });
     utils.assignIfNotNil(param, { opened });
     return http.put(`/classes/${id}`, param);
   },

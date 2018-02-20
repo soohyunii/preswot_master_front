@@ -8,10 +8,11 @@
             <el-input v-model="title"></el-input>
           </el-form-item>
 
-          <el-form-item label="강사 목록">
+          <el-form-item label="공동 강사 목록">
+            <!-- TODO: translation -->
             <el-input
               v-model="teacherEmailList"
-              placeholder="abc@example.com, qwerty@example.com">
+              placeholder="공동 강사가 없을시 비워주세요.">
             </el-input>
           </el-form-item>
 
