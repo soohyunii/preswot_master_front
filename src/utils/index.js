@@ -33,25 +33,27 @@ export default {
     // console.log('encodedPayload', encodedPayload);
     // const payload = JSON.parse(atob(encodedPayload));
     // console.log('payload', payload);
-    // TODO: try cath jwtDecode
+    let isExpired;
     try {
       const payload = jwtDecode(jwt);
-      return Date.now() < payload.exp;
+      isExpired = Date.now() < payload.exp;
     } catch (error) {
-      return true;
+      isExpired = true;
     }
+    return isExpired;
   },
   getEmailFromJwt() {
     const jwt = this.getJwtFromLocalStorage();
     if (jwt.length === 0) {
       return null;
     }
-    // TODO: try cath jwtDecode
+    let email;
     try {
-      return jwtDecode(jwt).email_id;
+      email = jwtDecode(jwt).email_id;
     } catch (error) {
-      return null;
+      email = null;
     }
+    return email;
   },
   formatDate(d) {
     // console.log('formatDate', d, d.toLocaleDateString('en-US').split('-'));
