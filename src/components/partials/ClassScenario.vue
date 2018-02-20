@@ -124,13 +124,13 @@ export default {
   name: 'ClassScenario',
   async mounted() {
     const vm = this;
-    await vm.fetchClass();
+    await vm.getClass();
     vm.$forceUpdate();
 
     vm.$watch(
       () => (vm.currentClass),
       async () => {
-        await vm.fetchClass();
+        await vm.getClass();
         vm.$forceUpdate();
       },
     );
@@ -181,7 +181,7 @@ export default {
       'createSc',
     ]),
     ...mapActions('class', [
-      'fetchClass',
+      'getClass',
     ]),
     // getType(type) {
     //   // 과목 시나리오 유형 분류 {{ A: 강의, B: 숙제, C: 퀴즈, D: 시험 }}
