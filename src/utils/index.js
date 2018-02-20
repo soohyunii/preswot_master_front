@@ -104,4 +104,32 @@ export default {
       Object.assign(p, { [key]: variable[originalKey] });
     }
   },
+  sortSc(sc, currentEditingScItemIndex) {
+    const beforeSortedScItem = sc[currentEditingScItemIndex];
+    let tempMap = new Map();
+    sc.forEach((item, index) => {
+      tempMap.set(item, index);
+    });
+    // for (let i = 0; i < sc.length; i += 1) { window.console.log('before sort', sc[i].id); }
+    const activeSortedSc = sc.sort((a, b) => {
+      const diff = a.activeStartOffsetSec - b.activeStartOffsetSec;
+      if (diff !== 0) { return diff; }
+      return tempMap.get(a) - tempMap.get(b);
+    });
+    // for (let i = 0; i < sc.length; i += 1) { window.console.log('active sort', sc[i].id); }
+
+    tempMap = new Map();
+    activeSortedSc.forEach((item, index) => {
+      tempMap.set(item, index);
+    });
+    const orderSortedSc = activeSortedSc.sort((a, b) => {
+      const diff = a.order - b.order;
+      if (diff !== 0) { return diff; }
+      return tempMap.get(a) - tempMap.get(b);
+    });
+    // for (let i = 0; i < sc.length; i += 1) { window.console.log('order sort', sc[i].id); }
+
+    const changedCurrentEditingScItemIndex = sc.map(x => x.id).indexOf(beforeSortedScItem.id);
+    return { orderSortedSc, changedCurrentEditingScItemIndex };
+  },
 };
