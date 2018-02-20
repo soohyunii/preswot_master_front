@@ -92,6 +92,17 @@
               </el-button>
             </template>
           </el-table-column>
+          <el-table-column
+            prop="edit"
+            label="수정">
+            <template slot-scope="scope">
+              <el-button
+                @click="$router.push(`/a/teacher/lecture/${scope.row.scId}/live`);"
+              >
+                강의
+              </el-button>
+            </template>
+          </el-table-column>
         </el-table>
 
         <br />
