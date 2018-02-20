@@ -87,17 +87,30 @@
           </el-tab-pane> -->
         </el-tabs>
         <el-row>
-          <div id="video_wrapper">
-            <button>ddd</button> <br/>
-            <iframe
+          <div class="video-wrapper">
+            <i :class="iconClass" @click="onClick('PLAYER_TOGGLE')"></i>
+            <div v-show="isPlayerVisible">
+              <youtube
+                id="video"
+                :video-id="youtubeId"
+                player-width="500"
+                player-height="300"
+                :player-vars="{
+                  autoplay: 1,
+                }"
+                :mute="true"
+              >
+              </youtube>
+            </div>
+            <!-- <iframe
               width="500px"
               height="300px"
-              :src="streamingLink"
+              :src="youtubeId"
               frameborder="0"
               allowfullscreen
               autoplay
             >
-            </iframe>
+            </iframe> -->
           </div>
           <div class="statusbar" v-bind:class="{ activeInfo: isActiveInfo}">
             <div class="statusbar_for_click" @click="onClick('OPEN_STATUS_INFO')"></div>
@@ -110,13 +123,17 @@
 </template>
 
 <style lang="scss" scoped>
-  #video_wrapper {
+  @import "~@/variables.scss";
+
+  .video-wrapper {
     position: fixed;
     right: 0;
     bottom: 30px;
     text-align: right;
-    // max-width: 600px;
-    // max-height: 400px;
+    .toggle-icon {
+      color: $app-ultra-violet;
+      margin: 5px;
+    }
   }
   .statusbar {
     position:fixed;
@@ -168,6 +185,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { getIdFromURL } from 'vue-youtube-embed';
 
 import Sc from '../partials/Sc';
 import ScItemAdder from '../partials/ScItemAdder';
@@ -190,8 +208,8 @@ export default {
   },
   mounted() {
     const vm = this;
-    console.log(vm.$route);
-    vm.streamingLink = vm.$route.query.link;
+    vm.youtubeId = getIdFromURL(vm.$route.query.link);
+    console.log('vm.youtubeId', vm.youtubeId);
   },
   data() {
     // TODO: translate
@@ -204,7 +222,8 @@ export default {
       isCloseStatusbar: false,
       isActiveInfo: false,
       lectureId: 1,
-      streamingLink: '',
+      youtubeId: '',
+      isPlayerVisible: true,
     };
   },
   methods: {
@@ -213,6 +232,10 @@ export default {
       switch (type) {
         case 'OPEN_STATUS_INFO': {
           vm.isActiveInfo = !vm.isActiveInfo;
+          break;
+        }
+        case 'PLAYER_TOGGLE': {
+          vm.isPlayerVisible = !vm.isPlayerVisible;
           break;
         }
         default: {
@@ -226,6 +249,16 @@ export default {
       'isScEmpty',
       // 'scType', // TODO: uncomment
     ]),
+    iconClass() {
+      const vm = this;
+      return {
+        'toggle-icon': true,
+        fa: true,
+        'fa-2x': true,
+        'fa-eye-slash': vm.isPlayerVisible,
+        'fa-eye': !vm.isPlayerVisible,
+      };
+    },
   },
 };
 </script>

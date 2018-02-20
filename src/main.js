@@ -9,8 +9,9 @@ import VueResize from 'vue-resize';
 import Vue2Filters from 'vue2-filters';
 import Vlf from 'vlf';
 import VueScrollTo from 'vue-scrollto';
-import authPlugin from './utils/authPlugin';
+import VueYoutubeEmbed from 'vue-youtube-embed';
 
+import authPlugin from './utils/authPlugin';
 import App from './App';
 import router from './router';
 import store from './stores';
@@ -31,6 +32,7 @@ Vue.use(VueResize);
 Vue.use(Vue2Filters);
 Vue.use(Vlf);
 Vue.use(VueScrollTo);
+Vue.use(VueYoutubeEmbed);
 
 const defaultLocale = utils.getDefaultLocale();
 
