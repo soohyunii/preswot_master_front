@@ -85,16 +85,16 @@
             prop="edit"
             label="수정">
             <template slot-scope="scope">
-              <el-button
-                @click="$router.push(`/a/teacher/lecture/${scope.row.scId}/edit`);"
-              >
-                수정
-              </el-button>
+              <router-link :to="`/a/teacher/lecture/${scope.row.scId}/edit`">
+                <el-button>
+                  수정
+                </el-button>
+              </router-link>
             </template>
           </el-table-column>
           <el-table-column
-            prop="edit"
-            label="수정">
+            prop="live"
+            label="강의">
             <template slot-scope="scope">
               <el-button
                 @click="$router.push(`/a/teacher/lecture/${scope.row.scId}/live`);"

@@ -73,10 +73,10 @@
             break;
           }
           case 'OPEN_STATUS_INFO': {
-
+            break;
           }
           default: {
-            throw new Error('not defined type', type);
+            throw new Error(`not defined type ${type}`);
           }
         }
       },
