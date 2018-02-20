@@ -47,7 +47,7 @@
           </el-tab-pane> -->
           <el-tab-pane label="시나리오 아이템 수정" name="third">
             <h1>TODO: 시나리오 아이템 수정~</h1>
-            <!-- <el-row :gutter="30" class="sc-row">
+            <el-row :gutter="30" class="sc-row">
               <el-col :span="16">
                 <div>
                   <sc />
@@ -77,7 +77,7 @@
 
                 </el-col>
               </el-row>
-            </div> -->
+            </div>
           </el-tab-pane>
           <!-- <el-tab-pane label="시나리오 삭제" name="fourth">
             <el-row>

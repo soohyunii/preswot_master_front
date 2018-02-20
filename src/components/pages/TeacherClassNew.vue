@@ -80,7 +80,7 @@ export default {
       'assignNewClass',
     ]),
     ...mapActions('class', [
-      'createClass',
+      'postClass',
     ]),
     changeShouldDeactivated(label) {
       const vm = this;
@@ -91,7 +91,7 @@ export default {
     async onSubmit() {
       const vm = this;
       try {
-        await vm.createClass();
+        await vm.postClass();
         vm.$notify({
           title: '과목 생성 성공',
           message: '성공적으로 과목이 생성됨',
