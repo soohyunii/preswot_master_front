@@ -96,11 +96,9 @@
             prop="live"
             label="강의">
             <template slot-scope="scope">
-              <router-link :to="`/a/teacher/lecture/${scope.row.scId}/live`">
-                <el-button>
-                  강의
-                </el-button>
-              </router-link>
+              <el-button @click="onClick('OPEN_LIVE_MODAL', scope.row.scId)">
+                강의
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -112,6 +110,32 @@
           <el-button @click="clickAddScenario" type="primary">과목 시나리오 추가</el-button>
         </el-col>
       </div>
+    </el-col>
+    <el-col>
+      <el-dialog
+        title="Input Youtube Live Streaming Link"
+        :visible.sync="isModalVisible"
+      >
+        <el-form :model="input" label-width="120px">
+          <el-form-item label="Link Address">
+            <el-input v-model="input.youtubeLink"></el-input>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button
+            @click="onClick('CANCEL');"
+          >
+            Cancel
+          </el-button>
+          <el-button
+            type="primary"
+            @click="onClick('CONFIRM')"
+            :disabled="input.youtubeLink.length === 0"
+          >
+            Confirm
+          </el-button>
+        </span>
+      </el-dialog>
     </el-col>
   </el-row>
 </template>
@@ -134,6 +158,15 @@ export default {
         vm.$forceUpdate();
       },
     );
+  },
+  data() {
+    return {
+      scId: null,
+      isModalVisible: false,
+      input: {
+        youtubeLink: '',
+      },
+    };
   },
   computed: {
     ...mapGetters('class', [
@@ -183,6 +216,45 @@ export default {
     ...mapActions('class', [
       'fetchClass',
     ]),
+    async onClick(type, scId) {
+      const vm = this;
+      switch (type) {
+        case 'OPEN_LIVE_MODAL': {
+          vm.isModalVisible = true;
+          vm.scId = scId;
+          break;
+        }
+        case 'CANCEL': {
+          vm.isModalVisible = false;
+          vm.input.youtubeLink = '';
+          vm.scId = null;
+          break;
+        }
+        case 'CONFIRM': {
+          try {
+            // TODO: send link to backend server
+
+            // If Success
+            vm.input.youtubeLink = '';
+            vm.isModalVisible = false;
+            vm.$router.push({
+              path: `/a/teacher/lecture/${vm.scId}/live`,
+              params: {
+                youtubeLink: vm.input.youtubeLink,
+              },
+            });
+            vm.scId = null;
+          } catch (error) {
+            // TODO: show noti
+            // console.error(error);
+          }
+          break;
+        }
+        default: {
+          throw new Error(`not defined type ${type}`);
+        }
+      }
+    },
     // getType(type) {
     //   // 과목 시나리오 유형 분류 {{ A: 강의, B: 숙제, C: 퀴즈, D: 시험 }}
     //   // TODO: Translate

@@ -6,7 +6,15 @@
       </el-aside>
       <el-main>
         <el-row class="video">
-          <iframe width="100%" height="500px" src="https://www.youtube.com/embed/DAHsPaR-tAU?autoplay=1" frameborder="0" allowfullscreen autoplay></iframe>
+          <iframe
+            width="100%"
+            height="500px"
+            src="https://www.youtube.com/embed/DAHsPaR-tAU?autoplay=1"
+            frameborder="0"
+            allowfullscreen
+            autoplay
+          >
+          </iframe>
         </el-row>
         <el-row :gutter="5">
           <el-col :span="3">
