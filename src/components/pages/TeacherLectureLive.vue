@@ -232,6 +232,11 @@ export default {
     ScActiveTimeEditor,
     TeacherLectureLiveSummary,
   },
+  sockets: {
+    connect() {
+      console.log('socket connected');
+    },
+  },
   async beforeMount() {
     const vm = this;
     vm.youtubeId = getIdFromURL(vm.$route.query.link);
