@@ -234,7 +234,8 @@ export default {
   },
   sockets: {
     connect() {
-      console.log('socket connected');
+      const vm = this;
+      console.log('socket connected', vm.currentEditingScItem);
     },
   },
   async beforeMount() {

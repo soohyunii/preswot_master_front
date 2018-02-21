@@ -18,6 +18,7 @@ import router from './router';
 import store from './stores';
 import messages from './messages';
 import utils from './utils';
+import { websocketUrl } from './services/config'
 
 
 Vue.config.productionTip = false;
@@ -34,7 +35,7 @@ Vue.use(Vue2Filters);
 Vue.use(Vlf);
 Vue.use(VueScrollTo);
 Vue.use(VueYoutubeEmbed);
-Vue.use(VueSocketio, 'http://localhost:8001', store);
+Vue.use(VueSocketio, websocketUrl, store);
 
 const defaultLocale = utils.getDefaultLocale();
 
