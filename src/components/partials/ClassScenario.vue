@@ -148,13 +148,13 @@ export default {
   name: 'ClassScenario',
   async mounted() {
     const vm = this;
-    await vm.fetchClass();
+    await vm.getClass();
     vm.$forceUpdate();
 
     vm.$watch(
       () => (vm.currentClass),
       async () => {
-        await vm.fetchClass();
+        await vm.getClass();
         vm.$forceUpdate();
       },
     );
@@ -214,7 +214,7 @@ export default {
       'createSc',
     ]),
     ...mapActions('class', [
-      'fetchClass',
+      'getClass',
     ]),
     async onClick(type, scId) {
       const vm = this;

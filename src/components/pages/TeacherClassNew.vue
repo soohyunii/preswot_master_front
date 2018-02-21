@@ -8,10 +8,11 @@
             <el-input v-model="title"></el-input>
           </el-form-item>
 
-          <el-form-item label="강사 목록">
+          <el-form-item label="공동 강사 목록">
+            <!-- TODO: translation -->
             <el-input
               v-model="teacherEmailList"
-              placeholder="abc@example.com, qwerty@example.com">
+              placeholder="공동 강사가 없을시 비워주세요.">
             </el-input>
           </el-form-item>
 
@@ -80,7 +81,7 @@ export default {
       'assignNewClass',
     ]),
     ...mapActions('class', [
-      'createClass',
+      'postClass',
     ]),
     changeShouldDeactivated(label) {
       const vm = this;
@@ -91,14 +92,17 @@ export default {
     async onSubmit() {
       const vm = this;
       try {
-        await vm.createClass();
+        await vm.postClass();
         vm.$notify({
           title: '과목 생성 성공',
           message: '성공적으로 과목이 생성됨',
           type: 'success',
         });
         vm.updateNewClass({
-          newClass: {},
+          newClass: {
+            activeStartDate: null,
+            activeEndDate: null,
+          },
         });
         vm.$router.push('/a/teacher/class');
       } catch (error) {

@@ -54,13 +54,14 @@ export default {
       if (!title) {
         return false;
       }
+      /*
       const isteacherEmailListNullOrEmpty = !teacherEmailList || teacherEmailList.length === 0;
       if (isteacherEmailListNullOrEmpty) {
         return false;
-      }
-      const isteacherEmailListAllNumber = teacherEmailList.every(
+      } */
+      const isteacherEmailListAllNumber = teacherEmailList ? teacherEmailList.every(
         value => utils.isValidEmail(value),
-      );
+      ) : true;
       if (!isteacherEmailListAllNumber) {
         return false;
       }
@@ -141,8 +142,8 @@ export default {
     },
   },
   actions: {
-    async fetchMyClassLists({ commit }) {
-      const res = await classService.fetchingMyClassList();
+    async getMyClassLists({ commit }) {
+      const res = await classService.getMyClassList();
 
       const sc = res.data.studyingClasses;
       if (sc && sc.length !== 0) {
@@ -166,30 +167,39 @@ export default {
         });
       }
     },
-    async createClass({ state, getters }) {
+    async postClass({ state, getters }) {
       // console.log('state', state);
       if (!getters.isNewClassValid) {
         throw new Error('invalid');
       }
       // TODO: pass intendedLectureNum
-      const res = await classService.createClass(state.newClass);
+      const res = await classService.postClass(state.newClass);
       if (res.data && res.data.success) {
         return res;
       }
       throw new Error(`create class failed ${res.status}`);
     },
-    async fetchClass({ state, getters, commit }) {
+    async getClass({ state, getters, commit }) {
       if (state.currentClassIndex === null) {
         return;
       }
       const currentClass = getters.currentClass;
-      const res = await classService.fetchClass({
+      const res = await classService.getClass({
         id: currentClass.class_id,
       });
       commit('assignCurrentClass', {
         currentClass: {
           scenarioList: res.data.lectures,
         },
+      });
+    },
+    async deleteClass({ getters, commit }) {
+      const currentClass = getters.currentClass;
+      await classService.delete({
+        id: currentClass.class_id,
+      });
+      commit('updateCurrentClassIndex', {
+        currentClassIndex: null,
       });
     },
   },
