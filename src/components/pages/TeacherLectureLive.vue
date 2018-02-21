@@ -181,6 +181,9 @@ import ScItemSummary from '../partials/ScItemSummary';
 import ScMaterialEditor from '../partials/ScMaterialEditor';
 import ScActiveTimeEditor from '../partials/ScActiveTimeEditor';
 import ScCommonEditor from '../partials/ScCommonEditor';
+import ScSurveyEditor from '../partials/ScSurveyEditor';
+import ScQuestionEditor from '../partials/ScQuestionEditor';
+import ScHomeworkEditor from '../partials/ScHomeworkEditor';
 import TeacherLectureLiveSummary from '../partials/TeacherLectureLiveSummary';
 
 export default {
@@ -190,7 +193,10 @@ export default {
     ScItemAdder,
     ScItemSummary,
     ScCommonEditor,
+    ScQuestionEditor,
     ScMaterialEditor,
+    ScHomeworkEditor,
+    ScSurveyEditor,
     ScActiveTimeEditor,
     TeacherLectureLiveSummary,
   },
@@ -232,8 +238,15 @@ export default {
     ...mapMutations('sc', [
       'updateScId',
     ]),
+    ...mapMutations('scItem', [
+      'updateCurrentEditingScItemIndex',
+    ]),
     ...mapActions('sc', [
       'getSc',
+    ]),
+    ...mapActions('scItem', [
+      'getScItem',
+      'getItemKeywords',
     ]),
     onClick(type) {
       const vm = this;
