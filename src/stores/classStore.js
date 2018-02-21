@@ -193,5 +193,14 @@ export default {
         },
       });
     },
+    async deleteClass({ getters, commit }) {
+      const currentClass = getters.currentClass;
+      await classService.delete({
+        id: currentClass.class_id,
+      });
+      commit('updateCurrentClassIndex', {
+        currentClassIndex: null,
+      });
+    },
   },
 };

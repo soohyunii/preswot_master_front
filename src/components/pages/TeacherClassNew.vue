@@ -99,7 +99,10 @@ export default {
           type: 'success',
         });
         vm.updateNewClass({
-          newClass: {},
+          newClass: {
+            activeStartDate: null,
+            activeEndDate: null,
+          },
         });
         vm.$router.push('/a/teacher/class');
       } catch (error) {
