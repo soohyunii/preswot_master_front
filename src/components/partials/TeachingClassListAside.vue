@@ -75,7 +75,7 @@ export default {
       'updateCurrentClassIndex',
     ]),
     ...mapActions('class', [
-      'fetchMyClassLists',
+      'getMyClassLists',
     ]),
     clickAddButton() {
       const vm = this;
@@ -98,7 +98,7 @@ export default {
   async mounted() {
     const vm = this;
 
-    await vm.fetchMyClassLists();
+    await vm.getMyClassLists();
     vm.$forceUpdate();
     // const classList = await teacherService.fetchTeachingClassList();
     // console.log('classList', classList);
