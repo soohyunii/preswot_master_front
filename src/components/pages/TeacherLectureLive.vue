@@ -235,6 +235,9 @@ export default {
     ...mapActions('sc', [
       'getSc',
     ]),
+    ...mapMutations('scItem', [
+      'updateCurrentEditingScItemIndex',
+    ]),
     onClick(type) {
       const vm = this;
       switch (type) {
