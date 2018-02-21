@@ -27,22 +27,13 @@
             </h3>
           </el-col>
 
+
         </el-row>
         <hr><br />
 
-        <el-tabs class="tabs" v-model="activeTab">
-          <el-tab-pane label="시나리오 수정" name="first">
-            <!-- <sc-editor /> -->
-            <h1>TODO: 시나리오 수정~</h1>
-          </el-tab-pane>
-          <!-- <el-tab-pane label="시나리오 지식맵 수정" name="second">
-            <div style="width: 100%; height: 100%;">
-              <knowledge-map />
-            </div>
-          </el-tab-pane> -->
-          <el-tab-pane label="시나리오 아이템 수정" name="third">
-            <h1>TODO: 시나리오 아이템 수정~</h1>
-            <!-- <el-row :gutter="30" class="sc-row">
+        <el-row>
+          <el-col>
+            <el-row :gutter="30" class="sc-row">
               <el-col :span="16">
                 <div>
                   <sc />
@@ -60,32 +51,25 @@
                 <el-col :span="24">
                   <h1>아이템 편집</h1>
                   <sc-common-editor />
-                  <sc-material-editor
-                    v-if="currentEditingScItemType === '강의자료'
-                    || currentEditingScItemType === '숙제'"
-                  />
+                  <sc-material-editor v-if="currentEditingScItemType === '강의자료'" />
+                  <sc-homework-editor v-if="currentEditingScItemType === '숙제'" />
                   <sc-survey-editor v-if="currentEditingScItemType === '설문'" />
-                  <div v-if="currentEditingScItemType === '문항'">
-                    TODO: 문항~~
-                  </div>
+                  <sc-question-editor v-if="currentEditingScItemType === '문항'" />
                   <sc-active-time-editor />
 
                 </el-col>
               </el-row>
-            </div> -->
+            </div>
+          </el-col>
+        </el-row>
+        <!-- <el-tabs class="tabs" v-model="activeTab">
+          <el-tab-pane label="시나리오 수정" name="first">
+            <h1>TODO: 시나리오 수정~</h1>
           </el-tab-pane>
-          <!-- <el-tab-pane label="시나리오 삭제" name="fourth">
-            <el-row>
-              <el-col style="max-width: 600px;">
-                <el-form label-width="120px">
-                  <el-form-item label="시나리오 삭제">
-                    <el-button type="primary" @click="onClickDelete">시나리오 삭제</el-button>
-                  </el-form-item>
-                </el-form>
-              </el-col>
-            </el-row>
-          </el-tab-pane> -->
-        </el-tabs>
+          <el-tab-pane label="시나리오 아이템 수정" name="third">
+            <h1>TODO: 시나리오 아이템 수정~</h1>
+          </el-tab-pane>
+        </el-tabs> -->
         <el-row>
           <div class="video-wrapper">
             <i v-show="!isInfoVisible"
@@ -188,7 +172,7 @@
 </style>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions, mapMutations } from 'vuex';
 import { getIdFromURL } from 'vue-youtube-embed';
 
 import Sc from '../partials/Sc';
@@ -210,10 +194,26 @@ export default {
     ScActiveTimeEditor,
     TeacherLectureLiveSummary,
   },
-  mounted() {
+  async beforeMount() {
     const vm = this;
     vm.youtubeId = getIdFromURL(vm.$route.query.link);
-    console.log('vm.youtubeId', vm.youtubeId);
+    vm.updateScId({
+      scId: Number.parseInt(vm.$route.params.scId, 10),
+    });
+    await vm.getSc();
+    // TODO: handle sc empty
+    if (!vm.isScEmpty) {
+      vm.updateCurrentEditingScItemIndex({
+        currentEditingScItemIndex: 0,
+      });
+      // 문항, 강의자료의 id가 이 단계에서 얻어짐 => getItemKeywords() 함수에서 이 id를 이용
+      await vm.getScItem({
+        scItemId: vm.currentEditingScItem.id,
+      });
+      if (['문항', '강의자료'].includes(vm.currentEditingScItemType)) {
+        vm.getItemKeywords();
+      }
+    }
   },
   data() {
     // TODO: translate
@@ -229,6 +229,12 @@ export default {
     };
   },
   methods: {
+    ...mapMutations('sc', [
+      'updateScId',
+    ]),
+    ...mapActions('sc', [
+      'getSc',
+    ]),
     onClick(type) {
       const vm = this;
       switch (type) {
@@ -250,8 +256,16 @@ export default {
   computed: {
     ...mapGetters('scItem', [
       'isScEmpty',
-      // 'scType', // TODO: uncomment
+      'currentEditingScItem',
     ]),
+    currentEditingScItemType() {
+      const vm = this;
+      const item = vm.currentEditingScItem;
+      if (!item) {
+        return null;
+      }
+      return item.type;
+    },
     iconClass() {
       const vm = this;
       return {
