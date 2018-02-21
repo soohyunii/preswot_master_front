@@ -24,6 +24,7 @@
           <el-button>과목지식맵</el-button>
           <el-button>과목큐레이션</el-button>
           <el-button>과목저널링</el-button>
+          <el-button type="primary" @click="onClick('EDIT')">과목수정</el-button>
           <el-button type="danger" @click="onClick('DELETE')">과목삭제</el-button>
           <br /><br />
 
@@ -76,6 +77,10 @@ export default {
     onClick(type) {
       const vm = this;
       switch (type) {
+        case 'EDIT': {
+          vm.$router.push(`/a/teacher/class/${vm.currentClass.class_id}/edit`);
+          break;
+        }
         case 'DELETE': {
           vm.$confirm('정말로 이 과목을 삭제하시겠습니까?', `${vm.currentClass.name || ''} 삭제`, {
             confirmButtonText: '예, 삭제합니다.',
