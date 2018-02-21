@@ -29,9 +29,10 @@
 
 
         </el-row>
+
         <hr><br />
 
-        <el-row>
+        <el-row class="editor">
           <el-col>
             <el-row :gutter="30" class="sc-row">
               <el-col :span="16">
@@ -43,6 +44,26 @@
                 <div>
                   <sc-item-adder />
                 </div>
+              </el-col>
+            </el-row>
+
+            <el-row
+              v-show="currentEditingScItem"
+              :gutter="30"
+            >
+              <el-col :span="24">
+                <br />
+                <h1>강의 중 임시 활성화</h1>
+                <p>* 임시 활성화는 기존에 세팅되어있던 값을 덮어씌우지 않지만, 취소하지 않는 한 계속 활성화됩니다.</p>
+                <el-button type="primary" @click="onClick('TEMP_ACTIVATE')">
+                  임시 활성화
+                </el-button>
+                <el-button type="primary" @click="onClick('TEMP_DEACTIVATE')">
+                  임시 활성화 취소
+                </el-button>
+                <br />
+                <br />
+                <br />
               </el-col>
             </el-row>
 
@@ -121,6 +142,17 @@
     .toggle-icon {
       color: $app-ultra-violet;
       margin: 5px;
+    }
+  }
+
+  .editor {
+    background-color: white;
+    padding: 1.5vh 2.5vw;
+    border-radius: 5px;
+
+    .sc-row {
+      padding: 20px;
+      background-color: $app-oatmeal;
     }
   }
   .statusbar {
@@ -260,8 +292,16 @@ export default {
           vm.isPlayerVisible = !vm.isPlayerVisible;
           break;
         }
-        default: {
+        case 'TEMP_ACTIVATE': {
+          console.log('ta');
           break;
+        }
+        case 'TEMP_DEACTIVATE': {
+          console.log('tda');
+          break;
+        }
+        default: {
+          throw new Error(`not defined type ${type}`);
         }
       }
     },
