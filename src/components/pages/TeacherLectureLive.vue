@@ -36,7 +36,7 @@
             <el-row :gutter="30" class="sc-row">
               <el-col :span="16">
                 <div>
-                  <sc />
+                  <sc :after-start-date-offset-sec="afterStartDateOffsetSec"/>
                 </div>
               </el-col>
               <el-col :span="8">
@@ -107,6 +107,11 @@
         </el-row>
       </el-main>
     </el-container>
+    <!--
+    <h1>debug</h1>
+    현재시간 : {{now}}<br/>
+    활성화 시각 : {{scStartDate}}<br/>
+    활성화 시각 이후 : {{afterStartDateOffsetSec}} sec<br/> -->
   </div>
 </template>
 
@@ -172,7 +177,7 @@
 </style>
 
 <script>
-import { mapGetters, mapActions, mapMutations } from 'vuex';
+import { mapGetters, mapActions, mapMutations, mapState } from 'vuex';
 import { getIdFromURL } from 'vue-youtube-embed';
 
 import Sc from '../partials/Sc';
@@ -225,13 +230,12 @@ export default {
     // TODO: translate
     return {
       activeTab: 'first',
-      scTitle: '4강 (배열)', // TODO: replace
-      scType: '강의', // TODO: replace
       SummaryData: [],
       isInfoVisible: false,
       lectureId: 1,
       youtubeId: '',
       isPlayerVisible: true,
+      now: new Date(),
     };
   },
   methods: {
@@ -267,6 +271,7 @@ export default {
     },
   },
   computed: {
+    ...mapState('sc', ['scTitle', 'scType', 'scStartDate']),
     ...mapGetters('scItem', [
       'isScEmpty',
       'currentEditingScItem',
@@ -289,6 +294,19 @@ export default {
         'fa-eye': !vm.isPlayerVisible,
       };
     },
+    afterStartDateOffsetSec() {
+      const vm = this;
+      const nowDate = vm.now ? vm.now : new Date();
+      const startDate = vm.scStartDate ? vm.scStartDate : new Date();
+      const diff = Math.floor((nowDate.getTime() - startDate.getTime()) / 1000);
+      return diff;
+    },
+  },
+  created() {
+    const vm = this;
+    setInterval(() => {
+      vm.now = new Date();
+    }, 1000);
   },
 };
 </script>

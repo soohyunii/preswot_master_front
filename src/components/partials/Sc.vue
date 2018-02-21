@@ -30,7 +30,8 @@
                     class="list-group-item"
                     :key="item.id"
                     :type="item.type"
-                    :index="index" />
+                    :index="index"
+                    :after-start-date-offset-sec="afterStartDateOffsetSec" />
                 </transition-group>
               </draggable>
             </el-row>
@@ -111,6 +112,7 @@ import ScItem from './ScItem';
 
 export default {
   name: 'Sc',
+  props: ['afterStartDateOffsetSec'],
   data() {
     return {
       drag: false,
