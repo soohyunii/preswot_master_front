@@ -4,7 +4,7 @@ import questionService from '../services/questionService';
 import materialService from '../services/materialService';
 import surveyService from '../services/surveyService';
 import homeworkService from '../services/homeworkService';
-import { baseURL } from '../services/http';
+import { baseUrl } from '../services/config';
 
 import utils from '../utils';
 
@@ -212,7 +212,7 @@ export default {
                 const fileName = tokens.pop();
                 return {
                   name: fileName,
-                  url: `${baseURL}${item.client_path}`,
+                  url: `${baseUrl}${item.client_path}`,
                   guid: item.file_guid,
                 };
               }),
@@ -241,7 +241,7 @@ export default {
                 const fileName = tokens.pop();
                 return {
                   name: fileName,
-                  url: `${baseURL}${item.client_path}`,
+                  url: `${baseUrl}${item.client_path}`,
                   guid: item.file_guid,
                 };
               }),
@@ -268,7 +268,7 @@ export default {
                 const fileName = tokens.pop();
                 return {
                   name: fileName,
-                  url: `${baseURL}${item.client_path}`,
+                  url: `${baseUrl}${item.client_path}`,
                   guid: item.file_guid,
                 };
               }),
@@ -473,7 +473,7 @@ export default {
       const fileName = tokens.pop();
       newFileList.push({
         name: fileName,
-        url: `${baseURL}${res.data.file.client_path}`,
+        url: `${baseUrl}${res.data.file.client_path}`,
         status: 'success',
         uid: file.uid,
         guid: res.data.file.file_guid,
