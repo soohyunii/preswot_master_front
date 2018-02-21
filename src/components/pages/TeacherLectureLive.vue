@@ -181,6 +181,8 @@ import ScItemSummary from '../partials/ScItemSummary';
 import ScMaterialEditor from '../partials/ScMaterialEditor';
 import ScActiveTimeEditor from '../partials/ScActiveTimeEditor';
 import ScQuestionEditor from '../partials/ScQuestionEditor';
+import ScHomeworkEditor from '../partials/ScHomeworkEditor';
+import ScSurveyEditor from '../partials/ScSurveyEditor';
 import ScCommonEditor from '../partials/ScCommonEditor';
 import TeacherLectureLiveSummary from '../partials/TeacherLectureLiveSummary';
 
@@ -190,9 +192,11 @@ export default {
     Sc,
     ScItemAdder,
     ScItemSummary,
-    ScQuestionEditor,
     ScCommonEditor,
     ScMaterialEditor,
+    ScQuestionEditor,
+    ScSurveyEditor,
+    ScHomeworkEditor,
     ScActiveTimeEditor,
     TeacherLectureLiveSummary,
   },
