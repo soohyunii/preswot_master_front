@@ -26,7 +26,7 @@
           <el-button>과목저널링</el-button>
           <el-button type="danger" @click="onClick('DELETE')">과목삭제</el-button>
           <br /><br />
-          {{ teachingClassList }}
+
           <class-scenario />
 
           <!-- TODO: Implement dummy response about class statistics -->
