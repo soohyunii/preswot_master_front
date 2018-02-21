@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper"
-  :class="isSelectedItem() + ' ' + isActiveItem()"
+  :class="itemClass()"
   @click="onClick('SELECT_SC_ITEM',index)">
     <el-col align="center">
       <!-- TODO: change icons -->
@@ -24,6 +24,7 @@ export default {
     return {
       selectedClass: 'selected',
       nonActiveItem: 'nonActive',
+      tempActive: false,
     };
   },
   methods: {
@@ -121,17 +122,21 @@ export default {
       }
       return icon;
     },
-    isSelectedItem() {
+    itemClass() {
       const vm = this;
-      if (vm.index === vm.currentEditingScItemIndex) {
-        return 'selected';
-      }
-      return '';
+      const selected = vm.index === vm.currentEditingScItemIndex;
+      return {
+        selected,
+        'nonActive': vm.isActiveItem,
+      };
     },
     isActiveItem() {
       const vm = this;
+      if (vm.tempActive) {
+        return true;
+      }
       if (!vm.afterStartDateOffsetSec) {
-        return '';
+        return false;
       }
       const startTime = vm.sc[vm.index].activeStartOffsetSec;
       const endTime = vm.sc[vm.index].activeEndOffsetSec;
@@ -139,9 +144,9 @@ export default {
       const isAfterStartTime = startTime <= vm.afterStartDateOffsetSec;
       const isBeforeEndTime = endTime ? vm.afterStartDateOffsetSec <= endTime : true;
       if (isAfterStartTime && isBeforeEndTime) {
-        return '';
+        return true;
       }
-      return 'nonActive';
+      return false;
     },
   },
   computed: {
