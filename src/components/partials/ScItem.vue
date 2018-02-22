@@ -127,7 +127,7 @@ export default {
       const selected = vm.index === vm.currentEditingScItemIndex;
       return {
         selected,
-        'nonActive': vm.isActiveItem,
+        'nonActive': !vm.isActiveItem(),
       };
     },
     isActiveItem() {
@@ -140,7 +140,6 @@ export default {
       }
       const startTime = vm.sc[vm.index].activeStartOffsetSec;
       const endTime = vm.sc[vm.index].activeEndOffsetSec;
-
       const isAfterStartTime = startTime <= vm.afterStartDateOffsetSec;
       const isBeforeEndTime = endTime ? vm.afterStartDateOffsetSec <= endTime : true;
       if (isAfterStartTime && isBeforeEndTime) {
