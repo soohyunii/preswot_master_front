@@ -37,7 +37,7 @@
             <el-row :gutter="30" class="sc-row">
               <el-col :span="16">
                 <div>
-                  <sc />
+                  <sc :after-start-date-offset-sec="afterStartDateOffsetSec"/>
                 </div>
               </el-col>
               <el-col :span="8">
@@ -128,6 +128,11 @@
         </el-row>
       </el-main>
     </el-container>
+    <!--
+    <h1>debug</h1>
+    현재시간 : {{now}}<br/>
+    활성화 시각 : {{scStartDate}}<br/>
+    활성화 시각 이후 : {{afterStartDateOffsetSec}} sec<br/> -->
   </div>
 </template>
 
@@ -204,7 +209,7 @@
 </style>
 
 <script>
-import { mapGetters, mapActions, mapMutations } from 'vuex';
+import { mapGetters, mapActions, mapMutations, mapState } from 'vuex';
 import { getIdFromURL } from 'vue-youtube-embed';
 
 import Sc from '../partials/Sc';
@@ -212,10 +217,10 @@ import ScItemAdder from '../partials/ScItemAdder';
 import ScItemSummary from '../partials/ScItemSummary';
 import ScMaterialEditor from '../partials/ScMaterialEditor';
 import ScActiveTimeEditor from '../partials/ScActiveTimeEditor';
-import ScQuestionEditor from '../partials/ScQuestionEditor';
 import ScHomeworkEditor from '../partials/ScHomeworkEditor';
 import ScSurveyEditor from '../partials/ScSurveyEditor';
 import ScCommonEditor from '../partials/ScCommonEditor';
+import ScQuestionEditor from '../partials/ScQuestionEditor';
 import TeacherLectureLiveSummary from '../partials/TeacherLectureLiveSummary';
 
 export default {
@@ -225,10 +230,10 @@ export default {
     ScItemAdder,
     ScItemSummary,
     ScCommonEditor,
-    ScMaterialEditor,
     ScQuestionEditor,
-    ScSurveyEditor,
+    ScMaterialEditor,
     ScHomeworkEditor,
+    ScSurveyEditor,
     ScActiveTimeEditor,
     TeacherLectureLiveSummary,
   },
@@ -263,24 +268,23 @@ export default {
     // TODO: translate
     return {
       activeTab: 'first',
-      scTitle: '4강 (배열)', // TODO: replace
-      scType: '강의', // TODO: replace
       SummaryData: [],
       isInfoVisible: false,
       lectureId: 1,
       youtubeId: '',
       isPlayerVisible: true,
+      now: new Date(),
     };
   },
   methods: {
     ...mapMutations('sc', [
       'updateScId',
     ]),
-    ...mapActions('sc', [
-      'getSc',
-    ]),
     ...mapMutations('scItem', [
       'updateCurrentEditingScItemIndex',
+    ]),
+    ...mapActions('sc', [
+      'getSc',
     ]),
     ...mapActions('scItem', [
       'getScItem',
@@ -313,6 +317,7 @@ export default {
     },
   },
   computed: {
+    ...mapState('sc', ['scTitle', 'scType', 'scStartDate']),
     ...mapGetters('scItem', [
       'isScEmpty',
       'currentEditingScItem',
@@ -335,6 +340,19 @@ export default {
         'fa-eye': !vm.isPlayerVisible,
       };
     },
+    afterStartDateOffsetSec() {
+      const vm = this;
+      const nowDate = vm.now ? vm.now : new Date();
+      const startDate = vm.scStartDate ? vm.scStartDate : new Date();
+      const diff = Math.floor((nowDate.getTime() - startDate.getTime()) / 1000);
+      return diff;
+    },
+  },
+  created() {
+    const vm = this;
+    setInterval(() => {
+      vm.now = new Date();
+    }, 1000);
   },
 };
 </script>

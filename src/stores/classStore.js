@@ -179,6 +179,20 @@ export default {
       }
       throw new Error(`create class failed ${res.status}`);
     },
+    async putClass({ getters }) {
+      const res = await classService.putClass({
+        name: getters.currentClass.name,
+        description: getters.currentClass.description,
+        activeStartDate: getters.currentClass.start_time,
+        activeEndDate: getters.currentClass.end_time,
+        opened: getters.currentClass.opened,
+        id: getters.currentClass.class_id,
+      });
+      if (res.data && res.data.success) {
+        return res;
+      }
+      throw new Error(`edit class failed ${res.status}`);
+    },
     async getClass({ state, getters, commit }) {
       if (state.currentClassIndex === null) {
         return;

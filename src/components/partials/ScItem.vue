@@ -1,5 +1,7 @@
 <template>
-  <div class="wrapper" :class="index === currentEditingScItemIndex ? selectedClass : ''" @click="onClick('SELECT_SC_ITEM',index)">
+  <div class="wrapper"
+  :class="itemClass()"
+  @click="onClick('SELECT_SC_ITEM',index)">
     <el-col align="center">
       <!-- TODO: change icons -->
       <div class="image">
@@ -17,10 +19,12 @@ import { mapState, mapMutations, mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'ScItem',
-  props: ['type', 'index'],
+  props: ['type', 'index', 'afterStartDateOffsetSec'],
   data() {
     return {
       selectedClass: 'selected',
+      nonActiveItem: 'nonActive',
+      tempActive: false,
     };
   },
   methods: {
@@ -118,6 +122,31 @@ export default {
       }
       return icon;
     },
+    itemClass() {
+      const vm = this;
+      const selected = vm.index === vm.currentEditingScItemIndex;
+      return {
+        selected,
+        'nonActive': !vm.isActiveItem(),
+      };
+    },
+    isActiveItem() {
+      const vm = this;
+      if (vm.tempActive) {
+        return true;
+      }
+      if (!vm.afterStartDateOffsetSec) {
+        return false;
+      }
+      const startTime = vm.sc[vm.index].activeStartOffsetSec;
+      const endTime = vm.sc[vm.index].activeEndOffsetSec;
+      const isAfterStartTime = startTime <= vm.afterStartDateOffsetSec;
+      const isBeforeEndTime = endTime ? vm.afterStartDateOffsetSec <= endTime : true;
+      if (isAfterStartTime && isBeforeEndTime) {
+        return true;
+      }
+      return false;
+    },
   },
   computed: {
     ...mapState('scItem', ['sc', 'currentEditingScItemIndex']),
@@ -176,6 +205,10 @@ export default {
 
   .selected {
     background-color: #dcdfe6;
+  }
+
+  .nonActive {
+    opacity: 0.3;
   }
 
   .image {
