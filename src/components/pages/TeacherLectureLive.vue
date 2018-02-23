@@ -239,8 +239,8 @@ export default {
   },
   sockets: {
     connect() {
-      const vm = this;
-      console.log('socket connected', vm.currentEditingScItem);
+      // const vm = this;
+      // console.log('socket connected', vm.currentEditingScItem);
     },
   },
   async beforeMount() {
@@ -303,11 +303,11 @@ export default {
           break;
         }
         case 'TEMP_ACTIVATE': {
-          console.log('ta');
+          // console.log('ta');
           break;
         }
         case 'TEMP_DEACTIVATE': {
-          console.log('tda');
+          // console.log('tda');
           break;
         }
         default: {
