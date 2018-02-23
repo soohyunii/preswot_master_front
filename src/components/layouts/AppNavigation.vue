@@ -72,6 +72,7 @@
       <router-link to="/a/teacher/lecture/live">Teacher Live</router-link> <br />
       <router-link to="/a/test">Chart Test</router-link> <br />
       <router-link to="/a/teacher/lecture/wordCloudExample">wordCloudExample</router-link> <br />
+      <router-link to="/a/student/class">Student Class</router-link> <br />
     </el-menu>
   </div>
 </template>

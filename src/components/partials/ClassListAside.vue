@@ -31,7 +31,7 @@
       <el-col align="center">
         <!-- TODO: Implement adding lecture part -->
         <!-- TODO: translation -->
-        <el-button class="class-btn" @click="clickAddButton()">
+        <el-button v-if="type === 'TEACH'" class="class-btn" @click="clickAddButton()">
           <i class='el-icon-circle-plus' style="font-size: 50px;"></i> <br/>
           과목 추가
         </el-button>

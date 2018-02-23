@@ -42,6 +42,9 @@ export default {
     isTeachingClassListEmpty(state) {
       return state.teachingClassList.length === 0;
     },
+    isStudyingClassListEmpty(state) {
+      return state.studyingClassList.length === 0;
+    },
     isNewClassValid(state) {
       const {
         title,
@@ -78,12 +81,19 @@ export default {
       }
       return true;
     },
-    currentClass(state) {
+    currentTeachingClass(state) {
       const index = state.currentClassIndex;
       if (index === null) {
         return null;
       }
       return state.teachingClassList[index];
+    },
+    currentStudyingClass(state) {
+      const index = state.currentClassIndex;
+      if (index === null) {
+        return null;
+      }
+      return state.studyingClassList[index];
     },
   },
   mutations: {
@@ -99,11 +109,18 @@ export default {
         newClass,
       );
     },
-    assignCurrentClass(state, { currentClass }) {
+    assignCurrentStudyingClass(state, { currentStudyingClass }) {
+      const c = state.studyingClassList[state.currentClassIndex];
+      Object.assign(
+        c,
+        currentStudyingClass,
+      );
+    },
+    assignCurrentTeachingClass(state, { currentTeachingClass }) {
       const c = state.teachingClassList[state.currentClassIndex];
       Object.assign(
         c,
-        currentClass,
+        currentTeachingClass,
       );
     },
     // pushStudyingClass(state, { studyingClass, studyingClassList }) {
@@ -146,6 +163,11 @@ export default {
       const res = await classService.getMyClassList();
 
       const sc = res.data.studyingClasses;
+      sc.map((item) => {
+        // eslint-disable-next-line
+        item.scenarioList = null;
+        return item;
+      });
       if (sc && sc.length !== 0) {
         commit('updateStudyingClassList', {
           studyingClassList: sc,
@@ -181,34 +203,48 @@ export default {
     },
     async putClass({ getters }) {
       const res = await classService.putClass({
-        name: getters.currentClass.name,
-        description: getters.currentClass.description,
-        activeStartDate: getters.currentClass.start_time,
-        activeEndDate: getters.currentClass.end_time,
-        opened: getters.currentClass.opened,
-        id: getters.currentClass.class_id,
+        name: getters.currentTeachingClass.name,
+        description: getters.currentTeachingClass.description,
+        activeStartDate: getters.currentTeachingClass.start_time,
+        activeEndDate: getters.currentTeachingClass.end_time,
+        opened: getters.currentTeachingClass.opened,
+        id: getters.currentTeachingClass.class_id,
       });
       if (res.data && res.data.success) {
         return res;
       }
       throw new Error(`edit class failed ${res.status}`);
     },
-    async getClass({ state, getters, commit }) {
+    async getClass({ state, getters, commit }, { type }) {
       if (state.currentClassIndex === null) {
         return;
       }
-      const currentClass = getters.currentClass;
+      // TODO: currentClass => currentTeaching(Studying)Class
+      let currentClass;
+      if (type === 'TEACH') {
+        currentClass = getters.currentTeachingClass;
+      } else {
+        currentClass = getters.currentStudyingClass;
+      }
       const res = await classService.getClass({
         id: currentClass.class_id,
       });
-      commit('assignCurrentClass', {
-        currentClass: {
-          scenarioList: res.data.lectures,
-        },
-      });
+      if (type === 'TEACH') {
+        commit('assignCurrentTeachingClass', {
+          currentTeachingClass: {
+            scenarioList: res.data.lectures,
+          },
+        });
+      } else {
+        commit('assignCurrentStudyingClass', {
+          currentStudyingClass: {
+            scenarioList: res.data.lectures,
+          },
+        });
+      }
     },
     async deleteClass({ getters, commit }) {
-      const currentClass = getters.currentClass;
+      const currentClass = getters.currentTeachingClass;
       await classService.delete({
         id: currentClass.class_id,
       });
