@@ -82,6 +82,7 @@
             </template>
           </el-table-column>
           <el-table-column
+            v-if="type === 'TEACH'"
             prop="edit"
             label="수정">
             <template slot-scope="scope">
@@ -107,7 +108,7 @@
         <br />
 
         <el-col align="center">
-          <el-button @click="clickAddScenario" type="primary">과목 시나리오 추가</el-button>
+          <el-button v-if="type === 'TEACH'" @click="clickAddScenario" type="primary">과목 시나리오 추가</el-button>
         </el-col>
       </div>
     </el-col>
@@ -146,15 +147,16 @@ import utils from '../../utils';
 
 export default {
   name: 'ClassScenario',
+  props: ['type'],
   async mounted() {
     const vm = this;
-    await vm.getClass();
+    await vm.getClass({ type: vm.type });
     vm.$forceUpdate();
 
     vm.$watch(
       () => (vm.currentClass),
       async () => {
-        await vm.getClass();
+        await vm.getClass({ type: vm.type });
         vm.$forceUpdate();
       },
     );
@@ -170,8 +172,27 @@ export default {
   },
   computed: {
     ...mapGetters('class', [
-      'currentClass',
+      'currentTeachingClass',
+      'currentStudyingClass',
     ]),
+    currentClass() {
+      const vm = this;
+      let currentClass;
+      switch (vm.type) {
+        case 'STUDY': {
+          currentClass = vm.currentStudyingClass;
+          break;
+        }
+        case 'TEACH': {
+          currentClass = vm.currentTeachingClass;
+          break;
+        }
+        default: {
+          throw new Error(`not defined type ${vm.type}`);
+        }
+      }
+      return currentClass;
+    },
     tableData: {
       get() {
         const vm = this;
