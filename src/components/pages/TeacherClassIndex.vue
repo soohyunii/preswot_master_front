@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <el-container>
-      <class-list-aside />
+      <class-list-aside type="TEACH" />
 
       <el-main>
         <div

@@ -3,7 +3,7 @@
     <el-row>
       <el-col
         align="center"
-        v-for="(item, index) in teachingClassList"
+        v-for="(item, index) in classList"
         :key="index"
       >
         <!-- {{ item }} -->
@@ -59,6 +59,7 @@ import { mapState, mapMutations, mapActions } from 'vuex';
 
 export default {
   name: 'ClassListAside',
+  props: ['type'],
   data() {
     return {
       truncateLength: 10,
@@ -68,7 +69,23 @@ export default {
     ...mapState('class', [
       'currentClassIndex',
       'teachingClassList',
+      'studyingClassList',
     ]),
+    classList() {
+      const vm = this;
+      const { type } = vm;
+      switch (type) {
+        case 'TEACH': {
+          return vm.teachingClassList;
+        }
+        case 'STUDY': {
+          return vm.studyingClassList;
+        }
+        default: {
+          throw new Error(`not defined class type ${type}`);
+        }
+      }
+    },
   },
   methods: {
     ...mapMutations('class', [
@@ -95,12 +112,13 @@ export default {
       });
     },
   },
-  async mounted() {
+
+  async beforeMount() {
     const vm = this;
 
     await vm.getMyClassLists();
-    await vm.$nextTick();
-    vm.$forceUpdate();
+    // await vm.$nextTick();
+    // vm.$forceUpdate();
 
     // const classList = await teacherService.fetchTeachingClassList();
     // console.log('classList', classList);

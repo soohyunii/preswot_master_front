@@ -13,8 +13,8 @@ export default {
     teachingClassList: [],
     // //////////////////////////절취선////////////////////////// //
     /**
-     * TeacherClassIndex 관련 변수들
-     * @var {number} currentClassIndex: teachingClassList에서 선택된 과목의 index
+     * ClassListAside 관련 변수들
+     * @var {number} currentClassIndex: ClassListAside에서 선택된 과목의 index
      */
     currentClassIndex: null,
     // //////////////////////////절취선////////////////////////// //
