@@ -96,7 +96,7 @@ export default function authRoutes(root) {
       },
     },
     {
-      path: '/student/lecture/live',
+      path: '/student/lecture/:scId/live',
       name: 'StudentLectureLive',
       component: StudentLectureLive,
       meta: {
