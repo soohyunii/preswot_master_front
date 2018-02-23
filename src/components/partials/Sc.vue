@@ -30,8 +30,7 @@
                     class="list-group-item"
                     :key="item.id"
                     :type="item.type"
-                    :index="index"
-                    :after-start-date-offset-sec="afterStartDateOffsetSec" />
+                    :index="index" />
                 </transition-group>
               </draggable>
             </el-row>
