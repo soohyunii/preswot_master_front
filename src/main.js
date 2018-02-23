@@ -18,7 +18,7 @@ import router from './router';
 import store from './stores';
 import messages from './messages';
 import utils from './utils';
-import { websocketUrl } from './services/config'
+import { websocketUrl } from './services/config';
 
 
 Vue.config.productionTip = false;

@@ -240,7 +240,7 @@ export default {
   sockets: {
     connect() {
       const vm = this;
-      console.log('socket connected', vm.currentEditingScItem);
+      console.log('socket connected', vm.currentEditingScItem); // eslint-disable-line
     },
   },
   async beforeMount() {
@@ -250,6 +250,8 @@ export default {
       scId: Number.parseInt(vm.$route.params.scId, 10),
     });
     await vm.getSc();
+    vm.updateScVideoLink({ scVideoLink: vm.$route.query.link });
+    vm.putSc();
     // TODO: handle sc empty
     if (!vm.isScEmpty) {
       vm.updateCurrentEditingScItemIndex({
@@ -279,12 +281,14 @@ export default {
   methods: {
     ...mapMutations('sc', [
       'updateScId',
+      'updateScVideoLink',
     ]),
     ...mapMutations('scItem', [
       'updateCurrentEditingScItemIndex',
     ]),
     ...mapActions('sc', [
       'getSc',
+      'putSc',
     ]),
     ...mapActions('scItem', [
       'getScItem',
@@ -303,11 +307,11 @@ export default {
           break;
         }
         case 'TEMP_ACTIVATE': {
-          console.log('ta');
+          console.log('ta'); // eslint-disable-line
           break;
         }
         case 'TEMP_DEACTIVATE': {
-          console.log('tda');
+          console.log('tda'); // eslint-disable-line
           break;
         }
         default: {
