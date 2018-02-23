@@ -73,7 +73,7 @@
                   <div v-if="currentEditingScItemType === '문항'">
                     TODO: 문항~~
                   </div>
-                  <sc-active-time-editor />
+                  <sc-active-time-editor :type="currentEditingScItemType" />
 
                 </el-col>
               </el-row>

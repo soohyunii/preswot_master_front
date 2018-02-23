@@ -53,10 +53,13 @@
           </div>
 
 
-          <el-form-item label="선지별 선택 비율">
+          <el-form-item
+            v-if="['문항', '설문'].includes(type)"
+            :label="showingResultLabel"
+          >
             <el-radio-group v-model="scItemIsResultVisible" @change="onChange('RESULT')">
-              <el-radio-button :label="true">보이기</el-radio-button>
-              <el-radio-button :label="false">숨기기</el-radio-button>
+              <el-radio-button :label="true">공개</el-radio-button>
+              <el-radio-button :label="false">비공개</el-radio-button>
             </el-radio-group>
           </el-form-item>
           <i class="el-icon-loading" v-if="loading.RESULT" />
@@ -72,6 +75,7 @@ import { mapState, mapMutations, mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'ScActiveTimeEditor',
+  props: ['type'],
   data() {
     return {
       shouldDeactivated: true,
@@ -121,6 +125,15 @@ export default {
       res.scItemStartDate = vm.scItemStartDate;
       res.scItemEndDate = vm.scItemEndDate;
       return res;
+    },
+    showingResultLabel() {
+      const vm = this;
+      if (vm.type === '설문') {
+        return '설문결과';
+      } else if (vm.type === '문항') {
+        return '문항결과';
+      }
+      return null;
     },
     scItemOrder: {
       get() {
