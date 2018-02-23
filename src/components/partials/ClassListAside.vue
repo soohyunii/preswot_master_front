@@ -1,5 +1,5 @@
 <template>
-  <el-aside width="150px" id="teacher_class_list_aside">
+  <el-aside width="150px" class="class_list_aside">
     <el-row>
       <el-col
         align="center"
@@ -41,7 +41,7 @@
 </template>
 
 <style lang="scss" scoped>
-#teacher_class_list_aside {
+.class_list_aside {
   padding-top: 20px;
   .class-btn {
     width: 120px;
@@ -58,7 +58,7 @@ import { mapState, mapMutations, mapActions } from 'vuex';
 // import teacherService from '../../services/teacherService';
 
 export default {
-  name: 'TeachingClassListAside',
+  name: 'ClassListAside',
   data() {
     return {
       truncateLength: 10,
@@ -99,7 +99,9 @@ export default {
     const vm = this;
 
     await vm.getMyClassLists();
+    await vm.$nextTick();
     vm.$forceUpdate();
+
     // const classList = await teacherService.fetchTeachingClassList();
     // console.log('classList', classList);
     // vm.updateTeachingClassList({ classList });

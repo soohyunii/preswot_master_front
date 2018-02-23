@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <el-container>
-      <teaching-class-list-aside />
+      <class-list-aside />
 
       <el-main>
         <div
@@ -52,9 +52,7 @@
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 import ClassScenario from '../partials/ClassScenario';
 import ClassStatistics from '../partials/ClassStatistics';
-import TeachingClassListAside from '../partials/TeachingClassListAside';
-// import teacherService from '../../services/teacherService';
-// import classService from '../../services/classService';
+import ClassListAside from '../partials/ClassListAside';
 
 
 export default {
@@ -69,7 +67,7 @@ export default {
   components: {
     ClassScenario,
     ClassStatistics,
-    TeachingClassListAside,
+    ClassListAside,
   },
   methods: {
     ...mapMutations('class', ['deleteTeachingClass']),
