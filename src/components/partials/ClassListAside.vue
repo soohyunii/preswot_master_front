@@ -28,7 +28,7 @@
           </el-button>
         </el-tooltip>
       </el-col>
-      <el-col align="center">
+      <el-col align="center" v-if="type === 'TEACH'">
         <!-- TODO: Implement adding lecture part -->
         <!-- TODO: translation -->
         <el-button class="class-btn" @click="clickAddButton()">
