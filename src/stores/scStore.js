@@ -24,6 +24,7 @@ export default {
     scEndDate: null,
     scDescription: null,
     scKnowledgeMap: null,
+    scVideoLink: null,
     currentEditingNodeIndex: null,
     nodes: [],
     edges: [],
@@ -48,6 +49,9 @@ export default {
     },
     updateScEndDate(state, { scEndDate }) {
       state.scEndDate = scEndDate;
+    },
+    updateScVideoLink(state, { scVideoLink }) {
+      state.scVideoLink = scVideoLink;
     },
     updateScDescription(state, { scDescription }) {
       state.scDescription = scDescription;
@@ -217,6 +221,7 @@ export default {
         location: null,
         // TODO: add state.scIsOpen,
         opened: true,
+        videoLink: state.scVideoLink,
         teacherEmail: utils.getEmailFromJwt(),
         type,
       });

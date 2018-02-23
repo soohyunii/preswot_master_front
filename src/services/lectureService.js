@@ -33,6 +33,7 @@ export default {
     startDate,
     endDate,
     opened,
+    videoLink,
     teacherEmail,
   }) {
     const param = {};
@@ -45,6 +46,7 @@ export default {
     utils.assignIfNotNil(param, { startDate }, 'intended_start');
     utils.assignIfNotNil(param, { endDate }, 'intended_end');
     utils.assignIfNotNil(param, { opened });
+    utils.assignIfNotNil(param, { videoLink }, 'video_link');
     utils.assignIfNotNil(param, { teacherEmail }, 'teacher_email');
 
     // console.log('param', param);

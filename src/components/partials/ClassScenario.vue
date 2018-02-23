@@ -233,7 +233,7 @@ export default {
         case 'CONFIRM': {
           try {
             // TODO: send link to backend server
-
+            // TODO: link validation should be needed
             // If Success
             vm.$router.push({
               path: `/a/teacher/lecture/${vm.scId}/live`,

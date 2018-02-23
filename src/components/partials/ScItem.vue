@@ -127,7 +127,7 @@ export default {
       const selected = vm.index === vm.currentEditingScItemIndex;
       return {
         selected,
-        'nonActive': !vm.isActiveItem(),
+        nonActive: !vm.isActiveItem(),
       };
     },
     isActiveItem() {
