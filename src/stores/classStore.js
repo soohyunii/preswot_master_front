@@ -173,14 +173,10 @@ export default {
         throw new Error('invalid');
       }
       // TODO: pass intendedLectureNum
-      const res = await classService.postClass(state.newClass);
-      if (res.data && res.data.success) {
-        return res;
-      }
-      throw new Error(`create class failed ${res.status}`);
+      await classService.postClass(state.newClass);
     },
     async putClass({ getters }) {
-      const res = await classService.putClass({
+      await classService.putClass({
         name: getters.currentClass.name,
         description: getters.currentClass.description,
         activeStartDate: getters.currentClass.start_time,
@@ -188,10 +184,6 @@ export default {
         opened: getters.currentClass.opened,
         id: getters.currentClass.class_id,
       });
-      if (res.data && res.data.success) {
-        return res;
-      }
-      throw new Error(`edit class failed ${res.status}`);
     },
     async getClass({ state, getters, commit }) {
       if (state.currentClassIndex === null) {

@@ -37,10 +37,20 @@
             </el-date-picker>
             <el-radio-group v-model="shouldDeactivated" @change="changeShouldDeactivated">
               <el-radio-button :label="true">비활성화</el-radio-button>
-              <el-radio-button :label="false">계속 활성화</el-radio-button>
+              <el-radio-button :label="false" :disabled="scItemOrder === 2">계속 활성화</el-radio-button>
             </el-radio-group>
           </el-form-item>
           <i class="el-icon-loading" v-if="loading.END_DATE" />
+          <div v-if="scItemOrder === 2" style="text-indent: 120px; color: red;">
+            <h5>
+              복습에는 비활성화 시각이 반드시 필요합니다.
+              <span style="text-indent: 0px;">
+              <el-tooltip class="item" effect="dark" content="이 시간을 기준으로 서버에서 자동채점이 수행됩니다" placement="right">
+                <i class="el-icon-warning" />
+              </el-tooltip>
+              </span>
+            </h5>
+          </div>
 
 
           <el-form-item
@@ -136,6 +146,9 @@ export default {
       },
       set(scItemOrder) {
         const vm = this;
+        if (scItemOrder === 2) {
+          vm.shouldDeactivated = true;
+        }
         vm.assignCurrentEditingScItem({
           currentEditingScItem: {
             order: scItemOrder,
