@@ -3,6 +3,7 @@ import Profile from '../components/pages/Profile';
 import TeacherClassIndex from '../components/pages/TeacherClassIndex';
 import TeacherLectureNew from '../components/pages/TeacherLectureNew';
 import TeacherLectureLive from '../components/pages/TeacherLectureLive';
+import StudentClassIndex from '../components/pages/StudentClassIndex';
 import StudentLectureLive from '../components/pages/StudentLectureLive';
 import TeacherClassNew from '../components/pages/TeacherClassNew';
 import TeacherClassEdit from '../components/pages/TeacherClassEdit';
@@ -92,6 +93,15 @@ export default function authRoutes(root) {
       component: TeacherLectureLive,
       meta: {
         title: 'Teacher New Live', // TODO: import from i18n
+        auth: true,
+      },
+    },
+    {
+      path: '/student/class/',
+      name: 'StudentClass',
+      component: StudentClassIndex,
+      meta: {
+        title: 'Student Class Index', // TODO: import from i18n
         auth: true,
       },
     },

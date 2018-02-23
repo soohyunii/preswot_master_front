@@ -75,7 +75,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations('class', ['assignCurrentClass']),
+    ...mapMutations('class', ['assignCurrentTeachingClass']),
     ...mapActions('class', ['putClass']),
     changeShouldDeactivated(label) {
       const vm = this;
@@ -104,7 +104,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters('class', ['currentClass']),
+    ...mapGetters('class', ['currentTeachingClass']),
     input() {
       const res = {};
       const vm = this;
@@ -114,12 +114,12 @@ export default {
     title: {
       get() {
         const vm = this;
-        return vm.currentClass.name;
+        return vm.currentTeachingClass.name;
       },
       set(name) {
         const vm = this;
-        vm.assignCurrentClass({
-          currentClass: {
+        vm.assignCurrentTeachingClass({
+          currentTeachingClass: {
             name,
           },
         });
@@ -128,12 +128,12 @@ export default {
     description: {
       get() {
         const vm = this;
-        return vm.currentClass.description;
+        return vm.currentTeachingClass.description;
       },
       set(description) {
         const vm = this;
-        vm.assignCurrentClass({
-          currentClass: {
+        vm.assignCurrentTeachingClass({
+          currentTeachingClass: {
             description,
           },
         });
@@ -142,12 +142,12 @@ export default {
     activeStartDate: {
       get() {
         const vm = this;
-        return vm.currentClass.start_time;
+        return vm.currentTeachingClass.start_time;
       },
       set(activeStartDate) {
         const vm = this;
-        vm.assignCurrentClass({
-          currentClass: {
+        vm.assignCurrentTeachingClass({
+          currentTeachingClass: {
             start_time: activeStartDate,
           },
         });
@@ -156,12 +156,12 @@ export default {
     activeEndDate: {
       get() {
         const vm = this;
-        return vm.currentClass.end_time;
+        return vm.currentTeachingClass.end_time;
       },
       set(activeEndDate) {
         const vm = this;
-        vm.assignCurrentClass({
-          currentClass: {
+        vm.assignCurrentTeachingClass({
+          currentTeachingClass: {
             end_time: activeEndDate,
           },
         });
@@ -170,12 +170,12 @@ export default {
     opened: {
       get() {
         const vm = this;
-        return vm.currentClass.opened;
+        return vm.currentTeachingClass.opened;
       },
       set(opened) {
         const vm = this;
-        vm.assignCurrentClass({
-          currentClass: {
+        vm.assignCurrentTeachingClass({
+          currentTeachingClass: {
             opened,
           },
         });
