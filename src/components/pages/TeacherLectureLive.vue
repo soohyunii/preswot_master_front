@@ -252,10 +252,7 @@ export default {
     await vm.getSc();
     vm.updateScVideoLink({ scVideoLink: vm.$route.query.link });
     vm.putSc();
-    vm.updateOffsetSecNowDate();
-    vm.setIntervalReturn = setInterval(() => {
-      vm.updateOffsetSecNowDate();
-    }, 1000);
+    vm.setIntervalId = vm.updateOffsetSecNowDate();
     // TODO: handle sc empty
     if (!vm.isScEmpty) {
       vm.updateCurrentEditingScItemIndex({
@@ -279,7 +276,7 @@ export default {
       lectureId: 1,
       youtubeId: '',
       isPlayerVisible: true,
-      setIntervalReturn: null,
+      setIntervalId: null,
     };
   },
   methods: {
@@ -352,7 +349,7 @@ export default {
   },
   destroyed() {
     const vm = this;
-    clearInterval(vm.setIntervalReturn);
+    clearInterval(vm.setIntervalId);
   },
 };
 </script>

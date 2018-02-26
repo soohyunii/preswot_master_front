@@ -140,10 +140,16 @@ export default {
   },
   actions: {
     updateOffsetSecNowDate({ state, commit }) {
-      const now = new Date().getTime();
       const startDate = state.scStartDate.getTime();
-      const diff = Math.floor((now - startDate) / 1000);
+      let now = new Date().getTime();
+      let diff = Math.floor((now - startDate) / 1000);
       commit('updateAfterStartDateOffsetSec', { diff });
+
+      return setInterval(() => {
+        now = new Date().getTime();
+        diff = Math.floor((now - startDate) / 1000);
+        commit('updateAfterStartDateOffsetSec', { diff });
+      }, 1000);
     },
     async getSc({ state, commit }) {
       const res = await lectureService.getLecture({
