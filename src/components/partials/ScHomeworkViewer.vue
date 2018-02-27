@@ -40,7 +40,6 @@ export default {
     onClick(index) {
       const vm = this;
       const file = vm.fileList[index];
-      // window.location.href = file.url;
       utils.downloadFile(file.url, file.name);
     },
   },

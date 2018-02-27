@@ -38,7 +38,6 @@ export default {
     mScore() {
       const vm = this;
       const m = vm.currentEditingScItem.material;
-      console.log('m', m);
       return m ? m.score : 0;
     },
     fileList() {
