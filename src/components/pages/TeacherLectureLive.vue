@@ -307,7 +307,9 @@ export default {
           break;
         }
         case 'TEMP_ACTIVATE': {
+          const test = this.$socket.emit('test');
           console.log('ta'); // eslint-disable-line
+          console.log(test);// eslint-disable-line
           break;
         }
         case 'TEMP_DEACTIVATE': {
