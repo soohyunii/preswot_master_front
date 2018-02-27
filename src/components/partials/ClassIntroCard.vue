@@ -2,7 +2,12 @@
   <el-card>
     <div slot="header" class="clear-fix">
       <b>{{ props.title }}</b>
-      <el-button type="primary" size="mini" style="float: right;">
+      <el-button
+        @click="props.onClick('APPLY', props.classId)"
+        type="primary"
+        size="mini"
+        style="float: right;"
+      >
         수강 신청
       </el-button>
     </div>
@@ -55,6 +60,14 @@ export default {
     },
     labelSpan: {
       type: Number,
+      required: true,
+    },
+    classId: {
+      type: Number,
+      required: true,
+    },
+    onClick: {
+      type: Function,
       required: true,
     },
     startDateStr: String,

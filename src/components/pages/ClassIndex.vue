@@ -10,6 +10,8 @@
         <class-intro-card
           :title="item.name"
           :description="item.description"
+          :classId="item.class_id"
+          :onClick="onClick"
           :label-span="5"
           :teacher-list="[item.master.email_id]"
           :start-date-str="formatDate(item.start_item)"
@@ -41,6 +43,17 @@ export default {
   methods: {
     ...mapActions('class', ['getClassLists']),
     formatDate: utils.formatDate,
+    onClick(type, data) {
+      switch (type) {
+        case 'APPLY': {
+          console.log('data', data);
+          break;
+        }
+        default: {
+          throw new Error(`not defined type ${type}`);
+        }
+      }
+    },
   },
 };
 </script>
