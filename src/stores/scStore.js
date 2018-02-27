@@ -211,7 +211,7 @@ export default {
     },
     async createSc({ rootGetters }) {
       const userId = rootGetters['auth/userId'];
-      const classId = rootGetters['class/currentClass'].class_id;
+      const classId = rootGetters['class/currentTeachingClass'].class_id;
 
       const res = await lectureService.postLecture({
         classId,
