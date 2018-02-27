@@ -50,6 +50,8 @@
               TODO:
               학생이 문제 보고
               문제 풀 수 있는 공간
+              <sc-common-viewer />
+              <sc-material-viewer v-if="currentEditingScItemType === '강의자료'" />
               <!-- <h1>아이템 편집</h1>
               <sc-common-editor />
               <sc-material-editor v-if="currentEditingScItemType === '강의자료'" />
@@ -72,12 +74,16 @@ import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
 
 import Sc from '../partials/Sc';
 import StudentLectureLiveSummary from '../partials/StudentLectureLiveSummary';
+import ScCommonViewer from '../partials/ScCommonViewer';
+import ScMaterialViewer from '../partials/ScMaterialViewer';
 
 export default {
   name: 'StudentLectureLive',
   components: {
     Sc,
     StudentLectureLiveSummary,
+    ScCommonViewer,
+    ScMaterialViewer,
   },
   data() {
     return {
@@ -113,14 +119,14 @@ export default {
       'isScEmpty',
       'currentEditingScItem',
     ]),
-    // currentEditingScItemType() {
-    //   const vm = this;
-    //   const item = vm.currentEditingScItem;
-    //   if (!item) {
-    //     return null;
-    //   }
-    //   return item.type;
-    // },
+    currentEditingScItemType() {
+      const vm = this;
+      const item = vm.currentEditingScItem;
+      if (!item) {
+        return null;
+      }
+      return item.type;
+    },
   },
   methods: {
     ...mapMutations('sc', [
