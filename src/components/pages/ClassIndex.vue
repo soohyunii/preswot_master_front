@@ -1,16 +1,23 @@
 <template>
   <div>
-    <h1>
-      Whole Class Home template, 전체 강의 목록 <br />
-      (왼쪽 네비게이션 '과목 리스트' 눌렀을 떄 나오는 화면) <br />
-      Whole Class List라고 하지 않은 이유는 List는 partials에 들어갈 것 같은 어감이라, <br />
-      더 큰 단위로 Home!
-    </h1>
+    <class-intro-card
+      title="타이틀 어쩌고"
+      description="설명 저쩌고"
+      :label-span="5"
+      :teacher-list="['a', 'b']"
+      :start-date-str="'ddd'"
+      :end-date-str="'fffff'"
+    />
   </div>
 </template>
 
 <script>
+import ClassIntroCard from '../partials/ClassIntroCard';
+
 export default {
   name: 'ClassIndex',
+  components: {
+    ClassIntroCard,
+  },
 };
 </script>
