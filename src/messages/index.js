@@ -66,10 +66,10 @@ export default {
       "QUESTION": "Question",
       "SURVEY": "Survey",
       "HOMEWORK": "Homework",
-      "LECTURE_DATA": "Lecture data"
+      "MATERIAL": "Material"
     },
     "ADDER": {
-      "SEQUENCE_AUTHORING_TOOL": "Sequence authoring tool"
+      "ITEM_ADDER": "Item Adder"
     }
   },
   "ko": {
@@ -138,10 +138,10 @@ export default {
       "QUESTION": "문항",
       "SURVEY": "설문",
       "HOMEWORK": "숙제",
-      "LECTURE_DATA": "강의자료"
+      "MATERIAL": "강의자료"
     },
     "ADDER": {
-      "SEQUENCE_AUTHORING_TOOL": "시퀀스 저작 도구"
+      "ITEM_ADDER": "아이템 추가 도구\n"
     }
   }
 }

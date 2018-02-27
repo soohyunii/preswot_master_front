@@ -1,5 +1,7 @@
 <template>
-  <div class="wrapper" :class="index === currentEditingScItemIndex ? selectedClass : ''" @click="onClick('SELECT_SC_ITEM',index)">
+  <div class="wrapper"
+  :class="itemClass()"
+  @click="onClick('SELECT_SC_ITEM',index)">
     <el-col align="center">
       <!-- TODO: change icons -->
       <div class="image">
@@ -7,13 +9,13 @@
         <i class="el-icon-error" style="color:red; vertical-align:top" @click.stop="onClick('deleteIcon',index)"></i><br/>
       </div>
       <div class="label-time">{{ scActiveTime }}</div>
-      <div class="label-duration">{{ scActiveDurationTime }}</div>
+      <div class="label-duration">{{ scOrder }}</div>
     </el-col>
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations, mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'ScItem',
@@ -21,33 +23,75 @@ export default {
   data() {
     return {
       selectedClass: 'selected',
+      nonActiveItem: 'nonActive',
+      tempActive: false,
     };
   },
   methods: {
-    ...mapMutations('teacher', [
-      'deleteScItem',
+    ...mapMutations('scItem', [
+      'removeScItem',
       'assignCurrentEditingScItem',
-      'assignCurrentEditingScItemIndex',
+      'updateCurrentEditingScItemIndex',
     ]),
-    onClick(type, index) {
+    ...mapActions('scItem', ['deleteScItem', 'getScItem', 'getItemKeywords']),
+    async onClick(type, index) {
       const vm = this;
       switch (type) {
         case 'SELECT_SC_ITEM': {
           if (vm.sc.length > index) {
-            vm.assignCurrentEditingScItemIndex({
+            await vm.updateCurrentEditingScItemIndex({
               currentEditingScItemIndex: index,
             });
+            await vm.getScItem({
+              scItemId: vm.currentEditingScItem.id,
+            });
+            if (['문항', '강의자료'].includes(vm.type)) {
+              await vm.getItemKeywords();
+            }
           } else {
-            vm.assignCurrentEditingScItemIndex({
+            vm.updateCurrentEditingScItemIndex({
               currentEditingScItemIndex: -1,
             });
           }
           break;
         }
         case 'deleteIcon': {
-          vm.deleteScItem({
-            lectureElementIndex: index,
-          });
+          vm.$confirm('정말로 이 시나리오 아이템을 삭제하시겠습니까?', `${vm.currentEditingScItem || ''} 삭제`, {
+            confirmButtonText: '예, 삭제합니다.',
+            cancelButtonText: '아니요, 삭제하지 않습니다.',
+            type: 'warning',
+          })
+            .then(async () => {
+              try {
+                await vm.deleteScItem({
+                  scItemIndex: index,
+                });
+                vm.removeScItem({
+                  lectureElementIndex: index,
+                });
+                vm.$notify({
+                  title: '삭제됨',
+                  message: '시나리오 아이템이 삭제됨',
+                  type: 'success',
+                  duration: 3000,
+                });
+              } catch (error) {
+                vm.$notify({
+                  title: '시나리오 아이템 삭제 실패',
+                  message: error.toString(),
+                  type: 'error',
+                  duration: 3000,
+                });
+              }
+            })
+            .catch(() => {
+              vm.$notify({
+                title: '취소됨',
+                message: '시나리오 아이템 삭제 취소됨',
+                type: 'info',
+                duration: 3000,
+              });
+            });
           break;
         }
         default : {
@@ -78,27 +122,75 @@ export default {
       }
       return icon;
     },
+    itemClass() {
+      const vm = this;
+      const selected = vm.index === vm.currentEditingScItemIndex;
+      return {
+        selected,
+        nonActive: !vm.isActiveItem(),
+      };
+    },
+    isActiveItem() {
+      const vm = this;
+      if (vm.tempActive) {
+        return true;
+      }
+      if (!(vm.$route.name === 'TeacherLectureLive')) {
+        return true;
+      }
+      const startTime = vm.sc[vm.index].activeStartOffsetSec;
+      const endTime = vm.sc[vm.index].activeEndOffsetSec;
+      const isAfterStartTime = startTime <= vm.afterStartDateOffsetSec;
+      const isBeforeEndTime = endTime ? vm.afterStartDateOffsetSec <= endTime : true;
+      if (isAfterStartTime && isBeforeEndTime) {
+        return true;
+      }
+      return false;
+    },
   },
   computed: {
-    ...mapState('teacher', ['sc', 'currentEditingScItemIndex']),
+    ...mapState('scItem', ['sc', 'currentEditingScItemIndex']),
+    ...mapGetters('scItem', ['currentEditingScItem']),
+    ...mapState('sc', ['afterStartDateOffsetSec']),
     scActiveTime: {
       get() {
         const vm = this;
-        const time = vm.sc[vm.index].activeTime;
+        const time = vm.sc[vm.index].activeStartOffsetSec;
         if (time) {
-          return `${time.getHours() < 10 ? '0' : ''}${time.getHours()}:${time.getMinutes() < 10 ? '0' : ''}${time.getMinutes()}:${time.getSeconds() < 10 ? '0' : ''}${time.getSeconds()}`;
+          let hours = Math.floor(time / 3600);
+          let minutes = Math.floor((time - (hours * 3600)) / 60);
+          let seconds = time - (hours * 3600) - (minutes * 60);
+          if (hours < 10) { hours = `0${hours}`; }
+          if (minutes < 10) { minutes = `0${minutes}`; }
+          if (seconds < 10) { seconds = `0${seconds}`; }
+          return `${hours}:${minutes}:${seconds}`;
         }
         return '00:00:00';
       },
     },
-    scActiveDurationTime: {
+    scOrder: {
       get() {
         const vm = this;
-        const time = vm.sc[vm.index].activeDurationTime;
-        if (time && (time.getMinutes() !== 0 || time.getSeconds() !== 0)) {
-          return `${time.getMinutes() !== 0 ? `${time.getMinutes()}m` : ''} ${time.getSeconds() !== 0 ? `${time.getSeconds()}s` : ''}`;
+        const order = vm.sc[vm.index].order;
+        let scOrder = '';
+        switch (order) {
+          case 0: {
+            scOrder = '예습';
+            break;
+          }
+          case 1: {
+            scOrder = '본강의';
+            break;
+          }
+          case 2: {
+            scOrder = '복습';
+            break;
+          }
+          default: {
+            throw new Error(`not defined order ${order}`);
+          }
         }
-        return '0s';
+        return scOrder;
       },
     },
   },
@@ -114,6 +206,10 @@ export default {
 
   .selected {
     background-color: #dcdfe6;
+  }
+
+  .nonActive {
+    opacity: 0.3;
   }
 
   .image {

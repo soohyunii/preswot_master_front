@@ -28,7 +28,7 @@
                   <sc-item
                     v-for="(item, index) in sc"
                     class="list-group-item"
-                    :key="item.key"
+                    :key="item.id"
                     :type="item.type"
                     :index="index" />
                 </transition-group>
@@ -111,6 +111,7 @@ import ScItem from './ScItem';
 
 export default {
   name: 'Sc',
+  props: ['afterStartDateOffsetSec'],
   data() {
     return {
       drag: false,
@@ -120,22 +121,24 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('teacher', ['isScEmpty', 'currentEditingScItem']),
+    ...mapGetters('scItem', [
+      'currentEditingScItem',
+      'isScEmpty',
+    ]),
     sc: {
       get() {
-        return this.$store.state.teacher.sc;
+        return this.$store.state.scItem.sc;
       },
       set(sc) {
         const vm = this;
-        const beforeUuuuuddateCurrentEditingScItem = vm.currentEditingScItem;
+        const beforeUpdateCurrentEditingScItem = vm.currentEditingScItem;
         if (sc) {
           vm.updateSc({ sc });
         }
-        const index = sc.map(x => x.key).indexOf(beforeUuuuuddateCurrentEditingScItem.key);
+        const index = sc.map(x => x.id).indexOf(beforeUpdateCurrentEditingScItem.id);
         if (index !== -1) {
-          vm.assignCurrentEditingScItem({
-            currentEditingScItem: beforeUuuuuddateCurrentEditingScItem,
-            lectureElementIndex: index,
+          vm.updateCurrentEditingScItemIndex({
+            currentEditingScItemIndex: index,
           });
         }
       },
@@ -148,7 +151,11 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', ['updateSc', 'assignCurrentEditingScItem']),
+    ...mapMutations('sc', ['updateSc']),
+    ...mapMutations('scItem', [
+      'assignCurrentEditingScItem',
+      'updateCurrentEditingScItemIndex',
+    ]),
     updateLabelStyle() {
       const vm = this;
       const main = this.$refs.main;

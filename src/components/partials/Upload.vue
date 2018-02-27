@@ -3,51 +3,60 @@
     <!-- TODO: action path -->
     <el-upload
       action="#"
-      :auto-upload="false"
-      :on-change="handleChange"
+      :auto-upload="true"
       :on-remove="handleRemove"
       :file-list="fileList"
       multiple
       :limit="5"
       :on-exceed="handleExceed"
       :before-remove="beforeRemove"
+      :http-request="doUpload"
+      :on-error="handleError"
+      :on-success="handleSuccess"
       ref="upload">
       <el-button slot="trigger" size="small" type="primary">파일추가 [+]</el-button>
-      <el-button size="small" type="success" @click="submitUpload">upload Test</el-button>
     </el-upload>
+    <i class="el-icon-loading" v-if="loading" />
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations, mapGetters, mapActions } from 'vuex';
 
 
 export default {
   name: 'Upload',
-  props: ['type'],
+  props: ['from'],
+  data() {
+    return {
+      loading: false,
+    };
+  },
   computed: {
-    ...mapState('teacher', ['sc']),
+    ...mapState('scItem', ['sc']),
+    ...mapGetters('scItem', ['currentEditingScItem']),
     fileList: {
       get() {
         const vm = this;
-        switch (vm.type.from) {
-          default:
-            throw new Error(`not defined type ${vm.type.from}`);
+        switch (vm.from) {
+          case 'ScQuestionEditor':
+          case 'ScSurveyEditor':
+          case 'ScHomeworkEditor':
           case 'ScMaterialEditor': {
-            // for fileList from ScMaterialEditor
-            const index = vm.type.currentEditingScItemIndex;
-            if (index !== null && index > -1) {
-              // FIXME: replace with currentEditingScItem
-              return vm.sc[vm.type.currentEditingScItemIndex].fileList || [];
-            }
-            return [];
+            const scItem = vm.currentEditingScItem;
+            return scItem ? scItem.fileList : [];
+          }
+          default: {
+            throw new Error(`not defined type ${vm.type.from}`);
           }
         }
       },
       set(fileList) {
         const vm = this;
-        switch (vm.type.from) {
-          default:
+        switch (vm.from) {
+          case 'ScQuestionEditor':
+          case 'ScSurveyEditor':
+          case 'ScHomeworkEditor':
           case 'ScMaterialEditor': {
             // for fileList of ScMaterialEditor
             vm.assignCurrentEditingScItem({
@@ -55,17 +64,21 @@ export default {
                 fileList,
               },
             });
+            break;
+          }
+          default: {
+            break;
           }
         }
       },
     },
   },
   methods: {
-    ...mapMutations('teacher', ['assignCurrentEditingScItem']),
-    submitUpload() {
-      this.$refs.upload.submit();
-      window.console.log('upload Test');
-    },
+    ...mapMutations('scItem', ['assignCurrentEditingScItem']),
+    ...mapActions('scItem', [
+      'postFile',
+      'deleteFile',
+    ]),
     handleExceed(files, fileList) {
       // TODO: translate
       this.$message.warning(
@@ -78,13 +91,74 @@ export default {
       // TODO: translate
       return this.$confirm(`${file.name} 파일을 삭제하시겠습니까？`);
     },
-    handleRemove(file, fileList) {
+    async handleRemove(file) {
       const vm = this;
-      vm.fileList = fileList;
+      try {
+        vm.loading = true;
+        vm.deleteFile({
+          fileGuid: file.guid,
+        });
+        vm.$notify({
+          title: '삭제 성공',
+          message: `${file.name} 삭제 성공`,
+          type: 'success',
+          duration: 3000,
+        });
+      } catch (error) {
+        vm.$notify({
+          title: `${file.name} 삭제 실패`,
+          message: error.toString(),
+          type: 'error',
+          duration: 0,
+        });
+      } finally {
+        vm.loading = false;
+      }
     },
-    handleChange(files, fileList) {
+    handleSuccess(res, file) {
       const vm = this;
-      vm.fileList = fileList;
+      vm.loading = false;
+      // console.log(res, file, fileList);
+      vm.$notify({
+        title: '업로드 성공',
+        message: `${file.name} 업로드 성공`,
+        type: 'success',
+      });
+    },
+    handleError(err, file) {
+      const vm = this;
+      vm.loading = false;
+      // console.log(err, file, fileList);
+      vm.$notify({
+        title: '업로드 실패',
+        message: `${file.name} ${err}`,
+        type: 'error',
+      });
+    },
+    // handleChange(file, fileList) {
+    //   const vm = this;
+    //   // vm.fileList.push(file);
+    //   // vm.fileList = fileList;
+    //   console.log('handleChange', file, fileList);
+    // },
+    async doUpload(req) {
+      // console.log('req', req);
+      const vm = this;
+      vm.loading = true;
+      switch (vm.from) {
+        case 'ScQuestionEditor':
+        case 'ScSurveyEditor':
+        case 'ScHomeworkEditor':
+        case 'ScMaterialEditor': {
+          await vm.postFile({
+            file: req.file,
+          });
+          break;
+        }
+        default: {
+          throw new Error(`not defined from ${vm.from}`);
+        }
+      }
     },
   },
 };

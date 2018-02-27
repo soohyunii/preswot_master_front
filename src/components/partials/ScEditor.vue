@@ -4,47 +4,60 @@
       <el-col style="max-width: 600px;">
         <el-form :model="input" ref="elForm" label-width="120px">
           <el-form-item label="제목" prop="scTitle">
-            <el-input v-model="scTitle"></el-input>
+            <!-- :disabled during loading.TITLE -->
+            <el-input
+              v-model.lazy="scTitle"
+              @change="onChange('TITLE')"
+            ></el-input>
           </el-form-item>
+          <i class="el-icon-loading" v-if="loading.TITLE" />
 
-          <el-form-item label="활성화 시각" prop="scStartDatetime">
+          <el-form-item label="활성화 시각" prop="scStartDate">
             <el-date-picker
-              v-model="scStartDatetime"
-              value-format="yyyy-MM-dd HH:mm:ss"
+              v-model.lazy="scStartDate"
               type="datetime"
+              @change="onChange('START_DATE')"
             >
             </el-date-picker>
           </el-form-item>
+          <i class="el-icon-loading" v-if="loading.START_DATE" />
+
+
+          <el-form-item label="비활성화 시각" prop="scEndDate">
+            <el-date-picker
+              v-model.lazy="scEndDate"
+              type="datetime"
+              @change="onChange('END_DATE')"
+            >
+            </el-date-picker>
+          </el-form-item>
+          <i class="el-icon-loading" v-if="loading.END_DATE" />
+
 
           <el-form-item label="타입" prop="scType">
-            <el-radio-group v-model="scType">
+            <el-radio-group
+              v-model.lazy="scType"
+              @change="onChange('TYPE')"
+            >
               <el-radio-button label="강의"></el-radio-button>
               <el-radio-button label="숙제"></el-radio-button>
               <el-radio-button label="퀴즈"></el-radio-button>
               <el-radio-button label="시험"></el-radio-button>
             </el-radio-group>
           </el-form-item>
+          <i class="el-icon-loading" v-if="loading.TYPE" />
 
           <el-form-item label="설명" prop="scDescription">
             <el-input
               type="textarea"
               :rows="3"
-              v-model="scDescription"
+              v-model.lazy="scDescription"
               placeholder="dd"
+              @change="onChange('DESCRIPTION')"
             >
             </el-input>
           </el-form-item>
-
-          <!-- TODO: implement 지식맵 -->
-          <el-form-item label="지식맵" prop="scDescription">
-            <el-input
-              type="textarea"
-              :rows="3"
-              v-model="scDescription"
-              placeholder="dd"
-            >
-            </el-input>
-          </el-form-item>
+          <i class="el-icon-loading" v-if="loading.DESCRIPTION" />
         </el-form>
       </el-col>
     </el-row>
@@ -52,12 +65,26 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapActions } from 'vuex';
+
+// function delay(delayMillisec) {
+//   return new Promise((fulfill) => {
+//     setTimeout(fulfill, delayMillisec);
+//   });
+// }
 
 export default {
   name: 'ScEditor',
   data() {
-    return {};
+    return {
+      loading: {
+        TITLE: false,
+        START_DATE: false,
+        END_DATE: false,
+        TYPE: false,
+        DESCRIPTION: false,
+      },
+    };
   },
   computed: {
     input() {
@@ -71,7 +98,7 @@ export default {
     scTitle: {
       get() {
         const vm = this;
-        return vm.$store.state.teacher.scTitle;
+        return vm.$store.state.sc.scTitle;
       },
       set(scTitle) {
         const vm = this;
@@ -80,22 +107,34 @@ export default {
         });
       },
     },
-    scStartDatetime: {
+    scStartDate: {
       get() {
         const vm = this;
-        return vm.$store.state.teacher.scStartDatetime;
+        return vm.$store.state.sc.scStartDate;
       },
-      set(scStartDatetime) {
+      set(scStartDate) {
         const vm = this;
-        vm.updateScStartDatetime({
-          scStartDatetime,
+        vm.updateScStartDate({
+          scStartDate,
+        });
+      },
+    },
+    scEndDate: {
+      get() {
+        const vm = this;
+        return vm.$store.state.sc.scEndDate;
+      },
+      set(scEndDate) {
+        const vm = this;
+        vm.updateScEndDate({
+          scEndDate,
         });
       },
     },
     scType: {
       get() {
         const vm = this;
-        return vm.$store.state.teacher.scType;
+        return vm.$store.state.sc.scType;
       },
       set(scType) {
         const vm = this;
@@ -107,7 +146,7 @@ export default {
     scDescription: {
       get() {
         const vm = this;
-        return vm.$store.state.teacher.scDescription;
+        return vm.$store.state.sc.scDescription;
       },
       set(scDescription) {
         const vm = this;
@@ -118,12 +157,37 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('teacher', [
+    ...mapMutations('sc', [
       'updateScTitle',
       'updateScDescription',
       'updateScType',
-      'updateScStartDatetime',
+      'updateScStartDate',
+      'updateScEndDate',
     ]),
+    ...mapActions('sc', [
+      'putScTitle',
+      'putScStartDate',
+      'putScEndDate',
+      'putScType',
+      'putScDescription',
+      'putSc',
+    ]),
+    async onChange(type) {
+      const vm = this;
+      try {
+        vm.loading[type] = true;
+        await vm.putSc();
+      } catch (error) {
+        vm.$notify({
+          title: '저장 실패',
+          message: error.toString(),
+          type: 'error',
+          duration: 0,
+        });
+      } finally {
+        vm.loading[type] = false;
+      }
+    },
   },
 };
 </script>

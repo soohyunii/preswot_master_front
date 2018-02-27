@@ -22,8 +22,6 @@ export default {
     });
   },
   register({ input }) {
-    return http.post('/users', {
-      data: input,
-    });
+    return http.post('/users', input);
   },
 };
