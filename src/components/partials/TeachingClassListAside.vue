@@ -76,6 +76,7 @@ export default {
     ]),
     ...mapActions('class', [
       'getMyClassLists',
+      'getKnowledgeMapData',
     ]),
     clickAddButton() {
       const vm = this;
@@ -93,6 +94,7 @@ export default {
       vm.updateCurrentClassIndex({
         currentClassIndex: index,
       });
+      vm.getKnowledgeMapData();
     },
   },
   async mounted() {

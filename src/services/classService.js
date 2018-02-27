@@ -13,6 +13,12 @@ export default {
   getClass({ id }) { //
     return http.get(`/classes/${id}`);
   },
+  getClassCoverage({ id }) {
+    return http.get(`/classes/${id}/coverage`);
+  },
+  getClassKeywordRelation({ id }) {
+    return http.get(`/classes/${id}/keyword-relation`);
+  },
   postClass({ //
     title,
     description,
