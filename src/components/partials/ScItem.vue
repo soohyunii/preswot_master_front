@@ -24,7 +24,7 @@ export default {
     return {
       selectedClass: 'selected',
       nonActiveItem: 'nonActive',
-      tempActive: false,
+      // tempActive: false, //eslint-disable
     };
   },
   methods: {
@@ -132,9 +132,12 @@ export default {
     },
     isActiveItem() {
       const vm = this;
-      if (vm.tempActive) {
+      if (vm.sc[vm.index].opened === 1) {
         return true;
       }
+      // if (vm.tempActive) {
+      //   return true;
+      // }
       if (!vm.afterStartDateOffsetSec) {
         return false;
       }
@@ -143,7 +146,7 @@ export default {
       const isAfterStartTime = startTime <= vm.afterStartDateOffsetSec;
       const isBeforeEndTime = endTime ? vm.afterStartDateOffsetSec <= endTime : true;
       if (isAfterStartTime && isBeforeEndTime) {
-        return true;
+        return true; // 이 부분이 항상 참으로 동작, 활성화 시간 설정여부 때문.
       }
       return false;
     },

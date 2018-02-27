@@ -293,6 +293,9 @@ export default {
     ...mapActions('scItem', [
       'getScItem',
       'getItemKeywords',
+      'setActivated',
+      'setDeActivated',
+      'putScItem',
     ]),
     onClick(type) {
       const vm = this;
@@ -307,13 +310,17 @@ export default {
           break;
         }
         case 'TEMP_ACTIVATE': {
-          const test = this.$socket.emit('test');
           console.log('ta'); // eslint-disable-line
-          console.log(test);// eslint-disable-line
+          // const test = this.$socket.emit('LECTURE_ITEM_ACTIVATION');
+          // console.log(test); // eslint-disable-line
+          vm.setActivated(vm);
+          vm.putScItem(vm);
           break;
         }
         case 'TEMP_DEACTIVATE': {
           console.log('tda'); // eslint-disable-line
+          vm.setDeActivated(vm);
+          vm.putScItem(vm);
           break;
         }
         default: {
