@@ -65,4 +65,9 @@ export default {
   }) {
     return http.delete(`/classes/${id}`);
   },
+  postClassUser({
+    id,
+  }) {
+    return http.post(`/classes/${id}/user`);
+  },
 };

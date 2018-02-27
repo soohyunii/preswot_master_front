@@ -268,5 +268,10 @@ export default {
         currentClassIndex: null,
       });
     },
+    async postClassUser(_, { classId }) {
+      await classService.postClassUser({
+        id: classId,
+      });
+    },
   },
 };

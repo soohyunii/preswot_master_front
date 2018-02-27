@@ -41,12 +41,36 @@ export default {
     ...mapState('class', ['openedClassList']),
   },
   methods: {
-    ...mapActions('class', ['getClassLists']),
+    ...mapActions('class', [
+      'getClassLists',
+      'getMyClassLists',
+      'postClassUser',
+    ]),
     formatDate: utils.formatDate,
-    onClick(type, data) {
+    async onClick(type, data) {
+      const vm = this;
       switch (type) {
         case 'APPLY': {
           console.log('data', data);
+          try {
+            await vm.postClassUser({
+              classId: data,
+            });
+            vm.$notify({
+              title: '수강 신청 요청 성공',
+              message: '메세지',
+              type: 'success',
+            });
+            vm.getClassLists();
+            vm.getMyClassLists();
+          } catch (error) {
+            vm.$notify({
+              title: '수강 신청 요청 실패',
+              message: error.toString(),
+              type: 'error',
+              duration: 0,
+            });
+          }
           break;
         }
         default: {
