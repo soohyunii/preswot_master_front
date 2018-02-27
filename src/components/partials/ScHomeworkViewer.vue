@@ -3,8 +3,6 @@
     <el-col style="max-width: 600px;">
       <el-form label-width="120px">
         <el-form-item label="파일 목록">
-          TODO: 파일 목록fff
-
           <el-button
             type="primary"
             v-for="(item, index) in fileList"
@@ -13,8 +11,6 @@
           >
             {{ item.name }} <i class="el-icon-download el-icon-right"></i>
           </el-button>
-
-          {{ fileList }}
         </el-form-item>
       </el-form>
     </el-col>
