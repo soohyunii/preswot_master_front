@@ -37,6 +37,7 @@
       <el-dialog
         title="과목 지식맵 & 워드 클라우드"
         :visible.sync="isModalVisible"
+        width="70%"
         center
       >
         <class-knowledge-map />

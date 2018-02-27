@@ -6,7 +6,7 @@
         nameKey="name"
         valueKey="value"
         fontScale="sqrt"
-        :fontSize="[10, 120]"
+        :fontSize="[20, 120]"
         :wordClick="wordClick">
       </wordcloud>
       <el-button @click="showOnlyUnderstand()">이해한 것만</el-button>
@@ -42,11 +42,12 @@ export default {
         notUnderstandClass.item(i).style.fill = vm.userUnderstandWordCloud ? 'gray' : vm.notUnderstandWordColor[i];
       }
       for (let i = 0; i < understandClass.length; i += 1) {
-        understandClass.item(i).style.textShadow = vm.userUnderstandWordCloud ? '0 0 10px #000' : '';
+        understandClass.item(i).style.textShadow = vm.userUnderstandWordCloud ? '0 0 5px #000' : '';
       }
     },
   },
   computed: {
+    /*
     words() {
       const wordarr = [];
       for (let i = 0; i < 150; i += 1) {
@@ -63,6 +64,14 @@ export default {
         wordarr.push({ name, value, understand });
       }
       return wordarr;
+    }, */
+    words() {
+      const vm = this;
+      return vm.keywords.map(item => ({
+        name: item.name,
+        value: item._size, // eslint-disable-line
+        understand: Math.random() > 0.5 ? ' notUnderstand' : ' understand',
+      }));
     },
   },
   data() {
@@ -71,6 +80,7 @@ export default {
       notUnderstandWordColor: [],
     };
   },
+  props: ['keywords'],
 };
 </script>
 

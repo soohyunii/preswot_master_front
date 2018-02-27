@@ -1,43 +1,41 @@
 <template>
   <div class="wrapper">
-    <div class="wrapper" ref="wrapper">
-      <svg style="width: 0px; height: 0px; float: left;">
-        <defs>
-          <marker id="m-end" markerWidth="10" markerHeight="10" refX="11" refY="3" orient="auto" markerUnits="strokeWidth" >
-            <path d="M0,0 L0,6 L9,3 z"></path>
-          </marker>
-          <!--
-          <marker id="m-start" markerWidth="6" markerHeight="6" refX="-4" refY="3" orient="auto" markerUnits="strokeWidth" >
-            <rect width="3" height="6"></rect>
-          </marker>-->
-        </defs>
-      </svg>
-      <div class="network">
-        <div class="bg" @click="selectReset()">
-          <d3-network
-            :net-nodes="nodes"
-            :net-links="edges"
-            :selection="{nodes: selectedNode, links: {}}"
-            :options="options"
-            :link-cb="lcb"
-            @node-click="nodeClick" />
-        </div>
-        <el-row>
-          <!-- TODO: translate -->
-          <el-col :span="4">
-            <el-switch
-              v-model="mode"
-              active-color="#13ce66"
-              active-value="PINNED"
-              active-text="선택 노드 고정"
-              inactive-value="NOT_PINNED"
-            >
-            </el-switch>
-          </el-col>
-        </el-row>
+    <svg style="width: 0px; height: 0px; float: left;">
+      <defs>
+        <marker id="m-end" markerWidth="10" markerHeight="10" refX="11" refY="3" orient="auto" markerUnits="strokeWidth" >
+          <path d="M0,0 L0,6 L9,3 z"></path>
+        </marker>
+        <!--
+        <marker id="m-start" markerWidth="6" markerHeight="6" refX="-4" refY="3" orient="auto" markerUnits="strokeWidth" >
+          <rect width="3" height="6"></rect>
+        </marker>-->
+      </defs>
+    </svg>
+    <div class="network">
+      <div class="bg" @click="selectReset()">
+        <d3-network
+          :net-nodes="nodes"
+          :net-links="edges"
+          :selection="{nodes: selectedNode, links: {}}"
+          :options="options"
+          :link-cb="lcb"
+          @node-click="nodeClick" />
       </div>
+      <el-row>
+        <!-- TODO: translate -->
+        <el-col :span="4">
+          <el-switch
+            v-model="mode"
+            active-color="#13ce66"
+            active-value="PINNED"
+            active-text="선택 노드 고정"
+            inactive-value="NOT_PINNED"
+          >
+          </el-switch>
+        </el-col>
+      </el-row>
     </div>
-    <pre>{{nodes}}</pre>
+    <word-cloud-example :keywords="nodes"/>
   </div>
 </template>
 
@@ -47,7 +45,7 @@
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex';
 import D3Network from 'vue-d3-network';
-import WordCloud from '../partials/wordCloudExample';
+import WordCloudExample from '../partials/wordCloudExample';
 
 export default {
   name: 'ClassKnowledgeMap',
@@ -82,7 +80,7 @@ export default {
   },
   components: {
     D3Network,
-    WordCloud,
+    WordCloudExample,
   },
   methods: {
     ...mapMutations('class', ['setNodesPinned']),
