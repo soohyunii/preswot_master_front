@@ -8,4 +8,7 @@ $app-gray: darken($app-oatmeal, 40%);
 
 /* element variables */
 // * Do not modify element-ui pre-defined color except primary
-$--color-primary: $app-ultra-violet;
+$--color-primary: lighten($app-ultra-violet, 10%);
+
+
+

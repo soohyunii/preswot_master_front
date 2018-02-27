@@ -82,27 +82,23 @@
 </template>
 
 <style lang="scss" scoped>
-// @import "~@/variables.scss"; // * To use $--color-primary scss variable
+  .el-input {
+    width: 400px; // TODO: Rplace 400px with designed value
+  }
 
-.el-input {
-  width: 400px; // TODO: Rplace 400px with designed value
-}
+  #navigation_toggle {
+    border: 0;
+    padding: 6px 10px;
+    vertical-align: middle;
+    // .fa.fa-bars {
+    //   top: 100px;
+    // }
+  }
 
-#navigation_toggle {
-  border: 0;
-  padding: 6px 10px;
-  vertical-align: middle;
-  // .fa.fa-bars {
-  //   top: 100px;
-  // }
-}
-
-#app_nav_wrapper {
-  padding: 8px 0;
-}
-
+  #app_nav_wrapper {
+    padding: 8px 0;
+  }
 </style>
-
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex';
