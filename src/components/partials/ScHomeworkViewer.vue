@@ -4,6 +4,17 @@
       <el-form label-width="120px">
         <el-form-item label="파일 목록">
           TODO: 파일 목록fff
+
+          <el-button
+            type="primary"
+            v-for="(item, index) in fileList"
+            :key="item.guid"
+            @click="onClick(index)"
+          >
+            {{ item.name }} <i class="el-icon-download el-icon-right"></i>
+          </el-button>
+
+          {{ fileList }}
         </el-form-item>
       </el-form>
     </el-col>
@@ -16,8 +27,25 @@
 
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'ScHomeworkViewer',
+  computed: {
+    ...mapGetters('scItem', ['currentEditingScItem']),
+    fileList() {
+      const vm = this;
+      const item = vm.currentEditingScItem;
+      return item.fileList;
+    },
+  },
+  methods: {
+    onClick(index) {
+      const vm = this;
+      const file = vm.fileList[index];
+      window.location.assign(file.url);
+    },
+  },
 };
 </script>
 
