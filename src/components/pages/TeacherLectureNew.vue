@@ -203,6 +203,7 @@ export default {
     ...mapMutations('sc', [
       'updateScType',
       'updateScId',
+      'updateAfterStartDateOffsetSec',
     ]),
     ...mapMutations('scItem', [
       'updateCurrentEditingScItemIndex',

@@ -37,7 +37,7 @@
             <el-row :gutter="30" class="sc-row">
               <el-col :span="16">
                 <div>
-                  <sc :after-start-date-offset-sec="afterStartDateOffsetSec"/>
+                  <sc />
                 </div>
               </el-col>
               <el-col :span="8">
@@ -252,6 +252,7 @@ export default {
     await vm.getSc();
     vm.updateScVideoLink({ scVideoLink: vm.$route.query.link });
     vm.putSc();
+    vm.setIntervalId = vm.updateOffsetSecNowDate();
     // TODO: handle sc empty
     if (!vm.isScEmpty) {
       vm.updateCurrentEditingScItemIndex({
@@ -275,7 +276,7 @@ export default {
       lectureId: 1,
       youtubeId: '',
       isPlayerVisible: true,
-      now: new Date(),
+      setIntervalId: null,
     };
   },
   methods: {
@@ -289,6 +290,7 @@ export default {
     ...mapActions('sc', [
       'getSc',
       'putSc',
+      'updateOffsetSecNowDate',
     ]),
     ...mapActions('scItem', [
       'getScItem',
@@ -344,19 +346,10 @@ export default {
         'fa-eye': !vm.isPlayerVisible,
       };
     },
-    afterStartDateOffsetSec() {
-      const vm = this;
-      const nowDate = vm.now ? vm.now : new Date();
-      const startDate = vm.scStartDate ? vm.scStartDate : new Date();
-      const diff = Math.floor((nowDate.getTime() - startDate.getTime()) / 1000);
-      return diff;
-    },
   },
-  created() {
+  destroyed() {
     const vm = this;
-    setInterval(() => {
-      vm.now = new Date();
-    }, 1000);
+    clearInterval(vm.setIntervalId);
   },
 };
 </script>

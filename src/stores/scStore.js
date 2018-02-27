@@ -25,6 +25,7 @@ export default {
     scDescription: null,
     scKnowledgeMap: null,
     scVideoLink: null,
+    afterStartDateOffsetSec: null,
     currentEditingNodeIndex: null,
     nodes: [],
     edges: [],
@@ -35,6 +36,9 @@ export default {
     },
   },
   mutations: {
+    updateAfterStartDateOffsetSec(state, { diff }) {
+      state.afterStartDateOffsetSec = diff;
+    },
     updateScId(state, { scId }) {
       state.scId = scId;
     },
@@ -135,6 +139,18 @@ export default {
     },
   },
   actions: {
+    updateOffsetSecNowDate({ state, commit }) {
+      const startDate = state.scStartDate.getTime();
+      let now = new Date().getTime();
+      let diff = Math.floor((now - startDate) / 1000);
+      commit('updateAfterStartDateOffsetSec', { diff });
+
+      return setInterval(() => {
+        now = new Date().getTime();
+        diff = Math.floor((now - startDate) / 1000);
+        commit('updateAfterStartDateOffsetSec', { diff });
+      }, 1000);
+    },
     async getSc({ state, commit }) {
       const res = await lectureService.getLecture({
         lectureId: state.scId,
