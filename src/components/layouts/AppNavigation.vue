@@ -28,16 +28,16 @@
           <span slot="title">수강 중인 과목</span>
         </template>
         <el-menu-item-group>
-          <template v-for="(item, key, index) in attendingClassList">
+          <template v-for="(item, key, index) in studyingClassList">
             <el-tooltip
               effect="dark"
-              :content="item.className"
-              :disabled="item.className.length < truncateLength"
+              :content="item.name"
+              :disabled="item.name.length < truncateLength"
               placement="right"
               :key="key">
               <el-menu-item :index="'3-'+index" :key="key">
                 <!-- TODO: link to each class -->
-                {{ item.className | truncate(truncateLength) }}
+                {{ item.name | truncate(truncateLength) }}
               </el-menu-item>
             </el-tooltip>
           </template>
@@ -54,13 +54,13 @@
           <template v-for="(item, key, index) in teachingClassList">
             <el-tooltip
               effect="dark"
-              :content="item.className"
-              :disabled="item.className.length < truncateLength"
+              :content="item.name"
+              :disabled="item.name.length < truncateLength"
               placement="right"
               :key="key">
               <el-menu-item :index="'4-'+index" :key="key">
                 <!-- TODO: link to each class -->
-                {{ item.className | truncate(truncateLength) }}
+                {{ item.name | truncate(truncateLength) }}
               </el-menu-item>
             </el-tooltip>
           </template>
@@ -68,10 +68,10 @@
       </el-submenu>
 
       <!-- TODO: Find a better place to be -->
-      <router-link to="/a/student/lecture/live">Student Live</router-link> <br />
-      <router-link to="/a/teacher/lecture/live">Teacher Live</router-link> <br />
+      <router-link to="/a/student/lecture/1/live">Student Live</router-link> <br />
       <router-link to="/a/test">Chart Test</router-link> <br />
       <router-link to="/a/teacher/lecture/wordCloudExample">wordCloudExample</router-link> <br />
+      <router-link to="/a/student/class">Student Class</router-link> <br />
     </el-menu>
   </div>
 </template>
@@ -112,8 +112,8 @@
 </style>
 
 <script>
-import { mapState } from 'vuex';
-import studentService from '../../services/studentService';
+import { mapState, mapActions } from 'vuex';
+// import studentService from '../../services/studentService';
 // import teacherService from '../../services/teacherService';
 
 export default {
@@ -122,32 +122,24 @@ export default {
     return {
       // isCollapse: false,
       truncateLength: 16,
-      attendingClassList: [],
-      teachingClassList: [],
     };
   },
   computed: {
     ...mapState('layout', ['isNavCollapsed']),
+    ...mapState('class', [
+      'studyingClassList',
+      'teachingClassList',
+    ]),
+  },
+  methods: {
+    ...mapActions('class', [
+      'getMyClassLists',
+    ]),
   },
   async mounted() {
     const vm = this;
-    vm.attendingClassList = await studentService.fetchAttendingClassList();
-    // vm.teachingClassList = await teacherService.fetchTeachingClassList();
-    // TODO: replace with teacherService.fetchTeachingClassList
-    vm.teachingClassList = [
-      {
-        className: 'Vue.js',
-      },
-      {
-        className: 'Node.js',
-      },
-      {
-        className: 'TensorFlow with python and C++',
-      },
-      {
-        className: 'length_test_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-      },
-    ];
+    await vm.getMyClassLists();
+    vm.$forceUpdate();
   },
 };
 </script>

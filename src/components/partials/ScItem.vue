@@ -19,7 +19,7 @@ import { mapState, mapMutations, mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'ScItem',
-  props: ['type', 'index', 'afterStartDateOffsetSec'],
+  props: ['type', 'index'],
   data() {
     return {
       selectedClass: 'selected',
@@ -135,11 +135,11 @@ export default {
       if (vm.sc[vm.index].opened === 1) {
         return true;
       }
-      // if (vm.tempActive) {
-      //   return true;
-      // }
       if (!vm.afterStartDateOffsetSec) {
         return false;
+      }
+      if (!(vm.$route.name === 'TeacherLectureLive')) {
+        return true;
       }
       const startTime = vm.sc[vm.index].activeStartOffsetSec;
       const endTime = vm.sc[vm.index].activeEndOffsetSec;
@@ -154,6 +154,7 @@ export default {
   computed: {
     ...mapState('scItem', ['sc', 'currentEditingScItemIndex']),
     ...mapGetters('scItem', ['currentEditingScItem']),
+    ...mapState('sc', ['afterStartDateOffsetSec']),
     scActiveTime: {
       get() {
         const vm = this;
