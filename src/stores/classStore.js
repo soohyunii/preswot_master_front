@@ -9,12 +9,15 @@ export default {
      * 공통 변수들
      * @var {Array[class]} teachingClassList
      */
+    openedClassList: [],
+    goingClassList: [],
+    finishedClassList: [],
     studyingClassList: [],
     teachingClassList: [],
     // //////////////////////////절취선////////////////////////// //
     /**
-     * TeacherClassIndex 관련 변수들
-     * @var {number} currentClassIndex: teachingClassList에서 선택된 과목의 index
+     * ClassListAside 관련 변수들
+     * @var {number} currentClassIndex: ClassListAside에서 선택된 과목의 index
      */
     currentClassIndex: null,
     // //////////////////////////절취선////////////////////////// //
@@ -50,6 +53,9 @@ export default {
   getters: {
     isTeachingClassListEmpty(state) {
       return state.teachingClassList.length === 0;
+    },
+    isStudyingClassListEmpty(state) {
+      return state.studyingClassList.length === 0;
     },
     isNewClassValid(state) {
       const {
@@ -87,12 +93,19 @@ export default {
       }
       return true;
     },
-    currentClass(state) {
+    currentTeachingClass(state) {
       const index = state.currentClassIndex;
       if (index === null) {
         return null;
       }
       return state.teachingClassList[index];
+    },
+    currentStudyingClass(state) {
+      const index = state.currentClassIndex;
+      if (index === null) {
+        return null;
+      }
+      return state.studyingClassList[index];
     },
   },
   mutations: {
@@ -123,6 +136,15 @@ export default {
     updateEdges(state, { edges }) {
       state.edges = edges;
     },
+    updateOpenedClassList(state, { openedClassList }) {
+      state.openedClassList = openedClassList;
+    },
+    updateGoingClassList(state, { goingClassList }) {
+      state.goingClassList = goingClassList;
+    },
+    updateFinishedClassList(state, { finishedClassList }) {
+      state.finishedClassList = finishedClassList;
+    },
     updateCurrentClassIndex(state, { currentClassIndex }) {
       state.currentClassIndex = currentClassIndex;
     },
@@ -135,11 +157,18 @@ export default {
         newClass,
       );
     },
-    assignCurrentClass(state, { currentClass }) {
+    assignCurrentStudyingClass(state, { currentStudyingClass }) {
+      const c = state.studyingClassList[state.currentClassIndex];
+      Object.assign(
+        c,
+        currentStudyingClass,
+      );
+    },
+    assignCurrentTeachingClass(state, { currentTeachingClass }) {
       const c = state.teachingClassList[state.currentClassIndex];
       Object.assign(
         c,
-        currentClass,
+        currentTeachingClass,
       );
     },
     // pushStudyingClass(state, { studyingClass, studyingClassList }) {
@@ -201,10 +230,27 @@ export default {
       commit('updateEdges', { edges });
       */
     },
+    async getClassLists({ commit }) {
+      const res = await classService.getClassLists();
+      commit('updateOpenedClassList', {
+        openedClassList: res.data.openedClasses,
+      });
+      commit('updateGoingClassList', {
+        goingClassList: res.data.goingClasses,
+      });
+      commit('updateFinishedClassList', {
+        finishedClassList: res.data.finishedClasses,
+      });
+    },
     async getMyClassLists({ commit }) {
       const res = await classService.getMyClassList();
 
       const sc = res.data.studyingClasses;
+      sc.map((item) => {
+        // eslint-disable-next-line
+        item.scenarioList = null;
+        return item;
+      });
       if (sc && sc.length !== 0) {
         commit('updateStudyingClassList', {
           studyingClassList: sc,
@@ -232,14 +278,10 @@ export default {
         throw new Error('invalid');
       }
       // TODO: pass intendedLectureNum
-      const res = await classService.postClass(state.newClass);
-      if (res.data && res.data.success) {
-        return res;
-      }
-      throw new Error(`create class failed ${res.status}`);
+      await classService.postClass(state.newClass);
     },
     async putClass({ getters }) {
-      const res = await classService.putClass({
+      await classService.putClass({
         name: getters.currentClass.name,
         description: getters.currentClass.description,
         activeStartDate: getters.currentClass.start_time,
@@ -247,32 +289,47 @@ export default {
         opened: getters.currentClass.opened,
         id: getters.currentClass.class_id,
       });
-      if (res.data && res.data.success) {
-        return res;
-      }
-      throw new Error(`edit class failed ${res.status}`);
     },
-    async getClass({ state, getters, commit }) {
+    async getClass({ state, getters, commit }, { type }) {
       if (state.currentClassIndex === null) {
         return;
       }
-      const currentClass = getters.currentClass;
+      // TODO: currentClass => currentTeaching(Studying)Class
+      let currentClass;
+      if (type === 'TEACH') {
+        currentClass = getters.currentTeachingClass;
+      } else {
+        currentClass = getters.currentStudyingClass;
+      }
       const res = await classService.getClass({
         id: currentClass.class_id,
       });
-      commit('assignCurrentClass', {
-        currentClass: {
-          scenarioList: res.data.lectures,
-        },
-      });
+      if (type === 'TEACH') {
+        commit('assignCurrentTeachingClass', {
+          currentTeachingClass: {
+            scenarioList: res.data.lectures,
+          },
+        });
+      } else {
+        commit('assignCurrentStudyingClass', {
+          currentStudyingClass: {
+            scenarioList: res.data.lectures,
+          },
+        });
+      }
     },
     async deleteClass({ getters, commit }) {
-      const currentClass = getters.currentClass;
+      const currentClass = getters.currentTeachingClass;
       await classService.delete({
         id: currentClass.class_id,
       });
       commit('updateCurrentClassIndex', {
         currentClassIndex: null,
+      });
+    },
+    async postClassUser(_, { classId }) {
+      await classService.postClassUser({
+        id: classId,
       });
     },
   },

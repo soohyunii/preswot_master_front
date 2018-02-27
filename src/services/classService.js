@@ -4,7 +4,7 @@ import http from './http';
 import utils from '../utils';
 
 export default {
-  getClasses() {
+  getClassLists() {
     return http.get('/classes');
   },
   getMyClassList() { //
@@ -70,5 +70,10 @@ export default {
     id,
   }) {
     return http.delete(`/classes/${id}`);
+  },
+  postClassUser({
+    id,
+  }) {
+    return http.post(`/classes/${id}/user`);
   },
 };

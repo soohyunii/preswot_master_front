@@ -1,9 +1,9 @@
 <template>
-  <el-aside width="150px" id="teacher_class_list_aside">
+  <el-aside width="150px" class="class_list_aside">
     <el-row>
       <el-col
         align="center"
-        v-for="(item, index) in teachingClassList"
+        v-for="(item, index) in classList"
         :key="index"
       >
         <!-- {{ item }} -->
@@ -28,10 +28,10 @@
           </el-button>
         </el-tooltip>
       </el-col>
-      <el-col align="center">
+      <el-col align="center" v-if="type === 'TEACH'">
         <!-- TODO: Implement adding lecture part -->
         <!-- TODO: translation -->
-        <el-button class="class-btn" @click="clickAddButton()">
+        <el-button v-if="type === 'TEACH'" class="class-btn" @click="clickAddButton()">
           <i class='el-icon-circle-plus' style="font-size: 50px;"></i> <br/>
           과목 추가
         </el-button>
@@ -41,7 +41,7 @@
 </template>
 
 <style lang="scss" scoped>
-#teacher_class_list_aside {
+.class_list_aside {
   padding-top: 20px;
   .class-btn {
     width: 120px;
@@ -58,7 +58,8 @@ import { mapState, mapMutations, mapActions } from 'vuex';
 // import teacherService from '../../services/teacherService';
 
 export default {
-  name: 'TeachingClassListAside',
+  name: 'ClassListAside',
+  props: ['type'],
   data() {
     return {
       truncateLength: 10,
@@ -68,7 +69,23 @@ export default {
     ...mapState('class', [
       'currentClassIndex',
       'teachingClassList',
+      'studyingClassList',
     ]),
+    classList() {
+      const vm = this;
+      const { type } = vm;
+      switch (type) {
+        case 'TEACH': {
+          return vm.teachingClassList;
+        }
+        case 'STUDY': {
+          return vm.studyingClassList;
+        }
+        default: {
+          throw new Error(`not defined class type ${type}`);
+        }
+      }
+    },
   },
   methods: {
     ...mapMutations('class', [
@@ -97,11 +114,14 @@ export default {
       vm.getKnowledgeMapData();
     },
   },
-  async mounted() {
+
+  async beforeMount() {
     const vm = this;
 
     await vm.getMyClassLists();
-    vm.$forceUpdate();
+    // await vm.$nextTick();
+    // vm.$forceUpdate();
+
     // const classList = await teacherService.fetchTeachingClassList();
     // console.log('classList', classList);
     // vm.updateTeachingClassList({ classList });
