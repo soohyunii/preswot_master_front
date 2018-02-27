@@ -11,6 +11,6 @@
 
 <script>
 export default {
-  name: 'WholeClassHome',
+  name: 'ClassIndex',
 };
 </script>
