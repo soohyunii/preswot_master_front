@@ -9,6 +9,9 @@ export default {
      * 공통 변수들
      * @var {Array[class]} teachingClassList
      */
+    openedClassList: [],
+    goingClassList: [],
+    finishedClassList: [],
     studyingClassList: [],
     teachingClassList: [],
     // //////////////////////////절취선////////////////////////// //
@@ -87,6 +90,15 @@ export default {
     },
   },
   mutations: {
+    updateOpenedClassList(state, { openedClassList }) {
+      state.openedClassList = openedClassList;
+    },
+    updateGoingClassList(state, { goingClassList }) {
+      state.goingClassList = goingClassList;
+    },
+    updateFinishedClassList(state, { finishedClassList }) {
+      state.finishedClassList = finishedClassList;
+    },
     updateCurrentClassIndex(state, { currentClassIndex }) {
       state.currentClassIndex = currentClassIndex;
     },
@@ -142,6 +154,18 @@ export default {
     },
   },
   actions: {
+    async getClassLists({ commit }) {
+      const res = await classService.getClassLists();
+      commit('updateOpenedClassList', {
+        openedClassList: res.data.openedClasses,
+      });
+      commit('updateGoingClassList', {
+        goingClassList: res.data.goingClasses,
+      });
+      commit('updateFinishedClassList', {
+        finishedClassList: res.data.finishedClasses,
+      });
+    },
     async getMyClassLists({ commit }) {
       const res = await classService.getMyClassList();
 
