@@ -24,6 +24,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import utils from '../../utils';
 
 export default {
   name: 'ScHomeworkViewer',
@@ -39,7 +40,8 @@ export default {
     onClick(index) {
       const vm = this;
       const file = vm.fileList[index];
-      window.location.assign(file.url);
+      // window.location.href = file.url;
+      utils.downloadFile(file.url, file.name);
     },
   },
 };

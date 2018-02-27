@@ -142,4 +142,15 @@ export default {
     const changedCurrentEditingScItemIndex = sc.map(x => x.id).indexOf(beforeSortedScItem.id);
     return { orderSortedSc, changedCurrentEditingScItemIndex };
   },
+  downloadFile(url, filename) {
+    console.log('downloadFile', url);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    window.setTimeout(() => {
+      document.body.removeChild(link);
+    }, 1000);
+  },
 };
