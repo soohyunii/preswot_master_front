@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <el-container>
-      <teaching-class-list-aside />
+      <class-list-aside type="TEACH" />
 
       <el-main>
         <div
@@ -12,12 +12,12 @@
         </div>
         <div
           class="info-box"
-          v-else-if="!currentClass"
+          v-else-if="!currentTeachingClass"
         >
           TODO: Select Class from left menus!
         </div>
         <div v-else>
-          <h3>{{ currentClass.name }}</h3><hr>
+          <h3>{{ currentTeachingClass.name }}</h3><hr>
 
           <!-- TODO: translation -->
           <!-- TODO: Link to each page per button-->
@@ -28,7 +28,7 @@
           <el-button type="danger" @click="onClick('DELETE')">과목삭제</el-button>
           <br /><br />
 
-          <class-scenario />
+          <class-scenario type="TEACH" />
 
           <!-- TODO: Implement dummy response about class statistics -->
           <class-statistics />
@@ -52,9 +52,7 @@
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 import ClassScenario from '../partials/ClassScenario';
 import ClassStatistics from '../partials/ClassStatistics';
-import TeachingClassListAside from '../partials/TeachingClassListAside';
-// import teacherService from '../../services/teacherService';
-// import classService from '../../services/classService';
+import ClassListAside from '../partials/ClassListAside';
 
 
 export default {
@@ -62,14 +60,14 @@ export default {
   computed: {
     ...mapState('class', ['teachingClassList', 'currentClassIndex']),
     ...mapGetters('class', [
-      'currentClass',
+      'currentTeachingClass',
       'isTeachingClassListEmpty',
     ]),
   },
   components: {
     ClassScenario,
     ClassStatistics,
-    TeachingClassListAside,
+    ClassListAside,
   },
   methods: {
     ...mapMutations('class', ['deleteTeachingClass']),
@@ -78,11 +76,11 @@ export default {
       const vm = this;
       switch (type) {
         case 'EDIT': {
-          vm.$router.push(`/a/teacher/class/${vm.currentClass.class_id}/edit`);
+          vm.$router.push(`/a/teacher/class/${vm.currentTeachingClass.class_id}/edit`);
           break;
         }
         case 'DELETE': {
-          vm.$confirm('정말로 이 과목을 삭제하시겠습니까?', `${vm.currentClass.name || ''} 삭제`, {
+          vm.$confirm('정말로 이 과목을 삭제하시겠습니까?', `${vm.currentTeachingClass.name || ''} 삭제`, {
             confirmButtonText: '예, 삭제합니다.',
             cancelButtonText: '아니요, 삭제하지 않습니다.',
             type: 'warning',

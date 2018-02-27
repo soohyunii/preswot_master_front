@@ -239,8 +239,8 @@ export default {
   },
   sockets: {
     connect() {
-      const vm = this;
-      console.log('socket connected', vm.currentEditingScItem); // eslint-disable-line
+      // const vm = this;
+      // console.log('socket connected', vm.currentEditingScItem);
     },
   },
   async beforeMount() {
