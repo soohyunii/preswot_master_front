@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="animated faidIn">
+  <div id="app" class="wrapper animated faidIn">
       <wordcloud
         class="wordCloud"
         :data="words"
@@ -67,6 +67,7 @@ export default {
     }, */
     words() {
       const vm = this;
+      // TODO: 이해여부 값 수정 필요
       return vm.keywords.map(item => ({
         name: item.name,
         value: item._size, // eslint-disable-line
@@ -86,11 +87,14 @@ export default {
 
 <style lang="scss" scope>
   .wordCloud {
-    min-height: 700px;
+    min-height: 500px;
   }
 </style>
 
 <style>
+.wrapper {
+  height: 1200px;
+}
 .animated {
   -webkit-animation-duration: 2s;
   animation-duration: 2s;

@@ -237,7 +237,6 @@ export default {
   display: inline-block;
   position: relative;
   width: 100%;
-  height: 400px;
   svg{
     display: inline-block;
     position: absolute;
