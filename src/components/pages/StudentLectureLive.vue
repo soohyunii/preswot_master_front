@@ -52,6 +52,9 @@
               문제 풀 수 있는 공간
               <sc-common-viewer />
               <sc-material-viewer v-if="currentEditingScItemType === '강의자료'" />
+              <sc-homework-viewer v-if="currentEditingScItemType === '숙제'" />
+              <sc-survey-viewer v-if="currentEditingScItemType === '설문'" />
+              <sc-question-viewer v-if="currentEditingScItemType === '문항'" />
               <!-- <h1>아이템 편집</h1>
               <sc-common-editor />
               <sc-material-editor v-if="currentEditingScItemType === '강의자료'" />
@@ -76,6 +79,9 @@ import Sc from '../partials/Sc';
 import StudentLectureLiveSummary from '../partials/StudentLectureLiveSummary';
 import ScCommonViewer from '../partials/ScCommonViewer';
 import ScMaterialViewer from '../partials/ScMaterialViewer';
+import ScHomeworkViewer from '../partials/ScHomeworkViewer';
+import ScSurveyViewer from '../partials/ScSurveyViewer';
+import ScQuestionViewer from '../partials/ScQuestionViewer';
 
 export default {
   name: 'StudentLectureLive',
@@ -84,6 +90,9 @@ export default {
     StudentLectureLiveSummary,
     ScCommonViewer,
     ScMaterialViewer,
+    ScHomeworkViewer,
+    ScSurveyViewer,
+    ScQuestionViewer,
   },
   data() {
     return {

@@ -26,7 +26,7 @@
           </el-form-item>
           <i class="el-icon-loading" v-if="loading.TYPE" />
 
-          <template v-if="[0, 1, 2, 3].includes(pType)">
+          <template>
             <el-form-item label="문제" prop="pQuestion">
               <el-input
                 type="textarea"
