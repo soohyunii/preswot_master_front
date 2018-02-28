@@ -51,7 +51,6 @@ export default {
       const vm = this;
       switch (type) {
         case 'APPLY': {
-          console.log('data', data);
           try {
             await vm.postClassUser({
               classId: data,
@@ -61,11 +60,21 @@ export default {
               message: '메세지',
               type: 'success',
             });
-            vm.getClassLists();
-            vm.getMyClassLists();
           } catch (error) {
             vm.$notify({
               title: '수강 신청 요청 실패',
+              message: error.toString(),
+              type: 'error',
+              duration: 0,
+            });
+          }
+
+          try {
+            await vm.getMyClassLists();
+            await vm.getClassLists();
+          } catch (error) {
+            vm.$notify({
+              title: '과목 목록 가져오기 실패',
               message: error.toString(),
               type: 'error',
               duration: 0,
