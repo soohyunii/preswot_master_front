@@ -208,7 +208,7 @@ export default {
   },
   actions: {
     async getKnowledgeMapData({ getters, commit }) {
-      const id = getters.currentClass.class_id;
+      const id = getters.currentTeachingClass.class_id;
       const res1 = await classService.getClassCoverage({ id });
       window.console.log('res1', res1);
       const nodes = res1.data.keyword_coverages.map(item => ({
