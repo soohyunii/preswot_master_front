@@ -21,7 +21,7 @@
 
           <!-- TODO: translation -->
           <!-- TODO: Link to each page per button-->
-          <el-button>과목지식맵</el-button>
+          <el-button @click="onClick('OPEN_KNOWLEDGEMAP_MODAL')">과목지식맵</el-button>
           <el-button>과목큐레이션</el-button>
           <el-button>과목저널링</el-button>
           <el-button type="primary" @click="onClick('EDIT')">과목수정</el-button>
@@ -33,6 +33,24 @@
           <!-- TODO: Implement dummy response about class statistics -->
           <class-statistics />
         </div>
+        <el-col>
+      <el-dialog
+        title="과목 지식맵 & 워드 클라우드"
+        :visible.sync="isModalVisible"
+        width="70%"
+        center
+      >
+        <class-knowledge-map />
+        <span slot="footer" class="dialog-footer">
+          <el-button
+            type="primary"
+            @click="onClick('CONFIRM')"
+          >
+            Confirm
+          </el-button>
+        </span>
+      </el-dialog>
+    </el-col>
       </el-main>
     </el-container>
   </div>
@@ -52,11 +70,19 @@
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 import ClassScenario from '../partials/ClassScenario';
 import ClassStatistics from '../partials/ClassStatistics';
+import ClassKnowledgeMap from '../partials/ClassKnowledgeMap';
+// import teacherService from '../../services/teacherService';
+// import classService from '../../services/classService';
 import ClassListAside from '../partials/ClassListAside';
 
 
 export default {
   name: 'TeacherClassIndex',
+  data() {
+    return {
+      isModalVisible: false,
+    };
+  },
   computed: {
     ...mapState('class', ['teachingClassList', 'currentClassIndex']),
     ...mapGetters('class', [
@@ -67,6 +93,7 @@ export default {
   components: {
     ClassScenario,
     ClassStatistics,
+    ClassKnowledgeMap,
     ClassListAside,
   },
   methods: {
@@ -75,6 +102,14 @@ export default {
     onClick(type) {
       const vm = this;
       switch (type) {
+        case 'OPEN_KNOWLEDGEMAP_MODAL': {
+          vm.isModalVisible = true;
+          break;
+        }
+        case 'CONFIRM': {
+          vm.isModalVisible = false;
+          break;
+        }
         case 'EDIT': {
           vm.$router.push(`/a/teacher/class/${vm.currentTeachingClass.class_id}/edit`);
           break;

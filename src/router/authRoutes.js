@@ -7,7 +7,6 @@ import StudentClassIndex from '../components/pages/StudentClassIndex';
 import StudentLectureLive from '../components/pages/StudentLectureLive';
 import TeacherClassNew from '../components/pages/TeacherClassNew';
 import TeacherClassEdit from '../components/pages/TeacherClassEdit';
-import wordCloudExample from '../components/partials/wordCloudExample';
 import StudentClassJournal from '../components/pages/StudentClassJournal';
 import TeacherClassJournal from '../components/pages/TeacherClassJournal';
 import test from '../components/partials/test';
@@ -30,15 +29,6 @@ export default function authRoutes(root) {
       component: test,
       meta: {
         title: 'test', // TODO: import from i18n
-        auth: true,
-      },
-    },
-    {
-      path: '/teacher/lecture/wordCloudExample',
-      name: 'wordCloudExample',
-      component: wordCloudExample,
-      meta: {
-        title: 'wordCloudExample', // TODO: import from i18n
         auth: true,
       },
     },
