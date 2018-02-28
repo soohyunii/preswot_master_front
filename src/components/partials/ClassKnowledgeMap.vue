@@ -35,7 +35,7 @@
         </el-col>
       </el-row>
     </div>
-    <word-cloud :keywords="nodes"/>
+    <word-cloud-example :keywords="nodes"/>
   </div>
 </template>
 
@@ -45,7 +45,7 @@
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex';
 import D3Network from 'vue-d3-network';
-import WordCloud from '../partials/wordCloud';
+import WordCloudExample from '../partials/WordCloudExample';
 
 export default {
   name: 'ClassKnowledgeMap',
@@ -80,7 +80,7 @@ export default {
   },
   components: {
     D3Network,
-    WordCloud,
+    WordCloudExample,
   },
   methods: {
     ...mapMutations('class', ['setNodesPinned']),

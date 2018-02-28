@@ -86,7 +86,7 @@ const props = {
 }
 
 export default {
-  name: 'VueWordCloud',
+  name: 'WordCloud',
   directives,
   props,
   data () {
