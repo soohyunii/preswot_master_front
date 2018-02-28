@@ -70,7 +70,6 @@
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 import ClassScenario from '../partials/ClassScenario';
 import ClassStatistics from '../partials/ClassStatistics';
-import TeachingClassListAside from '../partials/TeachingClassListAside';
 import ClassKnowledgeMap from '../partials/ClassKnowledgeMap';
 // import teacherService from '../../services/teacherService';
 // import classService from '../../services/classService';
@@ -94,7 +93,6 @@ export default {
   components: {
     ClassScenario,
     ClassStatistics,
-    TeachingClassListAside,
     ClassKnowledgeMap,
     ClassListAside,
   },
