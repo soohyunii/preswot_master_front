@@ -87,8 +87,17 @@ export default {
     },
   },
   mutations: {
-    updateCurrentClassIndex(state, { currentClassIndex }) {
-      state.currentClassIndex = currentClassIndex;
+    updateCurrentClassIndex(state, { currentClassIndex, currentClassId }) {
+      if (currentClassIndex === 0 || currentClassIndex) {
+        state.currentClassIndex = currentClassIndex;
+      }
+      if (currentClassId) {
+        for (let i = 0; i < state.teachingClassList.length; i += 1) {
+          if (state.teachingClassList[i].class_id === currentClassId) {
+            state.currentClassIndex = i;
+          }
+        }
+      }
     },
     updateNewClass(state, { newClass }) {
       state.newClass = newClass;

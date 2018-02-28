@@ -6,6 +6,7 @@ import TeacherLectureLive from '../components/pages/TeacherLectureLive';
 import StudentLectureLive from '../components/pages/StudentLectureLive';
 import TeacherClassNew from '../components/pages/TeacherClassNew';
 import TeacherClassEdit from '../components/pages/TeacherClassEdit';
+import TeacherClassEvaluation from '../components/pages/TeacherClassEvaluation';
 import wordCloudExample from '../components/partials/wordCloudExample';
 import test from '../components/partials/test';
 
@@ -72,6 +73,15 @@ export default function authRoutes(root) {
       component: TeacherClassEdit,
       meta: {
         title: 'Teacher Class Edit', // TODO: import from i18n
+        auth: true,
+      },
+    },
+    {
+      path: '/teacher/class/:classId/evaluation',
+      name: 'TeacherClassEvaluation',
+      component: TeacherClassEvaluation,
+      meta: {
+        title: 'Teacher Class Evaluation',
         auth: true,
       },
     },
