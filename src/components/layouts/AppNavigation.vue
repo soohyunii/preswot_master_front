@@ -28,14 +28,17 @@
           <span slot="title">수강 중인 과목</span>
         </template>
         <el-menu-item-group>
-          <template v-for="(item, key, index) in studyingClassList">
+          <template v-for="(item, index) in studyingClassList">
             <el-tooltip
               effect="dark"
               :content="item.name"
               :disabled="item.name.length < truncateLength"
               placement="right"
-              :key="key">
-              <el-menu-item :index="'3-'+index" :key="key">
+              :key="index">
+              <el-menu-item
+                index="/a/student/class"
+                @click="clickClassButton(item, index)"
+                :key="index">
                 <!-- TODO: link to each class -->
                 {{ item.name | truncate(truncateLength) }}
               </el-menu-item>
@@ -51,14 +54,18 @@
           <span slot="title">강의 중인 과목</span>
         </template>
         <el-menu-item-group>
-          <template v-for="(item, key, index) in teachingClassList">
+          <template v-for="(item, index) in teachingClassList">
             <el-tooltip
               effect="dark"
               :content="item.name"
               :disabled="item.name.length < truncateLength"
               placement="right"
-              :key="key">
-              <el-menu-item :index="'4-'+index" :key="key">
+              :key="index">
+              <el-menu-item
+                :key="index"
+                index="/a/teacher/class"
+                @click="clickClassButton(item, index)"
+              >
                 <!-- TODO: link to each class -->
                 {{ item.name | truncate(truncateLength) }}
               </el-menu-item>
@@ -111,7 +118,7 @@
 </style>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 // import studentService from '../../services/studentService';
 // import teacherService from '../../services/teacherService';
 
@@ -128,12 +135,22 @@ export default {
     ...mapState('class', [
       'studyingClassList',
       'teachingClassList',
+      'currentClassIndex',
     ]),
   },
   methods: {
+    ...mapMutations('class', [
+      'updateCurrentClassIndex',
+    ]),
     ...mapActions('class', [
       'getMyClassLists',
     ]),
+    clickClassButton(item, index) {
+      const vm = this;
+      vm.updateCurrentClassIndex({
+        currentClassIndex: index,
+      });
+    },
   },
   async mounted() {
     const vm = this;
