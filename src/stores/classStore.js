@@ -282,12 +282,12 @@ export default {
     },
     async putClass({ getters }) {
       await classService.putClass({
-        name: getters.currentClass.name,
-        description: getters.currentClass.description,
-        activeStartDate: getters.currentClass.start_time,
-        activeEndDate: getters.currentClass.end_time,
-        opened: getters.currentClass.opened,
-        id: getters.currentClass.class_id,
+        name: getters.currentTeachingClass.name,
+        description: getters.currentTeachingClass.description,
+        activeStartDate: getters.currentTeachingClass.start_time,
+        activeEndDate: getters.currentTeachingClass.end_time,
+        opened: getters.currentTeachingClass.opened,
+        id: getters.currentTeachingClass.class_id,
       });
     },
     async getClass({ state, getters, commit }, { type }) {

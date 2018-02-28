@@ -8,13 +8,13 @@
       :router="true"
     >
       <el-menu-item index="/" class="menu">
-        <i class="fa fa-home fa-lg fa-fw el-compatible"></i>
+        <i class="fas fa-home fa-lg fa-fw el-compatible"></i>
         <!-- TODO: Translation -->
         <span slot="title">홈</span>
       </el-menu-item>
 
       <el-menu-item index="/classes" class="menu">
-        <i class="fa fa-list fa-lg fa-fw el-compatible"></i>
+        <i class="fas fa-list fa-lg fa-fw el-compatible"></i>
         <span slot="title">
           <!-- TODO: Translation -->
           과목 리스트
@@ -23,7 +23,7 @@
 
       <el-submenu index="3" class="menu">
         <template slot="title">
-          <i class="fa fa-graduation-cap fa-lg fa-fw el-compatible"></i>
+          <i class="fas fa-graduation-cap fa-lg fa-fw el-compatible"></i>
           <!-- TODO: Translation -->
           <span slot="title">수강 중인 과목</span>
         </template>
@@ -46,7 +46,7 @@
 
       <el-submenu index="4" class="menu">
         <template slot="title">
-          <i class="fa fa-book fa-lg fa-fw el-compatible"></i>
+          <i class="fas fa-book fa-lg fa-fw el-compatible"></i>
           <!-- TODO: Translation -->
           <span slot="title">강의 중인 과목</span>
         </template>
