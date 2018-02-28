@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="wrapper animated faidIn">
-      <wordcloud
+      <vue-word-cloud
         class="wordCloud"
         :data="words"
         nameKey="name"
@@ -8,7 +8,7 @@
         fontScale="sqrt"
         :fontSize="[20, 120]"
         :wordClick="wordClick">
-      </wordcloud>
+      </vue-word-cloud>
       <el-button @click="showOnlyUnderstand()">이해한 것만</el-button>
   </div>
 </template>
@@ -18,7 +18,7 @@
 import VueWordCloud from './vueWordCloud';
 
 export default {
-  name: 'wordCloudExample',
+  name: 'WordCloud',
   components: {
     VueWordCloud,
   },
