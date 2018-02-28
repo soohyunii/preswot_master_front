@@ -47,5 +47,19 @@ export default {
       }
       return res;
     },
+    async findPassword({ commit }, { email }) {
+      const res = await authService.findPassword({ email });
+      if (!res.data.success) {
+        throw new Error('error occured');
+      }
+      return res;
+    },
+    async putPassword({ commit }, { newPassword, key, userId }) {
+      const res = await authService.putPassword({ newPassword, key, userId });
+      if (!res.data.success) {
+        throw new Error('error occured');
+      }
+      return res;
+    },
   },
 };
