@@ -71,7 +71,7 @@ export default {
     pComment: {
       get() {
         const vm = this;
-        const s = vm.currentEditingScItem.comment;
+        const s = vm.currentEditingScItem.survey;
         return s ? s.comment : '';
       },
       set(pComment) {
