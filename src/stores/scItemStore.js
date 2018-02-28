@@ -152,13 +152,13 @@ export default {
           const question = res.data.questions[0];
           let answer = [];
           if (question.answer.length !== 0) {
-            answer = question.answer[0].split(',')
+            answer = question.answer
             .map(token => token.trim())
             .filter(token => token.length !== 0);
           }
           let choice = [];
           if (question.choice.length !== 0) {
-            choice = question.choice[0].split(',')
+            choice = question.choice
             .map(token => token.trim())
             .filter(token => token.length !== 0);
           }

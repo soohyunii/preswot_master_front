@@ -17,6 +17,13 @@
           <el-form-item label="문항">
             ({{ qType }}) {{ qQuestion }}
           </el-form-item>
+
+          <template v-if="[0].includes(qType)">
+            <el-form-item label="보기">
+              TODO: 보기 v-for<br />
+              {{ qChoice }}
+            </el-form-item>
+          </template>
         </el-form>
       </el-col>
     </el-row>
@@ -48,6 +55,11 @@ export default {
       const vm = this;
       const q = vm.currentEditingScItem.question;
       return q ? q.question : '';
+    },
+    qChoice() {
+      const vm = this;
+      const q = vm.currentEditingScItem.question;
+      return q ? q.choice : [];
     },
   },
 };
