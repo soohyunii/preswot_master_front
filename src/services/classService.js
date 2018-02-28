@@ -16,8 +16,8 @@ export default {
   getClassCoverage({ id }) {
     return http.get(`/classes/${id}/coverage`);
   },
-  getClassKeywordRelation({ id }) {
-    return http.get(`/classes/${id}/keyword-relation`);
+  getClassKeywordRelations({ id }) {
+    return http.get(`/classes/${id}/keyword-relations`);
   },
   postClass({ //
     title,

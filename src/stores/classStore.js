@@ -221,7 +221,7 @@ export default {
 
       // TODO: API 추가 시 주석 제거
       /*
-      const res2 = await classService.getClassKeywordRelation({ id });
+      const res2 = await classService.getClassKeywordRelations({ id });
       const edges = res2.data.map(item => ({
         sid: item.node1,
         tid: item.node2,
