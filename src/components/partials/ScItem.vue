@@ -103,20 +103,20 @@ export default {
       let icon;
       switch (type) {
         case '문항': {
-          icon = 'el-icon-question';
+          icon = 'fas fa-list-ol';
           break;
         }
         default:
         case '강의자료': {
-          icon = 'el-icon-info';
+          icon = 'far fa-file-pdf';
           break;
         }
         case '숙제': {
-          icon = 'el-icon-document';
+          icon = 'fas fa-tasks';
           break;
         }
         case '설문': {
-          icon = 'el-icon-edit-outline';
+          icon = 'far fa-clipboard';
           break;
         }
       }
