@@ -34,6 +34,9 @@
           </span>
         </el-form-item>
       </el-form>
+      <!-- TODO: 차트 데이터 수정 -->
+      설문 결과 차트
+      <bar-chart :xAxisName="chartXAxis" :data="chartData"/>
     </el-col>
   </el-row>
 </template>
@@ -45,9 +48,13 @@
 <script>
 import { mapGetters } from 'vuex';
 import utils from '../../utils';
+import BarChart from './BarChart';
 
 export default {
   name: 'ScSurveyViewer',
+  components: {
+    BarChart,
+  },
   data() {
     return {
       // TODO: 학생 답안 저장위치 바꾸기
@@ -56,6 +63,29 @@ export default {
     };
   },
   computed: {
+    chartXAxis() {
+      const axis = ['x'];
+      const vm = this;
+      if (vm.sChoice) {
+        vm.sChoice.forEach((element) => {
+          axis.push(element);
+        });
+        return axis;
+      }
+      return null;
+    },
+    chartData() {
+      const data = ['설문조사 결과'];
+      const vm = this;
+      if (vm.sChoice) {
+        vm.sChoice.forEach(() => {
+          // TODO: 설문 결과 값 수정
+          data.push(Math.floor(Math.random() * 100) + 1);
+        });
+        return data;
+      }
+      return null;
+    },
     ...mapGetters('scItem', ['currentEditingScItem']),
     fileList() {
       const vm = this;
