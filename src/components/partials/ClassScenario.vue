@@ -150,13 +150,33 @@ export default {
   props: ['type'],
   async mounted() {
     const vm = this;
-    await vm.getClass({ type: vm.type });
+    try {
+      await vm.getClass({ type: vm.type });
+    } catch (error) {
+      // TODO: wording 바꿀 필요 有
+      vm.$notify({
+        title: '요청 실패',
+        message: '아직 개설된 강의가 없습니다.',
+        type: 'error',
+        duration: 0,
+      });
+    }
     vm.$forceUpdate();
 
     vm.$watch(
       () => (vm.currentClass),
       async () => {
-        await vm.getClass({ type: vm.type });
+        try {
+          await vm.getClass({ type: vm.type });
+        } catch (error) {
+          // TODO: wording 바꿀 필요 有
+          vm.$notify({
+            title: '요청 실패',
+            message: '아직 개설된 강의가 없습니다.',
+            type: 'error',
+            duration: 0,
+          });
+        }
         vm.$forceUpdate();
       },
     );
