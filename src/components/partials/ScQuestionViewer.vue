@@ -20,10 +20,17 @@
 
           <template v-if="[0].includes(qType)">
             <el-form-item label="보기">
-              TODO: 보기 v-for<br />
-              {{ qChoice }}
+              <el-checkbox-group v-model.lazy="qAnswerChoice">
+                <template v-for="(choice, key) in qChoice">
+                  <el-checkbox :label="choice" :key="key"></el-checkbox>
+                </template>
+              </el-checkbox-group>
             </el-form-item>
           </template>
+
+          <el-form-item label="분포">
+            <bar-chart v-show="[0].includes(qType)" :xAxisName="chartXAxis" :data="chartData"/>
+          </el-form-item>
 
           <template v-if="[0, 1, 2].includes(qType)">
             <el-form-item label="답">
@@ -81,15 +88,43 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import BarChart from './BarChart';
 
 export default {
   name: 'ScQuestionViewer',
+  components: {
+    BarChart,
+  },
   data() {
     return {
       qAnswer: '',
+      qAnswerChoice: [],
     };
   },
   computed: {
+    chartXAxis() {
+      const axis = ['x'];
+      const vm = this;
+      if (vm.qChoice) {
+        vm.qChoice.forEach((element) => {
+          axis.push(element);
+        });
+        return axis;
+      }
+      return null;
+    },
+    chartData() {
+      const data = ['답 제출 분포'];
+      const vm = this;
+      if (vm.qChoice) {
+        vm.qChoice.forEach(() => {
+          // TODO: 결과 값 수정
+          data.push(Math.floor(Math.random() * 100) + 1);
+        });
+        return data;
+      }
+      return null;
+    },
     ...mapGetters('scItem', ['currentEditingScItem']),
     fileList() {
       const vm = this;
@@ -151,7 +186,7 @@ export default {
     onClick(type) {
       switch (type) {
         case 'SUBMIT': {
-          console.log('onclick submit');
+          console.log('onclick submit'); // eslint-disable-line
           break;
         }
         default: {
