@@ -53,37 +53,20 @@ export default {
       const vm = this;
       switch (type) {
         case 'SUBMIT': {
-          await vm.putPassword({
-            newPassword: vm.input.password,
-            key: vm.$route.params.rand,
-            userId: vm.$route.params.userId,
-          });
-          vm.$router.push('/login');
+          try {
+            await vm.putPassword({
+              newPassword: vm.input.password,
+              key: vm.$route.params.rand,
+              userId: vm.$route.params.userId,
+            });
+            vm.$router.push('/login');
+          } catch (e) {
+            throw new Error(e.toString());
+          }
           break;
         }
         default: {
           throw new Error('not defined type', type);
-        }
-      }
-    },
-    openNoti(type, message, title) {
-      const vm = this;
-      switch (type) {
-        case 'success':
-        case 'warning':
-          vm.$notify({
-            title,
-            message,
-            type,
-          });
-          break;
-        default :
-        case 'error' : {
-          vm.$notify.error({
-            title: 'Error',
-            message,
-          });
-          break;
         }
       }
     },
