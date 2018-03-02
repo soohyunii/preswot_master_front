@@ -59,9 +59,19 @@ export default {
               key: vm.$route.params.rand,
               userId: vm.$route.params.userId,
             });
+            vm.$notify({
+              title: '비밀번호 변경 성공',
+              message: '성공적으로 비밀번호가 변경됨',
+              type: 'success',
+            });
             vm.$router.push('/login');
-          } catch (e) {
-            throw new Error(e.toString());
+          } catch (error) {
+            vm.$notify({
+              title: '비밀번호 변경 실패',
+              message: error.toString(),
+              type: 'error',
+              duration: 0,
+            });
           }
           break;
         }

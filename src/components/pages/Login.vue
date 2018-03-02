@@ -39,8 +39,8 @@
           >
             <!-- TODO: replace 브랜드 로고 -->
             <el-button type="primary" plain slot="title">Brand Logo</el-button>
-            <h2>비밀번호 재설정</h2>
-            <span>비밀번호를 재설정할 이메일을 입력하세요.</span>
+            <h2>비밀번호 변경</h2>
+            <span>비밀번호를 변경할 이메일을 입력하세요.</span>
             <br/><br/><hr><br/>
             <el-form :model="input" label-width="120px" label-position="top">
               <el-form-item label="이메일">
@@ -52,7 +52,7 @@
                 type="primary"
                 @click="onClick('SUBMIT')"
               >
-                재설정 방법 전송
+                변경 방법 전송
               </el-button>
             </span>
           </el-dialog>
