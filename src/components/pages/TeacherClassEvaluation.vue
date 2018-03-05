@@ -151,7 +151,6 @@
 <script>
   import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
   import coverageService from '../../services/coverageService';
-  import ElButton from "element-ui/packages/button/src/button";
 
   export default {
     name: 'TeacherClassEvaluation',
@@ -169,9 +168,6 @@
           return vm.currentClass.scenarioList;
         },
       },
-    },
-    components: {
-      ElButton
     },
     data() {
       return {
