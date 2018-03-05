@@ -158,7 +158,7 @@ export default {
           }
           let choice = [];
           if (question.choice.length !== 0) {
-            choice = question.choice
+            choice = question.choice[0].split(',')
             .map(token => token.trim())
             .filter(token => token.length !== 0);
           }

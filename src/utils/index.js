@@ -143,7 +143,7 @@ export default {
     return { orderSortedSc, changedCurrentEditingScItemIndex };
   },
   downloadFile(url, filename) {
-    console.log('downloadFile', url);
+    console.log('downloadFile', url); // eslint-disable-line
     const link = document.createElement('a');
     link.href = url;
     link.setAttribute('download', filename);
