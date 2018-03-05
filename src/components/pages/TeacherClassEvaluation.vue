@@ -60,7 +60,7 @@
           <div v-if="radio1 === 'Question'">
             <el-row :gutter="40">
               <el-col :span="12" align-center>
-                <h2 v-if="coverage.avg_coverage">{{coverage.avg_coverage.question_error}}</h2>
+                <h2 v-if="coverage.avg_coverage.question_error">{{coverage.avg_coverage.question_error}}</h2>
                 <h2 v-else>계산되지 않음</h2>
               </el-col>
               <el-col :span="12">
@@ -76,13 +76,23 @@
             <br />
             <el-table
               :data="coverage.keyword_coverages"
-              border height="300">
+              border height="300" style="width: 100%">
               <el-table-column label="Keyword" align="center" prop="keyword" sortable>
               </el-table-column>
               <el-table-column label="Error" align="center" prop="difference_question" sortable>
               </el-table-column>
               <el-table-column label="관련 문항" align="center">
-
+                <template slot-scope="scope">
+                  <el-tooltip v-for="question in scope.row.questions"
+                              effect="dark"
+                              placement="top">
+                    <div slot="content">{{question.lecture_name}}<br />{{question.item_name}}</div>
+                    <!---->
+                    <!--여기부분 question.lecture_item_id 로 링크 만들어야댐-->
+                    <!---->
+                    <i class="el-icon-edit" style="margin-left: 5px"></i>
+                  </el-tooltip>
+                </template>
               </el-table-column>
             </el-table>
           </div>
@@ -90,7 +100,7 @@
           <div v-if="radio1 === 'Item'">
             <el-row :gutter="40">
               <el-col :span="12" align-center>
-                <h2 v-if="coverage.avg_coverage">{{coverage.avg_coverage.material_error}}</h2>
+                <h2 v-if="coverage.avg_coverage.material_error">{{coverage.avg_coverage.material_error}}</h2>
                 <h2 v-else>계산되지 않음</h2>
               </el-col>
               <el-col :span="12">
@@ -112,7 +122,17 @@
               <el-table-column label="Error" align="center" prop="difference_material" sortable>
               </el-table-column>
               <el-table-column label="관련 자료" align="center">
-
+                <template slot-scope="scope">
+                  <el-tooltip v-for="material in scope.row.materials"
+                              effect="dark"
+                              placement="top">
+                    <div slot="content">{{material.lecture_name}}<br />{{material.item_name}}</div>
+                    <!---->
+                    <!--여기부분 material.lecture_item_id 로 링크 만들어야댐-->
+                    <!---->
+                    <i class="el-icon-edit" style="margin-left: 5px"></i>
+                  </el-tooltip>
+                </template>
               </el-table-column>
             </el-table>
           </div>
@@ -131,6 +151,7 @@
 <script>
   import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
   import coverageService from '../../services/coverageService';
+  import ElButton from "element-ui/packages/button/src/button";
 
   export default {
     name: 'TeacherClassEvaluation',
@@ -150,6 +171,7 @@
       },
     },
     components: {
+      ElButton
     },
     data() {
       return {
@@ -170,6 +192,7 @@
       this.coverage = (await coverageService.getClassCoverage({
         id: Number.parseInt(vm.$route.params.classId, 10),
       })).data;
+      console.log(this.coverage);
     },
     methods: {
       ...mapMutations('class', [
@@ -191,6 +214,7 @@
             id: keyInt,
           })).data;
         }
+        console.log(this.coverage);
       },
     },
   };
