@@ -10,6 +10,15 @@ export default {
       password,
     });
   },
+  findPassword({ email }) {
+    return http.get(`/auth/${email}/find-password`);
+  },
+  putPassword({ newPassword, key, userId }) {
+    return http.put(`/auth/${userId}/password`, {
+      newPassword,
+      key,
+    });
+  },
   checkEmailDuplicated({ email }) {
     // TODO: Replace dummy with axios
     return new Promise((resolve) => {
