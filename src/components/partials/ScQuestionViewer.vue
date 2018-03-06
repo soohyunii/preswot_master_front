@@ -151,6 +151,7 @@ export default {
     onClick(type) {
       switch (type) {
         case 'SUBMIT': {
+          // eslint-disable-next-line
           console.log('onclick submit');
           break;
         }

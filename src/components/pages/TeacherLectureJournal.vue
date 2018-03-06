@@ -93,6 +93,19 @@
     width: 100%;
     top: 0px;
     height: 100%;
+    border-radius: 50%;
+    .q1 {
+      width: 23.6%;
+    }
+    .q2 {
+      width: 24.9%;
+    }
+    .q3 {
+      width: 25.1%;
+    }
+    .q4 {
+      width: 20%;
+    }
   }
   .slider_label_q{
     float: left;
@@ -101,24 +114,6 @@
     -webkit-box-align: center;
     font-size: 10px;
   }
-  .slider_label_q.q1{
-    width:23.6%;
-  }
-  .slider_label_q.q2{
-    width:24.9%;
-  }
-  .slider_label_q.q3{
-    width:25.1%;
-  }
-  .slider_label_q.q4{
-    width:20%;
-  }
-  .slider_label_q.q5{
-  }
-  .slider_label{
-    border-radius: 50%;
-  }
-
 </style>
 
 <style lang="scss">
@@ -154,11 +149,6 @@
     },
     async beforeMount() {
       const vm = this;
-      /*
-      vm.updateLectureId({
-        lectureId: 1,
-      });
-      */
       vm.updateUserId({
         userId: utils.getUserIdFromJwt(),
       });
@@ -169,28 +159,19 @@
         analysisOpt: 1,
       });
       await vm.getAnalysisData();
-      console.log(vm.analysisData);
     },
     methods: {
       ...mapMutations('analysis', ['updateClassId', 'updateUserId', 'updateIsStudent', 'updateIsActiveInfo', 'updateLectureId', 'updateAnalysisOpt']),
       ...mapActions('analysis', [
         'getAnalysisData',
       ]),
-      onClick(type, lectureId) {
-        const vm = this;
-        switch (type) {
-          default: {
-            throw new Error('not defined type', type);
-          }
-        }
-      },
     },
     computed: {
       ...mapState('analysis', ['analysisData', 'lectureId']),
       tableData: {
         get() {
           const vm = this;
-          var returnArr = [];
+          const returnArr = [];
           returnArr.push({
             row_name: '예습',
             max_participation_score: vm.analysisData.result1[0].o0_max_participation_score,
@@ -244,34 +225,7 @@
               min_participation_score: vm.analysisData.result1[0].o2_min_participation_score,
               min_concentration_score: vm.analysisData.result1[0].o2_min_concentration_score,
               min_understanding_score: vm.analysisData.result1[0].o2_min_understanding_score,
-            })
-          /*
-          return vm.analysisData.map((lecture, index) => {
-            const type = utils.convertScType(sc.type);
-
-            const date = (() => {
-              if (!sc.intended_start) {
-                return '미정 TODO: 미정 없어져야함'; // TODO: intended_start 꼭 있어야함!
-              }
-              const startDate = new Date(sc.intended_start);
-              if (!sc.intended_end) {
-                return `${utils.formatDate(startDate)} ~ 계속`;
-              }
-              const endDate = new Date(sc.intended_end);
-              return `${utils.formatDate(startDate)} ~ ${utils.formatDate(endDate)}`;
-            })();
-
-            return {
-              index,
-              type,
-              scId: sc.lecture_id,
-              scType: '실시간',
-              teacher: sc.teacher_id,
-              title: sc.name,
-              date,
-            };
-          });
-          */
+            });
           return returnArr;
         },
       },

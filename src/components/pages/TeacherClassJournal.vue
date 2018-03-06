@@ -4,7 +4,7 @@
     <div class="num_student">수강 인원: {{ analysisData[0].class_num_student }}</div>
     <line-chart :chartData = "analysisData" :isStudent = "isStudent"/>
     <el-table
-      :data="tableData"
+      :data="analysisData"
       style="width: 100%">
       <el-table-column
         prop="index"
@@ -102,6 +102,19 @@
     width: 100%;
     top: 0px;
     height: 100%;
+    border-radius: 50%;
+    .q1 {
+      width: 23.6%;
+    }
+    .q2 {
+      width: 24.9%;
+    }
+    .q3 {
+      width: 25.1%;
+    }
+    .q4 {
+      width: 20%;
+    }
   }
   .slider_label_q{
     float: left;
@@ -110,24 +123,6 @@
     -webkit-box-align: center;
     font-size: 10px;
   }
-  .slider_label_q.q1{
-    width:23.6%;
-  }
-  .slider_label_q.q2{
-    width:24.9%;
-  }
-  .slider_label_q.q3{
-    width:25.1%;
-  }
-  .slider_label_q.q4{
-    width:20%;
-  }
-  .slider_label_q.q5{
-  }
-  .slider_label{
-    border-radius: 50%;
-  }
-
 </style>
 
 <style lang="scss">
@@ -176,7 +171,6 @@
         analysisOpt: 0,
       });
       await vm.getAnalysisData();
-      // console.log(vm.analysisData);
     },
     methods: {
       ...mapMutations('analysis', ['updateClassId', 'updateUserId', 'updateIsStudent', 'updateIsActiveInfo', 'updateLectureId', 'updateAnalysisOpt']),
@@ -185,7 +179,6 @@
       ]),
       onClick(type, lectureId) {
         const vm = this;
-        console.log(lectureId);
         switch (type) {
           case 'STUDENT_STAT': {
             vm.updateLectureId({
@@ -215,39 +208,6 @@
     },
     computed: {
       ...mapState('analysis', ['analysisData', 'isActiveInfo', 'lectureId']),
-      tableData: {
-        get() {
-          const vm = this;
-          /*
-          return vm.analysisData.map((lecture, index) => {
-            const type = utils.convertScType(sc.type);
-
-            const date = (() => {
-              if (!sc.intended_start) {
-                return '미정 TODO: 미정 없어져야함'; // TODO: intended_start 꼭 있어야함!
-              }
-              const startDate = new Date(sc.intended_start);
-              if (!sc.intended_end) {
-                return `${utils.formatDate(startDate)} ~ 계속`;
-              }
-              const endDate = new Date(sc.intended_end);
-              return `${utils.formatDate(startDate)} ~ ${utils.formatDate(endDate)}`;
-            })();
-
-            return {
-              index,
-              type,
-              scId: sc.lecture_id,
-              scType: '실시간',
-              teacher: sc.teacher_id,
-              title: sc.name,
-              date,
-            };
-          });
-          */
-          return vm.analysisData;
-        },
-      },
     },
   };
 </script>

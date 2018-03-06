@@ -111,7 +111,7 @@
 
 </style>
 <script>
-  import { mapActions, mapState, mapMutations } from 'vuex';
+  import { mapState, mapMutations } from 'vuex';
   import realtimeLectureService from '../../services/realtimeLectureService';
 
   export default {
@@ -132,10 +132,10 @@
       async getLectureStat() {
         const vm = this;
         try {
-          var lectureData = await realtimeLectureService.getStudentLectureLog({
+          const lectureData = await realtimeLectureService.getStudentLectureLog({
             lectureId: vm.lectureId, opt: vm.opt,
           });
-          for (var i = 0; i < lectureData.data.length; i += 1) {
+          for (let i = 0; i < lectureData.data.length; i += 1) {
             // eslint-disable-next-line
             lectureData.data[i].latest_pic_path = '"'+ lectureData.data[i].latest_pic_path + '"';
             // eslint-disable-next-line
@@ -151,19 +151,16 @@
         const vm = this;
         switch (type) {
           case 'GET_LECTURE_SCORE_ORDER_BY_CONCENTRATION': {
-            //vm.lectureId = 1; // 강의 아이디를 여기에다가 넣어야됨
             vm.opt = 0;
             vm.getLectureStat();
             break;
           }
           case 'GET_LECTURE_SCORE_ORDER_BY_PARTICIPATION': {
-            //vm.lectureId = 1; // 강의 아이디를 여기에다가 넣어야됨
             vm.opt = 1;
             vm.getLectureStat();
             break;
           }
           case 'GET_LECTURE_SCORE_ORDER_BY_UNDERSTANDING': {
-            //vm.lectureId = 1; // 강의 아이디를 여기에다가 넣어야됨
             vm.opt = 2;
             vm.getLectureStat();
             break;

@@ -14,7 +14,7 @@ const axiosConfig = {
 
 const isDev = true; // TODO: replace
 if (isDev) {
-  axiosConfig.baseURL = 'http://165.132.105.33:3000';
+  axiosConfig.baseURL = baseUrl;
 }
 
 const jwt = utils.getJwtFromLocalStorage();

@@ -42,34 +42,30 @@ export default {
   },
   actions: {
     async getAnalysisData({ state, commit }) {
-      try {
-        let res = null;
-        switch (state.analysisOpt){
-          case (0): {
-            res = await analysisService.getClassLogAnalysis({
-              classId: state.classId, userId: state.userId, isStudent: state.isStudent,
-            });
-            break;
-          }
-          case (1): {
-            res = await analysisService.getLectureLogAnalysis({
-              lectureId: state.lectureId, userId: state.userId, isStudent: state.isStudent,
-            });
-            break;
-          }
-          default: {
-            res = await analysisService.getClassLogAnalysis({
-              classId: state.classId, userId: state.userId, isStudent: state.isStudent,
-            });
-            break;
-          }
+      let res = null;
+      switch (state.analysisOpt) {
+        case (0): {
+          res = await analysisService.getClassLogAnalysis({
+            classId: state.classId, userId: state.userId, isStudent: state.isStudent,
+          });
+          break;
         }
-        commit('updateAnalysisData', {
-          analysisData: res.data,
-        });
-      } catch (e) {
-        throw new Error('request error');
+        case (1): {
+          res = await analysisService.getLectureLogAnalysis({
+            lectureId: state.lectureId, userId: state.userId, isStudent: state.isStudent,
+          });
+          break;
+        }
+        default: {
+          res = await analysisService.getClassLogAnalysis({
+            classId: state.classId, userId: state.userId, isStudent: state.isStudent,
+          });
+          break;
+        }
       }
+      commit('updateAnalysisData', {
+        analysisData: res.data,
+      });
     },
   },
 };
