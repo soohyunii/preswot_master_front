@@ -14,9 +14,7 @@ const axiosConfig = {
 
 const isDev = true; // TODO: replace
 if (isDev) {
-  // axiosConfig.baseURL = 'https://khneedssleep.com:8000';
   axiosConfig.baseURL = baseUrl;
-  // axiosConfig.baseURL = 'http://165.132.105.33:3000';
 }
 
 const jwt = utils.getJwtFromLocalStorage();

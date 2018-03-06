@@ -2,13 +2,7 @@
   <div class="ts">
     <!-- TODO: translation -->
     <el-row>
-      <el-col :offset="1" :span="3" style="text-align:center;"><div>수강생 평균 집중도</div></el-col>
-      <el-col :span="3"><el-progress :text-inside="true" :stroke-width="20" :percentage="70"></el-progress></el-col>
-      <el-col :span="4" style="text-align:center;"><div>수강생 평균 참여도</div></el-col>
-      <el-col :span="3"><el-progress :text-inside="true" :stroke-width="20" :percentage="100" status="success"></el-progress></el-col>
-      <el-col :span="4" style="text-align:center;"><div>수강생 평균 이해도</div></el-col>
-      <el-col :span="3"><el-progress :text-inside="true" :stroke-width="20" :percentage="100" status="success"></el-progress></el-col>
-      <el-col :span="3" style="text-align:right;">
+      <el-col :offset="21" :span="3" style="text-align:right;">
         <i class="el-icon-close" @click="onClick('CLOSE_STATUSBAR')" />
       </el-col>
     </el-row>
@@ -24,7 +18,7 @@
       </el-button>
     </el-row>
     <el-row :gutter="20" id="student_score">
-      <el-col :span="3" v-for="(item, index) in forLoopData" :key="index">
+      <el-col :span="3" v-for="item in forLoopData" :key="item">
         <div class="one_user">
           <div class="user_pic" v-bind:style='{ backgroundImage: "url(" + item.latest_pic_path + ")", }'></div>
           <div class="user_info">
@@ -41,14 +35,17 @@
 </template>
 
 <style lang="scss" scoped>
-
+  .ts.activeInfo{
+    max-height: 85%;
+    visibility: visible;
+  }
   .el-row {
     margin-bottom: 20px;
     padding-left:30px;
     padding-right:30px;
-  &:last-child {
-     margin-bottom: 0;
-   }
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
   .el-col {
     border-radius: 4px;
@@ -97,23 +94,41 @@
     margin-right: 20px;
     -webkit-box-pack: center;
   }
+  .ts{
+    position: fixed;
+    left: 0px;
+    bottom: 0px;
+    width: 100%;
+    padding: 8px 0px 5px 0px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    -webkit-transition: max-height 2s;
+    transition: max-height 2s;
+    overflow: hidden;
+    height: 100%;
+    max-height: 85%;
+  }
 
 </style>
 <script>
+  import { mapState, mapMutations } from 'vuex';
   import realtimeLectureService from '../../services/realtimeLectureService';
-
 
   export default {
     // TODO: 전달되는 데이터 명 확인
-    name: 'TeacherLectureLiveSummary',
-    props: ['SummaryData', 'lectureId'],
+    name: 'TeacherClassJournalDetail',
+    props: ['lectureId'],
     data() {
       return {
         forLoopData: null,
         loopInterval: 0,
       };
     },
+    computed: {
+      ...mapState('analysis', ['analysisData', 'isActiveInfo']),
+    },
     methods: {
+      ...mapMutations('analysis', ['updateClassId', 'updateUserId', 'updateIsStudent', 'updateIsActiveInfo', 'updateLectureId']),
       async getLectureStat() {
         const vm = this;
         try {
@@ -136,24 +151,24 @@
         const vm = this;
         switch (type) {
           case 'GET_LECTURE_SCORE_ORDER_BY_CONCENTRATION': {
-            // vm.lectureId = 1; // 강의 아이디를 여기에다가 넣어야됨
             vm.opt = 0;
             vm.getLectureStat();
             break;
           }
           case 'GET_LECTURE_SCORE_ORDER_BY_PARTICIPATION': {
-            // vm.lectureId = 1; // 강의 아이디를 여기에다가 넣어야됨
             vm.opt = 1;
             vm.getLectureStat();
             break;
           }
           case 'GET_LECTURE_SCORE_ORDER_BY_UNDERSTANDING': {
-            // vm.lectureId = 1; // 강의 아이디를 여기에다가 넣어야됨
             vm.opt = 2;
             vm.getLectureStat();
             break;
           }
           case 'CLOSE_STATUSBAR': {
+            vm.updateIsActiveInfo({
+              isActiveInfo: false,
+            });
             break;
           }
           default: {
