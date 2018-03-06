@@ -21,7 +21,7 @@
         sortable
         style="width: 10%">
         <template slot-scope="scope">
-          <el-slider v-model="(scope.row.num_student_on_lecture - scope.row.num_better_understanding_score)/scope.row.num_student_on_lecture * 100"  :step="25" disabled show-stops></el-slider>
+          <el-slider v-model="defaultValue"  :step="25" disabled show-stops></el-slider>
           <div class = "slider_label">
             <div class= "slider_label_q q1">{{scope.row.min_understanding_score}}</div>
             <div class= "slider_label_q q2">{{scope.row.q1_understanding_score}}</div>
@@ -37,7 +37,7 @@
         sortable
         style="width: 10%">
         <template slot-scope="scope">
-          <el-slider v-model="(scope.row.num_student_on_lecture - scope.row.num_better_concentration_score)/scope.row.num_student_on_lecture * 100"  :step="25" disabled show-stops></el-slider>
+          <el-slider v-model="defaultValue"  :step="25" disabled show-stops></el-slider>
           <div class = "slider_label">
             <div class= "slider_label_q q1">{{scope.row.min_concentration_score}}</div>
             <div class= "slider_label_q q2">{{scope.row.q1_concentration_score}}</div>
@@ -53,7 +53,7 @@
         sortable
         style="width: 10%">
         <template slot-scope="scope">
-          <el-slider v-model="(scope.row.num_student_on_lecture - scope.row.num_better_participation_score)/scope.row.num_student_on_lecture * 100"  :step="25" disabled show-stops></el-slider>
+          <el-slider v-model="defaultValue"  :step="25" disabled show-stops></el-slider>
           <div class = "slider_label">
             <div class= "slider_label_q q1">{{scope.row.min_participation_score}}</div>
             <div class= "slider_label_q q2">{{scope.row.q1_participation_score}}</div>
@@ -63,6 +63,7 @@
           </div>
         </template>
       </el-table-column>
+      <!--
       <el-table-column
         prop="index"
         label="통계 보기"
@@ -70,11 +71,13 @@
         width="150">
         <template slot-scope="scope">
           <el-button type="primary" size="small" @click="onClick('LECTURE_ANALYSIS', scope.row.lecture_id)">
-            상세 로그
+            강의 상세 로그
           </el-button>
         </template>
       </el-table-column>
+      -->
     </el-table>
+    <teacher-class-journal-detail :lectureId = "lectureId" v-if = "isActiveInfo"/>
   </div>
 </template>
 
@@ -114,17 +117,11 @@
 </style>
 
 <style lang="scss">
-  .el-slider__button{
-    width:0px;
-    height:0px;
-    border: none;
+  .el-slider__button-wrapper{
+    display:none !important;
   }
   .el-slider__runway{
-    cursor: context-menu;
-  }
-  .el-slider__runway.disabled, .el-slider__runway.disabled .el-slider__button-wrapper:hover, .el-slider__runway.disabled .el-slider__button-wrapper.hover
-  {
-    cursor: context-menu;
+    cursor: auto;
   }
   .el-progress-bar__outer{
     background-color:#ffffff;
@@ -139,7 +136,7 @@
   import TeacherClassJournalDetail from '../partials/TeacherClassJournalDetail';
 
   export default {
-    name: 'StudentLectureJournal',
+    name: 'TeacherLectureJournal',
     components: {
       TimeLine,
       TeacherClassJournalDetail,
@@ -147,7 +144,7 @@
     data() {
       return {
         defaultValue: 0,
-        isStudent: 1,
+        isStudent: 0,
       };
     },
     async beforeMount() {
@@ -156,7 +153,7 @@
         userId: utils.getUserIdFromJwt(),
       });
       vm.updateIsStudent({
-        isStudent: 1,
+        isStudent: 0,
       });
       vm.updateAnalysisOpt({
         analysisOpt: 1,
@@ -164,35 +161,10 @@
       await vm.getAnalysisData();
     },
     methods: {
-      ...mapMutations('analysis', ['updateClassId', 'updateUserId', 'updateIsStudent', 'updateLectureId', 'updateAnalysisOpt']),
+      ...mapMutations('analysis', ['updateClassId', 'updateUserId', 'updateIsStudent', 'updateIsActiveInfo', 'updateLectureId', 'updateAnalysisOpt']),
       ...mapActions('analysis', [
         'getAnalysisData',
       ]),
-      onClick(type, lectureId) {
-        const vm = this;
-        switch (type) {
-          case 'STUDENT_STAT': {
-            vm.updateLectureId({
-              // eslint-disable-next-line
-              lectureId: lectureId,
-            });
-            break;
-          }
-          case 'LECTURE_ANALYSIS': {
-            vm.updateLectureId({
-              // eslint-disable-next-line
-              lectureId: lectureId,
-            });
-            vm.$router.push({
-              name: 'StudentLectureJournal',
-            });
-            break;
-          }
-          default: {
-            throw new Error('not defined type', type);
-          }
-        }
-      },
     },
     computed: {
       ...mapState('analysis', ['analysisData', 'lectureId']),
@@ -217,13 +189,6 @@
             min_participation_score: vm.analysisData.result1[0].o0_min_participation_score,
             min_concentration_score: vm.analysisData.result1[0].o0_min_concentration_score,
             min_understanding_score: vm.analysisData.result1[0].o0_min_understanding_score,
-            // eslint-disable-next-line
-            num_better_participation_score: vm.analysisData.result1[0].o0_num_better_participation_score,
-            // eslint-disable-next-line
-            num_better_concentration_score: vm.analysisData.result1[0].o0_num_better_concentration_score,
-            // eslint-disable-next-line
-            num_better_understanding_score: vm.analysisData.result1[0].o0_num_better_understanding_score,
-            num_student_on_lecture: vm.analysisData.result1[0].num_student_on_lecture,
           },
             {
               row_name: '본강의',
@@ -242,13 +207,6 @@
               min_participation_score: vm.analysisData.result1[0].o1_min_participation_score,
               min_concentration_score: vm.analysisData.result1[0].o1_min_concentration_score,
               min_understanding_score: vm.analysisData.result1[0].o1_min_understanding_score,
-              // eslint-disable-next-line
-              num_better_participation_score: vm.analysisData.result1[0].o1_num_better_participation_score,
-              // eslint-disable-next-line
-              num_better_concentration_score: vm.analysisData.result1[0].o1_num_better_concentration_score,
-              // eslint-disable-next-line
-              num_better_understanding_score: vm.analysisData.result1[0].o1_num_better_understanding_score,
-              num_student_on_lecture: vm.analysisData.result1[0].num_student_on_lecture,
             },
             {
               row_name: '복습',
@@ -267,13 +225,6 @@
               min_participation_score: vm.analysisData.result1[0].o2_min_participation_score,
               min_concentration_score: vm.analysisData.result1[0].o2_min_concentration_score,
               min_understanding_score: vm.analysisData.result1[0].o2_min_understanding_score,
-              // eslint-disable-next-line
-              num_better_participation_score: vm.analysisData.result1[0].o2_num_better_participation_score,
-              // eslint-disable-next-line
-              num_better_concentration_score: vm.analysisData.result1[0].o2_num_better_concentration_score,
-              // eslint-disable-next-line
-              num_better_understanding_score: vm.analysisData.result1[0].o2_num_better_understanding_score,
-              num_student_on_lecture: vm.analysisData.result1[0].num_student_on_lecture,
             });
           return returnArr;
         },
