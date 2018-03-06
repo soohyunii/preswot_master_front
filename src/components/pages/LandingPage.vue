@@ -53,6 +53,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import deepEqual from 'deep-equal';
 import ClassIntroCard from '../partials/ClassIntroCard';
 import studentService from '../../services/studentService';
@@ -80,6 +81,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions('class', ['postClassUser']),
     async onClick(type, data) {
       const vm = this;
       switch (type) {
