@@ -64,7 +64,7 @@
                     <sc-homework-editor v-if="currentEditingScItemType === '숙제'" />
                     <sc-survey-editor v-if="currentEditingScItemType === '설문'" />
                     <sc-question-editor v-if="currentEditingScItemType === '문항'" />
-                    <sc-active-time-editor />
+                    <sc-active-time-editor :type="currentEditingScItemType" />
 
                   </el-col>
                 </el-row>
@@ -151,7 +151,7 @@ export default {
   },
   data() {
     return {
-      activeTab: 'third', // TODO: change to first
+      activeTab: 'first', // TODO: change to first
     };
   },
   async beforeMount() {
@@ -203,6 +203,7 @@ export default {
     ...mapMutations('sc', [
       'updateScType',
       'updateScId',
+      'updateAfterStartDateOffsetSec',
     ]),
     ...mapMutations('scItem', [
       'updateCurrentEditingScItemIndex',

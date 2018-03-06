@@ -5,30 +5,31 @@
       <!-- TODO: replace span with :xs, :sm, :md, :lg, :xl -->
       <el-col :span="13">
         <el-button
+        :type="appTheme" plain
           id="navigation_toggle"
           @click="onClick('TOGGLE_NAVIGATION')"
         >
-          <i class="fa fa-bars fa-2x" />
+          <i class="fas fa-bars fa-2x" />
         </el-button>
         <router-link to="/">
           <!-- TODO: replace 브랜드 로고 -->
-          <el-button type="primary">Brand Logo</el-button>
+          <el-button :type="appTheme" plain>Brand Logo</el-button>
         </router-link>
         <!-- TODO: translate placeholder -->
         <el-input placeholder="Please input" v-model="searchText">
         </el-input>
         <!-- <el-button icon="el-icon-search" type="primary"></el-button> -->
-        <el-button type="primary">
-          <i class="fa fa-search"></i>
+        <el-button :type="appTheme" plain>
+          <i class="fas fa-search"></i>
         </el-button>
       </el-col>
 
       <el-col :span="11">
 
         <el-row type="flex" justify="end">
-          <el-col :span="12">
+          <el-col :span="14">
             <el-dropdown @command="onClick">
-              <el-button type="primary">
+              <el-button :type="appTheme" plain>
                 {{ $t('HEADER.LANG_INFO') }}<i class="el-icon-arrow-down el-icon--right"></i>
               </el-button>
               <el-dropdown-menu slot="dropdown">
@@ -37,20 +38,26 @@
               </el-dropdown-menu>
             </el-dropdown>
 
+            <router-link to="/a/student/class" v-show="isJwtValid">
+              <el-button :type="appTheme" plain>
+                <i class="fas fa-graduation-cap"></i>
+              </el-button>
+            </router-link>
+
             <router-link to="/a/teacher/class" v-show="isJwtValid">
-              <el-button type="primary">
-                <i class="fa fa-pencil-square-o"></i>
+              <el-button :type="appTheme" plain>
+                <i class="fas fa-edit"></i>
               </el-button>
             </router-link>
 
             <!-- Login / Profile, Logout button part -->
             <router-link to="/login" v-show="!isJwtValid">
-              <el-button type="primary">
+              <el-button :type="appTheme" plain>
                   {{ $t('LOGIN.LOGIN_BUTTON') }}
               </el-button>
             </router-link>
             <el-dropdown @command="onClick">
-              <el-button type="primary" v-show="isJwtValid">
+              <el-button :type="appTheme" plain v-show="isJwtValid">
                   {{ $t('HEADER.PROFILE_BUTTON') }}<i class="el-icon-arrow-down el-icon--right"></i>
               </el-button>
               <el-dropdown-menu slot="dropdown">
@@ -62,7 +69,7 @@
             </router-link> -->
 
             <router-link to="/register" v-show="!isJwtValid">
-              <el-button type="primary">
+              <el-button :type="appTheme" plain>
                 회원가입
               </el-button>
             </router-link>
@@ -76,27 +83,23 @@
 </template>
 
 <style lang="scss" scoped>
-// @import "~@/variables.scss"; // * To use $--color-primary scss variable
+  .el-input {
+    width: 400px; // TODO: Rplace 400px with designed value
+  }
 
-.el-input {
-  width: 400px; // TODO: Rplace 400px with designed value
-}
+  #navigation_toggle {
+    border: 0;
+    padding: 6px 10px;
+    vertical-align: middle;
+    // .fa.fa-bars {
+    //   top: 100px;
+    // }
+  }
 
-#navigation_toggle {
-  border: 0;
-  padding: 6px 10px;
-  vertical-align: middle;
-  // .fa.fa-bars {
-  //   top: 100px;
-  // }
-}
-
-#app_nav_wrapper {
-  padding: 8px 0;
-}
-
+  #app_nav_wrapper {
+    padding: 8px 0;
+  }
 </style>
-
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex';
@@ -112,6 +115,19 @@ export default {
     ...mapState('auth', ['jwt', 'locale']),
     ...mapState('layout', ['isNavCollapsed']),
     ...mapGetters('auth', ['isJwtValid']),
+    appTheme() {
+      const vm = this;
+      const path = vm.$route.path;
+      if (path.includes('teacher')) {
+        if (path.includes('live')) {
+          return 'warning';
+        }
+        return 'primary';
+      } else if (path.includes('student')) {
+        return '';
+      }
+      return 'primary';
+    },
   },
   methods: {
     ...mapMutations('layout', ['updateCollapse']),

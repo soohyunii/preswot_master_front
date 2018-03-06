@@ -37,16 +37,29 @@
             </el-date-picker>
             <el-radio-group v-model="shouldDeactivated" @change="changeShouldDeactivated">
               <el-radio-button :label="true">비활성화</el-radio-button>
-              <el-radio-button :label="false">계속 활성화</el-radio-button>
+              <el-radio-button :label="false" :disabled="scItemOrder === 2">계속 활성화</el-radio-button>
             </el-radio-group>
           </el-form-item>
           <i class="el-icon-loading" v-if="loading.END_DATE" />
+          <div v-if="scItemOrder === 2" style="text-indent: 120px; color: red;">
+            <h5>
+              복습에는 비활성화 시각이 반드시 필요합니다.
+              <span style="text-indent: 0px;">
+              <el-tooltip class="item" effect="dark" content="이 시간을 기준으로 서버에서 자동채점이 수행됩니다" placement="right">
+                <i class="el-icon-warning" />
+              </el-tooltip>
+              </span>
+            </h5>
+          </div>
 
 
-          <el-form-item label="선지별 선택 비율">
+          <el-form-item
+            v-if="['문항', '설문'].includes(type)"
+            :label="showingResultLabel"
+          >
             <el-radio-group v-model="scItemIsResultVisible" @change="onChange('RESULT')">
-              <el-radio-button :label="true">보이기</el-radio-button>
-              <el-radio-button :label="false">숨기기</el-radio-button>
+              <el-radio-button :label="true">공개</el-radio-button>
+              <el-radio-button :label="false">비공개</el-radio-button>
             </el-radio-group>
           </el-form-item>
           <i class="el-icon-loading" v-if="loading.RESULT" />
@@ -62,6 +75,7 @@ import { mapState, mapMutations, mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'ScActiveTimeEditor',
+  props: ['type'],
   data() {
     return {
       shouldDeactivated: true,
@@ -112,6 +126,15 @@ export default {
       res.scItemEndDate = vm.scItemEndDate;
       return res;
     },
+    showingResultLabel() {
+      const vm = this;
+      if (vm.type === '설문') {
+        return '설문결과';
+      } else if (vm.type === '문항') {
+        return '문항결과';
+      }
+      return null;
+    },
     scItemOrder: {
       get() {
         const vm = this;
@@ -123,6 +146,9 @@ export default {
       },
       set(scItemOrder) {
         const vm = this;
+        if (scItemOrder === 2) {
+          vm.shouldDeactivated = true;
+        }
         vm.assignCurrentEditingScItem({
           currentEditingScItem: {
             order: scItemOrder,

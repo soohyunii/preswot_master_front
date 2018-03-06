@@ -82,13 +82,23 @@
             </template>
           </el-table-column>
           <el-table-column
+            v-if="type === 'TEACH'"
             prop="edit"
             label="수정">
             <template slot-scope="scope">
-              <el-button
-                @click="$router.push(`/a/teacher/lecture/${scope.row.scId}/edit`);"
-              >
-                수정
+              <router-link :to="`/a/teacher/lecture/${scope.row.scId}/edit`">
+                <el-button>
+                  수정
+                </el-button>
+              </router-link>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="live"
+            label="강의">
+            <template slot-scope="scope">
+              <el-button @click="onClick('OPEN_LIVE_MODAL', scope.row.scId)">
+                강의
               </el-button>
             </template>
           </el-table-column>
@@ -98,9 +108,35 @@
         <br />
 
         <el-col align="center">
-          <el-button @click="clickAddScenario" type="primary">과목 시나리오 추가</el-button>
+          <el-button v-if="type === 'TEACH'" @click="clickAddScenario" type="primary">과목 시나리오 추가</el-button>
         </el-col>
       </div>
+    </el-col>
+    <el-col>
+      <el-dialog
+        title="Input Youtube Live Streaming Link"
+        :visible.sync="isModalVisible"
+      >
+        <el-form :model="input" label-width="120px">
+          <el-form-item label="Link Address">
+            <el-input v-model="input.youtubeLink"></el-input>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button
+            @click="onClick('CANCEL');"
+          >
+            Cancel
+          </el-button>
+          <el-button
+            type="primary"
+            @click="onClick('CONFIRM')"
+            :disabled="input.youtubeLink.length === 0"
+          >
+            Confirm
+          </el-button>
+        </span>
+      </el-dialog>
     </el-col>
   </el-row>
 </template>
@@ -111,23 +147,72 @@ import utils from '../../utils';
 
 export default {
   name: 'ClassScenario',
+  props: ['type'],
   async mounted() {
     const vm = this;
-    await vm.fetchClass();
+    try {
+      await vm.getClass({ type: vm.type });
+    } catch (error) {
+      // TODO: wording 바꿀 필요 有
+      vm.$notify({
+        title: '요청 실패',
+        message: '아직 개설된 강의가 없습니다.',
+        type: 'error',
+        duration: 0,
+      });
+    }
     vm.$forceUpdate();
 
     vm.$watch(
       () => (vm.currentClass),
       async () => {
-        await vm.fetchClass();
+        try {
+          await vm.getClass({ type: vm.type });
+        } catch (error) {
+          // TODO: wording 바꿀 필요 有
+          vm.$notify({
+            title: '요청 실패',
+            message: '아직 개설된 강의가 없습니다.',
+            type: 'error',
+            duration: 0,
+          });
+        }
         vm.$forceUpdate();
       },
     );
   },
+  data() {
+    return {
+      scId: null,
+      isModalVisible: false,
+      input: {
+        youtubeLink: 'https://www.youtube.com/embed/P-Ov-WcQYTw?autoplay=1',
+      },
+    };
+  },
   computed: {
     ...mapGetters('class', [
-      'currentClass',
+      'currentTeachingClass',
+      'currentStudyingClass',
     ]),
+    currentClass() {
+      const vm = this;
+      let currentClass;
+      switch (vm.type) {
+        case 'STUDY': {
+          currentClass = vm.currentStudyingClass;
+          break;
+        }
+        case 'TEACH': {
+          currentClass = vm.currentTeachingClass;
+          break;
+        }
+        default: {
+          throw new Error(`not defined type ${vm.type}`);
+        }
+      }
+      return currentClass;
+    },
     tableData: {
       get() {
         const vm = this;
@@ -170,8 +255,47 @@ export default {
       'createSc',
     ]),
     ...mapActions('class', [
-      'fetchClass',
+      'getClass',
     ]),
+    async onClick(type, scId) {
+      const vm = this;
+      switch (type) {
+        case 'OPEN_LIVE_MODAL': {
+          vm.isModalVisible = true;
+          vm.scId = scId;
+          break;
+        }
+        case 'CANCEL': {
+          vm.isModalVisible = false;
+          vm.input.youtubeLink = '';
+          vm.scId = null;
+          break;
+        }
+        case 'CONFIRM': {
+          try {
+            // TODO: send link to backend server
+            // TODO: link validation should be needed
+            // If Success
+            vm.$router.push({
+              path: `/a/teacher/lecture/${vm.scId}/live`,
+              query: {
+                link: vm.input.youtubeLink,
+              },
+            });
+            vm.isModalVisible = false;
+            vm.input.youtubeLink = '';
+            vm.scId = null;
+          } catch (error) {
+            // TODO: show noti
+            // console.error(error);
+          }
+          break;
+        }
+        default: {
+          throw new Error(`not defined type ${type}`);
+        }
+      }
+    },
     // getType(type) {
     //   // 과목 시나리오 유형 분류 {{ A: 강의, B: 숙제, C: 퀴즈, D: 시험 }}
     //   // TODO: Translate

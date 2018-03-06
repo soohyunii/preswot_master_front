@@ -8,13 +8,13 @@
       :router="true"
     >
       <el-menu-item index="/" class="menu">
-        <i class="fa fa-home fa-lg fa-fw el-compatible"></i>
+        <i class="fas fa-home fa-lg fa-fw el-compatible"></i>
         <!-- TODO: Translation -->
         <span slot="title">홈</span>
       </el-menu-item>
 
       <el-menu-item index="/classes" class="menu">
-        <i class="fa fa-list fa-lg fa-fw el-compatible"></i>
+        <i class="fas fa-list fa-lg fa-fw el-compatible"></i>
         <span slot="title">
           <!-- TODO: Translation -->
           과목 리스트
@@ -23,21 +23,24 @@
 
       <el-submenu index="3" class="menu">
         <template slot="title">
-          <i class="fa fa-graduation-cap fa-lg fa-fw el-compatible"></i>
+          <i class="fas fa-graduation-cap fa-lg fa-fw el-compatible"></i>
           <!-- TODO: Translation -->
           <span slot="title">수강 중인 과목</span>
         </template>
         <el-menu-item-group>
-          <template v-for="(item, key, index) in attendingClassList">
+          <template v-for="(item, index) in studyingClassList">
             <el-tooltip
               effect="dark"
-              :content="item.className"
-              :disabled="item.className.length < truncateLength"
+              :content="item.name"
+              :disabled="item.name.length < truncateLength"
               placement="right"
-              :key="key">
-              <el-menu-item :index="'3-'+index" :key="key">
+              :key="index">
+              <el-menu-item
+                index="/a/student/class"
+                @click="clickClassButton(item, index)"
+                :key="index">
                 <!-- TODO: link to each class -->
-                {{ item.className | truncate(truncateLength) }}
+                {{ item.name | truncate(truncateLength) }}
               </el-menu-item>
             </el-tooltip>
           </template>
@@ -46,21 +49,25 @@
 
       <el-submenu index="4" class="menu">
         <template slot="title">
-          <i class="fa fa-book fa-lg fa-fw el-compatible"></i>
+          <i class="fas fa-book fa-lg fa-fw el-compatible"></i>
           <!-- TODO: Translation -->
           <span slot="title">강의 중인 과목</span>
         </template>
         <el-menu-item-group>
-          <template v-for="(item, key, index) in teachingClassList">
+          <template v-for="(item, index) in teachingClassList">
             <el-tooltip
               effect="dark"
-              :content="item.className"
-              :disabled="item.className.length < truncateLength"
+              :content="item.name"
+              :disabled="item.name.length < truncateLength"
               placement="right"
-              :key="key">
-              <el-menu-item :index="'4-'+index" :key="key">
+              :key="index">
+              <el-menu-item
+                :key="index"
+                index="/a/teacher/class"
+                @click="clickClassButton(item, index)"
+              >
                 <!-- TODO: link to each class -->
-                {{ item.className | truncate(truncateLength) }}
+                {{ item.name | truncate(truncateLength) }}
               </el-menu-item>
             </el-tooltip>
           </template>
@@ -68,10 +75,9 @@
       </el-submenu>
 
       <!-- TODO: Find a better place to be -->
-      <router-link to="/a/student/lecture/live">Student Live</router-link> <br />
-      <router-link to="/a/teacher/lecture/live">Teacher Live</router-link> <br />
+      <router-link to="/a/student/lecture/1/live">Student Live</router-link> <br />
       <router-link to="/a/test">Chart Test</router-link> <br />
-      <router-link to="/a/teacher/lecture/wordCloudExample">wordCloudExample</router-link> <br />
+      <router-link to="/a/student/class">Student Class</router-link> <br />
     </el-menu>
   </div>
 </template>
@@ -112,8 +118,8 @@
 </style>
 
 <script>
-import { mapState } from 'vuex';
-import studentService from '../../services/studentService';
+import { mapState, mapMutations, mapActions } from 'vuex';
+// import studentService from '../../services/studentService';
 // import teacherService from '../../services/teacherService';
 
 export default {
@@ -122,32 +128,34 @@ export default {
     return {
       // isCollapse: false,
       truncateLength: 16,
-      attendingClassList: [],
-      teachingClassList: [],
     };
   },
   computed: {
     ...mapState('layout', ['isNavCollapsed']),
+    ...mapState('class', [
+      'studyingClassList',
+      'teachingClassList',
+      'currentClassIndex',
+    ]),
+  },
+  methods: {
+    ...mapMutations('class', [
+      'updateCurrentClassIndex',
+    ]),
+    ...mapActions('class', [
+      'getMyClassLists',
+    ]),
+    clickClassButton(item, index) {
+      const vm = this;
+      vm.updateCurrentClassIndex({
+        currentClassIndex: index,
+      });
+    },
   },
   async mounted() {
     const vm = this;
-    vm.attendingClassList = await studentService.fetchAttendingClassList();
-    // vm.teachingClassList = await teacherService.fetchTeachingClassList();
-    // TODO: replace with teacherService.fetchTeachingClassList
-    vm.teachingClassList = [
-      {
-        className: 'Vue.js',
-      },
-      {
-        className: 'Node.js',
-      },
-      {
-        className: 'TensorFlow with python and C++',
-      },
-      {
-        className: 'length_test_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-      },
-    ];
+    await vm.getMyClassLists();
+    vm.$forceUpdate();
   },
 };
 </script>

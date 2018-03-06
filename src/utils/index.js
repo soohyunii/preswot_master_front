@@ -33,17 +33,27 @@ export default {
     // console.log('encodedPayload', encodedPayload);
     // const payload = JSON.parse(atob(encodedPayload));
     // console.log('payload', payload);
-    // TODO: try cath jwtDecode
-    const payload = jwtDecode(jwt);
-    return Date.now() < payload.exp;
+    let isExpired;
+    try {
+      const payload = jwtDecode(jwt);
+      isExpired = Date.now() < payload.exp;
+    } catch (error) {
+      isExpired = true;
+    }
+    return isExpired;
   },
   getEmailFromJwt() {
     const jwt = this.getJwtFromLocalStorage();
     if (jwt.length === 0) {
       return null;
     }
-    // TODO: try cath jwtDecode
-    return jwtDecode(jwt).email_id;
+    let email;
+    try {
+      email = jwtDecode(jwt).email_id;
+    } catch (error) {
+      email = null;
+    }
+    return email;
   },
   getUserIdFromJwt() {
     const jwt = this.getJwtFromLocalStorage();
@@ -131,5 +141,16 @@ export default {
 
     const changedCurrentEditingScItemIndex = sc.map(x => x.id).indexOf(beforeSortedScItem.id);
     return { orderSortedSc, changedCurrentEditingScItemIndex };
+  },
+  downloadFile(url, filename) {
+    console.log('downloadFile', url); // eslint-disable-line
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    window.setTimeout(() => {
+      document.body.removeChild(link);
+    }, 1000);
   },
 };

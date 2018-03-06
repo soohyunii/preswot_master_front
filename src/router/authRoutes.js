@@ -3,9 +3,10 @@ import Profile from '../components/pages/Profile';
 import TeacherClassIndex from '../components/pages/TeacherClassIndex';
 import TeacherLectureNew from '../components/pages/TeacherLectureNew';
 import TeacherLectureLive from '../components/pages/TeacherLectureLive';
+import StudentClassIndex from '../components/pages/StudentClassIndex';
 import StudentLectureLive from '../components/pages/StudentLectureLive';
 import TeacherClassNew from '../components/pages/TeacherClassNew';
-import wordCloudExample from '../components/partials/wordCloudExample';
+import TeacherClassEdit from '../components/pages/TeacherClassEdit';
 import StudentClassJournal from '../components/pages/StudentClassJournal';
 import TeacherClassJournal from '../components/pages/TeacherClassJournal';
 import StudentLectureJournal from '../components/pages/StudentLectureJournal';
@@ -30,15 +31,6 @@ export default function authRoutes(root) {
       component: test,
       meta: {
         title: 'test', // TODO: import from i18n
-        auth: true,
-      },
-    },
-    {
-      path: '/teacher/lecture/wordCloudExample',
-      name: 'wordCloudExample',
-      component: wordCloudExample,
-      meta: {
-        title: 'wordCloudExample', // TODO: import from i18n
         auth: true,
       },
     },
@@ -70,6 +62,15 @@ export default function authRoutes(root) {
       },
     },
     {
+      path: '/teacher/class/:classId/edit',
+      name: 'TeacherClassEdit',
+      component: TeacherClassEdit,
+      meta: {
+        title: 'Teacher Class Edit', // TODO: import from i18n
+        auth: true,
+      },
+    },
+    {
       path: '/teacher/lecture/:scId/edit',
       name: 'TeacherLectureNew',
       component: TeacherLectureNew,
@@ -79,7 +80,7 @@ export default function authRoutes(root) {
       },
     },
     {
-      path: '/teacher/lecture/live',
+      path: '/teacher/lecture/:scId/live',
       name: 'TeacherLectureLive',
       component: TeacherLectureLive,
       meta: {
@@ -88,7 +89,16 @@ export default function authRoutes(root) {
       },
     },
     {
-      path: '/student/lecture/live',
+      path: '/student/class/',
+      name: 'StudentClass',
+      component: StudentClassIndex,
+      meta: {
+        title: 'Student Class Index', // TODO: import from i18n
+        auth: true,
+      },
+    },
+    {
+      path: '/student/lecture/:scId/live',
       name: 'StudentLectureLive',
       component: StudentLectureLive,
       meta: {

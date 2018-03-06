@@ -47,5 +47,11 @@ export default {
       }
       return res;
     },
+    async findPassword({ commit }, { email }) {
+      await authService.findPassword({ email });
+    },
+    async putPassword({ commit }, { newPassword, key, userId }) {
+      await authService.putPassword({ newPassword, key, userId });
+    },
   },
 };

@@ -42,6 +42,7 @@
           formedData[2].push(vm.chartData[i].avg_participation_score);
         }
       }
+      // eslint-disable-next-line
       const chart = bb.generate({
         data: {
           columns: formedData,

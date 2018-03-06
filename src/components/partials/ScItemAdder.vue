@@ -4,22 +4,22 @@
       <!-- TODO: change icon -->
       <el-col align="center" :span="6">
         <el-button @click="onClick('문항')" style="width: 100%;">
-          <i class="el-icon-question"></i><br />{{$t('ITEM.QUESTION')}}
+          <i class="fas fa-list-ol"></i><br />{{$t('ITEM.QUESTION')}}
         </el-button>
       </el-col>
       <el-col align="center" :span="6">
         <el-button @click="onClick('설문')" style="width: 100%;">
-          <i class="el-icon-edit-outline"></i><br />{{$t('ITEM.SURVEY')}}
+          <i class="far fa-clipboard"></i><br />{{$t('ITEM.SURVEY')}}
         </el-button>
       </el-col>
       <el-col align="center" :span="6">
         <el-button @click="onClick('숙제')" style="width: 100%;">
-          <i class="el-icon-document"></i><br />{{$t('ITEM.HOMEWORK')}}
+          <i class="fas fa-tasks"></i><br />{{$t('ITEM.HOMEWORK')}}
         </el-button>
       </el-col>
       <el-col align="center" :span="6">
         <el-button @click="onClick('강의자료')" style="width: 100%;">
-          <i class="el-icon-info"></i><br />{{$t('ITEM.MATERIAL')}}
+          <i class="far fa-file-pdf"></i><br />{{$t('ITEM.MATERIAL')}}
         </el-button>
       </el-col>
     </el-row>

@@ -176,7 +176,7 @@
         analysisOpt: 0,
       });
       await vm.getAnalysisData();
-      console.log(vm.analysisData);
+      // console.log(vm.analysisData);
     },
     methods: {
       ...mapMutations('analysis', ['updateClassId', 'updateUserId', 'updateIsStudent', 'updateIsActiveInfo', 'updateLectureId', 'updateAnalysisOpt']),

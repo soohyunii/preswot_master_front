@@ -1,19 +1,11 @@
 <template>
   <div>
-    <h1>과목 생성</h1>
+    <h1>과목 수정</h1>
     <el-row>
       <el-col style="max-width: 600px;">
-        <el-form :model="input" ref="elForm" label-width="125px">
+        <el-form label-width="125px">
           <el-form-item label="과목 제목">
             <el-input v-model="title"></el-input>
-          </el-form-item>
-
-          <el-form-item label="공동 강사 목록">
-            <!-- TODO: translation -->
-            <el-input
-              v-model="teacherEmailList"
-              placeholder="공동 강사가 없을시 비워주세요.">
-            </el-input>
           </el-form-item>
 
           <el-form-item label="과목 소개">
@@ -41,17 +33,24 @@
             </el-radio-group>
           </el-form-item>
 
+          <el-form-item label="과목 공개 여부">
+            <el-radio-group v-model="opened">
+              <el-radio-button label="0">비공개</el-radio-button>
+              <el-radio-button label="1">공개(닫힘)</el-radio-button>
+              <el-radio-button label="2">진행중(열림)</el-radio-button>
+              <el-radio-button label="3">종료</el-radio-button>
+            </el-radio-group>
+          </el-form-item>
+
           <el-form-item>
             <!-- TODO: use button loading -->
             <el-button
               type="primary"
-              :disabled="!isNewClassValid"
               @click="onSubmit"
             >
-              강의 생성하기
+              강의 수정하기
             </el-button>
           </el-form-item>
-
         </el-form>
       </el-col>
     </el-row>
@@ -59,30 +58,25 @@
 </template>
 
 <script>
-import { mapMutations, mapState, mapActions, mapGetters } from 'vuex';
+import { mapMutations, mapActions, mapGetters } from 'vuex';
 // import authService from '../../services/authService';
-import utils from '../../utils';
+// import utils from '../../utils';
 
 export default {
-  name: 'TeacherClassNew',
+  name: 'TeacherClassEdit',
   // async mounted() {
   //   const res = await authService.test();
   //   console.log(res);
   // },
   data() {
     return {
-      test: '',
       shouldDeactivated: true,
+      test: '',
     };
   },
   methods: {
-    ...mapMutations('class', [
-      'updateNewClass',
-      'assignNewClass',
-    ]),
-    ...mapActions('class', [
-      'postClass',
-    ]),
+    ...mapMutations('class', ['assignCurrentTeachingClass']),
+    ...mapActions('class', ['putClass']),
     changeShouldDeactivated(label) {
       const vm = this;
       if (!label) {
@@ -92,22 +86,16 @@ export default {
     async onSubmit() {
       const vm = this;
       try {
-        await vm.postClass();
+        await vm.putClass();
         vm.$notify({
-          title: '과목 생성 성공',
-          message: '성공적으로 과목이 생성됨',
+          title: '과목 수정 성공',
+          message: '성공적으로 과목이 수정됨',
           type: 'success',
-        });
-        vm.updateNewClass({
-          newClass: {
-            activeStartDate: null,
-            activeEndDate: null,
-          },
         });
         vm.$router.push('/a/teacher/class');
       } catch (error) {
         vm.$notify({
-          title: '과목 생성 실패',
+          title: '과목 수정 실패',
           message: error.toString(),
           type: 'error',
           duration: 0,
@@ -116,12 +104,7 @@ export default {
     },
   },
   computed: {
-    ...mapState('class', [
-      'newClass',
-    ]),
-    ...mapGetters('class', [
-      'isNewClassValid',
-    ]),
+    ...mapGetters('class', ['currentTeachingClass']),
     input() {
       const res = {};
       const vm = this;
@@ -131,32 +114,13 @@ export default {
     title: {
       get() {
         const vm = this;
-        return vm.newClass.title;
+        return vm.currentTeachingClass.name;
       },
-      set(title) {
+      set(name) {
         const vm = this;
-        vm.assignNewClass({
-          newClass: {
-            title,
-          },
-        });
-      },
-    },
-    teacherEmailList: {
-      get() {
-        const vm = this;
-        if (!vm.newClass.teacherEmailList) {
-          return null;
-        }
-        return vm.newClass.teacherEmailList.join(', ');
-      },
-      set(teacherEmailList) {
-        const vm = this;
-        vm.assignNewClass({
-          newClass: {
-            teacherEmailList: teacherEmailList.split(',')
-              .map(value => value.trim())
-              .filter(value => utils.isValidEmail(value)),
+        vm.assignCurrentTeachingClass({
+          currentTeachingClass: {
+            name,
           },
         });
       },
@@ -164,12 +128,12 @@ export default {
     description: {
       get() {
         const vm = this;
-        return vm.newClass.description;
+        return vm.currentTeachingClass.description;
       },
       set(description) {
         const vm = this;
-        vm.assignNewClass({
-          newClass: {
+        vm.assignCurrentTeachingClass({
+          currentTeachingClass: {
             description,
           },
         });
@@ -178,14 +142,13 @@ export default {
     activeStartDate: {
       get() {
         const vm = this;
-        // const activeStartDate = new Date(vm.newClass.activeStartDate);
-        return vm.newClass.activeStartDate;
+        return vm.currentTeachingClass.start_time;
       },
       set(activeStartDate) {
         const vm = this;
-        vm.assignNewClass({
-          newClass: {
-            activeStartDate,
+        vm.assignCurrentTeachingClass({
+          currentTeachingClass: {
+            start_time: activeStartDate,
           },
         });
       },
@@ -193,13 +156,27 @@ export default {
     activeEndDate: {
       get() {
         const vm = this;
-        return vm.newClass.activeEndDate;
+        return vm.currentTeachingClass.end_time;
       },
       set(activeEndDate) {
         const vm = this;
-        vm.assignNewClass({
-          newClass: {
-            activeEndDate,
+        vm.assignCurrentTeachingClass({
+          currentTeachingClass: {
+            end_time: activeEndDate,
+          },
+        });
+      },
+    },
+    opened: {
+      get() {
+        const vm = this;
+        return vm.currentTeachingClass.opened;
+      },
+      set(opened) {
+        const vm = this;
+        vm.assignCurrentTeachingClass({
+          currentTeachingClass: {
+            opened,
           },
         });
       },
