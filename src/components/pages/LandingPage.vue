@@ -15,16 +15,21 @@
         <!-- TODO: translation -->
         <div class="">인기 강의 목록<hr></div>
         <el-row :gutter="20" >
-          <template v-for="(item, index, key) in popularClassList">
-            <el-col :key="key" :span="Math.ceil(24 / elementNumber)" v-if="index < elementNumber">
-              {{ item.className }}
-              <div class="image-wrapper">
-                <img src="../../assets/dev/ratio_16_10.png">
-              </div>
+          <template v-for="(item, index) in openedClassList">
+            <el-col :key="item.class_id" :span="8" v-if="index < elementNumber">
+              <class-intro-card
+                :title="item.name"
+                :description="item.description"
+                :classId="item.class_id"
+                :onClick="onClick"
+                :label-span="5"
+                :teacher-list="[item.master.email_id]"
+                :start-date-str="formatDate(item.start_item)"
+                :end-date-str="formatDate(item.end_time)"
+              />
             </el-col>
           </template>
         </el-row>
-
         <!-- TODO: translation -->
         <div class="">내 수강 통계<hr></div>
         <el-row type="flex" justify="center">
@@ -46,11 +51,17 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex';
 import deepEqual from 'deep-equal';
 import studentService from '../../services/studentService';
+import ClassIntroCard from '../partials/ClassIntroCard';
+import utils from '../../utils';
 
 export default {
   name: 'Home',
+  components: {
+    ClassIntroCard,
+  },
   data() {
     const vm = this;
     // * Restore previous popularClassList
@@ -68,7 +79,55 @@ export default {
       elmenetwidthPixel: 300,
     };
   },
+  computed: {
+    ...mapState('class', ['openedClassList']),
+  },
   methods: {
+    ...mapActions('class', [
+      'getClassLists',
+      'getMyClassLists',
+    ]),
+    formatDate: utils.formatDate,
+    async onClick(type, data) {
+      const vm = this;
+      switch (type) {
+        case 'APPLY': {
+          try {
+            await vm.postClassUser({
+              classId: data,
+            });
+            vm.$notify({
+              title: '수강 신청 요청 성공',
+              message: '메세지',
+              type: 'success',
+            });
+          } catch (error) {
+            vm.$notify({
+              title: '수강 신청 요청 실패',
+              message: error.toString(),
+              type: 'error',
+              duration: 0,
+            });
+          }
+
+          try {
+            await vm.getMyClassLists();
+            await vm.getClassLists();
+          } catch (error) {
+            vm.$notify({
+              title: '과목 목록 가져오기 실패',
+              message: error.toString(),
+              type: 'error',
+              duration: 0,
+            });
+          }
+          break;
+        }
+        default: {
+          throw new Error(`not defined type ${type}`);
+        }
+      }
+    },
     handleResize() {
       const vm = this;
       const width = document.getElementById('landing_page_wrapper').offsetWidth;
@@ -94,6 +153,7 @@ export default {
   async mounted() {
     const vm = this;
     const res = await studentService.fetchPopularClassList();
+    await vm.getClassLists();
     // * If fetched popularClassList is different from stored one, replace it
     if (deepEqual(res, vm.popularClassList)) {
       return;
