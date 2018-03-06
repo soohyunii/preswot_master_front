@@ -8,13 +8,13 @@
       :router="true"
     >
       <el-menu-item index="/" class="menu">
-        <i class="fa fa-home fa-lg fa-fw el-compatible"></i>
+        <i class="fas fa-home fa-lg fa-fw el-compatible"></i>
         <!-- TODO: Translation -->
         <span slot="title">홈</span>
       </el-menu-item>
 
       <el-menu-item index="/classes" class="menu">
-        <i class="fa fa-list fa-lg fa-fw el-compatible"></i>
+        <i class="fas fa-list fa-lg fa-fw el-compatible"></i>
         <span slot="title">
           <!-- TODO: Translation -->
           과목 리스트
@@ -23,19 +23,22 @@
 
       <el-submenu index="3" class="menu">
         <template slot="title">
-          <i class="fa fa-graduation-cap fa-lg fa-fw el-compatible"></i>
+          <i class="fas fa-graduation-cap fa-lg fa-fw el-compatible"></i>
           <!-- TODO: Translation -->
           <span slot="title">수강 중인 과목</span>
         </template>
         <el-menu-item-group>
-          <template v-for="(item, key, index) in studyingClassList">
+          <template v-for="(item, index) in studyingClassList">
             <el-tooltip
               effect="dark"
               :content="item.name"
               :disabled="item.name.length < truncateLength"
               placement="right"
-              :key="key">
-              <el-menu-item :index="'3-'+index" :key="key">
+              :key="index">
+              <el-menu-item
+                index="/a/student/class"
+                @click="clickClassButton(item, index)"
+                :key="index">
                 <!-- TODO: link to each class -->
                 {{ item.name | truncate(truncateLength) }}
               </el-menu-item>
@@ -46,19 +49,23 @@
 
       <el-submenu index="4" class="menu">
         <template slot="title">
-          <i class="fa fa-book fa-lg fa-fw el-compatible"></i>
+          <i class="fas fa-book fa-lg fa-fw el-compatible"></i>
           <!-- TODO: Translation -->
           <span slot="title">강의 중인 과목</span>
         </template>
         <el-menu-item-group>
-          <template v-for="(item, key, index) in teachingClassList">
+          <template v-for="(item, index) in teachingClassList">
             <el-tooltip
               effect="dark"
               :content="item.name"
               :disabled="item.name.length < truncateLength"
               placement="right"
-              :key="key">
-              <el-menu-item :index="'4-'+index" :key="key">
+              :key="index">
+              <el-menu-item
+                :key="index"
+                index="/a/teacher/class"
+                @click="clickClassButton(item, index)"
+              >
                 <!-- TODO: link to each class -->
                 {{ item.name | truncate(truncateLength) }}
               </el-menu-item>
@@ -70,7 +77,6 @@
       <!-- TODO: Find a better place to be -->
       <router-link to="/a/student/lecture/1/live">Student Live</router-link> <br />
       <router-link to="/a/test">Chart Test</router-link> <br />
-      <router-link to="/a/teacher/lecture/wordCloudExample">wordCloudExample</router-link> <br />
       <router-link to="/a/student/class">Student Class</router-link> <br />
     </el-menu>
   </div>
@@ -112,7 +118,7 @@
 </style>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 // import studentService from '../../services/studentService';
 // import teacherService from '../../services/teacherService';
 
@@ -129,12 +135,22 @@ export default {
     ...mapState('class', [
       'studyingClassList',
       'teachingClassList',
+      'currentClassIndex',
     ]),
   },
   methods: {
+    ...mapMutations('class', [
+      'updateCurrentClassIndex',
+    ]),
     ...mapActions('class', [
       'getMyClassLists',
     ]),
+    clickClassButton(item, index) {
+      const vm = this;
+      vm.updateCurrentClassIndex({
+        currentClassIndex: index,
+      });
+    },
   },
   async mounted() {
     const vm = this;

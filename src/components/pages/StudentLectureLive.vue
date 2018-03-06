@@ -47,9 +47,6 @@
         <div id="app_lecture_editor" v-show="!isScEmpty">
           <el-row :gutter="30">
             <el-col :span="24">
-              TODO:
-              학생이 문제 보고
-              문제 풀 수 있는 공간
               <sc-common-viewer />
               <sc-material-viewer v-if="currentEditingScItemType === '강의자료'" />
               <sc-homework-viewer v-if="currentEditingScItemType === '숙제'" />

@@ -93,6 +93,7 @@ export default {
     ]),
     ...mapActions('class', [
       'getMyClassLists',
+      'getKnowledgeMapData',
     ]),
     clickAddButton() {
       const vm = this;
@@ -110,6 +111,8 @@ export default {
       vm.updateCurrentClassIndex({
         currentClassIndex: index,
       });
+      const isTeacher = vm.$route.path.includes('teacher');
+      vm.getKnowledgeMapData({ isTeacher });
     },
   },
 

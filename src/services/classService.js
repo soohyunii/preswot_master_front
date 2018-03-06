@@ -4,7 +4,7 @@ import http from './http';
 import utils from '../utils';
 
 export default {
-  getClasses() {
+  getClassLists() {
     return http.get('/classes');
   },
   getMyClassList() { //
@@ -12,6 +12,12 @@ export default {
   },
   getClass({ id }) { //
     return http.get(`/classes/${id}`);
+  },
+  getClassCoverage({ id }) {
+    return http.get(`/classes/${id}/coverage`);
+  },
+  getClassKeywordRelations({ id }) {
+    return http.get(`/classes/${id}/keyword-relations`);
   },
   postClass({ //
     title,
@@ -64,5 +70,10 @@ export default {
     id,
   }) {
     return http.delete(`/classes/${id}`);
+  },
+  postClassUser({
+    id,
+  }) {
+    return http.post(`/classes/${id}/user`);
   },
 };

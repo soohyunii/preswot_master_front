@@ -9,6 +9,9 @@ export default {
      * 공통 변수들
      * @var {Array[class]} teachingClassList
      */
+    openedClassList: [],
+    goingClassList: [],
+    finishedClassList: [],
     studyingClassList: [],
     teachingClassList: [],
     // //////////////////////////절취선////////////////////////// //
@@ -37,6 +40,15 @@ export default {
       activeStartDate: null,
       activeEndDate: null,
     },
+    // //////////////////////////절취선////////////////////////// //
+    /**
+     * ClassKnowledgeMap 관련 변수들
+     * 과목 전체에 대한 키워드, 릴레이션 정보
+     * @var {Array[class]}
+     * @var {Array[class]}
+     */
+    nodes: [],
+    edges: [],
   },
   getters: {
     isTeachingClassListEmpty(state) {
@@ -97,6 +109,42 @@ export default {
     },
   },
   mutations: {
+    setNodesPinned(state, { pinned, node }) {
+      let index = -1;
+      state.nodes.forEach((item, idx) => {
+        if (item.id === node.id) {
+          index = idx;
+        }
+      });
+      if (index < 0) {
+        return;
+      }
+      // state.nodes[index].pinned = pinned;
+      if (pinned) {
+        state.nodes[index].pinned = true;
+        state.nodes[index].fx = state.nodes[index].x;
+        state.nodes[index].fy = state.nodes[index].y;
+      } else {
+        state.nodes[index].pinned = false;
+        state.nodes[index].fx = null;
+        state.nodes[index].fy = null;
+      }
+    },
+    updateNodes(state, { nodes }) {
+      state.nodes = nodes;
+    },
+    updateEdges(state, { edges }) {
+      state.edges = edges;
+    },
+    updateOpenedClassList(state, { openedClassList }) {
+      state.openedClassList = openedClassList;
+    },
+    updateGoingClassList(state, { goingClassList }) {
+      state.goingClassList = goingClassList;
+    },
+    updateFinishedClassList(state, { finishedClassList }) {
+      state.finishedClassList = finishedClassList;
+    },
     updateCurrentClassIndex(state, { currentClassIndex }) {
       state.currentClassIndex = currentClassIndex;
     },
@@ -159,6 +207,42 @@ export default {
     },
   },
   actions: {
+    async getKnowledgeMapData({ getters, commit }, { isTeacher }) {
+      const id = isTeacher ? getters.currentTeachingClass.class_id
+        : getters.currentStudyingClass.class_id;
+      const res1 = await classService.getClassCoverage({ id });
+      window.console.log('res1', res1);
+      const nodes = res1.data.keyword_coverages.map(item => ({
+        value: item.keyword,
+        id: item.keyword,
+        name: item.keyword,
+        _size: item.weight,
+      }));
+      commit('updateNodes', { nodes });
+
+      // TODO: API 추가 시 주석 제거
+      /*
+      const res2 = await classService.getClassKeywordRelations({ id });
+      const edges = res2.data.map(item => ({
+        sid: item.node1,
+        tid: item.node2,
+        weight: item.weight,
+      }));
+      commit('updateEdges', { edges });
+      */
+    },
+    async getClassLists({ commit }) {
+      const res = await classService.getClassLists();
+      commit('updateOpenedClassList', {
+        openedClassList: res.data.openedClasses,
+      });
+      commit('updateGoingClassList', {
+        goingClassList: res.data.goingClasses,
+      });
+      commit('updateFinishedClassList', {
+        finishedClassList: res.data.finishedClasses,
+      });
+    },
     async getMyClassLists({ commit }) {
       const res = await classService.getMyClassList();
 
@@ -199,12 +283,12 @@ export default {
     },
     async putClass({ getters }) {
       await classService.putClass({
-        name: getters.currentClass.name,
-        description: getters.currentClass.description,
-        activeStartDate: getters.currentClass.start_time,
-        activeEndDate: getters.currentClass.end_time,
-        opened: getters.currentClass.opened,
-        id: getters.currentClass.class_id,
+        name: getters.currentTeachingClass.name,
+        description: getters.currentTeachingClass.description,
+        activeStartDate: getters.currentTeachingClass.start_time,
+        activeEndDate: getters.currentTeachingClass.end_time,
+        opened: getters.currentTeachingClass.opened,
+        id: getters.currentTeachingClass.class_id,
       });
     },
     async getClass({ state, getters, commit }, { type }) {
@@ -242,6 +326,11 @@ export default {
       });
       commit('updateCurrentClassIndex', {
         currentClassIndex: null,
+      });
+    },
+    async postClassUser(_, { classId }) {
+      await classService.postClassUser({
+        id: classId,
       });
     },
   },
