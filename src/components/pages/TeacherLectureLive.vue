@@ -239,8 +239,13 @@ export default {
   },
   sockets: {
     connect() {
-      // const vm = this;
-      // console.log('socket connected', vm.currentEditingScItem);
+      const vm = this;
+      const params = {
+        lecture_id: Number.parseInt(vm.$route.params.scId, 10),
+      };
+      setInterval(() => {
+        this.$socket.emit('UPDATE_TIMELINE_LOG', JSON.stringify(params));
+      }, 180000);
     },
   },
   async beforeMount() {
@@ -296,8 +301,7 @@ export default {
       'getScItem',
       'getItemKeywords',
       'setActivated',
-      'setDeActivated',
-      'putScItem',
+      'setDeactivated',
     ]),
     onClick(type) {
       const vm = this;
@@ -313,16 +317,24 @@ export default {
         }
         case 'TEMP_ACTIVATE': {
           console.log('ta'); // eslint-disable-line
-          // const test = this.$socket.emit('LECTURE_ITEM_ACTIVATION');
-          // console.log(test); // eslint-disable-line
+          const params = {
+            opened: 1,
+            lecture_item_id: vm.currentEditingScItem.id,
+            lecture_id: this.lectureId,
+          };
+          this.$socket.emit('LECTURE_ITEM_ACTIVATION', JSON.stringify(params));
           vm.setActivated(vm);
-          vm.putScItem(vm);
           break;
         }
         case 'TEMP_DEACTIVATE': {
           console.log('tda'); // eslint-disable-line
-          vm.setDeActivated(vm);
-          vm.putScItem(vm);
+          const params = {
+            opened: 0,
+            lecture_item_id: vm.currentEditingScItem.id,
+            lecture_id: this.lectureId,
+          };
+          this.$socket.emit('LECTURE_ITEM_ACTIVATION', JSON.stringify(params));
+          vm.setDeactivated(vm);
           break;
         }
         default: {

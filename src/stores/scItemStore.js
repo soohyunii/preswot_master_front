@@ -54,7 +54,6 @@ export default {
         score,
       });
     },
-
     updateItemKeywords(state, { keywords }) {
       state.sc[state.currentEditingScItemIndex].itemKeywords = keywords;
       console.log(state.sc[state.currentEditingScItemIndex].itemKeywords); // eslint-disable-line
@@ -594,7 +593,7 @@ export default {
         },
       });
     },
-    setDeActivated(state) {
+    setDeactivated(state) {
       state.commit('assignCurrentEditingScItem', {
         currentEditingScItem: {
           opened: 0,

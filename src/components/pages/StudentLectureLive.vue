@@ -82,6 +82,7 @@ import ScMaterialViewer from '../partials/ScMaterialViewer';
 import ScHomeworkViewer from '../partials/ScHomeworkViewer';
 import ScSurveyViewer from '../partials/ScSurveyViewer';
 import ScQuestionViewer from '../partials/ScQuestionViewer';
+import utils from '../../utils';
 
 export default {
   name: 'StudentLectureLive',
@@ -93,6 +94,20 @@ export default {
     ScHomeworkViewer,
     ScSurveyViewer,
     ScQuestionViewer,
+  },
+  sockets: {
+    connect() {
+      const vm = this;
+      const params = {
+        lecture_id: Number.parseInt(vm.$route.params.scId, 10),
+        user_id: utils.getUserIdFromJwt(),
+      };
+      this.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
+      console.log('socket connected'); // eslint-disable-line
+      setInterval(() => {
+        this.$socket.emit('HEART_BEAT', JSON.stringify(params));
+      }, 30000);
+    },
   },
   data() {
     return {
@@ -121,6 +136,15 @@ export default {
       //   vm.getItemKeywords();
       // }
     }
+  },
+  mounted() {
+    this.$socket.on('RELOAD_LECTURE_ITEM', (msg) => {
+      const jsonMSG = JSON.parse(msg);
+      if (jsonMSG.reload === true) {
+        // do refresh scenario when socket detected
+        this.updateScenario();
+      }
+    });
   },
   computed: {
     ...mapState('sc', ['scTitle', 'scType', 'scStartDate']),
@@ -174,6 +198,18 @@ export default {
         }
       }
     },
+    updateScenario() {
+      alert('시나리오 변경이 일어났습니다. 새로고침이 필요합니다'); // eslint-disable-line
+      const vm = this;
+      vm.getSc();
+      // TODO : 학생이 문제를 보고 풀 수 있는 공간에 대한 업데이트도 수행되야 함
+      // vm.getScItem({
+      //   scItemId: vm.currentEditingScItem.id,
+      // });
+    },
+  },
+  beforeDestroy() {
+    this.$socket.close();
   },
 };
 </script>
