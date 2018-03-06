@@ -18,7 +18,7 @@
       </el-button>
     </el-row>
     <el-row :gutter="20" id="student_score">
-      <el-col :span="3" v-for="item in forLoopData">
+      <el-col :span="3" v-for="item in forLoopData" :key="item">
         <div class="one_user">
           <div class="user_pic" v-bind:style='{ backgroundImage: "url(" + item.latest_pic_path + ")", }'></div>
           <div class="user_info">
