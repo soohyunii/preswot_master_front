@@ -25,7 +25,7 @@ export default {
             classId: 1,
             teacherList: ['aa@aa.aa'],
             startDate: '2018-03-01 00:00:00',
-            endDate: 'unsetted',
+            endDate: '계속 활성화',
           },
           {
             name: 'Tensorflow',
@@ -33,7 +33,7 @@ export default {
             classId: 2,
             teacherList: ['aa@aa.aa'],
             startDate: '2018-03-01 00:00:00',
-            endDate: 'unsetted',
+            endDate: '계속 활성화',
           },
           {
             name: 'C++',
@@ -41,7 +41,7 @@ export default {
             classId: 3,
             teacherList: ['aa@aa.aa'],
             startDate: '2018-03-01 00:00:00',
-            endDate: 'unsetted',
+            endDate: '계속 활성화',
           },
           {
             name: 'Vue.js',
@@ -49,7 +49,7 @@ export default {
             classId: 4,
             teacherList: ['aa@aa.aa'],
             startDate: '2018-03-01 00:00:00',
-            endDate: 'unsetted',
+            endDate: '계속 활성화',
           },
         ]);
       }, 500);
