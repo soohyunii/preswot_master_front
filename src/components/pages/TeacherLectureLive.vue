@@ -368,6 +368,9 @@ export default {
       };
     },
   },
+  beforeDestory() {
+    this.$socket.close();
+  },
   destroyed() {
     const vm = this;
     clearInterval(vm.setIntervalId);
