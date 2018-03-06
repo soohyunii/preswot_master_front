@@ -81,7 +81,7 @@
               </el-table-column>
               <el-table-column label="Error" align="center" prop="difference_question" sortable>
               </el-table-column>
-              <el-table-column label="관련 문항" align="center">
+              <el-table-column label="관련 문항 키워드 수정" align="center">
                 <template slot-scope="scope">
                   <el-tooltip v-for="question in scope.row.questions"
                               effect="dark"
@@ -96,7 +96,7 @@
               </el-table-column>
             </el-table>
           </div>
-
+asdasdasdasdasd
           <div v-if="radio1 === 'Item'">
             <el-row :gutter="40">
               <el-col :span="12" align-center>
@@ -121,7 +121,7 @@
               </el-table-column>
               <el-table-column label="Error" align="center" prop="difference_material" sortable>
               </el-table-column>
-              <el-table-column label="관련 자료" align="center">
+              <el-table-column label="관련 자료 키워드 수정" align="center">
                 <template slot-scope="scope">
                   <el-tooltip v-for="material in scope.row.materials"
                               effect="dark"
@@ -150,12 +150,12 @@
 
 <script>
   import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
-  import coverageService from '../../services/coverageService';
 
   export default {
     name: 'TeacherClassEvaluation',
     computed: {
-      ...mapState('class', ['teachingClassList', 'currentClassIndex']),
+      ...mapState('class', ['teachingClassList', 'currentClassIndex', 'currentClassCoverage']),
+      ...mapState('sc', ['scCoverage']),
       ...mapGetters('class', [
         'currentClass',
       ]),
@@ -185,10 +185,8 @@
         });
         await vm.getClass();
       }
-      this.coverage = (await coverageService.getClassCoverage({
-        id: Number.parseInt(vm.$route.params.classId, 10),
-      })).data;
-      console.log(this.coverage);
+      await vm.getClassCoverage();
+      vm.coverage = vm.currentClassCoverage;
     },
     methods: {
       ...mapMutations('class', [
@@ -197,20 +195,19 @@
       ...mapActions('class', [
         'getMyClassLists',
         'getClass',
+        'getClassCoverage',
       ]),
+      ...mapActions('sc', ['getScCoverage']),
       async handelSelect(key) {
         const vm = this;
         const keyInt = parseInt(key, 10);
         if (keyInt === 0) {
-          this.coverage = (await coverageService.getClassCoverage({
-            id: Number.parseInt(vm.$route.params.classId, 10),
-          })).data;
+          await vm.getClassCoverage();
+          vm.coverage = vm.currentClassCoverage;
         } else {
-          this.coverage = (await coverageService.getLectureCoverage({
-            id: keyInt,
-          })).data;
+          await vm.getScCoverage({ id: keyInt });
+          vm.coverage = vm.scCoverage;
         }
-        console.log(this.coverage);
       },
     },
   };

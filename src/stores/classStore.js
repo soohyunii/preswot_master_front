@@ -37,6 +37,10 @@ export default {
       activeStartDate: null,
       activeEndDate: null,
     },
+    /**
+     * coverage 변수
+     */
+    currentClassCoverage: null,
   },
   getters: {
     isTeachingClassListEmpty(state) {
@@ -149,6 +153,9 @@ export default {
     deleteTeachingClass(state, { teachingClassIndex }) {
       state.teachingClassList.splice(teachingClassIndex, 1);
     },
+    updateCurrentClassCoverage(state, { currentClassCoverage }) {
+      state.currentClassCoverage = currentClassCoverage;
+    },
   },
   actions: {
     async getMyClassLists({ commit }) {
@@ -215,6 +222,17 @@ export default {
       });
       commit('updateCurrentClassIndex', {
         currentClassIndex: null,
+      });
+    },
+    async getClassCoverage({ state, getters, commit }) {
+      if (state.currentClassIndex === null) {
+        return;
+      }
+      const res = await classService.getClassCoverage({
+        id: getters.currentClass.class_id,
+      });
+      commit('updateCurrentClassCoverage', {
+        currentClassCoverage: res.data,
       });
     },
   },

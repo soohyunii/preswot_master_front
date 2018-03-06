@@ -65,4 +65,7 @@ export default {
   }) {
     return http.delete(`/classes/${id}`);
   },
+  getClassCoverage({ id }) {
+    return http.get(`/classes/${id}/coverage`);
+  },
 };
