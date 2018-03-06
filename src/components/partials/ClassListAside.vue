@@ -111,7 +111,8 @@ export default {
       vm.updateCurrentClassIndex({
         currentClassIndex: index,
       });
-      vm.getKnowledgeMapData();
+      const isTeacher = vm.$route.path.includes('teacher');
+      vm.getKnowledgeMapData({ isTeacher });
     },
   },
 
