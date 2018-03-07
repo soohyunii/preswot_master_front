@@ -237,11 +237,15 @@ export default {
     ScActiveTimeEditor,
     TeacherLectureLiveSummary,
   },
-  sockets: {
-    connect() {
-      // const vm = this;
-      // console.log('socket connected', vm.currentEditingScItem);
-    },
+  created() {
+    this.$socket.connect();
+    const vm = this;
+    const params = {
+      lecture_id: Number.parseInt(vm.$route.params.scId, 10),
+    };
+    vm.sUpdateTimelineLogIntervalId = setInterval(() => {
+      vm.$socket.emit('UPDATE_TIMELINE_LOG', JSON.stringify(params));
+    }, 180000);
   },
   async beforeMount() {
     const vm = this;
@@ -252,7 +256,7 @@ export default {
     await vm.getSc();
     vm.updateScVideoLink({ scVideoLink: vm.$route.query.link });
     vm.putSc();
-    vm.setIntervalId = vm.updateOffsetSecNowDate();
+    vm.elapsedTimeIntervalId = vm.updateOffsetSecNowDate();
     // TODO: handle sc empty
     if (!vm.isScEmpty) {
       vm.updateCurrentEditingScItemIndex({
@@ -276,7 +280,8 @@ export default {
       lectureId: 1,
       youtubeId: '',
       isPlayerVisible: true,
-      setIntervalId: null,
+      elapsedTimeIntervalId: null,
+      sUpdateTimelineLogIntervalId: null,
     };
   },
   methods: {
@@ -295,6 +300,8 @@ export default {
     ...mapActions('scItem', [
       'getScItem',
       'getItemKeywords',
+      'setActivated',
+      'setDeactivated',
     ]),
     onClick(type) {
       const vm = this;
@@ -310,10 +317,24 @@ export default {
         }
         case 'TEMP_ACTIVATE': {
           console.log('ta'); // eslint-disable-line
+          const params = {
+            opened: 1,
+            lecture_item_id: vm.currentEditingScItem.id,
+            lecture_id: this.lectureId,
+          };
+          this.$socket.emit('LECTURE_ITEM_ACTIVATION', JSON.stringify(params));
+          vm.setActivated(vm);
           break;
         }
         case 'TEMP_DEACTIVATE': {
           console.log('tda'); // eslint-disable-line
+          const params = {
+            opened: 0,
+            lecture_item_id: vm.currentEditingScItem.id,
+            lecture_id: this.lectureId,
+          };
+          this.$socket.emit('LECTURE_ITEM_ACTIVATION', JSON.stringify(params));
+          vm.setDeactivated(vm);
           break;
         }
         default: {
@@ -347,9 +368,13 @@ export default {
       };
     },
   },
+  beforeDestory() {
+    this.$socket.close();
+  },
   destroyed() {
     const vm = this;
-    clearInterval(vm.setIntervalId);
+    clearInterval(vm.elapsedTimeIntervalId);
+    clearInterval(vm.sUpdateTimelineLogIntervalId);
   },
 };
 </script>
