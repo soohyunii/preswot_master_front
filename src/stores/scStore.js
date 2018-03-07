@@ -24,6 +24,8 @@ export default {
     scEndDate: null,
     scDescription: null,
     scKnowledgeMap: null,
+    scVideoLink: null,
+    afterStartDateOffsetSec: null,
     currentEditingNodeIndex: null,
     nodes: [],
     edges: [],
@@ -38,6 +40,9 @@ export default {
     },
   },
   mutations: {
+    updateAfterStartDateOffsetSec(state, { diff }) {
+      state.afterStartDateOffsetSec = diff;
+    },
     updateScId(state, { scId }) {
       state.scId = scId;
     },
@@ -52,6 +57,9 @@ export default {
     },
     updateScEndDate(state, { scEndDate }) {
       state.scEndDate = scEndDate;
+    },
+    updateScVideoLink(state, { scVideoLink }) {
+      state.scVideoLink = scVideoLink;
     },
     updateScDescription(state, { scDescription }) {
       state.scDescription = scDescription;
@@ -138,6 +146,18 @@ export default {
     },
   },
   actions: {
+    updateOffsetSecNowDate({ state, commit }) {
+      const startDate = state.scStartDate.getTime();
+      let now = new Date().getTime();
+      let diff = Math.floor((now - startDate) / 1000);
+      commit('updateAfterStartDateOffsetSec', { diff });
+
+      return setInterval(() => {
+        now = new Date().getTime();
+        diff = Math.floor((now - startDate) / 1000);
+        commit('updateAfterStartDateOffsetSec', { diff });
+      }, 1000);
+    },
     async getSc({ state, commit }) {
       const res = await lectureService.getLecture({
         lectureId: state.scId,
@@ -198,7 +218,7 @@ export default {
     },
     async createSc({ rootGetters }) {
       const userId = rootGetters['auth/userId'];
-      const classId = rootGetters['class/currentClass'].class_id;
+      const classId = rootGetters['class/currentTeachingClass'].class_id;
 
       const res = await lectureService.postLecture({
         classId,
@@ -224,6 +244,7 @@ export default {
         location: null,
         // TODO: add state.scIsOpen,
         opened: true,
+        videoLink: state.scVideoLink,
         teacherEmail: utils.getEmailFromJwt(),
         type,
       });

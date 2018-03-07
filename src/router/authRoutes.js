@@ -3,11 +3,16 @@ import Profile from '../components/pages/Profile';
 import TeacherClassIndex from '../components/pages/TeacherClassIndex';
 import TeacherLectureNew from '../components/pages/TeacherLectureNew';
 import TeacherLectureLive from '../components/pages/TeacherLectureLive';
+import StudentClassIndex from '../components/pages/StudentClassIndex';
 import StudentLectureLive from '../components/pages/StudentLectureLive';
 import TeacherClassNew from '../components/pages/TeacherClassNew';
 import TeacherClassEdit from '../components/pages/TeacherClassEdit';
 import TeacherClassEvaluation from '../components/pages/TeacherClassEvaluation';
 import wordCloudExample from '../components/partials/wordCloudExample';
+import StudentClassJournal from '../components/pages/StudentClassJournal';
+import TeacherClassJournal from '../components/pages/TeacherClassJournal';
+import StudentLectureJournal from '../components/pages/StudentLectureJournal';
+import TeacherLectureJournal from '../components/pages/TeacherLectureJournal';
 import test from '../components/partials/test';
 
 
@@ -28,15 +33,6 @@ export default function authRoutes(root) {
       component: test,
       meta: {
         title: 'test', // TODO: import from i18n
-        auth: true,
-      },
-    },
-    {
-      path: '/teacher/lecture/wordCloudExample',
-      name: 'wordCloudExample',
-      component: wordCloudExample,
-      meta: {
-        title: 'wordCloudExample', // TODO: import from i18n
         auth: true,
       },
     },
@@ -104,11 +100,56 @@ export default function authRoutes(root) {
       },
     },
     {
-      path: '/student/lecture/live',
+      path: '/student/class/',
+      name: 'StudentClass',
+      component: StudentClassIndex,
+      meta: {
+        title: 'Student Class Index', // TODO: import from i18n
+        auth: true,
+      },
+    },
+    {
+      path: '/student/lecture/:scId/live',
       name: 'StudentLectureLive',
       component: StudentLectureLive,
       meta: {
         title: 'Student Lecture Live',
+        auth: true,
+      },
+    },
+    {
+      path: '/student/class/journal',
+      name: 'StudentClassJournal',
+      component: StudentClassJournal,
+      meta: {
+        title: 'Student Class Journal',
+        auth: true,
+      },
+    },
+    {
+      path: '/teacher/class/journal',
+      name: 'TeacherClassJournal',
+      component: TeacherClassJournal,
+      meta: {
+        title: 'Teacher Class Journal',
+        auth: true,
+      },
+    },
+    {
+      path: '/student/lecture/journal',
+      name: 'StudentLectureJournal',
+      component: StudentLectureJournal,
+      meta: {
+        title: 'Student Lecture Journal',
+        auth: true,
+      },
+    },
+    {
+      path: '/teacher/lecture/journal',
+      name: 'TeacherLectureJournal',
+      component: TeacherLectureJournal,
+      meta: {
+        title: 'Teacher Lecture Journal',
         auth: true,
       },
     },

@@ -111,6 +111,7 @@ import ScItem from './ScItem';
 
 export default {
   name: 'Sc',
+  props: ['afterStartDateOffsetSec'],
   data() {
     return {
       drag: false,

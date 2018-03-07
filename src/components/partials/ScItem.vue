@@ -1,5 +1,7 @@
 <template>
-  <div class="wrapper" :class="index === currentEditingScItemIndex ? selectedClass : ''" @click="onClick('SELECT_SC_ITEM',index)">
+  <div class="wrapper"
+  :class="itemClass()"
+  @click="onClick('SELECT_SC_ITEM',index)">
     <el-col align="center">
       <!-- TODO: change icons -->
       <div class="image">
@@ -21,6 +23,8 @@ export default {
   data() {
     return {
       selectedClass: 'selected',
+      nonActiveItem: 'nonActive',
+      tempActive: false,
     };
   },
   methods: {
@@ -99,29 +103,55 @@ export default {
       let icon;
       switch (type) {
         case '문항': {
-          icon = 'el-icon-question';
+          icon = 'fas fa-list-ol';
           break;
         }
         default:
         case '강의자료': {
-          icon = 'el-icon-info';
+          icon = 'far fa-file-pdf';
           break;
         }
         case '숙제': {
-          icon = 'el-icon-document';
+          icon = 'fas fa-tasks';
           break;
         }
         case '설문': {
-          icon = 'el-icon-edit-outline';
+          icon = 'far fa-clipboard';
           break;
         }
       }
       return icon;
     },
+    itemClass() {
+      const vm = this;
+      const selected = vm.index === vm.currentEditingScItemIndex;
+      return {
+        selected,
+        nonActive: !vm.isActiveItem(),
+      };
+    },
+    isActiveItem() {
+      const vm = this;
+      if (vm.tempActive) {
+        return true;
+      }
+      if (!(vm.$route.name === 'TeacherLectureLive')) {
+        return true;
+      }
+      const startTime = vm.sc[vm.index].activeStartOffsetSec;
+      const endTime = vm.sc[vm.index].activeEndOffsetSec;
+      const isAfterStartTime = startTime <= vm.afterStartDateOffsetSec;
+      const isBeforeEndTime = endTime ? vm.afterStartDateOffsetSec <= endTime : true;
+      if (isAfterStartTime && isBeforeEndTime) {
+        return true;
+      }
+      return false;
+    },
   },
   computed: {
     ...mapState('scItem', ['sc', 'currentEditingScItemIndex']),
     ...mapGetters('scItem', ['currentEditingScItem']),
+    ...mapState('sc', ['afterStartDateOffsetSec']),
     scActiveTime: {
       get() {
         const vm = this;
@@ -176,6 +206,10 @@ export default {
 
   .selected {
     background-color: #dcdfe6;
+  }
+
+  .nonActive {
+    opacity: 0.3;
   }
 
   .image {

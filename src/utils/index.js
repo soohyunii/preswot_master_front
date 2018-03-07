@@ -55,6 +55,14 @@ export default {
     }
     return email;
   },
+  getUserIdFromJwt() {
+    const jwt = this.getJwtFromLocalStorage();
+    if (jwt.length === 0) {
+      return null;
+    }
+    // TODO: try cath jwtDecode
+    return jwtDecode(jwt).authId;
+  },
   formatDate(d) {
     // console.log('formatDate', d, d.toLocaleDateString('en-US').split('-'));
     // eslint-disable-next-line
@@ -133,5 +141,16 @@ export default {
 
     const changedCurrentEditingScItemIndex = sc.map(x => x.id).indexOf(beforeSortedScItem.id);
     return { orderSortedSc, changedCurrentEditingScItemIndex };
+  },
+  downloadFile(url, filename) {
+    console.log('downloadFile', url); // eslint-disable-line
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    window.setTimeout(() => {
+      document.body.removeChild(link);
+    }, 1000);
   },
 };

@@ -9,12 +9,15 @@ export default {
      * 공통 변수들
      * @var {Array[class]} teachingClassList
      */
+    openedClassList: [],
+    goingClassList: [],
+    finishedClassList: [],
     studyingClassList: [],
     teachingClassList: [],
     // //////////////////////////절취선////////////////////////// //
     /**
-     * TeacherClassIndex 관련 변수들
-     * @var {number} currentClassIndex: teachingClassList에서 선택된 과목의 index
+     * ClassListAside 관련 변수들
+     * @var {number} currentClassIndex: ClassListAside에서 선택된 과목의 index
      */
     currentClassIndex: null,
     // //////////////////////////절취선////////////////////////// //
@@ -41,10 +44,22 @@ export default {
      * coverage 변수
      */
     currentClassCoverage: null,
+    // //////////////////////////절취선////////////////////////// //
+    /**
+     * ClassKnowledgeMap 관련 변수들
+     * 과목 전체에 대한 키워드, 릴레이션 정보
+     * @var {Array[class]}
+     * @var {Array[class]}
+     */
+    nodes: [],
+    edges: [],
   },
   getters: {
     isTeachingClassListEmpty(state) {
       return state.teachingClassList.length === 0;
+    },
+    isStudyingClassListEmpty(state) {
+      return state.studyingClassList.length === 0;
     },
     isNewClassValid(state) {
       const {
@@ -82,12 +97,19 @@ export default {
       }
       return true;
     },
-    currentClass(state) {
+    currentTeachingClass(state) {
       const index = state.currentClassIndex;
       if (index === null) {
         return null;
       }
       return state.teachingClassList[index];
+    },
+    currentStudyingClass(state) {
+      const index = state.currentClassIndex;
+      if (index === null) {
+        return null;
+      }
+      return state.studyingClassList[index];
     },
   },
   mutations: {
@@ -103,6 +125,42 @@ export default {
         }
       }
     },
+    setNodesPinned(state, { pinned, node }) {
+      let index = -1;
+      state.nodes.forEach((item, idx) => {
+        if (item.id === node.id) {
+          index = idx;
+        }
+      });
+      if (index < 0) {
+        return;
+      }
+      // state.nodes[index].pinned = pinned;
+      if (pinned) {
+        state.nodes[index].pinned = true;
+        state.nodes[index].fx = state.nodes[index].x;
+        state.nodes[index].fy = state.nodes[index].y;
+      } else {
+        state.nodes[index].pinned = false;
+        state.nodes[index].fx = null;
+        state.nodes[index].fy = null;
+      }
+    },
+    updateNodes(state, { nodes }) {
+      state.nodes = nodes;
+    },
+    updateEdges(state, { edges }) {
+      state.edges = edges;
+    },
+    updateOpenedClassList(state, { openedClassList }) {
+      state.openedClassList = openedClassList;
+    },
+    updateGoingClassList(state, { goingClassList }) {
+      state.goingClassList = goingClassList;
+    },
+    updateFinishedClassList(state, { finishedClassList }) {
+      state.finishedClassList = finishedClassList;
+    },
     updateNewClass(state, { newClass }) {
       state.newClass = newClass;
     },
@@ -112,11 +170,18 @@ export default {
         newClass,
       );
     },
-    assignCurrentClass(state, { currentClass }) {
+    assignCurrentStudyingClass(state, { currentStudyingClass }) {
+      const c = state.studyingClassList[state.currentClassIndex];
+      Object.assign(
+        c,
+        currentStudyingClass,
+      );
+    },
+    assignCurrentTeachingClass(state, { currentTeachingClass }) {
       const c = state.teachingClassList[state.currentClassIndex];
       Object.assign(
         c,
-        currentClass,
+        currentTeachingClass,
       );
     },
     // pushStudyingClass(state, { studyingClass, studyingClassList }) {
@@ -158,10 +223,51 @@ export default {
     },
   },
   actions: {
+    async getKnowledgeMapData({ getters, commit }, { isTeacher }) {
+      const id = isTeacher ? getters.currentTeachingClass.class_id
+        : getters.currentStudyingClass.class_id;
+      const res1 = await classService.getClassCoverage({ id });
+      window.console.log('res1', res1);
+      const nodes = res1.data.keyword_coverages.map(item => ({
+        value: item.keyword,
+        id: item.keyword,
+        name: item.keyword,
+        _size: item.weight,
+      }));
+      commit('updateNodes', { nodes });
+
+      // TODO: API 추가 시 주석 제거
+      /*
+      const res2 = await classService.getClassKeywordRelations({ id });
+      const edges = res2.data.map(item => ({
+        sid: item.node1,
+        tid: item.node2,
+        weight: item.weight,
+      }));
+      commit('updateEdges', { edges });
+      */
+    },
+    async getClassLists({ commit }) {
+      const res = await classService.getClassLists();
+      commit('updateOpenedClassList', {
+        openedClassList: res.data.openedClasses,
+      });
+      commit('updateGoingClassList', {
+        goingClassList: res.data.goingClasses,
+      });
+      commit('updateFinishedClassList', {
+        finishedClassList: res.data.finishedClasses,
+      });
+    },
     async getMyClassLists({ commit }) {
       const res = await classService.getMyClassList();
 
       const sc = res.data.studyingClasses;
+      sc.map((item) => {
+        // eslint-disable-next-line
+        item.scenarioList = null;
+        return item;
+      });
       if (sc && sc.length !== 0) {
         commit('updateStudyingClassList', {
           studyingClassList: sc,
@@ -193,30 +299,44 @@ export default {
     },
     async putClass({ getters }) {
       await classService.putClass({
-        name: getters.currentClass.name,
-        description: getters.currentClass.description,
-        activeStartDate: getters.currentClass.start_time,
-        activeEndDate: getters.currentClass.end_time,
-        opened: getters.currentClass.opened,
-        id: getters.currentClass.class_id,
+        name: getters.currentTeachingClass.name,
+        description: getters.currentTeachingClass.description,
+        activeStartDate: getters.currentTeachingClass.start_time,
+        activeEndDate: getters.currentTeachingClass.end_time,
+        opened: getters.currentTeachingClass.opened,
+        id: getters.currentTeachingClass.class_id,
       });
     },
-    async getClass({ state, getters, commit }) {
+    async getClass({ state, getters, commit }, { type }) {
       if (state.currentClassIndex === null) {
         return;
       }
-      const currentClass = getters.currentClass;
+      // TODO: currentClass => currentTeaching(Studying)Class
+      let currentClass;
+      if (type === 'TEACH') {
+        currentClass = getters.currentTeachingClass;
+      } else {
+        currentClass = getters.currentStudyingClass;
+      }
       const res = await classService.getClass({
         id: currentClass.class_id,
       });
-      commit('assignCurrentClass', {
-        currentClass: {
-          scenarioList: res.data.lectures,
-        },
-      });
+      if (type === 'TEACH') {
+        commit('assignCurrentTeachingClass', {
+          currentTeachingClass: {
+            scenarioList: res.data.lectures,
+          },
+        });
+      } else {
+        commit('assignCurrentStudyingClass', {
+          currentStudyingClass: {
+            scenarioList: res.data.lectures,
+          },
+        });
+      }
     },
     async deleteClass({ getters, commit }) {
-      const currentClass = getters.currentClass;
+      const currentClass = getters.currentTeachingClass;
       await classService.delete({
         id: currentClass.class_id,
       });
@@ -233,6 +353,11 @@ export default {
       });
       commit('updateCurrentClassCoverage', {
         currentClassCoverage: res.data,
+      });
+    },
+    async postClassUser(_, { classId }) {
+      await classService.postClassUser({
+        id: classId,
       });
     },
   },
