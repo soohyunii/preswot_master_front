@@ -81,6 +81,7 @@ import ScSurveyViewer from '../partials/ScSurveyViewer';
 import ScQuestionViewer from '../partials/ScQuestionViewer';
 import utils from '../../utils';
 
+
 export default {
   name: 'StudentLectureLive',
   components: {
@@ -92,25 +93,25 @@ export default {
     ScSurveyViewer,
     ScQuestionViewer,
   },
-  sockets: {
-    connect() {
-      const vm = this;
-      const params = {
-        lecture_id: Number.parseInt(vm.$route.params.scId, 10),
-        user_id: utils.getUserIdFromJwt(),
-      };
-      this.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
-      console.log('socket connected'); // eslint-disable-line
-      setInterval(() => {
-        this.$socket.emit('HEART_BEAT', JSON.stringify(params));
-      }, 30000);
-    },
+  created() {
+    this.$socket.connect();
+    const vm = this;
+    const params = {
+      lecture_id: Number.parseInt(vm.$route.params.scId, 10),
+      user_id: utils.getUserIdFromJwt(),
+    };
+    vm.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
+    console.log('socket connected'); // eslint-disable-line
+    vm.sHeartbeatIntervalId = setInterval(() => {
+      this.$socket.emit('HEART_BEAT', JSON.stringify(params));
+    }, 30000);
   },
   data() {
     return {
       isCloseMovie: false,
       isCloseStatusbar: false,
       SummaryData: [],
+      sHeartbeatIntervalId: 0,
     };
   },
   async beforeMount() {
@@ -206,7 +207,9 @@ export default {
     },
   },
   beforeDestroy() {
-    this.$socket.close();
+    const vm = this;
+    vm.$socket.close();
+    clearInterval(vm.sHeartbeatIntervalId);
   },
 };
 </script>

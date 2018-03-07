@@ -151,7 +151,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('scItem', ['updateSc']),
+    ...mapMutations('sc', ['updateSc']),
     ...mapMutations('scItem', [
       'assignCurrentEditingScItem',
       'updateCurrentEditingScItemIndex',

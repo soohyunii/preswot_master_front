@@ -237,16 +237,15 @@ export default {
     ScActiveTimeEditor,
     TeacherLectureLiveSummary,
   },
-  sockets: {
-    connect() {
-      const vm = this;
-      const params = {
-        lecture_id: Number.parseInt(vm.$route.params.scId, 10),
-      };
-      setInterval(() => {
-        this.$socket.emit('UPDATE_TIMELINE_LOG', JSON.stringify(params));
-      }, 180000);
-    },
+  created() {
+    this.$socket.connect();
+    const vm = this;
+    const params = {
+      lecture_id: Number.parseInt(vm.$route.params.scId, 10),
+    };
+    vm.sUpdateTimelineLogIntervalId = setInterval(() => {
+      vm.$socket.emit('UPDATE_TIMELINE_LOG', JSON.stringify(params));
+    }, 180000);
   },
   async beforeMount() {
     const vm = this;
@@ -257,7 +256,7 @@ export default {
     await vm.getSc();
     vm.updateScVideoLink({ scVideoLink: vm.$route.query.link });
     vm.putSc();
-    vm.setIntervalId = vm.updateOffsetSecNowDate();
+    vm.elapsedTimeIntervalId = vm.updateOffsetSecNowDate();
     // TODO: handle sc empty
     if (!vm.isScEmpty) {
       vm.updateCurrentEditingScItemIndex({
@@ -281,7 +280,8 @@ export default {
       lectureId: 1,
       youtubeId: '',
       isPlayerVisible: true,
-      setIntervalId: null,
+      elapsedTimeIntervalId: null,
+      sUpdateTimelineLogIntervalId: null,
     };
   },
   methods: {
@@ -373,7 +373,8 @@ export default {
   },
   destroyed() {
     const vm = this;
-    clearInterval(vm.setIntervalId);
+    clearInterval(vm.elapsedTimeIntervalId);
+    clearInterval(vm.sUpdateTimelineLogIntervalId);
   },
 };
 </script>
