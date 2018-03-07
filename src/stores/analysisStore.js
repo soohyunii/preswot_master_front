@@ -7,6 +7,9 @@ export default {
     classId: null,
     userId: null,
     isStudent: false,
+    isActiveInfo: false,
+    lectureId: 1,
+    analysisOpt: 0,
   },
   getters: {
     // eslint-disable-next-line
@@ -27,19 +30,42 @@ export default {
     updateIsStudent(state, { isStudent }) {
       state.isStudent = isStudent;
     },
+    updateIsActiveInfo(state, { isActiveInfo }) {
+      state.isActiveInfo = isActiveInfo;
+    },
+    updateLectureId(state, { lectureId }) {
+      state.lectureId = lectureId;
+    },
+    updateAnalysisOpt(state, { analysisOpt }) {
+      state.analysisOpt = analysisOpt;
+    },
   },
   actions: {
     async getAnalysisData({ state, commit }) {
-      try {
-        const res = await analysisService.getLogAnalysis({
-          classId: state.classId, userId: state.userId, isStudent: state.isStudent,
-        });
-        commit('updateAnalysisData', {
-          analysisData: res.data,
-        });
-      } catch (e) {
-        throw new Error('request error');
+      let res = null;
+      switch (state.analysisOpt) {
+        case (0): {
+          res = await analysisService.getClassLogAnalysis({
+            classId: state.classId, userId: state.userId, isStudent: state.isStudent,
+          });
+          break;
+        }
+        case (1): {
+          res = await analysisService.getLectureLogAnalysis({
+            lectureId: state.lectureId, userId: state.userId, isStudent: state.isStudent,
+          });
+          break;
+        }
+        default: {
+          res = await analysisService.getClassLogAnalysis({
+            classId: state.classId, userId: state.userId, isStudent: state.isStudent,
+          });
+          break;
+        }
       }
+      commit('updateAnalysisData', {
+        analysisData: res.data,
+      });
     },
   },
 };

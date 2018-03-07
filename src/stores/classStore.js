@@ -207,8 +207,9 @@ export default {
     },
   },
   actions: {
-    async getKnowledgeMapData({ getters, commit }) {
-      const id = getters.currentTeachingClass.class_id;
+    async getKnowledgeMapData({ getters, commit }, { isTeacher }) {
+      const id = isTeacher ? getters.currentTeachingClass.class_id
+        : getters.currentStudyingClass.class_id;
       const res1 = await classService.getClassCoverage({ id });
       window.console.log('res1', res1);
       const nodes = res1.data.keyword_coverages.map(item => ({
@@ -282,12 +283,12 @@ export default {
     },
     async putClass({ getters }) {
       await classService.putClass({
-        name: getters.currentClass.name,
-        description: getters.currentClass.description,
-        activeStartDate: getters.currentClass.start_time,
-        activeEndDate: getters.currentClass.end_time,
-        opened: getters.currentClass.opened,
-        id: getters.currentClass.class_id,
+        name: getters.currentTeachingClass.name,
+        description: getters.currentTeachingClass.description,
+        activeStartDate: getters.currentTeachingClass.start_time,
+        activeEndDate: getters.currentTeachingClass.end_time,
+        opened: getters.currentTeachingClass.opened,
+        id: getters.currentTeachingClass.class_id,
       });
     },
     async getClass({ state, getters, commit }, { type }) {

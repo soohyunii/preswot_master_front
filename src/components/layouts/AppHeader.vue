@@ -9,7 +9,7 @@
           id="navigation_toggle"
           @click="onClick('TOGGLE_NAVIGATION')"
         >
-          <i class="fa fa-bars fa-2x" />
+          <i class="fas fa-bars fa-2x" />
         </el-button>
         <router-link to="/">
           <!-- TODO: replace 브랜드 로고 -->
@@ -20,7 +20,7 @@
         </el-input>
         <!-- <el-button icon="el-icon-search" type="primary"></el-button> -->
         <el-button :type="appTheme" plain>
-          <i class="fa fa-search"></i>
+          <i class="fas fa-search"></i>
         </el-button>
       </el-col>
 
@@ -40,13 +40,13 @@
 
             <router-link to="/a/student/class" v-show="isJwtValid">
               <el-button :type="appTheme" plain>
-                <i class="fa fa-graduation-cap"></i>
+                <i class="fas fa-graduation-cap"></i>
               </el-button>
             </router-link>
 
             <router-link to="/a/teacher/class" v-show="isJwtValid">
               <el-button :type="appTheme" plain>
-                <i class="fa fa-pencil-square-o"></i>
+                <i class="fas fa-edit"></i>
               </el-button>
             </router-link>
 
