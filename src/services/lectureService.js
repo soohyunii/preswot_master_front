@@ -85,4 +85,7 @@ export default {
   }) {
     return http.delete(`/lecture/${lectureId}/${node1}/${node2}`);
   },
+  getLectureCoverage({ id }) {
+    return http.get(`/lectures/${id}/coverage`);
+  },
 };

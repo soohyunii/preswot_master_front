@@ -29,6 +29,10 @@ export default {
     currentEditingNodeIndex: null,
     nodes: [],
     edges: [],
+    /**
+     * coverage 변수
+     */
+    scCoverage: null,
   },
   getters: {
     currentEditingNode(state) {
@@ -136,6 +140,9 @@ export default {
         state.nodes[state.currentEditingNodeIndex],
         currentEditingNode,
       );
+    },
+    updateScCoverage(state, { scCoverage }) {
+      state.scCoverage = scCoverage;
     },
   },
   actions: {
@@ -318,6 +325,12 @@ export default {
       await lectureService.postLectureKeywordRelations({
         lectureId: state.scId,
         lectureRelations,
+      });
+    },
+    async getScCoverage({ commit }, { id }) {
+      const res = await lectureService.getLectureCoverage({ id });
+      commit('updateScCoverage', {
+        scCoverage: res.data,
       });
     },
   },
