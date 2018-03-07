@@ -8,7 +8,7 @@ import StudentLectureLive from '../components/pages/StudentLectureLive';
 import TeacherClassNew from '../components/pages/TeacherClassNew';
 import TeacherClassEdit from '../components/pages/TeacherClassEdit';
 import TeacherClassEvaluation from '../components/pages/TeacherClassEvaluation';
-import wordCloudExample from '../components/partials/wordCloudExample';
+// import wordCloudExample from '../components/partials/wordCloudExample';
 import StudentClassJournal from '../components/pages/StudentClassJournal';
 import TeacherClassJournal from '../components/pages/TeacherClassJournal';
 import StudentLectureJournal from '../components/pages/StudentLectureJournal';
