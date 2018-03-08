@@ -21,6 +21,7 @@
 
           <!-- TODO: translation -->
           <!-- TODO: Link to each page per button-->
+          <el-button @click="onClick('EVALUATION')">과목진단</el-button>
           <el-button @click="onClick('OPEN_KNOWLEDGEMAP_MODAL')">과목지식맵</el-button>
           <el-button @click="onClick('ANALYSIS')">과목저널링</el-button>
           <el-button type="primary" @click="onClick('EDIT')">과목수정</el-button>
@@ -102,6 +103,10 @@ export default {
     onClick(type) {
       const vm = this;
       switch (type) {
+        case 'EVALUATION': {
+          vm.$router.push(`/a/teacher/class/${vm.currentClass.class_id}/evaluation`);
+          break;
+        }
         case 'ANALYSIS': {
           vm.updateClassId({
             classId: vm.currentTeachingClass.class_id,

@@ -40,6 +40,10 @@ export default {
       activeStartDate: null,
       activeEndDate: null,
     },
+    /**
+     * coverage 변수
+     */
+    currentClassCoverage: null,
     // //////////////////////////절취선////////////////////////// //
     /**
      * ClassKnowledgeMap 관련 변수들
@@ -109,6 +113,18 @@ export default {
     },
   },
   mutations: {
+    updateCurrentClassIndex(state, { currentClassIndex, currentClassId }) {
+      if (currentClassIndex === 0 || currentClassIndex) {
+        state.currentClassIndex = currentClassIndex;
+      }
+      if (currentClassId) {
+        for (let i = 0; i < state.teachingClassList.length; i += 1) {
+          if (state.teachingClassList[i].class_id === currentClassId) {
+            state.currentClassIndex = i;
+          }
+        }
+      }
+    },
     setNodesPinned(state, { pinned, node }) {
       let index = -1;
       state.nodes.forEach((item, idx) => {
@@ -144,9 +160,6 @@ export default {
     },
     updateFinishedClassList(state, { finishedClassList }) {
       state.finishedClassList = finishedClassList;
-    },
-    updateCurrentClassIndex(state, { currentClassIndex }) {
-      state.currentClassIndex = currentClassIndex;
     },
     updateNewClass(state, { newClass }) {
       state.newClass = newClass;
@@ -204,6 +217,9 @@ export default {
     },
     deleteTeachingClass(state, { teachingClassIndex }) {
       state.teachingClassList.splice(teachingClassIndex, 1);
+    },
+    updateCurrentClassCoverage(state, { currentClassCoverage }) {
+      state.currentClassCoverage = currentClassCoverage;
     },
   },
   actions: {
@@ -326,6 +342,17 @@ export default {
       });
       commit('updateCurrentClassIndex', {
         currentClassIndex: null,
+      });
+    },
+    async getClassCoverage({ state, getters, commit }) {
+      if (state.currentClassIndex === null) {
+        return;
+      }
+      const res = await classService.getClassCoverage({
+        id: getters.currentClass.class_id,
+      });
+      commit('updateCurrentClassCoverage', {
+        currentClassCoverage: res.data,
       });
     },
     async postClassUser(_, { classId }) {

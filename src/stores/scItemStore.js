@@ -340,6 +340,7 @@ export default {
         endTime: scItem.activeEndOffsetSec,
         order: scItem.order,
         result: utils.convertBoolean(scItem.isResultVisible),
+        opened: scItem.opened,
       });
     },
     async deleteScItem({ state }, { scItemIndex }) {
@@ -584,6 +585,20 @@ export default {
           throw new Error(`not defined type ${item.type}`);
         }
       }
+    },
+    setActivated(state) {
+      state.commit('assignCurrentEditingScItem', {
+        currentEditingScItem: {
+          opened: 1,
+        },
+      });
+    },
+    setDeactivated(state) {
+      state.commit('assignCurrentEditingScItem', {
+        currentEditingScItem: {
+          opened: 0,
+        },
+      });
     },
   },
 };
