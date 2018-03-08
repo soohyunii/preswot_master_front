@@ -22,8 +22,7 @@
           <!-- TODO: translation -->
           <!-- TODO: Link to each page per button-->
           <el-button>과목지식맵</el-button>
-          <el-button>과목큐레이션</el-button>
-          <el-button>과목저널링</el-button>
+          <el-button @click="onClick('ANALYSIS')">과목저널링</el-button>
           <br /><br />
 
           <class-scenario type="STUDY" />
@@ -47,7 +46,7 @@
 </style>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
+import { mapState, mapGetters, mapMutations } from 'vuex';
 import ClassScenario from '../partials/ClassScenario';
 import ClassStatistics from '../partials/ClassStatistics';
 import ClassListAside from '../partials/ClassListAside';
@@ -68,6 +67,22 @@ export default {
     ClassListAside,
   },
   methods: {
+    ...mapMutations('analysis', ['updateClassId']),
+    onClick(type) {
+      const vm = this;
+      switch (type) {
+        case 'ANALYSIS': {
+          vm.updateClassId({
+            classId: vm.currentStudyingClass.class_id,
+          });
+          vm.$router.push('/a/student/class/journal');
+          break;
+        }
+        default: {
+          throw new Error(`not defined type ${type}`);
+        }
+      }
+    },
   },
 };
 

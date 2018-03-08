@@ -14,16 +14,23 @@
 
         <!-- TODO: translation -->
         <div class="">인기 강의 목록<hr></div>
-        <el-row :gutter="20" >
-          <template v-for="(item, index, key) in popularClassList">
-            <el-col :key="key" :span="Math.ceil(24 / elementNumber)" v-if="index < elementNumber">
-              {{ item.className }}
-              <div class="image-wrapper">
-                <img src="../../assets/dev/ratio_16_10.png">
-              </div>
+        <el-row :gutter="10" >
+          <template v-for="(item, index) in popularClassList">
+            <el-col :key="item.class_id" :span="24/elementNumber" v-if="index < elementNumber">
+              <class-intro-card
+                :title="item.name"
+                :description="item.description"
+                :classId="item.classId"
+                :onClick="onClick"
+                :label-span="8"
+                :teacher-list="item.teacherList"
+                :start-date-str="item.startDate"
+                :end-date-str="item.endDate"
+              />
             </el-col>
           </template>
         </el-row>
+        <br/>
 
         <!-- TODO: translation -->
         <div class="">내 수강 통계<hr></div>
@@ -46,11 +53,16 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import deepEqual from 'deep-equal';
+import ClassIntroCard from '../partials/ClassIntroCard';
 import studentService from '../../services/studentService';
 
 export default {
   name: 'Home',
+  components: {
+    ClassIntroCard,
+  },
   data() {
     const vm = this;
     // * Restore previous popularClassList
@@ -69,6 +81,46 @@ export default {
     };
   },
   methods: {
+    ...mapActions('class', ['postClassUser']),
+    async onClick(type, data) {
+      const vm = this;
+      switch (type) {
+        case 'APPLY': {
+          try {
+            await vm.postClassUser({
+              classId: data,
+            });
+            vm.$notify({
+              title: '수강 신청 요청 성공',
+              message: '메세지',
+              type: 'success',
+            });
+          } catch (error) {
+            vm.$notify({
+              title: '수강 신청 요청 실패',
+              message: error.toString(),
+              type: 'error',
+              duration: 0,
+            });
+          }
+
+          try {
+            await vm.getPopularClassList();
+          } catch (error) {
+            vm.$notify({
+              title: '과목 목록 가져오기 실패',
+              message: error.toString(),
+              type: 'error',
+              duration: 0,
+            });
+          }
+          break;
+        }
+        default: {
+          throw new Error(`not defined type ${type}`);
+        }
+      }
+    },
     handleResize() {
       const vm = this;
       const width = document.getElementById('landing_page_wrapper').offsetWidth;
@@ -90,16 +142,20 @@ export default {
       }
       return 4;
     },
+    async getPopularClassList() {
+      const vm = this;
+      const res = await studentService.fetchPopularClassList();
+      // * If fetched popularClassList is different from stored one, replace it
+      if (deepEqual(res, vm.popularClassList)) {
+        return;
+      }
+      vm.popularClassList = res;
+      vm.$vlf.setItem('popularClassList', res);
+    },
   },
   async mounted() {
     const vm = this;
-    const res = await studentService.fetchPopularClassList();
-    // * If fetched popularClassList is different from stored one, replace it
-    if (deepEqual(res, vm.popularClassList)) {
-      return;
-    }
-    vm.popularClassList = res;
-    vm.$vlf.setItem('popularClassList', res);
+    await vm.getPopularClassList();
     vm.handleResize();
   },
 };

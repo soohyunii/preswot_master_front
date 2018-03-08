@@ -93,7 +93,9 @@
               </router-link>
             </template>
           </el-table-column>
+
           <el-table-column
+            v-if="type ==='TEACH'"
             prop="live"
             label="강의">
             <template slot-scope="scope">
@@ -102,6 +104,21 @@
               </el-button>
             </template>
           </el-table-column>
+
+           <el-table-column
+            v-if="type ==='STUDY'"
+            prop="live"
+            label="강의 듣기">
+            <template slot-scope="scope">
+              <router-link :to="`/a/student/lecture/${scope.row.scId}/live`">
+                <el-button>
+                  강의 듣기
+                </el-button>
+              </router-link>
+            </template>
+          </el-table-column>
+
+
         </el-table>
 
         <br />
@@ -150,13 +167,33 @@ export default {
   props: ['type'],
   async mounted() {
     const vm = this;
-    await vm.getClass({ type: vm.type });
+    try {
+      await vm.getClass({ type: vm.type });
+    } catch (error) {
+      // TODO: wording 바꿀 필요 有
+      vm.$notify({
+        title: '요청 실패',
+        message: '아직 개설된 강의가 없습니다.',
+        type: 'error',
+        duration: 0,
+      });
+    }
     vm.$forceUpdate();
 
     vm.$watch(
       () => (vm.currentClass),
       async () => {
-        await vm.getClass({ type: vm.type });
+        try {
+          await vm.getClass({ type: vm.type });
+        } catch (error) {
+          // TODO: wording 바꿀 필요 有
+          vm.$notify({
+            title: '요청 실패',
+            message: '아직 개설된 강의가 없습니다.',
+            type: 'error',
+            duration: 0,
+          });
+        }
         vm.$forceUpdate();
       },
     );

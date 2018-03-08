@@ -22,8 +22,7 @@
           <!-- TODO: translation -->
           <!-- TODO: Link to each page per button-->
           <el-button @click="onClick('OPEN_KNOWLEDGEMAP_MODAL')">과목지식맵</el-button>
-          <el-button>과목큐레이션</el-button>
-          <el-button>과목저널링</el-button>
+          <el-button @click="onClick('ANALYSIS')">과목저널링</el-button>
           <el-button type="primary" @click="onClick('EDIT')">과목수정</el-button>
           <el-button type="danger" @click="onClick('DELETE')">과목삭제</el-button>
           <br /><br />
@@ -98,10 +97,18 @@ export default {
   },
   methods: {
     ...mapMutations('class', ['deleteTeachingClass']),
+    ...mapMutations('analysis', ['updateClassId']),
     ...mapActions('class', ['deleteClass']),
     onClick(type) {
       const vm = this;
       switch (type) {
+        case 'ANALYSIS': {
+          vm.updateClassId({
+            classId: vm.currentTeachingClass.class_id,
+          });
+          vm.$router.push('/a/teacher/class/journal');
+          break;
+        }
         case 'OPEN_KNOWLEDGEMAP_MODAL': {
           vm.isModalVisible = true;
           break;

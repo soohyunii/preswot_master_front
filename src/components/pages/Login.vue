@@ -27,10 +27,35 @@
           </el-button>
           <el-button
             type="primary"
-            @click="/* onClick('FORGOT_PASSWORD') */"
+            @click="onClick('FORGOT_PASSWORD')"
           >
             {{ $t('LOGIN.FORGOT_PASSWORD_BUTTON') }}
           </el-button>
+          <el-dialog
+            title="비밀번호 초기화"
+            :visible.sync="isModalVisible"
+            width="30%"
+            center
+          >
+            <!-- TODO: replace 브랜드 로고 -->
+            <el-button type="primary" plain slot="title">Brand Logo</el-button>
+            <h2>비밀번호 변경</h2>
+            <span>비밀번호를 변경할 이메일을 입력하세요.</span>
+            <br/><br/><hr><br/>
+            <el-form :model="input" label-width="120px" label-position="top">
+              <el-form-item label="이메일">
+                <el-input v-model="findingPasswordEmail"></el-input>
+              </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+              <el-button
+                type="primary"
+                @click="onClick('SUBMIT')"
+              >
+                변경 방법 전송
+              </el-button>
+            </span>
+          </el-dialog>
         </el-col>
       </el-row>
     </el-container>
@@ -51,11 +76,14 @@ export default {
         email: 'adoji92@gmail.com',
         password: 'adjadj1234',
       },
+      isModalVisible: false,
+      findingPasswordEmail: '',
     };
   },
   methods: {
     ...mapActions('auth', [
       'reqLogin',
+      'findPassword',
     ]),
     async onClick(type) {
       const vm = this;
@@ -80,6 +108,31 @@ export default {
             // console.error('login error', error);
             // TODO: translate
             vm.openNoti('error', 'Login Failed !!');
+          }
+          break;
+        }
+        case 'FORGOT_PASSWORD': {
+          vm.isModalVisible = true;
+          break;
+        }
+        case 'SUBMIT': {
+          try {
+            await vm.findPassword({
+              email: vm.findingPasswordEmail,
+            });
+            vm.$notify({
+              title: '이메일 전송 성공',
+              message: '비밀번호 초기화 이메일을 보냈습니다. 받은 편지함을 확인하세요.',
+              type: 'success',
+            });
+            vm.isModalVisible = false;
+          } catch (error) {
+            vm.$notify({
+              title: '이메일 전송 실패',
+              message: error.toString(),
+              type: 'error',
+              duration: 0,
+            });
           }
           break;
         }
