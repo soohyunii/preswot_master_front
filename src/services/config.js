@@ -9,7 +9,7 @@ let socketPort = 8001;
 // const isDev = true;
 const isTest = document.URL.includes('13.124.196.202');
 if (isTest) {
-  serverUrl = '13.124.236.81';
+  serverUrl = 'http://13.124.236.81';
   backPort = 8000;
   socketPort = 8001;
 }
