@@ -104,7 +104,7 @@ export default {
       const vm = this;
       switch (type) {
         case 'EVALUATION': {
-          vm.$router.push(`/a/teacher/class/${vm.currentClass.class_id}/evaluation`);
+          vm.$router.push(`/a/teacher/class/${vm.currentTeachingClass.class_id}/evaluation`);
           break;
         }
         case 'ANALYSIS': {

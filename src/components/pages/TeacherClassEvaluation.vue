@@ -1,9 +1,9 @@
 <template>
   <div class="wrapper">
     <el-container>
-      <el-main v-if="currentClass">
+      <el-main v-if="currentTeachingClass">
 
-        <h2>{{ currentClass.name }}</h2><hr>
+        <h2>{{ currentTeachingClass.name }}</h2><hr>
         <el-menu :default-active="activeIndex" mode="horizontal" @select="handelSelect">
           <el-menu-item index="0">과목</el-menu-item>
           <el-submenu index="2">
@@ -157,15 +157,15 @@ asdasdasdasdasd
       ...mapState('class', ['teachingClassList', 'currentClassIndex', 'currentClassCoverage']),
       ...mapState('sc', ['scCoverage']),
       ...mapGetters('class', [
-        'currentClass',
+        'currentTeachingClass',
       ]),
       scenarioList: {
         get() {
           const vm = this;
-          if (!vm.currentClass.scenarioList) {
+          if (!vm.currentTeachingClass.scenarioList) {
             return [];
           }
-          return vm.currentClass.scenarioList;
+          return vm.currentTeachingClass.scenarioList;
         },
       },
     },
@@ -178,14 +178,14 @@ asdasdasdasdasd
     },
     async created() {
       const vm = this;
-      if (!vm.currentClass) {
+      if (!vm.currentTeachingClass) {
         await vm.getMyClassLists();
         vm.updateCurrentClassIndex({
           currentClassId: Number.parseInt(vm.$route.params.classId, 10),
         });
-        await vm.getClass();
+        await vm.getClass({ type: 'TEACH' });
       }
-      await vm.getClassCoverage();
+      await vm.getClassCoverage({ type: 'TEACH' });
       vm.coverage = vm.currentClassCoverage;
     },
     methods: {
@@ -202,7 +202,7 @@ asdasdasdasdasd
         const vm = this;
         const keyInt = parseInt(key, 10);
         if (keyInt === 0) {
-          await vm.getClassCoverage();
+          await vm.getClassCoverage({ type: 'TEACH' });
           vm.coverage = vm.currentClassCoverage;
         } else {
           await vm.getScCoverage({ id: keyInt });
