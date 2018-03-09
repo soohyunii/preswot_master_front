@@ -82,6 +82,15 @@ export default function authRoutes(root) {
       },
     },
     {
+      path: '/teacher/class/:classId/scoring',
+      name: 'TeacherClassScoring',
+      component: asd,
+      meta: {
+        title: 'Teacher Class Scoring',
+        auth: true,
+      },
+    },
+    {
       path: '/teacher/lecture/:scId/edit',
       name: 'TeacherLectureNew',
       component: TeacherLectureNew,

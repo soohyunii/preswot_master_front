@@ -24,6 +24,7 @@
           <el-button @click="onClick('EVALUATION')">과목진단</el-button>
           <el-button @click="onClick('OPEN_KNOWLEDGEMAP_MODAL')">과목지식맵</el-button>
           <el-button @click="onClick('ANALYSIS')">과목저널링</el-button>
+          <el-button @click="onClick('SCORING')">체점 항목</el-button>
           <el-button type="primary" @click="onClick('EDIT')">과목수정</el-button>
           <el-button type="danger" @click="onClick('DELETE')">과목삭제</el-button>
           <br /><br />
@@ -74,6 +75,7 @@ import ClassKnowledgeMap from '../partials/ClassKnowledgeMap';
 // import teacherService from '../../services/teacherService';
 // import classService from '../../services/classService';
 import ClassListAside from '../partials/ClassListAside';
+import ElButton from "element-ui/packages/button/src/button";
 
 
 export default {
@@ -91,6 +93,7 @@ export default {
     ]),
   },
   components: {
+    ElButton,
     ClassScenario,
     ClassStatistics,
     ClassKnowledgeMap,
@@ -103,6 +106,10 @@ export default {
     onClick(type) {
       const vm = this;
       switch (type) {
+        case 'SCORING': {
+          vm.$router.push(`/a/teacher/class/${vm.currentTeachingClass.class_id}/scoring`);
+          break;
+        }
         case 'EVALUATION': {
           vm.$router.push(`/a/teacher/class/${vm.currentClass.class_id}/evaluation`);
           break;
