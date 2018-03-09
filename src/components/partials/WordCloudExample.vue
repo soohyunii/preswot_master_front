@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="wrapper animated faidIn">
+  <div class="wc-wrapper animated faidIn">
       <word-cloud
         class="wordCloud"
         :data="words"
@@ -67,7 +67,7 @@ export default {
 </script>
 
 <style lang="scss" scope>
-  .wrapper {
+  .wc-wrapper {
     height: 1200px;
   }
   .animated {
