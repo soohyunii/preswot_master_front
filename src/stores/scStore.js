@@ -162,7 +162,7 @@ export default {
       const res = await lectureService.getLecture({
         lectureId: state.scId,
       });
-      console.log('getSc res', res.data.lecture_items[0]); // eslint-disable-line
+      console.log('getSc res', res.data); // eslint-disable-line
       commit('updateScTitle', {
         scTitle: res.data.name,
       });
@@ -177,6 +177,9 @@ export default {
       });
       commit('updateScDescription', {
         scDescription: res.data.description,
+      });
+      commit('updateScVideoLink', {
+        scVideoLink: res.data.video_link,
       });
       // eslint-disable-next-line
       const sc = res.data.lecture_items.map((scItem) => {
