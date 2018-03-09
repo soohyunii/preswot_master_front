@@ -158,7 +158,7 @@ export default {
           }
           let choice = [];
           if (question.choice.length !== 0) {
-            choice = question.choice[0].split(',')
+            choice = question.choice
             .map(token => token.trim())
             .filter(token => token.length !== 0);
           }
@@ -196,9 +196,9 @@ export default {
           const survey = res.data.surveys[0];
           let choice = [];
           if (survey.choice.length !== 0) {
-            choice = survey.choice[0].split(',')
-            .map(token => token.trim())
-            .filter(token => token.length !== 0);
+            choice = survey
+              .map(token => token.trim())
+              .filter(token => token.length !== 0);
           }
           commit('assignCurrentEditingScItem', {
             currentEditingScItem: {
