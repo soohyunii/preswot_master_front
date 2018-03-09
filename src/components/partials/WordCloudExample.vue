@@ -67,35 +67,32 @@ export default {
 </script>
 
 <style lang="scss" scope>
+  .wrapper {
+    height: 1200px;
+  }
+  .animated {
+    -webkit-animation-duration: 2s;
+    animation-duration: 2s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+  }
+
+  @-webkit-keyframes fadeIn {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+  }
+
+  @keyframes fadeIn {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+  }
+
+  .fadeIn {
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn;
+  }
   .wordCloud {
     min-height: 500px;
   }
-</style>
-
-<style>
-.wrapper {
-  height: 1200px;
-}
-.animated {
-  -webkit-animation-duration: 2s;
-  animation-duration: 2s;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-}
-
-@-webkit-keyframes fadeIn {
-  0% {opacity: 0;}
-  100% {opacity: 1;}
-}
-
-@keyframes fadeIn {
-  0% {opacity: 0;}
-  100% {opacity: 1;}
-}
-
-.fadeIn {
-  -webkit-animation-name: fadeIn;
-  animation-name: fadeIn;
-}
 </style>
 
