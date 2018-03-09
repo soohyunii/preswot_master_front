@@ -213,11 +213,17 @@
 
           <template v-if="[0, 1, 2, 3].includes(pType)">
             <el-form-item label="배점" prop="pScore">
-              <el-input
-                type='number'
-                v-model.lazy="pScore"
-                @change="onChange('SCORE')"
-              />
+              <el-tooltip
+                effect="light"
+                placement="top-start">
+                <div slot="content">키워드 배점으로 조정하세요</div>
+                <el-input
+                  type='number'
+                  v-model.lazy="pScore"
+                  @change="onChange('SCORE')"
+                  disabled
+                />
+              </el-tooltip>
             </el-form-item>
             <i class="el-icon-loading" v-if="loading.SCORE" />
 

@@ -25,6 +25,7 @@
             type="number"
             placeholder="배점"
             size="mini"
+            min="1"
           />
           <el-button class="button-new-tag" size="small" @click="handleInputConfirm">키워드 추가</el-button>
         </div>
@@ -84,6 +85,7 @@ export default {
     ...mapMutations('scItem', [
       'assignCurrentEditingScItem',
       'pushItemKeyword',
+      'updateItemScore',
     ]),
     ...mapActions('scItem', [
       'putScItem',
@@ -161,15 +163,7 @@ export default {
           throw new Error('not defined type', item.type);
         }
       }
-      if (scoreSum !== itemScore) {
-        // TODO: transalte
-        vm.$notify({
-          title: '406',
-          message: 'score sum invalid',
-          type: 'warning',
-        });
-        return;
-      }
+      vm.updateItemScore({ score: scoreSum });
       await vm.deleteItemKeywords({ id }); // TODO: try catch
       vm.postItemKeywords({ id }); // TODO: try catch
     },

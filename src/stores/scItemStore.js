@@ -48,6 +48,13 @@ export default {
     },
   },
   mutations: {
+    updateItemScore(state, { score }) {
+      if (state.sc[state.currentEditingScItemIndex].type === '문항') {
+        state.sc[state.currentEditingScItemIndex].question.score = score;
+      } else if (state.sc[state.currentEditingScItemIndex].type === '강의자료') {
+        state.sc[state.currentEditingScItemIndex].material.score = score;
+      }
+    },
     pushItemKeyword(state, { keyword, score }) {
       state.sc[state.currentEditingScItemIndex].itemKeywords.push({
         keyword,
