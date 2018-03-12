@@ -344,12 +344,18 @@ export default {
         currentClassIndex: null,
       });
     },
-    async getClassCoverage({ state, getters, commit }) {
+    async getClassCoverage({ state, getters, commit }, { type }) {
       if (state.currentClassIndex === null) {
         return;
       }
+      let currentClass;
+      if (type === 'TEACH') {
+        currentClass = getters.currentTeachingClass;
+      } else {
+        currentClass = getters.currentStudyingClass;
+      }
       const res = await classService.getClassCoverage({
-        id: getters.currentClass.class_id,
+        id: currentClass.class_id,
       });
       commit('updateCurrentClassCoverage', {
         currentClassCoverage: res.data,

@@ -84,13 +84,13 @@
           </el-tab-pane>
         </el-tabs>
 
-        <div>
+        <!-- <div>
           <h2>debug</h2>
           server will get this:
           <pre style="font-size: 70%;">{{ DEBUGscenarioServerWillReceive }}</pre>
           currentEditingScItem: {{ currentEditingScItem }}<br/>
           currentEditingScItemType: {{ currentEditingScItemType }}
-        </div>
+        </div> -->
       </el-main>
       <!-- 이 메인은 맞음 끝 -->
     </el-container>

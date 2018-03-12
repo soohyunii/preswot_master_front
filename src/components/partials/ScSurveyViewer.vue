@@ -19,19 +19,19 @@
           </span>
         </el-form-item>
 
-         <el-form-item label="설문 입력">
-          <el-checkbox-group v-if="sChoice.length > 0" v-model="answerChoice">
+        <el-form-item label="설문 입력">
+          <el-checkbox-group v-if="[0].includes(sType)" v-model.lazy="sAnswerChoice">
             <template v-for="(choice, key) in sChoice">
               <el-checkbox :label="choice" :key="key"></el-checkbox>
             </template>
           </el-checkbox-group>
-          <el-input v-else v-model="answerString">
+          <el-input  v-if="[1].includes(sType)" v-model.lazy="sAnswer">
           </el-input>
-          <br/>
-          <span class="item-text">
-            {{ answerChoice }}<br />
-            {{ answerString }}
-          </span>
+        </el-form-item>
+
+        <el-form-item label="분포">
+          <!-- TODO: 차트 데이터 수정 -->
+          <bar-chart v-show="[0].includes(sType)" :xAxisName="chartXAxis" :data="chartData"/>
         </el-form-item>
       </el-form>
     </el-col>
@@ -45,17 +45,43 @@
 <script>
 import { mapGetters } from 'vuex';
 import utils from '../../utils';
+import BarChart from './BarChart';
 
 export default {
   name: 'ScSurveyViewer',
+  components: {
+    BarChart,
+  },
   data() {
     return {
-      // TODO: 학생 답안 저장위치 바꾸기
-      answerChoice: [],
-      answerString: '',
+      sAnswer: '',
+      sAnswerChoice: [],
     };
   },
   computed: {
+    chartXAxis() {
+      const axis = ['x'];
+      const vm = this;
+      if (vm.sChoice) {
+        vm.sChoice.forEach((element) => {
+          axis.push(element);
+        });
+        return axis;
+      }
+      return null;
+    },
+    chartData() {
+      const data = ['설문조사 결과'];
+      const vm = this;
+      if (vm.sChoice) {
+        vm.sChoice.forEach(() => {
+          // TODO: 설문 결과 값 수정
+          data.push(Math.floor(Math.random() * 100) + 1);
+        });
+        return data;
+      }
+      return null;
+    },
     ...mapGetters('scItem', ['currentEditingScItem']),
     fileList() {
       const vm = this;
@@ -65,8 +91,7 @@ export default {
     sType() {
       const vm = this;
       const s = vm.currentEditingScItem.survey;
-      const numType = s ? s.type : 0;
-      return utils.convertScItemType(numType);
+      return s ? s.type : 0;
     },
     sComment() {
       const vm = this;
@@ -76,10 +101,7 @@ export default {
     sChoice() {
       const vm = this;
       const s = vm.currentEditingScItem.survey;
-      if (!s.choice) {
-        return [];
-      }
-      return s.choice;
+      return s.choice ? s.choice : [];
     },
   },
   methods: {

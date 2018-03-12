@@ -18,56 +18,68 @@
             ({{ qType }}) {{ qQuestion }}
           </el-form-item>
 
-          <template v-if="[0].includes(qType)">
-            <el-form-item label="보기">
-              TODO: 보기 v-for<br />
-              {{ qChoice }}
+          <template v-if="!isSubmitted">
+            <template v-if="[0].includes(qType)">
+              <el-form-item label="보기">
+                <el-checkbox-group v-model.lazy="qAnswerChoice">
+                  <template v-for="(choice, key) in qChoice">
+                    <el-checkbox :label="choice" :key="key"></el-checkbox>
+                  </template>
+                </el-checkbox-group>
+              </el-form-item>
+            </template>
+
+            <template v-if="[0, 1, 2].includes(qType)">
+              <el-form-item label="답">
+                <el-input
+                  :type="qType === 1 ? 'input' : 'textarea'"
+                  :rows="3"
+                  v-model.lazy="qAnswer"
+                />
+              </el-form-item>
+            </template>
+
+            <!-- 코딩 -->
+            <template v-if="[3].includes(qType)">
+              <br />
+              <br />
+
+              <el-form-item label="정보">
+                시간 제한: {{ qTimeLimit }} 초<br />
+                메모리 제한: {{ qMemoryLimit }} MB<br />
+                사용 가능한 언어: {{ qLanguageList.join(', ') }}
+              </el-form-item>
+              <el-form-item label="입력 예제">
+                {{ qInputDescription }}
+                <pre style="background-color: white; padding: 5px 20px;">{{ qSampleInput }}</pre>
+              </el-form-item>
+              <el-form-item label="출력 예제">
+                {{ qOutputDescription }}
+                <pre style="background-color: white; padding: 5px 20px;">{{ qSampleOutput }}</pre>
+              </el-form-item>
+
+              <el-form-item label="코드">
+                <el-input
+                  type="textarea"
+                  :rows="20"
+                  v-model.lazy="qAnswer"
+                />
+              </el-form-item>
+            </template>
+
+            <el-form-item>
+              <el-button type="primary" @click="onClick('SUBMIT')">
+                문항 제출
+              </el-button>
             </el-form-item>
           </template>
 
-          <template v-if="[0, 1, 2].includes(qType)">
-            <el-form-item label="답">
-              <el-input
-                :type="qType === 1 ? 'input' : 'textarea'"
-                :rows="3"
-                v-model.lazy="qAnswer"
-              />
+          <div v-show="isSubmitted">
+            <el-form-item v-show="[0].includes(qType)" label="분포">
+              <bar-chart :xAxisName="chartXAxis" :data="chartData"/>
             </el-form-item>
-          </template>
-
-          <!-- 코딩 -->
-          <template v-if="[3].includes(qType)">
-            <br />
-            <br />
-
-            <el-form-item label="정보">
-              시간 제한: {{ qTimeLimit }} 초<br />
-              메모리 제한: {{ qMemoryLimit }} MB<br />
-              사용 가능한 언어: {{ qLanguageList.join(', ') }}
-            </el-form-item>
-            <el-form-item label="입력 예제">
-              {{ qInputDescription }}
-              <pre style="background-color: white; padding: 5px 20px;">{{ qSampleInput }}</pre>
-            </el-form-item>
-            <el-form-item label="출력 예제">
-              {{ qOutputDescription }}
-              <pre style="background-color: white; padding: 5px 20px;">{{ qSampleOutput }}</pre>
-            </el-form-item>
-
-            <el-form-item label="코드">
-              <el-input
-                type="textarea"
-                :rows="20"
-                v-model.lazy="qAnswer"
-              />
-            </el-form-item>
-          </template>
-
-          <el-form-item>
-            <el-button type="primary" @click="onClick('SUBMIT')">
-              문항 제출
-            </el-button>
-          </el-form-item>
+            제출되었습니다 {{ isSubmitted }}
+          </div>
 
         </el-form>
       </el-col>
@@ -81,15 +93,44 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import BarChart from './BarChart';
 
 export default {
   name: 'ScQuestionViewer',
+  components: {
+    BarChart,
+  },
   data() {
     return {
       qAnswer: '',
+      qAnswerChoice: [],
+      isSubmitted: false,
     };
   },
   computed: {
+    chartXAxis() {
+      const axis = ['x'];
+      const vm = this;
+      if (vm.qChoice) {
+        vm.qChoice.forEach((element) => {
+          axis.push(element);
+        });
+        return axis;
+      }
+      return null;
+    },
+    chartData() {
+      const data = ['답 제출 분포'];
+      const vm = this;
+      if (vm.qChoice) {
+        vm.qChoice.forEach(() => {
+          // TODO: 결과 값 수정
+          data.push(Math.floor(Math.random() * 100) + 1);
+        });
+        return data;
+      }
+      return null;
+    },
     ...mapGetters('scItem', ['currentEditingScItem']),
     fileList() {
       const vm = this;
@@ -151,8 +192,9 @@ export default {
     onClick(type) {
       switch (type) {
         case 'SUBMIT': {
-          // eslint-disable-next-line
-          console.log('onclick submit');
+          console.log('onclick submit'); //eslint-disable-line
+          const vm = this;
+          vm.isSubmitted = true;
           break;
         }
         default: {

@@ -93,7 +93,9 @@
               </router-link>
             </template>
           </el-table-column>
+
           <el-table-column
+            v-if="type ==='TEACH'"
             prop="live"
             label="강의">
             <template slot-scope="scope">
@@ -102,6 +104,21 @@
               </el-button>
             </template>
           </el-table-column>
+
+           <el-table-column
+            v-if="type ==='STUDY'"
+            prop="live"
+            label="강의 듣기">
+            <template slot-scope="scope">
+              <router-link :to="`/a/student/lecture/${scope.row.scId}/live`">
+                <el-button>
+                  강의 듣기
+                </el-button>
+              </router-link>
+            </template>
+          </el-table-column>
+
+
         </el-table>
 
         <br />

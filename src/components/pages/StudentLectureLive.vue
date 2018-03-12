@@ -1,5 +1,16 @@
 <template>
   <div>
+    <el-row>
+      <el-col>
+        <youtube
+          id="video"
+          :video-id="youtubeId"
+          :player-width="playerWidth"
+          :player-height="(playerWidth * 10) / 16"
+        >
+        </youtube>
+      </el-col>
+    </el-row>
     <el-row :gutter="5">
       <el-col :span="3">
         <el-dropdown>
@@ -71,6 +82,7 @@
 
 <script>
 import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
+import { getIdFromURL } from 'vue-youtube-embed';
 
 import Sc from '../partials/Sc';
 import StudentLectureLiveSummary from '../partials/StudentLectureLiveSummary';
@@ -112,6 +124,8 @@ export default {
       isCloseStatusbar: false,
       SummaryData: [],
       sHeartbeatIntervalId: 0,
+      youtubeId: '',
+      playerWidth: 1000,
     };
   },
   async beforeMount() {
@@ -121,6 +135,8 @@ export default {
       scId: Number.parseInt(vm.$route.params.scId, 10),
     });
     await vm.getSc();
+    await vm.$nextTick();
+    vm.youtubeId = getIdFromURL(vm.scVideoLink);
     // TODO: handle sc empty
     if (!vm.isScEmpty) {
       vm.updateCurrentEditingScItemIndex({
@@ -144,8 +160,16 @@ export default {
       }
     });
   },
+  async updated() {
+    const vm = this;
+    await vm.$nextTick();
+    const displayWidth = window.innerWidth
+      || document.documentElement.clientWidth
+      || document.getElementsByName('body')[0].clientWidth;
+    vm.playerWidth = (displayWidth * 9.5) / 10;
+  },
   computed: {
-    ...mapState('sc', ['scTitle', 'scType', 'scStartDate']),
+    ...mapState('sc', ['scTitle', 'scType', 'scStartDate', 'scVideoLink']),
     ...mapGetters('scItem', [
       'isScEmpty',
       'currentEditingScItem',

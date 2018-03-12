@@ -19,7 +19,6 @@
         />
       </el-col>
     </el-row>
-    {{ openedClassList }}
   </div>
 </template>
 
