@@ -293,6 +293,7 @@ export default {
             // TODO: send link to backend server
             // TODO: link validation should be needed
             // If Success
+            vm.input.youtubeLink = "https://www.youtube.com/embed/" + vm.input.youtubeLink.split('v=')[1] + "?autoplay=1";
             vm.$router.push({
               path: `/a/teacher/lecture/${vm.scId}/live`,
               query: {

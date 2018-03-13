@@ -51,8 +51,12 @@ export default {
       const vm = this;
       const file = vm.fileList[index];
       utils.downloadFile(file.url, file.name);
+      const params = {
+        lecture_item_id : vm.currentEditingScItem.id,
+        user_id : utils.getUserIdFromJwt(),
+      };
+      vm.$socket.emit('DOING_LECTURE_ITEM', JSON.stringify(params));
     },
   },
 };
 </script>
-

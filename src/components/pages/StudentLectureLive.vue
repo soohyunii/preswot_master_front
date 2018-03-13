@@ -108,15 +108,15 @@ export default {
   created() {
     this.$socket.connect();
     const vm = this;
-    const params = {
-      lecture_id: Number.parseInt(vm.$route.params.scId, 10),
-      user_id: utils.getUserIdFromJwt(),
-    };
     vm.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
     console.log('socket connected'); // eslint-disable-line
     vm.sHeartbeatIntervalId = setInterval(() => {
+      const params = {
+        lecture_id: Number.parseInt(vm.$route.params.scId, 10),
+        user_id: utils.getUserIdFromJwt(),
+      };
       this.$socket.emit('HEART_BEAT', JSON.stringify(params));
-    }, 30000);
+    }, 3000);
   },
   data() {
     return {
@@ -150,6 +150,10 @@ export default {
       //   vm.getItemKeywords();
       // }
     }
+    const params = {
+      lecture_id : Number.parseInt(vm.$route.params.scId, 10),
+    };
+    vm.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
   },
   mounted() {
     this.$socket.on('RELOAD_LECTURE_ITEM', (msg) => {
