@@ -7,11 +7,17 @@
             <keyword-editor></keyword-editor>
           </el-form-item>
           <el-form-item label="배점">
-            <el-input
-              type='number'
-              v-model.lazy="mScore"
-              @change="onChange('SCORE')"
-            />
+            <el-tooltip
+              effect="light"
+              placement="top-start">
+              <div slot="content">키워드 배점으로 조정하세요</div>
+              <el-input
+                type='number'
+                v-model.lazy="mScore"
+                @change="onChange('SCORE')"
+                disabled
+              />
+            </el-tooltip>
           </el-form-item>
           <i class="el-icon-loading" v-if="loading.SCORE" />
           <el-form-item label="파일 업로드">
