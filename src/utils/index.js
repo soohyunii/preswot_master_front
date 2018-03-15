@@ -1,4 +1,4 @@
-import getLocale from 'browser-locale';
+// import getLocale from 'browser-locale';
 import jwtDecode from 'jwt-decode';
 import moment from 'moment';
 import isNil from 'lodash.isnil';
@@ -22,8 +22,10 @@ export default {
     return jwt;
   },
   getDefaultLocale() {
-    const browserLocale = getLocale().split('-')[0];
-    return localStorage.getItem('locale') || browserLocale || 'ko';
+    // TODO: 나중에 로케일 작업하면 밑에 코드로 바꾸기
+    // const browserLocale = getLocale().split('-')[0];
+    // return localStorage.getItem('locale') || browserLocale || 'ko';
+    return 'ko';
   },
   isJwtExpired(jwt) {
     if (!jwt) {
