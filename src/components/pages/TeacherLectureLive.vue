@@ -252,7 +252,6 @@ export default {
         lecture_id: Number.parseInt(vm.$route.params.scId, 10),
         user_id: utils.getUserIdFromJwt(),
       };
-      console.log(params2);
       this.$socket.emit('HEART_BEAT', JSON.stringify(params2));
     }, 3000);
   },
@@ -279,10 +278,10 @@ export default {
         vm.getItemKeywords();
       }
     }
-      const params = {
-        lecture_id : Number.parseInt(vm.$route.params.scId, 10),
-      };
-      vm.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
+    const params = {
+      lecture_id: Number.parseInt(vm.$route.params.scId, 10),
+    };
+    vm.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
   },
   data() {
     // TODO: translate
@@ -383,6 +382,7 @@ export default {
     },
   },
   beforeDestory() {
+    const vm = this;
     this.$socket.close();
     clearInterval(vm.sHeartbeatIntervalId);
   },
