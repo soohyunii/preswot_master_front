@@ -195,6 +195,11 @@ export default {
           console.log('onclick submit'); //eslint-disable-line
           const vm = this;
           vm.isSubmitted = true;
+          const params = {
+            lecture_item_id : vm.currentEditingScItem.id,
+            user_id : utils.getUserIdFromJwt(),
+          };
+          vm.$socket.emit('DOING_LECTURE_ITEM', JSON.stringify(params));
           break;
         }
         default: {

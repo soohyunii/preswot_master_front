@@ -123,7 +123,7 @@
           </div>
           <div class="statusbar" v-bind:class="{ activeInfo: isInfoVisible}">
             <div class="statusbar_for_click" @click="onClick('TOGGLE_STATUS_INFO')"></div>
-            <teacher-lecture-live-summary :lectureId= "lectureId"/>
+            <teacher-lecture-live-summary :lectureId= "Number.parseInt($route.params.scId, 10)"/>
           </div>
         </el-row>
       </el-main>
@@ -222,6 +222,7 @@ import ScSurveyEditor from '../partials/ScSurveyEditor';
 import ScCommonEditor from '../partials/ScCommonEditor';
 import ScQuestionEditor from '../partials/ScQuestionEditor';
 import TeacherLectureLiveSummary from '../partials/TeacherLectureLiveSummary';
+import utils from '../../utils';
 
 export default {
   name: 'TeacherLectureLive',
@@ -240,12 +241,20 @@ export default {
   created() {
     this.$socket.connect();
     const vm = this;
-    const params = {
-      lecture_id: Number.parseInt(vm.$route.params.scId, 10),
-    };
     vm.sUpdateTimelineLogIntervalId = setInterval(() => {
+      const params = {
+        lecture_id: Number.parseInt(vm.$route.params.scId, 10),
+      };
       vm.$socket.emit('UPDATE_TIMELINE_LOG', JSON.stringify(params));
-    }, 180000);
+    }, 18000);
+    vm.sHeartbeatIntervalId = setInterval(() => {
+      const params2 = {
+        lecture_id: Number.parseInt(vm.$route.params.scId, 10),
+        user_id: utils.getUserIdFromJwt(),
+      };
+      console.log(params2);
+      this.$socket.emit('HEART_BEAT', JSON.stringify(params2));
+    }, 3000);
   },
   async beforeMount() {
     const vm = this;
@@ -270,6 +279,10 @@ export default {
         vm.getItemKeywords();
       }
     }
+      const params = {
+        lecture_id : Number.parseInt(vm.$route.params.scId, 10),
+      };
+      vm.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
   },
   data() {
     // TODO: translate
@@ -282,6 +295,7 @@ export default {
       isPlayerVisible: true,
       elapsedTimeIntervalId: null,
       sUpdateTimelineLogIntervalId: null,
+      sHeartbeatIntervalId: 0,
     };
   },
   methods: {
@@ -320,7 +334,7 @@ export default {
           const params = {
             opened: 1,
             lecture_item_id: vm.currentEditingScItem.id,
-            lecture_id: this.lectureId,
+            lecture_id: Number.parseInt(vm.$route.params.scId, 10),
           };
           this.$socket.emit('LECTURE_ITEM_ACTIVATION', JSON.stringify(params));
           vm.setActivated(vm);
@@ -331,7 +345,7 @@ export default {
           const params = {
             opened: 0,
             lecture_item_id: vm.currentEditingScItem.id,
-            lecture_id: this.lectureId,
+            lecture_id: Number.parseInt(vm.$route.params.scId, 10),
           };
           this.$socket.emit('LECTURE_ITEM_ACTIVATION', JSON.stringify(params));
           vm.setDeactivated(vm);
@@ -370,6 +384,7 @@ export default {
   },
   beforeDestory() {
     this.$socket.close();
+    clearInterval(vm.sHeartbeatIntervalId);
   },
   destroyed() {
     const vm = this;

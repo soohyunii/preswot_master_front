@@ -3,11 +3,11 @@
     <!-- TODO: translation -->
     <el-row>
       <el-col :offset="1" :span="3" style="text-align:center;"><div>수강생 평균 집중도</div></el-col>
-      <el-col :span="3"><el-progress :text-inside="true" :stroke-width="20" :percentage="70"></el-progress></el-col>
+      <el-col :span="3"><el-progress :text-inside="true" :stroke-width="20" :percentage="Number(avg_data.avg_concentration_score.toFixed(1))"></el-progress></el-col>
       <el-col :span="4" style="text-align:center;"><div>수강생 평균 참여도</div></el-col>
-      <el-col :span="3"><el-progress :text-inside="true" :stroke-width="20" :percentage="100" status="success"></el-progress></el-col>
+      <el-col :span="3"><el-progress :text-inside="true" :stroke-width="20" :percentage="Number(avg_data.avg_participation_score.toFixed(1))" status="success"></el-progress></el-col>
       <el-col :span="4" style="text-align:center;"><div>수강생 평균 이해도</div></el-col>
-      <el-col :span="3"><el-progress :text-inside="true" :stroke-width="20" :percentage="100" status="success"></el-progress></el-col>
+      <el-col :span="3"><el-progress :text-inside="true" :stroke-width="20" :percentage="Number(avg_data.avg_understanding_score.toFixed(1))" status="success"></el-progress></el-col>
       <el-col :span="3" style="text-align:right;">
         <i class="el-icon-close" @click="onClick('CLOSE_STATUSBAR')" />
       </el-col>
@@ -40,8 +40,10 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
-
+<style lang="scss">
+  .el-progress-bar__innerText{
+  color:#000000;
+  }
   .el-row {
     margin-bottom: 20px;
     padding-left:30px;
@@ -111,7 +113,15 @@
       return {
         forLoopData: null,
         loopInterval: 0,
+        avg_data : {},
       };
+    },
+    async beforeMount() {
+      const vm = this;
+      vm.$socket.on('GET_REALTIME_STAT', (msg) => {
+        const jsonMSG = JSON.parse(msg);
+        vm.avg_data = jsonMSG[0];
+      });
     },
     methods: {
       async getLectureStat() {
@@ -138,19 +148,22 @@
           case 'GET_LECTURE_SCORE_ORDER_BY_CONCENTRATION': {
             // vm.lectureId = 1; // 강의 아이디를 여기에다가 넣어야됨
             vm.opt = 0;
-            vm.getLectureStat();
+            clearInterval(vm.loopInterval);
+            vm.loopInterval = setInterval(vm.getLectureStat, 1000);
             break;
           }
           case 'GET_LECTURE_SCORE_ORDER_BY_PARTICIPATION': {
             // vm.lectureId = 1; // 강의 아이디를 여기에다가 넣어야됨
             vm.opt = 1;
-            vm.getLectureStat();
+            clearInterval(vm.loopInterval);
+            vm.loopInterval = setInterval(vm.getLectureStat, 1000);
             break;
           }
           case 'GET_LECTURE_SCORE_ORDER_BY_UNDERSTANDING': {
             // vm.lectureId = 1; // 강의 아이디를 여기에다가 넣어야됨
             vm.opt = 2;
-            vm.getLectureStat();
+            clearInterval(vm.loopInterval);
+            vm.loopInterval = setInterval(vm.getLectureStat, 1000);
             break;
           }
           case 'CLOSE_STATUSBAR': {
