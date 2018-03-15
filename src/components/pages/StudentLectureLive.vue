@@ -151,7 +151,7 @@ export default {
       // }
     }
     const params = {
-      lecture_id : Number.parseInt(vm.$route.params.scId, 10),
+      lecture_id: Number.parseInt(vm.$route.params.scId, 10),
     };
     vm.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
   },

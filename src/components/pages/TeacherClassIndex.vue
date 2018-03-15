@@ -75,7 +75,6 @@ import ClassKnowledgeMap from '../partials/ClassKnowledgeMap';
 // import teacherService from '../../services/teacherService';
 // import classService from '../../services/classService';
 import ClassListAside from '../partials/ClassListAside';
-import ElButton from "element-ui/packages/button/src/button";
 
 
 export default {
@@ -93,7 +92,6 @@ export default {
     ]),
   },
   components: {
-    ElButton,
     ClassScenario,
     ClassStatistics,
     ClassKnowledgeMap,

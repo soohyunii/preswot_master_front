@@ -8,7 +8,7 @@
           <el-menu-item index="0">과목</el-menu-item>
           <el-submenu index="2">
             <template slot="title">강의 시나리오</template>
-            <el-menu-item v-for="item in scenarioList" :index="item.lecture_id.toString()">
+            <el-menu-item v-for="item in scenarioList" :index="item.lecture_id.toString()" :key="item.name">
               {{ item.name }}
             </el-menu-item>
           </el-submenu>
@@ -85,7 +85,8 @@
                 <template slot-scope="scope">
                   <el-tooltip v-for="question in scope.row.questions"
                               effect="dark"
-                              placement="top">
+                              placement="top"
+                              :key="question">
                     <div slot="content">{{question.lecture_name}}<br />{{question.item_name}}</div>
                     <!---->
                     <!--여기부분 question.lecture_item_id 로 링크 만들어야댐-->
@@ -125,7 +126,8 @@ asdasdasdasdasd
                 <template slot-scope="scope">
                   <el-tooltip v-for="material in scope.row.materials"
                               effect="dark"
-                              placement="top">
+                              placement="top"
+                              :key="material">
                     <div slot="content">{{material.lecture_name}}<br />{{material.item_name}}</div>
                     <!---->
                     <!--여기부분 material.lecture_item_id 로 링크 만들어야댐-->

@@ -284,7 +284,6 @@ export default {
     vm.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
   },
   data() {
-    // TODO: translate
     return {
       activeTab: 'first',
       SummaryData: [],
@@ -329,7 +328,6 @@ export default {
           break;
         }
         case 'TEMP_ACTIVATE': {
-          console.log('ta'); // eslint-disable-line
           const params = {
             opened: 1,
             lecture_item_id: vm.currentEditingScItem.id,
@@ -340,7 +338,6 @@ export default {
           break;
         }
         case 'TEMP_DEACTIVATE': {
-          console.log('tda'); // eslint-disable-line
           const params = {
             opened: 0,
             lecture_item_id: vm.currentEditingScItem.id,

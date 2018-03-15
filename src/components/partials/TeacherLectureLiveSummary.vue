@@ -113,7 +113,7 @@
       return {
         forLoopData: null,
         loopInterval: 0,
-        avg_data : {},
+        avg_data: {},
       };
     },
     async beforeMount() {
