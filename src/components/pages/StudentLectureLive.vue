@@ -108,6 +108,9 @@ export default {
   created() {
     this.$socket.connect();
     const vm = this;
+    const params = {
+      lecture_id : Number.parseInt(vm.$route.params.scId, 10),
+    }
     vm.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
     console.log('socket connected'); // eslint-disable-line
     vm.sHeartbeatIntervalId = setInterval(() => {
@@ -237,6 +240,8 @@ export default {
   beforeDestroy() {
     const vm = this;
     vm.$socket.close();
+  },
+  destroyed() {
     clearInterval(vm.sHeartbeatIntervalId);
   },
 };
