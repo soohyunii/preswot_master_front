@@ -16,6 +16,9 @@ export default {
   getClassCoverage({ id }) {
     return http.get(`/classes/${id}/coverage`);
   },
+  getClassNeedScoring({ id }) {
+    return http.get(`/classes/${id}/need-scoring`)
+  },
   getClassKeywordRelations({ id }) {
     return http.get(`/classes/${id}/keyword-relations`);
   },
@@ -65,6 +68,16 @@ export default {
     teacherEmail,
   }) {
     return http.delete(`/classes/${id}/teacher/${teacherEmail}`);
+  },
+  putScore({ id, score }) {
+    const param = {};
+    utils.assignIfNotNil(param, { score });
+    return http.put(`/student/answer/${id}`, param);
+  },
+  putHomeworkFeedback({ id, feedback }) {
+    const param = {};
+    utils.assignIfNotNil(param, { feedback });
+    return http.put(`/student/homework/${id}`, param);
   },
   delete({
     id,

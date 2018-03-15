@@ -28,7 +28,7 @@
 
         <el-row type="flex" justify="end">
           <el-col :span="14">
-            <el-dropdown @command="onClick">
+            <!-- <el-dropdown @command="onClick">
               <el-button :type="appTheme" plain>
                 {{ $t('HEADER.LANG_INFO') }}<i class="el-icon-arrow-down el-icon--right"></i>
               </el-button>
@@ -36,7 +36,7 @@
                 <el-dropdown-item command="LOCALE_KO">한국어</el-dropdown-item>
                 <el-dropdown-item command="LOCALE_EN">English</el-dropdown-item>
               </el-dropdown-menu>
-            </el-dropdown>
+            </el-dropdown> -->
 
             <router-link to="/a/student/class" v-show="isJwtValid">
               <el-button :type="appTheme" plain>
