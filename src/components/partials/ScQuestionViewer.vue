@@ -193,7 +193,7 @@ export default {
     onClick(type) {
       switch (type) {
         case 'SUBMIT': {
-          console.log('onclick submit'); //eslint-disable-line
+          // console.log('onclick submit'); //eslint-disable-line
           const vm = this;
           vm.isSubmitted = true;
           const params = {
