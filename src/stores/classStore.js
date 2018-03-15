@@ -44,6 +44,7 @@ export default {
      * coverage 변수
      */
     currentClassCoverage: null,
+    currentClassNeedScoring: null,
     // //////////////////////////절취선////////////////////////// //
     /**
      * ClassKnowledgeMap 관련 변수들
@@ -221,6 +222,9 @@ export default {
     updateCurrentClassCoverage(state, { currentClassCoverage }) {
       state.currentClassCoverage = currentClassCoverage;
     },
+    updateCurrentClassNeedScoring(state, { currentClassNeedScoring }) {
+      state.currentClassNeedScoring = currentClassNeedScoring;
+    },
   },
   actions: {
     async getKnowledgeMapData({ getters, commit }, { isTeacher }) {
@@ -307,6 +311,16 @@ export default {
         id: getters.currentTeachingClass.class_id,
       });
     },
+    async putScore({ state }, { id, score }) {
+      await classService.putScore({
+        id, score,
+      });
+    },
+    async putHomeworkFeedback({ state }, { id, feedback }) {
+      await classService.putHomeworkFeedback({
+        id, feedback,
+      });
+    },
     async getClass({ state, getters, commit }, { type }) {
       if (state.currentClassIndex === null) {
         return;
@@ -359,6 +373,23 @@ export default {
       });
       commit('updateCurrentClassCoverage', {
         currentClassCoverage: res.data,
+      });
+    },
+    async getClassNeedScoring({ state, getters, commit }, { type }) {
+      if (state.currentClassIndex === null) {
+        return;
+      }
+      let currentClass;
+      if (type === 'TEACH') {
+        currentClass = getters.currentTeachingClass;
+      } else {
+        currentClass = getters.currentStudyingClass;
+      }
+      const res = await classService.getClassNeedScoring({
+        id: currentClass.class_id,
+      });
+      commit('updateCurrentClassNeedScoring', {
+        currentClassNeedScoring: res.data,
       });
     },
     async postClassUser(_, { classId }) {
