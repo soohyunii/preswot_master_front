@@ -161,10 +161,13 @@ export default {
           }
           // TODO: translation
           vm.$notify({
-            title: 'Success',
-            message: 'Logout Success !!',
+            title: '로그아웃',
+            message: '로그아웃 성공',
             type: 'success',
           });
+          setTimeout(() => {
+            location.reload();
+          }, 800);
           break;
         }
         case 'LOCALE_KO': {
