@@ -83,21 +83,25 @@
               </el-table-column>
               <el-table-column label="관련 문항 키워드 수정" align="center">
                 <template slot-scope="scope">
-                  <el-tooltip v-for="question in scope.row.questions"
+                  <el-tooltip v-for="(question, index) in scope.row.questions"
                               effect="dark"
                               placement="top"
-                              :key="question">
-                    <div slot="content">{{question.lecture_name}}<br />{{question.item_name}}</div>
+                              :key="index">
+                    <div slot="content">
+                      {{question.lecture_name}}<br />
+                      {{question.item_name}} <br />
+                      {{ question }}
+
+                    </div>
                     <!---->
                     <!--여기부분 question.lecture_item_id 로 링크 만들어야댐-->
                     <!---->
-                    <i class="el-icon-edit" style="margin-left: 5px"></i>
+                    <i class="el-icon-edit" style="margin-left: 5px" @click="onClick('QUESTION_KEYWORD_EDIT', question)"></i>
                   </el-tooltip>
                 </template>
               </el-table-column>
             </el-table>
           </div>
-asdasdasdasdasd
           <div v-if="radio1 === 'Item'">
             <el-row :gutter="40">
               <el-col :span="12" align-center>
@@ -124,15 +128,15 @@ asdasdasdasdasd
               </el-table-column>
               <el-table-column label="관련 자료 키워드 수정" align="center">
                 <template slot-scope="scope">
-                  <el-tooltip v-for="material in scope.row.materials"
+                  <el-tooltip v-for="(material, index) in scope.row.materials"
                               effect="dark"
                               placement="top"
-                              :key="material">
+                              :key="index">
                     <div slot="content">{{material.lecture_name}}<br />{{material.item_name}}</div>
                     <!---->
                     <!--여기부분 material.lecture_item_id 로 링크 만들어야댐-->
                     <!---->
-                    <i class="el-icon-edit" style="margin-left: 5px"></i>
+                    <i class="el-icon-edit" style="margin-left: 5px" @click="onClick('MATERIAL_KEYWORD_EDIT', material)"></i>
                   </el-tooltip>
                 </template>
               </el-table-column>
@@ -209,6 +213,21 @@ asdasdasdasdasd
         } else {
           await vm.getScCoverage({ id: keyInt });
           vm.coverage = vm.scCoverage;
+        }
+      },
+      onClick(type, payload) {
+        switch (type) {
+          case 'QUESTION_KEYWORD_EDIT': {
+            console.log('q', payload);
+            break;
+          }
+          case 'MATERIAL_KEYWORD_EDIT': {
+            console.log('m', payload);
+            break;
+          }
+          default: {
+            throw new Error(`not defined type ${type}`);
+          }
         }
       },
     },
