@@ -129,7 +129,7 @@ export default {
       sHeartbeatIntervalId: 0,
       youtubeId: '',
       playerWidth: 1000,
-      fleetingSC: [],
+      fleetingSc: [],
     };
   },
   async beforeMount() {
@@ -178,10 +178,10 @@ export default {
   },
   computed: {
     ...mapState('sc', ['scTitle', 'scType', 'scStartDate', 'scVideoLink']),
+    ...mapState('scItem', ['sc']),
     ...mapGetters('scItem', [
       'isScEmpty',
       'currentEditingScItem',
-      'currentSC',
     ]),
     currentEditingScItemType() {
       const vm = this;
@@ -229,11 +229,11 @@ export default {
         }
       }
     },
-    async refreshSCItems() {
+    async refreshScItems() {
       const vm = this;
       await vm.getSc();
-      for (let i = 0; i < vm.fleetingSC.length; i++) {
-        if (vm.fleetingSC[i].opened !== vm.currentSC[i].opened) {
+      for (let i = 0; i < vm.fleetingSc.length; i++) { // eslint-disable-line
+        if (vm.fleetingSc[i].opened !== vm.sc[i].opened) {
           vm.updateCurrentEditingScItemIndex({
             currentEditingScItemIndex: i,
           });
@@ -242,13 +242,13 @@ export default {
     },
     updateScenario() {
       const vm = this;
-      vm.fleetingSC = vm.currentSC;
+      vm.fleetingSc = vm.sc;
       vm.$notify({
         title: '시나리오 변경',
         message: '시나리오 변경이 일어났습니다.',
         type: 'success',
       });
-      this.refreshSCItems();
+      this.refreshScItems();
     },
   },
   beforeDestroy() {

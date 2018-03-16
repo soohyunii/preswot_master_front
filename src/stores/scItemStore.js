@@ -24,9 +24,6 @@ export default {
     // //////////////////////////절취선////////////////////////// //
   },
   getters: {
-    currentSC(state) {
-      return state.sc;
-    },
     isScEmpty(state) {
       return state.sc.length === 0;
     },
