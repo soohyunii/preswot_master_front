@@ -20,14 +20,17 @@
           <h3>중요 키워드</h3>
           <br />
           <el-row :gutter="40">
-            <el-col :span="16" style="height: 300px; text-align: center">
-              여기는 워드크라우드 <br />
-              여기는 워드크라우드 <br />
-              여기는 워드크라우드 <br />
-              여기는 워드크라우드 <br />
-              여기는 워드크라우드 <br />
-              여기는 워드크라우드 <br />
-              여기는 워드크라우드 <br />
+            <el-col :span="16">
+              <word-cloud
+                style="min-height: 500px;"
+                :data="coverage.keyword_coverages"
+                nameKey="keyword"
+                valueKey="weight"
+                fontScale="sqrt"
+                :fontSize="[40, 120]"
+                :wordClick="() => {}"
+              >
+              </word-cloud>
             </el-col>
             <el-col :span="8">
               <el-table
@@ -149,102 +152,106 @@
 </template>
 
 <style scoped>
-  main {
-    min-height: 800px;
-  }
+main {
+  min-height: 800px;
+}
 </style>
 
 <script>
-  import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
+import WordCloud from '../partials/WordCloud';
 
-  export default {
-    name: 'TeacherClassEvaluation',
-    computed: {
-      ...mapState('class', ['teachingClassList', 'currentClassIndex', 'currentClassCoverage']),
-      ...mapState('sc', ['scCoverage']),
-      ...mapGetters('class', [
-        'currentTeachingClass',
-      ]),
-      scenarioList: {
-        get() {
-          const vm = this;
-          if (!vm.currentTeachingClass.scenarioList) {
-            return [];
-          }
-          return vm.currentTeachingClass.scenarioList;
-        },
+export default {
+  name: 'TeacherClassEvaluation',
+  components: {
+    WordCloud,
+  },
+  computed: {
+    ...mapState('class', ['teachingClassList', 'currentClassIndex', 'currentClassCoverage']),
+    ...mapState('sc', ['scCoverage']),
+    ...mapGetters('class', [
+      'currentTeachingClass',
+    ]),
+    scenarioList: {
+      get() {
+        const vm = this;
+        if (!vm.currentTeachingClass.scenarioList) {
+          return [];
+        }
+        return vm.currentTeachingClass.scenarioList;
       },
     },
-    data() {
-      return {
-        coverage: null,
-        activeIndex: '0',
-        radio1: 'Question',
-      };
-    },
-    async created() {
+  },
+  data() {
+    return {
+      coverage: null,
+      activeIndex: '0',
+      radio1: 'Question',
+    };
+  },
+  async created() {
+    const vm = this;
+    if (!vm.currentTeachingClass) {
+      await vm.getMyClassLists();
+      vm.updateCurrentClassIndex({
+        currentClassId: Number.parseInt(vm.$route.params.classId, 10),
+      });
+      await vm.getClass({ type: 'TEACH' });
+    }
+    await vm.getClassCoverage({ type: 'TEACH' });
+    vm.coverage = vm.currentClassCoverage;
+  },
+  methods: {
+    ...mapMutations('class', [
+      'updateCurrentClassIndex',
+    ]),
+    ...mapActions('class', [
+      'getMyClassLists',
+      'getClass',
+      'getClassCoverage',
+    ]),
+    ...mapActions('sc', ['getScCoverage']),
+    async handelSelect(key) {
       const vm = this;
-      if (!vm.currentTeachingClass) {
-        await vm.getMyClassLists();
-        vm.updateCurrentClassIndex({
-          currentClassId: Number.parseInt(vm.$route.params.classId, 10),
-        });
-        await vm.getClass({ type: 'TEACH' });
+      const keyInt = parseInt(key, 10);
+      if (keyInt === 0) {
+        await vm.getClassCoverage({ type: 'TEACH' });
+        vm.coverage = vm.currentClassCoverage;
+      } else {
+        await vm.getScCoverage({ id: keyInt });
+        vm.coverage = vm.scCoverage;
       }
-      await vm.getClassCoverage({ type: 'TEACH' });
-      vm.coverage = vm.currentClassCoverage;
     },
-    methods: {
-      ...mapMutations('class', [
-        'updateCurrentClassIndex',
-      ]),
-      ...mapActions('class', [
-        'getMyClassLists',
-        'getClass',
-        'getClassCoverage',
-      ]),
-      ...mapActions('sc', ['getScCoverage']),
-      async handelSelect(key) {
-        const vm = this;
-        const keyInt = parseInt(key, 10);
-        if (keyInt === 0) {
-          await vm.getClassCoverage({ type: 'TEACH' });
-          vm.coverage = vm.currentClassCoverage;
-        } else {
-          await vm.getScCoverage({ id: keyInt });
-          vm.coverage = vm.scCoverage;
+    onClick(type, payload) {
+      const vm = this;
+      switch (type) {
+        case 'QUESTION_KEYWORD_EDIT': {
+          vm.$router.push({
+            path: `/a/teacher/lecture/${payload.lecture_id}/edit`,
+            query: {
+              tab: 'third',
+              type,
+              scItemId: payload.lecture_item_id,
+            },
+          });
+          break;
         }
-      },
-      onClick(type, payload) {
-        const vm = this;
-        switch (type) {
-          case 'QUESTION_KEYWORD_EDIT': {
-            vm.$router.push({
-              path: `/a/teacher/lecture/${payload.lecture_id}/edit`,
-              query: {
-                tab: 'third',
-                type,
-                scItemId: payload.lecture_item_id,
-              },
-            });
-            break;
-          }
-          case 'MATERIAL_KEYWORD_EDIT': {
-            vm.$router.push({
-              path: `/a/teacher/lecture/${payload.lecture_id}/edit`,
-              query: {
-                tab: 'third',
-                type,
-                scItemId: payload.lecture_item_id,
-              },
-            });
-            break;
-          }
-          default: {
-            throw new Error(`not defined type ${type}`);
-          }
+        case 'MATERIAL_KEYWORD_EDIT': {
+          vm.$router.push({
+            path: `/a/teacher/lecture/${payload.lecture_id}/edit`,
+            query: {
+              tab: 'third',
+              type,
+              scItemId: payload.lecture_item_id,
+            },
+          });
+          break;
         }
-      },
+        default: {
+          throw new Error(`not defined type ${type}`);
+        }
+      }
     },
-  };
+  },
+};
 </script>

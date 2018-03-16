@@ -379,12 +379,11 @@ export default {
     },
   },
   beforeDestory() {
-    const vm = this;
     this.$socket.close();
-    clearInterval(vm.sHeartbeatIntervalId);
   },
   destroyed() {
     const vm = this;
+    clearInterval(vm.sHeartbeatIntervalId);
     clearInterval(vm.elapsedTimeIntervalId);
     clearInterval(vm.sUpdateTimelineLogIntervalId);
   },

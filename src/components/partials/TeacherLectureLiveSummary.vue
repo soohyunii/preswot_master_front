@@ -3,11 +3,11 @@
     <!-- TODO: translation -->
     <el-row>
       <el-col :offset="1" :span="3" style="text-align:center;"><div>수강생 평균 집중도</div></el-col>
-      <el-col :span="3"><el-progress :text-inside="true" :stroke-width="20" :percentage="Number(avg_data.avg_concentration_score.toFixed(1))"></el-progress></el-col>
+      <el-col :span="3"><el-progress :text-inside="true" :stroke-width="20" :percentage="avg_data.avg_concentration_score"></el-progress></el-col>
       <el-col :span="4" style="text-align:center;"><div>수강생 평균 참여도</div></el-col>
-      <el-col :span="3"><el-progress :text-inside="true" :stroke-width="20" :percentage="Number(avg_data.avg_participation_score.toFixed(1))" status="success"></el-progress></el-col>
+      <el-col :span="3"><el-progress :text-inside="true" :stroke-width="20" :percentage="avg_data.avg_understanding_score" status="success"></el-progress></el-col>
       <el-col :span="4" style="text-align:center;"><div>수강생 평균 이해도</div></el-col>
-      <el-col :span="3"><el-progress :text-inside="true" :stroke-width="20" :percentage="Number(avg_data.avg_understanding_score.toFixed(1))" status="success"></el-progress></el-col>
+      <el-col :span="3"><el-progress :text-inside="true" :stroke-width="20" :percentage="avg_data.avg_participation_score" status="success"></el-progress></el-col>
       <el-col :span="3" style="text-align:right;">
         <i class="el-icon-close" @click="onClick('CLOSE_STATUSBAR')" />
       </el-col>
@@ -113,14 +113,21 @@
       return {
         forLoopData: null,
         loopInterval: 0,
-        avg_data: {},
+        avg_data: {
+          avg_concentration_score: 0,
+          avg_participation_score: 0,
+          avg_understanding_score: 0,
+        },
       };
     },
     async beforeMount() {
       const vm = this;
       vm.$socket.on('GET_REALTIME_STAT', (msg) => {
         const jsonMSG = JSON.parse(msg);
-        vm.avg_data = jsonMSG[0];
+        // console.log(jsonMSG[0]);
+        vm.avg_data.avg_concentration_score = Number(jsonMSG[0].avg_concentration_score.toFixed(1));
+        vm.avg_data.avg_participation_score = Number(jsonMSG[0].avg_participation_score.toFixed(1));
+        vm.avg_data.avg_understanding_score = Number(jsonMSG[0].avg_understanding_score.toFixed(1));
       });
     },
     methods: {
