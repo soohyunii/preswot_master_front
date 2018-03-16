@@ -124,7 +124,7 @@
       const vm = this;
       vm.$socket.on('GET_REALTIME_STAT', (msg) => {
         const jsonMSG = JSON.parse(msg);
-        console.log(jsonMSG[0]);
+        // console.log(jsonMSG[0]);
         vm.avg_data.avg_concentration_score = Number(jsonMSG[0].avg_concentration_score.toFixed(1));
         vm.avg_data.avg_participation_score = Number(jsonMSG[0].avg_participation_score.toFixed(1));
         vm.avg_data.avg_understanding_score = Number(jsonMSG[0].avg_understanding_score.toFixed(1));

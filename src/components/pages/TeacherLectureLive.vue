@@ -379,7 +379,6 @@ export default {
     },
   },
   beforeDestory() {
-    const vm = this;
     this.$socket.close();
   },
   destroyed() {
