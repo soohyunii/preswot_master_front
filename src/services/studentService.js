@@ -1,4 +1,14 @@
+import http from './http';
+
 export default {
+  submitSurvey({
+    surveyId,
+    answer,
+  }) {
+    return http.post(`/student/survey/${surveyId}`, {
+      answer,
+    });
+  },
   fetchAttendingClassList() {
     // TODO: Replace dummy with axios
     return new Promise((resolve) => {
