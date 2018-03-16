@@ -4,6 +4,7 @@ import questionService from '../services/questionService';
 import materialService from '../services/materialService';
 import surveyService from '../services/surveyService';
 import homeworkService from '../services/homeworkService';
+import studentService from '../services/studentService';
 import { baseUrl } from '../services/config';
 
 import utils from '../utils';
@@ -205,7 +206,7 @@ export default {
           const survey = res.data.surveys[0];
           let choice = [];
           if (survey.choice.length !== 0) {
-            choice = survey
+            choice = survey.choice
               .map(token => token.trim())
               .filter(token => token.length !== 0);
           }
@@ -607,6 +608,12 @@ export default {
         currentEditingScItem: {
           opened: 0,
         },
+      });
+    },
+    async submitSurvey({ getters }, { id, answer }) {
+      await studentService.submitSurvey({
+        surveyId: id,
+        answer,
       });
     },
   },
