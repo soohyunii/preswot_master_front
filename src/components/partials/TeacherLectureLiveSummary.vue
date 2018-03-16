@@ -113,10 +113,10 @@
       return {
         forLoopData: null,
         loopInterval: 0,
-        avg_data : {
-        avg_concentration_score : 0,
-        avg_participation_score : 0,
-        avg_understanding_score : 0,
+        avg_data: {
+          avg_concentration_score: 0,
+          avg_participation_score: 0,
+          avg_understanding_score: 0,
         },
       };
     },

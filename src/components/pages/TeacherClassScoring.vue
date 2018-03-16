@@ -99,7 +99,8 @@
               <el-col class="desc-name">숙제 파일:</el-col>
               <el-col :span="8" class="desc-desc">
                 <el-button type="text" class="download"
-                           v-for="file in inner.homework.files"
+                           v-for="(file, index) in inner.homework.files"
+                           :key="index"
                            @click="onClickDownload(file.client_path, file.name)">{{file.name}}<br>
                 </el-button>
               </el-col>
@@ -113,7 +114,8 @@
                 <el-table-column label="File" align="center">
                   <template slot-scope="scope">
                     <el-button type="text" class="download"
-                               v-for="file in scope.row.files"
+                               v-for="(file, index) in scope.row.files"
+                               :key="index"
                                @click="onClickDownload(file.client_path, file.name)">{{file.name}}<br>
                     </el-button>
                   </template>
@@ -194,7 +196,7 @@
       }
       await vm.getClassNeedScoring({ type: 'TEACH' });
       vm.needScoring = vm.currentClassNeedScoring;
-      console.log(vm.needScoring);
+      // console.log(vm.needScoring);
     },
     methods: {
       ...mapMutations('class', [
@@ -222,7 +224,7 @@
             await vm.putScore({ id, score });
           }
         } else if (type === 'homework') {
-          console.log('asdasd');
+          // console.log('asdasd');
           await vm.putHomeworkFeedback({ id, feedback: score });
         }
       },
