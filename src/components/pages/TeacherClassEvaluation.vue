@@ -216,13 +216,28 @@
         }
       },
       onClick(type, payload) {
+        const vm = this;
         switch (type) {
           case 'QUESTION_KEYWORD_EDIT': {
-            console.log('q', payload);
+            vm.$router.push({
+              path: `/a/teacher/lecture/${payload.lecture_id}/edit`,
+              query: {
+                tab: 'third',
+                type,
+                scItemId: payload.lecture_item_id,
+              },
+            });
             break;
           }
           case 'MATERIAL_KEYWORD_EDIT': {
-            console.log('m', payload);
+            vm.$router.push({
+              path: `/a/teacher/lecture/${payload.lecture_id}/edit`,
+              query: {
+                tab: 'third',
+                type,
+                scItemId: payload.lecture_item_id,
+              },
+            });
             break;
           }
           default: {
