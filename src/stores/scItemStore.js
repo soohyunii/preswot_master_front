@@ -173,7 +173,20 @@ export default {
             currentEditingScItem: {
               type: utils.convertScItemType(lectureItemType),
               id: scItemId,
-              fileList: question.files,
+              fileList: question.files.map((item) => {
+                return {
+                  name: item.name,
+                  url: `${baseUrl}${item.client_path}`,
+                  guid: item.file_guid,
+                };
+              }),
+              SQLiteFile: question.sql_lite_file.map((item) => {
+                return {
+                  name: item.name,
+                  url: `${baseUrl}${item.client_path}`,
+                  guid: item.file_guid,
+                };
+              }),
               question: {
                 id: question.question_id,
                 type: question.type,
@@ -212,13 +225,8 @@ export default {
               type: utils.convertScItemType(lectureItemType),
               id: scItemId,
               fileList: survey.files.map((item) => {
-                const tokens = item.client_path.split('/')
-                  .map(t => t.trim())
-                  .filter(t => t.length !== 0);
-
-                const fileName = tokens.pop();
                 return {
-                  name: fileName,
+                  name: item.name,
                   url: `${baseUrl}${item.client_path}`,
                   guid: item.file_guid,
                 };
@@ -241,13 +249,8 @@ export default {
               type: utils.convertScItemType(lectureItemType),
               id: scItemId,
               fileList: material.files.map((item) => {
-                const tokens = item.client_path.split('/')
-                  .map(t => t.trim())
-                  .filter(t => t.length !== 0);
-
-                const fileName = tokens.pop();
                 return {
-                  name: fileName,
+                  name: item.name,
                   url: `${baseUrl}${item.client_path}`,
                   guid: item.file_guid,
                 };
@@ -268,13 +271,8 @@ export default {
               type: utils.convertScItemType(lectureItemType),
               id: scItemId,
               fileList: homework.files.map((item) => {
-                const tokens = item.client_path.split('/')
-                  .map(t => t.trim())
-                  .filter(t => t.length !== 0);
-
-                const fileName = tokens.pop();
                 return {
-                  name: fileName,
+                  name: item.name,
                   url: `${baseUrl}${item.client_path}`,
                   guid: item.file_guid,
                 };
@@ -439,7 +437,7 @@ export default {
         fileGuid,
       });
     },
-    async postFile({ commit, getters }, { file }) {
+    async postFile({ commit, getters }, { file, SQLite }) {
       let res;
       switch (getters.currentEditingScItem.type) {
         case '강의자료': {
@@ -457,10 +455,17 @@ export default {
           break;
         }
         case '문항': {
-          res = await questionService.postQuestionFile({
-            file,
-            questionId: getters.currentEditingScItem.question.id,
-          });
+          if (SQLite) {
+            res = await questionService.postQuestionSQLiteFile({
+              file,
+              questionId: getters.currentEditingScItem.question.id,
+            });
+          } else {
+            res = await questionService.postQuestionFile({
+              file,
+              questionId: getters.currentEditingScItem.question.id,
+            });
+          }
           break;
         }
         case '숙제': {
@@ -474,13 +479,25 @@ export default {
           throw new Error(`not defined scItemType ${getters.currentEditingScItem.type}`);
         }
       }
+      if (SQLite) {
+        const SQLiteFile = getters.currentEditingScItem.SQLiteFile;
+        SQLiteFile.push({
+          name: res.data.sqlLiteFile.name,
+          url: `${baseUrl}${res.data.sqlLiteFile.client_path}`,
+          status: 'success',
+          uid: file.uid,
+          guid: res.data.sqlLiteFile.file_guid,
+        });
+        commit('assignCurrentEditingScItem', {
+          currentEditingScItem: {
+            SQLiteFile,
+          },
+        });
+        return;
+      }
       const newFileList = getters.currentEditingScItem.fileList;
-      const tokens = res.data.file.client_path.split('/')
-        .map(t => t.trim())
-        .filter(t => t.length !== 0);
-      const fileName = tokens.pop();
       newFileList.push({
-        name: fileName,
+        name: res.data.file.name,
         url: `${baseUrl}${res.data.file.client_path}`,
         status: 'success',
         uid: file.uid,
