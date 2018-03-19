@@ -218,7 +218,7 @@
             <i class="el-icon-loading" v-if="loading.TIME_LIMIT" />
           </template>
 
-          <template v-if="[0, 1, 2, 3,4].includes(pType)">
+          <template v-if="[0, 1, 2, 3, 4].includes(pType)">
             <el-form-item label="배점" prop="pScore">
               <el-tooltip
                 effect="light"
