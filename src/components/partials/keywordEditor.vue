@@ -147,16 +147,16 @@ export default {
         scoreSum += keyword.score;
       });
       let id = null;
-      let itemScore = 0;
+      // let itemScore = 0;
       switch (item.type) {
         case '문항': {
           id = item.question.id;
-          itemScore = item.question.score;
+          // itemScore = item.question.score;
           break;
         }
         case '강의자료': {
           id = item.material.id;
-          itemScore = item.material.score;
+          // itemScore = item.material.score;
           break;
         }
         default: {

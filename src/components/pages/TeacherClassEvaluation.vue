@@ -8,7 +8,7 @@
           <el-menu-item index="0">과목</el-menu-item>
           <el-submenu index="2">
             <template slot="title">강의 시나리오</template>
-            <el-menu-item v-for="item in scenarioList" :index="item.lecture_id.toString()">
+            <el-menu-item v-for="item in scenarioList" :index="item.lecture_id.toString()" :key="item.name">
               {{ item.name }}
             </el-menu-item>
           </el-submenu>
@@ -20,14 +20,17 @@
           <h3>중요 키워드</h3>
           <br />
           <el-row :gutter="40">
-            <el-col :span="16" style="height: 300px; text-align: center">
-              여기는 워드크라우드 <br />
-              여기는 워드크라우드 <br />
-              여기는 워드크라우드 <br />
-              여기는 워드크라우드 <br />
-              여기는 워드크라우드 <br />
-              여기는 워드크라우드 <br />
-              여기는 워드크라우드 <br />
+            <el-col :span="16">
+              <word-cloud
+                style="min-height: 500px;"
+                :data="coverage.keyword_coverages"
+                nameKey="keyword"
+                valueKey="weight"
+                fontScale="sqrt"
+                :fontSize="[40, 120]"
+                :wordClick="() => {}"
+              >
+              </word-cloud>
             </el-col>
             <el-col :span="8">
               <el-table
@@ -83,20 +86,25 @@
               </el-table-column>
               <el-table-column label="관련 문항 키워드 수정" align="center">
                 <template slot-scope="scope">
-                  <el-tooltip v-for="question in scope.row.questions"
+                  <el-tooltip v-for="(question, index) in scope.row.questions"
                               effect="dark"
-                              placement="top">
-                    <div slot="content">{{question.lecture_name}}<br />{{question.item_name}}</div>
+                              placement="top"
+                              :key="index">
+                    <div slot="content">
+                      {{question.lecture_name}}<br />
+                      {{question.item_name}} <br />
+                      {{ question }}
+
+                    </div>
                     <!---->
                     <!--여기부분 question.lecture_item_id 로 링크 만들어야댐-->
                     <!---->
-                    <i class="el-icon-edit" style="margin-left: 5px"></i>
+                    <i class="el-icon-edit" style="margin-left: 5px" @click="onClick('QUESTION_KEYWORD_EDIT', question)"></i>
                   </el-tooltip>
                 </template>
               </el-table-column>
             </el-table>
           </div>
-asdasdasdasdasd
           <div v-if="radio1 === 'Item'">
             <el-row :gutter="40">
               <el-col :span="12" align-center>
@@ -123,14 +131,15 @@ asdasdasdasdasd
               </el-table-column>
               <el-table-column label="관련 자료 키워드 수정" align="center">
                 <template slot-scope="scope">
-                  <el-tooltip v-for="material in scope.row.materials"
+                  <el-tooltip v-for="(material, index) in scope.row.materials"
                               effect="dark"
-                              placement="top">
+                              placement="top"
+                              :key="index">
                     <div slot="content">{{material.lecture_name}}<br />{{material.item_name}}</div>
                     <!---->
                     <!--여기부분 material.lecture_item_id 로 링크 만들어야댐-->
                     <!---->
-                    <i class="el-icon-edit" style="margin-left: 5px"></i>
+                    <i class="el-icon-edit" style="margin-left: 5px" @click="onClick('MATERIAL_KEYWORD_EDIT', material)"></i>
                   </el-tooltip>
                 </template>
               </el-table-column>
@@ -143,72 +152,106 @@ asdasdasdasdasd
 </template>
 
 <style scoped>
-  main {
-    min-height: 800px;
-  }
+main {
+  min-height: 800px;
+}
 </style>
 
 <script>
-  import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
+import WordCloud from '../partials/WordCloud';
 
-  export default {
-    name: 'TeacherClassEvaluation',
-    computed: {
-      ...mapState('class', ['teachingClassList', 'currentClassIndex', 'currentClassCoverage']),
-      ...mapState('sc', ['scCoverage']),
-      ...mapGetters('class', [
-        'currentTeachingClass',
-      ]),
-      scenarioList: {
-        get() {
-          const vm = this;
-          if (!vm.currentTeachingClass.scenarioList) {
-            return [];
-          }
-          return vm.currentTeachingClass.scenarioList;
-        },
-      },
-    },
-    data() {
-      return {
-        coverage: null,
-        activeIndex: '0',
-        radio1: 'Question',
-      };
-    },
-    async created() {
-      const vm = this;
-      if (!vm.currentTeachingClass) {
-        await vm.getMyClassLists();
-        vm.updateCurrentClassIndex({
-          currentClassId: Number.parseInt(vm.$route.params.classId, 10),
-        });
-        await vm.getClass({ type: 'TEACH' });
-      }
-      await vm.getClassCoverage({ type: 'TEACH' });
-      vm.coverage = vm.currentClassCoverage;
-    },
-    methods: {
-      ...mapMutations('class', [
-        'updateCurrentClassIndex',
-      ]),
-      ...mapActions('class', [
-        'getMyClassLists',
-        'getClass',
-        'getClassCoverage',
-      ]),
-      ...mapActions('sc', ['getScCoverage']),
-      async handelSelect(key) {
+export default {
+  name: 'TeacherClassEvaluation',
+  components: {
+    WordCloud,
+  },
+  computed: {
+    ...mapState('class', ['teachingClassList', 'currentClassIndex', 'currentClassCoverage']),
+    ...mapState('sc', ['scCoverage']),
+    ...mapGetters('class', [
+      'currentTeachingClass',
+    ]),
+    scenarioList: {
+      get() {
         const vm = this;
-        const keyInt = parseInt(key, 10);
-        if (keyInt === 0) {
-          await vm.getClassCoverage({ type: 'TEACH' });
-          vm.coverage = vm.currentClassCoverage;
-        } else {
-          await vm.getScCoverage({ id: keyInt });
-          vm.coverage = vm.scCoverage;
+        if (!vm.currentTeachingClass.scenarioList) {
+          return [];
         }
+        return vm.currentTeachingClass.scenarioList;
       },
     },
-  };
+  },
+  data() {
+    return {
+      coverage: null,
+      activeIndex: '0',
+      radio1: 'Question',
+    };
+  },
+  async created() {
+    const vm = this;
+    if (!vm.currentTeachingClass) {
+      await vm.getMyClassLists();
+      vm.updateCurrentClassIndex({
+        currentClassId: Number.parseInt(vm.$route.params.classId, 10),
+      });
+      await vm.getClass({ type: 'TEACH' });
+    }
+    await vm.getClassCoverage({ type: 'TEACH' });
+    vm.coverage = vm.currentClassCoverage;
+  },
+  methods: {
+    ...mapMutations('class', [
+      'updateCurrentClassIndex',
+    ]),
+    ...mapActions('class', [
+      'getMyClassLists',
+      'getClass',
+      'getClassCoverage',
+    ]),
+    ...mapActions('sc', ['getScCoverage']),
+    async handelSelect(key) {
+      const vm = this;
+      const keyInt = parseInt(key, 10);
+      if (keyInt === 0) {
+        await vm.getClassCoverage({ type: 'TEACH' });
+        vm.coverage = vm.currentClassCoverage;
+      } else {
+        await vm.getScCoverage({ id: keyInt });
+        vm.coverage = vm.scCoverage;
+      }
+    },
+    onClick(type, payload) {
+      const vm = this;
+      switch (type) {
+        case 'QUESTION_KEYWORD_EDIT': {
+          vm.$router.push({
+            path: `/a/teacher/lecture/${payload.lecture_id}/edit`,
+            query: {
+              tab: 'third',
+              type,
+              scItemId: payload.lecture_item_id,
+            },
+          });
+          break;
+        }
+        case 'MATERIAL_KEYWORD_EDIT': {
+          vm.$router.push({
+            path: `/a/teacher/lecture/${payload.lecture_id}/edit`,
+            query: {
+              tab: 'third',
+              type,
+              scItemId: payload.lecture_item_id,
+            },
+          });
+          break;
+        }
+        default: {
+          throw new Error(`not defined type ${type}`);
+        }
+      }
+    },
+  },
+};
 </script>

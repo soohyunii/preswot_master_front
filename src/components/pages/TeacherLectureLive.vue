@@ -252,7 +252,6 @@ export default {
         lecture_id: Number.parseInt(vm.$route.params.scId, 10),
         user_id: utils.getUserIdFromJwt(),
       };
-      console.log(params2);
       this.$socket.emit('HEART_BEAT', JSON.stringify(params2));
     }, 3000);
   },
@@ -279,13 +278,12 @@ export default {
         vm.getItemKeywords();
       }
     }
-      const params = {
-        lecture_id : Number.parseInt(vm.$route.params.scId, 10),
-      };
-      vm.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
+    const params = {
+      lecture_id: Number.parseInt(vm.$route.params.scId, 10),
+    };
+    vm.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
   },
   data() {
-    // TODO: translate
     return {
       activeTab: 'first',
       SummaryData: [],
@@ -330,7 +328,6 @@ export default {
           break;
         }
         case 'TEMP_ACTIVATE': {
-          console.log('ta'); // eslint-disable-line
           const params = {
             opened: 1,
             lecture_item_id: vm.currentEditingScItem.id,
@@ -341,7 +338,6 @@ export default {
           break;
         }
         case 'TEMP_DEACTIVATE': {
-          console.log('tda'); // eslint-disable-line
           const params = {
             opened: 0,
             lecture_item_id: vm.currentEditingScItem.id,
@@ -384,10 +380,10 @@ export default {
   },
   beforeDestory() {
     this.$socket.close();
-    clearInterval(vm.sHeartbeatIntervalId);
   },
   destroyed() {
     const vm = this;
+    clearInterval(vm.sHeartbeatIntervalId);
     clearInterval(vm.elapsedTimeIntervalId);
     clearInterval(vm.sUpdateTimelineLogIntervalId);
   },

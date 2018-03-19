@@ -108,14 +108,17 @@ export default {
   created() {
     this.$socket.connect();
     const vm = this;
+    const params = {
+      lecture_id: Number.parseInt(vm.$route.params.scId, 10),
+    };
     vm.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
     console.log('socket connected'); // eslint-disable-line
     vm.sHeartbeatIntervalId = setInterval(() => {
-      const params = {
+      const params2 = {
         lecture_id: Number.parseInt(vm.$route.params.scId, 10),
         user_id: utils.getUserIdFromJwt(),
       };
-      this.$socket.emit('HEART_BEAT', JSON.stringify(params));
+      this.$socket.emit('HEART_BEAT', JSON.stringify(params2));
     }, 3000);
   },
   data() {
@@ -126,6 +129,7 @@ export default {
       sHeartbeatIntervalId: 0,
       youtubeId: '',
       playerWidth: 1000,
+      fleetingSc: [],
     };
   },
   async beforeMount() {
@@ -151,7 +155,7 @@ export default {
       // }
     }
     const params = {
-      lecture_id : Number.parseInt(vm.$route.params.scId, 10),
+      lecture_id: Number.parseInt(vm.$route.params.scId, 10),
     };
     vm.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
   },
@@ -174,6 +178,7 @@ export default {
   },
   computed: {
     ...mapState('sc', ['scTitle', 'scType', 'scStartDate', 'scVideoLink']),
+    ...mapState('scItem', ['sc']),
     ...mapGetters('scItem', [
       'isScEmpty',
       'currentEditingScItem',
@@ -224,19 +229,34 @@ export default {
         }
       }
     },
-    updateScenario() {
-      alert('시나리오 변경이 일어났습니다. 새로고침이 필요합니다'); // eslint-disable-line
+    async refreshScItems() {
       const vm = this;
-      vm.getSc();
-      // TODO : 학생이 문제를 보고 풀 수 있는 공간에 대한 업데이트도 수행되야 함
-      // vm.getScItem({
-      //   scItemId: vm.currentEditingScItem.id,
-      // });
+      await vm.getSc();
+      for (let i = 0; i < vm.fleetingSc.length; i++) { // eslint-disable-line
+        if (vm.fleetingSc[i].opened !== vm.sc[i].opened) {
+          vm.updateCurrentEditingScItemIndex({
+            currentEditingScItemIndex: i,
+          });
+        }
+      }
+    },
+    updateScenario() {
+      const vm = this;
+      vm.fleetingSc = vm.sc;
+      vm.$notify({
+        title: '시나리오 변경',
+        message: '시나리오 변경이 일어났습니다.',
+        type: 'success',
+      });
+      this.refreshScItems();
     },
   },
   beforeDestroy() {
     const vm = this;
     vm.$socket.close();
+  },
+  destroyed() {
+    const vm = this;
     clearInterval(vm.sHeartbeatIntervalId);
   },
 };
