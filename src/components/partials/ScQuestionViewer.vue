@@ -8,7 +8,7 @@
               type="primary"
               v-for="(item, index) in fileList"
               :key="item.guid"
-              @click="onClick(index)"
+              @click="onClick('FILE', index)"
             >
               {{ item.name }} <i class="el-icon-download el-icon-right"></i>
             </el-button>
@@ -29,7 +29,7 @@
               </el-form-item>
             </template>
 
-            <template v-if="[0, 1, 2].includes(qType)">
+            <template v-if="[1, 2].includes(qType)">
               <el-form-item label="답">
                 <el-input
                   :type="qType === 1 ? 'input' : 'textarea'"
@@ -92,7 +92,7 @@
 </style>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import BarChart from './BarChart';
 import utils from '../../utils';
 
@@ -190,8 +190,15 @@ export default {
     },
   },
   methods: {
-    onClick(type) {
+    ...mapActions('scItem', ['submitQustion']),
+    async onClick(type, index) {
       switch (type) {
+        case 'FILE': {
+          const vm = this;
+          const file = vm.fileList[index];
+          utils.downloadFile(file.url, file.name);
+          break;
+        }
         case 'SUBMIT': {
           // console.log('onclick submit'); //eslint-disable-line
           const vm = this;
@@ -200,7 +207,18 @@ export default {
             lecture_item_id: vm.currentEditingScItem.id,
             user_id: utils.getUserIdFromJwt(),
           };
+          const answers = vm.qtype === 1 ? [vm.qAnswer] : vm.qAnswerChoice;
+          const start = vm.currentEditingScItem.activeStartOffsetSec;
+          // TODO: 확인
+          const interval = new Date().getSeconds - start;
+          // const interval
           vm.$socket.emit('DOING_LECTURE_ITEM', JSON.stringify(params));
+          await vm.submitQuestion({
+            id: vm.currentEditingScItem.question.id,
+            answers,
+            interval,
+            codeLanguage,
+          });
           break;
         }
         default: {

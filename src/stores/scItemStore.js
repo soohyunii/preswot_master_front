@@ -607,6 +607,19 @@ export default {
         },
       });
     },
+    async submitQuestion({ getters }, {
+      id,
+      answers,
+      interval,
+      codeLanguage,
+    }) {
+      await studentService.submitQuestion({
+        questionId: id,
+        answers,
+        interval,
+        codeLanguage,
+      });
+    },
     async submitSurvey({ getters }, { id, answer }) {
       await studentService.submitSurvey({
         surveyId: id,
