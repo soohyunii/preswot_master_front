@@ -129,6 +129,9 @@
   .el-progress-bar__outer{
     background-color:#ffffff;
   }
+  .el-slider__runway.disabled .el-slider__bar{
+    background-color:#41355e;
+  }
 
 </style>
 

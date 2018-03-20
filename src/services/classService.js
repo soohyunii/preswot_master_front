@@ -17,7 +17,7 @@ export default {
     return http.get(`/classes/${id}/coverage`);
   },
   getClassNeedScoring({ id }) {
-    return http.get(`/classes/${id}/need-scoring`)
+    return http.get(`/classes/${id}/need-scoring`);
   },
   getClassKeywordRelations({ id }) {
     return http.get(`/classes/${id}/keyword-relations`);

@@ -119,7 +119,6 @@ export default {
   watch: {
     words: {
       handler: function (val, oldVal) {
-        window.console.log('word update');
         this.update();
       },
       deep: true,

@@ -159,13 +159,25 @@ export default {
     vm.updateScId({
       scId: Number.parseInt(vm.$route.params.scId, 10),
     });
+    switch (vm.$route.query.type) {
+      case 'QUESTION_KEYWORD_EDIT':
+      case 'MATERIAL_KEYWORD_EDIT': {
+        vm.activeTab = vm.$route.query.tab;
+        const queryScItemId = Number.parseInt(vm.$route.query.scItemId, 10);
+        const targetScItemIndex = vm.sc.findIndex(item => item.id === queryScItemId);
+        vm.updateCurrentEditingScItemIndex({
+          currentEditingScItemIndex: targetScItemIndex,
+        });
+        break;
+      }
+      default: {
+        // 의도적으로 비워둔 곳
+      }
+    }
     // TODO: handle if scId doens't exists
     // TODO: handle if scId exists but don't have the authorization
     await vm.getSc();
     if (!vm.isScEmpty) {
-      vm.updateCurrentEditingScItemIndex({
-        currentEditingScItemIndex: 0,
-      });
       // 문항, 강의자료의 id가 이 단계에서 얻어짐 => getItemKeywords() 함수에서 이 id를 이용
       await vm.getScItem({
         scItemId: vm.currentEditingScItem.id,
@@ -175,6 +187,14 @@ export default {
       }
     }
     vm.getKnowledgeMapData();
+
+    // 마지막에,
+    // 아무것도 선택되어있지 않고 scItem이 하나라도 있다면 제일 앞에거 선택
+    if (!vm.isScEmpty && !vm.currentEditingScItem) {
+      vm.updateCurrentEditingScItemIndex({
+        currentEditingScItemIndex: 0,
+      });
+    }
   },
   mounted() {
     const vm = this;
@@ -185,6 +205,9 @@ export default {
   },
   computed: {
     ...mapState('sc', ['scTitle', 'scType']),
+    ...mapState('scItem', [
+      'sc',
+    ]),
     ...mapGetters('scItem', [
       'isScEmpty',
       'DEBUGscenarioServerWillReceive',
