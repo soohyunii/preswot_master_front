@@ -173,20 +173,16 @@ export default {
             currentEditingScItem: {
               type: utils.convertScItemType(lectureItemType),
               id: scItemId,
-              fileList: question.files.map((item) => {
-                return {
-                  name: item.name,
-                  url: `${baseUrl}${item.client_path}`,
-                  guid: item.file_guid,
-                };
-              }),
-              SQLiteFile: question.sql_lite_file.map((item) => {
-                return {
-                  name: item.name,
-                  url: `${baseUrl}${item.client_path}`,
-                  guid: item.file_guid,
-                };
-              }),
+              fileList: question.files.map(item => ({
+                name: item.name,
+                url: `${baseUrl}${item.client_path}`,
+                guid: item.file_guid,
+              })),
+              SQLiteFile: question.sql_lite_file.map(item => ({
+                name: item.name,
+                url: `${baseUrl}${item.client_path}`,
+                guid: item.file_guid,
+              })),
               question: {
                 id: question.question_id,
                 type: question.type,
@@ -224,13 +220,11 @@ export default {
             currentEditingScItem: {
               type: utils.convertScItemType(lectureItemType),
               id: scItemId,
-              fileList: survey.files.map((item) => {
-                return {
-                  name: item.name,
-                  url: `${baseUrl}${item.client_path}`,
-                  guid: item.file_guid,
-                };
-              }),
+              fileList: survey.files.map(item => ({
+                name: item.name,
+                url: `${baseUrl}${item.client_path}`,
+                guid: item.file_guid,
+              })),
               survey: {
                 id: survey.survey_id,
                 type: survey.type,
@@ -248,13 +242,11 @@ export default {
             currentEditingScItem: {
               type: utils.convertScItemType(lectureItemType),
               id: scItemId,
-              fileList: material.files.map((item) => {
-                return {
-                  name: item.name,
-                  url: `${baseUrl}${item.client_path}`,
-                  guid: item.file_guid,
-                };
-              }),
+              fileList: material.files.map(item => ({
+                name: item.name,
+                url: `${baseUrl}${item.client_path}`,
+                guid: item.file_guid,
+              })),
               material: {
                 id: material.material_id,
                 score: material.score,
@@ -270,13 +262,11 @@ export default {
             currentEditingScItem: {
               type: utils.convertScItemType(lectureItemType),
               id: scItemId,
-              fileList: homework.files.map((item) => {
-                return {
-                  name: item.name,
-                  url: `${baseUrl}${item.client_path}`,
-                  guid: item.file_guid,
-                };
-              }),
+              fileList: homework.files.map(item => ({
+                name: item.name,
+                url: `${baseUrl}${item.client_path}`,
+                guid: item.file_guid,
+              })),
               homework: {
                 id: homework.homework_id,
               },

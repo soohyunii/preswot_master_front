@@ -137,12 +137,12 @@ export default {
             user_id: utils.getUserIdFromJwt(),
           };
           let answer;
-          if (vm.sType == 1) {
-            answer = [ vm.sAnswer ];
+          if (vm.sType === 1) {
+            answer = [vm.sAnswer];
           } else {
             answer = vm.sAnswerChoice;
           }
-          console.log(answer);
+          // console.log(answer);
           vm.$socket.emit('DOING_LECTURE_ITEM', JSON.stringify(params));
           await vm.submitSurvey({
             id: vm.currentEditingScItem.survey.id,
