@@ -83,14 +83,6 @@
             </div>
           </el-col>
         </el-row>
-        <!-- <el-tabs class="tabs" v-model="activeTab">
-          <el-tab-pane label="시나리오 수정" name="first">
-            <h1>TODO: 시나리오 수정~</h1>
-          </el-tab-pane>
-          <el-tab-pane label="시나리오 아이템 수정" name="third">
-            <h1>TODO: 시나리오 아이템 수정~</h1>
-          </el-tab-pane>
-        </el-tabs> -->
         <el-row>
           <div class="video-wrapper">
             <i v-show="!isInfoVisible"
