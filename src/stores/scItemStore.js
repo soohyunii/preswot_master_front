@@ -34,18 +34,6 @@ export default {
     currentTeachingScItem(state) {
       return state.sc[state.currentTeachingScItemIndex];
     },
-    DEBUGscenarioServerWillReceive(state) {
-      // TODO: delete
-      const res = {};
-      res.title = state.scTitle;
-      res.type = state.scType;
-      res.startDatetime = state.scStartDatetime;
-      res.description = state.scDescription;
-      res.knowledgeMap = state.scKnowledgeMap;
-
-      res.sc = state.sc;
-      return res;
-    },
   },
   mutations: {
     updateItemScore(state, { score }) {
