@@ -7,7 +7,7 @@
       :on-remove="handleRemove"
       :file-list="fileList"
       multiple
-      :limit="5"
+      :limit="SQLite? 1 : 5"
       :on-exceed="handleExceed"
       :before-remove="beforeRemove"
       :http-request="doUpload"
@@ -30,6 +30,7 @@ export default {
   data() {
     return {
       loading: false,
+      SQLite: false,
     };
   },
   computed: {
@@ -46,8 +47,13 @@ export default {
             const scItem = vm.currentEditingScItem;
             return scItem ? scItem.fileList : [];
           }
+          case 'ScQuestionSQLite': {
+            vm.SQLite = true;
+            const scItem = vm.currentEditingScItem;
+            return scItem ? scItem.SQLiteFile : [];
+          }
           default: {
-            throw new Error(`not defined type ${vm.type.from}`);
+            throw new Error(`not defined type ${vm.from}`);
           }
         }
       },
@@ -62,6 +68,14 @@ export default {
             vm.assignCurrentEditingScItem({
               currentEditingScItem: {
                 fileList,
+              },
+            });
+            break;
+          }
+          case 'ScQuestionSQLite': {
+            vm.assignCurrentEditingScItem({
+              currentEditingScItem: {
+                SQLiteFile: fileList,
               },
             });
             break;
@@ -81,11 +95,17 @@ export default {
     ]),
     handleExceed(files, fileList) {
       // TODO: translate
-      this.$message.warning(
-        `최대 5개의 파일을 업로드 할 수 있습니다.
+      if (this.SQLite) {
+        this.$message.warning(
+          'SQLite Database 파일은 1개만 업로드 할 수 있습니다.',
+        );
+      } else {
+        this.$message.warning(
+          `최대 5개의 파일을 업로드 할 수 있습니다.
         ${files.length}개의 파일을 선택하셨습니다.
         업로드 하려는 파일의 총 개수 : ${files.length + fileList.length}`,
-      );
+        );
+      }
     },
     beforeRemove(file) {
       // TODO: translate
@@ -152,6 +172,13 @@ export default {
         case 'ScMaterialEditor': {
           await vm.postFile({
             file: req.file,
+          });
+          break;
+        }
+        case 'ScQuestionSQLite': {
+          await vm.postFile({
+            file: req.file,
+            SQLite: true,
           });
           break;
         }

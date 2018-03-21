@@ -22,6 +22,7 @@
               <el-radio-button :label="1">단답</el-radio-button>
               <el-radio-button :label="2">서술</el-radio-button>
               <el-radio-button :label="3">코딩</el-radio-button>
+              <el-radio-button :label="4">SQL</el-radio-button>
             </el-radio-group>
           </el-form-item>
           <i class="el-icon-loading" v-if="loading.TYPE" />
@@ -50,7 +51,13 @@
             <i class="el-icon-loading" v-if="loading.CHOICE" />
           </template>
 
-          <template v-if="[0, 1, 2].includes(pType)">
+          <template v-if="[4].includes(pType)">
+            <el-form-item label="SQLite 업로드">
+              <upload from="ScQuestionSQLite"/>
+            </el-form-item>
+          </template>
+
+          <template v-if="[0, 1, 2, 4].includes(pType)">
             <el-form-item label="답" prop="pAnswer">
               <el-input
                 :type="pType === 1 ? 'input' : 'textarea'"
@@ -211,7 +218,7 @@
             <i class="el-icon-loading" v-if="loading.TIME_LIMIT" />
           </template>
 
-          <template v-if="[0, 1, 2, 3].includes(pType)">
+          <template v-if="[0, 1, 2, 3, 4].includes(pType)">
             <el-form-item label="배점" prop="pScore">
               <el-tooltip
                 effect="light"
