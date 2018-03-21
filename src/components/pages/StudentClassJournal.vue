@@ -131,6 +131,9 @@
   .el-progress-bar__outer{
     background-color:#ffffff;
   }
+  .el-slider__runway.disabled .el-slider__bar{
+    background-color:#41355e;
+  }
 
 </style>
 
@@ -153,7 +156,7 @@
     async beforeMount() {
       const vm = this;
       vm.updateClassId({
-        classId: 2,
+        classId: Number.parseInt(vm.$route.params.classId, 10),
       });
       vm.updateUserId({
         userId: utils.getUserIdFromJwt(),

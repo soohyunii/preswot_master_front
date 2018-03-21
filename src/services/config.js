@@ -3,7 +3,7 @@
 // let serverUrl = 'http://localhost';
 let serverUrl = 'http://165.132.105.33';
 
-let backPort = 3000;
+let backPort = 8000;
 let socketPort = 8001;
 
 // const isDev = true;
