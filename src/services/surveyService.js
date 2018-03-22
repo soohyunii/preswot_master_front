@@ -35,4 +35,9 @@ export default {
       },
     });
   },
+  getSurveyResult({
+    surveyId,
+  }) {
+    return http.get(`/surveys/${surveyId}/result`);
+  },
 };
