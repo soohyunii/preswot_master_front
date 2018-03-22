@@ -78,9 +78,8 @@
             <el-form-item v-show="[0].includes(qType)" label="분포">
               <bar-chart :xAxisName="chartXAxis" :data="chartData"/>
             </el-form-item>
-            제출되었습니다 {{ isSubmitted }}
+            제출되었습니다
           </div>
-
         </el-form>
       </el-col>
     </el-row>
@@ -92,7 +91,7 @@
 </style>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapState, mapGetters, mapActions } from 'vuex';
 import BarChart from './BarChart';
 import utils from '../../utils';
 
@@ -109,6 +108,8 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('scItem', ['currentEditingScItem']),
+    ...mapState('sc', ['scStartDate']),
     chartXAxis() {
       const axis = ['x'];
       const vm = this;
@@ -118,7 +119,7 @@ export default {
         });
         return axis;
       }
-      return null;
+      return [];
     },
     chartData() {
       const data = ['답 제출 분포'];
@@ -130,9 +131,8 @@ export default {
         });
         return data;
       }
-      return null;
+      return [];
     },
-    ...mapGetters('scItem', ['currentEditingScItem']),
     fileList() {
       const vm = this;
       const item = vm.currentEditingScItem;
@@ -190,7 +190,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('scItem', ['submitQustion']),
+    ...mapActions('scItem', ['submitQuestion']),
     async onClick(type, index) {
       switch (type) {
         case 'FILE': {
@@ -208,9 +208,17 @@ export default {
             user_id: utils.getUserIdFromJwt(),
           };
           const answers = vm.qtype === 1 ? [vm.qAnswer] : vm.qAnswerChoice;
-          const start = vm.currentEditingScItem.activeStartOffsetSec;
-          // TODO: 확인
-          const interval = new Date().getSeconds - start;
+
+          /* Same with scStore updateOffsetSecNowDate algorithm. */
+          const startScItem = vm.currentEditingScItem.activeStartOffsetSec;
+          const startTime = vm.scStartDate.getTime() + startScItem;
+
+          const now = new Date().getTime();
+          const interval = Math.floor((now - startTime) / 1000);
+          /* *************************************************** */
+
+          const codeLanguage = vm.qLanguageList.join(',');
+
           // const interval
           vm.$socket.emit('DOING_LECTURE_ITEM', JSON.stringify(params));
           await vm.submitQuestion({
