@@ -27,4 +27,9 @@ export default {
       },
     });
   },
+  getHomeworkResult({
+    homeworkId,
+  }) {
+    return http.get(`/homework/${homeworkId}/result`);
+  },
 };

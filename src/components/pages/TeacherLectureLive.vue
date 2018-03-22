@@ -53,14 +53,28 @@
             >
               <el-col :span="24">
                 <br />
-                <h1>강의 중 임시 활성화</h1>
-                <p>* 임시 활성화는 기존에 세팅되어있던 값을 덮어씌우지 않지만, 취소하지 않는 한 계속 활성화됩니다.</p>
-                <el-button type="primary" @click="onClick('TEMP_ACTIVATE')">
-                  임시 활성화
-                </el-button>
-                <el-button type="primary" @click="onClick('TEMP_DEACTIVATE')">
-                  임시 활성화 취소
-                </el-button>
+                <el-tabs type="border-card" class="sub-tab">
+                  <el-tab-pane label="임시 활성화">
+                    <h1>강의 중 임시 활성화</h1>
+                    <p>* 임시 활성화는 기존에 세팅되어있던 값을 덮어씌우지 않지만, 취소하지 않는 한 계속 활성화됩니다.</p>
+                    <el-button type="primary" @click="onClick('TEMP_ACTIVATE')">
+                      임시 활성화
+                    </el-button>
+                    <el-button type="primary" @click="onClick('TEMP_DEACTIVATE')">
+                      임시 활성화 취소
+                    </el-button>
+                  </el-tab-pane>
+                  <el-tab-pane label="결과 집계">
+                    <div v-if="currentEditingScItemType === '강의자료'">
+                      * 강의자료는 결과 집계가 없음
+                    </div>
+                    <div v-else>
+                      <el-button icon="el-icon-refresh" @click="onClick('REFRESH_STATISTICS')">새로고침</el-button>
+                      <br /> <br />
+                      {{ currentEditingScItem.result }}
+                    </div>
+                  </el-tab-pane>
+                </el-tabs>
                 <br />
                 <br />
                 <br />
@@ -103,15 +117,6 @@
               >
               </youtube>
             </div>
-            <!-- <iframe
-              width="500px"
-              height="300px"
-              :src="youtubeId"
-              frameborder="0"
-              allowfullscreen
-              autoplay
-            >
-            </iframe> -->
           </div>
           <div class="statusbar" v-bind:class="{ activeInfo: isInfoVisible}">
             <div class="statusbar_for_click" @click="onClick('TOGGLE_STATUS_INFO')"></div>
@@ -150,6 +155,10 @@
     .sc-row {
       padding: 20px;
       background-color: $app-oatmeal;
+    }
+
+    .sub-tab {
+      max-width: 800px;
     }
   }
   .statusbar {
@@ -277,10 +286,7 @@ export default {
   },
   data() {
     return {
-      activeTab: 'first',
-      SummaryData: [],
       isInfoVisible: false,
-      lectureId: 1,
       youtubeId: '',
       isPlayerVisible: true,
       elapsedTimeIntervalId: null,
@@ -306,8 +312,9 @@ export default {
       'getItemKeywords',
       'setActivated',
       'setDeactivated',
+      'getScItemResult',
     ]),
-    onClick(type) {
+    async onClick(type) {
       const vm = this;
       switch (type) {
         case 'TOGGLE_STATUS_INFO': {
@@ -337,6 +344,10 @@ export default {
           };
           this.$socket.emit('LECTURE_ITEM_ACTIVATION', JSON.stringify(params));
           vm.setDeactivated(vm);
+          break;
+        }
+        case 'REFRESH_STATISTICS': {
+          await vm.getScItemResult();
           break;
         }
         default: {
