@@ -608,5 +608,10 @@ export default {
         answer,
       });
     },
+    async scoringFinish({ }, { lectureItemId }) {
+      await lectureItemService.scoringFinish({
+        lectureItemId,
+      });
+    },
   },
 };

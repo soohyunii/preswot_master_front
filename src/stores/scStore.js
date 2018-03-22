@@ -317,7 +317,7 @@ export default {
     async postKnowledgeMapData({ state }) {
       const lectureKeywords = state.nodes.map(item => ({
         keyword: item.name,
-        weight: Number.parseInt(item._size, 10), // eslint-disable-line
+        weight: Number.parseFloat(item._size), // eslint-disable-line
       }));
       console.log('lectureKeywords', lectureKeywords); // eslint-disable-line
       await lectureService.postLectureKeywords({
