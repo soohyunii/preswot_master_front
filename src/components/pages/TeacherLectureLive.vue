@@ -53,14 +53,21 @@
             >
               <el-col :span="24">
                 <br />
-                <h1>강의 중 임시 활성화</h1>
-                <p>* 임시 활성화는 기존에 세팅되어있던 값을 덮어씌우지 않지만, 취소하지 않는 한 계속 활성화됩니다.</p>
-                <el-button type="primary" @click="onClick('TEMP_ACTIVATE')">
-                  임시 활성화
-                </el-button>
-                <el-button type="primary" @click="onClick('TEMP_DEACTIVATE')">
-                  임시 활성화 취소
-                </el-button>
+                <el-tabs type="border-card" class="sub-tab">
+                  <el-tab-pane label="임시 활성화">
+                    <h1>강의 중 임시 활성화</h1>
+                    <p>* 임시 활성화는 기존에 세팅되어있던 값을 덮어씌우지 않지만, 취소하지 않는 한 계속 활성화됩니다.</p>
+                    <el-button type="primary" @click="onClick('TEMP_ACTIVATE')">
+                      임시 활성화
+                    </el-button>
+                    <el-button type="primary" @click="onClick('TEMP_DEACTIVATE')">
+                      임시 활성화 취소
+                    </el-button>
+                  </el-tab-pane>
+                  <el-tab-pane label="결과 집계">
+                    결과가 나온다아
+                  </el-tab-pane>
+                </el-tabs>
                 <br />
                 <br />
                 <br />
@@ -150,6 +157,10 @@
     .sc-row {
       padding: 20px;
       background-color: $app-oatmeal;
+    }
+
+    .sub-tab {
+      max-width: 800px;
     }
   }
   .statusbar {
