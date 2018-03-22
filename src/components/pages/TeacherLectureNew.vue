@@ -35,13 +35,13 @@
         <hr><br />
 
         <el-tabs class="tabs" v-model="activeTab">
-          <el-tab-pane label="시나리오 수정" name="first">
+          <el-tab-pane label="강의 수정" name="first">
             <sc-editor />
           </el-tab-pane>
-          <el-tab-pane label="시나리오 지식맵 수정" name="second">
+          <el-tab-pane label="강의 지식맵 수정" name="second">
             <knowledge-map v-if="activeTab === 'second'" />
           </el-tab-pane>
-          <el-tab-pane label="시나리오 아이템 수정" name="third">
+          <el-tab-pane label="강의 아이템 수정" name="third">
               <el-row :gutter="30" class="sc-row">
                 <el-col :span="16">
                   <div>
@@ -71,12 +71,12 @@
               </div>
           </el-tab-pane>
 
-          <el-tab-pane label="시나리오 삭제" name="fourth">
+          <el-tab-pane label="강의 삭제" name="fourth">
             <el-row>
               <el-col style="max-width: 600px;">
                 <el-form label-width="120px">
-                  <el-form-item label="시나리오 삭제">
-                    <el-button type="primary" @click="onClickDelete">시나리오 삭제</el-button>
+                  <el-form-item label="강의 삭제">
+                    <el-button type="danger" @click="onClickDelete">강의 삭제</el-button>
                   </el-form-item>
                 </el-form>
               </el-col>
@@ -84,13 +84,6 @@
           </el-tab-pane>
         </el-tabs>
 
-        <!-- <div>
-          <h2>debug</h2>
-          server will get this:
-          <pre style="font-size: 70%;">{{ DEBUGscenarioServerWillReceive }}</pre>
-          currentEditingScItem: {{ currentEditingScItem }}<br/>
-          currentEditingScItemType: {{ currentEditingScItemType }}
-        </div> -->
       </el-main>
       <!-- 이 메인은 맞음 끝 -->
     </el-container>
@@ -186,7 +179,6 @@ export default {
         vm.getItemKeywords();
       }
     }
-    vm.getKnowledgeMapData();
 
     // 마지막에,
     // 아무것도 선택되어있지 않고 scItem이 하나라도 있다면 제일 앞에거 선택
@@ -210,7 +202,6 @@ export default {
     ]),
     ...mapGetters('scItem', [
       'isScEmpty',
-      'DEBUGscenarioServerWillReceive',
       'currentEditingScItem',
     ]),
     currentEditingScItemType() {
@@ -234,7 +225,6 @@ export default {
     ...mapActions('sc', [
       'getSc',
       'deleteSc',
-      'getKnowledgeMapData',
     ]),
     ...mapActions('scItem', [
       'getScItem',
@@ -249,7 +239,7 @@ export default {
     },
     onClickDelete() {
       const vm = this;
-      vm.$confirm('정말로 이 시나리오를 삭제하시겠습니까?', `${vm.scTitle || ''} 삭제`, {
+      vm.$confirm('정말로 이 강의를 삭제하시겠습니까?', `${vm.scTitle || ''} 삭제`, {
         confirmButtonText: '예, 삭제합니다.',
         cancelButtonText: '아니요, 삭제하지 않습니다.',
         type: 'warning',
@@ -259,14 +249,14 @@ export default {
             await vm.deleteSc();
             vm.$notify({
               title: '삭제됨',
-              message: '시나리오가 삭제됨',
+              message: '강의가 삭제됨',
               type: 'success',
               duration: 3000,
             });
             vm.$router.push('/a/teacher/class');
           } catch (error) {
             vm.$notify({
-              title: '시나리오 삭제 실패',
+              title: '강의 삭제 실패',
               message: error.toString(),
               type: 'error',
               duration: 3000,
@@ -276,7 +266,7 @@ export default {
         .catch(() => {
           vm.$notify({
             title: '취소됨',
-            message: '시나리오 삭제 취소됨',
+            message: '강의 삭제 취소됨',
             type: 'info',
             duration: 3000,
           });
