@@ -358,10 +358,31 @@ export default {
       });
     },
     async getScItemResult({ getters, commit }) {
-      // TODO: 이거 타입에 따라 questionResult부를지 뭐 부를지 그런거 조져야함
-      const res = await questionService.getQuestionResult({
-        questionId: getters.currentEditingScItem.question.id,
-      });
+      const { type } = getters.currentEditingScItem;
+      let res = {}; // undefined이면 자주 터지니까 그거 막으려고
+      switch (type) {
+        case '문항': {
+          res = await questionService.getQuestionResult({
+            questionId: getters.currentEditingScItem.question.id,
+          });
+          break;
+        }
+        case '설문': {
+          res = await surveyService.getSurveyResult({
+            surveyId: getters.currentEditingScItem.survey.id,
+          });
+          break;
+        }
+        case '숙제': {
+          res = await homeworkService.getHomeworkResult({
+            homeworkId: getters.currentEditingScItem.homework.id,
+          });
+          break;
+        }
+        default: {
+          throw new Error(`not defined type ${type}`);
+        }
+      }
       commit('assignCurrentEditingScItem', {
         currentEditingScItem: {
           result: res.data,
