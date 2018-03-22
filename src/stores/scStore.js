@@ -29,6 +29,7 @@ export default {
     currentEditingNodeIndex: null,
     nodes: [],
     edges: [],
+    scKnowledgeMapState: null,
     /**
      * coverage 변수
      */
@@ -144,6 +145,9 @@ export default {
     updateScCoverage(state, { scCoverage }) {
       state.scCoverage = scCoverage;
     },
+    updateScKnowledgeMapState(state, { scKnowledgeMapState }) {
+      state.scKnowledgeMapState = scKnowledgeMapState;
+    },
   },
   actions: {
     updateOffsetSecNowDate({ state, commit }) {
@@ -181,6 +185,9 @@ export default {
       commit('updateScVideoLink', {
         scVideoLink: res.data.video_link,
       });
+      commit('updateScKnowledgeMapState', {
+        scKnowledgeMapState: res.data.keyword_state,
+      });
       // eslint-disable-next-line
       const sc = res.data.lecture_items.map((scItem) => {
         // eslint-disable-next-line
@@ -208,6 +215,28 @@ export default {
       }, {
         root: true,
       });
+      // 지식맵 가져오는 부분을 이쪽으로 옮김
+      const res1 = await lectureService.getLectureKeywords({
+        lectureId: state.scId,
+      });
+      const nodes = res1.data.map(item => ({
+        value: item.keyword,
+        id: item.keyword,
+        name: item.keyword,
+        _size: item.weight,
+      }));
+      commit('updateNodes', { nodes });
+      const res2 = await lectureService.getLectureKeywordRelations({
+        lectureId: state.scId,
+      });
+      if (res2) {
+        const edges = res2.data.map(item => ({
+          sid: item.node1,
+          tid: item.node2,
+          weight: item.weight,
+        }));
+        commit('updateEdges', { edges });
+      }
       // FIXME:
       // if (sc.length !== 0) {
       //   commit('updateCurrentEditingScItemIndex', {
@@ -250,6 +279,7 @@ export default {
         videoLink: state.scVideoLink,
         teacherEmail: utils.getEmailFromJwt(),
         type,
+        keywordState: state.scKnowledgeMapState,
       });
     },
     async deleteSc({ state, commit }) {
@@ -284,31 +314,6 @@ export default {
         root: true,
       });
     },
-    async getKnowledgeMapData({ state, commit }) {
-      const res1 = await lectureService.getLectureKeywords({
-        lectureId: state.scId,
-      });
-      console.log('res1', res1); // eslint-disable-line
-      const nodes = res1.data.map(item => ({
-        value: item.keyword,
-        id: item.keyword,
-        name: item.keyword,
-        _size: item.weight,
-      }));
-      commit('updateNodes', { nodes });
-      const res2 = await lectureService.getLectureKeywordRelations({
-        lectureId: state.scId,
-      });
-      console.log('res2', res2); // eslint-disable-line
-      if (res2) {
-        const edges = res2.data.map(item => ({
-          sid: item.node1,
-          tid: item.node2,
-          weight: item.weight,
-        }));
-        commit('updateEdges', { edges });
-      }
-    },
     async postKnowledgeMapData({ state }) {
       const lectureKeywords = state.nodes.map(item => ({
         keyword: item.name,
@@ -334,6 +339,16 @@ export default {
       const res = await lectureService.getLectureCoverage({ id });
       commit('updateScCoverage', {
         scCoverage: res.data,
+      });
+    },
+    async executeExtractor({ state, commit }, { numberOfKeyword, keywordLength }) {
+      await lectureService.executeExtractor({
+        id: state.scId,
+        numberOfKeyword,
+        keywordLength,
+      });
+      commit('updateScKnowledgeMapState', {
+        scKnowledgeMapState: 1,
       });
     },
   },
