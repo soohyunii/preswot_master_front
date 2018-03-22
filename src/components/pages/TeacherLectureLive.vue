@@ -65,7 +65,8 @@
                     </el-button>
                   </el-tab-pane>
                   <el-tab-pane label="결과 집계">
-                    결과가 나온다아
+                    <el-button icon="el-icon-refresh" @click="onClick('REFRESH_STATISTICS')">새로고침</el-button> <br />
+                    {{ tempDEBUG }}
                   </el-tab-pane>
                 </el-tabs>
                 <br />
@@ -205,6 +206,7 @@
 <script>
 import { mapGetters, mapActions, mapMutations, mapState } from 'vuex';
 import { getIdFromURL } from 'vue-youtube-embed';
+import isNil from 'lodash.isnil';
 
 import Sc from '../partials/Sc';
 import ScItemAdder from '../partials/ScItemAdder';
@@ -217,6 +219,9 @@ import ScCommonEditor from '../partials/ScCommonEditor';
 import ScQuestionEditor from '../partials/ScQuestionEditor';
 import TeacherLectureLiveSummary from '../partials/TeacherLectureLiveSummary';
 import utils from '../../utils';
+
+// TODO: delete below import (테스트용으로 만든거)
+import questionService from '../../services/questionService';
 
 export default {
   name: 'TeacherLectureLive',
@@ -285,6 +290,7 @@ export default {
       elapsedTimeIntervalId: null,
       sUpdateTimelineLogIntervalId: null,
       sHeartbeatIntervalId: 0,
+      tempDEBUG: {},
     };
   },
   methods: {
@@ -306,7 +312,7 @@ export default {
       'setActivated',
       'setDeactivated',
     ]),
-    onClick(type) {
+    async onClick(type) {
       const vm = this;
       switch (type) {
         case 'TOGGLE_STATUS_INFO': {
@@ -336,6 +342,26 @@ export default {
           };
           this.$socket.emit('LECTURE_ITEM_ACTIVATION', JSON.stringify(params));
           vm.setDeactivated(vm);
+          break;
+        }
+        case 'REFRESH_STATISTICS': {
+          // TODO: get questionId
+          let questionId = null;
+          try {
+            questionId = vm.currentEditingScItem.question.id;
+          } catch (error) {
+            // empty
+          }
+          if (isNil(questionId)) {
+            return;
+          }
+          vm.tempDEBUG = await questionService.getQuestionResult({
+            questionId,
+          });
+          vm.tempDEBUG = vm.tempDEBUG.data;
+          // Object.assign(vm.tempDEBUG, {
+          //   ccc: vm.currentEditingScItem,
+          // });
           break;
         }
         default: {

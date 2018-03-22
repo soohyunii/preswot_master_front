@@ -157,6 +157,11 @@ export default {
             .map(token => token.trim())
             .filter(token => token.length !== 0);
           }
+          const SQLiteFile = question.sql_lite_file ? question.sql_lite_file.map(item => ({
+            name: item.name,
+            url: `${baseUrl}${item.client_path}`,
+            guid: item.file_guid,
+          })) : [];
           commit('assignCurrentEditingScItem', {
             currentEditingScItem: {
               type: utils.convertScItemType(lectureItemType),
@@ -166,11 +171,7 @@ export default {
                 url: `${baseUrl}${item.client_path}`,
                 guid: item.file_guid,
               })),
-              SQLiteFile: question.sql_lite_file.map(item => ({
-                name: item.name,
-                url: `${baseUrl}${item.client_path}`,
-                guid: item.file_guid,
-              })),
+              SQLiteFile,
               question: {
                 id: question.question_id,
                 type: question.type,
