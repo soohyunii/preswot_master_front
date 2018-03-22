@@ -179,7 +179,6 @@ export default {
         vm.getItemKeywords();
       }
     }
-    vm.getKnowledgeMapData();
 
     // 마지막에,
     // 아무것도 선택되어있지 않고 scItem이 하나라도 있다면 제일 앞에거 선택
@@ -226,7 +225,6 @@ export default {
     ...mapActions('sc', [
       'getSc',
       'deleteSc',
-      'getKnowledgeMapData',
     ]),
     ...mapActions('scItem', [
       'getScItem',
