@@ -8,7 +8,7 @@
               type="primary"
               v-for="(item, index) in fileList"
               :key="item.guid"
-              @click="onClick(index)"
+              @click="onClick('FILE', index)"
             >
               {{ item.name }} <i class="el-icon-download el-icon-right"></i>
             </el-button>
@@ -29,7 +29,7 @@
               </el-form-item>
             </template>
 
-            <template v-if="[0, 1, 2].includes(qType)">
+            <template v-if="[1, 2].includes(qType)">
               <el-form-item label="답">
                 <el-input
                   :type="qType === 1 ? 'input' : 'textarea'"
@@ -78,9 +78,8 @@
             <el-form-item v-show="[0].includes(qType)" label="분포">
               <bar-chart :xAxisName="chartXAxis" :data="chartData"/>
             </el-form-item>
-            제출되었습니다 {{ isSubmitted }}
+            제출되었습니다
           </div>
-
         </el-form>
       </el-col>
     </el-row>
@@ -92,7 +91,7 @@
 </style>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState, mapGetters, mapActions } from 'vuex';
 import BarChart from './BarChart';
 import utils from '../../utils';
 
@@ -109,6 +108,8 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('scItem', ['currentEditingScItem']),
+    ...mapState('sc', ['scStartDate']),
     chartXAxis() {
       const axis = ['x'];
       const vm = this;
@@ -118,7 +119,7 @@ export default {
         });
         return axis;
       }
-      return null;
+      return [];
     },
     chartData() {
       const data = ['답 제출 분포'];
@@ -130,9 +131,8 @@ export default {
         });
         return data;
       }
-      return null;
+      return [];
     },
-    ...mapGetters('scItem', ['currentEditingScItem']),
     fileList() {
       const vm = this;
       const item = vm.currentEditingScItem;
@@ -190,8 +190,15 @@ export default {
     },
   },
   methods: {
-    onClick(type) {
+    ...mapActions('scItem', ['submitQuestion']),
+    async onClick(type, index) {
       switch (type) {
+        case 'FILE': {
+          const vm = this;
+          const file = vm.fileList[index];
+          utils.downloadFile(file.url, file.name);
+          break;
+        }
         case 'SUBMIT': {
           // console.log('onclick submit'); //eslint-disable-line
           const vm = this;
@@ -200,7 +207,26 @@ export default {
             lecture_item_id: vm.currentEditingScItem.id,
             user_id: utils.getUserIdFromJwt(),
           };
+          const answers = vm.qtype === 1 ? [vm.qAnswer] : vm.qAnswerChoice;
+
+          /* Same with scStore updateOffsetSecNowDate algorithm. */
+          const startScItem = vm.currentEditingScItem.activeStartOffsetSec;
+          const startTime = vm.scStartDate.getTime() + startScItem;
+
+          const now = new Date().getTime();
+          const interval = Math.floor((now - startTime) / 1000);
+          /* *************************************************** */
+
+          const codeLanguage = vm.qLanguageList.join(',');
+
+          // const interval
           vm.$socket.emit('DOING_LECTURE_ITEM', JSON.stringify(params));
+          await vm.submitQuestion({
+            id: vm.currentEditingScItem.question.id,
+            answers,
+            interval,
+            codeLanguage,
+          });
           break;
         }
         default: {

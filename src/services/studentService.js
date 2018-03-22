@@ -9,6 +9,19 @@ export default {
       answer,
     });
   },
+  submitQuestion({
+    questionId,
+    answers,
+    interval,
+    codeLanguage,
+  }) {
+    return http.post('/student/answer', {
+      questionId,
+      answers,
+      interval,
+      codeLanguage,
+    });
+  },
   fetchAttendingClassList() {
     // TODO: Replace dummy with axios
     return new Promise((resolve) => {
