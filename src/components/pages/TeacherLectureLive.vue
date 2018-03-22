@@ -110,15 +110,6 @@
               >
               </youtube>
             </div>
-            <!-- <iframe
-              width="500px"
-              height="300px"
-              :src="youtubeId"
-              frameborder="0"
-              allowfullscreen
-              autoplay
-            >
-            </iframe> -->
           </div>
           <div class="statusbar" v-bind:class="{ activeInfo: isInfoVisible}">
             <div class="statusbar_for_click" @click="onClick('TOGGLE_STATUS_INFO')"></div>
@@ -288,10 +279,7 @@ export default {
   },
   data() {
     return {
-      activeTab: 'first',
-      SummaryData: [],
       isInfoVisible: false,
-      lectureId: 1,
       youtubeId: '',
       isPlayerVisible: true,
       elapsedTimeIntervalId: null,
