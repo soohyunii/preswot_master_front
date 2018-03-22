@@ -64,6 +64,7 @@ export default {
       const survey = {};
       const question = {};
       const homework = {};
+      const result = {};
       const itemKeywords = [];
       const scItem = {
         id,
@@ -79,6 +80,7 @@ export default {
         question,
         homework,
         itemKeywords,
+        result,
       };
       state.currentEditingScItemIndex = state.sc.length;
       state.sc.push(scItem);
@@ -171,6 +173,7 @@ export default {
                 url: `${baseUrl}${item.client_path}`,
                 guid: item.file_guid,
               })),
+              result: {}, // 이건 scItemStore.action.getScItemResult() 로 불러온다
               SQLiteFile,
               question: {
                 id: question.question_id,
@@ -352,6 +355,17 @@ export default {
         memoryLimit: q.memoryLimit,
         timeLimit: q.timeLimit,
         languageList: q.languageList,
+      });
+    },
+    async getScItemResult({ getters, commit }) {
+      // TODO: 이거 타입에 따라 questionResult부를지 뭐 부를지 그런거 조져야함
+      const res = await questionService.getQuestionResult({
+        questionId: getters.currentEditingScItem.question.id,
+      });
+      commit('assignCurrentEditingScItem', {
+        currentEditingScItem: {
+          result: res.data,
+        },
       });
     },
     async putQuestionType({ getters }) {

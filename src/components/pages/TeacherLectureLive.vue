@@ -66,7 +66,7 @@
                   </el-tab-pane>
                   <el-tab-pane label="결과 집계">
                     <el-button icon="el-icon-refresh" @click="onClick('REFRESH_STATISTICS')">새로고침</el-button> <br />
-                    {{ tempDEBUG }}
+                    {{ currentEditingScItem.result }}
                   </el-tab-pane>
                 </el-tabs>
                 <br />
@@ -311,6 +311,7 @@ export default {
       'getItemKeywords',
       'setActivated',
       'setDeactivated',
+      'getScItemResult',
     ]),
     async onClick(type) {
       const vm = this;
@@ -345,6 +346,7 @@ export default {
           break;
         }
         case 'REFRESH_STATISTICS': {
+          await vm.getScItemResult();
           // TODO: get questionId
           let questionId = null;
           try {
