@@ -99,4 +99,9 @@ export default {
       },
     });
   },
+  getQuestionResult({
+    questionId,
+  }) {
+    return http.get(`/questions/${questionId}/result`);
+  },
 };

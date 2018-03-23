@@ -1,10 +1,12 @@
 <template>
   <div class="wrapper">
-    <h2>{{ $t('REG.REG_TITLE') }}</h2>
     <el-container>
       <el-row>
         <el-col style="max-width: 700px;">
           <el-form :model="input" :rules="rules" ref="elForm" :label-width="getLabelWidth()">
+            <el-form-item>
+              <h1>{{ $t('REG.REG_TITLE') }}</h1>
+            </el-form-item>
             <el-form-item :label="$t('REG.EMAIL_LABEL')" prop="email_id" id="email_id">
               <el-input :placeholder="$t('REG.EMAIL_PH')" v-model="input.email_id" type="email"></el-input>
             </el-form-item>
@@ -87,14 +89,14 @@
               </div>
               <el-checkbox v-model="input.checkTou" id="user_tou_input">{{ $t('REG.TOU_LABEL') }}</el-checkbox>
             </el-form-item>
-            <br />
+
             <br />
 
-            <el-button type="primary" @click="submitForm('elForm')">회원가입</el-button>
+            <el-form-item>
+              <el-button type="primary" @click="submitForm('elForm')">회원가입</el-button>
+            </el-form-item>
             <br />
 
-            <!-- TODO: delete -->
-            <pre>{{ input }}</pre>
           </el-form>
         </el-col>
       </el-row>
@@ -291,11 +293,6 @@ export default {
   background-color: white;
   border-radius: 4px;
   padding: 10px;
-}
-
-
-h2 {
-  color: red;
 }
 </style>
 

@@ -125,7 +125,7 @@
         <br />
 
         <el-col align="center">
-          <el-button v-if="type === 'TEACH'" @click="clickAddScenario" type="primary">과목 시나리오 추가</el-button>
+          <el-button v-if="type === 'TEACH'" @click="clickAddScenario" type="primary">새로운 강의 생성</el-button>
         </el-col>
       </div>
     </el-col>

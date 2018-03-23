@@ -21,7 +21,7 @@
               <el-radio-button :label="0">객관</el-radio-button>
               <el-radio-button :label="1">단답</el-radio-button>
               <el-radio-button :label="2">서술</el-radio-button>
-              <el-radio-button :label="3">코딩</el-radio-button>
+              <el-radio-button :label="3">SW</el-radio-button>
               <el-radio-button :label="4">SQL</el-radio-button>
             </el-radio-group>
           </el-form-item>
@@ -82,7 +82,7 @@
             <i class="el-icon-loading" v-if="loading.ISORDERINGANSWER" />
           </template>
 
-          <!-- 코딩 -->
+          <!-- SW -->
           <template v-if="[3].includes(pType)">
             <el-form-item label="언어" prop="languageList">
               <el-select

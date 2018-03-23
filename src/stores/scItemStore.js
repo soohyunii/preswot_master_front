@@ -34,18 +34,6 @@ export default {
     currentTeachingScItem(state) {
       return state.sc[state.currentTeachingScItemIndex];
     },
-    DEBUGscenarioServerWillReceive(state) {
-      // TODO: delete
-      const res = {};
-      res.title = state.scTitle;
-      res.type = state.scType;
-      res.startDatetime = state.scStartDatetime;
-      res.description = state.scDescription;
-      res.knowledgeMap = state.scKnowledgeMap;
-
-      res.sc = state.sc;
-      return res;
-    },
   },
   mutations: {
     updateItemScore(state, { score }) {
@@ -76,6 +64,7 @@ export default {
       const survey = {};
       const question = {};
       const homework = {};
+      const result = {};
       const itemKeywords = [];
       const scItem = {
         id,
@@ -91,6 +80,7 @@ export default {
         question,
         homework,
         itemKeywords,
+        result,
       };
       state.currentEditingScItemIndex = state.sc.length;
       state.sc.push(scItem);
@@ -169,6 +159,11 @@ export default {
             .map(token => token.trim())
             .filter(token => token.length !== 0);
           }
+          const SQLiteFile = question.sql_lite_file ? question.sql_lite_file.map(item => ({
+            name: item.name,
+            url: `${baseUrl}${item.client_path}`,
+            guid: item.file_guid,
+          })) : [];
           commit('assignCurrentEditingScItem', {
             currentEditingScItem: {
               type: utils.convertScItemType(lectureItemType),
@@ -178,11 +173,8 @@ export default {
                 url: `${baseUrl}${item.client_path}`,
                 guid: item.file_guid,
               })),
-              SQLiteFile: question.sql_lite_file.map(item => ({
-                name: item.name,
-                url: `${baseUrl}${item.client_path}`,
-                guid: item.file_guid,
-              })),
+              result: {}, // 이건 scItemStore.action.getScItemResult() 로 불러온다
+              SQLiteFile,
               question: {
                 id: question.question_id,
                 type: question.type,
@@ -363,6 +355,38 @@ export default {
         memoryLimit: q.memoryLimit,
         timeLimit: q.timeLimit,
         languageList: q.languageList,
+      });
+    },
+    async getScItemResult({ getters, commit }) {
+      const { type } = getters.currentEditingScItem;
+      let res = {}; // undefined이면 자주 터지니까 그거 막으려고
+      switch (type) {
+        case '문항': {
+          res = await questionService.getQuestionResult({
+            questionId: getters.currentEditingScItem.question.id,
+          });
+          break;
+        }
+        case '설문': {
+          res = await surveyService.getSurveyResult({
+            surveyId: getters.currentEditingScItem.survey.id,
+          });
+          break;
+        }
+        case '숙제': {
+          res = await homeworkService.getHomeworkResult({
+            homeworkId: getters.currentEditingScItem.homework.id,
+          });
+          break;
+        }
+        default: {
+          throw new Error(`not defined type ${type}`);
+        }
+      }
+      commit('assignCurrentEditingScItem', {
+        currentEditingScItem: {
+          result: res.data,
+        },
       });
     },
     async putQuestionType({ getters }) {
@@ -614,10 +638,28 @@ export default {
         },
       });
     },
+    async submitQuestion({ getters }, {
+      id,
+      answers,
+      interval,
+      codeLanguage,
+    }) {
+      await studentService.submitQuestion({
+        questionId: id,
+        answers,
+        interval,
+        codeLanguage,
+      });
+    },
     async submitSurvey({ getters }, { id, answer }) {
       await studentService.submitSurvey({
         surveyId: id,
         answer,
+      });
+    },
+    async scoringFinish(_, { lectureItemId }) {
+      await lectureItemService.scoringFinish({
+        lectureItemId,
       });
     },
   },

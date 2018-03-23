@@ -47,6 +47,7 @@ export default {
     opened,
     videoLink,
     teacherEmail,
+    keywordState,
   }) {
     const param = {};
 
@@ -60,6 +61,7 @@ export default {
     utils.assignIfNotNil(param, { opened });
     utils.assignIfNotNil(param, { videoLink }, 'video_link');
     utils.assignIfNotNil(param, { teacherEmail }, 'teacher_email');
+    utils.assignIfNotNil(param, { keywordState }, 'keyword_state');
 
     // console.log('param', param);
     return http.put(`/lectures/${lectureId}`, param);
@@ -99,5 +101,12 @@ export default {
   },
   getLectureCoverage({ id }) {
     return http.get(`/lectures/${id}/coverage`);
+  },
+  executeExtractor({ id, numberOfKeyword, keywordLength }) {
+    const param = {
+      numberOfKeyword,
+      minKeywordLength: keywordLength,
+    };
+    return http.post(`/lectures/${id}/keyword-extractor`, param);
   },
 };

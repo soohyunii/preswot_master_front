@@ -84,4 +84,9 @@ export default {
   }) {
     return http.delete(`/materials/${materialId}/keywords`);
   },
+  scoringFinish({
+    lectureItemId,
+  }) {
+    return http.put(`lecture-items/${lectureItemId}`, { scoring_finish: 1 });
+  },
 };
