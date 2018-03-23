@@ -131,7 +131,7 @@ export default {
     return {
       // isCollapse: false,
       truncateLength: 16,
-      serverUrl: `${baseUrl}`,
+      serverUrl: baseUrl,
       userId: utils.getUserIdFromJwt(),
     };
   },
