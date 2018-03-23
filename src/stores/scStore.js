@@ -102,7 +102,7 @@ export default {
         id: node.id,
         name: '\n',
         _cssClass: '',
-        _size: node._size, // eslint-disable-line
+        _size: node._size, // eslint-disable-line no-underscore-dangle
         x,
         y,
         pinned: false,
@@ -166,7 +166,7 @@ export default {
       const res = await lectureService.getLecture({
         lectureId: state.scId,
       });
-      console.log('getSc res', res.data); // eslint-disable-line
+      console.log('getSc res', res.data); // eslint-disable-line no-console
       commit('updateScTitle', {
         scTitle: res.data.name,
       });
@@ -188,7 +188,6 @@ export default {
       commit('updateScKnowledgeMapState', {
         scKnowledgeMapState: res.data.keyword_state,
       });
-      // eslint-disable-next-line
       const sc = res.data.lecture_items.map((scItem) => {
         // eslint-disable-next-line
         console.log('getSc scItem', scItem);
@@ -237,16 +236,6 @@ export default {
         }));
         commit('updateEdges', { edges });
       }
-      // FIXME:
-      // if (sc.length !== 0) {
-      //   commit('updateCurrentEditingScItemIndex', {
-      //     currentEditingScItemIndex: 0,
-      //   });
-      //   await dispatch('getScItem', {
-      //     scItemId: getters.currentEditingScItem.id,
-      //   });
-      //   await dispatch('getItemKeywords');
-      // }
     },
     async createSc({ rootGetters }) {
       const userId = rootGetters['auth/userId'];
@@ -274,7 +263,6 @@ export default {
         endDate: state.scEndDate,
         // TODO: add state.scLocation
         location: null,
-        // TODO: add state.scIsOpen,
         opened: true,
         videoLink: state.scVideoLink,
         teacherEmail: utils.getEmailFromJwt(),
@@ -317,9 +305,9 @@ export default {
     async postKnowledgeMapData({ state }) {
       const lectureKeywords = state.nodes.map(item => ({
         keyword: item.name,
-        weight: Number.parseInt(item._size, 10), // eslint-disable-line
+        weight: Number.parseFloat(item._size), // eslint-disable-line no-underscore-dangle
       }));
-      console.log('lectureKeywords', lectureKeywords); // eslint-disable-line
+      // console.log('lectureKeywords', lectureKeywords); // eslint-disable-line
       await lectureService.postLectureKeywords({
         lectureId: state.scId,
         lectureKeywords,
@@ -329,7 +317,7 @@ export default {
         node2: item.tid,
         weight: item.weight,
       }));
-      console.log('lectureRelations', lectureRelations); // eslint-disable-line
+      // console.log('lectureRelations', lectureRelations); // eslint-disable-line
       await lectureService.postLectureKeywordRelations({
         lectureId: state.scId,
         lectureRelations,

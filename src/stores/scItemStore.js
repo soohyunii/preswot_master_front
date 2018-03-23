@@ -657,5 +657,10 @@ export default {
         answer,
       });
     },
+    async scoringFinish(_, { lectureItemId }) {
+      await lectureItemService.scoringFinish({
+        lectureItemId,
+      });
+    },
   },
 };

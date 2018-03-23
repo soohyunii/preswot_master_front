@@ -25,25 +25,21 @@
               label="Scoring">
               <template slot-scope="scope">
                 <el-button
-                  @click="handleClick({
-                   lecture_item_id: scope.row.lecture_item_id,
-                   lecture_id: scope.row.lecture_id,
-                   lecture_item_name: scope.row.lecture_item_name,
-                   lecture_item_description: scope.row.lecture_item_description,
-                   question: scope.row.question,
-                   homework: scope.row.homework,
-                   type: scope.row.type,
-                   })"
+                  @click="handleClick(scope.row)"
                   type="text" size="small">
-                  점수 매기기
+                  체점
                 </el-button>
+                <i v-if="scope.row.scoring_finish === 1"
+                   class="el-icon-success"
+                   style="float:right; margin-top: 9px; margin-right: 15px;"></i>
               </template>
             </el-table-column>
           </el-table>
         </div>
 
         <div v-if="inner">
-          <el-button @click="backClick" type="primary" >다른 항목 보기</el-button>
+          <el-button @click="backClick('BACK')" type="primary" >다른 항목 보기</el-button>
+          <el-button @click="backClick('FINISH')" type="primary" >체점 완료</el-button>
 
           <div v-if="inner.type === 'long'">
             <el-row class="description">
@@ -209,11 +205,21 @@
         'putScore',
         'putHomeworkFeedback',
       ]),
+      ...mapActions('scItem', [
+        'scoringFinish',
+      ]),
       handleClick(data) {
         this.inner = data;
       },
-      backClick() {
-        this.inner = null;
+      backClick(type) {
+        const vm = this;
+        if (type === 'BACK') {
+          vm.inner = null;
+        } else if (type === 'FINISH') {
+          vm.scoringFinish({ lectureItemId: vm.inner.lecture_item_id });
+          vm.inner.scoring_finish = 1;
+          vm.inner = null;
+        }
       },
       async onChange(type, id, score, index) {
         const vm = this;

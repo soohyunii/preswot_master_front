@@ -32,7 +32,7 @@
       다른 작업은 삼가 주세요.
     </div>
 
-    <div v-if="scKnowledgeMapState === 2">
+    <div v-if="scKnowledgeMapState === 2 || scKnowledgeMapState === 3">
       <svg style="width: 0px; height: 0px; float: left;">
         <defs>
           <marker id="m-end" markerWidth="10" markerHeight="10" refX="11" refY="3" orient="auto" markerUnits="strokeWidth" >
