@@ -128,7 +128,7 @@ export default function authRoutes(root) {
       },
     },
     {
-      path: '/student/class/:classId/journal',
+      path: '/student/class/:classId/:userId/journal',
       name: 'StudentClassJournal',
       component: StudentClassJournal,
       meta: {
@@ -146,7 +146,7 @@ export default function authRoutes(root) {
       },
     },
     {
-      path: '/student/lecture/journal',
+      path: '/student/lecture/:lectureId/:userId/journal',
       name: 'StudentLectureJournal',
       component: StudentLectureJournal,
       meta: {

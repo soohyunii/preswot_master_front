@@ -29,6 +29,8 @@ export default {
     currentEditingNodeIndex: null,
     nodes: [],
     edges: [],
+    scAcceptPlist: [],
+    scAvailablePlist: [],
     /**
      * coverage 변수
      */
@@ -51,6 +53,25 @@ export default {
     },
     updateScType(state, { scType }) {
       state.scType = scType;
+    },
+    updateScPlist(state, { scPlist }) {
+      //state.scAcceptPlist = scPlist.lecture_accept_plist;
+      state.scAvailablePlist = [];
+      state.scAcceptPlist = [];
+      for(let i = 0; i < scPlist.plist_all.length; i++)
+      {
+        state.scAvailablePlist.push({
+         key: scPlist.plist_all[i].plist_id,
+         label: scPlist.plist_all[i].name,
+       });
+      }
+      for(let i = 0; i < scPlist.lecture_accept_plist.length; i++)
+      {
+        state.scAcceptPlist.push(scPlist.lecture_accept_plist[i].plist_id);
+      }
+    },
+    updateScAcceptPlist(state, { scAcceptPlist }) {
+      state.scAcceptPlist = scAcceptPlist;
     },
     updateScStartDate(state, { scStartDate }) {
       state.scStartDate = scStartDate;
@@ -162,6 +183,13 @@ export default {
       const res = await lectureService.getLecture({
         lectureId: state.scId,
       });
+      const plist = await lectureService.getLecturePlist({
+        lectureId: state.scId,
+      });
+      commit('updateScPlist', {
+        scPlist: plist.data,
+      });
+      console.log('getSc plist', plist.data); // eslint-disable-line
       console.log('getSc res', res.data); // eslint-disable-line
       commit('updateScTitle', {
         scTitle: res.data.name,
@@ -218,6 +246,14 @@ export default {
       //   });
       //   await dispatch('getItemKeywords');
       // }
+    },
+    async postScplist({ state }) {
+      console.log(state.scAcceptPlist,'@@@@@@@@@');
+      const res = await lectureService.postLecturePlist({
+        lectureId: state.scId,
+        movedKeys: state.scAcceptPlist,
+      });
+      return ;
     },
     async createSc({ rootGetters }) {
       const userId = rootGetters['auth/userId'];

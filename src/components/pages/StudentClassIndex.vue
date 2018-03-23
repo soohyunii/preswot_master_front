@@ -50,7 +50,7 @@ import { mapState, mapGetters, mapMutations } from 'vuex';
 import ClassScenario from '../partials/ClassScenario';
 import ClassStatistics from '../partials/ClassStatistics';
 import ClassListAside from '../partials/ClassListAside';
-
+import utils from '../../utils';
 
 export default {
   name: 'StudentClassIndex',
@@ -70,12 +70,13 @@ export default {
     ...mapMutations('analysis', ['updateClassId']),
     onClick(type) {
       const vm = this;
+      const userId = utils.getUserIdFromJwt();
       switch (type) {
         case 'ANALYSIS': {
           vm.updateClassId({
             classId: vm.currentStudyingClass.class_id,
           });
-            vm.$router.push(`/a/student/class/${vm.currentStudyingClass.class_id}/journal`);
+            vm.$router.push(`/a/student/class/${vm.currentStudyingClass.class_id}/${userId}/journal`);
           break;
         }
         default: {
