@@ -657,7 +657,7 @@ export default {
         answer,
       });
     },
-    async scoringFinish({ }, { lectureItemId }) {
+    async scoringFinish(_, { lectureItemId }) {
       await lectureItemService.scoringFinish({
         lectureItemId,
       });
