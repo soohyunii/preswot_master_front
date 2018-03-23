@@ -56,18 +56,16 @@ export default {
       state.scType = scType;
     },
     updateScPlist(state, { scPlist }) {
-      //state.scAcceptPlist = scPlist.lecture_accept_plist;
+      // state.scAcceptPlist = scPlist.lecture_accept_plist;
       state.scAvailablePlist = [];
       state.scAcceptPlist = [];
-      for(let i = 0; i < scPlist.plist_all.length; i++)
-      {
+      for (let i = 0; i < scPlist.plist_all.length; i += 1) {
         state.scAvailablePlist.push({
-         key: scPlist.plist_all[i].plist_id,
-         label: scPlist.plist_all[i].name,
-       });
+          key: scPlist.plist_all[i].plist_id,
+          label: scPlist.plist_all[i].name,
+        });
       }
-      for(let i = 0; i < scPlist.lecture_accept_plist.length; i++)
-      {
+      for (let i = 0; i < scPlist.lecture_accept_plist.length; i += 1) {
         state.scAcceptPlist.push(scPlist.lecture_accept_plist[i].plist_id);
       }
     },
@@ -266,12 +264,11 @@ export default {
       }
     },
     async postScplist({ state }) {
-      console.log(state.scAcceptPlist,'@@@@@@@@@');
-      const res = await lectureService.postLecturePlist({
+      // console.log(state.scAcceptPlist, '@@@@@@@@@');
+      await lectureService.postLecturePlist({
         lectureId: state.scId,
         movedKeys: state.scAcceptPlist,
       });
-      return ;
     },
     async createSc({ rootGetters }) {
       const userId = rootGetters['auth/userId'];
