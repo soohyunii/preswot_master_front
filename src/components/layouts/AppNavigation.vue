@@ -119,11 +119,9 @@
 </style>
 
 <script>
-import utils from '../../utils';
 import { mapState, mapMutations, mapActions } from 'vuex';
+import utils from '../../utils';
 import { baseUrl } from '../../services/config';
-// import studentService from '../../services/studentService';
-// import teacherService from '../../services/teacherService';
 
 export default {
   name: 'AppNavigation',
