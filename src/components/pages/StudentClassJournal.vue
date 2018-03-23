@@ -139,7 +139,6 @@
 
 <script>
   import { mapActions, mapState, mapMutations } from 'vuex';
-  import utils from '../../utils';
   import LineChart from '../partials/LineChart';
 
   export default {

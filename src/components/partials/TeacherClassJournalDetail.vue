@@ -143,11 +143,9 @@
             // eslint-disable-next-line
             lectureData.data[i].latest_pic_path = '"'+ lectureData.data[i].latest_pic_path + '"';
             // eslint-disable-next-line
-            console.log(lectureData.data[i].latest_pic_path);
           }
 
           vm.forLoopData = lectureData.data;
-          console.log(vm.forLoopData);
         } catch (e) {
           throw new Error('request error');
         }
@@ -175,9 +173,6 @@
               isActiveInfo: false,
             });
             break;
-          }
-          case 'GO_TO_STUDENT_JOURNAL': {
-          //  vm.$router.push(`/a/student/class/${vm.currentStudyingClass.class_id}/${userId}/journal`);
           }
           default: {
             break;

@@ -20,7 +20,7 @@ export default {
     });
   },
   postLecturePlist({
-    lectureId, movedKeys
+    lectureId, movedKeys,
   }) {
     return http.post(`/lectures/${lectureId}/plist`, {
       movedKeys,
