@@ -5,9 +5,9 @@
       <el-col :offset="1" :span="3" style="text-align:center;"><div>수강생 평균 집중도</div></el-col>
       <el-col :span="3"><el-progress :text-inside="true" :stroke-width="20" :percentage="avg_data.avg_concentration_score"></el-progress></el-col>
       <el-col :span="4" style="text-align:center;"><div>수강생 평균 참여도</div></el-col>
-      <el-col :span="3"><el-progress :text-inside="true" :stroke-width="20" :percentage="avg_data.avg_understanding_score" status="success"></el-progress></el-col>
-      <el-col :span="4" style="text-align:center;"><div>수강생 평균 이해도</div></el-col>
       <el-col :span="3"><el-progress :text-inside="true" :stroke-width="20" :percentage="avg_data.avg_participation_score" status="success"></el-progress></el-col>
+      <el-col :span="4" style="text-align:center;"><div>수강생 평균 이해도</div></el-col>
+      <el-col :span="3"><el-progress :text-inside="true" :stroke-width="20" :percentage="avg_data.avg_understanding_score" status="success"></el-progress></el-col>
       <el-col :span="3" style="text-align:right;">
         <i class="el-icon-close" @click="onClick('CLOSE_STATUSBAR')" />
       </el-col>

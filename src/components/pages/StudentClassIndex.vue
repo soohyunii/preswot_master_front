@@ -75,7 +75,7 @@ export default {
           vm.updateClassId({
             classId: vm.currentStudyingClass.class_id,
           });
-          vm.$router.push('/a/student/class/journal');
+            vm.$router.push(`/a/student/class/${vm.currentStudyingClass.class_id}/journal`);
           break;
         }
         default: {
