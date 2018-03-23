@@ -25,11 +25,11 @@
             <div class="sex">zxc</div>
           </el-slider>
           <div class = "slider_label">
-            <div class= "slider_label_q q1">{{scope.row.min_understanding_score}}</div>
-            <div class= "slider_label_q q2">{{scope.row.q1_understanding_score}}</div>
-            <div class= "slider_label_q q3">{{scope.row.q2_understanding_score}}</div>
-            <div class= "slider_label_q q4">{{scope.row.q3_understanding_score}}</div>
-            <div class= "slider_label_q q5">{{scope.row.max_understanding_score}}</div>
+            <div class= "slider_label_q q1">{{scope.row.min_understanding_score.toFixed(1)}}</div>
+            <div class= "slider_label_q q2">{{scope.row.q1_understanding_score.toFixed(1)}}</div>
+            <div class= "slider_label_q q3">{{scope.row.q2_understanding_score.toFixed(1)}}</div>
+            <div class= "slider_label_q q4">{{scope.row.q3_understanding_score.toFixed(1)}}</div>
+            <div class= "slider_label_q q5">{{scope.row.max_understanding_score.toFixed(1)}}</div>
           </div>
         </template>
       </el-table-column>
@@ -41,11 +41,11 @@
         <template slot-scope="scope">
           <el-slider v-model="(scope.row.class_num_student - scope.row.num_better_concentration_score)/scope.row.class_num_student * 100"  :step="25" disabled show-stops></el-slider>
           <div class = "slider_label">
-            <div class= "slider_label_q q1">{{scope.row.min_concentration_score}}</div>
-            <div class= "slider_label_q q2">{{scope.row.q1_concentration_score}}</div>
-            <div class= "slider_label_q q3">{{scope.row.q2_concentration_score}}</div>
-            <div class= "slider_label_q q4">{{scope.row.q3_concentration_score}}</div>
-            <div class= "slider_label_q q5">{{scope.row.max_concentration_score}}</div>
+            <div class= "slider_label_q q1">{{scope.row.min_concentration_score.toFixed(1)}}</div>
+            <div class= "slider_label_q q2">{{scope.row.q1_concentration_score.toFixed(1)}}</div>
+            <div class= "slider_label_q q3">{{scope.row.q2_concentration_score.toFixed(1)}}</div>
+            <div class= "slider_label_q q4">{{scope.row.q3_concentration_score.toFixed(1)}}</div>
+            <div class= "slider_label_q q5">{{scope.row.max_concentration_score.toFixed(1)}}</div>
           </div>
         </template>
       </el-table-column>
@@ -57,11 +57,11 @@
         <template slot-scope="scope">
           <el-slider v-model="(scope.row.class_num_student - scope.row.num_better_participation_score)/scope.row.class_num_student * 100"  :step="25" disabled show-stops></el-slider>
           <div class = "slider_label">
-            <div class= "slider_label_q q1">{{scope.row.min_participation_score}}</div>
-            <div class= "slider_label_q q2">{{scope.row.q1_participation_score}}</div>
-            <div class= "slider_label_q q3">{{scope.row.q2_participation_score}}</div>
-            <div class= "slider_label_q q4">{{scope.row.q3_participation_score}}</div>
-            <div class= "slider_label_q q5">{{scope.row.max_participation_score}}</div>
+            <div class= "slider_label_q q1">{{scope.row.min_participation_score.toFixed(1)}}</div>
+            <div class= "slider_label_q q2">{{scope.row.q1_participation_score.toFixed(1)}}</div>
+            <div class= "slider_label_q q3">{{scope.row.q2_participation_score.toFixed(1)}}</div>
+            <div class= "slider_label_q q4">{{scope.row.q3_participation_score.toFixed(1)}}</div>
+            <div class= "slider_label_q q5">{{scope.row.max_participation_score.toFixed(1)}}</div>
           </div>
         </template>
       </el-table-column>
@@ -131,6 +131,9 @@
   .el-progress-bar__outer{
     background-color:#ffffff;
   }
+  .el-slider__runway.disabled .el-slider__bar{
+    background-color:#41355e;
+  }
 
 </style>
 
@@ -153,10 +156,10 @@
     async beforeMount() {
       const vm = this;
       vm.updateClassId({
-        classId: 2,
+        classId: Number.parseInt(vm.$route.params.classId, 10),
       });
       vm.updateUserId({
-        userId: utils.getUserIdFromJwt(),
+        userId: Number.parseInt(vm.$route.params.userId, 10),
       });
       vm.updateIsStudent({
         isStudent: 1,
@@ -189,9 +192,7 @@
               // eslint-disable-next-line
               lectureId: lectureId,
             });
-            vm.$router.push({
-              name: 'StudentLectureJournal',
-            });
+            vm.$router.push(`/a/student/lecture/${lectureId}/${Number.parseInt(vm.$route.params.userId, 10)}/journal`);
             break;
           }
           default: {

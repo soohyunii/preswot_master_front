@@ -70,7 +70,6 @@
                 </el-row>
               </div>
           </el-tab-pane>
-
           <el-tab-pane label="강의 삭제" name="fourth">
             <el-row>
               <el-col style="max-width: 600px;">
@@ -81,6 +80,9 @@
                 </el-form>
               </el-col>
             </el-row>
+          </el-tab-pane>
+          <el-tab-pane label="강의 허용 프로그램 수정" name="fifth">
+            <sc-accept-plist />
           </el-tab-pane>
         </el-tabs>
 
@@ -126,6 +128,7 @@ import ScCommonEditor from '../partials/ScCommonEditor';
 import ScSurveyEditor from '../partials/ScSurveyEditor';
 import ScQuestionEditor from '../partials/ScQuestionEditor';
 import ScHomeworkEditor from '../partials/ScHomeworkEditor';
+import ScAcceptPlist from '../partials/ScAcceptPlist';
 import KnowledgeMap from '../partials/KnowledgeMap';
 
 export default {
@@ -141,6 +144,7 @@ export default {
     ScSurveyEditor,
     ScActiveTimeEditor,
     KnowledgeMap,
+    ScAcceptPlist,
   },
   data() {
     return {
