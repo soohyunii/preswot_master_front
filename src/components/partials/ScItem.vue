@@ -1,27 +1,35 @@
 <template>
-  <div class="wrapper"
-  :class="itemClass()"
-  @click="onClick('SELECT_SC_ITEM',index)">
-    <el-col align="center">
-      <!-- TODO: change icons -->
-      <div class="image">
-        <i :class="getIconsByType(type)" class="main-image"></i>
-        <i
-          v-if="!isStudent"
-          class="el-icon-error"
-          style="color: red; vertical-align: top;"
-          @click.stop="onClick('deleteIcon', index)"
-        ></i>
-        <br/>
-      </div>
-      <div class="label-time">{{ scActiveTime }}</div>
-      <div class="label-duration">{{ scOrder }}</div>
-    </el-col>
+  <div class="sc-item-wrapper">
+    <div
+      :class="itemClass"
+      @click.stop="onClick('SELECT_SC_ITEM',index)"
+    >
+      <el-col align="center">
+        <!-- TODO: change icons -->
+        <div class="image">
+          <i :class="getIconsByType(type)" class="main-image"></i>
+          <i
+            v-if="!isStudent"
+            class="el-icon-error"
+            style="color: red; vertical-align: top;"
+            @click.stop="onClick('deleteIcon', index)"
+          ></i>
+          <br/>
+        </div>
+        <div class="label-time">{{ scActiveTime }}</div>
+        <div class="label-duration">{{ scOrder }}</div>
+      </el-col>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations, mapGetters, mapActions } from 'vuex';
+import {
+  mapState,
+  mapMutations,
+  mapGetters,
+  mapActions,
+} from 'vuex';
 
 export default {
   name: 'ScItem',
@@ -46,6 +54,15 @@ export default {
       const vm = this;
       switch (type) {
         case 'SELECT_SC_ITEM': {
+          if (vm.isStudent && !vm.isActiveItem()) {
+            vm.$notify({
+              title: '비활성화된 아이템',
+              message: '아이템이 아직 활성화되지 않음',
+              type: 'warning',
+              duration: 1000,
+            });
+            return;
+          }
           if (vm.sc.length > index) {
             await vm.updateCurrentEditingScItemIndex({
               currentEditingScItemIndex: index,
@@ -130,14 +147,6 @@ export default {
       }
       return icon;
     },
-    itemClass() {
-      const vm = this;
-      const selected = vm.index === vm.currentEditingScItemIndex;
-      return {
-        selected,
-        nonActive: !vm.isActiveItem(),
-      };
-    },
     isActiveItem() {
       const vm = this;
       if (vm.sc[vm.index].opened === 1) {
@@ -163,6 +172,14 @@ export default {
     ...mapState('scItem', ['sc', 'currentEditingScItemIndex']),
     ...mapGetters('scItem', ['currentEditingScItem']),
     ...mapState('sc', ['afterStartDateOffsetSec']),
+    itemClass() {
+      const vm = this;
+      const selected = vm.index === vm.currentEditingScItemIndex;
+      return {
+        selected,
+        nonActive: !vm.isActiveItem(),
+      };
+    },
     scActiveTime: {
       get() {
         const vm = this;
@@ -211,7 +228,7 @@ export default {
 <style lang="scss" scoped>
 @import "~@/variables.scss";
 
-.wrapper {
+.sc-item-wrapper {
   margin: 8px 0px;
   padding: 5px 0px 5px 0px;
 
