@@ -91,7 +91,7 @@
 </style>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex';
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
 import BarChart from './BarChart';
 import utils from '../../utils';
 
@@ -104,7 +104,6 @@ export default {
     return {
       qAnswer: '',
       qAnswerChoice: [],
-      isSubmitted: false,
     };
   },
   computed: {
@@ -120,6 +119,18 @@ export default {
         return axis;
       }
       return [];
+    },
+    isSubmitted: {
+      get() {
+        const vm = this;
+        return vm.currentEditingScItem.isSubmitted;
+      },
+      set(isSubmitted) {
+        const vm = this;
+        vm.assignCurrentEditingScItem('scItem', {
+          isSubmitted,
+        });
+      },
     },
     chartData() {
       const data = ['답 제출 분포'];
@@ -196,6 +207,7 @@ export default {
     },
   },
   methods: {
+    ...mapMutations('scItem', ['assignCurrentEditingScItem']),
     ...mapActions('scItem', ['submitQuestion']),
     async onClick(type, index) {
       switch (type) {
