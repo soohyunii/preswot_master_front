@@ -176,8 +176,7 @@ export default {
                 guid: item.file_guid,
               })),
               result: {}, // 이건 scItemStore.action.getScItemResult() 로 불러온다
-              isSubmitted: false, // 설문이나 문항이 제출되었는지 아닌지
-              // FIXME: 근데 이거 서버로부터 받아와야하는것 같은데
+              isSubmitted: question.student_answer_logs.length !== 0, // 설문, 문항, 숙제가 제출되었는지
               SQLiteFile,
               question: {
                 id: question.question_id,
@@ -217,8 +216,7 @@ export default {
               type: utils.convertScItemType(lectureItemType),
               id: scItemId,
               result: {}, // 이건 scItemStore.action.getScItemResult() 로 불러온다
-              isSubmitted: false, // 설문이나 문항이 제출되었는지 아닌지
-              // FIXME: 근데 이거 서버로부터 받아와야하는것 같은데
+              isSubmitted: survey.student_surveys.length !== 0, // 설문, 문항, 숙제가 제출되었는지
               fileList: survey.files.map(item => ({
                 name: item.name,
                 url: `${baseUrl}${item.client_path}`,
@@ -262,6 +260,7 @@ export default {
               type: utils.convertScItemType(lectureItemType),
               id: scItemId,
               result: {}, // 이건 scItemStore.action.getScItemResult() 로 불러온다
+              isSubmitted: homework.student_homeworks.length !== 0, // 설문, 문항, 숙제가 제출되었는지
               fileList: homework.files.map(item => ({
                 name: item.name,
                 url: `${baseUrl}${item.client_path}`,
