@@ -53,8 +53,6 @@
           </el-col>
         </el-row>
 
-        <!-- v-show="currentEditingScItem" -->
-
         <div id="app_lecture_editor" v-show="!isScEmpty">
           <el-row :gutter="30">
             <el-col :span="24">
@@ -63,14 +61,6 @@
               <sc-homework-viewer v-if="currentEditingScItemType === '숙제'" />
               <sc-survey-viewer v-if="currentEditingScItemType === '설문'" />
               <sc-question-viewer v-if="currentEditingScItemType === '문항'" />
-              <!-- <h1>아이템 편집</h1>
-              <sc-common-editor />
-              <sc-material-editor v-if="currentEditingScItemType === '강의자료'" />
-              <sc-homework-editor v-if="currentEditingScItemType === '숙제'" />
-              <sc-survey-editor v-if="currentEditingScItemType === '설문'" />
-              <sc-question-editor v-if="currentEditingScItemType === '문항'" />
-              <sc-active-time-editor /> -->
-
             </el-col>
           </el-row>
         </div>
@@ -235,7 +225,7 @@ export default {
     async refreshScItems() {
       const vm = this;
       await vm.getSc();
-      for (let i = 0; i < vm.fleetingSc.length; i++) { // eslint-disable-line
+      for (let i = 0; i < vm.fleetingSc.length; i += 1) {
         if (vm.fleetingSc[i].opened !== vm.sc[i].opened) {
           vm.updateCurrentEditingScItemIndex({
             currentEditingScItemIndex: i,
