@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="sc-wrapper">
     <el-container>
       <el-aside width="39px">
         <span class="label" :style="labelStyle">SCENARIO</span>
@@ -19,20 +19,19 @@
           </div>
           <div v-show="!isScEmpty">
             <el-row :gutter="10">
-              <!-- TODO: middle bar between two Items -->
-              <draggable v-model="sc"
+              <transition-group name="list-group">
+                <sc-item
+                  v-for="(item, index) in sc"
+                  class="list-group-item"
+                  :key="item.id"
+                  :type="item.type"
+                  :index="index" />
+              </transition-group>
+              <!-- <draggable v-model="sc"
                 :options="dragOptions"
                 @start="drag = true;"
                 @end="drag = false;">
-                <transition-group name="list-group">
-                  <sc-item
-                    v-for="(item, index) in sc"
-                    class="list-group-item"
-                    :key="item.id"
-                    :type="item.type"
-                    :index="index" />
-                </transition-group>
-              </draggable>
+              </draggable> -->
             </el-row>
           </div>
         </div>
@@ -44,7 +43,7 @@
 <style lang="scss" scoped>
 @import "~@/variables.scss";
 
-.wrapper {
+.sc-wrapper {
   background-color: white;
 
   .label {
@@ -67,14 +66,14 @@
       margin-right: 10px;
   }
 
-  .list-group-enter, .list-group-leave-to /* .list-leave-active below version 2.1.8 */ {
-    opacity: 0;
-    transform: translateY(20px);
-  }
+  // .list-group-enter, .list-group-leave-to /* .list-leave-active below version 2.1.8 */ {
+  //   opacity: 0;
+  //   transform: translateY(20px);
+  // }
 
-  .list-group-leave-active {
-    position: absolute;
-  }
+  // .list-group-leave-active {
+  //   position: absolute;
+  // }
 
   .ghost {
     opacity: .5;
@@ -151,7 +150,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('sc', ['updateSc']),
+    ...mapMutations('scItem', ['updateSc']),
     ...mapMutations('scItem', [
       'assignCurrentEditingScItem',
       'updateCurrentEditingScItemIndex',
