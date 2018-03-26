@@ -15,7 +15,7 @@
           </el-form-item>
 
           <el-form-item label="문항">
-            ({{ qType }}) {{ qQuestion }}
+            ({{ qTypeStr }}) {{ qQuestion }}
           </el-form-item>
 
           <template v-if="!isSubmitted">
@@ -142,6 +142,12 @@ export default {
       const vm = this;
       const q = vm.currentEditingScItem.question;
       return q ? q.type : 0;
+    },
+    qTypeStr() {
+      const vm = this;
+      const q = vm.currentEditingScItem.question;
+      const type = q ? q.type : 0;
+      return utils.convertQuestionType(type);
     },
     qQuestion() {
       const vm = this;

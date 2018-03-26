@@ -88,6 +88,15 @@ export default {
     }
     return new Error(`not defined scItemType ${scItemType}`);
   },
+  convertQuestionType(questionType) {
+    const mapping = ['객관', '단답', '서술', 'SW', 'SQL'];
+    if (typeof questionType === 'number') {
+      return mapping[questionType];
+    } else if (typeof questionType === 'string') {
+      return mapping.indexOf(questionType);
+    }
+    return new Error(`not defined questionType ${questionType}`);
+  },
   // convertScItemOrder(scItemOrder) {
   //   const mapping = ['예습', '본강의', '복습'];
   //   if (typeof scItemOrder === 'number') {
