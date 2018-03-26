@@ -127,8 +127,10 @@ export default {
       },
       set(isSubmitted) {
         const vm = this;
-        vm.assignCurrentEditingScItem('scItem', {
-          isSubmitted,
+        vm.assignCurrentEditingScItem({
+          currentEditingScItem: {
+            isSubmitted,
+          },
         });
       },
     },
