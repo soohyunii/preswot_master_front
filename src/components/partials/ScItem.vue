@@ -5,8 +5,14 @@
     <el-col align="center">
       <!-- TODO: change icons -->
       <div class="image">
-        <i :class="getIconsByType(type)" class="main-image" ></i>
-        <i class="el-icon-error" style="color:red; vertical-align:top" @click.stop="onClick('deleteIcon',index)"></i><br/>
+        <i :class="getIconsByType(type)" class="main-image"></i>
+        <i
+          v-if="!isStudent"
+          class="el-icon-error"
+          style="color: red; vertical-align: top;"
+          @click.stop="onClick('deleteIcon', index)"
+        ></i>
+        <br/>
       </div>
       <div class="label-time">{{ scActiveTime }}</div>
       <div class="label-duration">{{ scOrder }}</div>
@@ -20,11 +26,13 @@ import { mapState, mapMutations, mapGetters, mapActions } from 'vuex';
 export default {
   name: 'ScItem',
   props: ['type', 'index'],
+  mounted() {
+    const vm = this;
+    vm.isStudent = vm.$route.path.includes('/student/lecture/');
+  },
   data() {
     return {
-      selectedClass: 'selected',
-      nonActiveItem: 'nonActive',
-      // tempActive: false, //eslint-disable
+      isStudent: true,
     };
   },
   methods: {

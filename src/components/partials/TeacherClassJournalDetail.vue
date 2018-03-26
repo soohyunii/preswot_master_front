@@ -19,7 +19,7 @@
     </el-row>
     <el-row :gutter="20" id="student_score">
       <el-col :span="3" v-for="item in forLoopData" :key="item">
-        <div class="one_user">
+        <div class="one_user"  v-on:click="select($event, item.user_id)">
           <div class="user_pic" v-bind:style='{ backgroundImage: "url(" + item.latest_pic_path + ")", }'></div>
           <div class="user_info">
             <div class="user_name">{{item.name}}</div>
@@ -125,10 +125,14 @@
       };
     },
     computed: {
-      ...mapState('analysis', ['analysisData', 'isActiveInfo']),
+      ...mapState('analysis', ['analysisData', 'isActiveInfo', 'classId']),
     },
     methods: {
       ...mapMutations('analysis', ['updateClassId', 'updateUserId', 'updateIsStudent', 'updateIsActiveInfo', 'updateLectureId']),
+      select(e, userId) {
+        const vm = this;
+        vm.$router.push(`/a/student/class/${vm.classId}/${userId}/journal`);
+      },
       async getLectureStat() {
         const vm = this;
         try {
@@ -139,7 +143,6 @@
             // eslint-disable-next-line
             lectureData.data[i].latest_pic_path = '"'+ lectureData.data[i].latest_pic_path + '"';
             // eslint-disable-next-line
-            console.log(lectureData.data[i].latest_pic_path);
           }
 
           vm.forLoopData = lectureData.data;

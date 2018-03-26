@@ -134,13 +134,18 @@ export default {
   },
   async beforeMount() {
     const vm = this;
-    vm.youtubeId = 'TODO:replace';
     vm.updateScId({
       scId: Number.parseInt(vm.$route.params.scId, 10),
     });
     await vm.getSc();
     await vm.$nextTick();
+    console.log('scVideoLink', vm.scVideoLink);
+    if (!vm.scVideoLink) {
+      // FIXME: scVideoLink가 없을 떄 처리하기
+      return;
+    }
     vm.youtubeId = getIdFromURL(vm.scVideoLink);
+    console.log('youtubeId', vm.youtubeId);
     // TODO: handle sc empty
     if (!vm.isScEmpty) {
       vm.updateCurrentEditingScItemIndex({

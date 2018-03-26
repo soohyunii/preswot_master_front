@@ -78,6 +78,7 @@
       <router-link to="/a/student/lecture/1/live">Student Live</router-link> <br />
       <router-link to="/a/test">Chart Test</router-link> <br />
       <router-link to="/a/student/class">Student Class</router-link> <br />
+      <a :href = "`${serverUrl}/downloads/download_logfile/${userId}`">log_file</a> <br />
     </el-menu>
   </div>
 </template>
@@ -119,8 +120,8 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex';
-// import studentService from '../../services/studentService';
-// import teacherService from '../../services/teacherService';
+import utils from '../../utils';
+import { baseUrl } from '../../services/config';
 
 export default {
   name: 'AppNavigation',
@@ -128,6 +129,8 @@ export default {
     return {
       // isCollapse: false,
       truncateLength: 16,
+      serverUrl: baseUrl,
+      userId: utils.getUserIdFromJwt(),
     };
   },
   computed: {

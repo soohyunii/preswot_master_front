@@ -19,6 +19,18 @@ export default {
       teacherId,
     });
   },
+  postLecturePlist({
+    lectureId, movedKeys,
+  }) {
+    return http.post(`/lectures/${lectureId}/plist`, {
+      movedKeys,
+    });
+  },
+  getLecturePlist({
+    lectureId,
+  }) {
+    return http.get(`/lectures/${lectureId}/plist`);
+  },
   deleteLecture({
     lectureId,
   }) {
