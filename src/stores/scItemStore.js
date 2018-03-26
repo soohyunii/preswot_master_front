@@ -66,6 +66,7 @@ export default {
       const homework = {};
       const result = {};
       const itemKeywords = [];
+      const isSubmitted = false; // 문항이나 설문이 제출되었는지 아닌지
       const scItem = {
         id,
         title,
@@ -81,6 +82,7 @@ export default {
         homework,
         itemKeywords,
         result,
+        isSubmitted,
       };
       state.currentEditingScItemIndex = state.sc.length;
       state.sc.push(scItem);
@@ -174,6 +176,8 @@ export default {
                 guid: item.file_guid,
               })),
               result: {}, // 이건 scItemStore.action.getScItemResult() 로 불러온다
+              isSubmitted: false, // 설문이나 문항이 제출되었는지 아닌지
+              // FIXME: 근데 이거 서버로부터 받아와야하는것 같은데
               SQLiteFile,
               question: {
                 id: question.question_id,
