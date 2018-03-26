@@ -225,7 +225,7 @@ export default {
             lecture_item_id: vm.currentEditingScItem.id,
             user_id: utils.getUserIdFromJwt(),
           };
-          const answers = vm.qtype === 1 ? [vm.qAnswer] : vm.qAnswerChoice;
+          const answers = vm.qType === 1 ? [vm.qAnswer] : vm.qAnswerChoice;
 
           /* Same with scStore updateOffsetSecNowDate algorithm. */
           const startScItem = vm.currentEditingScItem.activeStartOffsetSec;
