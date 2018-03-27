@@ -152,10 +152,6 @@ export default {
         case 0: { // * 문항
           const question = res.data.questions[0];
           let answer = [];
-          let isSubmitted = false;
-          if (question.student_answer_logs.length !== 0) {
-            isSubmitted = true;
-          }
           if (question.answer.length !== 0) {
             answer = question.answer
             .map(token => token.trim())
@@ -182,7 +178,7 @@ export default {
                 guid: item.file_guid,
               })),
               result: {}, // 이건 scItemStore.action.getScItemResult() 로 불러온다
-              isSubmitted, // 설문이나 문항이 제출되었는지 아닌지
+              isSubmitted: question.student_answer_logs.length !== 0, // 설문, 문항, 숙제가 제출되었는지
               submitted: question.student_answer_logs,
               SQLiteFile,
               question: {
@@ -212,10 +208,6 @@ export default {
         }
         case 1: { // * 설문
           const survey = res.data.surveys[0];
-          let isSubmitted = false;
-          if (survey.student_surveys.length !== 0) {
-            isSubmitted = true;
-          }
           let choice = [];
           if (survey.choice.length !== 0) {
             choice = survey.choice
@@ -227,7 +219,7 @@ export default {
               type: utils.convertScItemType(lectureItemType),
               id: scItemId,
               result: {}, // 이건 scItemStore.action.getScItemResult() 로 불러온다
-              isSubmitted, // 설문이나 문항이 제출되었는지 아닌지
+              isSubmitted: survey.student_surveys.length !== 0, // 설문, 문항, 숙제가 제출되었는지
               submitted: survey.student_surveys,
               fileList: survey.files.map(item => ({
                 name: item.name,
@@ -267,17 +259,12 @@ export default {
         }
         case 3: { // * 숙제
           const homework = res.data.homework[0];
-          let isSubmitted = false;
-          if (homework.student_homeworks.length !== 0) {
-            isSubmitted = true;
-          }
           commit('assignCurrentEditingScItem', {
             currentEditingScItem: {
               type: utils.convertScItemType(lectureItemType),
               id: scItemId,
               result: {}, // 이건 scItemStore.action.getScItemResult() 로 불러온다
-              isSubmitted,
-              submitted: homework.student_homeworks,
+              isSubmitted: homework.student_homeworks.length !== 0, // 설문, 문항, 숙제가 제출되었는지
               fileList: homework.files.map(item => ({
                 name: item.name,
                 url: `${baseUrl}${item.client_path}`,
