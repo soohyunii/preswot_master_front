@@ -171,14 +171,14 @@ export default {
   actions: {
     updateOffsetSecNowDate({ state, commit }) {
       const startDate = state.scStartDate.getTime();
-      let now = new Date().getTime();
-      let diff = Math.floor((now - startDate) / 1000);
+      const now = new Date().getTime();
+      const diff = Math.floor((now - startDate) / 1000);
       commit('updateAfterStartDateOffsetSec', { diff });
 
       return setInterval(() => {
-        now = new Date().getTime();
-        diff = Math.floor((now - startDate) / 1000);
-        commit('updateAfterStartDateOffsetSec', { diff });
+        const now2 = new Date().getTime();
+        const diff2 = Math.floor((now2 - startDate) / 1000);
+        commit('updateAfterStartDateOffsetSec', { diff: diff2 });
       }, 1000);
     },
     async getSc({ state, commit }) {

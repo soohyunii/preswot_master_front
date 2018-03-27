@@ -67,6 +67,7 @@ export default {
       const result = {};
       const itemKeywords = [];
       const isSubmitted = false; // 문항이나 설문이 제출되었는지 아닌지
+      const submitted = [];
       const scItem = {
         id,
         title,
@@ -83,6 +84,7 @@ export default {
         itemKeywords,
         result,
         isSubmitted,
+        submitted,
       };
       state.currentEditingScItemIndex = state.sc.length;
       state.sc.push(scItem);
@@ -177,6 +179,7 @@ export default {
               })),
               result: {}, // 이건 scItemStore.action.getScItemResult() 로 불러온다
               isSubmitted: question.student_answer_logs.length !== 0, // 설문, 문항, 숙제가 제출되었는지
+              submitted: question.student_answer_logs,
               SQLiteFile,
               question: {
                 id: question.question_id,
@@ -217,6 +220,7 @@ export default {
               id: scItemId,
               result: {}, // 이건 scItemStore.action.getScItemResult() 로 불러온다
               isSubmitted: survey.student_surveys.length !== 0, // 설문, 문항, 숙제가 제출되었는지
+              submitted: survey.student_surveys,
               fileList: survey.files.map(item => ({
                 name: item.name,
                 url: `${baseUrl}${item.client_path}`,

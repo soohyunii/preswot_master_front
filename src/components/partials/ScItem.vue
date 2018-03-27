@@ -155,11 +155,14 @@ export default {
       if (!vm.afterStartDateOffsetSec) {
         return false;
       }
-      if (!(vm.$route.name === 'TeacherLectureLive')) {
+      if (vm.$route.name === 'TeacherLectureNew') {
         return true;
       }
       const startTime = vm.sc[vm.index].activeStartOffsetSec;
       const endTime = vm.sc[vm.index].activeEndOffsetSec;
+      if (!startTime) {
+        return false;
+      }
       const isAfterStartTime = startTime <= vm.afterStartDateOffsetSec;
       const isBeforeEndTime = endTime ? vm.afterStartDateOffsetSec <= endTime : true;
       if (isAfterStartTime && isBeforeEndTime) {

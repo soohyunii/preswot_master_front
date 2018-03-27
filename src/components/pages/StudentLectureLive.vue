@@ -117,6 +117,7 @@ export default {
       isCloseStatusbar: false,
       SummaryData: [],
       sHeartbeatIntervalId: 0,
+      elapsedTimeIntervalId: 0,
       youtubeId: '',
       playerWidth: 1000,
       fleetingSc: [],
@@ -128,6 +129,7 @@ export default {
       scId: Number.parseInt(vm.$route.params.scId, 10),
     });
     await vm.getSc();
+    vm.elapsedTimeIntervalId = vm.updateOffsetSecNowDate();
     await vm.$nextTick();
     if (!vm.scVideoLink) {
       // FIXME: scVideoLink가 없을 떄 처리하기
@@ -194,6 +196,7 @@ export default {
     ]),
     ...mapActions('sc', [
       'getSc',
+      'updateOffsetSecNowDate',
     ]),
     ...mapActions('scItem', [
       'getScItem',
@@ -251,6 +254,7 @@ export default {
   destroyed() {
     const vm = this;
     clearInterval(vm.sHeartbeatIntervalId);
+    clearInterval(vm.elapsedTimeIntervalId);
   },
 };
 </script>
