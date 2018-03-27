@@ -117,6 +117,7 @@ export default {
       isCloseStatusbar: false,
       SummaryData: [],
       sHeartbeatIntervalId: 0,
+      elapsedTimeIntervalId: 0,
       youtubeId: '',
       playerWidth: 1000,
       fleetingSc: [],
