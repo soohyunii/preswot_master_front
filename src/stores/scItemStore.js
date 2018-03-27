@@ -67,6 +67,7 @@ export default {
       const result = {};
       const itemKeywords = [];
       const isSubmitted = false; // 문항이나 설문이 제출되었는지 아닌지
+      const submitted = [];
       const scItem = {
         id,
         title,
@@ -83,6 +84,7 @@ export default {
         itemKeywords,
         result,
         isSubmitted,
+        submitted,
       };
       state.currentEditingScItemIndex = state.sc.length;
       state.sc.push(scItem);
@@ -150,6 +152,10 @@ export default {
         case 0: { // * 문항
           const question = res.data.questions[0];
           let answer = [];
+          let isSubmitted = false;
+          if (question.student_answer_logs.length !== 0) {
+            isSubmitted = true;
+          }
           if (question.answer.length !== 0) {
             answer = question.answer
             .map(token => token.trim())
@@ -176,8 +182,8 @@ export default {
                 guid: item.file_guid,
               })),
               result: {}, // 이건 scItemStore.action.getScItemResult() 로 불러온다
-              isSubmitted: false, // 설문이나 문항이 제출되었는지 아닌지
-              // FIXME: 근데 이거 서버로부터 받아와야하는것 같은데
+              isSubmitted, // 설문이나 문항이 제출되었는지 아닌지
+              submitted: question.student_answer_logs,
               SQLiteFile,
               question: {
                 id: question.question_id,
@@ -206,6 +212,10 @@ export default {
         }
         case 1: { // * 설문
           const survey = res.data.surveys[0];
+          let isSubmitted = false;
+          if (survey.student_surveys.length !== 0) {
+            isSubmitted = true;
+          }
           let choice = [];
           if (survey.choice.length !== 0) {
             choice = survey.choice
@@ -217,8 +227,8 @@ export default {
               type: utils.convertScItemType(lectureItemType),
               id: scItemId,
               result: {}, // 이건 scItemStore.action.getScItemResult() 로 불러온다
-              isSubmitted: false, // 설문이나 문항이 제출되었는지 아닌지
-              // FIXME: 근데 이거 서버로부터 받아와야하는것 같은데
+              isSubmitted, // 설문이나 문항이 제출되었는지 아닌지
+              submitted: survey.student_surveys,
               fileList: survey.files.map(item => ({
                 name: item.name,
                 url: `${baseUrl}${item.client_path}`,
@@ -257,11 +267,17 @@ export default {
         }
         case 3: { // * 숙제
           const homework = res.data.homework[0];
+          let isSubmitted = false;
+          if (homework.student_homeworks.length !== 0) {
+            isSubmitted = true;
+          }
           commit('assignCurrentEditingScItem', {
             currentEditingScItem: {
               type: utils.convertScItemType(lectureItemType),
               id: scItemId,
               result: {}, // 이건 scItemStore.action.getScItemResult() 로 불러온다
+              isSubmitted,
+              submitted: homework.student_homeworks,
               fileList: homework.files.map(item => ({
                 name: item.name,
                 url: `${baseUrl}${item.client_path}`,

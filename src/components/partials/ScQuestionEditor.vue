@@ -69,7 +69,7 @@
             <i class="el-icon-loading" v-if="loading.ANSWER" />
           </template>
 
-          <template v-if="[0].includes(pType)">
+          <template v-if="[].includes(pType)">
             <el-form-item label="답 순서 중요">
               <el-radio-group
                 v-model="pIsOrderingAnswer"
@@ -412,7 +412,7 @@ export default {
           answer = pAnswer.split(',')
                 .map(value => value.trim())
                 .filter(value => value.length !== 0);
-        } else if ([1, 2].includes(vm.pType)) {
+        } else if ([1, 2, 4].includes(vm.pType)) {
           answer = [];
           answer.push(pAnswer.trim());
         }

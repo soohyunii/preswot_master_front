@@ -23,13 +23,13 @@
               <el-form-item label="보기">
                 <el-checkbox-group v-model.lazy="qAnswerChoice">
                   <template v-for="(choice, key) in qChoice">
-                    <el-checkbox :label="choice" :key="key"></el-checkbox>
+                    <el-checkbox :label="(key+1).toString()" >{{ choice }}</el-checkbox>
                   </template>
                 </el-checkbox-group>
               </el-form-item>
             </template>
 
-            <template v-if="[1, 2].includes(qType)">
+            <template v-if="[1, 2, 4].includes(qType)">
               <el-form-item label="답">
                 <el-input
                   :type="qType === 1 ? 'input' : 'textarea'"
@@ -58,6 +58,14 @@
                 <pre style="background-color: white; padding: 5px 20px;">{{ qSampleOutput }}</pre>
               </el-form-item>
 
+              <el-form-item label="언어 선택">
+                <el-radio-group v-model.lazy="qAnswerLanguage">
+                  <template v-for="(lang) in qLanguageList">
+                    <el-radio :label="lang" ></el-radio>
+                  </template>
+                </el-radio-group>
+              </el-form-item>
+
               <el-form-item label="코드">
                 <el-input
                   type="textarea"
@@ -75,14 +83,51 @@
           </template>
 
           <div v-show="isSubmitted">
-            <el-form-item v-show="[0].includes(qType)" label="분포">
+            <template v-if="[0].includes(qType)">
+              <el-form-item label="보기">
+                <el-checkbox-group>
+                  <template v-for="(choice, key) in qChoice">
+                    <el-checkbox :label="(key+1).toString()" disabled>{{choice}}</el-checkbox>
+                  </template>
+                </el-checkbox-group>
+              </el-form-item>
+            </template>
+
+            <!--FIXME:  -->
+            <el-form-item v-show="[].includes(qType)" label="분포">
               <bar-chart :xAxisName="chartXAxis" :data="chartData"/>
             </el-form-item>
-            제출되었습니다
+            <br />
+
+            <h4 style="padding-left: 120px;">제출 기록</h4>
+
+            <!--FIXME: 제출기록-->
+            <el-table
+              :data="qSubmitted"
+              border>
+              <el-table-column label="시간" align="center" sortable>
+                <template slot-scope="scope">
+                  <p>{{new Date(scope.row.created_at).toLocaleString()}}</p>
+                </template>
+              </el-table-column>
+              <el-table-column label="제출 답" align="center" sortable>
+                <template slot-scope="scope">
+                  <p>{{scope.row.answer.join(', ')}}</p>
+                </template>
+              </el-table-column>
+            </el-table>
+
+            <el-button
+              type=""
+              @click="onClick('RE', 0)">
+              다시 풀기
+            </el-button>
           </div>
         </el-form>
       </el-col>
     </el-row>
+
+
   </div>
 </template>
 
@@ -104,6 +149,7 @@ export default {
     return {
       qAnswer: '',
       qAnswerChoice: [],
+      qAnswerLanguage: '',
     };
   },
   computed: {
@@ -127,8 +173,10 @@ export default {
       },
       set(isSubmitted) {
         const vm = this;
-        vm.assignCurrentEditingScItem('scItem', {
-          isSubmitted,
+        vm.assignCurrentEditingScItem({
+          currentEditingScItem: {
+            isSubmitted,
+          },
         });
       },
     },
@@ -147,6 +195,7 @@ export default {
     fileList() {
       const vm = this;
       const item = vm.currentEditingScItem;
+      vm.init();
       return item.fileList;
     },
     qType() {
@@ -205,27 +254,31 @@ export default {
       const q = vm.currentEditingScItem.question;
       return q ? q.languageList : [];
     },
+    qSubmitted() {
+      const vm = this;
+      const q = vm.currentEditingScItem.question;
+      return q ? vm.currentEditingScItem.submitted : [];
+    },
   },
   methods: {
-    ...mapMutations('scItem', ['assignCurrentEditingScItem']),
+    ...mapMutations('scItem', ['assignCurrentEditingScItem', 'updateCurrentEditingScItemIndex']),
     ...mapActions('scItem', ['submitQuestion']),
     async onClick(type, index) {
+      const vm = this;
       switch (type) {
         case 'FILE': {
-          const vm = this;
           const file = vm.fileList[index];
           utils.downloadFile(file.url, file.name);
           break;
         }
         case 'SUBMIT': {
           // console.log('onclick submit'); //eslint-disable-line
-          const vm = this;
           vm.isSubmitted = true;
           const params = {
             lecture_item_id: vm.currentEditingScItem.id,
             user_id: utils.getUserIdFromJwt(),
           };
-          const answers = vm.qType === 1 ? [vm.qAnswer] : vm.qAnswerChoice;
+          const answers = vm.qType === 0 ? vm.qAnswerChoice : [vm.qAnswer];
 
           /* Same with scStore updateOffsetSecNowDate algorithm. */
           const startScItem = vm.currentEditingScItem.activeStartOffsetSec;
@@ -235,7 +288,6 @@ export default {
           const interval = Math.floor((now - startTime) / 1000);
           /* *************************************************** */
 
-          const codeLanguage = vm.qLanguageList.join(',');
 
           // const interval
           vm.$socket.emit('DOING_LECTURE_ITEM', JSON.stringify(params));
@@ -243,14 +295,25 @@ export default {
             id: vm.currentEditingScItem.question.id,
             answers,
             interval,
-            codeLanguage,
+            codeLanguage: vm.qAnswerLanguage,
           });
+          vm.updateCurrentEditingScItemIndex({ });
+          break;
+        }
+        case 'RE': {
+          vm.isSubmitted = false;
           break;
         }
         default: {
           throw new Error(`not defined type ${type}`);
         }
       }
+    },
+    init() {
+      const vm = this;
+      vm.qAnswer = '';
+      vm.qAnswerChoice = [];
+      vm.qAnswerLanguage = '';
     },
   },
 };
