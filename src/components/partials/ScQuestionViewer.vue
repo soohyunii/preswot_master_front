@@ -23,7 +23,10 @@
               <el-form-item label="보기">
                 <el-checkbox-group v-model.lazy="qAnswerChoice">
                   <template v-for="(choice, key) in qChoice">
-                    <el-checkbox :label="(key+1).toString()" >{{ choice }}</el-checkbox>
+                    <el-checkbox
+                      :key="key"
+                      :label="(key + 1).toString()"
+                    >{{ choice }}</el-checkbox>
                   </template>
                 </el-checkbox-group>
               </el-form-item>
@@ -61,7 +64,10 @@
               <el-form-item label="언어 선택">
                 <el-radio-group v-model.lazy="qAnswerLanguage">
                   <template v-for="(lang) in qLanguageList">
-                    <el-radio :label="lang" ></el-radio>
+                    <el-radio
+                      :key="lang"
+                      :label="lang"
+                    ></el-radio>
                   </template>
                 </el-radio-group>
               </el-form-item>
@@ -87,7 +93,7 @@
               <el-form-item label="보기">
                 <el-checkbox-group>
                   <template v-for="(choice, key) in qChoice">
-                    <el-checkbox :label="(key+1).toString()" disabled>{{choice}}</el-checkbox>
+                    <el-checkbox :key="key" :label="(key + 1).toString()" disabled>{{choice}}</el-checkbox>
                   </template>
                 </el-checkbox-group>
               </el-form-item>
