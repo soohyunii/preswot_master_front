@@ -63,15 +63,20 @@
               <el-col :span="24">
                 <br />
                 <el-tabs type="border-card" class="sub-tab">
-                  <el-tab-pane label="임시 활성화">
-                    <h1>강의 중 임시 활성화</h1>
-                    <p>* 임시 활성화는 기존에 세팅되어있던 값을 덮어씌우지 않지만, 취소하지 않는 한 계속 활성화됩니다.</p>
-                    <el-button type="primary" @click="onClick('TEMP_ACTIVATE')">
-                      임시 활성화
-                    </el-button>
-                    <el-button type="primary" @click="onClick('TEMP_DEACTIVATE')">
-                      임시 활성화 취소
-                    </el-button>
+                  <el-tab-pane label="활성화 선택">
+                    <h1>강의 중 활성화 방법 선택</h1>
+                    <p>* 계속 활성화/비활성화 선택 시 활성화 시간에 관계없이 계속 적용 됩니다.</p>
+                    <!--<el-button type="primary" @click="onClick('TEMP_ACTIVATE')">-->
+                      <!--임시 활성화-->
+                    <!--</el-button>-->
+                    <!--<el-button type="primary" @click="onClick('TEMP_DEACTIVATE')">-->
+                      <!--임시 활성화 취소-->
+                    <!--</el-button>-->
+                    <el-radio-group v-model="opened" @change="onClick('ACTIVATION_CONTROL')">
+                      <el-radio :label="1">계속 활성화</el-radio>
+                      <el-radio :label="0">활성화 시간에 따름</el-radio>
+                      <el-radio :label="-1">계속 비활성화</el-radio>
+                    </el-radio-group>
                   </el-tab-pane>
                   <el-tab-pane label="결과 집계">
                     <div v-if="currentEditingScItemType === '강의자료'">
@@ -311,6 +316,7 @@ export default {
     ]),
     ...mapMutations('scItem', [
       'updateCurrentEditingScItemIndex',
+      'assignCurrentEditingScItem',
     ]),
     ...mapActions('sc', [
       'getSc',
@@ -336,28 +342,37 @@ export default {
           vm.isPlayerVisible = !vm.isPlayerVisible;
           break;
         }
-        case 'TEMP_ACTIVATE': {
-          const params = {
-            opened: 1,
-            lecture_item_id: vm.currentEditingScItem.id,
-            lecture_id: Number.parseInt(vm.$route.params.scId, 10),
-          };
-          this.$socket.emit('LECTURE_ITEM_ACTIVATION', JSON.stringify(params));
-          vm.setActivated(vm);
-          break;
-        }
-        case 'TEMP_DEACTIVATE': {
-          const params = {
-            opened: 0,
-            lecture_item_id: vm.currentEditingScItem.id,
-            lecture_id: Number.parseInt(vm.$route.params.scId, 10),
-          };
-          this.$socket.emit('LECTURE_ITEM_ACTIVATION', JSON.stringify(params));
-          vm.setDeactivated(vm);
-          break;
-        }
+        // case 'TEMP_ACTIVATE': {
+        //   const params = {
+        //     opened: 1,
+        //     lecture_item_id: vm.currentEditingScItem.id,
+        //     lecture_id: Number.parseInt(vm.$route.params.scId, 10),
+        //   };
+        //   this.$socket.emit('LECTURE_ITEM_ACTIVATION', JSON.stringify(params));
+        //   vm.setActivated(vm);
+        //   break;
+        // }
+        // case 'TEMP_DEACTIVATE': {
+        //   const params = {
+        //     opened: 0,
+        //     lecture_item_id: vm.currentEditingScItem.id,
+        //     lecture_id: Number.parseInt(vm.$route.params.scId, 10),
+        //   };
+        //   this.$socket.emit('LECTURE_ITEM_ACTIVATION', JSON.stringify(params));
+        //   vm.setDeactivated(vm);
+        //   break;
+        // }
         case 'REFRESH_STATISTICS': {
           await vm.getScItemResult();
+          break;
+        }
+        case 'ACTIVATION_CONTROL': {
+          const params = {
+            opened: vm.opened,
+            lecture_item_id: vm.currentEditingScItem.id,
+            lecture_id: Number.parseInt(vm.$route.params.scId, 10),
+          };
+          this.$socket.emit('LECTURE_ITEM_ACTIVATION', JSON.stringify(params));
           break;
         }
         default: {
@@ -383,6 +398,24 @@ export default {
         return null;
       }
       return item.type;
+    },
+    opened: {
+      get() {
+        const vm = this;
+        const item = vm.currentEditingScItem;
+        if (!item) {
+          return null;
+        }
+        return item.opened;
+      },
+      set(opened) {
+        const vm = this;
+        vm.assignCurrentEditingScItem({
+          currentEditingScItem: {
+            opened,
+          },
+        });
+      },
     },
     iconClass() {
       const vm = this;

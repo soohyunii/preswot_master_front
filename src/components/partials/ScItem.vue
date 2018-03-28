@@ -157,14 +157,17 @@ export default {
     },
     isActiveItem() {
       const vm = this;
+      if (vm.$route.name === 'TeacherLectureNew') {
+        return true;
+      }
       if (vm.sc[vm.index].opened === 1) {
         return true;
       }
-      if (!vm.afterStartDateOffsetSec) {
+      if (vm.sc[vm.index].opened === -1) {
         return false;
       }
-      if (vm.$route.name === 'TeacherLectureNew') {
-        return true;
+      if (!vm.afterStartDateOffsetSec) {
+        return false;
       }
       const startTime = vm.sc[vm.index].activeStartOffsetSec;
       const endTime = vm.sc[vm.index].activeEndOffsetSec;
