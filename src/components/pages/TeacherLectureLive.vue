@@ -85,7 +85,18 @@
                     <div v-else>
                       <el-button icon="el-icon-refresh" @click="onClick('REFRESH_STATISTICS')">새로고침</el-button>
                       <br /> <br />
-                      {{ currentEditingScItem.result }}
+                      제출자 수: {{currentEditingScItem.result.num_students_total}} <br />
+                      정답자 수: {{currentEditingScItem.result.num_students_answer}} <br />
+                      <el-table
+                        v-if="currentEditingScItemType === '문항' || currentEditingScItemType === '설문'"
+                        :data="currentEditingScItem.result.student_answers"
+                        border >
+                        <el-table-column label="제출 답" align="center" prop="student_answer">
+                        </el-table-column>
+                        <el-table-column label="인원" align="center" prop="num_students" sortable>
+                        </el-table-column>
+                      </el-table>
+
                     </div>
                   </el-tab-pane>
                 </el-tabs>
@@ -109,6 +120,14 @@
                 </el-col>
               </el-row>
             </div>
+            <br />
+            <el-row>
+              <el-col>
+                <el-button type="primary" @click="onClick('RELOAD')" style="margin-left: 150px">
+                  변경사항 저장
+                </el-button>
+              </el-col>
+            </el-row>
           </el-col>
         </el-row>
         <el-row>
@@ -373,6 +392,13 @@ export default {
             lecture_id: Number.parseInt(vm.$route.params.scId, 10),
           };
           this.$socket.emit('LECTURE_ITEM_ACTIVATION', JSON.stringify(params));
+          break;
+        }
+        case 'RELOAD': {
+          const params = {
+            lecture_id: Number.parseInt(vm.$route.params.scId, 10),
+          };
+          this.$socket.emit('STUDENT_MUST_RELOAD', JSON.stringify(params));
           break;
         }
         default: {

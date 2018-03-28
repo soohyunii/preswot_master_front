@@ -147,6 +147,11 @@ export default {
       return;
     }
     vm.youtubeId = getIdFromURL(vm.scVideoLink);
+    if (!vm.isScEmpty) {
+      vm.updateCurrentEditingScItemIndex({
+        currentEditingScItemIndex: null,
+      });
+    }
     const params = {
       lecture_id: Number.parseInt(vm.$route.params.scId, 10),
     };
@@ -236,10 +241,12 @@ export default {
       const vm = this;
       await vm.getSc();
       for (let i = 0; i < vm.fleetingSc.length; i += 1) {
-        if (vm.fleetingSc[i].opened !== vm.sc[i].opened) {
+        if (vm.fleetingSc[i].opened !== vm.sc[i].opened &&
+          vm.sc[i].opened === 1) {
           vm.updateCurrentEditingScItemIndex({
             currentEditingScItemIndex: i,
           });
+          await vm.getScItem({ scItemId: vm.sc[i].id });
         }
       }
     },
