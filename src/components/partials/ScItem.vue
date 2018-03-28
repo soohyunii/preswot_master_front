@@ -157,7 +157,14 @@ export default {
     },
     isActiveItem() {
       const vm = this;
-      if (vm.sc[vm.index].opened === 1) {
+      let index;
+      if (isNil(vm.scOrderFilter)) {
+        index = vm.index;
+      } else {
+        const clickedScItem = vm.sc.filter(item => item.order === vm.scOrderFilter)[vm.index];
+        index = vm.sc.findIndex(item => item.id === clickedScItem.id);
+      }
+      if (vm.sc[index].opened === 1) {
         return true;
       }
       if (!vm.afterStartDateOffsetSec) {
@@ -166,8 +173,8 @@ export default {
       if (vm.$route.name === 'TeacherLectureNew') {
         return true;
       }
-      const startTime = vm.sc[vm.index].activeStartOffsetSec;
-      const endTime = vm.sc[vm.index].activeEndOffsetSec;
+      const startTime = vm.sc[index].activeStartOffsetSec;
+      const endTime = vm.sc[index].activeEndOffsetSec;
       if (!startTime) {
         return false;
       }
@@ -188,7 +195,14 @@ export default {
     ]),
     itemClass() {
       const vm = this;
-      const selected = vm.index === vm.currentEditingScItemIndex;
+      let index;
+      if (isNil(vm.scOrderFilter)) {
+        index = vm.index;
+      } else {
+        const clickedScItem = vm.sc.filter(item => item.order === vm.scOrderFilter)[vm.index];
+        index = vm.sc.findIndex(item => item.id === clickedScItem.id);
+      }
+      const selected = index === vm.currentEditingScItemIndex;
       return {
         selected,
         nonActive: !vm.isActiveItem(),
@@ -197,7 +211,14 @@ export default {
     scActiveTime: {
       get() {
         const vm = this;
-        const time = vm.sc[vm.index].activeStartOffsetSec;
+        let index;
+        if (isNil(vm.scOrderFilter)) {
+          index = vm.index;
+        } else {
+          const clickedScItem = vm.sc.filter(item => item.order === vm.scOrderFilter)[vm.index];
+          index = vm.sc.findIndex(item => item.id === clickedScItem.id);
+        }
+        const time = vm.sc[index].activeStartOffsetSec;
         if (time) {
           let hours = Math.floor(time / 3600);
           let minutes = Math.floor((time - (hours * 3600)) / 60);
@@ -210,30 +231,35 @@ export default {
         return '00:00:00';
       },
     },
-    scOrder: {
-      get() {
-        const vm = this;
-        const order = vm.sc[vm.index].order;
-        let scOrder = '';
-        switch (order) {
-          case 0: {
-            scOrder = '예습';
-            break;
-          }
-          case 1: {
-            scOrder = '본강의';
-            break;
-          }
-          case 2: {
-            scOrder = '복습';
-            break;
-          }
-          default: {
-            throw new Error(`not defined order ${order}`);
-          }
+    scOrder() {
+      const vm = this;
+      let index;
+      if (isNil(vm.scOrderFilter)) {
+        index = vm.index;
+      } else {
+        const clickedScItem = vm.sc.filter(item => item.order === vm.scOrderFilter)[vm.index];
+        index = vm.sc.findIndex(item => item.id === clickedScItem.id);
+      }
+      const order = vm.sc[index].order;
+      let scOrder = '';
+      switch (order) {
+        case 0: {
+          scOrder = '예습';
+          break;
         }
-        return scOrder;
-      },
+        case 1: {
+          scOrder = '본강의';
+          break;
+        }
+        case 2: {
+          scOrder = '복습';
+          break;
+        }
+        default: {
+          throw new Error(`not defined order ${order}`);
+        }
+      }
+      return scOrder;
     },
   },
 };
