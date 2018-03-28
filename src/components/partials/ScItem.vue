@@ -30,6 +30,7 @@ import {
   mapGetters,
   mapActions,
 } from 'vuex';
+import isNil from 'lodash.isnil';
 
 export default {
   name: 'ScItem',
@@ -50,8 +51,15 @@ export default {
       'updateCurrentEditingScItemIndex',
     ]),
     ...mapActions('scItem', ['deleteScItem', 'getScItem', 'getItemKeywords']),
-    async onClick(type, index) {
+    async onClick(type, filteredIndex) {
       const vm = this;
+      let index;
+      if (isNil(vm.scOrderFilter)) {
+        index = filteredIndex;
+      } else {
+        const clickedScItem = vm.sc.filter(item => item.order === vm.scOrderFilter)[filteredIndex];
+        index = vm.sc.findIndex(item => item.id === clickedScItem.id);
+      }
       switch (type) {
         case 'SELECT_SC_ITEM': {
           if (vm.isStudent && !vm.isActiveItem()) {
@@ -174,7 +182,10 @@ export default {
   computed: {
     ...mapState('scItem', ['sc', 'currentEditingScItemIndex']),
     ...mapGetters('scItem', ['currentEditingScItem']),
-    ...mapState('sc', ['afterStartDateOffsetSec']),
+    ...mapState('sc', [
+      'afterStartDateOffsetSec',
+      'scOrderFilter',
+    ]),
     itemClass() {
       const vm = this;
       const selected = vm.index === vm.currentEditingScItemIndex;

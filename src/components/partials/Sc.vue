@@ -127,12 +127,9 @@ export default {
     ]),
     sc: {
       get() {
-        console.log('sc get called');
         const vm = this;
         const filter = vm.$store.state.sc.scOrderFilter;
         const sc = vm.$store.state.scItem.sc;
-        console.log('filter', filter);
-        console.log('filter isNil', isNil(filter));
         return isNil(filter) ? sc : sc.filter(item => item.order === filter);
       },
       set(sc) {
