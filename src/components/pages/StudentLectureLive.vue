@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-row>
+    <el-row v-if="state.isVideoVisible()">
       <el-col>
         <youtube
           id="video"
@@ -73,6 +73,7 @@
 <script>
 import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
 import { getIdFromURL } from 'vue-youtube-embed';
+import isNil from 'lodash.isnil';
 
 import Sc from '../partials/Sc';
 import StudentLectureLiveSummary from '../partials/StudentLectureLiveSummary';
@@ -82,7 +83,7 @@ import ScHomeworkViewer from '../partials/ScHomeworkViewer';
 import ScSurveyViewer from '../partials/ScSurveyViewer';
 import ScQuestionViewer from '../partials/ScQuestionViewer';
 import utils from '../../utils';
-
+import StudentLectureState from '../../states/student-lecture';
 
 export default {
   name: 'StudentLectureLive',
@@ -112,6 +113,11 @@ export default {
     }, 3000);
   },
   data() {
+    const vm = this;
+    let state = StudentLectureState[vm.$route.params.order];
+    if (isNil(state)) {
+      state = StudentLectureState.live;
+    }
     return {
       isCloseMovie: false,
       isCloseStatusbar: false,
@@ -121,6 +127,7 @@ export default {
       youtubeId: '',
       playerWidth: 1000,
       fleetingSc: [],
+      state,
     };
   },
   async beforeMount() {
