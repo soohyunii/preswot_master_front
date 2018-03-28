@@ -52,7 +52,7 @@
             prop="student"
             label="참여 수강생 수"
             sortable
-            width="130">
+            width="140">
           </el-table-column>
           <el-table-column
             prop="understanding"
@@ -107,12 +107,38 @@
 
            <el-table-column
             v-if="type ==='STUDENT'"
+            prop="pre"
+            label="예습">
+            <template slot-scope="scope">
+              <router-link :to="`/a/student/lecture/${scope.row.scId}/pre`">
+                <el-button>
+                  예습
+                </el-button>
+              </router-link>
+            </template>
+          </el-table-column>
+
+           <el-table-column
+            v-if="type ==='STUDENT'"
             prop="live"
-            label="강의 듣기">
+            label="본강">
             <template slot-scope="scope">
               <router-link :to="`/a/student/lecture/${scope.row.scId}/live`">
                 <el-button>
-                  강의 듣기
+                  본강
+                </el-button>
+              </router-link>
+            </template>
+          </el-table-column>
+
+           <el-table-column
+            v-if="type ==='STUDENT'"
+            prop="post"
+            label="복습">
+            <template slot-scope="scope">
+              <router-link :to="`/a/student/lecture/${scope.row.scId}/post`">
+                <el-button>
+                  복습
                 </el-button>
               </router-link>
             </template>

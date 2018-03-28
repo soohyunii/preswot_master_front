@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-row>
+    <el-row v-if="isVideoVisible">
       <el-col>
         <youtube
           id="video"
@@ -73,6 +73,7 @@
 <script>
 import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
 import { getIdFromURL } from 'vue-youtube-embed';
+import isString from 'lodash.isstring';
 
 import Sc from '../partials/Sc';
 import StudentLectureLiveSummary from '../partials/StudentLectureLiveSummary';
@@ -82,7 +83,6 @@ import ScHomeworkViewer from '../partials/ScHomeworkViewer';
 import ScSurveyViewer from '../partials/ScSurveyViewer';
 import ScQuestionViewer from '../partials/ScQuestionViewer';
 import utils from '../../utils';
-
 
 export default {
   name: 'StudentLectureLive',
@@ -112,9 +112,20 @@ export default {
     }, 3000);
   },
   data() {
+    const vm = this;
+    const order = isString(vm.$route.params.order) ?
+      vm.$route.params.order.toUpperCase() : 'LIVE';
+    /* eslint-disable no-nested-ternary */
+    const scOrderFilter =
+      order === 'PRE' ? 0 :
+      order === 'LIVE' ? 1 :
+      order === 'POST' ? 2 :
+      1; // default live
+    /* eslint-enable no-nested-ternary */
+    vm.updateScOrderFilter({
+      scOrderFilter,
+    });
     return {
-      isCloseMovie: false,
-      isCloseStatusbar: false,
       SummaryData: [],
       sHeartbeatIntervalId: 0,
       elapsedTimeIntervalId: 0,
@@ -136,30 +147,18 @@ export default {
       return;
     }
     vm.youtubeId = getIdFromURL(vm.scVideoLink);
-    // TODO: handle sc empty
-    if (!vm.isScEmpty) {
-      vm.updateCurrentEditingScItemIndex({
-        currentEditingScItemIndex: null,
-      });
-      // 문항, 강의자료의 id가 이 단계에서 얻어짐 => getItemKeywords() 함수에서 이 id를 이용
-      // await vm.getScItem({
-      //   scItemId: vm.currentEditingScItem.id,
-      // });
-      // if (['문항', '강의자료'].includes(vm.currentEditingScItemType)) {
-      //   vm.getItemKeywords();
-      // }
-    }
     const params = {
       lecture_id: Number.parseInt(vm.$route.params.scId, 10),
     };
     vm.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
   },
   mounted() {
-    this.$socket.on('RELOAD_LECTURE_ITEM', (msg) => {
+    const vm = this;
+    vm.$socket.on('RELOAD_LECTURE_ITEM', (msg) => {
       const jsonMSG = JSON.parse(msg);
       if (jsonMSG.reload === true) {
         // do refresh scenario when socket detected
-        this.updateScenario();
+        vm.updateScenario();
       }
     });
   },
@@ -172,7 +171,13 @@ export default {
     vm.playerWidth = (displayWidth * 9.5) / 10;
   },
   computed: {
-    ...mapState('sc', ['scTitle', 'scType', 'scStartDate', 'scVideoLink']),
+    ...mapState('sc', [
+      'scTitle',
+      'scType',
+      'scStartDate',
+      'scVideoLink',
+      'scOrderFilter',
+    ]),
     ...mapState('scItem', ['sc']),
     ...mapGetters('scItem', [
       'isScEmpty',
@@ -186,10 +191,28 @@ export default {
       }
       return item.type;
     },
+    isVideoVisible() {
+      const vm = this;
+      switch (vm.scOrderFilter) {
+        case 0: // pre
+        case 2: { // post
+          return false;
+        }
+        case 1: { // live
+          return true;
+        }
+        default: {
+          // eslint-disable-next-line
+          console.error(`not defined scOrderFilter ${vm.scOrderFilter}`);
+          return true;
+        }
+      }
+    },
   },
   methods: {
     ...mapMutations('sc', [
       'updateScId',
+      'updateScOrderFilter',
     ]),
     ...mapMutations('scItem', [
       'updateCurrentEditingScItemIndex',
@@ -202,29 +225,13 @@ export default {
       'getScItem',
       'getItemKeywords',
     ]),
-    onClick(type) {
-      const vm = this;
-      switch (type) {
-        case 'CLOSE_MOVIE': {
-          vm.isCloseMovie = true;
-          break;
-        }
-        case 'CLOSE_STATUSBAR': {
-          vm.isCloseStatusbar = true;
-          break;
-        }
-        case 'POPUP_MOVIE': {
-          window.open('https://www.w3schools.com/html/mov_bbb.mp4', '_blank', 'location=0');
-          break;
-        }
-        case 'OPEN_STATUS_INFO': {
-          break;
-        }
-        default: {
-          throw new Error(`not defined type ${type}`);
-        }
-      }
-    },
+    // onClick(type) {
+    //   switch (type) {
+    //     default: {
+    //       throw new Error(`not defined type ${type}`);
+    //     }
+    //   }
+    // },
     async refreshScItems() {
       const vm = this;
       await vm.getSc();
@@ -244,7 +251,7 @@ export default {
         message: '시나리오 변경이 일어났습니다.',
         type: 'success',
       });
-      this.refreshScItems();
+      vm.refreshScItems();
     },
   },
   beforeDestroy() {

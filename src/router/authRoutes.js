@@ -119,7 +119,7 @@ export default function authRoutes(root) {
       },
     },
     {
-      path: '/student/lecture/:scId/live',
+      path: '/student/lecture/:scId/:order',
       name: 'StudentLectureLive',
       component: StudentLectureLive,
       meta: {
