@@ -3,7 +3,6 @@
     <el-container>
       <el-aside width="39px">
         <span class="label" :style="labelStyle">SCENARIO</span>
-        <!-- <span class="label">SCENARIO</span> -->
       </el-aside>
       <el-main>
         <div ref="main">
@@ -66,19 +65,20 @@
       margin-right: 10px;
   }
 
+  /* draggable 관련 css */
   // .list-group-enter, .list-group-leave-to /* .list-leave-active below version 2.1.8 */ {
   //   opacity: 0;
   //   transform: translateY(20px);
   // }
-
   // .list-group-leave-active {
   //   position: absolute;
   // }
+  // .ghost {
+  //   opacity: .5;
+  //   background-color: rgb(204, 204, 204);
+  // }
+  /* draggable 관련 css 끝 */
 
-  .ghost {
-    opacity: .5;
-    background-color: rgb(204, 204, 204);
-  }
 
   .bg-white {
     background-color: rgb(255, 255, 255);
@@ -142,12 +142,12 @@ export default {
         }
       },
     },
-    dragOptions() {
-      return {
-        animation: 0,
-        ghostClass: 'ghost',
-      };
-    },
+    // dragOptions() {
+    //   return {
+    //     animation: 0,
+    //     ghostClass: 'ghost',
+    //   };
+    // },
   },
   methods: {
     ...mapMutations('scItem', ['updateSc']),
