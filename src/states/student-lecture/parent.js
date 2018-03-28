@@ -12,7 +12,7 @@ export default class StudentLectureStateImpl {
   //   }
   //   this._order = order.toUpperCase();
   // }
-  // eslint-disable-next-line class-methods-use-this
+  // eslint-disable-next-line class-methods-use-this, no-unused-vars
   isVideoVisible() {
     throw new Error('Should be overrided');
   }

@@ -119,7 +119,6 @@ export default {
       state = StudentLectureState.live;
     }
     return {
-      isCloseMovie: false,
       isCloseStatusbar: false,
       SummaryData: [],
       sHeartbeatIntervalId: 0,
@@ -127,7 +126,7 @@ export default {
       youtubeId: '',
       playerWidth: 1000,
       fleetingSc: [],
-      state,
+      state: StudentLectureState.live,
     };
   },
   async beforeMount() {
@@ -199,10 +198,6 @@ export default {
     onClick(type) {
       const vm = this;
       switch (type) {
-        case 'CLOSE_MOVIE': {
-          vm.isCloseMovie = true;
-          break;
-        }
         case 'CLOSE_STATUSBAR': {
           vm.isCloseStatusbar = true;
           break;
