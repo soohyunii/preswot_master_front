@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <el-container>
-      <class-list-aside type="TEACH" />
+      <class-list-aside type="TEACHER" />
 
       <el-main>
         <div
@@ -29,7 +29,7 @@
           <el-button type="danger" @click="onClick('DELETE')">과목삭제</el-button>
           <br /><br />
 
-          <class-scenario type="TEACH" />
+          <class-scenario type="TEACHER" />
 
           <!-- TODO: Implement dummy response about class statistics -->
           <class-statistics />

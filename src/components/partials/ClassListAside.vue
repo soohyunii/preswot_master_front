@@ -28,10 +28,10 @@
           </el-button>
         </el-tooltip>
       </el-col>
-      <el-col align="center" v-if="type === 'TEACH'">
+      <el-col align="center" v-if="type === 'TEACHER'">
         <!-- TODO: Implement adding lecture part -->
         <!-- TODO: translation -->
-        <el-button v-if="type === 'TEACH'" class="class-btn" @click="clickAddButton()">
+        <el-button v-if="type === 'TEACHER'" class="class-btn" @click="clickAddButton()">
           <i class='el-icon-circle-plus' style="font-size: 50px;"></i> <br/>
           과목 추가
         </el-button>
@@ -75,10 +75,10 @@ export default {
       const vm = this;
       const { type } = vm;
       switch (type) {
-        case 'TEACH': {
+        case 'TEACHER': {
           return vm.teachingClassList;
         }
-        case 'STUDY': {
+        case 'STUDENT': {
           return vm.studyingClassList;
         }
         default: {

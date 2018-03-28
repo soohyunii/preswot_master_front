@@ -188,9 +188,9 @@
         vm.updateCurrentClassIndex({
           currentClassId: Number.parseInt(vm.$route.params.classId, 10),
         });
-        await vm.getClass({ type: 'TEACH' });
+        await vm.getClass({ type: 'TEACHER' });
       }
-      await vm.getClassNeedScoring({ type: 'TEACH' });
+      await vm.getClassNeedScoring({ type: 'TEACHER' });
       vm.needScoring = vm.currentClassNeedScoring;
       // console.log(vm.needScoring);
     },
