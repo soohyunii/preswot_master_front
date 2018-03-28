@@ -32,6 +32,7 @@ export default {
     scAcceptPlist: [],
     scAvailablePlist: [],
     scKnowledgeMapState: null,
+    scOrderFilter: null, // null이면 전부 / 0이면 예습 / 1이면 본강 / 2이면 복습
     /**
      * coverage 변수
      */
@@ -83,6 +84,9 @@ export default {
     },
     updateScDescription(state, { scDescription }) {
       state.scDescription = scDescription;
+    },
+    updateScOrderFilter(state, { scOrderFilter }) {
+      state.scOrderFilter = scOrderFilter;
     },
     setNodesPinned(state, { pinned, node }) {
       let index = -1;

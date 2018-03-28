@@ -45,6 +45,15 @@
               <el-row :gutter="30" class="sc-row">
                 <el-col :span="16">
                   <div>
+                    <h3>필터</h3>
+                    <el-radio-group v-model="scOrderFilter">
+                      <el-radio-button label="null">모두</el-radio-button>
+                      <el-radio-button :label="0">예습</el-radio-button>
+                      <el-radio-button :label="1">본강</el-radio-button>
+                      <el-radio-button :label="2">복습</el-radio-button>
+                    </el-radio-group>
+                    <br />
+                    <br />
                     <sc />
                   </div>
                 </el-col>
@@ -208,6 +217,18 @@ export default {
       'isScEmpty',
       'currentEditingScItem',
     ]),
+    scOrderFilter: {
+      get() {
+        const vm = this;
+        return vm.$store.state.sc.scOrderFilter;
+      },
+      set(scOrderFilter) {
+        const vm = this;
+        vm.updateScOrderFilter({
+          scOrderFilter,
+        });
+      },
+    },
     currentEditingScItemType() {
       const vm = this;
       const item = vm.currentEditingScItem;
@@ -222,6 +243,7 @@ export default {
       'updateScType',
       'updateScId',
       'updateAfterStartDateOffsetSec',
+      'updateScOrderFilter',
     ]),
     ...mapMutations('scItem', [
       'updateCurrentEditingScItemIndex',
