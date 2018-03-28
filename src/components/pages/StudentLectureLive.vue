@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-row v-if="state.isVideoVisible()">
+    <el-row v-if="isVideoVisible">
       <el-col>
         <youtube
           id="video"
@@ -73,7 +73,7 @@
 <script>
 import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
 import { getIdFromURL } from 'vue-youtube-embed';
-import isNil from 'lodash.isnil';
+import isString from 'lodash.isstring';
 
 import Sc from '../partials/Sc';
 import StudentLectureLiveSummary from '../partials/StudentLectureLiveSummary';
@@ -83,7 +83,6 @@ import ScHomeworkViewer from '../partials/ScHomeworkViewer';
 import ScSurveyViewer from '../partials/ScSurveyViewer';
 import ScQuestionViewer from '../partials/ScQuestionViewer';
 import utils from '../../utils';
-import StudentLectureState from '../../states/student-lecture';
 
 export default {
   name: 'StudentLectureLive',
@@ -114,10 +113,8 @@ export default {
   },
   data() {
     const vm = this;
-    let state = StudentLectureState[vm.$route.params.order];
-    if (isNil(state)) {
-      state = StudentLectureState.live;
-    }
+    const order = isString(vm.$route.params.order) ?
+      vm.$route.params.order.toUpperCase() : 'LIVE';
     return {
       SummaryData: [],
       sHeartbeatIntervalId: 0,
@@ -125,7 +122,7 @@ export default {
       youtubeId: '',
       playerWidth: 1000,
       fleetingSc: [],
-      state: StudentLectureState.live,
+      order,
     };
   },
   async beforeMount() {
@@ -178,6 +175,21 @@ export default {
         return null;
       }
       return item.type;
+    },
+    isVideoVisible() {
+      const vm = this;
+      switch (vm.order) {
+        case 'PRE':
+        case 'POST': {
+          return false;
+        }
+        case 'LIVE': {
+          return true;
+        }
+        default: {
+          throw new Error(`not defined order ${vm.order}`);
+        }
+      }
     },
   },
   methods: {
