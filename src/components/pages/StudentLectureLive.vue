@@ -194,20 +194,13 @@ export default {
       'getScItem',
       'getItemKeywords',
     ]),
-    onClick(type) {
-      switch (type) {
-        case 'POPUP_MOVIE': {
-          window.open('https://www.w3schools.com/html/mov_bbb.mp4', '_blank', 'location=0');
-          break;
-        }
-        case 'OPEN_STATUS_INFO': {
-          break;
-        }
-        default: {
-          throw new Error(`not defined type ${type}`);
-        }
-      }
-    },
+    // onClick(type) {
+    //   switch (type) {
+    //     default: {
+    //       throw new Error(`not defined type ${type}`);
+    //     }
+    //   }
+    // },
     async refreshScItems() {
       const vm = this;
       await vm.getSc();
