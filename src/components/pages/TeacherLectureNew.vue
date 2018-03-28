@@ -47,7 +47,7 @@
                   <div>
                     <h3>필터</h3>
                     <el-radio-group v-model="scOrderFilter">
-                      <el-radio-button label="null">모두</el-radio-button>
+                      <el-radio-button :label="null">모두</el-radio-button>
                       <el-radio-button :label="0">예습</el-radio-button>
                       <el-radio-button :label="1">본강</el-radio-button>
                       <el-radio-button :label="2">복습</el-radio-button>

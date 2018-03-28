@@ -18,19 +18,19 @@
           </div>
           <div v-show="!isScEmpty">
             <el-row :gutter="10">
-              <transition-group name="list-group">
-                <sc-item
-                  v-for="(item, index) in sc"
-                  class="list-group-item"
-                  :key="item.id"
-                  :type="item.type"
-                  :index="index" />
-              </transition-group>
-              <!-- <draggable v-model="sc"
-                :options="dragOptions"
-                @start="drag = true;"
-                @end="drag = false;">
-              </draggable> -->
+              <sc-item
+                v-for="(item, index) in sc"
+                class="list-group-item"
+                :key="item.id"
+                :type="item.type"
+                :index="index" />
+              <!-- <transition-group name="list-group">
+                <draggable v-model="sc"
+                  :options="dragOptions"
+                  @start="drag = true;"
+                  @end="drag = false;">
+                </draggable>
+              </transition-group> -->
             </el-row>
           </div>
         </div>
@@ -105,6 +105,7 @@
 <script>
 import draggable from 'vuedraggable';
 import { mapGetters, mapMutations } from 'vuex';
+import isNil from 'lodash.isnil';
 
 import ScItem from './ScItem';
 
@@ -126,7 +127,13 @@ export default {
     ]),
     sc: {
       get() {
-        return this.$store.state.scItem.sc;
+        console.log('sc get called');
+        const vm = this;
+        const filter = vm.$store.state.sc.scOrderFilter;
+        const sc = vm.$store.state.scItem.sc;
+        console.log('filter', filter);
+        console.log('filter isNil', isNil(filter));
+        return isNil(filter) ? sc : sc.filter(item => item.order === filter);
       },
       set(sc) {
         const vm = this;
