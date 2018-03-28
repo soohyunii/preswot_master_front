@@ -1,10 +1,9 @@
 <template>
   <div class="sc-item-wrapper">
     <div
-      :class="itemClass"
-      @click.stop="onClick('SELECT_SC_ITEM',index)"
+      @click.stop="onClick('SELECT_SC_ITEM', index)"
     >
-      <el-col align="center">
+      <el-col align="center" :class="itemClass">
         <!-- TODO: change icons -->
         <div class="image">
           <i :class="getIconsByType(type)" class="main-image"></i>
@@ -72,7 +71,7 @@ export default {
             return;
           }
           if (vm.sc.length > index) {
-            await vm.updateCurrentEditingScItemIndex({
+            vm.updateCurrentEditingScItemIndex({
               currentEditingScItemIndex: index,
             });
             await vm.getScItem({
