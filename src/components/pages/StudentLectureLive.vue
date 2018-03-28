@@ -147,11 +147,12 @@ export default {
     vm.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
   },
   mounted() {
-    this.$socket.on('RELOAD_LECTURE_ITEM', (msg) => {
+    const vm = this;
+    vm.$socket.on('RELOAD_LECTURE_ITEM', (msg) => {
       const jsonMSG = JSON.parse(msg);
       if (jsonMSG.reload === true) {
         // do refresh scenario when socket detected
-        this.updateScenario();
+        vm.updateScenario();
       }
     });
   },
@@ -220,7 +221,7 @@ export default {
         message: '시나리오 변경이 일어났습니다.',
         type: 'success',
       });
-      this.refreshScItems();
+      vm.refreshScItems();
     },
   },
   beforeDestroy() {
