@@ -45,7 +45,7 @@
               <el-row :gutter="30" class="sc-row">
                 <el-col :span="16">
                   <div>
-                    <h3>필터</h3>
+                    <h3 style="display: inline-block;">필터</h3> &nbsp;
                     <el-radio-group v-model="scOrderFilter">
                       <el-radio-button :label="null">모두</el-radio-button>
                       <el-radio-button :label="0">예습</el-radio-button>
