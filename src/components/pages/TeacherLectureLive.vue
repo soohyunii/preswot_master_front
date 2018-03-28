@@ -37,6 +37,15 @@
             <el-row :gutter="30" class="sc-row">
               <el-col :span="16">
                 <div>
+                  <h3 style="display: inline-block;">필터</h3> &nbsp;
+                  <el-radio-group v-model="scOrderFilter">
+                    <el-radio-button :label="null">모두</el-radio-button>
+                    <el-radio-button :label="0">예습</el-radio-button>
+                    <el-radio-button :label="1">본강</el-radio-button>
+                    <el-radio-button :label="2">복습</el-radio-button>
+                  </el-radio-group>
+                  <br />
+                  <br />
                   <sc />
                 </div>
               </el-col>
@@ -298,6 +307,7 @@ export default {
     ...mapMutations('sc', [
       'updateScId',
       'updateScVideoLink',
+      'updateScOrderFilter',
     ]),
     ...mapMutations('scItem', [
       'updateCurrentEditingScItemIndex',
@@ -357,7 +367,11 @@ export default {
     },
   },
   computed: {
-    ...mapState('sc', ['scTitle', 'scType', 'scStartDate']),
+    ...mapState('sc', [
+      'scTitle',
+      'scType',
+      'scStartDate',
+    ]),
     ...mapGetters('scItem', [
       'isScEmpty',
       'currentEditingScItem',
@@ -379,6 +393,18 @@ export default {
         'fa-eye-slash': vm.isPlayerVisible,
         'fa-eye': !vm.isPlayerVisible,
       };
+    },
+    scOrderFilter: {
+      get() {
+        const vm = this;
+        return vm.$store.state.sc.scOrderFilter;
+      },
+      set(scOrderFilter) {
+        const vm = this;
+        vm.updateScOrderFilter({
+          scOrderFilter,
+        });
+      },
     },
   },
   beforeDestory() {

@@ -32,7 +32,7 @@ export default {
     scAcceptPlist: [],
     scAvailablePlist: [],
     scKnowledgeMapState: null,
-    scOrderFilter: null, // null이면 전부 / 0이면 예습 / 1이면 본강 / 2이면 복습
+    scOrderFilter: null, // null이면 모두 / 0이면 예습 / 1이면 본강 / 2이면 복습
     /**
      * coverage 변수
      */
