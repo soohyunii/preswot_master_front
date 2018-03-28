@@ -119,7 +119,6 @@ export default {
       state = StudentLectureState.live;
     }
     return {
-      isCloseStatusbar: false,
       SummaryData: [],
       sHeartbeatIntervalId: 0,
       elapsedTimeIntervalId: 0,
@@ -196,12 +195,7 @@ export default {
       'getItemKeywords',
     ]),
     onClick(type) {
-      const vm = this;
       switch (type) {
-        case 'CLOSE_STATUSBAR': {
-          vm.isCloseStatusbar = true;
-          break;
-        }
         case 'POPUP_MOVIE': {
           window.open('https://www.w3schools.com/html/mov_bbb.mp4', '_blank', 'location=0');
           break;
