@@ -246,7 +246,7 @@ export default {
           vm.updateCurrentEditingScItemIndex({
             currentEditingScItemIndex: i,
           });
-          await vm.getScItem({ scItemId: vm.sc[i].id });
+          await vm.getScItem({ scItemId: vm.sc[i].id }); // eslint-disable-line
         }
       }
     },
