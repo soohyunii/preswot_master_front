@@ -60,11 +60,13 @@ export default {
       const activeStartOffsetSec = null; // 강의 활성화 시각 기준으로 몇초 뒤에 활성화되냐
       const activeEndOffsetSec = null; // 강의 활성화 시각 기준으로 몇초 뒤에 비활성화되냐
       const isResultVisible = true; // 설문이나 문항을 풀고 나서 수강생중 몇퍼가 1번 선택했고.. 뭐 그런게 결과인데, 결과가 보이냐 마냐
+      // isResultVisible이 서버에서는 result라는 변수에 0 1로 저장됨
       const fileList = [];
+      const opened = 0; // 임시활성화 됨 1 / 아님 0
       const survey = {};
       const question = {};
       const homework = {};
-      const result = {};
+      const result = {}; // 얘는 서버에 있는 것 기준으로 question, survey, homework 안에 학생이 제출한 걸로 저장됨
       const itemKeywords = [];
       const isSubmitted = false; // 문항이나 설문이 제출되었는지 아닌지
       const submitted = [];
@@ -77,6 +79,7 @@ export default {
         activeEndOffsetSec,
         isResultVisible,
         description,
+        opened,
         fileList,
         survey,
         question,
@@ -142,15 +145,13 @@ export default {
       const res = await lectureItemService.getLectureItem({
         lectureItemId: scItemId,
       });
-
       // eslint-disable-next-line
       console.log('getScItem res data', res.data);
-
-      // * Commit mutations from res3.data (which is scItem)
-      const lectureItemType = res.data.type;
-      switch (lectureItemType) {
+      const scItem = res.data;
+      // * Commit mutations from res.data (which is scItem)
+      switch (scItem.type) {
         case 0: { // * 문항
-          const question = res.data.questions[0];
+          const question = scItem.questions[0];
           let answer = [];
           if (question.answer.length !== 0) {
             answer = question.answer
@@ -170,8 +171,15 @@ export default {
           })) : [];
           commit('assignCurrentEditingScItem', {
             currentEditingScItem: {
-              type: utils.convertScItemType(lectureItemType),
               id: scItemId,
+              title: scItem.name,
+              description: scItem.description,
+              activeStartOffsetSec: scItem.start_time,
+              activeEndOffsetSec: scItem.end_time,
+              isResultVisible: scItem.result,
+              opened: scItem.opened,
+              order: scItem.order,
+              type: utils.convertScItemType(scItem.type),
               fileList: question.files.map(item => ({
                 name: item.name,
                 url: `${baseUrl}${item.client_path}`,
@@ -207,7 +215,7 @@ export default {
           break;
         }
         case 1: { // * 설문
-          const survey = res.data.surveys[0];
+          const survey = scItem.surveys[0];
           let choice = [];
           if (survey.choice.length !== 0) {
             choice = survey.choice
@@ -216,8 +224,15 @@ export default {
           }
           commit('assignCurrentEditingScItem', {
             currentEditingScItem: {
-              type: utils.convertScItemType(lectureItemType),
               id: scItemId,
+              title: scItem.name,
+              description: scItem.description,
+              activeStartOffsetSec: scItem.start_time,
+              activeEndOffsetSec: scItem.end_time,
+              isResultVisible: scItem.result,
+              opened: scItem.opened,
+              order: scItem.order,
+              type: utils.convertScItemType(scItem.type),
               result: {}, // 이건 scItemStore.action.getScItemResult() 로 불러온다
               isSubmitted: survey.student_surveys.length !== 0, // 설문, 문항, 숙제가 제출되었는지
               submitted: survey.student_surveys,
@@ -238,11 +253,18 @@ export default {
           break;
         }
         case 2: { // * 강의자료
-          const material = res.data.materials[0];
+          const material = scItem.materials[0];
           commit('assignCurrentEditingScItem', {
             currentEditingScItem: {
-              type: utils.convertScItemType(lectureItemType),
               id: scItemId,
+              title: scItem.name,
+              description: scItem.description,
+              activeStartOffsetSec: scItem.start_time,
+              activeEndOffsetSec: scItem.end_time,
+              isResultVisible: scItem.result,
+              opened: scItem.opened,
+              order: scItem.order,
+              type: utils.convertScItemType(scItem.type),
               fileList: material.files.map(item => ({
                 name: item.name,
                 url: `${baseUrl}${item.client_path}`,
@@ -258,11 +280,18 @@ export default {
           break;
         }
         case 3: { // * 숙제
-          const homework = res.data.homework[0];
+          const homework = scItem.homework[0];
           commit('assignCurrentEditingScItem', {
             currentEditingScItem: {
-              type: utils.convertScItemType(lectureItemType),
               id: scItemId,
+              title: scItem.name,
+              description: scItem.description,
+              activeStartOffsetSec: scItem.start_time,
+              activeEndOffsetSec: scItem.end_time,
+              isResultVisible: scItem.result,
+              opened: scItem.opened,
+              order: scItem.order,
+              type: utils.convertScItemType(scItem.type),
               result: {}, // 이건 scItemStore.action.getScItemResult() 로 불러온다
               isSubmitted: homework.student_homeworks.length !== 0, // 설문, 문항, 숙제가 제출되었는지
               fileList: homework.files.map(item => ({
@@ -278,7 +307,7 @@ export default {
           break;
         }
         default: {
-          throw new Error(`not defined lectureItemType2 ${lectureItemType}`);
+          throw new Error(`not defined scItem.type2 ${scItem.type}`);
         }
       }
     },
