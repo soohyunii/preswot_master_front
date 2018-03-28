@@ -52,7 +52,7 @@
             prop="student"
             label="참여 수강생 수"
             sortable
-            width="130">
+            width="140">
           </el-table-column>
           <el-table-column
             prop="understanding"
@@ -82,7 +82,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="type === 'TEACH'"
+            v-if="type === 'TEACHER'"
             prop="edit"
             label="수정">
             <template slot-scope="scope">
@@ -95,7 +95,7 @@
           </el-table-column>
 
           <el-table-column
-            v-if="type ==='TEACH'"
+            v-if="type ==='TEACHER'"
             prop="live"
             label="강의">
             <template slot-scope="scope">
@@ -106,7 +106,33 @@
           </el-table-column>
 
            <el-table-column
-            v-if="type ==='STUDY'"
+            v-if="type ==='STUDENT'"
+            prop="live"
+            label="강의 듣기">
+            <template slot-scope="scope">
+              <router-link :to="`/a/student/lecture/${scope.row.scId}/live`">
+                <el-button>
+                  강의 듣기
+                </el-button>
+              </router-link>
+            </template>
+          </el-table-column>
+
+           <el-table-column
+            v-if="type ==='STUDENT'"
+            prop="live"
+            label="강의 듣기">
+            <template slot-scope="scope">
+              <router-link :to="`/a/student/lecture/${scope.row.scId}/live`">
+                <el-button>
+                  강의 듣기
+                </el-button>
+              </router-link>
+            </template>
+          </el-table-column>
+
+           <el-table-column
+            v-if="type ==='STUDENT'"
             prop="live"
             label="강의 듣기">
             <template slot-scope="scope">
@@ -125,7 +151,7 @@
         <br />
 
         <el-col align="center">
-          <el-button v-if="type === 'TEACH'" @click="clickAddScenario" type="primary">새로운 강의 생성</el-button>
+          <el-button v-if="type === 'TEACHER'" @click="clickAddScenario" type="primary">새로운 강의 생성</el-button>
         </el-col>
       </div>
     </el-col>
@@ -216,11 +242,11 @@ export default {
       const vm = this;
       let currentClass;
       switch (vm.type) {
-        case 'STUDY': {
+        case 'STUDENT': {
           currentClass = vm.currentStudyingClass;
           break;
         }
-        case 'TEACH': {
+        case 'TEACHER': {
           currentClass = vm.currentTeachingClass;
           break;
         }
@@ -314,33 +340,6 @@ export default {
         }
       }
     },
-    // getType(type) {
-    //   // 과목 시나리오 유형 분류 {{ A: 강의, B: 숙제, C: 퀴즈, D: 시험 }}
-    //   // TODO: Translate
-    //   switch (type) {
-    //     default:
-    //     case 'A':
-    //       return {
-    //         name: '강의',
-    //         type: '',
-    //       };
-    //     case 'B':
-    //       return {
-    //         name: '숙제',
-    //         type: 'warning',
-    //       };
-    //     case 'C':
-    //       return {
-    //         name: '퀴즈',
-    //         type: 'danger',
-    //       };
-    //     case 'D':
-    //       return {
-    //         name: '시험',
-    //         type: 'info',
-    //       };
-    //   }
-    // },
     async clickAddScenario() {
       const vm = this;
       try {

@@ -196,9 +196,9 @@ export default {
       vm.updateCurrentClassIndex({
         currentClassId: Number.parseInt(vm.$route.params.classId, 10),
       });
-      await vm.getClass({ type: 'TEACH' });
+      await vm.getClass({ type: 'TEACHER' });
     }
-    await vm.getClassCoverage({ type: 'TEACH' });
+    await vm.getClassCoverage({ type: 'TEACHER' });
     vm.coverage = vm.currentClassCoverage;
   },
   methods: {
@@ -215,7 +215,7 @@ export default {
       const vm = this;
       const keyInt = parseInt(key, 10);
       if (keyInt === 0) {
-        await vm.getClassCoverage({ type: 'TEACH' });
+        await vm.getClassCoverage({ type: 'TEACHER' });
         vm.coverage = vm.currentClassCoverage;
       } else {
         await vm.getScCoverage({ id: keyInt });

@@ -327,7 +327,7 @@ export default {
       }
       // TODO: currentClass => currentTeaching(Studying)Class
       let currentClass;
-      if (type === 'TEACH') {
+      if (type === 'TEACHER') {
         currentClass = getters.currentTeachingClass;
       } else {
         currentClass = getters.currentStudyingClass;
@@ -335,7 +335,7 @@ export default {
       const res = await classService.getClass({
         id: currentClass.class_id,
       });
-      if (type === 'TEACH') {
+      if (type === 'TEACHER') {
         commit('assignCurrentTeachingClass', {
           currentTeachingClass: {
             scenarioList: res.data.lectures,
@@ -363,7 +363,7 @@ export default {
         return;
       }
       let currentClass;
-      if (type === 'TEACH') {
+      if (type === 'TEACHER') {
         currentClass = getters.currentTeachingClass;
       } else {
         currentClass = getters.currentStudyingClass;
@@ -380,7 +380,7 @@ export default {
         return;
       }
       let currentClass;
-      if (type === 'TEACH') {
+      if (type === 'TEACHER') {
         currentClass = getters.currentTeachingClass;
       } else {
         currentClass = getters.currentStudyingClass;

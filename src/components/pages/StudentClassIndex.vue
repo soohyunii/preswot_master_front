@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <el-container>
-      <class-list-aside type="STUDY" />
+      <class-list-aside type="STUDENT" />
 
       <el-main>
         <div
@@ -25,7 +25,7 @@
           <el-button @click="onClick('ANALYSIS')">과목저널링</el-button>
           <br /><br />
 
-          <class-scenario type="STUDY" />
+          <class-scenario type="STUDENT" />
 
           <!-- TODO: Implement dummy response about class statistics -->
           <class-statistics />
