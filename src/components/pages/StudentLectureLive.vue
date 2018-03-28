@@ -115,6 +115,16 @@ export default {
     const vm = this;
     const order = isString(vm.$route.params.order) ?
       vm.$route.params.order.toUpperCase() : 'LIVE';
+    /* eslint-disable no-nested-ternary */
+    const scOrderFilter =
+      order === 'PRE' ? 0 :
+      order === 'LIVE' ? 1 :
+      order === 'POST' ? 2 :
+      1; // default live
+    /* eslint-enable no-nested-ternary */
+    vm.updateScOrderFilter({
+      scOrderFilter,
+    });
     return {
       SummaryData: [],
       sHeartbeatIntervalId: 0,
@@ -122,7 +132,6 @@ export default {
       youtubeId: '',
       playerWidth: 1000,
       fleetingSc: [],
-      order,
     };
   },
   async beforeMount() {
@@ -162,7 +171,13 @@ export default {
     vm.playerWidth = (displayWidth * 9.5) / 10;
   },
   computed: {
-    ...mapState('sc', ['scTitle', 'scType', 'scStartDate', 'scVideoLink']),
+    ...mapState('sc', [
+      'scTitle',
+      'scType',
+      'scStartDate',
+      'scVideoLink',
+      'scOrderFilter',
+    ]),
     ...mapState('scItem', ['sc']),
     ...mapGetters('scItem', [
       'isScEmpty',
@@ -178,16 +193,18 @@ export default {
     },
     isVideoVisible() {
       const vm = this;
-      switch (vm.order) {
-        case 'PRE':
-        case 'POST': {
+      switch (vm.scOrderFilter) {
+        case 0: // pre
+        case 2: { // post
           return false;
         }
-        case 'LIVE': {
+        case 1: { // live
           return true;
         }
         default: {
-          throw new Error(`not defined order ${vm.order}`);
+          // eslint-disable-next-line
+          console.error(`not defined scOrderFilter ${vm.scOrderFilter}`);
+          return true;
         }
       }
     },
@@ -195,6 +212,7 @@ export default {
   methods: {
     ...mapMutations('sc', [
       'updateScId',
+      'updateScOrderFilter',
     ]),
     ...mapMutations('scItem', [
       'updateCurrentEditingScItemIndex',
