@@ -53,9 +53,10 @@ export default {
       state.sc[state.currentEditingScItemIndex].itemKeywords = keywords;
       console.log(state.sc[state.currentEditingScItemIndex].itemKeywords); // eslint-disable-line
     },
-    pushScItem(state, { type, id }) {
+    pushScItem(state, { type, id, order }) {
       const title = null;
-      const order = 0; // 예습 = 0 / 본강의 = 1 / 복습 = 2
+      // const order = 0; // 예습 = 0 / 본강의 = 1 / 복습 = 2
+      // order 받아오는 형식으로 바꿈, orderFilter에 따라 다른곳에 들어가게!
       const description = null;
       const activeStartOffsetSec = null; // 강의 활성화 시각 기준으로 몇초 뒤에 활성화되냐
       const activeEndOffsetSec = null; // 강의 활성화 시각 기준으로 몇초 뒤에 비활성화되냐
@@ -314,7 +315,7 @@ export default {
     /**
      * @param {string 문항|설문|강의자료|숙제} scItemType
      */
-    async postScItem({ rootState }, { scItemType }) {
+    async postScItem({ rootState }, { scItemType, scItemOrder }) {
       const lectureItemType = utils.convertScItemType(scItemType);
       if (lectureItemType instanceof Error) {
         throw lectureItemType;
@@ -322,6 +323,7 @@ export default {
       const res1 = await lectureItemService.postLectureItem({
         lectureId: rootState.sc.scId,
         lectureItemType,
+        lectureItemOrder: scItemOrder,
       });
       const scItemId = res1.data.lecture_item_id;
       // * Post question || survey || homework || material
