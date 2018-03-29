@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="analysisData">
     <div class="classTitle">과목명: {{ analysisData['result1'][0].name }}</div>
     <div class="num_student">수강 인원: {{ analysisData['result1'][0].num_student_on_lecture }}</div>
     <time-line :chartData = "analysisData.result2"/>
@@ -75,6 +75,32 @@
         </template>
       </el-table-column>
     </el-table>
+    <br />
+
+    <el-row v-if="keyword">
+      <el-col :span="12">
+        <el-table :data="keyword" border style="width:700px">
+          <el-table-column
+            prop="keyword"
+            label="키워드"
+            sortable >
+          </el-table-column>
+          <el-table-column
+            prop="understanding"
+            label="이해도"
+            sortable >
+          </el-table-column>
+          <el-table-column
+            prop=""
+            label="관련 자료">
+
+          </el-table-column>
+        </el-table>
+      </el-col>
+      <el-col :span="12">
+        워드크라우드
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -198,7 +224,7 @@
       },
     },
     computed: {
-      ...mapState('analysis', ['analysisData', 'lectureId']),
+      ...mapState('analysis', ['analysisData', 'lectureId', 'keyword']),
       tableData: {
         get() {
           const vm = this;

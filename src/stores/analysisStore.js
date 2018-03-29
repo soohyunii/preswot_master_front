@@ -3,13 +3,14 @@ import analysisService from '../services/analysisService';
 export default {
   namespaced: true,
   state: {
-    analysisData: {},
+    analysisData: null,
     classId: null,
     userId: null,
     isStudent: false,
     isActiveInfo: false,
     lectureId: 1,
     analysisOpt: 0,
+    keyword: null,
   },
   getters: {
     // eslint-disable-next-line
@@ -39,13 +40,20 @@ export default {
     updateAnalysisOpt(state, { analysisOpt }) {
       state.analysisOpt = analysisOpt;
     },
+    updateKeyword(state, { keyword }) {
+      state.keyword = keyword;
+    },
   },
   actions: {
     async getAnalysisData({ state, commit }) {
       let res = null;
+      let keyword = null;
       switch (state.analysisOpt) {
         case (0): {
           res = await analysisService.getClassLogAnalysis({
+            classId: state.classId, userId: state.userId, isStudent: state.isStudent,
+          });
+          keyword = await analysisService.getClassKeyword({
             classId: state.classId, userId: state.userId, isStudent: state.isStudent,
           });
           break;
@@ -54,10 +62,16 @@ export default {
           res = await analysisService.getLectureLogAnalysis({
             lectureId: state.lectureId, userId: state.userId, isStudent: state.isStudent,
           });
+          keyword = await analysisService.getLectureKeyword({
+            lectureId: state.lectureId, userId: state.userId, isStudent: state.isStudent,
+          });
           break;
         }
         default: {
           res = await analysisService.getClassLogAnalysis({
+            classId: state.classId, userId: state.userId, isStudent: state.isStudent,
+          });
+          keyword = await analysisService.getClassKeyword({
             classId: state.classId, userId: state.userId, isStudent: state.isStudent,
           });
           break;
@@ -65,6 +79,9 @@ export default {
       }
       commit('updateAnalysisData', {
         analysisData: res.data,
+      });
+      commit('updateKeyword', {
+        keyword: keyword.data,
       });
     },
   },

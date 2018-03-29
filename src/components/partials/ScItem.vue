@@ -163,14 +163,18 @@ export default {
         const clickedScItem = vm.sc.filter(item => item.order === vm.scOrderFilter)[vm.index];
         index = vm.sc.findIndex(item => item.id === clickedScItem.id);
       }
+
+      if (vm.$route.name === 'TeacherLectureNew') {
+        return true;
+      }
       if (vm.sc[index].opened === 1) {
         return true;
       }
-      if (!vm.afterStartDateOffsetSec) {
+      if (vm.sc[index].opened === -1) {
         return false;
       }
-      if (vm.$route.name === 'TeacherLectureNew') {
-        return true;
+      if (!vm.afterStartDateOffsetSec) {
+        return false;
       }
       const startTime = vm.sc[index].activeStartOffsetSec;
       const endTime = vm.sc[index].activeEndOffsetSec;
