@@ -58,7 +58,7 @@
           </template>
 
           <template v-if="[0, 1, 2, 4].includes(pType)">
-            <el-form-item label="답" prop="pAnswer">
+            <el-form-item label="정답 쿼리" prop="pAnswer">
               <el-input
                 :type="pType === 1 ? 'input' : 'textarea'"
                 :rows="3"
