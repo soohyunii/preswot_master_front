@@ -65,10 +65,16 @@
 
 
 <script>
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
+import isNil from 'lodash.isnil';
 
 export default {
   name: 'ScItemAdder',
+  computed: {
+    ...mapState('sc', [
+      'scOrderFilter',
+    ]),
+  },
   methods: {
     ...mapMutations('scItem', ['pushScItem']),
     ...mapActions('scItem', [
@@ -80,14 +86,17 @@ export default {
       try {
         const validTypeList = ['문항', '설문', '숙제', '강의자료'];
         if (validTypeList.includes(type)) {
+          const newOrder = isNil(vm.scOrderFilter) ? 0 : vm.scOrderFilter;
           const scItemId = await vm.postScItem({
             scItemType: type,
+            scItemOrder: newOrder,
           });
 
           // * push scItem into sc
           vm.pushScItem({
             type,
             id: scItemId,
+            order: newOrder,
           });
 
           // * Then this will update currentEditingScItem

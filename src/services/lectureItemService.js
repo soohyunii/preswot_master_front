@@ -10,10 +10,12 @@ export default {
   postLectureItem({
     lectureId,
     lectureItemType,
+    lectureItemOrder,
   }) {
     return http.post('/lecture-items', {
       lectureId,
       type: lectureItemType,
+      order: lectureItemOrder,
     });
   },
   putLectureItem({
