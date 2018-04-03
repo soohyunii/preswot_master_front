@@ -215,7 +215,8 @@
               // eslint-disable-next-line
               lectureId: lectureId,
             });
-            vm.$router.push(`/a/student/lecture/${lectureId}/${Number.parseInt(vm.$route.params.userId, 10)}/journal`);
+            vm.$router.push(`/a/s
+            tudent/lecture/${lectureId}/${Number.parseInt(vm.$route.params.userId, 10)}/journal`);
             break;
           }
           default: {
