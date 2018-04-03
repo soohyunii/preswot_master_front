@@ -86,7 +86,9 @@
                       <el-button icon="el-icon-refresh" @click="onClick('REFRESH_STATISTICS')">새로고침</el-button>
                       <br /> <br />
                       제출자 수: {{currentEditingScItem.result.num_students_total}} <br />
-                      정답자 수: {{currentEditingScItem.result.num_students_answer}} <br />
+                      <span v-if="currentEditingScItemType === '문항'">
+                        정답자 수: {{currentEditingScItem.result.num_students_answer}} <br />
+                      </span>
                       <el-table
                         v-if="currentEditingScItemType === '문항' || currentEditingScItemType === '설문'"
                         :data="currentEditingScItem.result.student_answers"
@@ -115,7 +117,7 @@
                   <sc-homework-editor v-if="currentEditingScItemType === '숙제'" />
                   <sc-survey-editor v-if="currentEditingScItemType === '설문'" />
                   <sc-question-editor v-if="currentEditingScItemType === '문항'" />
-                  <sc-active-time-editor />
+                  <sc-active-time-editor :type="currentEditingScItemType" />
 
                 </el-col>
               </el-row>

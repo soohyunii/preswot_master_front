@@ -38,13 +38,34 @@
         </template>
 
         <div v-show="isSubmitted">
-          <el-form-item v-show="[0].includes(sType)" label="분포">
+          <el-form-item v-show="[].includes(sType)" label="분포">
             <!-- TODO: 차트 데이터 수정 -->
             <bar-chart :xAxisName="chartXAxis" :data="chartData"/>
           </el-form-item>
-          제출되었습니다.
-        </div>
 
+          <h4 style="padding-left: 120px;">제출 기록</h4>
+
+          <el-table
+            :data="sSubmitted"
+            border>
+            <el-table-column label="시간" align="center" sortable>
+              <template slot-scope="scope">
+                <p>{{new Date(scope.row.created_at).toLocaleString()}}</p>
+              </template>
+            </el-table-column>
+            <el-table-column label="제출 답" align="center" sortable>
+              <template slot-scope="scope">
+                <p>{{scope.row.answer.join(', ')}}</p>
+              </template>
+            </el-table-column>
+          </el-table>
+
+          <el-button
+            type=""
+            @click="onClick('RE', 0)">
+            다시 제출
+          </el-button>
+        </div>
       </el-form>
     </el-col>
   </el-row>
@@ -55,7 +76,7 @@
 </style>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions, mapMutations } from 'vuex';
 import utils from '../../utils';
 import BarChart from './BarChart';
 
@@ -68,7 +89,6 @@ export default {
     return {
       sAnswer: '',
       sAnswerChoice: [],
-      isSubmitted: false,
     };
   },
   computed: {
@@ -116,21 +136,40 @@ export default {
       const s = vm.currentEditingScItem.survey;
       return s.choice ? s.choice : [];
     },
+    sSubmitted() {
+      const vm = this;
+      const s = vm.currentEditingScItem.survey;
+      return s ? vm.currentEditingScItem.submitted : [];
+    },
+    isSubmitted: {
+      get() {
+        const vm = this;
+        return vm.currentEditingScItem.isSubmitted;
+      },
+      set(isSubmitted) {
+        const vm = this;
+        vm.assignCurrentEditingScItem({
+          currentEditingScItem: {
+            isSubmitted,
+          },
+        });
+      },
+    },
   },
   methods: {
+    ...mapMutations('scItem', ['assignCurrentEditingScItem', 'updateCurrentEditingScItemIndex']),
     ...mapActions('scItem', [
       'submitSurvey',
     ]),
     async onClick(type, index) {
+      const vm = this;
       switch (type) {
         case 'FILE': {
-          const vm = this;
           const file = vm.fileList[index];
           utils.downloadFile(file.url, file.name);
           break;
         }
         case 'SUBMIT': {
-          const vm = this;
           vm.isSubmitted = true;
           const params = {
             lecture_item_id: vm.currentEditingScItem.id,
@@ -148,6 +187,11 @@ export default {
             id: vm.currentEditingScItem.survey.id,
             answer,
           });
+          vm.updateCurrentEditingScItemIndex({ });
+          break;
+        }
+        case 'RE': {
+          vm.isSubmitted = false;
           break;
         }
         default: {

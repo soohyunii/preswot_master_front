@@ -18,6 +18,10 @@
             ({{ qTypeStr }}) {{ qQuestion }}
           </el-form-item>
 
+          <el-form-item label="배점">
+            {{qScore}}
+          </el-form-item>
+
           <template v-if="!isSubmitted">
             <template v-if="[0].includes(qType)">
               <el-form-item label="보기">
@@ -265,6 +269,11 @@ export default {
       const q = vm.currentEditingScItem.question;
       return q ? vm.currentEditingScItem.submitted : [];
     },
+    qScore() {
+      const vm = this;
+      const q = vm.currentEditingScItem.question;
+      return q ? q.score : null;
+    },
   },
   methods: {
     ...mapMutations('scItem', ['assignCurrentEditingScItem', 'updateCurrentEditingScItemIndex']),
@@ -287,11 +296,11 @@ export default {
           const answers = vm.qType === 0 ? vm.qAnswerChoice : [vm.qAnswer];
 
           /* Same with scStore updateOffsetSecNowDate algorithm. */
-          const startScItem = vm.currentEditingScItem.activeStartOffsetSec;
-          const startTime = vm.scStartDate.getTime() + startScItem;
-
-          const now = new Date().getTime();
-          const interval = Math.floor((now - startTime) / 1000);
+          // const startScItem = vm.currentEditingScItem.activeStartOffsetSec;
+          // const startTime = vm.scStartDate.getTime() + startScItem;
+          //
+          // const now = new Date().getTime();
+          // const interval = Math.floor((now - startTime) / 1000);
           /* *************************************************** */
 
 
@@ -300,7 +309,7 @@ export default {
           await vm.submitQuestion({
             id: vm.currentEditingScItem.question.id,
             answers,
-            interval,
+            interval: 0,
             codeLanguage: vm.qAnswerLanguage,
           });
           vm.updateCurrentEditingScItemIndex({ });
