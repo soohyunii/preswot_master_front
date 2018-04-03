@@ -77,7 +77,6 @@
       </el-table-column>
       -->
     </el-table>
-    <teacher-class-journal-detail :lectureId = "lectureId" v-if = "isActiveInfo"/>
   </div>
 </template>
 
@@ -160,6 +159,9 @@
       });
       vm.updateAnalysisOpt({
         analysisOpt: 1,
+      });
+      vm.updateLectureId({
+        lectureId: Number.parseInt(vm.$route.params.lectureId, 10),
       });
       await vm.getAnalysisData();
     },
