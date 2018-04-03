@@ -15,4 +15,14 @@ export default {
                  }) {
     return http.get(`/journalings/${userId}/${lectureId}/${isStudent}`);
   },
+  getClassKeyword({
+                          userId, classId, isStudent,
+                        }) {
+    return http.get(`/journalings/student_class_keyword/${userId}/${classId}/${isStudent}`);
+  },
+  getLectureKeyword({
+                      userId, lectureId, isStudent,
+                    }) {
+    return http.get(`/journalings/student_lecture_keyword/${userId}/${lectureId}/${isStudent}`);
+  },
 };

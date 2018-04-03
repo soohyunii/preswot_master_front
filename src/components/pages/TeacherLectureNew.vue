@@ -183,7 +183,7 @@ export default {
     // TODO: handle if scId doens't exists
     // TODO: handle if scId exists but don't have the authorization
     await vm.getSc();
-    if (!vm.isScEmpty) {
+    if (!vm.isScEmpty && vm.currentEditingScItem) {
       // 문항, 강의자료의 id가 이 단계에서 얻어짐 => getItemKeywords() 함수에서 이 id를 이용
       await vm.getScItem({
         scItemId: vm.currentEditingScItem.id,
@@ -199,6 +199,10 @@ export default {
       vm.updateCurrentEditingScItemIndex({
         currentEditingScItemIndex: 0,
       });
+      await vm.getScItem({ scItemId: vm.sc[0].id });
+      if (['문항', '강의자료'].includes(vm.currentEditingScItemType)) {
+        vm.getItemKeywords();
+      }
     }
   },
   mounted() {
