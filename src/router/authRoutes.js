@@ -155,7 +155,7 @@ export default function authRoutes(root) {
       },
     },
     {
-      path: '/teacher/lecture/journal',
+      path: '/teacher/lecture/:lectureId/journal',
       name: 'TeacherLectureJournal',
       component: TeacherLectureJournal,
       meta: {
