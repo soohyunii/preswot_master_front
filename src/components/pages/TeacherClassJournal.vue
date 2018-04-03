@@ -198,9 +198,7 @@
               // eslint-disable-next-line
               lectureId: lectureId,
             });
-            vm.$router.push({
-              name: 'TeacherLectureJournal',
-            });
+            vm.$router.push(`/a/teacher/lecture/${lectureId}/journal`);
             break;
           }
           default: {
