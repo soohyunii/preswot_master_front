@@ -4,7 +4,7 @@
     <div class="num_student">수강 인원: {{ analysisData[0].class_num_student }}</div>
     <line-chart :chartData = "analysisData" :isStudent = "isStudent"/>
     <el-table
-      :data="analysisData"
+      :data="tableData"
       style="width: 100%">
       <el-table-column
         prop="index"
@@ -21,8 +21,7 @@
         sortable
         style="width: 10%">
         <template slot-scope="scope">
-          <el-slider v-model="(scope.row.class_num_student - scope.row.num_better_understanding_score)/scope.row.class_num_student * 100"  :step="25" disabled show-stops>
-            <div class="sex">zxc</div>
+          <el-slider v-model="scope.row.percentUnderstanding"  :step="25" disabled show-stops>
           </el-slider>
           <div class = "slider_label">
             <div class= "slider_label_q q1">{{scope.row.min_understanding_score.toFixed(1)}}</div>
@@ -39,7 +38,7 @@
         sortable
         style="width: 10%">
         <template slot-scope="scope">
-          <el-slider v-model="(scope.row.class_num_student - scope.row.num_better_concentration_score)/scope.row.class_num_student * 100"  :step="25" disabled show-stops></el-slider>
+          <el-slider v-model="scope.row.percentConcentration"  :step="25" disabled show-stops></el-slider>
           <div class = "slider_label">
             <div class= "slider_label_q q1">{{scope.row.min_concentration_score.toFixed(1)}}</div>
             <div class= "slider_label_q q2">{{scope.row.q1_concentration_score.toFixed(1)}}</div>
@@ -55,7 +54,7 @@
         sortable
         style="width: 10%">
         <template slot-scope="scope">
-          <el-slider v-model="(scope.row.class_num_student - scope.row.num_better_participation_score)/scope.row.class_num_student * 100"  :step="25" disabled show-stops></el-slider>
+          <el-slider v-model="scope.row.percentParticipation"  :step="25" disabled show-stops></el-slider>
           <div class = "slider_label">
             <div class= "slider_label_q q1">{{scope.row.min_participation_score.toFixed(1)}}</div>
             <div class= "slider_label_q q2">{{scope.row.q1_participation_score.toFixed(1)}}</div>
@@ -202,6 +201,21 @@
     },
     computed: {
       ...mapState('analysis', ['analysisData', 'isActiveInfo', 'lectureId']),
+      tableData: {
+        get() {
+          const vm = this;
+          const returnArr = vm.analysisData;
+          for (let i = 0; i < returnArr.length; i += 1) {
+            // eslint-disable-next-line
+            returnArr[i].percentParticipation = (returnArr[i].class_num_student - returnArr[i].num_better_participation_score) / returnArr[i].class_num_student * 100;
+            // eslint-disable-next-line
+            returnArr[i].percentUnderstanding = (returnArr[i].class_num_student - returnArr[i].num_better_understanding_score) / returnArr[i].class_num_student * 100;
+            // eslint-disable-next-line
+            returnArr[i].percentConcentration = (returnArr[i].class_num_student - returnArr[i].num_better_concentration_score) / returnArr[i].class_num_student * 100;
+          }
+          return returnArr;
+        },
+      },
     },
   };
 </script>

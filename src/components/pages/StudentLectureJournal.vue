@@ -21,7 +21,7 @@
         sortable
         style="width: 10%">
         <template slot-scope="scope">
-          <el-slider v-model="(scope.row.num_student_on_lecture - scope.row.num_better_understanding_score)/scope.row.num_student_on_lecture * 100"  :step="25" disabled show-stops></el-slider>
+          <el-slider v-model="scope.row.percentUnderstanding"  :step="25" disabled show-stops></el-slider>
           <div class = "slider_label">
             <div class= "slider_label_q q1">{{scope.row.min_understanding_score.toFixed(1)}}</div>
             <div class= "slider_label_q q2">{{scope.row.q1_understanding_score.toFixed(1)}}</div>
@@ -37,7 +37,7 @@
         sortable
         style="width: 10%">
         <template slot-scope="scope">
-          <el-slider v-model="(scope.row.num_student_on_lecture - scope.row.num_better_concentration_score)/scope.row.num_student_on_lecture * 100"  :step="25" disabled show-stops></el-slider>
+          <el-slider v-model="scope.row.percentConcentration"  :step="25" disabled show-stops></el-slider>
           <div class = "slider_label">
             <div class= "slider_label_q q1">{{scope.row.min_concentration_score.toFixed(1)}}</div>
             <div class= "slider_label_q q2">{{scope.row.q1_concentration_score.toFixed(1)}}</div>
@@ -53,7 +53,7 @@
         sortable
         style="width: 10%">
         <template slot-scope="scope">
-          <el-slider v-model="(scope.row.num_student_on_lecture - scope.row.num_better_participation_score)/scope.row.num_student_on_lecture * 100"  :step="25" disabled show-stops></el-slider>
+          <el-slider v-model="scope.row.percentParticipation"  :step="25" disabled show-stops></el-slider>
           <div class = "slider_label">
             <div class= "slider_label_q q1">{{scope.row.min_participation_score.toFixed(1)}}</div>
             <div class= "slider_label_q q2">{{scope.row.q1_participation_score.toFixed(1)}}</div>
@@ -164,6 +164,9 @@
       vm.updateAnalysisOpt({
         analysisOpt: 1,
       });
+      vm.updateLectureId({
+        lectureId: Number.parseInt(vm.$route.params.lectureId, 10),
+      });
       await vm.getAnalysisData();
     },
     methods: {
@@ -174,13 +177,6 @@
       onClick(type, lectureId) {
         const vm = this;
         switch (type) {
-          case 'STUDENT_STAT': {
-            vm.updateLectureId({
-              // eslint-disable-next-line
-              lectureId: lectureId,
-            });
-            break;
-          }
           case 'LECTURE_ANALYSIS': {
             vm.updateLectureId({
               // eslint-disable-next-line
@@ -203,6 +199,24 @@
         get() {
           const vm = this;
           const returnArr = [];
+          // eslint-disable-next-line
+          const o0PercentParticipation = (vm.analysisData.result1[0].num_student_on_lecture - vm.analysisData.result1[0].o0_num_better_participation_score) / vm.analysisData.result1[0].num_student_on_lecture * 100;
+          // eslint-disable-next-line
+          const o0PercentUnderstanding = (vm.analysisData.result1[0].num_student_on_lecture - vm.analysisData.result1[0].o0_num_better_understanding_score) / vm.analysisData.result1[0].num_student_on_lecture * 100;
+          // eslint-disable-next-line
+          const o0PercentConcentration = (vm.analysisData.result1[0].num_student_on_lecture - vm.analysisData.result1[0].o0_num_better_concentration_score) / vm.analysisData.result1[0].num_student_on_lecture * 100;
+          // eslint-disable-next-line
+          const o1PercentParticipation = (vm.analysisData.result1[0].num_student_on_lecture - vm.analysisData.result1[0].o1_num_better_participation_score) / vm.analysisData.result1[0].num_student_on_lecture * 100;
+          // eslint-disable-next-line
+          const o1PercentUnderstanding = (vm.analysisData.result1[0].num_student_on_lecture - vm.analysisData.result1[0].o1_num_better_understanding_score) / vm.analysisData.result1[0].num_student_on_lecture * 100;
+          // eslint-disable-next-line
+          const o1PercentConcentration = (vm.analysisData.result1[0].num_student_on_lecture - vm.analysisData.result1[0].o1_num_better_concentration_score) / vm.analysisData.result1[0].num_student_on_lecture * 100;
+          // eslint-disable-next-line
+          const o2PercentParticipation = (vm.analysisData.result1[0].num_student_on_lecture - vm.analysisData.result1[0].o2_num_better_participation_score) / vm.analysisData.result1[0].num_student_on_lecture * 100;
+          // eslint-disable-next-line
+          const o2PercentUnderstanding = (vm.analysisData.result1[0].num_student_on_lecture - vm.analysisData.result1[0].o2_num_better_understanding_score) / vm.analysisData.result1[0].num_student_on_lecture * 100;
+          // eslint-disable-next-line
+          const o2PercentConcentration = (vm.analysisData.result1[0].num_student_on_lecture - vm.analysisData.result1[0].o2_num_better_concentration_score) / vm.analysisData.result1[0].num_student_on_lecture * 100;
           returnArr.push({
             row_name: '예습',
             max_participation_score: vm.analysisData.result1[0].o0_max_participation_score,
@@ -227,6 +241,9 @@
             // eslint-disable-next-line
             num_better_understanding_score: vm.analysisData.result1[0].o0_num_better_understanding_score,
             num_student_on_lecture: vm.analysisData.result1[0].num_student_on_lecture,
+            percentParticipation: o0PercentParticipation,
+            percentUnderstanding: o0PercentUnderstanding,
+            percentConcentration: o0PercentConcentration,
           },
             {
               row_name: '본강의',
@@ -252,6 +269,9 @@
               // eslint-disable-next-line
               num_better_understanding_score: vm.analysisData.result1[0].o1_num_better_understanding_score,
               num_student_on_lecture: vm.analysisData.result1[0].num_student_on_lecture,
+              percentParticipation: o1PercentParticipation,
+              percentUnderstanding: o1PercentUnderstanding,
+              percentConcentration: o1PercentConcentration,
             },
             {
               row_name: '복습',
@@ -277,6 +297,9 @@
               // eslint-disable-next-line
               num_better_understanding_score: vm.analysisData.result1[0].o2_num_better_understanding_score,
               num_student_on_lecture: vm.analysisData.result1[0].num_student_on_lecture,
+              percentParticipation: o2PercentParticipation,
+              percentUnderstanding: o2PercentUnderstanding,
+              percentConcentration: o2PercentConcentration,
             });
           return returnArr;
         },

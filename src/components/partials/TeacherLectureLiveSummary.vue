@@ -120,17 +120,26 @@
         },
       };
     },
-    async beforeMount() {
+    async mounted() {
       const vm = this;
       vm.$socket.on('GET_REALTIME_STAT', (msg) => {
         const jsonMSG = JSON.parse(msg);
-        // console.log(jsonMSG[0]);
-        vm.avg_data.avg_concentration_score = Number(jsonMSG[0].avg_concentration_score.toFixed(1));
-        vm.avg_data.avg_participation_score = Number(jsonMSG[0].avg_participation_score.toFixed(1));
-        vm.avg_data.avg_understanding_score = Number(jsonMSG[0].avg_understanding_score.toFixed(1));
+        vm.avg_data = {
+          avg_concentration_score: Number(jsonMSG[0].avg_concentration_score.toFixed(1)),
+          avg_participation_score: Number(jsonMSG[0].avg_participation_score.toFixed(1)),
+          avg_understanding_score: Number(jsonMSG[0].avg_understanding_score.toFixed(1)),
+        };
       });
     },
+    destroyed() {
+      const vm = this;
+      clearInterval(vm.loopInterval);
+    },
+    computed: {
+
+    },
     methods: {
+
       async getLectureStat() {
         const vm = this;
         try {
@@ -141,7 +150,6 @@
             // eslint-disable-next-line
             lectureData.data[i].latest_pic_path = '"'+ lectureData.data[i].latest_pic_path + '"';
             // eslint-disable-next-line
-            console.log(lectureData.data[i].latest_pic_path);
           }
 
           vm.forLoopData = lectureData.data;
