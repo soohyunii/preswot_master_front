@@ -85,7 +85,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('class', ['teachingClassList', 'currentClassIndex']),
+    ...mapState('class', ['currentClassIndex']),
     ...mapGetters('class', [
       'currentTeachingClass',
       'isTeachingClassListEmpty',
