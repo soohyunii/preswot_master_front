@@ -26,7 +26,7 @@ storiesOf('Button', module)
   .add('with JSX', () => ({
     components: { MyButton },
     template: `
-      <my-button @click="action">With JSX (replaced by olaf)<my-button>
+      <my-button @click="action">With JSX (replaced by olaf)</my-button>
     `,
     methods: { action: linkTo('Welcome') },
   }))

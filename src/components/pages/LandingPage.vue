@@ -59,7 +59,7 @@ import ClassIntroCard from '../partials/ClassIntroCard';
 import studentService from '../../services/studentService';
 
 export default {
-  name: 'Home',
+  name: 'LandingPage',
   components: {
     ClassIntroCard,
   },

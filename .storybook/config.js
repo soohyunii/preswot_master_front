@@ -10,13 +10,13 @@ function loadStories() {
 }
 
 // add vue components
-// const req2 = require.context('../src/components', true, /.vue$/);
-// req2.keys().forEach((filename) => {
-//   const vueComponent = req2(filename);
-//   console.log(1111, filename, vueComponent);
-//   const tokens = filename.split('/');
-//   const shortFilename = tokens[tokens.length - 1].replace('.vue', '');
-//   Vue.component(kebabCase(shortFilename), vueComponent);
-// })
+const req2 = require.context('../src/components', true, /.vue$/);
+req2.keys().forEach((filename) => {
+  const vueComponent = req2(filename);
+  console.log(1111, filename, vueComponent);
+  const tokens = filename.split('/');
+  const shortFilename = tokens[tokens.length - 1].replace('.vue', '');
+  Vue.component(kebabCase(shortFilename), vueComponent);
+})
 
 configure(loadStories, module);
