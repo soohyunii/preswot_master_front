@@ -30,7 +30,7 @@ describe('TeacherClassIndex.vue', () => {
       }),
       localVue,
     });
-    console.log(1);
+    // console.log(1);
     const text = wrapper.find('.info-box').text();
     expect(text).toBe('강의 중인 과목이 없음');
   });
@@ -50,7 +50,7 @@ describe('TeacherClassIndex.vue', () => {
       }),
       localVue,
     });
-    console.log(2);
+    // console.log(2);
     const text = wrapper.find('.info-box').text();
     expect(text).toBe('왼쪽의 과목 목록으로부터 선택하세요');
   });
@@ -70,7 +70,7 @@ describe('TeacherClassIndex.vue', () => {
       }),
       localVue,
     });
-    console.log(3);
+    // console.log(3);
     const text = wrapper.find('h3').text();
     expect(text).toBe('class1');
   });
