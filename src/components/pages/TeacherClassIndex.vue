@@ -8,13 +8,13 @@
           class="info-box"
           v-if="isTeachingClassListEmpty"
         >
-          TODO: Teaching Class List Empty!
+          강의 중인 과목이 없음
         </div>
         <div
           class="info-box"
           v-else-if="!currentTeachingClass"
         >
-          TODO: Select Class from left menus!
+          왼쪽의 과목 목록으로부터 선택하세요
         </div>
         <div v-else>
           <h3>{{ currentTeachingClass.name }}</h3><hr>
@@ -35,23 +35,23 @@
           <class-statistics />
         </div>
         <el-col>
-      <el-dialog
-        title="과목 지식맵 & 워드 클라우드"
-        :visible.sync="isModalVisible"
-        width="70%"
-        center
-      >
-        <class-knowledge-map />
-        <span slot="footer" class="dialog-footer">
-          <el-button
-            type="primary"
-            @click="onClick('CONFIRM')"
+          <el-dialog
+            title="과목 지식맵 & 워드 클라우드"
+            :visible.sync="isModalVisible"
+            width="70%"
+            center
           >
-            Confirm
-          </el-button>
-        </span>
-      </el-dialog>
-    </el-col>
+            <class-knowledge-map />
+            <span slot="footer" class="dialog-footer">
+              <el-button
+                type="primary"
+                @click="onClick('CONFIRM')"
+              >
+                Confirm
+              </el-button>
+            </span>
+          </el-dialog>
+        </el-col>
       </el-main>
     </el-container>
   </div>
