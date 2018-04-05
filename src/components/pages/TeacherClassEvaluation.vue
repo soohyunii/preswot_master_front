@@ -25,9 +25,9 @@
                 style="min-height: 500px;"
                 :data="forWordCloud"
                 nameKey="keyword"
-                valueKey="weight"
-                fontScale="sqrt"
-                :fontSize="[40, 120]"
+                valueKey="qweasd"
+                fontScale="n"
+                :fontSize="[20, 100]"
                 :wordClick="() => {}"
               >
               </word-cloud>
@@ -202,6 +202,10 @@ export default {
     await vm.getClassCoverage({ type: 'TEACHER' });
     vm.coverage = vm.currentClassCoverage;
     vm.forWordCloud = JSON.parse(JSON.stringify(vm.currentClassCoverage.keyword_coverages));
+
+    for (let i = 0; i < vm.forWordCloud.length; i += 1) {
+      vm.forWordCloud[i].qweasd = vm.forWordCloud[i].weight;
+    }
   },
   methods: {
     ...mapMutations('class', [
@@ -219,9 +223,19 @@ export default {
       if (keyInt === 0) {
         await vm.getClassCoverage({ type: 'TEACHER' });
         vm.coverage = vm.currentClassCoverage;
+        vm.forWordCloud = JSON.parse(JSON.stringify(vm.currentClassCoverage.keyword_coverages));
+
+        for (let i = 0; i < vm.forWordCloud.length; i += 1) {
+          vm.forWordCloud[i].qweasd = vm.forWordCloud[i].weight;
+        }
       } else {
         await vm.getScCoverage({ id: keyInt });
         vm.coverage = vm.scCoverage;
+        vm.forWordCloud = JSON.parse(JSON.stringify(vm.scCoverage.keyword_coverages));
+
+        for (let i = 0; i < vm.forWordCloud.length; i += 1) {
+          vm.forWordCloud[i].qweasd = vm.forWordCloud[i].weight;
+        }
       }
     },
     onClick(type, payload) {
