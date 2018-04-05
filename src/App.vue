@@ -65,16 +65,11 @@ export default {
 </script>
 
 <style lang="scss">
-@import url(https://fonts.googleapis.com/earlyaccess/notosanskr.css);
 @import "~@/app.scss";
 @import "~@/variables.scss";
 
-body {
-  user-select: none;
-}
 
 #app {
-  font-family: 'Noto Sans KR', sans-serif !important;
   display: flex;
   min-height: 108vh;
   flex-direction: column;

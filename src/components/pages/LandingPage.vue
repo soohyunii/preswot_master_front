@@ -169,6 +169,7 @@ export default {
   }
 
   .bg-white {
+    // background-color: red;
     background-color: rgb(255, 255, 255);
   }
 
