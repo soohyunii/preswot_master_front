@@ -167,12 +167,10 @@
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
 import BarChart from './BarChart';
 import utils from '../../utils';
-import ElFormItem from "element-ui/packages/form/src/form-item";
 
 export default {
   name: 'ScQuestionViewer',
   components: {
-    ElFormItem,
     BarChart,
   },
   data() {

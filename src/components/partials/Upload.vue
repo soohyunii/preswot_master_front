@@ -23,6 +23,7 @@
         <el-option
           v-for="file in previousSqliteFile"
           :label="file.name"
+          :key="file.file_guid"
           :value="file.file_guid">
         </el-option>
       </el-select>

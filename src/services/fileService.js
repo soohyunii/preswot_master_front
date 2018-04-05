@@ -12,7 +12,7 @@ export default {
   }) {
     return http.delete(`/files/${fileGuid}/sqlite/${questionId}`);
   },
-  previousSqliteFile({}) {
+  previousSqliteFile() {
     return http.get('/files/previous-sqlite-file');
   },
 };
