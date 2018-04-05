@@ -65,9 +65,9 @@ export default {
 </script>
 
 <style lang="scss">
+@import url(https://fonts.googleapis.com/earlyaccess/notosanskr.css);
 @import "~@/app.scss";
 // @import "./variables.scss";
-@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
 @import "~@/variables.scss";
 
 body {
