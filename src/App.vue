@@ -70,6 +70,7 @@ export default {
 @import "~@/variables.scss";
 
 body {
+  user-select: none;
 }
 
 #app {
