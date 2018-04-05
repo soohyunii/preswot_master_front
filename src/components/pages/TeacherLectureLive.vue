@@ -85,20 +85,21 @@
                     <div v-else>
                       <el-button icon="el-icon-refresh" @click="onClick('REFRESH_STATISTICS')">새로고침</el-button>
                       <br /> <br />
-                      제출자 수: {{currentEditingScItem.result.num_students_total}} <br />
-                      <span v-if="currentEditingScItemType === '문항'">
-                        정답자 수: {{currentEditingScItem.result.num_students_answer}} <br />
-                      </span>
-                      <el-table
-                        v-if="currentEditingScItemType === '문항' || currentEditingScItemType === '설문'"
-                        :data="currentEditingScItem.result.student_answers"
-                        border >
-                        <el-table-column label="제출 답" align="center" prop="student_answer">
-                        </el-table-column>
-                        <el-table-column label="인원" align="center" prop="num_students" sortable>
-                        </el-table-column>
-                      </el-table>
-
+                      <div v-if="currentEditingScItem.result">
+                        제출자 수: {{currentEditingScItem.result.num_students_total}} <br />
+                        <span v-if="currentEditingScItemType === '문항'">
+                          정답자 수: {{currentEditingScItem.result.num_students_answer}} <br />
+                        </span>
+                        <el-table
+                          v-if="currentEditingScItemType === '문항' || currentEditingScItemType === '설문'"
+                          :data="currentEditingScItem.result.student_answers"
+                          border >
+                          <el-table-column label="제출 답" align="center" prop="student_answer">
+                          </el-table-column>
+                          <el-table-column label="인원" align="center" prop="num_students" sortable>
+                          </el-table-column>
+                        </el-table>
+                      </div>
                     </div>
                   </el-tab-pane>
                 </el-tabs>

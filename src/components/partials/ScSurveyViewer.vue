@@ -47,13 +47,13 @@
 
           <el-table
             :data="sSubmitted"
-            border>
+            border height="200">
             <el-table-column label="시간" align="center" sortable>
               <template slot-scope="scope">
                 <p>{{new Date(scope.row.created_at).toLocaleString()}}</p>
               </template>
             </el-table-column>
-            <el-table-column label="제출 답" align="center" sortable>
+            <el-table-column label="응답" align="center" sortable>
               <template slot-scope="scope">
                 <p>{{scope.row.answer.join(', ')}}</p>
               </template>

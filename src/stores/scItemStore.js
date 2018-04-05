@@ -187,7 +187,7 @@ export default {
                 url: `${baseUrl}${item.client_path}`,
                 guid: item.file_guid,
               })),
-              result: {}, // 이건 scItemStore.action.getScItemResult() 로 불러온다
+              result: null, // 이건 scItemStore.action.getScItemResult() 로 불러온다
               isSubmitted: question.student_answer_logs.length !== 0, // 설문, 문항, 숙제가 제출되었는지
               submitted: question.student_answer_logs,
               SQLiteFile,
@@ -236,7 +236,7 @@ export default {
               opened: scItem.opened,
               order: scItem.order,
               type: utils.convertScItemType(scItem.type),
-              result: {}, // 이건 scItemStore.action.getScItemResult() 로 불러온다
+              result: null, // 이건 scItemStore.action.getScItemResult() 로 불러온다
               isSubmitted: survey.student_surveys.length !== 0, // 설문, 문항, 숙제가 제출되었는지
               submitted: survey.student_surveys,
               fileList: survey.files.map(item => ({
@@ -295,7 +295,7 @@ export default {
               opened: scItem.opened,
               order: scItem.order,
               type: utils.convertScItemType(scItem.type),
-              result: {}, // 이건 scItemStore.action.getScItemResult() 로 불러온다
+              result: null, // 이건 scItemStore.action.getScItemResult() 로 불러온다
               isSubmitted: homework.student_homeworks.length !== 0, // 설문, 문항, 숙제가 제출되었는지
               submitted: homework.student_homeworks,
               fileList: homework.files.map(item => ({
