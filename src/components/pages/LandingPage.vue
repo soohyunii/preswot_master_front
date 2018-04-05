@@ -162,7 +162,7 @@ export default {
 </script>
 
 
-<style scoped>
+<style lang="scss" scoped>
   .container {
     min-width: 500px;
     margin: auto;
