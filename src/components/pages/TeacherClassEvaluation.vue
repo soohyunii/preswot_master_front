@@ -23,7 +23,7 @@
             <el-col :span="16">
               <word-cloud
                 style="min-height: 500px;"
-                :data="coverage.keyword_coverages"
+                :data="forWordCloud"
                 nameKey="keyword"
                 valueKey="weight"
                 fontScale="sqrt"
@@ -185,6 +185,7 @@ export default {
   data() {
     return {
       coverage: null,
+      forWordCloud: null,
       activeIndex: '0',
       radio1: 'Question',
     };
@@ -200,6 +201,7 @@ export default {
     }
     await vm.getClassCoverage({ type: 'TEACHER' });
     vm.coverage = vm.currentClassCoverage;
+    vm.forWordCloud = JSON.parse(JSON.stringify(vm.currentClassCoverage.keyword_coverages));
   },
   methods: {
     ...mapMutations('class', [

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="analysisData">
+  <div v-if="analysisData && analysisData.result1 && analysisData.result1[0]">
     <div class="classTitle">과목명: {{ analysisData['result1'][0].name }}</div>
     <div class="num_student">수강 인원: {{ analysisData['result1'][0].num_student_on_lecture }}</div>
     <time-line :chartData = "analysisData.result2"/>
@@ -79,7 +79,7 @@
 
     <el-row v-if="keyword">
       <el-col :span="12">
-        <el-table :data="keyword" border style="width:700px">
+        <el-table :data="keyword" border height="400" style="width:700px">
           <el-table-column
             prop="keyword"
             label="키워드"
@@ -98,7 +98,15 @@
         </el-table>
       </el-col>
       <el-col :span="12">
-        워드크라우드
+        <word-cloud
+          style="min-height: 400px;"
+          :data="keyword"
+          nameKey="keyword"
+          valueKey="understanding"
+          fontScale="sqrt"
+          :fontSize="[40, 120]"
+          :wordClick="() => {}"
+        ></word-cloud>
       </el-col>
     </el-row>
   </div>
@@ -166,12 +174,14 @@
   import utils from '../../utils';
   import TimeLine from '../partials/TimeLine';
   import TeacherClassJournalDetail from '../partials/TeacherClassJournalDetail';
+  import WordCloud from '../partials/WordCloud';
 
   export default {
     name: 'StudentLectureJournal',
     components: {
       TimeLine,
       TeacherClassJournalDetail,
+      WordCloud,
     },
     data() {
       return {

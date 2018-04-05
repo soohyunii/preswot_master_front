@@ -18,6 +18,10 @@
             ({{ qTypeStr }}) {{ qQuestion }}
           </el-form-item>
 
+          <el-form-item label="배점">
+            {{qScore}}
+          </el-form-item>
+
           <template v-if="!isSubmitted">
             <template v-if="[0].includes(qType)">
               <el-form-item label="보기">
@@ -99,24 +103,41 @@
               </el-form-item>
             </template>
 
+            <h4 style="padding-left: 120px;">결과 / 제출 기록</h4>
+            <hr>
+            <div v-if="!isResultVisible">
+              <p>결과 비공개</p>
+            </div>
+            <div v-else-if="isResultVisible && validSubmit">
+              <el-form-item label="정답">
+                {{qCorrectAnswer}}
+              </el-form-item>
+
+              <el-form-item label="제출 답">
+                {{validSubmit.answer.join(', ')}}
+              </el-form-item>
+
+              <el-form-item label="점수">
+                {{validSubmit.score}} / {{qScore}}
+              </el-form-item>
+            </div>
+
             <!--FIXME:  -->
             <el-form-item v-show="[].includes(qType)" label="분포">
               <bar-chart :xAxisName="chartXAxis" :data="chartData"/>
             </el-form-item>
             <br />
 
-            <h4 style="padding-left: 120px;">제출 기록</h4>
-
             <!--FIXME: 제출기록-->
             <el-table
               :data="qSubmitted"
-              border>
-              <el-table-column label="시간" align="center" sortable>
+              border height="200">
+              <el-table-column label="시간" align="center">
                 <template slot-scope="scope">
                   <p>{{new Date(scope.row.created_at).toLocaleString()}}</p>
                 </template>
               </el-table-column>
-              <el-table-column label="제출 답" align="center" sortable>
+              <el-table-column label="제출 답" align="center">
                 <template slot-scope="scope">
                   <p>{{scope.row.answer.join(', ')}}</p>
                 </template>
@@ -125,6 +146,7 @@
 
             <el-button
               type=""
+              v-if="!isResultVisible"
               @click="onClick('RE', 0)">
               다시 풀기
             </el-button>
@@ -185,6 +207,10 @@ export default {
           },
         });
       },
+    },
+    isResultVisible() {
+      const vm = this;
+      return vm.currentEditingScItem.isResultVisible;
     },
     chartData() {
       const data = ['답 제출 분포'];
@@ -265,6 +291,29 @@ export default {
       const q = vm.currentEditingScItem.question;
       return q ? vm.currentEditingScItem.submitted : [];
     },
+    qScore() {
+      const vm = this;
+      const q = vm.currentEditingScItem.question;
+      return q ? q.score : null;
+    },
+    qCorrectAnswer() {
+      const vm = this;
+      const q = vm.currentEditingScItem.question;
+      return q.answer ? q.answer.join(', ') : null;
+    },
+    validSubmit() {
+      const vm = this;
+      const s = vm.qSubmitted;
+      let v = null;
+      if (s) {
+        s.forEach((ss) => {
+          if (ss.valid) {
+            v = ss;
+          }
+        });
+      }
+      return v;
+    },
   },
   methods: {
     ...mapMutations('scItem', ['assignCurrentEditingScItem', 'updateCurrentEditingScItemIndex']),
@@ -287,11 +336,11 @@ export default {
           const answers = vm.qType === 0 ? vm.qAnswerChoice : [vm.qAnswer];
 
           /* Same with scStore updateOffsetSecNowDate algorithm. */
-          const startScItem = vm.currentEditingScItem.activeStartOffsetSec;
-          const startTime = vm.scStartDate.getTime() + startScItem;
-
-          const now = new Date().getTime();
-          const interval = Math.floor((now - startTime) / 1000);
+          // const startScItem = vm.currentEditingScItem.activeStartOffsetSec;
+          // const startTime = vm.scStartDate.getTime() + startScItem;
+          //
+          // const now = new Date().getTime();
+          // const interval = Math.floor((now - startTime) / 1000);
           /* *************************************************** */
 
 
@@ -300,7 +349,7 @@ export default {
           await vm.submitQuestion({
             id: vm.currentEditingScItem.question.id,
             answers,
-            interval,
+            interval: 0,
             codeLanguage: vm.qAnswerLanguage,
           });
           vm.updateCurrentEditingScItemIndex({ });
