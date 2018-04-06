@@ -26,21 +26,24 @@ module.exports = {
       globals: {
         devServerURL: `http://localhost:${process.env.PORT || config.dev.port}`,
       },
+
+      desiredCapabilities: {
+        javascriptEnabled: true,
+        acceptSslCerts: true,
+        databaseEnabled: true,
+        webStorageEnabled: true,
+      },
     },
 
     chrome: {
       desiredCapabilities: {
         browserName: 'chrome',
-        javascriptEnabled: true,
-        acceptSslCerts: true,
       },
     },
 
     firefox: {
       desiredCapabilities: {
         browserName: 'firefox',
-        javascriptEnabled: true,
-        acceptSslCerts: true,
       },
     },
   },
