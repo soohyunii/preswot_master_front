@@ -73,9 +73,9 @@ export default class AuthPlugin {
       if (typeof userId === 'undefined') {
         return;
       }
-      console.log('to', to); // eslint-disable-line
+      console.log('to', encodeURIComponent(to.fullPath)); // eslint-disable-line
       homepageLogService.getHomepageLog({
-        pageUrl: to.fullPath,
+        pageUrl: encodeURIComponent(to.fullPath),
       });
     });
   }

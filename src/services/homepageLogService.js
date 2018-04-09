@@ -4,6 +4,6 @@ export default {
   getHomepageLog({
     pageUrl,
   }) {
-    return http.get(`/homepage-log/${pageUrl}`);
+    return http.get(`/users/homepage-log/${pageUrl}`);
   },
 };
