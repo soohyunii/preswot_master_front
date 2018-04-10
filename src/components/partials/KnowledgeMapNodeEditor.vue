@@ -97,6 +97,16 @@ export default {
           break;
         }
         case 'changeNodeWeight': {
+          const node = vm.nodes[index];
+          // eslint-disable-next-line
+          if (node._size < 1 || node._size > 10) {
+            vm.$notify({
+              title: '워닝',
+              message: '중요도는 1~10사이',
+              type: 'warning',
+            });
+            return;
+          }
           vm.inputFlag[index].weight = !vm.inputFlag[index].weight;
           break;
         }
