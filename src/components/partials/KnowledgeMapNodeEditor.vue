@@ -99,10 +99,10 @@ export default {
         case 'changeNodeWeight': {
           const node = vm.nodes[index];
           // eslint-disable-next-line
-          if (node._size < 1 || node._size > 10) {
+          if (node._size < 1 || node._size > 100) {
             vm.$notify({
               title: '워닝',
-              message: '중요도는 1~10사이',
+              message: '중요도는 1~100사이',
               type: 'warning',
             });
             return;
