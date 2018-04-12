@@ -103,19 +103,54 @@
               </el-form-item>
             </template>
 
+            <template v-if="[3].includes(qType)">
+              <el-form-item label="정보">
+                시간 제한: {{ qTimeLimit }} 초<br />
+                메모리 제한: {{ qMemoryLimit }} MB<br />
+                사용 가능한 언어: {{ qLanguageList.join(', ') }}
+              </el-form-item>
+              <el-form-item label="입력 예제">
+                {{ qInputDescription }}
+                <pre style="background-color: white; padding: 5px 20px;">{{ qSampleInput }}</pre>
+              </el-form-item>
+              <el-form-item label="출력 예제">
+                {{ qOutputDescription }}
+                <pre style="background-color: white; padding: 5px 20px;">{{ qSampleOutput }}</pre>
+              </el-form-item>
+            </template>
+
             <h4 style="padding-left: 120px;">결과 / 제출 기록</h4>
             <hr>
             <div v-if="!isResultVisible">
               <p>결과 비공개</p>
             </div>
             <div v-else-if="isResultVisible && validSubmit">
-              <el-form-item label="정답">
+              <el-form-item v-if="[0, 1, 2, 4].includes(qType)" label="정답">
                 {{qCorrectAnswer}}
               </el-form-item>
 
               <el-form-item label="제출 답">
                 {{validSubmit.answer.join(', ')}}
               </el-form-item>
+
+              <template v-if="[3].includes(qType)">
+                <el-form-item label="결과">
+                  {{codeResult}}
+                </el-form-item>
+
+                <el-form-item label="정보">
+                  시간  : {{ validSubmit.oj_solution.time }} ms<br />
+                  메모리: {{ validSubmit.oj_solution.memory }} KB<br />
+                </el-form-item>
+
+                <el-form-item v-if="codeResult === '컴파일 에러'" label="컴파일 에러">
+                  {{validSubmit.oj_compileinfo.error}}
+                </el-form-item>
+
+                <el-form-item v-if="codeResult === '런타임 에러'" label="런타임 에러">
+                  {{validSubmit.oj_runtimeinfo.error}}
+                </el-form-item>
+              </template>
 
               <el-form-item label="점수">
                 {{validSubmit.score}} / {{qScore}}
@@ -313,6 +348,22 @@ export default {
         });
       }
       return v;
+    },
+    codeResult() {
+      const vm = this;
+      if (vm.qType !== 3) return null;
+      if (!vm.validSubmit) return null;
+
+      const res = vm.validSubmit.oj_solution.result;
+      if (res === 0) return '대기중';
+      if (res === 1 || res === 11) return '컴파일 에러';
+      if (res === 3) return '채점중';
+      if (res === 4) return '맞음';
+      if (res === 6) return '틀림';
+      if (res === 7) return '시간 초과';
+      if (res === 8) return '메모리 초과';
+      if (res === 9) return '출력 초과';
+      if (res === 10) return '런타임 에러';
     },
   },
   methods: {
