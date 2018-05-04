@@ -88,7 +88,7 @@ export default {
       switch (type) {
         case 'addNode': {
           const id = Guid.create().toString();
-          vm.pushNode({ node: { id, value: '', _size: 20 } });
+          vm.pushNode({ node: { id, value: '', _size: 5 } });
           vm.inputFlag.push({ value: true, weight: false });
           break;
         }
@@ -97,6 +97,16 @@ export default {
           break;
         }
         case 'changeNodeWeight': {
+          const node = vm.nodes[index];
+          // eslint-disable-next-line
+          if (node._size < 1 || node._size > 100) {
+            vm.$notify({
+              title: '워닝',
+              message: '중요도는 1~100사이',
+              type: 'warning',
+            });
+            return;
+          }
           vm.inputFlag[index].weight = !vm.inputFlag[index].weight;
           break;
         }

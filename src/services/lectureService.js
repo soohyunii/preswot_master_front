@@ -106,6 +106,7 @@ export default {
     const param = {
       numberOfKeyword,
       minKeywordLength: keywordLength,
+      isFast: true,
     };
     return http.post(`/lectures/${id}/keyword-extractor`, param);
   },

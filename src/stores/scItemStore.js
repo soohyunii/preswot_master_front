@@ -170,6 +170,7 @@ export default {
             url: `${baseUrl}${item.client_path}`,
             guid: item.file_guid,
           })) : [];
+          const previousSqliteFiles = (await fileService.previousSqliteFile({ })).data.files;
           commit('assignCurrentEditingScItem', {
             currentEditingScItem: {
               id: scItemId,
@@ -177,7 +178,7 @@ export default {
               description: scItem.description,
               activeStartOffsetSec: scItem.start_time,
               activeEndOffsetSec: scItem.end_time,
-              isResultVisible: scItem.result,
+              isResultVisible: scItem.result === 1,
               opened: scItem.opened,
               order: scItem.order,
               type: utils.convertScItemType(scItem.type),
@@ -186,7 +187,7 @@ export default {
                 url: `${baseUrl}${item.client_path}`,
                 guid: item.file_guid,
               })),
-              result: {}, // 이건 scItemStore.action.getScItemResult() 로 불러온다
+              result: null, // 이건 scItemStore.action.getScItemResult() 로 불러온다
               isSubmitted: question.student_answer_logs.length !== 0, // 설문, 문항, 숙제가 제출되었는지
               submitted: question.student_answer_logs,
               SQLiteFile,
@@ -207,6 +208,7 @@ export default {
                 sampleOutput: question.sample_output,
                 languageList: question.accept_language || [],
                 testCaseList: question.problem_testcases || [],
+                previousSqliteFiles,
                 // * order: 이거는 question이 여러개 들어올 때를 가정해서 만들어진거라 패스
                 // * showing_order: 위와 같음
                 // * timer: 애매해서 일단 뻄
@@ -230,11 +232,11 @@ export default {
               description: scItem.description,
               activeStartOffsetSec: scItem.start_time,
               activeEndOffsetSec: scItem.end_time,
-              isResultVisible: scItem.result,
+              isResultVisible: scItem.result === 1,
               opened: scItem.opened,
               order: scItem.order,
               type: utils.convertScItemType(scItem.type),
-              result: {}, // 이건 scItemStore.action.getScItemResult() 로 불러온다
+              result: null, // 이건 scItemStore.action.getScItemResult() 로 불러온다
               isSubmitted: survey.student_surveys.length !== 0, // 설문, 문항, 숙제가 제출되었는지
               submitted: survey.student_surveys,
               fileList: survey.files.map(item => ({
@@ -262,7 +264,7 @@ export default {
               description: scItem.description,
               activeStartOffsetSec: scItem.start_time,
               activeEndOffsetSec: scItem.end_time,
-              isResultVisible: scItem.result,
+              isResultVisible: scItem.result === 1,
               opened: scItem.opened,
               order: scItem.order,
               type: utils.convertScItemType(scItem.type),
@@ -289,12 +291,13 @@ export default {
               description: scItem.description,
               activeStartOffsetSec: scItem.start_time,
               activeEndOffsetSec: scItem.end_time,
-              isResultVisible: scItem.result,
+              isResultVisible: scItem.result === 1,
               opened: scItem.opened,
               order: scItem.order,
               type: utils.convertScItemType(scItem.type),
-              result: {}, // 이건 scItemStore.action.getScItemResult() 로 불러온다
+              result: null, // 이건 scItemStore.action.getScItemResult() 로 불러온다
               isSubmitted: homework.student_homeworks.length !== 0, // 설문, 문항, 숙제가 제출되었는지
+              submitted: homework.student_homeworks,
               fileList: homework.files.map(item => ({
                 name: item.name,
                 url: `${baseUrl}${item.client_path}`,
@@ -368,7 +371,7 @@ export default {
         startTime: scItem.activeStartOffsetSec,
         endTime: scItem.activeEndOffsetSec,
         order: scItem.order,
-        result: utils.convertBoolean(scItem.isResultVisible),
+        result: scItem.isResultVisible ? 1 : 0,
         opened: scItem.opened,
       });
     },
@@ -491,6 +494,16 @@ export default {
     async deleteFile(__empty__, { fileGuid }) {
       await fileService.deleteFile({
         fileGuid,
+      });
+    },
+    async deleteFileSqlite(__empty__, { fileGuid, questionId }) {
+      await fileService.deleteFileSqlite({
+        fileGuid, questionId,
+      });
+    },
+    async selectPreviousSqlite({ commit, getters }, { guid, questionId }) {
+      await questionService.selectPreviousSqlite({
+        guid, questionId,
       });
     },
     async postFile({ commit, getters }, { file, SQLite }) {

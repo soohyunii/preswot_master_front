@@ -104,4 +104,9 @@ export default {
   }) {
     return http.get(`/questions/${questionId}/result`);
   },
+  selectPreviousSqlite({
+    guid, questionId,
+  }) {
+    return http.put(`/questions/${questionId}/sqlite/${guid}`);
+  },
 };

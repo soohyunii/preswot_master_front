@@ -5,10 +5,12 @@ import utils from '../utils';
 //   console.log(store); // eslint-disable-line
 // }, 1000);
 import store from '../stores';
+import homepageLogService from '../services/homepageLogService';
 
 export default class AuthPlugin {
   constructor(options) {
     this._applyRouteGuard(options.router);
+    this._applyAfterHook(options.router);
   }
 
   static install(Vue, options) {
@@ -62,6 +64,19 @@ export default class AuthPlugin {
       } else {
         next();
       }
+    });
+  }
+
+  _applyAfterHook(router) { // eslint-disable-line class-methods-use-this
+    router.afterEach((to) => {
+      const userId = utils.getUserIdFromJwt();
+      if (typeof userId === 'undefined') {
+        return;
+      }
+      console.log('to', encodeURIComponent(to.fullPath)); // eslint-disable-line
+      homepageLogService.getHomepageLog({
+        pageUrl: encodeURIComponent(to.fullPath),
+      });
     });
   }
 }

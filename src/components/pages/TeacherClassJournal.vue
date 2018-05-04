@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="analysisData && analysisData[0]">
     <div class="classTitle">과목명: {{ analysisData[0].class_name }}</div>
     <div class="num_student">수강 인원: {{ analysisData[0].class_num_student }}</div>
     <line-chart :chartData = "analysisData" :isStudent = "isStudent"/>
@@ -87,6 +87,34 @@
       </el-table-column>
     </el-table>
     <teacher-class-journal-detail :lectureId = "lectureId" v-if = "isActiveInfo"/>
+    <el-row v-if="keyword">
+      <el-col :span="12">
+        <p>키워드별 학생 평균 이해도</p>
+        <el-table :data="keyword" border height="400" style="width:700px">
+          <el-table-column
+            prop="keyword"
+            label="키워드"
+            sortable >
+          </el-table-column>
+          <el-table-column
+            prop="understanding"
+            label="이해도"
+            sortable >
+          </el-table-column>
+        </el-table>
+      </el-col>
+      <el-col :span="12">
+        <word-cloud
+          style="min-height: 400px;"
+          :data="keyword"
+          nameKey="keyword"
+          valueKey="understanding"
+          fontScale="sqrt"
+          :fontSize="[40, 120]"
+          :wordClick="() => {}"
+        ></word-cloud>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -146,12 +174,14 @@
   import utils from '../../utils';
   import LineChart from '../partials/LineChart';
   import TeacherClassJournalDetail from '../partials/TeacherClassJournalDetail';
+  import WordCloud from '../partials/WordCloud';
 
   export default {
     name: 'TeacherClassJournal',
     components: {
       LineChart,
       TeacherClassJournalDetail,
+      WordCloud,
     },
     data() {
       return {
@@ -208,7 +238,7 @@
       },
     },
     computed: {
-      ...mapState('analysis', ['analysisData', 'isActiveInfo', 'lectureId']),
+      ...mapState('analysis', ['analysisData', 'isActiveInfo', 'lectureId', 'keyword']),
     },
   };
 </script>

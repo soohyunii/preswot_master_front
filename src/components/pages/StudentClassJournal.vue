@@ -1,5 +1,5 @@
 <template>
-  <div v-if="analysisData">
+  <div v-if="analysisData && analysisData[0]">
     <div class="classTitle">과목명: {{ analysisData[0].class_name }}</div>
     <div class="num_student">수강 인원: {{ analysisData[0].class_num_student }}</div>
     <line-chart :chartData = "analysisData" :isStudent = "isStudent"/>
@@ -79,7 +79,7 @@
     <br />
     <el-row v-if="keyword">
       <el-col :span="12">
-        <el-table :data="keyword" border style="width:700px">
+        <el-table :data="keyword" border height="400" style="width:700px">
           <el-table-column
             prop="keyword"
             label="키워드"
@@ -98,7 +98,15 @@
         </el-table>
       </el-col>
       <el-col :span="12">
-        워드크라우드
+        <word-cloud
+          style="min-height: 400px;"
+          :data="keyword"
+          nameKey="keyword"
+          valueKey="understanding"
+          fontScale="sqrt"
+          :fontSize="[40, 120]"
+          :wordClick="() => {}"
+        ></word-cloud>
       </el-col>
     </el-row>
   </div>
@@ -164,11 +172,13 @@
 <script>
   import { mapActions, mapState, mapMutations } from 'vuex';
   import LineChart from '../partials/LineChart';
+  import WordCloud from '../partials/WordCloud';
 
   export default {
     name: 'StudentClassJournal',
     components: {
       LineChart,
+      WordCloud,
     },
     data() {
       return {
@@ -226,7 +236,7 @@
       },
     },
     computed: {
-      ...mapState('analysis', ['analysisData', 'isActiveInfo', 'lectureId']),
+      ...mapState('analysis', ['analysisData', 'isActiveInfo', 'lectureId', 'keyword']),
       tableData: {
         get() {
           const vm = this;
