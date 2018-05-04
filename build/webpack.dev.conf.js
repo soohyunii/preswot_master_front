@@ -78,3 +78,5 @@ module.exports = new Promise((resolve, reject) => {
     }
   })
 })
+
+exports.devWebpackConfig = devWebpackConfig;

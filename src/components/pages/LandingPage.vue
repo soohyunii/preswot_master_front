@@ -7,7 +7,7 @@
           <el-col :span="12">
             영상 썸네일
             <div class="image-wrapper">
-              <img src="../../assets/dev/ratio_4_3.png">
+              <img :src="require('@/assets/dev/ratio_4_3.png')">
             </div>
           </el-col>
         </el-row>
@@ -59,7 +59,7 @@ import ClassIntroCard from '../partials/ClassIntroCard';
 import studentService from '../../services/studentService';
 
 export default {
-  name: 'Home',
+  name: 'LandingPage',
   components: {
     ClassIntroCard,
   },
@@ -162,13 +162,14 @@ export default {
 </script>
 
 
-<style scoped>
+<style lang="scss" scoped>
   .container {
     min-width: 500px;
     margin: auto;
   }
 
   .bg-white {
+    // background-color: red;
     background-color: rgb(255, 255, 255);
   }
 
