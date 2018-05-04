@@ -118,8 +118,9 @@
                   <sc-homework-editor v-if="currentEditingScItemType === '숙제'" />
                   <sc-survey-editor v-if="currentEditingScItemType === '설문'" />
                   <sc-question-editor v-if="currentEditingScItemType === '문항'" />
+                  <sc-practice-editor v-if="currentEditingScItemType === '실습'" />
+                  <sc-discussion-editor v-if="currentEditingScItemType === '토론'" />
                   <sc-active-time-editor :type="currentEditingScItemType" />
-
                 </el-col>
               </el-row>
             </div>
@@ -258,7 +259,9 @@ import ScHomeworkEditor from '../partials/ScHomeworkEditor';
 import ScSurveyEditor from '../partials/ScSurveyEditor';
 import ScCommonEditor from '../partials/ScCommonEditor';
 import ScQuestionEditor from '../partials/ScQuestionEditor';
+import ScPracticeEditor from '../partials/ScPraticeEditor';
 import TeacherLectureLiveSummary from '../partials/TeacherLectureLiveSummary';
+import ScDiscussionEditor from '../partials/ScDiscussionEditor';
 import utils from '../../utils';
 
 export default {
@@ -272,8 +275,10 @@ export default {
     ScMaterialEditor,
     ScHomeworkEditor,
     ScSurveyEditor,
+    ScPracticeEditor,
     ScActiveTimeEditor,
     TeacherLectureLiveSummary,
+    ScDiscussionEditor,
   },
   created() {
     this.$socket.connect();

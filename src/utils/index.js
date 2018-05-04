@@ -80,7 +80,7 @@ export default {
     return new Error(`not defined scType ${scType}`);
   },
   convertScItemType(scItemType) {
-    const mapping = ['문항', '설문', '강의자료', '숙제'];
+    const mapping = ['문항', '설문', '강의자료', '숙제', '실습', '토론'];
     if (typeof scItemType === 'number') {
       return mapping[scItemType];
     } else if (typeof scItemType === 'string') {
