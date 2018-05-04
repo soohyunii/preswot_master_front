@@ -5,6 +5,7 @@ import materialService from '../services/materialService';
 import surveyService from '../services/surveyService';
 import homeworkService from '../services/homeworkService';
 import studentService from '../services/studentService';
+import practiceService from '../services/practiceService';
 import { baseUrl } from '../services/config';
 
 import utils from '../utils';
@@ -67,6 +68,8 @@ export default {
       const survey = {};
       const question = {};
       const homework = {};
+      const practice = {};
+      const discussion = [];
       const result = {}; // 얘는 서버에 있는 것 기준으로 question, survey, homework 안에 학생이 제출한 걸로 저장됨
       const itemKeywords = [];
       const isSubmitted = false; // 문항이나 설문이 제출되었는지 아닌지
@@ -85,6 +88,8 @@ export default {
         survey,
         question,
         homework,
+        practice,
+        discussion,
         itemKeywords,
         result,
         isSubmitted,
@@ -310,6 +315,51 @@ export default {
           });
           break;
         }
+        case 4: { // * 실습
+          const practice = scItem.lecture_code_practices[0];
+          commit('assignCurrentEditingScItem', {
+            currentEditingScItem: {
+              id: scItemId,
+              title: scItem.name,
+              description: scItem.description,
+              activeStartOffsetSec: scItem.start_time,
+              activeEndOffsetSec: scItem.end_time,
+              isResultVisible: scItem.result === 1,
+              opened: scItem.opened,
+              order: scItem.order,
+              type: utils.convertScItemType(scItem.type),
+              result: null, // 이건 scItemStore.action.getScItemResult() 로 불러온다
+              isSubmitted: 0,
+              submitted: [],
+              practice: {
+                id: practice.lecture_code_practice_id,
+                code: practice.code,
+              },
+            },
+          });
+          break;
+        }
+        case 5: {  // * 토론
+          const discussion = scItem.discussions;
+          commit('assignCurrentEditingScItem', {
+            currentEditingScItem: {
+              id: scItemId,
+              title: scItem.name,
+              description: scItem.description,
+              activeStartOffsetSec: scItem.start_time,
+              activeEndOffsetSec: scItem.end_time,
+              isResultVisible: scItem.result === 1,
+              opened: scItem.opened,
+              order: scItem.order,
+              type: utils.convertScItemType(scItem.type),
+              result: null, // 이건 scItemStore.action.getScItemResult() 로 불러온다
+              isSubmitted: 0,
+              submitted: [],
+              discussion,
+            },
+          });
+          break;
+        }
         default: {
           throw new Error(`not defined scItem.type2 ${scItem.type}`);
         }
@@ -353,6 +403,15 @@ export default {
           await homeworkService.postHomework({
             lectureItemId: scItemId,
           });
+          break;
+        }
+        case 4: { // * 실습
+          await practiceService.postPractice({
+            lectureItemId: scItemId,
+          });
+          break;
+        }
+        case 5: { // * 토론
           break;
         }
         default: {
@@ -593,6 +652,13 @@ export default {
       await materialService.putMaterial({
         materialId: m.id,
         score: m.score,
+      });
+    },
+    async putPractice({ getters }) {
+      const p = getters.currentEditingScItem.practice;
+      await practiceService.putPractice({
+        practiceId: p.id,
+        code: p.code,
       });
     },
     // async deleteKnowledgeEdge({ state }, { edgeIndex }) {

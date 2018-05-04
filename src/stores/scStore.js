@@ -235,6 +235,8 @@ export default {
           material: {},
           homework: {},
           survey: {},
+          practice: {},
+          discussion: [],
           itemKeywords: [],
           fileList: [],
         };

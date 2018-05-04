@@ -61,6 +61,7 @@
               <sc-homework-viewer v-if="currentEditingScItemType === '숙제'" />
               <sc-survey-viewer v-if="currentEditingScItemType === '설문'" />
               <sc-question-viewer v-if="currentEditingScItemType === '문항'" />
+              <sc-discussion-editor v-if="currentEditingScItemType === '토론'" />
             </el-col>
           </el-row>
         </div>
@@ -82,6 +83,7 @@ import ScMaterialViewer from '../partials/ScMaterialViewer';
 import ScHomeworkViewer from '../partials/ScHomeworkViewer';
 import ScSurveyViewer from '../partials/ScSurveyViewer';
 import ScQuestionViewer from '../partials/ScQuestionViewer';
+import ScDiscussionEditor from '../partials/ScDiscussionEditor';
 import utils from '../../utils';
 
 export default {
@@ -94,6 +96,7 @@ export default {
     ScHomeworkViewer,
     ScSurveyViewer,
     ScQuestionViewer,
+    ScDiscussionEditor,
   },
   created() {
     this.$socket.connect();
