@@ -151,6 +151,14 @@ export default {
           icon = 'far fa-clipboard';
           break;
         }
+        case '실습': {
+          icon = 'far fa-file-code';
+          break;
+        }
+        case '토론': {
+          icon = 'far fa-comments';
+          break;
+        }
       }
       return icon;
     },
