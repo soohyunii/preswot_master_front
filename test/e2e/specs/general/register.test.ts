@@ -20,7 +20,6 @@ export default {
     // 회원가입 페이지로 가서
     client.click('a[href="/register"]')
       .waitForElementVisible('.register-wrapper', 1000);
-    // client.expect.url().to.be.contain('register');
     client.assert.urlContains('register');
     client.expect.element('label[for="email_id"]').to.be.present.before(1000);
 
@@ -60,13 +59,11 @@ export default {
     client.setValue('#belong input', '연세대');
     client.click('#checkTou span.el-checkbox__label');
 
-    // 클릭이 되는건지 안되는건지
     client.click('#btn_submit_register');
     client.pause(500);
-    client.saveScreenshot('./what.png');
+    // client.saveScreenshot('./what.png');
 
     client.assert.urlEquals(devServer + '/');
-    // client.expect.url().to.be.contain('register');
-    // client.end();
+    client.end();
   },
 };
