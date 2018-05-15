@@ -61,7 +61,7 @@
               <sc-homework-viewer v-if="currentEditingScItemType === '숙제'" />
               <sc-survey-viewer v-if="currentEditingScItemType === '설문'" />
               <sc-question-viewer v-if="currentEditingScItemType === '문항'" />
-              <sc-discussion-editor v-if="currentEditingScItemType === '토론'" />
+              <discussion v-if="currentEditingScItemType === '토론'" />
             </el-col>
           </el-row>
         </div>
@@ -83,7 +83,7 @@ import ScMaterialViewer from '../partials/ScMaterialViewer';
 import ScHomeworkViewer from '../partials/ScHomeworkViewer';
 import ScSurveyViewer from '../partials/ScSurveyViewer';
 import ScQuestionViewer from '../partials/ScQuestionViewer';
-import ScDiscussionEditor from '../partials/ScDiscussionEditor';
+import discussion from '../partials/Discussion';
 import utils from '../../utils';
 
 export default {
@@ -96,7 +96,7 @@ export default {
     ScHomeworkViewer,
     ScSurveyViewer,
     ScQuestionViewer,
-    ScDiscussionEditor,
+    discussion,
   },
   created() {
     this.$socket.connect();
@@ -143,7 +143,7 @@ export default {
       scId: Number.parseInt(vm.$route.params.scId, 10),
     });
     await vm.getSc();
-    vm.elapsedTimeIntervalId = vm.updateOffsetSecNowDate();
+    vm.updateOffsetSecNowDate();
     await vm.$nextTick();
     if (!vm.scVideoLink) {
       // FIXME: scVideoLink가 없을 떄 처리하기
@@ -228,6 +228,7 @@ export default {
     ...mapActions('sc', [
       'getSc',
       'updateOffsetSecNowDate',
+      'clearOffsetSecNowDate',
     ]),
     ...mapActions('scItem', [
       'getScItem',
@@ -267,11 +268,10 @@ export default {
   beforeDestroy() {
     const vm = this;
     vm.$socket.close();
+    clearInterval(vm.sHeartbeatIntervalId);
+    vm.clearOffsetSecNowDate();
   },
   destroyed() {
-    const vm = this;
-    clearInterval(vm.sHeartbeatIntervalId);
-    clearInterval(vm.elapsedTimeIntervalId);
   },
 };
 </script>

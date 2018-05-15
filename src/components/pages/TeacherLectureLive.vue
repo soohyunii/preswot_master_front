@@ -306,7 +306,7 @@ export default {
     await vm.getSc();
     vm.updateScVideoLink({ scVideoLink: vm.$route.query.link });
     vm.putSc();
-    vm.elapsedTimeIntervalId = vm.updateOffsetSecNowDate();
+    vm.updateOffsetSecNowDate();
     // TODO: handle sc empty
     if (!vm.isScEmpty) {
       vm.updateCurrentEditingScItemIndex({
@@ -349,6 +349,7 @@ export default {
       'getSc',
       'putSc',
       'updateOffsetSecNowDate',
+      'clearOffsetSecNowDate',
     ]),
     ...mapActions('scItem', [
       'getScItem',
@@ -474,13 +475,13 @@ export default {
       },
     },
   },
-  beforeDestory() {
+  beforeDestroy() {
     this.$socket.close();
+    this.clearOffsetSecNowDate();
   },
   destroyed() {
     const vm = this;
     clearInterval(vm.sHeartbeatIntervalId);
-    clearInterval(vm.elapsedTimeIntervalId);
     clearInterval(vm.sUpdateTimelineLogIntervalId);
   },
 };

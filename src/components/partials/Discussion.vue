@@ -1,5 +1,5 @@
 <template>
-  <el-card class="box-card">
+  <el-card class="box-card" style="max-width:480px;">
     <el-row style="padding:0;">
       <el-col id="chat-wrap" style="height: 482px; overflow-y: scroll">
         <el-card v-for="d in discuss" class="chat" >
@@ -68,7 +68,6 @@
     name: 'discussion',
     created() {
       const vm = this;
-      console.log('create');
       const params = {
         lecture_item_id: vm.currentEditingScItem.id,
       };
@@ -84,19 +83,22 @@
       });
       vm.$socket.on('ARRIVE_NEW_DISCUSSION', (msg) => {
         const jsonMSG = JSON.parse(msg);
-        jsonMSG.created_at = utils.formatDate(new Date(jsonMSG.created_at));
-        vm.discuss.push(jsonMSG);
+        if (this.pShare === true ||
+          jsonMSG.is_teacher === 1 ||
+          jsonMSG.user_id === utils.getUserIdFromJwt()) {
+          jsonMSG.created_at = utils.formatDate(new Date(jsonMSG.created_at));
+          vm.discuss.push(jsonMSG);
 
-        if (jsonMSG.user_id === utils.getUserIdFromJwt()) {
-          vm.updating = false;
+          if (jsonMSG.user_id === utils.getUserIdFromJwt()) {
+            vm.updating = false;
+          }
+          vm.$forceUpdate();
         }
-        vm.$forceUpdate();
       });
     },
     beforeUpdate() {
       const vm = this;
       if (vm.pre !== vm.currentEditingScItem.id) {
-        console.log('de');
         vm.pre = vm.currentEditingScItem.id;
         vm.$forceUpdate();
       }
@@ -125,9 +127,21 @@
           const discuss = JSON.parse(JSON.stringify(vm.currentEditingScItem.discussion));
           const dLength = discuss.length;
           for (let i = 0; i < dLength; i += 1) {
-            discuss[i].created_at = utils.formatDate(new Date(discuss[i].created_at));
+            if (!(this.pShare === true ||
+              discuss[i].is_teacher === 1 ||
+              discuss[i].user_id === utils.getUserIdFromJwt())) {
+              delete discuss[i];
+            } else {
+              discuss[i].created_at = utils.formatDate(new Date(discuss[i].created_at));
+            }
           }
           return discuss;
+        },
+      },
+      pShare: {
+        get() {
+          const vm = this;
+          return vm.currentEditingScItem.discussionShare;
         },
       },
     },
@@ -145,16 +159,6 @@
         vm.updating = true;
         vm.msg = '';
       },
-    },
-    beforeDestroy() {
-      const vm = this;
-      console.log('de');
-
-      const params = {
-        lecture_item_id: vm.currentEditingScItem.id,
-      };
-      vm.$socket.emit('LEAVE_DISCUSSION ', params);
-      console.log('de');
     },
   };
 </script>
