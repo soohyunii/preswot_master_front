@@ -10,9 +10,20 @@ const spawn = require('cross-spawn');
 
 let server;
 
+const useYarnDev = true;
 devConfigPromise.then((devConfig) => {
+  // 이 설정은 nightwatch.conf.js에서 globals.devServerURL에서 걍 조져버림
+  if (useYarnDev) {
+    return Promise.resolve();
+  }
   const devServerOptions = devConfig.devServer;
-  const compiler = webpack(webpackConfig);
+  let compiler;
+  const testWithProductionBuild = false;
+  if (testWithProductionBuild) {
+    compiler = webpack(webpackConfig);
+  } else {
+    compiler = webpack(devConfig);
+  }
   server = new DevServer(compiler, devServerOptions);
   const port = devServerOptions.port;
   const host = devServerOptions.host;
@@ -37,12 +48,16 @@ devConfigPromise.then((devConfig) => {
   const runner = spawn('./node_modules/.bin/nightwatch', opts, { stdio: 'inherit' });
 
   runner.on('exit', (code) => {
-    server.close();
+    if (server) {
+      server.close();
+    }
     process.exit(code);
   });
 
   runner.on('error', (err) => {
-    server.close();
+    if (server) {
+      server.close();
+    }
     throw err;
   });
 });

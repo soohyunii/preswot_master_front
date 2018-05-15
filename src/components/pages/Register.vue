@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="register-wrapper">
     <el-container>
       <el-row>
         <el-col style="max-width: 700px;">
@@ -41,14 +41,19 @@
             </el-form-item>
 
             <el-form-item :label="$t('REG.ADDRESS_LABEL')" prop="address1" id="address1">
-              <el-input type="string" :placeholder="$t('REG.ADDRESS_PH')" :value="address" readonly></el-input>
-              <el-button type="primary" @click="execDaumPostcode()">{{ $t('REG.ADDRESS_SEARCH_BUTTON') }}</el-button>
+              <el-input type="string" :placeholder="$t('REG.ADDRESS_PH')" v-model="input.address1"></el-input>
+              <el-button id="btn_search_address" type="primary" @click="execDaumPostcode()">{{ $t('REG.ADDRESS_SEARCH_BUTTON') }}</el-button>
             </el-form-item>
 
             <el-form-item :label="$t('REG.ADDRESS2_LABEL')" prop="address2" id="address2">
               <el-input id="detail" :placeholder="$t('REG.ADDRESS2_PH')" v-model="input.address2">
               </el-input>
             </el-form-item>
+
+            <el-form-item>
+              {{ address }}
+            </el-form-item>
+
 
 
             <!-- TODO: 핸드폰 번호 -->
@@ -93,7 +98,7 @@
             <br />
 
             <el-form-item>
-              <el-button type="primary" @click="submitForm('elForm')">회원가입</el-button>
+              <el-button id="btn_submit_register" type="primary" @click="submitForm('elForm')">회원가입</el-button>
             </el-form-item>
             <br />
 
