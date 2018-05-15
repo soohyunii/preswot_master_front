@@ -70,6 +70,32 @@ export default {
     // eslint-disable-next-line
     return moment(d).format('YYYY-MM-DD HH:mm:ss');
   },
+  formatSec2Time(secs, format) {
+    let hr = Math.floor(secs / 3600);
+    let min = Math.floor((secs - (hr * 3600)) / 60);
+    let sec = Math.floor(secs - (hr * 3600) - (min * 60));
+
+    if (hr < 10) {
+      hr = `0${hr}`;
+    }
+    if (min < 10) {
+      min = `0${min}`;
+    }
+    if (sec < 10) {
+      sec = `0${sec}`;
+    }
+    if (hr) {
+      hr = '00';
+    }
+
+    if (format != null) {
+      let formattedTime = format.replace('hh', hr);
+      formattedTime = formattedTime.replace('mm', min);
+      formattedTime = formattedTime.replace('ss', sec);
+      return formattedTime;
+    }
+    return `${hr}:${min}:${sec}`;
+  },
   convertScType(scType) {
     const mapping = ['강의', '숙제', '퀴즈', '시험'];
     if (typeof scType === 'number') {

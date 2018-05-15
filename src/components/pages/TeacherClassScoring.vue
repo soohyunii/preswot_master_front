@@ -230,7 +230,6 @@
             await vm.putScore({ id, score });
           }
         } else if (type === 'homework') {
-          // console.log('asdasd');
           await vm.putHomeworkFeedback({ id, feedback: score });
         }
       },

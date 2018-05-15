@@ -6,6 +6,7 @@ import surveyService from '../services/surveyService';
 import homeworkService from '../services/homeworkService';
 import studentService from '../services/studentService';
 import practiceService from '../services/practiceService';
+import discussionService from '../services/discussionService';
 import { baseUrl } from '../services/config';
 
 import utils from '../utils';
@@ -74,6 +75,7 @@ export default {
       const itemKeywords = [];
       const isSubmitted = false; // 문항이나 설문이 제출되었는지 아닌지
       const submitted = [];
+      const discussionShare = true;
       const scItem = {
         id,
         title,
@@ -90,6 +92,7 @@ export default {
         homework,
         practice,
         discussion,
+        discussionShare,
         itemKeywords,
         result,
         isSubmitted,
@@ -356,6 +359,7 @@ export default {
               isSubmitted: 0,
               submitted: [],
               discussion,
+              discussionShare: scItem.discussion_info.student_share,
             },
           });
           break;
@@ -645,6 +649,14 @@ export default {
         comment: s.comment,
         choice: s.choice,
         type: s.type,
+      });
+    },
+    async putDiscussion({ getters }) {
+      const share = getters.currentEditingScItem.discussionShare;
+      const id = getters.currentEditingScItem.id;
+      await discussionService.putDiscussion({
+        share,
+        id,
       });
     },
     async putMaterial({ getters }) {

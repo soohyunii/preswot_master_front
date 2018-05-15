@@ -71,9 +71,21 @@ export default {
             return;
           }
           if (vm.sc.length > index) {
+            if (vm.currentEzditingScItem) {
+              const params = {
+                lecture_item_id: vm.currentEditingScItem.id,
+              };
+              vm.$socket.emit('LEAVE_DISCUSSION', JSON.stringify(params));
+            }
             vm.updateCurrentEditingScItemIndex({
               currentEditingScItemIndex: index,
             });
+
+            const params = {
+              lecture_item_id: vm.currentEditingScItem.id,
+            };
+            vm.$socket.emit('JOIN_DISCUSSION', JSON.stringify(params));
+
             await vm.getScItem({
               scItemId: vm.currentEditingScItem.id,
             });

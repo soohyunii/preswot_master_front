@@ -26,6 +26,7 @@ export default {
     scKnowledgeMap: null,
     scVideoLink: null,
     afterStartDateOffsetSec: null,
+    afterStartDateOffsetSecInterval: 0,
     currentEditingNodeIndex: null,
     nodes: [],
     edges: [],
@@ -179,11 +180,14 @@ export default {
       const diff = Math.floor((now - startDate) / 1000);
       commit('updateAfterStartDateOffsetSec', { diff });
 
-      return setInterval(() => {
+      state.afterStartDateOffsetSecInterval = setInterval(() => {
         const now2 = new Date().getTime();
         const diff2 = Math.floor((now2 - startDate) / 1000);
         commit('updateAfterStartDateOffsetSec', { diff: diff2 });
       }, 1000);
+    },
+    clearOffsetSecNowDate({ state }) {
+      clearInterval(state.afterStartDateOffsetSecInterval);
     },
     async getSc({ state, commit }) {
       const res = await lectureService.getLecture({
