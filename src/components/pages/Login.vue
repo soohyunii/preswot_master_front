@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="login_wrapper">
     <el-container>
 
       <el-row>
@@ -20,6 +20,7 @@
           <br />
           <!-- TODO: add disabled attr according to validation -->
           <el-button
+            id="btn_login"
             type="primary"
             @click="onClick('LOGIN')"
           >

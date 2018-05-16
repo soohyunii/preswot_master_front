@@ -1,5 +1,5 @@
 <template>
-  <div class="register-wrapper">
+  <div id="register_wrapper">
     <el-container>
       <el-row>
         <el-col style="max-width: 700px;">
