@@ -1,5 +1,5 @@
 <template>
-  <el-card class="box-card" style="max-width:480px;">
+  <el-card v-bind:class="{ expand: isVoice }" class="box-card" style="max-width:480px;">
     <el-row style="padding:0;">
       <el-col id="chat-wrap" style="height: 482px; overflow-y: scroll">
         <el-card v-for="d in discuss" class="chat" >
@@ -7,8 +7,12 @@
             <span>{{d.user.name}}</span>
             <span class="chat-date" style="float:right">{{d.created_at}}</span>
           </div>
-          <div>
+          <div v-if="!d.is_audio">
             {{d.content}}
+          </div>
+          <div v-if="d.is_audio">
+            <audio controls :src="d.content">
+            </audio>
           </div>
         </el-card>
       </el-col>
@@ -21,12 +25,21 @@
             <el-input
               type="textarea"
               :rows="2"
-              style="width:330px;"
+              style="width:430px;"
               v-model="msg"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button v-if="!updating" type="primary" @click="chatSubmit" size="small">입력</el-button>
             <el-button v-if="updating" type="primary" @click="chatSubmit" size="small" disabled>입력</el-button>
+            <el-button type="primary" @click="voiceSubmit" size="small">음성</el-button>
+          </el-form-item>
+          <el-form-item v-if="isVoice">
+            <audio controls="" id="audio" :src="streamObjURL"></audio>
+            <div>
+              <el-button type="primary" @click="voiceRecord" size="small">Record</el-button>
+              <el-button type="primary" @click="voicePause" size="small">Pause</el-button>
+              <el-button type="primary" @click="voiceUpload" size="small">Upload</el-button>
+            </div>
           </el-form-item>
         </el-form>
       </el-col>
@@ -38,8 +51,12 @@
 
 <style scoped>
   .box-card {
-    height: 600px;
+    height: 640px;
     margin-left: 120px;
+    margin-bottom:30px;
+  }
+  .box-card.expand {
+    height:740px;
   }
   .chat-msg {
     margin-bottom: 0;
@@ -58,8 +75,9 @@
 
 
 <script>
-  import { mapGetters, mapMutations } from 'vuex';
+  import { mapGetters, mapMutations, mapActions } from 'vuex';
   import utils from '../../utils';
+  import { baseUrl } from '../../services/config';
 
   export default {
     components: {
@@ -83,6 +101,7 @@
       });
       vm.$socket.on('ARRIVE_NEW_DISCUSSION', (msg) => {
         const jsonMSG = JSON.parse(msg);
+        console.log(jsonMSG);
         if (this.pShare === true ||
           jsonMSG.is_teacher === 1 ||
           jsonMSG.user_id === utils.getUserIdFromJwt()) {
@@ -99,6 +118,10 @@
     beforeUpdate() {
       const vm = this;
       if (vm.pre !== vm.currentEditingScItem.id) {
+        vm.isVoice = false;
+        vm.recordedVoice = null;
+        vm.streamObjURL = null;
+        vm.recordBuffer = [];
         vm.pre = vm.currentEditingScItem.id;
         vm.$forceUpdate();
       }
@@ -116,6 +139,10 @@
         isStudent: true,
         updating: false,
         pre: -1,
+        isVoice: false,
+        streamObjURL: null,
+        recordedVoice: null,
+        recordBuffer: [],
       };
     },
     computed: {
@@ -134,6 +161,8 @@
             } else {
               discuss[i].created_at = utils.formatDate(new Date(discuss[i].created_at));
             }
+            if (discuss[i].is_audio)
+              discuss[i].content = baseUrl + discuss[i].content;
           }
           return discuss;
         },
@@ -146,6 +175,9 @@
       },
     },
     methods: {
+      ...mapActions('scItem', [
+        'postFile',
+      ]),
       ...mapMutations('scItem', ['assignCurrentEditingScItem']),
       formatDate: utils.formatDate,
       chatSubmit() {
@@ -154,10 +186,75 @@
           lecture_item_id: vm.currentEditingScItem.id,
           user_id: utils.getUserIdFromJwt(),
           content: vm.msg,
+          not_save: false,
         };
         vm.$socket.emit('SEND_NEW_DISCUSSION', JSON.stringify(params));
         vm.updating = true;
         vm.msg = '';
+      },
+      voiceSubmit() {
+        const vm = this;
+        vm.isVoice = true;
+      },
+      recordSuccessCallBack(s) {
+        const vm = this;
+        vm.recordedVoice = new MediaRecorder(s);
+        vm.recordedVoice.ondataavailable = function (e) {
+          vm.streamObjURL = window.URL.createObjectURL(e.data);
+          vm.recordBuffer.push(e.data);
+        };
+        vm.recordedVoice.start();
+      },
+      recordFailCallBack() {
+      },
+      voiceRecord() {
+        const vm = this;
+        if (navigator.getUserMedia) {
+          navigator.getUserMedia({
+            audio: true,
+          }, vm.recordSuccessCallBack, vm.recordFailCallBack);
+        }
+      },
+      voicePause() {
+        const vm = this;
+        vm.recordedVoice.stop();
+      },
+      dataUrlToFile(dataUrl) {
+        const binary = atob(dataUrl.split(',')[1]),
+        data = [];
+
+        for (let i = 0; i < binary.length; i++)
+          data.push(binary.charCodeAt(i));
+
+        return new File([new Uint8Array(data)], 'recorded-audio.mpeg', {
+          type: 'audio/mpeg'
+        });
+      },
+      voiceUpload() {
+        const vm = this;
+        const blob = new Blob(vm.recordBuffer, {
+          type: 'audio/mpeg'
+        });
+        console.log(blob);
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = function (e) {
+          const dataUrl = e.target.result;
+          console.log(e);
+          const file = vm.dataUrlToFile(dataUrl);
+          vm.postFile({
+            file: file,
+          }).then((r) => {
+            console.log(r);
+            const discussion = r.data.discussion;
+            const params = {
+              discussion: discussion,
+              not_save: true,
+            };
+            vm.$socket.emit('SEND_NEW_DISCUSSION', JSON.stringify(params));
+            vm.updating = true;
+          });
+        }
       },
     },
   };
