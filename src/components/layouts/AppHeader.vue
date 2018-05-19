@@ -50,6 +50,12 @@
               </el-button>
             </router-link>
 
+            <router-link to="/a/teacher/class2" v-show="isJwtValid">
+              <el-button :type="appTheme" plain>
+                <i class="fas fa-edit"></i>2
+              </el-button>
+            </router-link>
+
             <!-- Login / Profile, Logout button part -->
             <router-link to="/login" v-show="!isJwtValid">
               <el-button :type="appTheme" plain>

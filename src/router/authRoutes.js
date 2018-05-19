@@ -1,6 +1,7 @@
 // import Test from '../components/TestComponent';
 import Profile from '../components/pages/Profile';
 import TeacherClassIndex from '../components/pages/TeacherClassIndex';
+import TeacherClassIndex2 from '../components/pages/NNTeacherClassIndex';
 import TeacherLectureNew from '../components/pages/TeacherLectureNew';
 import TeacherLectureLive from '../components/pages/TeacherLectureLive';
 import StudentClassIndex from '../components/pages/StudentClassIndex';
@@ -52,6 +53,15 @@ export default function authRoutes(root) {
       component: TeacherClassIndex,
       meta: {
         title: 'Teacher Class Index', // TODO: import from i18n
+        auth: true,
+      },
+    },
+    {
+      path: '/teacher/class2/',
+      name: 'TeacherClass',
+      component: TeacherClassIndex2,
+      meta: {
+        title: 'Teacher Class Index2', // TODO: import from i18n
         auth: true,
       },
     },
