@@ -58,7 +58,7 @@ export default function authRoutes(root) {
     },
     {
       path: '/teacher/class2/',
-      name: 'TeacherClass',
+      name: 'TeacherClass2',
       component: TeacherClassIndex2,
       meta: {
         title: 'Teacher Class Index2', // TODO: import from i18n

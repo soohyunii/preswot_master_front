@@ -2,7 +2,7 @@
   <el-card class="box-card" style="max-width:480px;">
     <el-row style="padding:0;">
       <el-col id="chat-wrap" style="height: 482px; overflow-y: scroll">
-        <el-card v-for="d in discuss" class="chat" >
+        <el-card v-for="(d, index) in discuss" :key="index" class="chat">
           <div class="chat-head">
             <span>{{d.user.name}}</span>
             <span class="chat-date" style="float:right">{{d.created_at}}</span>
