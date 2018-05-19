@@ -8,7 +8,7 @@ function generateRandomEmail() {
 
 const testPassword = 'adjadj1234';
 export default {
-  '정상적인 회원가입': (client: NightwatchBrowser) => {
+  '회원가입은 모든 필드에 올바른 값을 넣었을 떄 회원을 생성해야한다.': (client: NightwatchBrowser) => {
     const devServer = client.globals.devServerURL as string;
 
     client.url(devServer)
@@ -19,7 +19,7 @@ export default {
 
     // 회원가입 페이지로 가서
     client.click('a[href="/register"]')
-      .waitForElementVisible('.register-wrapper', 1000);
+      .waitForElementVisible('#register_wrapper', 1000);
     client.assert.urlContains('register');
     client.expect.element('label[for="email_id"]').to.be.present.before(1000);
 
@@ -64,6 +64,39 @@ export default {
     // client.saveScreenshot('./what.png');
 
     client.assert.urlEquals(devServer + '/');
+    client.end();
+  },
+  // '중간에 로그인하면 어떻게 됨? 다음 테스트? client.end()랑 상관있남?': (client: NightwatchBrowser) => {
+  // // 이거 실행되고 다음꺼 실행된다는 가정하에, client.end() 없으면 로그인한채로 넘어감
+  //   const devServer = client.globals.devServerURL as string;
+  //   client.url(devServer)
+  //     .waitForElementVisible('#app', 5000);
+  //   client.click('a[href="/login"]')
+  //     .waitForElementVisible('#login_wrapper', 1000);
+  //   client.click('#btn_login'); // 값이 이미 입력되어있으니까 바로 클릭해버리기
+  //   client.end();
+  // },
+  '회원가입은 폼에 invalid한 값이 들어왔을 떄 적절한 타입의 경고를 띄우고 가입을 막아야한다.': (client: NightwatchBrowser) => {
+    const devServer = client.globals.devServerURL as string;
+
+    client.url(devServer)
+      .waitForElementVisible('#app', 5000);
+
+    // 로그인 되지 않은 상황에서
+    client.expect.element('a[href="/login"]').to.be.present.before(1000);
+
+    // 회원가입 페이지로 가서
+    client.click('a[href="/register"]')
+      .waitForElementVisible('#register_wrapper', 1000);
+    client.assert.urlContains('register');
+    client.expect.element('label[for="email_id"]').to.be.present.before(1000);
+    client.setValue('#email_id input', 'asdf');
+    client.click('body').pause(100); // focus 지우기
+    client.expect.element('#email_id .el-form-item__error').text.to.be.equal('유효하지 않은 이메일입니다.');
+
+    // TODO: 나머지 validation
+
+
     client.end();
   },
 };
