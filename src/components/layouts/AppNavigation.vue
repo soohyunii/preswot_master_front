@@ -79,6 +79,7 @@
       <router-link to="/a/test">Chart Test</router-link> <br />
       <router-link to="/a/student/class">Student Class</router-link> <br />
       <a :href = "`${serverUrl}/downloads/download_logfile/${userId}`">log_file</a> <br />
+      <router-link to="/a/dump">dump</router-link> <br />
     </el-menu>
   </div>
 </template>
