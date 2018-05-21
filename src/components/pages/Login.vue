@@ -75,7 +75,7 @@ export default {
     return {
       input: {
         email: 'adoji92@gmail.com',
-        password: 'adjadj1234',
+        password: '12345abcde',
       },
       isModalVisible: false,
       findingPasswordEmail: '',
