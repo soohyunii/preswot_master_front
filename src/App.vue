@@ -10,7 +10,7 @@
         </el-aside>
         <el-container>
           <el-main id="app_router_view_wrapper" >
-            <router-view/>
+            <router-view :key="$route.fullPath"></router-view> <!-- vue router에서 동일한 path 호출시 새로고침 효과 -->
           </el-main>
           <el-footer id="app_footer_wrapper">
             <app-footer />
@@ -24,8 +24,8 @@
 
 <script>
 import { mapState } from 'vuex';
-// import './app.scss';
-// import './variables.scss'; // * To use $--color-primary scss variable
+import './app.scss';
+import './variables.scss'; // * To use $--color-primary scss variable
 
 import AppNavigation from './components/layouts/AppNavigation';
 import AppHeader from './components/layouts/AppHeader';
@@ -65,9 +65,12 @@ export default {
 </script>
 
 <style lang="scss">
-@import "~@/app.scss";
+@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
 @import "~@/variables.scss";
 
+body {
+  font-family: 'Noto Sans KR', sans-serif !important;
+}
 
 #app {
   display: flex;

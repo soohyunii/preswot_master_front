@@ -15,6 +15,9 @@ import StudentClassJournal from '../components/pages/StudentClassJournal';
 import TeacherClassJournal from '../components/pages/TeacherClassJournal';
 import StudentLectureJournal from '../components/pages/StudentLectureJournal';
 import TeacherLectureJournal from '../components/pages/TeacherLectureJournal';
+import ClassQuestionAnswer from '../components/pages/ClassQuestionAnswer';
+import ClassQuestionAnswerWrite from '../components/pages/ClassQuestionAnswerWrite';
+import ClassQuestionAnswerDetail from '../components/pages/ClassQuestionAnswerDetail';
 import test from '../components/partials/test';
 
 
@@ -98,6 +101,33 @@ export default function authRoutes(root) {
       component: TeacherClassScoring,
       meta: {
         title: 'Teacher Class Scoring',
+        auth: true,
+      },
+    },
+    {
+      path: '/class/:classId/questionanswer/:pageNum',
+      name: 'ClassQuestionAnswer',
+      component: ClassQuestionAnswer,
+      meta: {
+        title: 'Class Q&A',
+        auth: true,
+      },
+    },
+    {
+      path: '/class/:classId/questionanswerwrite',
+      name: 'ClassQuestionAnswerWrite',
+      component: ClassQuestionAnswerWrite,
+      meta: {
+        title: 'Class Q&A Write',
+        auth: true,
+      },
+    },
+    {
+      path: '/class/:classId/questionanswerdetail/:boardId',
+      name: 'ClassQuestionDetail',
+      component: ClassQuestionAnswerDetail,
+      meta: {
+        title: 'Class Q&A Detail',
         auth: true,
       },
     },
