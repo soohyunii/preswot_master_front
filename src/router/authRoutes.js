@@ -16,6 +16,7 @@ import TeacherClassJournal from '../components/pages/TeacherClassJournal';
 import StudentLectureJournal from '../components/pages/StudentLectureJournal';
 import TeacherLectureJournal from '../components/pages/TeacherLectureJournal';
 import test from '../components/partials/test';
+import Dump from '../components/pages/dump';
 
 
 export default function authRoutes(root) {
@@ -170,6 +171,15 @@ export default function authRoutes(root) {
       component: TeacherLectureJournal,
       meta: {
         title: 'Teacher Lecture Journal',
+        auth: true,
+      },
+    },
+    {
+      path: '/dump',
+      name: 'dump',
+      component: Dump,
+      meta: {
+        title: 'Dump',
         auth: true,
       },
     },
