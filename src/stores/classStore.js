@@ -358,6 +358,12 @@ export default {
         currentClassIndex: null,
       });
     },
+    async NNdeleteClass({ state }, { index }) {
+      const currentClass = state.teachingClassList[index];
+      await classService.delete({
+        id: currentClass.class_id,
+      });
+    },
     async getClassCoverage({ state, getters, commit }, { type }) {
       if (state.currentClassIndex === null) {
         return;

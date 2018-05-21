@@ -1,46 +1,11 @@
 <template>
   <div id="teacher_class_index_wrapper" class="bt-container">
-    <class-list type="TEACHER" :list="[
-            {
-              class_id: 1,
-              name: 'asdf',
-              description: 'sdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdf',
-              intended_lecture_num: 0,
-              start_time: '2018-05-02T06:03:05.000Z',
-              end_time: null,
-              opened: 1,
-              created_at: '2018-05-15T06:03:06.000Z',
-              updated_at: '2018-05-15T07:12:08.000Z',
-              master_id: 11,
-              user_class: {
-                role: 'teacher',
-                class_id: 1,
-                user_id: 11,
-              },
-            },
-            {
-              class_id: 1,
-              name: 'asdf2',
-              description: 'sdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdf',
-              intended_lecture_num: 0,
-              start_time: '2018-05-02T06:03:05.000Z',
-              end_time: null,
-              opened: 1,
-              created_at: '2018-05-15T06:03:06.000Z',
-              updated_at: '2018-05-15T07:12:08.000Z',
-              master_id: 11,
-              user_class: {
-                role: 'teacher',
-                class_id: 1,
-                user_id: 11,
-              },
-            },
-          ]" />
+    <class-list @delete="onClickDelete" type="TEACHER" :list="teachingClassList" />
 
     <br />
 
     <div class="right-align">
-      <router-link to="/a/teacher/class/new">
+      <router-link to="/a/teacher/NNclass/new">
         <el-button type="primary">과목 개설</el-button>
       </router-link>
     </div>
@@ -58,19 +23,57 @@ export default {
   },
   computed: {
     ...mapState('class', [
-      'currentClassIndex',
       'teachingClassList',
-      'studyingClassList',
     ]),
   },
   methods: {
     ...mapMutations('class', [
-      'updateCurrentClassIndex',
+      'deleteTeachingClass',
     ]),
     ...mapActions('class', [
       'getMyClassLists',
-      'getKnowledgeMapData',
+      'NNdeleteClass',
     ]),
+    onClickDelete(index) {
+      const vm = this;
+      const currentTeachingClass = vm.teachingClassList[index];
+      vm.$confirm('정말로 이 과목을 삭제하시겠습니까?', `${currentTeachingClass.name || ''} 삭제`, {
+        confirmButtonText: '예, 삭제합니다.',
+        cancelButtonText: '아니요, 삭제하지 않습니다.',
+        type: 'warning',
+      })
+        .then(async () => {
+          try {
+            // const index = vm.currentClassIndex;
+            await vm.NNdeleteClass({ index });
+            vm.deleteTeachingClass({
+              teachingClassIndex: index,
+            });
+            vm.$notify({
+              title: '삭제됨',
+              message: '과목이 삭제됨',
+              type: 'success',
+              duration: 3000,
+            });
+          } catch (error) {
+            console.error(error); // eslint-disable-line no-console
+            vm.$notify({
+              title: '과목 삭제 실패',
+              message: error.toString(),
+              type: 'error',
+              duration: 3000,
+            });
+          }
+        })
+        .catch(() => {
+          vm.$notify({
+            title: '취소됨',
+            message: '과목 삭제 취소됨',
+            type: 'info',
+            duration: 3000,
+          });
+        });
+    },
   },
 };
 </script>
