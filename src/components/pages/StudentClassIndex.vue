@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper bt-container">
     <el-container>
       <class-list-aside type="STUDENT" />
 
