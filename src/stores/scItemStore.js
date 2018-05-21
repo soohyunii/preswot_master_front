@@ -607,6 +607,13 @@ export default {
           });
           break;
         }
+        case '토론': {
+          res = await discussionService.postDiscussionFile({
+            file,
+            lectureItemId: getters.currentEditingScItem.id,
+          });
+          return res;
+        }
         default: {
           throw new Error(`not defined scItemType ${getters.currentEditingScItem.type}`);
         }
@@ -625,7 +632,7 @@ export default {
             SQLiteFile,
           },
         });
-        return;
+        return res;
       }
       const newFileList = getters.currentEditingScItem.fileList;
       newFileList.push({
@@ -640,6 +647,7 @@ export default {
           fileList: newFileList,
         },
       });
+      return res;
       // console.log('teacherStore action postMaterialFile', res);
     },
     async putSurvey({ getters }) {
