@@ -196,6 +196,10 @@
     webpack "^3.11.0"
     webpack-hot-middleware "^2.21.2"
 
+"@types/jest@^22.2.3":
+  version "22.2.3"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-22.2.3.tgz#0157c0316dc3722c43a7b71de3fdf3acbccef10d"
+
 "@types/nightwatch@^0.9.7":
   version "0.9.7"
   resolved "https://registry.yarnpkg.com/@types/nightwatch/-/nightwatch-0.9.7.tgz#690993008374228a0c825d3920bdfe3721c079fe"
@@ -602,6 +606,10 @@ atob@^2.0.0:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.0.3.tgz#19c7a760473774468f20b2d2d03372ad7d4cbf5d"
 
+atob@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.1.tgz#ae2d5a729477f289d60dd7f96a6314a22dd6c22a"
+
 autoprefixer@^6.3.1:
   version "6.7.7"
   resolved "https://registry.yarnpkg.com/autoprefixer/-/autoprefixer-6.7.7.tgz#1dbd1c835658e35ce3f9984099db00585c782014"
@@ -667,7 +675,7 @@ babel-code-frame@6.26.0, babel-code-frame@^6.16.0, babel-code-frame@^6.22.0, bab
     esutils "^2.0.2"
     js-tokens "^3.0.2"
 
-babel-core@^6.0.0, babel-core@^6.22.1, babel-core@^6.25.0, babel-core@^6.26.0:
+babel-core@^6.0.0, babel-core@^6.22.1, babel-core@^6.26.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-core/-/babel-core-6.26.0.tgz#af32f78b31a6fcef119c87b0fd8d9753f03a0bb8"
   dependencies:
@@ -927,10 +935,6 @@ babel-plugin-jsx-v-model@^2.0.1:
     babel-plugin-syntax-jsx "^6.18.0"
     html-tags "^2.0.0"
     svg-tags "^1.0.0"
-
-babel-plugin-jsx-vue-functional@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/babel-plugin-jsx-vue-functional/-/babel-plugin-jsx-vue-functional-2.1.0.tgz#5630a0c86fe1904d28c30465e6bf1cf71235a239"
 
 babel-plugin-macros@^2.2.0:
   version "2.2.0"
@@ -1311,7 +1315,7 @@ babel-plugin-transform-minify-booleans@^6.9.0:
   version "6.9.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-transform-minify-booleans/-/babel-plugin-transform-minify-booleans-6.9.0.tgz#e36ceaa49aadcae70ec98bd9dbccb660719a667a"
 
-babel-plugin-transform-object-rest-spread@^6.22.0, babel-plugin-transform-object-rest-spread@^6.26.0:
+babel-plugin-transform-object-rest-spread@^6.22.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-transform-object-rest-spread/-/babel-plugin-transform-object-rest-spread-6.26.0.tgz#0f36692d50fef6b7e2d4b3ac1478137a963b7b06"
   dependencies:
@@ -1348,7 +1352,7 @@ babel-plugin-transform-remove-undefined@^0.3.0:
   dependencies:
     babel-helper-evaluate-path "^0.3.0"
 
-babel-plugin-transform-runtime@^6.15.0, babel-plugin-transform-runtime@^6.22.0, babel-plugin-transform-runtime@^6.23.0:
+babel-plugin-transform-runtime@^6.22.0, babel-plugin-transform-runtime@^6.23.0:
   version "6.23.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-transform-runtime/-/babel-plugin-transform-runtime-6.23.0.tgz#88490d446502ea9b8e7efb0fe09ec4d99479b1ee"
   dependencies:
@@ -1480,28 +1484,6 @@ babel-preset-stage-3@^6.24.1:
     babel-plugin-transform-exponentiation-operator "^6.24.1"
     babel-plugin-transform-object-rest-spread "^6.22.0"
 
-babel-preset-vue-app@^1.3.1:
-  version "1.3.2"
-  resolved "https://registry.yarnpkg.com/babel-preset-vue-app/-/babel-preset-vue-app-1.3.2.tgz#53e98ac012a4edd3f8356cc6aafa000a6e980292"
-  dependencies:
-    babel-plugin-syntax-dynamic-import "^6.18.0"
-    babel-plugin-transform-object-rest-spread "^6.26.0"
-    babel-plugin-transform-runtime "^6.15.0"
-    babel-preset-env "^1.6.0"
-    babel-preset-vue "^1.2.1"
-    babel-runtime "^6.20.0"
-
-babel-preset-vue@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/babel-preset-vue/-/babel-preset-vue-1.2.1.tgz#b0de8977e0ce981fc6824cf0a537917a02a6fe87"
-  dependencies:
-    babel-helper-vue-jsx-merge-props "^2.0.2"
-    babel-plugin-jsx-event-modifiers "^2.0.2"
-    babel-plugin-jsx-v-model "^2.0.1"
-    babel-plugin-jsx-vue-functional "^2.1.0"
-    babel-plugin-syntax-jsx "^6.18.0"
-    babel-plugin-transform-vue-jsx "^3.5.0"
-
 babel-preset-vue@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/babel-preset-vue/-/babel-preset-vue-2.0.2.tgz#cfadf1bd736125397481b5f8525ced0049a0c71f"
@@ -1524,7 +1506,7 @@ babel-register@^6.22.0, babel-register@^6.26.0:
     mkdirp "^0.5.1"
     source-map-support "^0.4.15"
 
-babel-runtime@6.x, babel-runtime@6.x.x, babel-runtime@^6.11.6, babel-runtime@^6.18.0, babel-runtime@^6.20.0, babel-runtime@^6.22.0, babel-runtime@^6.23.0, babel-runtime@^6.26.0, babel-runtime@^6.5.0:
+babel-runtime@6.x, babel-runtime@6.x.x, babel-runtime@^6.11.6, babel-runtime@^6.18.0, babel-runtime@^6.22.0, babel-runtime@^6.23.0, babel-runtime@^6.26.0, babel-runtime@^6.5.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
   dependencies:
@@ -2598,6 +2580,15 @@ css-selector-tokenizer@^0.7.0:
 css-what@2.1:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/css-what/-/css-what-2.1.0.tgz#9467d032c38cfaefb9f2d79501253062f87fa1bd"
+
+css@^2.1.0:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/css/-/css-2.2.3.tgz#f861f4ba61e79bedc962aa548e5780fd95cbc6be"
+  dependencies:
+    inherits "^2.0.1"
+    source-map "^0.1.38"
+    source-map-resolve "^0.5.1"
+    urix "^0.1.0"
 
 cssesc@^0.1.0:
   version "0.1.0"
@@ -3857,6 +3848,12 @@ extglob@^2.0.4:
     regex-not "^1.0.0"
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
+
+extract-from-css@^0.4.4:
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/extract-from-css/-/extract-from-css-0.4.4.tgz#1ea7df2e7c7c6eb9922fa08e8adaea486f6f8f92"
+  dependencies:
+    css "^2.1.0"
 
 extract-text-webpack-plugin@^3.0.0:
   version "3.0.2"
@@ -6091,6 +6088,10 @@ lodash.isarguments@^3.0.0:
 lodash.isarray@^3.0.0:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/lodash.isarray/-/lodash.isarray-3.0.4.tgz#79e4eb88c36a8122af86f844aa9bcd851b5fbb55"
+
+lodash.isarray@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/lodash.isarray/-/lodash.isarray-4.0.0.tgz#2aca496b28c4ca6d726715313590c02e6ea34403"
 
 lodash.isboolean@^3.0.3:
   version "3.0.3"
@@ -8767,6 +8768,16 @@ source-map-resolve@^0.5.0:
     source-map-url "^0.4.0"
     urix "^0.1.0"
 
+source-map-resolve@^0.5.1:
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/source-map-resolve/-/source-map-resolve-0.5.2.tgz#72e2cc34095543e43b2c62b2c4c10d4a9054f259"
+  dependencies:
+    atob "^2.1.1"
+    decode-uri-component "^0.2.0"
+    resolve-url "^0.2.1"
+    source-map-url "^0.4.0"
+    urix "^0.1.0"
+
 source-map-support@^0.4.15:
   version "0.4.18"
   resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.4.18.tgz#0286a6de8be42641338594e97ccea75f0a2c585f"
@@ -8786,6 +8797,12 @@ source-map-url@^0.4.0:
 source-map@0.5.x, source-map@^0.5.3, source-map@^0.5.6, source-map@^0.5.7, source-map@~0.5.0, source-map@~0.5.1:
   version "0.5.7"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.5.7.tgz#8a039d2d1021d22d1ea14c80d8ea468ba2ef3fcc"
+
+source-map@^0.1.38:
+  version "0.1.43"
+  resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.1.43.tgz#c24bc146ca517c1471f5dacbe2571b2b7f9e3346"
+  dependencies:
+    amdefine ">=0.0.4"
 
 source-map@^0.4.2, source-map@^0.4.4:
   version "0.4.4"
@@ -9608,20 +9625,20 @@ vue-i18n@^7.3.3:
   version "7.4.2"
   resolved "https://registry.yarnpkg.com/vue-i18n/-/vue-i18n-7.4.2.tgz#ef954f80898bb3609f132f77d51a7053379e03b2"
 
-vue-jest@^1.0.2:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/vue-jest/-/vue-jest-1.4.0.tgz#1d6b4d2774b0aec06cfe5d39789039d3381bc528"
+vue-jest@^2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/vue-jest/-/vue-jest-2.6.0.tgz#23dc99a4dce0bb59fea3946e1317b234968cf12a"
   dependencies:
-    babel-core "^6.25.0"
-    babel-preset-vue-app "^1.3.1"
+    babel-plugin-transform-es2015-modules-commonjs "^6.26.0"
     chalk "^2.1.0"
+    extract-from-css "^0.4.4"
     find-babel-config "^1.1.0"
     js-beautify "^1.6.14"
     node-cache "^4.1.1"
     object-assign "^4.1.1"
     source-map "^0.5.6"
     tsconfig "^7.0.0"
-    vue-template-es2015-compiler "^1.5.3"
+    vue-template-es2015-compiler "^1.6.0"
 
 vue-loader@^13.3.0:
   version "13.7.1"
@@ -9682,7 +9699,7 @@ vue-template-compiler@^2.5.2:
     de-indent "^1.0.2"
     he "^1.1.0"
 
-vue-template-es2015-compiler@^1.5.3, vue-template-es2015-compiler@^1.6.0:
+vue-template-es2015-compiler@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.6.0.tgz#dc42697133302ce3017524356a6c61b7b69b4a18"
 
