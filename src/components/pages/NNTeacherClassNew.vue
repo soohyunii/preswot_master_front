@@ -99,14 +99,9 @@ export default {
       description: '',
     };
     return {
-      isEdit: false,
       initialInput,
       input: Object.assign({}, initialInput), // 복사해서 넣음
     };
-  },
-  beforeMount() {
-    const vm = this;
-    vm.isEdit = vm.$route.fullPath.includes('/edit');
   },
   async mounted() {
     const vm = this;
@@ -125,6 +120,10 @@ export default {
     }
   },
   computed: {
+    isEdit() {
+      const vm = this;
+      return vm.$route.fullPath.includes('/edit');
+    },
     classId() {
       const vm = this;
       return vm.$route.path.split('class/')[1].split('/edit')[0];
