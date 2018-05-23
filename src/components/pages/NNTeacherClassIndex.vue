@@ -26,6 +26,10 @@ export default {
       'teachingClassList',
     ]),
   },
+  async beforeMount() {
+    const vm = this;
+    await vm.getMyClassLists();
+  },
   methods: {
     ...mapMutations('class', [
       'deleteTeachingClass',
