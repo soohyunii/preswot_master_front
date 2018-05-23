@@ -1,8 +1,5 @@
 <template>
   <div id="teacher_class_new_wrapper" class="bt-container">
-    NN Teacher Class New Template <br />
-    isEdit: {{ isEdit }} <br />
-    {{ input }}
     <h1>
       <template v-if="isEdit">
         과목 수정
@@ -150,13 +147,43 @@ export default {
         if (vm.isEdit) {
           const id = vm.classId;
           // TODO: wrap with try catch
-          await classService.NNputClass({
-            id,
-            ...vm.input,
-          });
+          try {
+            await classService.NNputClass({
+              id,
+              ...vm.input,
+            });
+            vm.$notify({
+              title: '과목 수정 성공',
+              message: '성공적으로 과목이 수정됨',
+              type: 'success',
+            });
+            vm.$router.go(-1);
+          } catch (error) {
+            vm.$notify({
+              title: '과목 수정 실패',
+              message: error.toString(),
+              type: 'error',
+              duration: 0,
+            });
+          }
         } else {
           // TODO: wrap with try catch
-          await classService.NNpostClass(vm.input);
+          try {
+            await classService.NNpostClass(vm.input);
+            vm.$notify({
+              title: '과목 생성 성공',
+              message: '성공적으로 과목이 생성됨',
+              type: 'success',
+            });
+            vm.$router.go(-1);
+          } catch (error) {
+            vm.$notify({
+              title: '과목 생성 실패',
+              message: error.toString(),
+              type: 'error',
+              duration: 0,
+            });
+          }
         }
       });
     },
