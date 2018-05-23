@@ -1,6 +1,5 @@
 <template functional>
-  <div id="class_list_wrapper" class="bt-container">
-    <h2>강의 중인 과목 목록</h2>
+  <div id="class_list_wrapper">
     <div v-if="props.list.length === 0">
       강의 중인 과목이 없습니다.
     </div>
@@ -103,7 +102,7 @@ export default {
           return true;
         }
         const firstElement = value[0];
-        const allowedKeyOfClassListItem = ['id'];
+        const allowedKeyOfClassListItem = ['id']; // TODO: improve this list
         const firstElementKeySet = new Set(Object.keys(firstElement));
         if (firstElementKeySet.size === 0) {
           throw new Error('ClassList empty element received.');

@@ -1,6 +1,13 @@
 <template>
   <div id="teacher_class_index_wrapper" class="bt-container">
-    <class-list @row-click="onClickRow" @delete="onClickDelete" type="TEACHER" :list="teachingClassList" />
+    <h2>강의 중인 과목 목록</h2>
+
+    <class-list
+      @row-click="onClickClass"
+      @delete="onClickDelete"
+      type="TEACHER"
+      :list="teachingClassList"
+    />
 
     <br />
 
@@ -40,7 +47,7 @@ export default {
       'getMyClassLists',
       'NNdeleteClass',
     ]),
-    onClickRow(row, a, column) {
+    onClickClass(row, _, column) {
       if (column.label === '-') {
         return;
       }
