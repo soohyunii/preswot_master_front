@@ -1,7 +1,8 @@
 /* eslint-disable import/prefer-default-export */
 
-let serverUrl = 'http://localhost';
-// let serverUrl = 'http://165.132.105.33';
+// let serverUrl = 'http://localhost';
+// let serverUrl = 'http://165.132.105.38';
+let serverUrl = 'http://13.124.236.81';
 
 let backPort = 8002;
 let socketPort = 8003;
