@@ -1,5 +1,5 @@
 <template>
-  <div id="app_nav_wrapper">
+  <div id="app_nav_wrapper" class="bt-container">
     <el-row type="flex" justify="space-between">
 
       <!-- TODO: replace span with :xs, :sm, :md, :lg, :xl -->
@@ -47,6 +47,12 @@
             <router-link to="/a/teacher/class" v-show="isJwtValid">
               <el-button :type="appTheme" plain>
                 <i class="fas fa-edit"></i>
+              </el-button>
+            </router-link>
+
+            <router-link to="/a/teacher/class2" v-show="isJwtValid">
+              <el-button :type="appTheme" plain>
+                <i class="fas fa-edit"></i>2
               </el-button>
             </router-link>
 
