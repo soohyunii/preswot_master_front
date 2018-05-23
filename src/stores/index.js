@@ -7,6 +7,7 @@ import sc from './scStore';
 import scItem from './scItemStore';
 import sibalClassIsReservedWord from './classStore';
 import analysis from './analysisStore';
+import board from './boardStore';
 
 Vue.use(Vuex);
 
@@ -18,5 +19,6 @@ export default new Vuex.Store({
     sc,
     class: sibalClassIsReservedWord,
     analysis,
+    board,
   },
 });
