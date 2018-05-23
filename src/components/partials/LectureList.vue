@@ -4,7 +4,99 @@
       생성된 강의가 없습니다.
     </div>
     <div v-else>
+      {{ props.list }}<br />
+
+      번호(1), 타입(숙제), 강의(근대사 1강), 기간, 수강한 학생수, 수강생 이해도(평균), 강의, 관리, 삭제
       <el-table :data="props.list" stripe @row-click="listeners['row-click']">
+        <el-table-column
+          prop="index"
+          label="강의 번호"
+          width="80"
+          align="center"
+        >
+          <template slot-scope="scope">
+            {{ scope.$index + 1 }}
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          prop="type"
+          label="타입"
+          width="90"
+          align="center"
+        ></el-table-column>
+
+        <el-table-column
+          prop="name"
+          label="강의"
+          width="225"
+          align="center"
+        ></el-table-column>
+
+        <el-table-column
+          label="기간"
+          width="300"
+          align="center"
+        >
+          <template slot-scope="scope">
+            {{ scope.row.intended_start ? new Date(scope.row.intended_start).toLocaleDateString('ko-KR') : '미정' }}
+            ~
+            {{ scope.row.intended_end ? new Date(scope.row.intended_end).toLocaleDateString('ko-KR') : '미정' }}
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          label="수강한 학생 수"
+          width="110"
+        >
+          <template slot-scope="scope">
+            몇명 / 몇명
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          label="수강생 이해도"
+          width="110"
+        >
+          <template slot-scope="scope">
+            몇%
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          label="-"
+          width="80"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <router-link :to="`/a/teacher/NNclass/${scope.row.class_id}/edit`">
+              <el-button>강의</el-button>
+            </router-link>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          label="-"
+          width="80"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <router-link :to="`/a/teacher/NNclass/${scope.row.class_id}/edit`">
+              <el-button>관리</el-button>
+            </router-link>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          label="-"
+          width="80"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <el-button type="danger" @click="listeners['delete'](scope.$index)">삭제</el-button>
+          </template>
+        </el-table-column>
+
       </el-table>
     </div>
   </div>

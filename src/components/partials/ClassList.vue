@@ -8,12 +8,11 @@
         <el-table-column
           prop="index"
           label="과목 번호"
-          sortable
           width="100"
           align="center"
         >
           <template slot-scope="scope">
-            {{ scope.row.class_id }}
+            {{ scope.$index }}
           </template>
         </el-table-column>
 
@@ -41,7 +40,9 @@
           align="center"
         >
           <template slot-scope="scope">
-            {{ new Date(scope.row.start_time).toLocaleDateString('ko-KR') }} ~ {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString('ko-KR') : '미정' }}
+            {{ scope.row.start_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') : '미정' }}
+            ~
+            {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString('ko-KR') : '미정' }}
           </template>
         </el-table-column>
 
