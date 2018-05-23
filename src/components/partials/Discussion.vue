@@ -101,7 +101,6 @@
       });
       vm.$socket.on('ARRIVE_NEW_DISCUSSION', (msg) => {
         const jsonMSG = JSON.parse(msg);
-        console.log(jsonMSG);
         if (this.pShare === true ||
           jsonMSG.is_teacher === 1 ||
           jsonMSG.user_id === utils.getUserIdFromJwt()) {
@@ -161,8 +160,9 @@
             } else {
               discuss[i].created_at = utils.formatDate(new Date(discuss[i].created_at));
             }
-            if (discuss[i].is_audio)
+            if (discuss[i].is_audio) {
               discuss[i].content = baseUrl + discuss[i].content;
+            }
           }
           return discuss;
         },
@@ -199,7 +199,7 @@
       recordSuccessCallBack(s) {
         const vm = this;
         vm.recordedVoice = new MediaRecorder(s);
-        vm.recordedVoice.ondataavailable = function (e) {
+        vm.recordedVoice.ondataavailable = function reData(e) {
           vm.streamObjURL = window.URL.createObjectURL(e.data);
           vm.recordBuffer.push(e.data);
         };
@@ -220,41 +220,38 @@
         vm.recordedVoice.stop();
       },
       dataUrlToFile(dataUrl) {
-        const binary = atob(dataUrl.split(',')[1]),
-        data = [];
+        const binary = atob(dataUrl.split(',')[1]);
+        const data = [];
 
-        for (let i = 0; i < binary.length; i++)
+        for (let i = 0; i < binary.length; i += 1) {
           data.push(binary.charCodeAt(i));
-
+        }
         return new File([new Uint8Array(data)], 'recorded-audio.mpeg', {
-          type: 'audio/mpeg'
+          type: 'audio/mpeg',
         });
       },
       voiceUpload() {
         const vm = this;
         const blob = new Blob(vm.recordBuffer, {
-          type: 'audio/mpeg'
+          type: 'audio/mpeg',
         });
-        console.log(blob);
         const reader = new FileReader();
         reader.readAsDataURL(blob);
-        reader.onloadend = function (e) {
+        reader.onloadend = function reloaded(e) {
           const dataUrl = e.target.result;
-          console.log(e);
           const file = vm.dataUrlToFile(dataUrl);
           vm.postFile({
-            file: file,
+            file,
           }).then((r) => {
-            console.log(r);
             const discussion = r.data.discussion;
             const params = {
-              discussion: discussion,
+              discussion,
               not_save: true,
             };
             vm.$socket.emit('SEND_NEW_DISCUSSION', JSON.stringify(params));
             vm.updating = true;
           });
-        }
+        };
       },
     },
   };
