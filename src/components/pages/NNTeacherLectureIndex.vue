@@ -1,5 +1,5 @@
 <template>
-  <div id="teacher_lecture_index" class="bt-container">
+  <div id="teacher_lecture_index_wrapper" class="bt-container">
     <h2>TODO: 과목명 classId: {{ classId }}</h2>
 
     <lecture-list
@@ -8,6 +8,14 @@
       type="TEACHER"
       :list="[]"
     />
+
+    <br />
+
+    <div class="right-align">
+      <router-link to="/a/teacher/NNlecture/new">
+        <el-button type="primary">강의 추가</el-button>
+      </router-link>
+    </div>
   </div>
 </template>
 
@@ -30,7 +38,7 @@ export default {
     },
   },
   methods: {
-    onClickLecture(row, a, column) {
+    onClickLecture(row, _, column) {
       if (column.label === '-') {
         return;
       }
@@ -43,4 +51,12 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+#teacher_lecture_index_wrapper {
+  .right-align {
+    text-align: right;
+  }
+}
+</style>
 
