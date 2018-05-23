@@ -16,4 +16,9 @@ export default {
       code,
     });
   },
+  getPracticeResult({
+                 practiceId,
+               }) {
+    return http.get(`/lecture_code_practices/${practiceId}`);
+  },
 };

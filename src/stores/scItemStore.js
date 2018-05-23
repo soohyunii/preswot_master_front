@@ -487,6 +487,12 @@ export default {
           });
           break;
         }
+        case '실습': {
+          res = await practiceService.getPracticeResult({
+            practiceId: getters.currentEditingScItem.practice.id,
+          });
+          break;
+        }
         default: {
           throw new Error(`not defined type ${type}`);
         }
