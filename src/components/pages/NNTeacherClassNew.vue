@@ -85,6 +85,8 @@
 
 <script>
 import { mapActions } from 'vuex';
+import classService from '../../services/classService';
+
 
 export default {
   name: 'TeacherClassNew',
@@ -114,8 +116,24 @@ export default {
   async mounted() {
     const vm = this;
     if (vm.isEdit) {
-      // TODO: load class info from server
+      const res = await classService.getClass({ id: vm.classId });
+      // console.log('res', res.data);
+      vm.input.title = res.data.name || vm.initialInput.title;
+      vm.input.opened = res.data.opened || vm.initialInput.opened;
+      vm.input.summary = res.data.summary || vm.initialInput.summary;
+      vm.input.activeStartDate = res.data.start_time || vm.initialInput.activeStartDate;
+      vm.input.activeEndDate = res.data.end_time || vm.initialInput.activeEndDate;
+      vm.input.capacity = res.data.capacity || vm.initialInput.capacity; // 0은 무제한
+      vm.input.capacityCheck = vm.input.capacity === 0;
+      vm.input.teacherDescription = res.data.teacher_description;
+      vm.input.description = res.data.description;
     }
+  },
+  computed: {
+    classId() {
+      const vm = this;
+      return vm.$route.path.split('class/')[1].split('/edit')[0];
+    },
   },
   methods: {
     ...mapActions('class', [
@@ -127,19 +145,18 @@ export default {
       vm.$refs.elForm.validate(async (/* valid, fields */) => {
         // console.log('valid,', valid);
         // console.log('fields', fields);
-        console.log(vm.$route);
         // TODO: if valid === true 로 감싸기
         // TODO: valid === false인 경우에 notify
         if (vm.isEdit) {
-          const id = vm.$route.path.split('class/')[1].split('/edit')[0];
+          const id = vm.classId;
           // TODO: wrap with try catch
-          await vm.NNputClass({
+          await classService.NNputClass({
             id,
             ...vm.input,
           });
         } else {
           // TODO: wrap with try catch
-          await vm.NNpostClass(vm.input);
+          await classService.NNpostClass(vm.input);
         }
       });
     },

@@ -342,6 +342,7 @@ export default {
         id, feedback,
       });
     },
+    // TODO: delete! for season2
     async getClass({ state, getters, commit }, { type }) {
       if (state.currentClassIndex === null) {
         return;
