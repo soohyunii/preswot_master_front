@@ -1,3 +1,5 @@
+import deepCopy from 'deep-copy';
+
 import utils from '../utils';
 import classService from '../services/classService';
 
@@ -348,6 +350,26 @@ export default {
           currentStudyingClass: {
             scenarioList: res.data.lectures,
           },
+        });
+      }
+    },
+    async NNgetClass({ state, commit }, { type, classId }) {
+      const res = await classService.getClass({
+        id: classId,
+      });
+      if (type === 'TEACHER') {
+        const newTeachingClassList = deepCopy(state.teachingClassList);
+        const currentClass = newTeachingClassList.find(item => item.class_id === classId);
+        currentClass.scenarioList = res.data.lectures;
+        commit('updateTeachingClassList', {
+          teachingClassList: newTeachingClassList,
+        });
+      } else {
+        const newStudyingClassList = deepCopy(state.studyingClassList);
+        const currentClass = newStudyingClassList.find(item => item.class_id === classId);
+        currentClass.scenarioList = res.data.lectures;
+        commit('updateStudyingClassList', {
+          studyingClassList: newStudyingClassList,
         });
       }
     },
