@@ -65,13 +65,13 @@ export default function authRoutes(root) {
       },
     },
     {
+      alias: '/teacher/NNclass/:classId/edit',
       path: '/teacher/NNclass/new',
       name: 'NNTeacherClassNew',
       component: NNTeacherClassNew,
       meta: {
         title: 'ddd',
       },
-      alias: '/teacher/NNclass/:classId/edit',
     },
     {
       path: '/teacher/class/new',

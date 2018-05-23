@@ -39,6 +39,28 @@ export default {
       teachers: teacherEmailList ? teacherEmailList : [], // eslint-disable-line
     });
   },
+  NNpostClass({
+    title,
+    opened,
+    summary,
+    activeStartDate,
+    activeEndDate,
+    capacity,
+    teacherDescription,
+    description,
+  }) {
+    return http.post('/classes', {
+      name: title,
+      opened,
+      summary,
+      start_time: activeStartDate,
+      end_time: activeEndDate,
+      capacity,
+      teacherDescription,
+      description,
+      teachers: [], // 현재 프론트에서는 공동 강사 입력 없음 23 May 2018
+    });
+  },
   putClass({
     name,
     description,
@@ -56,6 +78,28 @@ export default {
     Object.assign(param, { end_time: activeEndDate });
     utils.assignIfNotNil(param, { opened });
     return http.put(`/classes/${id}`, param);
+  },
+  NNputClass({
+    id,
+    title,
+    opened,
+    summary,
+    activeStartDate,
+    activeEndDate,
+    capacity,
+    teacherDescription,
+    description,
+  }) {
+    return http.put(`/classes/${id}`, {
+      name: title,
+      opened,
+      summary,
+      start_time: activeStartDate,
+      end_time: activeEndDate,
+      capacity,
+      teacherDescription,
+      description,
+    });
   },
   postTeacher({
     id,

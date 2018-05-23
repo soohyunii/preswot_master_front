@@ -42,7 +42,7 @@
           align="center"
         >
           <template slot-scope="scope">
-            {{ new Date(scope.row.start_time).toLocaleDateString() }} ~ {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString(scope.row.end_time) : '미정' }}
+            {{ new Date(scope.row.start_time).toLocaleDateString('ko-KR') }} ~ {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString('ko-KR') : '미정' }}
           </template>
         </el-table-column>
 
