@@ -21,6 +21,7 @@ export default {
      */
     currentClassIndex: null,
     // //////////////////////////절취선////////////////////////// //
+    // TODO: delete! for season2
     /**
      * TeacherClassNew 관련 변수들
      * ... 은 막 엄청 필요있을 것 같지가 않아서
