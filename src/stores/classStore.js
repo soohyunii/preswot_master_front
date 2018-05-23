@@ -301,27 +301,6 @@ export default {
       // TODO: pass intendedLectureNum
       await classService.postClass(state.newClass);
     },
-    async NNpostClass(_, {
-      title,
-      opened,
-      summary,
-      activeStartDate,
-      activeEndDate,
-      capacity,
-      teacherDescription,
-      description,
-    }) {
-      await classService.NNpostClass({
-        title,
-        opened,
-        summary,
-        activeStartDate,
-        activeEndDate,
-        capacity,
-        teacherDescription,
-        description,
-      });
-    },
     async putClass({ getters }) {
       await classService.putClass({
         name: getters.currentTeachingClass.name,
@@ -378,12 +357,6 @@ export default {
       });
       commit('updateCurrentClassIndex', {
         currentClassIndex: null,
-      });
-    },
-    async NNdeleteClass({ state }, { index }) {
-      const currentClass = state.teachingClassList[index];
-      await classService.delete({
-        id: currentClass.class_id,
       });
     },
     async getClassCoverage({ state, getters, commit }, { type }) {

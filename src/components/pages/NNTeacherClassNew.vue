@@ -81,9 +81,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
 import classService from '../../services/classService';
-
 
 export default {
   name: 'TeacherClassNew',
@@ -133,10 +131,6 @@ export default {
     },
   },
   methods: {
-    ...mapActions('class', [
-      'NNpostClass',
-      'NNputClass',
-    ]),
     onSubmit() {
       const vm = this;
       vm.$refs.elForm.validate(async (/* valid, fields */) => {

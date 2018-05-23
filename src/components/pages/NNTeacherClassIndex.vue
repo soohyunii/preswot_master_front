@@ -15,6 +15,8 @@
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex';
 import ClassList from '../partials/ClassList';
+import classService from '../../services/classService';
+
 
 export default {
   name: 'TeacherClassIndex',
@@ -49,7 +51,10 @@ export default {
         .then(async () => {
           try {
             // const index = vm.currentClassIndex;
-            await vm.NNdeleteClass({ index });
+            const currentClass = vm.teachingClassList[index];
+            await classService.delete({
+              id: currentClass.class_id,
+            });
             vm.deleteTeachingClass({
               teachingClassIndex: index,
             });
