@@ -1,7 +1,8 @@
 // import Test from '../components/TestComponent';
 import Profile from '../components/pages/Profile';
 import TeacherClassIndex from '../components/pages/TeacherClassIndex';
-import TeacherClassIndex2 from '../components/pages/NNTeacherClassIndex';
+import NNTeacherClassIndex from '../components/pages/NNTeacherClassIndex';
+import NNTeacherClassNew from '../components/pages/NNTeacherClassNew';
 import TeacherLectureNew from '../components/pages/TeacherLectureNew';
 import TeacherLectureLive from '../components/pages/TeacherLectureLive';
 import StudentClassIndex from '../components/pages/StudentClassIndex';
@@ -29,7 +30,6 @@ export default function authRoutes(root) {
     //   component: Test, // TODO: replace dummy with real component
     //   meta: {
     //     title: 'Admin Home', // TODO: import from i18n
-    //     auth: true,
     //   },
     // },
     {
@@ -38,7 +38,6 @@ export default function authRoutes(root) {
       component: test,
       meta: {
         title: 'test', // TODO: import from i18n
-        auth: true,
       },
     },
     {
@@ -47,7 +46,6 @@ export default function authRoutes(root) {
       component: Profile,
       meta: {
         title: 'Profile', // TODO: import from i18n
-        auth: true,
       },
     },
     {
@@ -56,17 +54,24 @@ export default function authRoutes(root) {
       component: TeacherClassIndex,
       meta: {
         title: 'Teacher Class Index', // TODO: import from i18n
-        auth: true,
       },
     },
     {
-      path: '/teacher/class2/',
-      name: 'TeacherClass2',
-      component: TeacherClassIndex2,
+      path: '/teacher/NNclass/',
+      name: 'NNTeacherClassIndex',
+      component: NNTeacherClassIndex,
       meta: {
         title: 'Teacher Class Index2', // TODO: import from i18n
-        auth: true,
       },
+    },
+    {
+      path: '/teacher/NNclass/new',
+      name: 'NNTeacherClassNew',
+      component: NNTeacherClassNew,
+      meta: {
+        title: 'ddd',
+      },
+      alias: '/teacher/NNclass/:classId/edit',
     },
     {
       path: '/teacher/class/new',
@@ -74,7 +79,6 @@ export default function authRoutes(root) {
       component: TeacherClassNew,
       meta: {
         title: 'Teacher Class New', // TODO: import from i18n
-        auth: true,
       },
     },
     {
@@ -83,7 +87,6 @@ export default function authRoutes(root) {
       component: TeacherClassEdit,
       meta: {
         title: 'Teacher Class Edit', // TODO: import from i18n
-        auth: true,
       },
     },
     {
@@ -92,7 +95,6 @@ export default function authRoutes(root) {
       component: TeacherClassEvaluation,
       meta: {
         title: 'Teacher Class Evaluation',
-        auth: true,
       },
     },
     {
@@ -101,7 +103,6 @@ export default function authRoutes(root) {
       component: TeacherClassScoring,
       meta: {
         title: 'Teacher Class Scoring',
-        auth: true,
       },
     },
     {
@@ -137,7 +138,6 @@ export default function authRoutes(root) {
       component: TeacherLectureNew,
       meta: {
         title: 'Teacher New Lecture', // TODO: import from i18n
-        auth: true,
       },
     },
     {
@@ -146,7 +146,6 @@ export default function authRoutes(root) {
       component: TeacherLectureLive,
       meta: {
         title: 'Teacher New Live', // TODO: import from i18n
-        auth: true,
       },
     },
     {
@@ -155,7 +154,6 @@ export default function authRoutes(root) {
       component: StudentClassIndex,
       meta: {
         title: 'Student Class Index', // TODO: import from i18n
-        auth: true,
       },
     },
     {
@@ -164,7 +162,6 @@ export default function authRoutes(root) {
       component: StudentLectureLive,
       meta: {
         title: 'Student Lecture Live',
-        auth: true,
       },
     },
     {
@@ -173,7 +170,6 @@ export default function authRoutes(root) {
       component: StudentClassJournal,
       meta: {
         title: 'Student Class Journal',
-        auth: true,
       },
     },
     {
@@ -182,7 +178,6 @@ export default function authRoutes(root) {
       component: TeacherClassJournal,
       meta: {
         title: 'Teacher Class Journal',
-        auth: true,
       },
     },
     {
@@ -191,7 +186,6 @@ export default function authRoutes(root) {
       component: StudentLectureJournal,
       meta: {
         title: 'Student Lecture Journal',
-        auth: true,
       },
     },
     {
@@ -200,11 +194,17 @@ export default function authRoutes(root) {
       component: TeacherLectureJournal,
       meta: {
         title: 'Teacher Lecture Journal',
-        auth: true,
       },
     },
   ].map((route) => {
     route.path = root + route.path; // eslint-disable-line no-param-reassign
+    if (route.alias) {
+      route.alias = root + route.alias; // eslint-disable-line no-param-reassign
+    }
+    if (!route.meta) {
+      route.meta = {}; // eslint-disable-line no-param-reassign
+    }
+    route.meta.auth = true; // eslint-disable-line no-param-reassign
     return route;
   });
 }

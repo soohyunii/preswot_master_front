@@ -1,6 +1,6 @@
 <template functional>
   <div id="class_list_wrapper" class="bt-container">
-    <h2>강의 과목</h2>
+    <h2>강의 중인 과목 목록</h2>
     <div v-if="props.list.length === 0">
       강의 중인 과목이 없습니다.
     </div>
@@ -8,20 +8,20 @@
       <el-table :data="props.list" stripe>
         <el-table-column
           prop="index"
-          label="번호"
+          label="과목 번호"
           sortable
-          width="70"
+          width="100"
           align="center"
         >
           <template slot-scope="scope">
-            {{ scope.$index + 1 }}
+            {{ scope.row.class_id }}
           </template>
         </el-table-column>
 
         <el-table-column
           prop="name"
           label="과목"
-          width="255"
+          width="225"
           align="center"
         ></el-table-column>
 
@@ -32,7 +32,7 @@
           align="center"
         >
           <template slot-scope="scope">
-            {{ scope.row.description | truncate(30) }}
+            {{ scope.row.description | truncate(20) }}
           </template>
         </el-table-column>
 
@@ -52,7 +52,9 @@
           align="center"
         >
           <template slot-scope="scope">
-            <el-button>수정</el-button>
+            <router-link :to="`/a/teacher/NNclass/${scope.row.class_id}/edit`">
+              <el-button>수정</el-button>
+            </router-link>
           </template>
         </el-table-column>
         <el-table-column
@@ -61,13 +63,11 @@
           align="center"
         >
           <template slot-scope="scope">
-            <el-button type="danger">삭제</el-button>
+            <el-button type="danger" @click="listeners['delete'](scope.$index)">삭제</el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
-    번호 / 과목 / 과목소개 / 기간 / - / - <br />
-    1 / 한국사 / 누가 국사 소리를 내었는가 / 어제부터 내일까지 / 수정 버튼 / 삭제 버튼 <br />
   </div>
 </template>
 
