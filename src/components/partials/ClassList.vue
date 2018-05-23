@@ -5,7 +5,7 @@
       강의 중인 과목이 없습니다.
     </div>
     <div v-else>
-      <el-table :data="props.list" stripe>
+      <el-table :data="props.list" stripe @row-click="listeners['row-click']">
         <el-table-column
           prop="index"
           label="과목 번호"

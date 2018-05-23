@@ -1,6 +1,6 @@
 <template>
   <div id="teacher_class_index_wrapper" class="bt-container">
-    <class-list @delete="onClickDelete" type="TEACHER" :list="teachingClassList" />
+    <class-list @row-click="onClickRow" @delete="onClickDelete" type="TEACHER" :list="teachingClassList" />
 
     <br />
 
@@ -40,6 +40,13 @@ export default {
       'getMyClassLists',
       'NNdeleteClass',
     ]),
+    onClickRow(row, a, column) {
+      if (column.label === '-') {
+        return;
+      }
+      const vm = this;
+      vm.$router.push(`/a/teacher/NNclass/${row.class_id}`);
+    },
     onClickDelete(index) {
       const vm = this;
       const currentTeachingClass = vm.teachingClassList[index];
