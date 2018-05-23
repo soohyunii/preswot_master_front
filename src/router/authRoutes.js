@@ -4,6 +4,7 @@ import TeacherClassIndex from '../components/pages/TeacherClassIndex';
 import NNTeacherClassIndex from '../components/pages/NNTeacherClassIndex';
 import NNTeacherClassNew from '../components/pages/NNTeacherClassNew';
 import NNTeacherLectureIndex from '../components/pages/NNTeacherLectureIndex';
+import NNTeacherLectureNew from '../components/pages/NNTeacherLectureNew';
 import TeacherLectureNew from '../components/pages/TeacherLectureNew';
 import TeacherLectureLive from '../components/pages/TeacherLectureLive';
 import StudentClassIndex from '../components/pages/StudentClassIndex';
@@ -72,6 +73,14 @@ export default function authRoutes(root) {
       component: NNTeacherClassNew,
       meta: {
         title: 'ddd',
+      },
+    },
+    {
+      path: '/teacher/NNlecture/new',
+      name: 'NNTeacherLectureNew',
+      component: NNTeacherLectureNew,
+      meta: {
+        title: 'dflskjdfj',
       },
     },
     {
