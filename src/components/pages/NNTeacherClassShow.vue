@@ -63,8 +63,8 @@ export default {
         return [];
       }
       const currentClass = vm.currentTeachingClass(vm.classId);
-      if (currentClass && currentClass.scenarioList) {
-        return currentClass.scenarioList.map((item) => {
+      if (currentClass && currentClass.lectures) {
+        return currentClass.lectures.map((item) => {
           const type = utils.convertScType(item.type);
           item.type = type; // eslint-disable-line no-param-reassign
           return item;

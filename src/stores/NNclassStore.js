@@ -38,9 +38,6 @@ export default {
       }
       return state.teachingClassList.find(item => item.class_id === classId);
     },
-    // currentTeachingClassLectureList(state) {
-
-    // },
   },
   mutations: {
     updateTeachingClassIndex(state, { teachingClassIndex }) {
@@ -116,14 +113,14 @@ export default {
       if (type === 'TEACHER') {
         const newTeachingClassList = deepCopy(state.teachingClassList);
         const currentClass = newTeachingClassList.find(item => item.class_id === classId);
-        currentClass.scenarioList = res.data.lectures;
+        currentClass.lectures = res.data.lectures;
         commit('updateTeachingClassList', {
           teachingClassList: newTeachingClassList,
         });
       } else {
         const newStudyingClassList = deepCopy(state.studyingClassList);
         const currentClass = newStudyingClassList.find(item => item.class_id === classId);
-        currentClass.scenarioList = res.data.lectures;
+        currentClass.lectures = res.data.lectures;
         commit('updateStudyingClassList', {
           studyingClassList: newStudyingClassList,
         });
