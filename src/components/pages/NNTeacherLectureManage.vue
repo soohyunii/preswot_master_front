@@ -24,8 +24,8 @@
       <el-tab-pane label="강의 자료 및 키워드 등록" name="two">
         강의 자료 및 키워드 등록 부분뷰
       </el-tab-pane>
-      <el-tab-pane label="강의 도구 등록" name="three">
-        강의 도구 등록 부분뷰
+      <el-tab-pane label="강의 아이템 등록" name="three">
+        강의 아이템 등록 부분뷰
       </el-tab-pane>
       <el-tab-pane label="강의 허용 프로그램 설정" name="four">
         강의 허용 프로그램 설정 부분뷰
