@@ -99,6 +99,15 @@
                           <el-table-column label="인원" align="center" prop="num_students" sortable>
                           </el-table-column>
                         </el-table>
+                        <el-table
+                          v-if="currentEditingScItemType === '실습'"
+                          :data="currentEditingScItem.result.lectures"
+                          border >
+                          <el-table-column label="user" align="center" prop="user_id">
+                          </el-table-column>
+                          <el-table-column label="score" align="center" prop="practice_score1" sortable>
+                          </el-table-column>
+                        </el-table>
                       </div>
                     </div>
                   </el-tab-pane>
@@ -370,28 +379,9 @@ export default {
           vm.isPlayerVisible = !vm.isPlayerVisible;
           break;
         }
-        // case 'TEMP_ACTIVATE': {
-        //   const params = {
-        //     opened: 1,
-        //     lecture_item_id: vm.currentEditingScItem.id,
-        //     lecture_id: Number.parseInt(vm.$route.params.scId, 10),
-        //   };
-        //   this.$socket.emit('LECTURE_ITEM_ACTIVATION', JSON.stringify(params));
-        //   vm.setActivated(vm);
-        //   break;
-        // }
-        // case 'TEMP_DEACTIVATE': {
-        //   const params = {
-        //     opened: 0,
-        //     lecture_item_id: vm.currentEditingScItem.id,
-        //     lecture_id: Number.parseInt(vm.$route.params.scId, 10),
-        //   };
-        //   this.$socket.emit('LECTURE_ITEM_ACTIVATION', JSON.stringify(params));
-        //   vm.setDeactivated(vm);
-        //   break;
-        // }
         case 'REFRESH_STATISTICS': {
           await vm.getScItemResult();
+          console.log(vm.currentEditingScItem.result.lectures);
           break;
         }
         case 'ACTIVATION_CONTROL': {
