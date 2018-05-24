@@ -1,8 +1,6 @@
 <template>
   <div id="teacher_lecture_index_wrapper" class="bt-container">
-    <h2>TODO: 과목명 classId: {{ classId }}</h2>
-
-    <!-- teachingClassList: {{ teachingClassList }} -->
+    <h2>{{ getCurrentClass().name }}</h2>
 
     <lecture-list
       @row-click="onClickLecture"

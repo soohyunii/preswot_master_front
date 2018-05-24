@@ -81,7 +81,7 @@
           align="center"
         >
           <template slot-scope="scope">
-            <router-link :to="`/a/teacher/NNlecture/${scope.row.lecture_id}/manage`">
+            <router-link :to="`/a/teacher/NNlecture/${scope.row.lecture_id}/manage?classId=${scope.row.class_id}`">
               <el-button>관리</el-button>
             </router-link>
           </template>
