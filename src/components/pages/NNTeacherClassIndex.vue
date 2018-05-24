@@ -45,7 +45,6 @@ export default {
     ]),
     ...mapActions('class', [
       'getMyClassLists',
-      'NNdeleteClass',
     ]),
     onClickClass(row, _, column) {
       if (column.label === '-') {
