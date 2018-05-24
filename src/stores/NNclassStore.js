@@ -61,6 +61,11 @@ export default {
     deleteTeachingClass(state, { teachingClassIndex }) {
       state.teachingClassList.splice(teachingClassIndex, 1);
     },
+    deleteScenario(state, { classId, lectureId }) {
+      const currentClass = state.teachingClassList.find(item => item.class_id === classId);
+      const tIndex = currentClass.scenarioList.findIndex(item => item.lecture_id === lectureId);
+      currentClass.scenarioList.splice(tIndex, 1);
+    },
   },
   actions: {
     async getClassLists({ commit }) {
@@ -121,6 +126,12 @@ export default {
           studyingClassList: newStudyingClassList,
         });
       }
+    },
+    async deleteScenario({ commit }, { classId, lectureId }) {
+      commit('deleteScenario', {
+        classId,
+        lectureId,
+      });
     },
   },
 };
