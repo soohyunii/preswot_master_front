@@ -8,7 +8,7 @@
       @row-click="onClickLecture"
       @delete="onClickDelete"
       type="TEACHER"
-      :list="lectureList"
+      :list="getLectureList()"
     />
 
     <br />
@@ -36,9 +36,14 @@ export default {
     return {
     };
   },
-  mounted() {
+  async mounted() {
     const vm = this;
-    vm.NNgetClass({
+    await vm.getMyClassLists();
+    // FIXME: vm.NNgetClass가 불릴 때 classStore.state.teachingClassList가
+    // 아직 채워지지 않은 경우가 있음
+    // 그래서 그냥 불렀는데. 구조적으로 개선이 필요함
+    // 지금 꽤나 여러군데에서 getMyClassLists를 부르고 있다는 것이.. 좀..
+    await vm.NNgetClass({
       type: 'TEACHER',
       classId: vm.classId,
     });
@@ -47,12 +52,26 @@ export default {
     ...mapState('class', [
       'teachingClassList',
     ]),
-    lectureList() {
+    classId() {
+      const vm = this;
+      return Number.parseInt(vm.$route.params.classId, 10);
+    },
+  },
+  methods: {
+    ...mapActions('class', [
+      'NNgetClass',
+      'getMyClassLists',
+    ]),
+    getCurrentClass() {
+      const vm = this;
+      return vm.teachingClassList.find(item => item.class_id === vm.classId);
+    },
+    getLectureList() {
       const vm = this;
       if (!vm.teachingClassList) {
         return [];
       }
-      const currentClass = vm.teachingClassList.find(item => item.class_id === vm.classId);
+      const currentClass = vm.getCurrentClass();
       if (currentClass && currentClass.scenarioList) {
         return currentClass.scenarioList.map((item) => {
           const type = utils.convertScType(item.type);
@@ -62,15 +81,6 @@ export default {
       }
       return [];
     },
-    classId() {
-      const vm = this;
-      return Number.parseInt(vm.$route.params.classId, 10);
-    },
-  },
-  methods: {
-    ...mapActions('class', [
-      'NNgetClass',
-    ]),
     onClickLecture(row, _, column) {
       if (column.label === '-') {
         return;
@@ -90,7 +100,6 @@ export default {
             const currentClass = vm.teachingClassList.find(item => item.class_id === vm.classId);
             const targetLecture = currentClass.scenarioList[index];
             await lectureService.deleteLecture({ lectureId: targetLecture.lecture_id });
-            // await vm.deleteSc();
             vm.$notify({
               title: '삭제됨',
               message: '강의가 삭제됨',
