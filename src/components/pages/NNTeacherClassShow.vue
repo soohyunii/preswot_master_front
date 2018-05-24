@@ -1,20 +1,17 @@
 <template>
   <div id="teacher_lecture_index_wrapper" class="bt-container">
-    <h2>TODO: 과목명 classId: {{ classId }}</h2>
-
-    <!-- teachingClassList: {{ teachingClassList }} -->
-
+    <h2>{{ getCurrentClass().name }}</h2>
     <lecture-list
       @row-click="onClickLecture"
       @delete="onClickDelete"
       type="TEACHER"
-      :list="getLectureList()"
+      :list="lectureList"
     />
 
     <br />
 
     <div class="right-align">
-      <router-link to="/a/teacher/NNlecture/new">
+      <router-link :to="`/a/teacher/NNlecture/new?classId=${classId}`">
         <el-button type="primary">강의 추가</el-button>
       </router-link>
     </div>
@@ -56,17 +53,7 @@ export default {
       const vm = this;
       return Number.parseInt(vm.$route.params.classId, 10);
     },
-  },
-  methods: {
-    ...mapActions('class', [
-      'NNgetClass',
-      'getMyClassLists',
-    ]),
-    getCurrentClass() {
-      const vm = this;
-      return vm.teachingClassList.find(item => item.class_id === vm.classId);
-    },
-    getLectureList() {
+    lectureList() {
       const vm = this;
       if (!vm.teachingClassList) {
         return [];
@@ -80,6 +67,16 @@ export default {
         });
       }
       return [];
+    },
+  },
+  methods: {
+    ...mapActions('class', [
+      'NNgetClass',
+      'getMyClassLists',
+    ]),
+    getCurrentClass() {
+      const vm = this;
+      return vm.teachingClassList.find(item => item.class_id === vm.classId);
     },
     onClickLecture(row, _, column) {
       if (column.label === '-') {
