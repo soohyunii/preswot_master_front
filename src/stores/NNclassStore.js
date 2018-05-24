@@ -63,8 +63,8 @@ export default {
     },
     deleteScenario(state, { classId, lectureId }) {
       const currentClass = state.teachingClassList.find(item => item.class_id === classId);
-      const tIndex = currentClass.scenarioList.findIndex(item => item.lecture_id === lectureId);
-      currentClass.scenarioList.splice(tIndex, 1);
+      const tIndex = currentClass.lectures.findIndex(item => item.lecture_id === lectureId);
+      currentClass.lectures.splice(tIndex, 1);
     },
   },
   actions: {
@@ -84,11 +84,6 @@ export default {
       const res = await classService.getMyClassList();
 
       const sc = res.data.studyingClasses;
-      sc.map((item) => {
-        // eslint-disable-next-line
-        item.scenarioList = null;
-        return item;
-      });
       if (sc && sc.length !== 0) {
         commit('updateStudyingClassList', {
           studyingClassList: sc,
@@ -96,11 +91,6 @@ export default {
       }
 
       const tc = res.data.teachingClasses;
-      tc.map((item) => {
-        // eslint-disable-next-line
-        item.scenarioList = null;
-        return item;
-      });
       if (tc && tc.length !== 0) {
         commit('updateTeachingClassList', {
           teachingClassList: tc,
