@@ -3,7 +3,7 @@ import Profile from '../components/pages/Profile';
 import TeacherClassIndex from '../components/pages/TeacherClassIndex';
 import NNTeacherClassIndex from '../components/pages/NNTeacherClassIndex';
 import NNTeacherClassNew from '../components/pages/NNTeacherClassNew';
-import NNTeacherLectureIndex from '../components/pages/NNTeacherLectureIndex';
+import NNTeacherClassShow from '../components/pages/NNTeacherClassShow';
 import NNTeacherLectureNew from '../components/pages/NNTeacherLectureNew';
 import TeacherLectureNew from '../components/pages/TeacherLectureNew';
 import TeacherLectureLive from '../components/pages/TeacherLectureLive';
@@ -80,7 +80,7 @@ export default function authRoutes(root) {
       name: 'NNTeacherLectureNew',
       component: NNTeacherLectureNew,
       meta: {
-        title: 'dflskjdfj',
+        title: 'Teacher Lecture New',
       },
     },
     {
@@ -93,10 +93,10 @@ export default function authRoutes(root) {
     },
     {
       path: '/teacher/NNclass/:classId',
-      name: 'Teacher Lecture Index',
-      component: NNTeacherLectureIndex,
+      name: 'Teacher Class Show',
+      component: NNTeacherClassShow,
       meta: {
-        title: 'Teacher Lecture Index', // TODO: import from i18n
+        title: 'Teacher Class Show', // TODO: import from i18n
       },
     },
     {
