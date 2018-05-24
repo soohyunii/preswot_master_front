@@ -1,4 +1,4 @@
-import deepCopy from 'deep-copy';
+// import deepCopy from 'deep-copy';
 // import isNil from 'lodash.isnil';
 
 import utils from '../utils';
