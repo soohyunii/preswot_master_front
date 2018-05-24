@@ -4,6 +4,7 @@ import Vuex from 'vuex';
 import auth from './authStore';
 import layout from './layoutStore';
 import sc from './scStore';
+import lc from './lcStore';
 import scItem from './scItemStore';
 import sibalClassIsReservedWord from './classStore';
 import NNclass from './NNclassStore';
@@ -18,6 +19,7 @@ export default new Vuex.Store({
     layout,
     scItem,
     sc,
+    lc,
     class: sibalClassIsReservedWord,
     NNclass,
     analysis,

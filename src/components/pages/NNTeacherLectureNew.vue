@@ -1,8 +1,8 @@
 <template>
   <div id="teacher_lecture_new_wrapper" class="bt-container">
-    <h1>
+    <h2>
       강의 추가
-    </h1>
+    </h2>
 
     {{ input }}<br /><br />
 
