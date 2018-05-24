@@ -9,7 +9,6 @@ export default {
     // //////////////////////////절취선////////////////////////// //
     /**
      * 공통 변수들
-     * @var {Array[class]} teachingClassList
      * 초기값으로 []를 주니까 서버에서 받아온건데 비어있는건지
      * 아니면 아직 서버로부터 안받아온건지 구분이 안가서 null로 초기화함
      */
@@ -33,8 +32,21 @@ export default {
       }
       return state.studyingClassList.length === 0;
     },
+    currentTeachingClass: state => (classId) => {
+      if (!Array.isArray(state.teachingClassList)) {
+        return null;
+      }
+      return state.teachingClassList.find(item => item.class_id === classId);
+    },
+    // currentTeachingClassLectureList(state) {
+
+    // },
   },
   mutations: {
+    updateTeachingClassIndex(state, { teachingClassIndex }) {
+      state.teachingClassIndex = teachingClassIndex;
+    },
+    // //////////////////////////////////////////
     updateOpenedClassList(state, { openedClassList }) {
       state.openedClassList = openedClassList;
     },
@@ -91,9 +103,6 @@ export default {
         item.scenarioList = null;
         return item;
       });
-      // Object.assign(tc, {
-      //   scenarioList: null,
-      // });
       if (tc && tc.length !== 0) {
         commit('updateTeachingClassList', {
           teachingClassList: tc,

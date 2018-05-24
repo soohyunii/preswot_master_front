@@ -1,8 +1,9 @@
 <template>
   <div id="teacher_lecture_manage_wrapper" class="bt-container">
-    <h2>{{ getCurrentClass().name }} > 근대사 1950년대(강의명)</h2>
+    <h2>{{ getCurrentClass() ? getCurrentClass().name : '' }} > 근대사 1950년대(강의명)</h2>
     lecture id: {{ lectureId }}<br />
     TODO: get lecture name <br />
+    {{ getCurrentClass() }}<br />
 
     <el-tabs v-model="activeTab">
       <el-tab-pane label="기본 정보 수정" name="one">
@@ -28,7 +29,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'TeacherLcetureManage',
@@ -36,6 +37,15 @@ export default {
     return {
       activeTab: 'one',
     };
+  },
+  async mounted() {
+    const vm = this;
+    // FIXME: TeacherClassShow의 그것이랑 동일한 문제 // getMyClassLists를 다른곳에서 불러서 이미 채워져있는경우면 사실 필요없음
+    await vm.getMyClassLists();
+    await vm.getClass({
+      type: 'TEACHER',
+      classId: vm.classId,
+    });
   },
   computed: {
     ...mapState('NNclass', [
@@ -51,10 +61,15 @@ export default {
     },
   },
   methods: {
+    ...mapActions('NNclass', [
+      'getMyClassLists',
+    ]),
     getCurrentClass() {
       const vm = this;
-      // console.log('getCurrentClass classId', vm.classId, vm.teachingClassList);
-      return vm.teachingClassList.find(item => item.class_id === vm.classId);
+      if (Array.isArray(vm.teachingClassList)) {
+        return vm.teachingClassList.find(item => item.class_id === vm.classId);
+      }
+      return null;
     },
   },
 };
