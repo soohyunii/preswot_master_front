@@ -381,7 +381,6 @@ export default {
         }
         case 'REFRESH_STATISTICS': {
           await vm.getScItemResult();
-          console.log(vm.currentEditingScItem.result.lectures);
           break;
         }
         case 'ACTIVATION_CONTROL': {
