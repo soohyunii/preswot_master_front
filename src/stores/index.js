@@ -6,6 +6,7 @@ import layout from './layoutStore';
 import sc from './scStore';
 import scItem from './scItemStore';
 import sibalClassIsReservedWord from './classStore';
+import NNclass from './NNclassStore';
 import analysis from './analysisStore';
 import board from './boardStore';
 
@@ -18,6 +19,7 @@ export default new Vuex.Store({
     scItem,
     sc,
     class: sibalClassIsReservedWord,
+    NNclass,
     analysis,
     board,
   },

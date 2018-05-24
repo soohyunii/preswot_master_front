@@ -6,7 +6,7 @@
       @row-click="onClickClass"
       @delete="onClickDelete"
       type="TEACHER"
-      :list="teachingClassList"
+      :list="teachingClassList || []"
     />
 
     <br />
@@ -31,7 +31,7 @@ export default {
     ClassList,
   },
   computed: {
-    ...mapState('class', [
+    ...mapState('NNclass', [
       'teachingClassList',
     ]),
   },
@@ -40,10 +40,10 @@ export default {
     await vm.getMyClassLists();
   },
   methods: {
-    ...mapMutations('class', [
+    ...mapMutations('NNclass', [
       'deleteTeachingClass',
     ]),
-    ...mapActions('class', [
+    ...mapActions('NNclass', [
       'getMyClassLists',
     ]),
     onClickClass(row, _, column) {

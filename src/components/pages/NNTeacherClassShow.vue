@@ -37,17 +37,17 @@ export default {
   async mounted() {
     const vm = this;
     await vm.getMyClassLists();
-    // FIXME: vm.NNgetClass가 불릴 때 classStore.state.teachingClassList가
+    // FIXME: vm.getClass가 불릴 때 classStore.state.teachingClassList가
     // 아직 채워지지 않은 경우가 있음
     // 그래서 그냥 불렀는데. 구조적으로 개선이 필요함
     // 지금 꽤나 여러군데에서 getMyClassLists를 부르고 있다는 것이.. 좀..
-    await vm.NNgetClass({
+    await vm.getClass({
       type: 'TEACHER',
       classId: vm.classId,
     });
   },
   computed: {
-    ...mapState('class', [
+    ...mapState('NNclass', [
       'teachingClassList',
     ]),
     classId() {
@@ -71,8 +71,8 @@ export default {
     },
   },
   methods: {
-    ...mapActions('class', [
-      'NNgetClass',
+    ...mapActions('NNclass', [
+      'getClass',
       'getMyClassLists',
     ]),
     getCurrentClass() {

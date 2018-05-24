@@ -38,7 +38,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('class', [
+    ...mapState('NNclass', [
       'teachingClassList',
     ]),
     classId() {
@@ -53,7 +53,7 @@ export default {
   methods: {
     getCurrentClass() {
       const vm = this;
-      console.log('getCurrentClass classId', vm.classId, vm.teachingClassList);
+      // console.log('getCurrentClass classId', vm.classId, vm.teachingClassList);
       return vm.teachingClassList.find(item => item.class_id === vm.classId);
     },
   },
