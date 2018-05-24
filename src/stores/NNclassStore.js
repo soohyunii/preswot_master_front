@@ -57,17 +57,9 @@ export default {
       state.teachingClassList.splice(teachingClassIndex, 1);
     },
     deleteScenario(state, { classId, lectureId }) {
-      let classIndex;
-      state.teachingClassList.forEach((element, index) => {
-        if (element.class_id === classId) {
-          classIndex = index;
-        }
-      });
-      state.teachingClassList[classIndex].scenarioList.forEach((element, index) => {
-        if (element.lecture_id === lectureId) {
-          state.teachingClassList[classIndex].scenarioList.splice(index, 1);
-        }
-      });
+      const currentClass = state.teachingClassList.find(item => item.class_id === classId);
+      const tIndex = currentClass.scenarioList.findIndex(item => item.lecture_id === lectureId);
+      currentClass.scenarioList.splice(tIndex, 1);
     },
   },
   actions: {
