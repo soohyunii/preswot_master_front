@@ -1,9 +1,9 @@
 <template>
   <div id="teacher_lecture_manage_wrapper" class="bt-container">
-    <h2>{{ getCurrentClass() ? getCurrentClass().name : '' }} > 근대사 1950년대(강의명)</h2>
+    <h2>{{ currentTeachingClass(classId) ? currentTeachingClass(classId).name : '' }} > 근대사 1950년대(강의명)</h2>
     lecture id: {{ lectureId }}<br />
     TODO: get lecture name <br />
-    {{ getCurrentClass() }}<br />
+    ddd {{ currentTeachingClass(classId) }}<br />
 
     <el-tabs v-model="activeTab">
       <el-tab-pane label="기본 정보 수정" name="one">
@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'TeacherLcetureManage',
@@ -51,6 +51,9 @@ export default {
     ...mapState('NNclass', [
       'teachingClassList',
     ]),
+    ...mapGetters('NNclass', [
+      'currentTeachingClass',
+    ]),
     classId() {
       const vm = this;
       return Number.parseInt(vm.$route.query.classId, 10);
@@ -63,14 +66,8 @@ export default {
   methods: {
     ...mapActions('NNclass', [
       'getMyClassLists',
+      'getClass',
     ]),
-    getCurrentClass() {
-      const vm = this;
-      if (Array.isArray(vm.teachingClassList)) {
-        return vm.teachingClassList.find(item => item.class_id === vm.classId);
-      }
-      return null;
-    },
   },
 };
 </script>

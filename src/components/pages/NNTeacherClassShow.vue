@@ -1,6 +1,6 @@
 <template>
   <div id="teacher_lecture_index_wrapper" class="bt-container">
-    <h2>{{ getCurrentClass().name }}</h2>
+    <h2>{{ currentTeachingClass(classId) ? currentTeachingClass(classId).name : '' }}</h2>
 
     <lecture-list
       @row-click="onClickLecture"
@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapGetters } from 'vuex';
 import LectureList from '../partials/LectureList';
 import utils from '../../utils';
 import lectureService from '../../services/lectureService';
@@ -50,6 +50,9 @@ export default {
     ...mapState('NNclass', [
       'teachingClassList',
     ]),
+    ...mapGetters('NNclass', [
+      'currentTeachingClass',
+    ]),
     classId() {
       const vm = this;
       return Number.parseInt(vm.$route.params.classId, 10);
@@ -59,7 +62,7 @@ export default {
       if (!vm.teachingClassList) {
         return [];
       }
-      const currentClass = vm.getCurrentClass();
+      const currentClass = vm.currentTeachingClass(vm.classId);
       if (currentClass && currentClass.scenarioList) {
         return currentClass.scenarioList.map((item) => {
           const type = utils.convertScType(item.type);
@@ -75,10 +78,6 @@ export default {
       'getClass',
       'getMyClassLists',
     ]),
-    getCurrentClass() {
-      const vm = this;
-      return vm.teachingClassList.find(item => item.class_id === vm.classId);
-    },
     onClickLecture(row, _, column) {
       if (column.label === '-') {
         return;
