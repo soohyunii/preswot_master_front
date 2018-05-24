@@ -12,7 +12,7 @@
     <br />
 
     <div class="right-align">
-      <router-link to="/a/teacher/NNlecture/new">
+      <router-link :to="`/a/teacher/NNlecture/new?classId=${classId}`">
         <el-button type="primary">강의 추가</el-button>
       </router-link>
     </div>

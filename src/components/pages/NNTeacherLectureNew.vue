@@ -85,7 +85,7 @@ export default {
           vm.$router.go(-1);
         } catch (error) {
           vm.$notify({
-            title: '과목 수정 실패',
+            title: '강의 추가 실패',
             message: error.toString(),
             type: 'error',
             duration: 0,
