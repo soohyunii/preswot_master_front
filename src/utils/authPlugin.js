@@ -1,4 +1,5 @@
 // import store from '../stores';
+import isNil from 'lodash.isnil';
 import utils from '../utils';
 
 // window.setInterval(() => {
@@ -70,10 +71,10 @@ export default class AuthPlugin {
   _applyAfterHook(router) { // eslint-disable-line class-methods-use-this
     router.afterEach((to) => {
       const userId = utils.getUserIdFromJwt();
-      if (typeof userId === 'undefined') {
+      if (isNil(userId)) {
         return;
       }
-      console.log('to', encodeURIComponent(to.fullPath)); // eslint-disable-line
+      // console.log('to', encodeURIComponent(to.fullPath)); // eslint-disable-line
       homepageLogService.getHomepageLog({
         pageUrl: encodeURIComponent(to.fullPath),
       });
