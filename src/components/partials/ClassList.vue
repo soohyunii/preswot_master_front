@@ -48,7 +48,7 @@
 
         <el-table-column
           label="-"
-          width="120"
+          width="80"
           align="center"
         >
           <template slot-scope="scope">
@@ -59,7 +59,7 @@
         </el-table-column>
         <el-table-column
           label="-"
-          width="120"
+          width="80"
           align="center"
         >
           <template slot-scope="scope">
