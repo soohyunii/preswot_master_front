@@ -74,6 +74,7 @@ export default {
     ...mapActions('NNclass', [
       'getClass',
       'getMyClassLists',
+      'deleteScenario',
     ]),
     getCurrentClass() {
       const vm = this;
@@ -105,6 +106,10 @@ export default {
               duration: 3000,
             });
             // TODO: delete lecture from scenarioList
+            vm.deleteScenario({
+              classId: vm.classId,
+              lectureId: targetLecture.lecture_id,
+            });
           } catch (error) {
             vm.$notify({
               title: '강의 삭제 실패',

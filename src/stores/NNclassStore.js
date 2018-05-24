@@ -56,6 +56,19 @@ export default {
     deleteTeachingClass(state, { teachingClassIndex }) {
       state.teachingClassList.splice(teachingClassIndex, 1);
     },
+    deleteScenario(state, { classId, lectureId }) {
+      let classIndex;
+      state.teachingClassList.forEach((element, index) => {
+        if (element.class_id === classId) {
+          classIndex = index;
+        }
+      });
+      state.teachingClassList[classIndex].scenarioList.forEach((element, index) => {
+        if (element.lecture_id === lectureId) {
+          state.teachingClassList[classIndex].scenarioList.splice(index, 1);
+        }
+      });
+    },
   },
   actions: {
     async getClassLists({ commit }) {
@@ -119,6 +132,12 @@ export default {
           studyingClassList: newStudyingClassList,
         });
       }
+    },
+    async deleteScenario({ commit }, { classId, lectureId }) {
+      commit('deleteScenario', {
+        classId,
+        lectureId,
+      });
     },
   },
 };
