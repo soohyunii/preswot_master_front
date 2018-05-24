@@ -40,10 +40,6 @@ export default {
     },
   },
   mutations: {
-    updateTeachingClassIndex(state, { teachingClassIndex }) {
-      state.teachingClassIndex = teachingClassIndex;
-    },
-    // //////////////////////////////////////////
     updateOpenedClassList(state, { openedClassList }) {
       state.openedClassList = openedClassList;
     },
