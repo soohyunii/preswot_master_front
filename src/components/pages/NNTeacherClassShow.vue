@@ -25,6 +25,7 @@
 import { mapState, mapActions } from 'vuex';
 import LectureList from '../partials/LectureList';
 import utils from '../../utils';
+import lectureService from '../../services/lectureService';
 
 export default {
   name: 'TeacherLectureIndex',
@@ -77,8 +78,43 @@ export default {
       const vm = this;
       vm.$router.push(`/a/teacher/NNclass/${row.class_id}`);
     },
-    onClickDelete() {
-
+    onClickDelete(index) {
+      const vm = this;
+      vm.$confirm('정말로 이 강의를 삭제하시겠습니까?', `${vm.scTitle || ''} 삭제`, {
+        confirmButtonText: '예, 삭제합니다.',
+        cancelButtonText: '아니요, 삭제하지 않습니다.',
+        type: 'warning',
+      })
+        .then(async () => {
+          try {
+            const currentClass = vm.teachingClassList.find(item => item.class_id === vm.classId);
+            const targetLecture = currentClass.scenarioList[index];
+            await lectureService.deleteLecture({ lectureId: targetLecture.lecture_id });
+            // await vm.deleteSc();
+            vm.$notify({
+              title: '삭제됨',
+              message: '강의가 삭제됨',
+              type: 'success',
+              duration: 3000,
+            });
+            // TODO: delete lecture from scenarioList
+          } catch (error) {
+            vm.$notify({
+              title: '강의 삭제 실패',
+              message: error.toString(),
+              type: 'error',
+              duration: 3000,
+            });
+          }
+        })
+        .catch(() => {
+          vm.$notify({
+            title: '취소됨',
+            message: '강의 삭제 취소됨',
+            type: 'info',
+            duration: 3000,
+          });
+        });
     },
   },
 };
