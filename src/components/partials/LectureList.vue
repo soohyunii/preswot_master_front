@@ -4,9 +4,9 @@
       생성된 강의가 없습니다.
     </div>
     <div v-else>
-      {{ props.list }}<br />
+      <!-- {{ props.list }}<br /> -->
 
-      번호(1), 타입(숙제), 강의(근대사 1강), 기간, 수강한 학생수, 수강생 이해도(평균), 강의, 관리, 삭제
+      <!-- 번호(1), 타입(숙제), 강의(근대사 1강), 기간, 수강한 학생수, 수강생 이해도(평균), 강의, 관리, 삭제 -->
       <el-table :data="props.list" stripe @row-click="listeners['row-click']">
         <el-table-column
           prop="index"
