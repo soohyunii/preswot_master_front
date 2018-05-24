@@ -31,11 +31,11 @@
         <el-row>
           <el-col :span="12">
             <h3>추천 키워드</h3>
-            TODO: RecommendKeywords.vue
+            <recommend-keywords />
           </el-col>
           <el-col :span="12">
             <h3>키워드 등록</h3>
-            TODO: LectureKeywords.vue
+            <lecture-keywords-editor />
           </el-col>
         </el-row>
       </el-tab-pane>
@@ -59,12 +59,16 @@
 import { mapState, mapActions, mapGetters } from 'vuex';
 import NNTeacherLectureNew from './NNTeacherLectureNew';
 import MaterialUpload from '../partials/MaterialUpload';
+import RecommendKeywords from '../partials/RecommendKeywords';
+import LectureKeywordsEditor from '../partials/LectureKeywordsEditor';
 
 export default {
   name: 'TeacherLectureManage',
   components: {
     TeacherLectureNew: NNTeacherLectureNew,
     MaterialUpload,
+    RecommendKeywords,
+    LectureKeywordsEditor,
   },
   data() {
     return {
