@@ -8,7 +8,7 @@
       @row-click="onClickLecture"
       @delete="onClickDelete"
       type="TEACHER"
-      :list="getLectureList()"
+      :list="lectureList"
     />
 
     <br />
@@ -56,17 +56,7 @@ export default {
       const vm = this;
       return Number.parseInt(vm.$route.params.classId, 10);
     },
-  },
-  methods: {
-    ...mapActions('class', [
-      'NNgetClass',
-      'getMyClassLists',
-    ]),
-    getCurrentClass() {
-      const vm = this;
-      return vm.teachingClassList.find(item => item.class_id === vm.classId);
-    },
-    getLectureList() {
+    lectureList() {
       const vm = this;
       if (!vm.teachingClassList) {
         return [];
@@ -80,6 +70,16 @@ export default {
         });
       }
       return [];
+    },
+  },
+  methods: {
+    ...mapActions('class', [
+      'NNgetClass',
+      'getMyClassLists',
+    ]),
+    getCurrentClass() {
+      const vm = this;
+      return vm.teachingClassList.find(item => item.class_id === vm.classId);
     },
     onClickLecture(row, _, column) {
       if (column.label === '-') {
