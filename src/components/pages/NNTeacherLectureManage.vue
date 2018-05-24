@@ -22,7 +22,22 @@
         <teacher-lecture-new />
       </el-tab-pane>
       <el-tab-pane label="강의 자료 및 키워드 등록" name="two">
-        강의 자료 및 키워드 등록 부분뷰
+        <el-row>
+          <el-col :span="12">
+            <h3>강의 자료 업로드</h3>
+            <material-upload />
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <h3>추천 키워드</h3>
+            TODO: RecommendKeywords.vue
+          </el-col>
+          <el-col :span="12">
+            <h3>키워드 등록</h3>
+            TODO: LectureKeywords.vue
+          </el-col>
+        </el-row>
       </el-tab-pane>
       <el-tab-pane label="강의 아이템 등록" name="three">
         강의 아이템 등록 부분뷰
@@ -43,15 +58,17 @@
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex';
 import NNTeacherLectureNew from './NNTeacherLectureNew';
+import MaterialUpload from '../partials/MaterialUpload';
 
 export default {
   name: 'TeacherLectureManage',
   components: {
     TeacherLectureNew: NNTeacherLectureNew,
+    MaterialUpload,
   },
   data() {
     return {
-      activeTab: 'one',
+      activeTab: 'two',
     };
   },
   async mounted() {
