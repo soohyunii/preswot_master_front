@@ -8,9 +8,9 @@
       </transition-group>
     </draggable>
 
-    <el-form :model="input" :rules="rules" ref="elForm" label-width="125px" style="max-width: 400px;">
+    <el-form @submit.native.prevent :model="input" :rules="rules" ref="elForm" label-width="125px" style="max-width: 400px;">
       <el-form-item label="키워드 입력" prop="keyword">
-        <el-input v-model="input.keyword">
+        <el-input v-model="input.keyword" @keydown.enter.native="onClick('ADD')">
           <el-button type="success" slot="append" icon="el-icon-plus" @click="onClick('ADD')"></el-button>
         </el-input>
       </el-form-item>
@@ -36,8 +36,8 @@ export default {
       rules: {
         keyword: {
           required: true,
-          message: '입력해주세요.',
-          trigger: 'blur,change',
+          message: '한 글자 이상 키워드를 입력해주세요.',
+          trigger: 'change',
         },
       },
       dragOptions: {
@@ -60,14 +60,10 @@ export default {
         Array.prototype.push.apply(res, this.$store.state.lc.addedKeywordList);
         return res;
       },
-      set(value) {
+      set(/* value */) {
         // 여기서는 다른곳에서 다 해줘서 해줄 필요가 없다?
-        console.log('lecture keyword set value', value); // eslint-disable-line
-        // const movedKeywordList = this.$store.state.lc.recommendKeywordList.filter()
-
-        // this.updateMovedKeywordList({
-        //   movedKeywordList: value,
-        // });
+        // 그래도 set 함수가 없으면 vue가 꼬장부려서 놔둠
+        // console.log('lecture keyword set value', value); // eslint-disable-line
       },
     },
   },
@@ -86,12 +82,17 @@ export default {
         case 'ADD': {
           this.$refs.elForm.validate(((valid) => {
             if (valid) {
+              const keyword = this.input.keyword.trim();
+              if (keyword.length === 0) {
+                // 존나 이유를 모르겠는데 가끔 keyup이 두번씩 들어옴 그걸 validate에서 거르지도 못함 병신임
+                return;
+              }
+              // TODO: check whether the keyword is duplicated or not
               const newAddedKeywordList = deepCopy(this.addedKeywordList);
-              newAddedKeywordList.push(this.input.keyword);
+              newAddedKeywordList.push(keyword);
               this.updateAddedKeywordList({
                 addedKeywordList: newAddedKeywordList,
               });
-              this.input.keyword = '';
               this.$refs.elForm.resetFields();
             }
           }));
