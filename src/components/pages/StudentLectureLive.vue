@@ -1,16 +1,16 @@
 <template>
   <div>
     <el-row v-if="isVideoVisible">
-      <el-col>
+      <el-col style="width: 800px">
         <youtube
           id="video"
           :video-id="youtubeId"
-          :player-width="playerWidth"
-          :player-height="(playerWidth * 10) / 16"
+          style="width: 100%"
         >
         </youtube>
       </el-col>
     </el-row>
+
     <el-row :gutter="5">
       <el-col :span="3">
         <el-dropdown>
@@ -133,7 +133,7 @@ export default {
       sHeartbeatIntervalId: 0,
       elapsedTimeIntervalId: 0,
       youtubeId: '',
-      playerWidth: 1000,
+      playerWidth: 500,
       fleetingSc: [],
     };
   },
