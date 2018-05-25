@@ -1,9 +1,9 @@
 <template>
-  <div id="app_nav_wrapper">
+  <div id="app_nav_wrapper" class="bt-container">
     <el-row type="flex" justify="space-between">
 
       <!-- TODO: replace span with :xs, :sm, :md, :lg, :xl -->
-      <el-col :span="13">
+      <el-col :span="15">
         <el-button
         :type="appTheme" plain
           id="navigation_toggle"
@@ -24,10 +24,10 @@
         </el-button>
       </el-col>
 
-      <el-col :span="11">
+      <el-col :span="9">
 
         <el-row type="flex" justify="end">
-          <el-col :span="14">
+          <el-col :span="18">
             <!-- <el-dropdown @command="onClick">
               <el-button :type="appTheme" plain>
                 {{ $t('HEADER.LANG_INFO') }}<i class="el-icon-arrow-down el-icon--right"></i>
@@ -49,6 +49,12 @@
                 <i class="fas fa-edit"></i>
               </el-button>
             </router-link>
+
+            <!--<router-link to="/a/teacher/class2" v-show="isJwtValid">-->
+              <!--<el-button :type="appTheme" plain>-->
+                <!--<i class="fas fa-edit"></i>2-->
+              <!--</el-button>-->
+            <!--</router-link>-->
 
             <!-- Login / Profile, Logout button part -->
             <router-link to="/login" v-show="!isJwtValid">

@@ -364,6 +364,8 @@ export default {
       if (res === 8) return '메모리 초과';
       if (res === 9) return '출력 초과';
       if (res === 10) return '런타임 에러';
+
+      return 'Not defined result';
     },
   },
   methods: {

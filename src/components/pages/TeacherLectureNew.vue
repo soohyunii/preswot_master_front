@@ -73,6 +73,8 @@
                     <sc-homework-editor v-if="currentEditingScItemType === '숙제'" />
                     <sc-survey-editor v-if="currentEditingScItemType === '설문'" />
                     <sc-question-editor v-if="currentEditingScItemType === '문항'" />
+                    <sc-practice-editor v-if="currentEditingScItemType === '실습'" />
+                    <sc-discussion-editor v-if="currentEditingScItemType === '토론'" />
                     <sc-active-time-editor :type="currentEditingScItemType" />
 
                   </el-col>
@@ -139,6 +141,8 @@ import ScQuestionEditor from '../partials/ScQuestionEditor';
 import ScHomeworkEditor from '../partials/ScHomeworkEditor';
 import ScAcceptPlist from '../partials/ScAcceptPlist';
 import KnowledgeMap from '../partials/KnowledgeMap';
+import ScPracticeEditor from '../partials/ScPraticeEditor';
+import ScDiscussionEditor from '../partials/ScDiscussionEditor';
 
 export default {
   name: 'TeacherLectureNew',
@@ -151,9 +155,11 @@ export default {
     ScMaterialEditor,
     ScHomeworkEditor,
     ScSurveyEditor,
+    ScPracticeEditor,
     ScActiveTimeEditor,
     KnowledgeMap,
     ScAcceptPlist,
+    ScDiscussionEditor,
   },
   data() {
     return {
@@ -162,6 +168,7 @@ export default {
   },
   async beforeMount() {
     const vm = this;
+    vm.$socket.connect();
     vm.updateScId({
       scId: Number.parseInt(vm.$route.params.scId, 10),
     });
@@ -302,6 +309,10 @@ export default {
           });
         });
     },
+  },
+  beforeDestroy() {
+    const vm = this;
+    vm.$socket.close();
   },
 };
 </script>

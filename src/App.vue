@@ -24,8 +24,8 @@
 
 <script>
 import { mapState } from 'vuex';
-import './app.scss';
-import './variables.scss'; // * To use $--color-primary scss variable
+// import './app.scss';
+// import './variables.scss'; // * To use $--color-primary scss variable
 
 import AppNavigation from './components/layouts/AppNavigation';
 import AppHeader from './components/layouts/AppHeader';
@@ -65,12 +65,9 @@ export default {
 </script>
 
 <style lang="scss">
-@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+@import "~@/app.scss";
 @import "~@/variables.scss";
 
-body {
-  font-family: 'Noto Sans KR', sans-serif !important;
-}
 
 #app {
   display: flex;

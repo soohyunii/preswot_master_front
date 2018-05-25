@@ -3,3 +3,10 @@
 @import "./billboard.css";
 $--font-path: '~element-ui/lib/theme-chalk/fonts';
 @import "~element-ui/packages/theme-chalk/src/index";
+
+@import url(https://fonts.googleapis.com/earlyaccess/notosanskr.css);
+@import "./bootstrap.css";
+html {
+  font-family: 'Noto Sans KR', sans-serif !important;
+  user-select: none;
+}

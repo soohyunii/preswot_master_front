@@ -22,6 +22,16 @@
           <i class="far fa-file-pdf"></i><br />{{$t('ITEM.MATERIAL')}}
         </el-button>
       </el-col>
+      <el-col align="center" :span="6">
+        <el-button @click="onClick('실습')" style="width: 100%;">
+          <i class="far fa-file-code"></i><br />실습
+        </el-button>
+      </el-col>
+      <el-col align="center" :span="6">
+        <el-button @click="onClick('토론')" style="width: 100%;">
+          <i class="far fa-comments"></i><br />토론
+        </el-button>
+      </el-col>
     </el-row>
     <br/>
     <el-row class="label">
@@ -84,7 +94,7 @@ export default {
     async onClick(type) {
       const vm = this;
       try {
-        const validTypeList = ['문항', '설문', '숙제', '강의자료'];
+        const validTypeList = ['문항', '설문', '숙제', '강의자료', '실습', '토론'];
         if (validTypeList.includes(type)) {
           const newOrder = isNil(vm.scOrderFilter) ? 0 : vm.scOrderFilter;
           const scItemId = await vm.postScItem({

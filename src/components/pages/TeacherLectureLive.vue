@@ -99,6 +99,15 @@
                           <el-table-column label="인원" align="center" prop="num_students" sortable>
                           </el-table-column>
                         </el-table>
+                        <el-table
+                          v-if="currentEditingScItemType === '실습'"
+                          :data="currentEditingScItem.result.lectures"
+                          border >
+                          <el-table-column label="user" align="center" prop="user_id">
+                          </el-table-column>
+                          <el-table-column label="score" align="center" prop="practice_score1" sortable>
+                          </el-table-column>
+                        </el-table>
                       </div>
                     </div>
                   </el-tab-pane>
@@ -118,8 +127,9 @@
                   <sc-homework-editor v-if="currentEditingScItemType === '숙제'" />
                   <sc-survey-editor v-if="currentEditingScItemType === '설문'" />
                   <sc-question-editor v-if="currentEditingScItemType === '문항'" />
+                  <sc-practice-editor v-if="currentEditingScItemType === '실습'" />
+                  <sc-discussion-editor v-if="currentEditingScItemType === '토론'" />
                   <sc-active-time-editor :type="currentEditingScItemType" />
-
                 </el-col>
               </el-row>
             </div>
@@ -258,7 +268,9 @@ import ScHomeworkEditor from '../partials/ScHomeworkEditor';
 import ScSurveyEditor from '../partials/ScSurveyEditor';
 import ScCommonEditor from '../partials/ScCommonEditor';
 import ScQuestionEditor from '../partials/ScQuestionEditor';
+import ScPracticeEditor from '../partials/ScPraticeEditor';
 import TeacherLectureLiveSummary from '../partials/TeacherLectureLiveSummary';
+import ScDiscussionEditor from '../partials/ScDiscussionEditor';
 import utils from '../../utils';
 
 export default {
@@ -272,8 +284,10 @@ export default {
     ScMaterialEditor,
     ScHomeworkEditor,
     ScSurveyEditor,
+    ScPracticeEditor,
     ScActiveTimeEditor,
     TeacherLectureLiveSummary,
+    ScDiscussionEditor,
   },
   created() {
     this.$socket.connect();
@@ -301,7 +315,7 @@ export default {
     await vm.getSc();
     vm.updateScVideoLink({ scVideoLink: vm.$route.query.link });
     vm.putSc();
-    vm.elapsedTimeIntervalId = vm.updateOffsetSecNowDate();
+    vm.updateOffsetSecNowDate();
     // TODO: handle sc empty
     if (!vm.isScEmpty) {
       vm.updateCurrentEditingScItemIndex({
@@ -344,6 +358,7 @@ export default {
       'getSc',
       'putSc',
       'updateOffsetSecNowDate',
+      'clearOffsetSecNowDate',
     ]),
     ...mapActions('scItem', [
       'getScItem',
@@ -364,26 +379,6 @@ export default {
           vm.isPlayerVisible = !vm.isPlayerVisible;
           break;
         }
-        // case 'TEMP_ACTIVATE': {
-        //   const params = {
-        //     opened: 1,
-        //     lecture_item_id: vm.currentEditingScItem.id,
-        //     lecture_id: Number.parseInt(vm.$route.params.scId, 10),
-        //   };
-        //   this.$socket.emit('LECTURE_ITEM_ACTIVATION', JSON.stringify(params));
-        //   vm.setActivated(vm);
-        //   break;
-        // }
-        // case 'TEMP_DEACTIVATE': {
-        //   const params = {
-        //     opened: 0,
-        //     lecture_item_id: vm.currentEditingScItem.id,
-        //     lecture_id: Number.parseInt(vm.$route.params.scId, 10),
-        //   };
-        //   this.$socket.emit('LECTURE_ITEM_ACTIVATION', JSON.stringify(params));
-        //   vm.setDeactivated(vm);
-        //   break;
-        // }
         case 'REFRESH_STATISTICS': {
           await vm.getScItemResult();
           break;
@@ -469,13 +464,13 @@ export default {
       },
     },
   },
-  beforeDestory() {
+  beforeDestroy() {
     this.$socket.close();
+    this.clearOffsetSecNowDate();
   },
   destroyed() {
     const vm = this;
     clearInterval(vm.sHeartbeatIntervalId);
-    clearInterval(vm.elapsedTimeIntervalId);
     clearInterval(vm.sUpdateTimelineLogIntervalId);
   },
 };

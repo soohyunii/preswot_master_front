@@ -1,6 +1,7 @@
 // import Test from '../components/TestComponent';
 import Profile from '../components/pages/Profile';
 import TeacherClassIndex from '../components/pages/TeacherClassIndex';
+import TeacherClassIndex2 from '../components/pages/NNTeacherClassIndex';
 import TeacherLectureNew from '../components/pages/TeacherLectureNew';
 import TeacherLectureLive from '../components/pages/TeacherLectureLive';
 import StudentClassIndex from '../components/pages/StudentClassIndex';
@@ -15,6 +16,7 @@ import TeacherClassJournal from '../components/pages/TeacherClassJournal';
 import StudentLectureJournal from '../components/pages/StudentLectureJournal';
 import TeacherLectureJournal from '../components/pages/TeacherLectureJournal';
 import test from '../components/partials/test';
+import Dump from '../components/pages/dump';
 import StudentClassReport from '../components/pages/StudentReport';
 import TeacherClassReport from '../components/pages/TeacherReport';
 
@@ -54,6 +56,15 @@ export default function authRoutes(root) {
       component: TeacherClassIndex,
       meta: {
         title: 'Teacher Class Index', // TODO: import from i18n
+        auth: true,
+      },
+    },
+    {
+      path: '/teacher/class2/',
+      name: 'TeacherClass2',
+      component: TeacherClassIndex2,
+      meta: {
+        title: 'Teacher Class Index2', // TODO: import from i18n
         auth: true,
       },
     },
@@ -162,6 +173,15 @@ export default function authRoutes(root) {
       component: TeacherLectureJournal,
       meta: {
         title: 'Teacher Lecture Journal',
+        auth: true,
+      },
+    },
+    {
+      path: '/dump',
+      name: 'dump',
+      component: Dump,
+      meta: {
+        title: 'Dump',
         auth: true,
       },
     },
