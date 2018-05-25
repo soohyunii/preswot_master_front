@@ -107,7 +107,7 @@ export default {
           break;
         }
         case 'DELETE_TAG': {
-          console.log('DELETE_TAG', payload);
+          console.log('DELETE_TAG', payload); // eslint-disable-line
           // TODO: isKeywordDuplicated랑 비슷한 감각으로 ()
           // case1 recommend keyword일 때는 movedKeywordList에서 payload를 빼주고
           // case2 keywordList 였다면 keywordList에서 payload 빼주고
