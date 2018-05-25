@@ -15,6 +15,8 @@ import TeacherClassJournal from '../components/pages/TeacherClassJournal';
 import StudentLectureJournal from '../components/pages/StudentLectureJournal';
 import TeacherLectureJournal from '../components/pages/TeacherLectureJournal';
 import test from '../components/partials/test';
+import StudentClassReport from '../components/pages/StudentReport';
+import TeacherClassReport from '../components/pages/TeacherReport';
 
 
 export default function authRoutes(root) {
@@ -160,6 +162,24 @@ export default function authRoutes(root) {
       component: TeacherLectureJournal,
       meta: {
         title: 'Teacher Lecture Journal',
+        auth: true,
+      },
+    },
+    {
+      path: '/report/student/:userId/class/:classId/',
+      name: 'StudentClassReport',
+      component: StudentClassReport,
+      meta: {
+        title: '학생 강의 보고서 페이지',
+        auth: true,
+      },
+    },
+    {
+      path: '/report/teacher/:userId/class/:classId/',
+      name: 'TeacherClassReport',
+      component: TeacherClassReport,
+      meta: {
+        title: '강사 강의 보고서 페이지',
         auth: true,
       },
     },
