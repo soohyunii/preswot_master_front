@@ -38,6 +38,9 @@
             <lecture-keywords-editor />
           </el-col>
         </el-row>
+        <div style="text-align: right;">
+          <el-button type="primary">키워드 수정 완료</el-button>
+        </div>
       </el-tab-pane>
       <el-tab-pane label="강의 아이템 등록" name="three">
         강의 아이템 등록 부분뷰

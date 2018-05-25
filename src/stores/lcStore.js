@@ -1,10 +1,16 @@
-import utils from '../utils';
+// import utils from '../utils';
 import lectureService from '../services/lectureService';
 
 export default {
   namespaced: true,
   state: {
-    lecture: null,
+    lecture: null, // getLecture로 불러온 정보 여기에 저장
+    // 키워드 관련 변수들 시작 //
+    recommendKeywordList: null, // 서버에서 불러온 강의자료에서 추출된 키워드들
+    keywordList: null, // 서버에서 불러온 강사가 추가한 키워드들
+    movedKeywordList: [], // rkl 에서 kl로 옮겨진 키워드들
+    addedKeywordList: [], // 브라우저에서 강사가 직접 추가했으나 아직 서버에 업로드 되진 않은 키워드들
+    // 키워드 관련 변수들 끝 //
   },
   getters: {
   },
@@ -12,6 +18,20 @@ export default {
     updateLecture(state, { lecture }) {
       state.lecture = lecture;
     },
+    // 키워드 관련 뮤테이션들 시작 //
+    updateRecommendKeywordList(state, { recommendKeywordList }) {
+      state.recommendKeywordList = recommendKeywordList;
+    },
+    updateKeywordList(state, { keywordList }) {
+      state.keywordList = keywordList;
+    },
+    updateMovedKeywordList(state, { movedKeywordList }) {
+      state.movedKeywordList = movedKeywordList;
+    },
+    updateAddedKeywordList(state, { addedKeywordList }) {
+      state.addedKeywordList = addedKeywordList;
+    },
+    // 키워드 관련 뮤테이션들 끝 //
   },
   actions: {
     async getLecture({ state, commit }, { lectureId }) {
@@ -52,113 +72,22 @@ export default {
       //   commit('updateEdges', { edges });
       // }
     },
-    async postScplist({ state }) {
-      // console.log(state.scAcceptPlist, '@@@@@@@@@');
-      await lectureService.postLecturePlist({
-        lectureId: state.scId,
-        movedKeys: state.scAcceptPlist,
+    /**
+     * 강의 자료 및 키워드 등록 탭에서 필요한 키워드들 다 가져옴
+     */
+    async getKeywords({ commit }) {
+      /**
+       * 여기서부터는 의사-코드
+       * const lectureId = state.lecture.lecture_id;
+       * const res1 = await lectureService.키워드 가져오는놈();
+       * const res2 = await lectureService.추천 키워드 가져오는놈();
+       * const leftRecommendKeywordList = res1.data.filter(x => !res2.data.has(x));
+       */
+      commit('updateKeywordList', {
+        keywordList: ['a', 'b', 'c'], // 이게 의사코드에서 res1.data
       });
-    },
-    async createSc({ rootGetters }) {
-      const userId = rootGetters['auth/userId'];
-      const classId = rootGetters['class/currentTeachingClass'].class_id;
-
-      const res = await lectureService.postLecture({
-        classId,
-        teacherId: userId,
-      });
-      return res.data.lecture_id;
-    },
-    async putSc({
-      state,
-      // commit,
-    }) {
-      const type = utils.convertScType(state.scType);
-      if (type instanceof Error) {
-        throw type;
-      }
-      await lectureService.putLecture({
-        lectureId: state.scId,
-        name: state.scTitle,
-        description: state.scDescription,
-        startDate: state.scStartDate,
-        endDate: state.scEndDate,
-        // TODO: add state.scLocation
-        location: null,
-        opened: true,
-        videoLink: state.scVideoLink,
-        teacherEmail: utils.getEmailFromJwt(),
-        type,
-        keywordState: state.scKnowledgeMapState,
-      });
-    },
-    async deleteSc({ state, commit }) {
-      await lectureService.deleteLecture({
-        lectureId: state.scId,
-      });
-      // TODO: replace here if sc related variables are grouped together
-      commit('updateScId', {
-        scId: null,
-      });
-      commit('updateScTitle', {
-        scTitle: null,
-      });
-      commit('updateScType', {
-        scType: null,
-      });
-      commit('updateScStartDate', {
-        scStartDate: null,
-      });
-      commit('updateScEndDate', {
-        scEndDate: null,
-      });
-      commit('updateScDescription', {
-        scDescription: null,
-      });
-      commit('updateCurrentEditingScItemIndex', {
-        currentEditingScItemIndex: null,
-      });
-      commit('scItem/updateSc', {
-        sc: [],
-      }, {
-        root: true,
-      });
-    },
-    async postKnowledgeMapData({ state }) {
-      const lectureKeywords = state.nodes.map(item => ({
-        keyword: item.name,
-        weight: Number.parseFloat(item._size), // eslint-disable-line no-underscore-dangle
-      }));
-      // console.log('lectureKeywords', lectureKeywords); // eslint-disable-line
-      await lectureService.postLectureKeywords({
-        lectureId: state.scId,
-        lectureKeywords,
-      });
-      const lectureRelations = state.edges.map(item => ({
-        node1: item.sid,
-        node2: item.tid,
-        weight: item.weight,
-      }));
-      // console.log('lectureRelations', lectureRelations); // eslint-disable-line
-      await lectureService.postLectureKeywordRelations({
-        lectureId: state.scId,
-        lectureRelations,
-      });
-    },
-    async getScCoverage({ commit }, { id }) {
-      const res = await lectureService.getLectureCoverage({ id });
-      commit('updateScCoverage', {
-        scCoverage: res.data,
-      });
-    },
-    async executeExtractor({ state, commit }, { numberOfKeyword, keywordLength }) {
-      await lectureService.executeExtractor({
-        id: state.scId,
-        numberOfKeyword,
-        keywordLength,
-      });
-      commit('updateScKnowledgeMapState', {
-        scKnowledgeMapState: 1,
+      commit('updateRecommendKeywordList', {
+        recommendKeywordList: ['d', 'e'], // 이게 의사코드에서 leftRecommendKeywordList
       });
     },
   },
