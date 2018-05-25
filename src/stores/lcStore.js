@@ -13,6 +13,15 @@ export default {
     // 키워드 관련 변수들 끝 //
   },
   getters: {
+    isKeywordDuplicated: state => keyword =>
+      // const set = new Set(state.recommendKeywordList);
+      // state.keywordList.forEach(x => set.add(x));
+      // state.addedKeywordList.forEach(x => set.add(x));
+      // return set.has(keyword);
+      // 어차피 키워드 길이만큼 순회하는건 똑같음
+       state.recommendKeywordList.includes(keyword) ||
+        state.keywordList.includes(keyword) ||
+        state.addedKeywordList.includes(keyword),
   },
   mutations: {
     updateLecture(state, { lecture }) {

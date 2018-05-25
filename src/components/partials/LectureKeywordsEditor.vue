@@ -4,7 +4,7 @@
     {{ keywordList }}
     <draggable element="div" v-model="keywordList" :move="onMove" :options="dragOptions">
       <transition-group type="transition">
-        <el-tag class="tag" type="primary" v-for="k in keywordList" :key="k">{{ k }}</el-tag>
+        <el-tag class="tag" type="primary" v-for="k in keywordList" :key="k" closable @close="onClick('DELETE_TAG', k)">{{ k }}</el-tag>
       </transition-group>
     </draggable>
 
@@ -21,7 +21,7 @@
 <script>
 import deepCopy from 'deep-copy';
 import draggable from 'vuedraggable';
-import { mapMutations, mapState } from 'vuex';
+import { mapMutations, mapState, mapGetters } from 'vuex';
 
 export default {
   name: 'LectureKeywordsEditor',
@@ -51,6 +51,9 @@ export default {
     ...mapState('lc', [
       'addedKeywordList',
     ]),
+    ...mapGetters('lc', [
+      'isKeywordDuplicated',
+    ]),
     keywordList: {
       get() {
         const res = [];
@@ -61,7 +64,7 @@ export default {
         return res;
       },
       set(/* value */) {
-        // 여기서는 다른곳에서 다 해줘서 해줄 필요가 없다?
+        // NOTE: 여기서는 다른곳에서 다 해줘서 해줄 필요가 없다?
         // 그래도 set 함수가 없으면 vue가 꼬장부려서 놔둠
         // console.log('lecture keyword set value', value); // eslint-disable-line
       },
@@ -77,17 +80,22 @@ export default {
       // console.log('draggedContext fff', draggedContext); // eslint-disable-line
       // return false;
     },
-    onClick(type) {
+    onClick(type, payload) {
       switch (type) {
         case 'ADD': {
           this.$refs.elForm.validate(((valid) => {
             if (valid) {
               const keyword = this.input.keyword.trim();
               if (keyword.length === 0) {
-                // 존나 이유를 모르겠는데 가끔 keyup이 두번씩 들어옴 그걸 validate에서 거르지도 못함 병신임
+                // 존나 이유를 모르겠는데 가끔 keydown이 두번씩 들어옴 그걸 validate에서 거르지도 못함 병신임
                 return;
               }
-              // TODO: check whether the keyword is duplicated or not
+              if (this.isKeywordDuplicated(keyword)) {
+                // TODO: notify user the keyword is duplicated
+
+                this.$refs.elForm.resetFields();
+                return;
+              }
               const newAddedKeywordList = deepCopy(this.addedKeywordList);
               newAddedKeywordList.push(keyword);
               this.updateAddedKeywordList({
@@ -96,6 +104,14 @@ export default {
               this.$refs.elForm.resetFields();
             }
           }));
+          break;
+        }
+        case 'DELETE_TAG': {
+          console.log('DELETE_TAG', payload);
+          // TODO: isKeywordDuplicated랑 비슷한 감각으로 ()
+          // case1 recommend keyword일 때는 movedKeywordList에서 payload를 빼주고
+          // case2 keywordList 였다면 keywordList에서 payload 빼주고
+          // case3 addedKeywordList 였다면 addedKeywordList에서 payload 빼주면 될듯
           break;
         }
         default: {
@@ -119,7 +135,6 @@ export default {
   }
 }
 </style>
-
 
 <style lang="scss" scoped>
 #lecture_keywords_editor_wrapper {
