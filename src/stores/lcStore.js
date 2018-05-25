@@ -81,6 +81,7 @@ export default {
      * 강의 자료 및 키워드 등록 탭에서 필요한 키워드들 다 가져옴
      */
     async getKeywords({ commit }) {
+      // TODO: 더미로 짜놓은거 api콜로 바꾸기
       /**
        * 여기서부터는 의사-코드
        * const lectureId = state.lecture.lecture_id;
