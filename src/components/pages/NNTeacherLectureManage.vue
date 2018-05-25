@@ -39,7 +39,7 @@
           </el-col>
         </el-row>
         <div style="text-align: right;">
-          <el-button type="primary">키워드 수정 완료</el-button>
+          <el-button @click="onClick('SUBMIT_KEYWORDS')" type="primary">키워드 수정 완료</el-button>
         </div>
       </el-tab-pane>
       <el-tab-pane label="강의 아이템 등록" name="three">
@@ -115,6 +115,9 @@ export default {
     ...mapActions('lc', [
       'getLecture',
     ]),
+    onClick(type, payload) { // eslint-disable-line
+      // TODO: switch case 해서 SUBMIT_KEYWORDS 서버 전송
+    },
   },
 };
 </script>
