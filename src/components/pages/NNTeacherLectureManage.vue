@@ -1,7 +1,7 @@
 <template>
   <div id="teacher_lecture_manage_wrapper" class="bt-container">
     <h2>{{ currentTeachingClass(classId) ? currentTeachingClass(classId).name : '' }} > {{ lecture ? lecture.name : '' }}</h2>
-    <!-- lecture id: {{ lectureId }} {{ lecture }}<br /> <br /> -->
+    lecture id: {{ lectureId }} {{ lecture }}<br /> <br />
     <!-- ddd {{ currentTeachingClass(classId) }}<br /> -->
 
     <el-tabs v-model="activeTab">
@@ -38,12 +38,19 @@
             <lecture-keywords-editor />
           </el-col>
         </el-row>
-        <div style="text-align: right;">
+        <div class="align-right">
           <el-button @click="onClick('SUBMIT_KEYWORDS')" type="primary">키워드 수정 완료</el-button>
         </div>
       </el-tab-pane>
       <el-tab-pane label="강의 아이템 등록" name="three">
-        강의 아이템 등록 부분뷰
+        <div class="align-right">
+          TODO: 자동 모드 toggle
+        </div>
+        <lecture-item-list
+          @delete="onClick('DELETE_LECTURE_ITEM')"
+          type="TEACHER"
+          :list="lecture.lecture_items || []"
+        />
       </el-tab-pane>
       <el-tab-pane label="강의 허용 프로그램 설정" name="four">
         강의 허용 프로그램 설정 부분뷰
@@ -64,6 +71,7 @@ import NNTeacherLectureNew from './NNTeacherLectureNew';
 import MaterialUpload from '../partials/MaterialUpload';
 import RecommendKeywords from '../partials/RecommendKeywords';
 import LectureKeywordsEditor from '../partials/LectureKeywordsEditor';
+import LectureItemList from '../partials/LectureItemList';
 
 export default {
   name: 'TeacherLectureManage',
@@ -72,10 +80,11 @@ export default {
     MaterialUpload,
     RecommendKeywords,
     LectureKeywordsEditor,
+    LectureItemList,
   },
   data() {
     return {
-      activeTab: 'two',
+      activeTab: 'three',
     };
   },
   async mounted() {
@@ -121,4 +130,13 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+#teacher_lecture_manage_wrapper {
+  .align-right {
+    text-align: right;
+  }
+}
+</style>
+
 

@@ -72,8 +72,6 @@
 </template>
 
 <script>
-import isArray from 'lodash.isarray';
-
 export default {
   name: 'ClassList',
   props: {
@@ -94,7 +92,7 @@ export default {
       type: Array,
       required: true,
       validator(value) {
-        if (!isArray(value)) {
+        if (!Array.isArray(value)) {
           // eslint-disable-next-line no-console
           console.error('prop "list" should be type Array');
           return false;
