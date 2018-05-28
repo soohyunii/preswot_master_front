@@ -32,16 +32,9 @@
         ></el-table-column>
 
         <el-table-column
-          prop="name"
-          label="강의 아이템 이름"
-          width="225"
-          align="center"
-        ></el-table-column>
-
-        <el-table-column
           prop="activeTime"
           label="활성화 시간"
-          width="300"
+          width="500"
           align="center"
         >
           // TODO:
