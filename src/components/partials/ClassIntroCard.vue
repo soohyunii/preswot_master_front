@@ -1,46 +1,15 @@
 <template functional>
-  <el-card>
-    <div slot="header" class="clear-fix">
-      <b>{{ props.title }}</b>
-      <el-button
-        @click="props.onClick('APPLY', props.classId)"
-        type="primary"
-        size="mini"
-        style="float: right;"
-      >
-        수강 신청
-      </el-button>
+  <div style="display: inline-block; width: 200px; margin: 20px 0px 20px 0px">
+    <div style="text-align: center; margin: 0px 0px 15px 0px;">
+      <img :src="require('@/assets/dev/ratio_1_1.png')" width="200" height="200">
     </div>
-    <el-row>
-      <el-col :span="props.labelSpan">과목 소개</el-col>
-      <el-col :span="24 - props.labelSpan">{{ props.description }}</el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="props.labelSpan">강사 목록</el-col>
-      <el-col :span="24 - props.labelSpan">{{ props.teacherList }}</el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="props.labelSpan">기간</el-col>
-      <el-col :span="24 - props.labelSpan">{{ props.startDateStr }}, {{ props.endDateStr }}</el-col>
-    </el-row>
-  </el-card>
+    <b>{{ props.title }}</b>
+    <h5 v-for="teacher in props.teacherList" :key="teacher">{{ teacher }}</h5>
+    <p v-if="props.startDateStr != undefined">{{ props.startDateStr }} ~ {{ props.endDateStr }}</p>
+    <p>{{ props.description }}</p>
+    <el-button style="width: 100%" @click="props.onClick()">수강 하기</el-button>
+  </div>
 </template>
-
-<style lang="scss" scoped>
-.el-row {
-  margin-bottom: 20px;
-}
-
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-}
-.clearfix:after {
-  clear: both
-}
-</style>
-
 
 <script>
 export default {
@@ -58,26 +27,15 @@ export default {
       type: Array[String],
       required: true,
     },
-    labelSpan: {
-      type: Number,
-      required: true,
-    },
     classId: {
       type: Number,
-      required: true,
     },
     onClick: {
       type: Function,
-      required: true,
     },
     startDateStr: String,
     endDateStr: String,
   },
-  // data() {
-  //   return {
-  //     labelSpan: 5,
-  //   };
-  // },
 };
 </script>
 
