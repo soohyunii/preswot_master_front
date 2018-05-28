@@ -4,7 +4,7 @@
       강의 아이템 목록이 비었습니다.
     </div>
     <div v-else>
-      <!-- {{ props.list }} -->
+      {{ props.list }}
       <el-table :data="props.list" stripe>
         <el-table-column
           prop="index"
@@ -22,9 +22,53 @@
           label="타입"
           width="100"
           align="center"
+        ></el-table-column>
+
+        <el-table-column
+          prop="name"
+          label="강의 아이템 이름"
+          width="225"
+          align="center"
+        ></el-table-column>
+
+        <el-table-column
+          prop="name"
+          label="강의 아이템 이름"
+          width="225"
+          align="center"
+        ></el-table-column>
+
+        <el-table-column
+          prop="activeTime"
+          label="활성화 시간"
+          width="300"
+          align="center"
         >
-          <!-- <template slot-scope="type">{{ scope.}}</template> -->
+          // TODO:
         </el-table-column>
+
+        <el-table-column
+          label="-"
+          width="80"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <router-link :to="`/a/teacher/NNclass/${scope.row.class_id}/edit`">
+              <el-button>수정</el-button>
+            </router-link>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          label="-"
+          width="80"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <el-button type="danger" @click="listeners['delete'](scope.$index)">삭제</el-button>
+          </template>
+        </el-table-column>
+
       </el-table>
     </div>
   </div>

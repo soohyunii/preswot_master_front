@@ -47,7 +47,7 @@
           TODO: 자동 모드 toggle
         </div>
         <lecture-item-list
-          @delete="onClick('DELETE_LECTURE_ITEM')"
+          @delete="onClickDeleteLectureItem"
           type="TEACHER"
           :list="lectureItemList"
         />
@@ -73,6 +73,8 @@ import RecommendKeywords from '../partials/RecommendKeywords';
 import LectureKeywordsEditor from '../partials/LectureKeywordsEditor';
 import LectureItemList from '../partials/LectureItemList';
 import utils from '../../utils';
+import lectureItemService from '../../services/lectureItemService';
+
 
 export default {
   name: 'TeacherLectureManage',
@@ -137,6 +139,50 @@ export default {
     ]),
     onClick(type, payload) { // eslint-disable-line
       // TODO: switch case 해서 SUBMIT_KEYWORDS 서버 전송
+    },
+    /**
+     * 얘는 onClick에서 넘겨주면 index를 못받아와서 안됨
+     */
+    onClickDeleteLectureItem(index) {
+      const vm = this;
+      const targetLectureItem = vm.lectureItemList[index];
+
+      console.log('targetLectureItem', targetLectureItem);
+      vm.$confirm('정말로 이 아이템을 삭제하시겠습니까?', `${targetLectureItem.name || ''} 삭제`, {
+        confirmButtonText: '예, 삭제합니다.',
+        cancelButtonText: '아니요, 삭제하지 않습니다.',
+        type: 'warning',
+      })
+        .then(async () => {
+          try {
+            await lectureItemService.deleteLectureItem({
+              lectureItemId: targetLectureItem.lecture_item_id,
+            });
+            // TODO: delete lectureItem from lecture.lecture_items
+            vm.$notify({
+              title: '삭제됨',
+              message: '과목이 삭제됨',
+              type: 'success',
+              duration: 3000,
+            });
+          } catch (error) {
+            console.error(error); // eslint-disable-line no-console
+            vm.$notify({
+              title: '과목 삭제 실패',
+              message: error.toString(),
+              type: 'error',
+              duration: 3000,
+            });
+          }
+        })
+        .catch(() => {
+          vm.$notify({
+            title: '취소됨',
+            message: '과목 삭제 취소됨',
+            type: 'info',
+            duration: 3000,
+          });
+        });
     },
   },
 };
