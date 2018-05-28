@@ -4,8 +4,28 @@
       강의 아이템 목록이 비었습니다.
     </div>
     <div v-else>
-      lecture item list template
-      {{ props.list }}
+      <!-- {{ props.list }} -->
+      <el-table :data="props.list" stripe>
+        <el-table-column
+          prop="index"
+          label="번호"
+          width="100"
+          align="center"
+        >
+          <template slot-scope="scope">
+            {{ scope.$index + 1 }}
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          prop="type"
+          label="타입"
+          width="100"
+          align="center"
+        >
+          <!-- <template slot-scope="type">{{ scope.}}</template> -->
+        </el-table-column>
+      </el-table>
     </div>
   </div>
 </template>

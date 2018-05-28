@@ -1,7 +1,7 @@
 <template>
   <div id="teacher_lecture_manage_wrapper" class="bt-container">
     <h2>{{ currentTeachingClass(classId) ? currentTeachingClass(classId).name : '' }} > {{ lecture ? lecture.name : '' }}</h2>
-    lecture id: {{ lectureId }} {{ lecture }}<br /> <br />
+    <!-- lecture id: {{ lectureId }} {{ lecture }}<br /> <br /> -->
     <!-- ddd {{ currentTeachingClass(classId) }}<br /> -->
 
     <el-tabs v-model="activeTab">
@@ -49,7 +49,7 @@
         <lecture-item-list
           @delete="onClick('DELETE_LECTURE_ITEM')"
           type="TEACHER"
-          :list="lecture.lecture_items || []"
+          :list="lectureItemList"
         />
       </el-tab-pane>
       <el-tab-pane label="강의 허용 프로그램 설정" name="four">
@@ -72,6 +72,7 @@ import MaterialUpload from '../partials/MaterialUpload';
 import RecommendKeywords from '../partials/RecommendKeywords';
 import LectureKeywordsEditor from '../partials/LectureKeywordsEditor';
 import LectureItemList from '../partials/LectureItemList';
+import utils from '../../utils';
 
 export default {
   name: 'TeacherLectureManage',
@@ -87,7 +88,7 @@ export default {
       activeTab: 'three',
     };
   },
-  async mounted() {
+  async beforeMount() {
     const vm = this;
     // FIXME: TeacherClassShow의 그것이랑 동일한 문제 // getMyClassLists를 다른곳에서 불러서 이미 채워져있는경우면 사실 필요없음
     await vm.getMyClassLists();
@@ -107,6 +108,16 @@ export default {
     ...mapState('lc', [
       'lecture',
     ]),
+    lectureItemList() {
+      const lecture = this.$store.state.lc.lecture;
+      if (lecture && Array.isArray(lecture.lecture_items)) {
+        return lecture.lecture_items.map((x) => {
+          x.type = utils.convertScType(x.type); // eslint-disable-line no-param-reassign
+          return x;
+        });
+      }
+      return [];
+    },
     classId() {
       const vm = this;
       return Number.parseInt(vm.$route.query.classId, 10);
