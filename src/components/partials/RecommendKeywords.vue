@@ -39,6 +39,7 @@ export default {
       get() {
         const vm = this;
         const moved = new Set(vm.$store.state.lc.movedKeywordList);
+        if (vm.$store.state.lc.recommendKeywordList === null) return [];// .filter undefined 버그 임시방편
         return vm.$store.state.lc.recommendKeywordList.filter(
           x => !moved.has(x),
         );

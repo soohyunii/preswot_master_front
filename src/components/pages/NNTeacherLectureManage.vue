@@ -114,9 +114,20 @@ export default {
     ]),
     ...mapActions('lc', [
       'getLecture',
+      'editLectureKeywords',
     ]),
     onClick(type, payload) { // eslint-disable-line
+      const vm = this;
       // TODO: switch case 해서 SUBMIT_KEYWORDS 서버 전송
+      switch (type) {
+        case 'SUBMIT_KEYWORDS': {
+          vm.editLectureKeywords();
+          break;
+        }
+        default: {
+          throw new Error(`not defined type ${type}`);
+        }
+      }
     },
   },
 };
