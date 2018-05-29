@@ -190,4 +190,17 @@ export default {
       document.body.removeChild(link);
     }, 1000);
   },
+  getWindowSize() {
+    return {
+      width: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
+      height: Math.max(document.documentElement.clientHeight, window.innerHeight || 0),
+    };
+  },
+  getViewportSize() {
+    const width = this.getWindowSize().width;
+    if (width >= 1200) return 'lg';
+    if (width >= 992) return 'md';
+    if (width >= 768) return 'sm';
+    return 'xs';
+  },
 };

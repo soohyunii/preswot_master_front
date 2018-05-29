@@ -79,6 +79,12 @@ export default {
       data: lectureKeywords,
     });
   },
+  deleteLectureKeyword({
+    lectureId,
+    lectureKeyword,
+  }) {
+    return http.delete(`/lectures/${lectureId}/keywords/${lectureKeyword}`);
+  },
   getLectureKeywordRelations({
     lectureId,
   }) {

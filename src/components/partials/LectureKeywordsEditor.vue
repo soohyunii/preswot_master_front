@@ -2,7 +2,7 @@
   <div id="lecture_keywords_editor_wrapper">
     lecture keywords editor template
     {{ keywordList }}
-    <draggable element="div" v-model="keywordList" :move="onMove" :options="dragOptions">
+    <draggable element="div" v-model="keywordList" :options="dragOptions">
       <transition-group type="transition">
         <el-tag class="tag" type="primary" v-for="k in keywordList" :key="k" closable @close="onClick('DELETE_TAG', k)">{{ k }}</el-tag>
       </transition-group>
@@ -21,7 +21,7 @@
 <script>
 import deepCopy from 'deep-copy';
 import draggable from 'vuedraggable';
-import { mapMutations, mapState, mapGetters } from 'vuex';
+import { mapMutations, mapState, mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'LectureKeywordsEditor',
@@ -75,11 +75,9 @@ export default {
       'updateMovedKeywordList',
       'updateAddedKeywordList',
     ]),
-    onMove(/* { relatedContext, draggedContext } */) {
-      // console.log('relatedContext fff', relatedContext); // eslint-disable-line
-      // console.log('draggedContext fff', draggedContext); // eslint-disable-line
-      // return false;
-    },
+    ...mapActions('lc', [
+      'deleteKeyword',
+    ]),
     onClick(type, payload) {
       switch (type) {
         case 'ADD': {
@@ -108,10 +106,9 @@ export default {
         }
         case 'DELETE_TAG': {
           console.log('DELETE_TAG', payload); // eslint-disable-line
-          // TODO: isKeywordDuplicated랑 비슷한 감각으로 ()
-          // case1 recommend keyword일 때는 movedKeywordList에서 payload를 빼주고
-          // case2 keywordList 였다면 keywordList에서 payload 빼주고
-          // case3 addedKeywordList 였다면 addedKeywordList에서 payload 빼주면 될듯
+          this.deleteKeyword({
+            payload,
+          });
           break;
         }
         default: {
