@@ -102,18 +102,21 @@ export default {
       });
       state.removedKeywordList = [];
     },
-    // 이 함수는 새로 등록한 키워드를 서버에 등록하는 기능, 기존에 등록한 키워드를 삭제할 경우 서버에서 삭제하는 기능을 수행함.
-    editLectureKeywords({ state }) {
-      // 키워드 삭제
+    // 기존에 등록된 키워드를 삭제하고 확인 누르는 경우, 서버에서 삭제
+    deleteLectureKeywords({ state }) {
       state.removedKeywordList.forEach((element) => {
         lectureService.deleteLectureKeyword({
           lectureId: state.lecture.lecture_id,
           lectureKeyword: element,
         });
       });
+      state.removedKeywordList = [];
+    },
+    // 키워드를 등록하고 확인 버튼을 누르는 경우, 서버에 등록
+    postLectureKeywords({ state }) {
       let mixedList = [];
       mixedList = mixedList.concat(state.movedKeywordList.concat(state.addedKeywordList));
-      // 키워드 등록
+      mixedList = mixedList.map(x => ({ keyword: x }));
       lectureService.postLectureKeywords({
         lectureId: state.lecture.lecture_id,
         lectureKeywords: mixedList,
@@ -124,6 +127,7 @@ export default {
       state.keywordList = state.keywordList.concat(state.movedKeywordList);
       state.movedKeywordList = [];
     },
+    // 키워드에 x키를 눌렀을 때 vuex단에서만 삭제
     deleteKeyword({ state }, { payload }) {
       if (state.keywordList.includes(payload)) {
         state.keywordList.splice(state.keywordList.indexOf(payload), 1);
