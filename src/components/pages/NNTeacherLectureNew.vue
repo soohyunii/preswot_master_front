@@ -67,7 +67,7 @@ export default {
   async mounted() {
     const vm = this;
     if (vm.isManage) {
-      const res = await lectureService.getLecture({ lectureId: vm.LectureId });
+      const res = await lectureService.getLecture({ lectureId: vm.lectureId });
       // console.log('res', res.data);
       vm.input.title = res.data.name || vm.initialInput.title;
       vm.input.type = res.data.type || vm.initialInput.type;
@@ -110,7 +110,7 @@ export default {
       const vm = this;
       return vm.$route.fullPath.includes('/manage');
     },
-    LectureId() {
+    lectureId() {
       const vm = this;
       return vm.$route.params.lectureId;
     },

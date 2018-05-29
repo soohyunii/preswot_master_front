@@ -114,14 +114,16 @@ export default {
     ]),
     ...mapActions('lc', [
       'getLecture',
-      'editLectureKeywords',
+      'deleteLectureKeywords',
+      'postLectureKeywords',
     ]),
     onClick(type, payload) { // eslint-disable-line
       const vm = this;
       // TODO: switch case 해서 SUBMIT_KEYWORDS 서버 전송
       switch (type) {
         case 'SUBMIT_KEYWORDS': {
-          vm.editLectureKeywords();
+          vm.deleteLectureKeywords();
+          vm.postLectureKeywords();
           break;
         }
         default: {
