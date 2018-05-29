@@ -7,19 +7,6 @@
 
     <el-tabs v-model="activeTab" :before-leave="beforeLeaveTab">
       <el-tab-pane label="기본 정보 수정" name="one">
-        강의 기본 정보 수정 부분뷰<br />
-        TODO: NNTeacherLectureNew 가져와야함
-        근데 얘도 bt-container class 가지고 있는 애라
-        적당히 분기해서 가져와야할듯? prop으로 먹이든, 아니면
-        vm.$route.path.includes 'manage' 이걸로 하든, 아니면
-        NNTeacherLectureNew의 속 부분을 partial로 따로 뺀다..? 근데 partial은 최대한 stateless하게 가고싶은데, 얘는 ... 어? 생각보다 stateless하네...? 근데 굳이 그렇게까지 해야하나 싶기도.<br />
-        정리!!<br />
-        prop으로는 아무것도 안넘김
-        NNTeacherClassNew.computed.isEdit에서 했던 것처럼 path 기준으로 isManage 하나 만들어서 분기~
-        isManage일때는 bt-container 클래스에서 빼고
-        강의 추가 라고 되어있는 h2 숨기고~
-        vm.getLecture() 불러서 lcStore.state.lecture에 있는 정보들 input에 넣어주고 하면 될 듯.
-
         <teacher-lecture-new />
       </el-tab-pane>
       <el-tab-pane label="강의 자료 및 키워드 등록" name="two">
