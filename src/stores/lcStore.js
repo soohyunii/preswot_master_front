@@ -8,7 +8,7 @@ export default {
     // 키워드 관련 변수들 시작 //
     recommendKeywordList: null, // 서버에서 불러온 강의자료에서 추출된 키워드들
     keywordList: null, // 서버에서 불러온 강사가 추가한 키워드들
-    removedKeywordList: null, // 서버에서 불러온 강의자료에서 추출된 키워드들 중에서 삭제될 키워드들
+    removedKeywordList: [], // 서버에서 불러온 강의자료에서 추출된 키워드들 중에서 삭제될 키워드들
     movedKeywordList: [], // rkl 에서 kl로 옮겨진 키워드들
     addedKeywordList: [], // 브라우저에서 강사가 직접 추가했으나 아직 서버에 업로드 되진 않은 키워드들
     // 키워드 관련 변수들 끝 //
