@@ -87,6 +87,7 @@ export default {
       classId: vm.classId,
     });
     await vm.getLecture({ lectureId: vm.lectureId });
+    await vm.getKeywords();
   },
   computed: {
     ...mapState('NNclass', [
@@ -116,10 +117,10 @@ export default {
       'getLecture',
       'deleteLectureKeywords',
       'postLectureKeywords',
+      'getKeywords',
     ]),
-    onClick(type, payload) { // eslint-disable-line
+    onClick(type) {
       const vm = this;
-      // TODO: switch case 해서 SUBMIT_KEYWORDS 서버 전송
       switch (type) {
         case 'SUBMIT_KEYWORDS': {
           vm.deleteLectureKeywords();

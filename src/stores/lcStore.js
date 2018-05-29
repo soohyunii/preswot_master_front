@@ -8,7 +8,7 @@ export default {
     // 키워드 관련 변수들 시작 //
     recommendKeywordList: null, // 서버에서 불러온 강의자료에서 추출된 키워드들
     keywordList: null, // 서버에서 불러온 강사가 추가한 키워드들
-    removedKeywordList: null, // 서버에서 불러온 강의자료에서 추출된 키워드들 중에서 삭제될 키워드들
+    removedKeywordList: [], // 서버에서 불러온 강의자료에서 추출된 키워드들 중에서 삭제될 키워드들
     movedKeywordList: [], // rkl 에서 kl로 옮겨진 키워드들
     addedKeywordList: [], // 브라우저에서 강사가 직접 추가했으나 아직 서버에 업로드 되진 않은 키워드들
     // 키워드 관련 변수들 끝 //
@@ -44,39 +44,9 @@ export default {
       const res = await lectureService.getLecture({
         lectureId,
       });
-      // const plist = await lectureService.getLecturePlist({
-      //   lectureId,
-      // });
-      // commit('updateScPlist', {
-      //   scPlist: plist.data,
-      // });
-      // console.log('getSc plist', plist.data); // eslint-disable-line
-      // console.log('getSc res', res.data); // eslint-disable-line
       commit('updateLecture', {
         lecture: res.data,
       });
-      // // 지식맵 가져오는 부분을 이쪽으로 옮김
-      // const res1 = await lectureService.getLectureKeywords({
-      //   lectureId: state.scId,
-      // });
-      // const nodes = res1.data.map(item => ({
-      //   value: item.keyword,
-      //   id: item.keyword,
-      //   name: item.keyword,
-      //   _size: item.weight,
-      // }));
-      // commit('updateNodes', { nodes });
-      // const res2 = await lectureService.getLectureKeywordRelations({
-      //   lectureId: state.scId,
-      // });
-      // if (res2) {
-      //   const edges = res2.data.map(item => ({
-      //     sid: item.node1,
-      //     tid: item.node2,
-      //     weight: item.weight,
-      //   }));
-      //   commit('updateEdges', { edges });
-      // }
     },
     /**
      * 강의 자료 및 키워드 등록 탭에서 필요한 키워드들 다 가져옴

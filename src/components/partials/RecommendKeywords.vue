@@ -14,16 +14,12 @@
 // https://github.com/SortableJS/Vue.Draggable
 // https://github.com/David-Desmaisons/draggable-example/blob/master/src/components/Hello.vue
 import draggable from 'vuedraggable';
-import { mapMutations, mapActions } from 'vuex';
+import { mapMutations } from 'vuex';
 
 export default {
   name: 'RecommendKeywords',
   components: {
     draggable,
-  },
-  beforeMount() {
-    const vm = this;
-    vm.getKeywords(); // FIXME: 이거 밖에서 부르는게 더 나을듯
   },
   data() {
     return {
@@ -62,13 +58,6 @@ export default {
       'updateMovedKeywordList',
       'updateKeywordList',
     ]),
-    ...mapActions('lc', [
-      'getKeywords',
-    ]),
-    // onMove({ relatedContext, draggedContext }) {
-    //   console.log('relatedContext,', relatedContext); // eslint-disable-line
-    //   console.log('draggedContext', draggedContext); // eslint-disable-line
-    // },
   },
 };
 </script>

@@ -40,7 +40,7 @@ export default {
     async onClick(type) {
       switch (type) {
         default: {
-          console.log('@LandingPage.vue/onClick(type)/default : 할 일을 입력하세요.');
+          console.log('@LandingPage.vue/onClick(type)/default : 할 일을 입력하세요.'); // eslint-disable-line
           // throw new Error(`not defined type ${type}`);
         }
       }
