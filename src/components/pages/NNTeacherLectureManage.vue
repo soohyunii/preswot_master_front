@@ -3,6 +3,7 @@
     <h2>{{ currentTeachingClass(classId) ? currentTeachingClass(classId).name : '' }} > {{ lecture ? lecture.name : '' }}</h2>
     <!-- lecture id: {{ lectureId }} {{ lecture }}<br /> <br /> -->
     <!-- ddd {{ currentTeachingClass(classId) }}<br /> -->
+    isEditing: {{ isEditing }} <br />
 
     <el-tabs v-model="activeTab">
       <el-tab-pane label="기본 정보 수정" name="one">
@@ -46,11 +47,19 @@
         <div class="align-right">
           TODO: 자동 모드 toggle
         </div>
-        <lecture-item-list
-          @delete="onClickDeleteLectureItem"
-          type="TEACHER"
-          :list="lectureItemList"
-        />
+        <!-- 존나 신기하게 functional component는 v-show를 안먹는다 -->
+        <div v-show="!isEditing">
+          <lecture-item-list
+            v-show="null"
+            @delete="onClickDeleteLectureItem"
+            @edit="onClickEditLectureItem"
+            type="TEACHER"
+            :list="lectureItemList"
+          />
+        </div>
+        <div v-show="isEditing">
+          <el-button @click="TODOdeleteClick">TODO: Delete this el-button and click listener</el-button>
+        </div>
       </el-tab-pane>
       <el-tab-pane label="강의 허용 프로그램 설정" name="four">
         강의 허용 프로그램 설정 부분뷰
@@ -66,7 +75,7 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters } from 'vuex';
+import { mapState, mapActions, mapGetters, mapMutations } from 'vuex';
 import NNTeacherLectureNew from './NNTeacherLectureNew';
 import MaterialUpload from '../partials/MaterialUpload';
 import RecommendKeywords from '../partials/RecommendKeywords';
@@ -110,6 +119,9 @@ export default {
     ...mapState('lc', [
       'lecture',
     ]),
+    ...mapGetters('lcItem', [
+      'isEditing',
+    ]),
     lectureItemList() {
       const lecture = this.$store.state.lc.lecture;
       if (lecture && Array.isArray(lecture.lecture_items)) {
@@ -130,6 +142,9 @@ export default {
     },
   },
   methods: {
+    ...mapMutations('lcItem', [
+      'updateCurrentEditingLectureItemId',
+    ]),
     ...mapActions('NNclass', [
       'getMyClassLists',
       'getClass',
@@ -137,8 +152,19 @@ export default {
     ...mapActions('lc', [
       'getLecture',
     ]),
+    TODOdeleteClick() {
+      this.updateCurrentEditingLectureItemId({
+        currentEditingLectureItemId: null,
+      });
+    },
     onClick(type, payload) { // eslint-disable-line
       // TODO: switch case 해서 SUBMIT_KEYWORDS 서버 전송
+    },
+    onClickEditLectureItem(lectureItemId) {
+      console.log('lectureItemId', lectureItemId); // eslint-disable-line
+      this.updateCurrentEditingLectureItemId({
+        currentEditingLectureItemId: lectureItemId,
+      });
     },
     /**
      * 얘는 onClick에서 넘겨주면 index를 못받아와서 안됨

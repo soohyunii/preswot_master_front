@@ -46,9 +46,7 @@
           align="center"
         >
           <template slot-scope="scope">
-            <router-link :to="`/a/teacher/NNclass/${scope.row.class_id}/edit`">
-              <el-button>수정</el-button>
-            </router-link>
+            <el-button @click="listeners['edit'](scope.row.lecture_item_id)">수정</el-button>
           </template>
         </el-table-column>
 
