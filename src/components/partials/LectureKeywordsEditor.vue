@@ -2,7 +2,7 @@
   <div id="lecture_keywords_editor_wrapper">
     lecture keywords editor template
     {{ keywordList }}
-    <draggable element="div" v-model="keywordList" :move="onMove" :options="dragOptions">
+    <draggable element="div" v-model="keywordList" :options="dragOptions">
       <transition-group type="transition">
         <el-tag class="tag" type="primary" v-for="k in keywordList" :key="k" closable @close="onClick('DELETE_TAG', k)">{{ k }}</el-tag>
       </transition-group>
@@ -78,11 +78,6 @@ export default {
     ...mapActions('lc', [
       'deleteKeyword',
     ]),
-    onMove(/* { relatedContext, draggedContext } */) {
-      // console.log('relatedContext fff', relatedContext); // eslint-disable-line
-      // console.log('draggedContext fff', draggedContext); // eslint-disable-line
-      // return false;
-    },
     onClick(type, payload) {
       switch (type) {
         case 'ADD': {
