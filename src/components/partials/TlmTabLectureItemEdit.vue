@@ -1,5 +1,5 @@
 <template>
-  <div id="tlm_lecture_item_edit_tab_wrapper">
+  <div id="tlm_tab_lecture_item_edit_wrapper">
     This is tlm_lecture_item_edit_tab_wrapper template
     <div class="ps-align-right">
       TODO: 자동 모드 toggle

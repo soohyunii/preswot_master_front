@@ -9,25 +9,7 @@
         <teacher-lecture-new />
       </el-tab-pane>
       <el-tab-pane label="강의 자료 및 키워드 등록" name="two">
-        <el-row>
-          <el-col :span="12">
-            <h3>강의 자료 업로드</h3>
-            <material-upload />
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <h3>추천 키워드 <span style="font-weight: 400;">(오른쪽으로 드래그)</span></h3>
-            <recommend-keywords />
-          </el-col>
-          <el-col :span="12">
-            <h3>키워드 등록</h3>
-            <lecture-keywords-editor />
-          </el-col>
-        </el-row>
-        <div class="align-right">
-          <el-button @click="onClick('SUBMIT_KEYWORDS')" type="primary">키워드 수정 완료</el-button>
-        </div>
+        <tlm-tab-material-and-keyword-edit />
       </el-tab-pane>
       <el-tab-pane label="강의 아이템 수정" name="three">
         <tlm-tab-lecture-item-edit />
@@ -48,9 +30,7 @@
 <script>
 import { mapState, mapActions, mapGetters, mapMutations } from 'vuex';
 import NNTeacherLectureNew from './NNTeacherLectureNew';
-import MaterialUpload from '../partials/MaterialUpload';
-import RecommendKeywords from '../partials/RecommendKeywords';
-import LectureKeywordsEditor from '../partials/LectureKeywordsEditor';
+import TlmTabMaterialAndKeywordEdit from '../partials/TlmTabMaterialAndKeywordEdit';
 import TlmTabLectureItemEdit from '../partials/TlmTabLectureItemEdit';
 // import utils from '../../utils';
 
@@ -59,14 +39,12 @@ export default {
   name: 'TeacherLectureManage',
   components: {
     TeacherLectureNew: NNTeacherLectureNew,
-    MaterialUpload,
-    RecommendKeywords,
-    LectureKeywordsEditor,
+    TlmTabMaterialAndKeywordEdit,
     TlmTabLectureItemEdit,
   },
   data() {
     return {
-      activeTab: 'three',
+      activeTab: 'two',
     };
   },
   async created() {
@@ -81,9 +59,6 @@ export default {
     await vm.getKeywords();
   },
   computed: {
-    ...mapState('NNclass', [
-      'teachingClassList',
-    ]),
     ...mapGetters('NNclass', [
       'currentTeachingClass',
     ]),
