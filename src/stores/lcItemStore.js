@@ -21,7 +21,7 @@ export default {
      * lectureItem은 서버로부터 받아온 값을 그냥 들고만 있는 애라고 생각하자,
      * 브라우저의 form에서 일어나는 모든 변경사항을 여기에 반영하지 말자. 너무 복잡해짐
      */
-    currentEditingLectureItemId: null,
+    currentEditingLectureItemId: null, // -1인 경우는 edit이 아니라 create
     lectureItem: null,
   },
   getters: {

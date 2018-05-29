@@ -3,7 +3,6 @@
     <h2>{{ currentTeachingClass(classId) ? currentTeachingClass(classId).name : '' }} > {{ lecture ? lecture.name : '' }}</h2>
     <!-- lecture id: {{ lectureId }} {{ lecture }}<br /> <br /> -->
     <!-- ddd {{ currentTeachingClass(classId) }}<br /> -->
-    isEditing: {{ isEditing }} <br />
 
     <el-tabs v-model="activeTab" :before-leave="beforeLeaveTab">
       <el-tab-pane label="기본 정보 수정" name="one">
@@ -30,23 +29,8 @@
           <el-button @click="onClick('SUBMIT_KEYWORDS')" type="primary">키워드 수정 완료</el-button>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="강의 아이템 등록" name="three">
-        <div class="align-right">
-          TODO: 자동 모드 toggle
-        </div>
-        <!-- 존나 신기하게 functional component는 v-show를 안먹는다 -->
-        <div v-show="!isEditing">
-          <lecture-item-list
-            v-show="null"
-            @delete="onClickDeleteLectureItem"
-            @edit="onClickEditLectureItem"
-            type="TEACHER"
-            :list="lectureItemList"
-          />
-        </div>
-        <div v-show="isEditing">
-          <el-button @click="TODOdeleteClick">TODO: Delete this el-button and click listener</el-button>
-        </div>
+      <el-tab-pane label="강의 아이템 수정" name="three">
+        <tlm-tab-lecture-item-edit />
       </el-tab-pane>
       <el-tab-pane label="강의 허용 프로그램 설정" name="four">
         강의 허용 프로그램 설정 부분뷰
@@ -67,9 +51,8 @@ import NNTeacherLectureNew from './NNTeacherLectureNew';
 import MaterialUpload from '../partials/MaterialUpload';
 import RecommendKeywords from '../partials/RecommendKeywords';
 import LectureKeywordsEditor from '../partials/LectureKeywordsEditor';
-import LectureItemList from '../partials/LectureItemList';
-import utils from '../../utils';
-import lectureItemService from '../../services/lectureItemService';
+import TlmTabLectureItemEdit from '../partials/TlmTabLectureItemEdit';
+// import utils from '../../utils';
 
 
 export default {
@@ -79,14 +62,14 @@ export default {
     MaterialUpload,
     RecommendKeywords,
     LectureKeywordsEditor,
-    LectureItemList,
+    TlmTabLectureItemEdit,
   },
   data() {
     return {
       activeTab: 'three',
     };
   },
-  async beforeMount() {
+  async created() {
     const vm = this;
     // FIXME: TeacherClassShow의 그것이랑 동일한 문제 // getMyClassLists를 다른곳에서 불러서 이미 채워져있는경우면 사실 필요없음
     await vm.getMyClassLists();
@@ -107,19 +90,6 @@ export default {
     ...mapState('lc', [
       'lecture',
     ]),
-    ...mapGetters('lcItem', [
-      'isEditing',
-    ]),
-    lectureItemList() {
-      const lecture = this.$store.state.lc.lecture;
-      if (lecture && Array.isArray(lecture.lecture_items)) {
-        return lecture.lecture_items.map((x) => {
-          x.type = utils.convertScType(x.type); // eslint-disable-line no-param-reassign
-          return x;
-        });
-      }
-      return [];
-    },
     classId() {
       const vm = this;
       return Number.parseInt(vm.$route.query.classId, 10);
@@ -144,11 +114,6 @@ export default {
       'postLectureKeywords',
       'getKeywords',
     ]),
-    TODOdeleteClick() {
-      this.updateCurrentEditingLectureItemId({
-        currentEditingLectureItemId: null,
-      });
-    },
     beforeLeaveTab() {
       if (this.activeTab === 'three') { // 강의 아이템 등록에서 떠나려는 경우
         this.updateCurrentEditingLectureItemId({
@@ -172,55 +137,6 @@ export default {
           throw new Error(`not defined type ${type}`);
         }
       }
-    },
-    onClickEditLectureItem(lectureItemId) {
-      console.log('lectureItemId', lectureItemId); // eslint-disable-line
-      this.updateCurrentEditingLectureItemId({
-        currentEditingLectureItemId: lectureItemId,
-      });
-    },
-    /**
-     * 얘는 onClick에서 넘겨주면 index를 못받아와서 안됨
-     */
-    onClickDeleteLectureItem(index) {
-      const vm = this;
-      const targetLectureItem = vm.lectureItemList[index];
-
-      vm.$confirm('정말로 이 아이템을 삭제하시겠습니까?', `${targetLectureItem.name || ''} 삭제`, {
-        confirmButtonText: '예, 삭제합니다.',
-        cancelButtonText: '아니요, 삭제하지 않습니다.',
-        type: 'warning',
-      })
-        .then(async () => {
-          try {
-            await lectureItemService.deleteLectureItem({
-              lectureItemId: targetLectureItem.lecture_item_id,
-            });
-            // TODO: delete lectureItem from lecture.lecture_items
-            vm.$notify({
-              title: '삭제됨',
-              message: '과목이 삭제됨',
-              type: 'success',
-              duration: 3000,
-            });
-          } catch (error) {
-            console.error(error); // eslint-disable-line no-console
-            vm.$notify({
-              title: '과목 삭제 실패',
-              message: error.toString(),
-              type: 'error',
-              duration: 3000,
-            });
-          }
-        })
-        .catch(() => {
-          vm.$notify({
-            title: '취소됨',
-            message: '과목 삭제 취소됨',
-            type: 'info',
-            duration: 3000,
-          });
-        });
     },
   },
 };
