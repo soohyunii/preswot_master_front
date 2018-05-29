@@ -7,7 +7,6 @@
     <!-- 존나 신기하게 functional component는 v-show를 안먹는다 -->
     <div v-show="!isEditing">
       <lecture-item-list
-        v-show="null"
         @delete="onClickDeleteLectureItem"
         @edit="onClickEditLectureItem"
         type="TEACHER"
