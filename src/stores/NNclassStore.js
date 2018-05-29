@@ -17,6 +17,7 @@ export default {
     finishedClassList: null,
     studyingClassList: null,
     teachingClassList: null,
+    popularClassList: null,
     // //////////////////////////절취선////////////////////////// //
   },
   getters: {
@@ -65,6 +66,9 @@ export default {
       const currentClass = state.teachingClassList.find(item => item.class_id === classId);
       const tIndex = currentClass.lectures.findIndex(item => item.lecture_id === lectureId);
       currentClass.lectures.splice(tIndex, 1);
+    },
+    updatePopularClassList(state, { popularClassList }) {
+      state.popularClassList = popularClassList;
     },
   },
   actions: {
@@ -121,6 +125,116 @@ export default {
       commit('deleteScenario', {
         classId,
         lectureId,
+      });
+    },
+    async getPopularClassList({ commit }) {
+      commit('updatePopularClassList', {
+        popularClassList: [{
+          title: '한국사',
+          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
+          classId: 1,
+          teacherlist: ['설민석'],
+          startDateStr: '2018-01-05',
+          endDateStr: '2018-05-09',
+        }, {
+          title: '미국사',
+          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
+          classId: 1,
+          teacherlist: ['미미미'],
+          startDateStr: '2018-01-05',
+          endDateStr: '2018-05-09',
+        }, {
+          title: '중국사',
+          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
+          classId: 1,
+          teacherlist: ['중중중'],
+          startDateStr: '2018-01-05',
+          endDateStr: '2018-05-09',
+        }, {
+          title: '일국사',
+          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
+          classId: 1,
+          teacherlist: ['일일일'],
+          startDateStr: '2018-01-05',
+          endDateStr: '2018-05-09',
+        }, {
+          title: '러국사',
+          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
+          classId: 1,
+          teacherlist: ['러러러'],
+          startDateStr: '2018-01-05',
+          endDateStr: '2018-05-09',
+        }, {
+          title: '국사',
+          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
+          classId: 1,
+          teacherlist: ['러러러'],
+          startDateStr: '2018-01-05',
+          endDateStr: '2018-05-09',
+        }, {
+          title: '국사2',
+          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
+          classId: 1,
+          teacherlist: ['러러러'],
+          startDateStr: '2018-01-05',
+          endDateStr: '2018-05-09',
+        }, {
+          title: '국사3',
+          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
+          classId: 1,
+          teacherlist: ['러러러'],
+          startDateStr: '2018-01-05',
+          endDateStr: '2018-05-09',
+        }, {
+          title: '국사4',
+          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
+          classId: 1,
+          teacherlist: ['러러러'],
+          startDateStr: '2018-01-05',
+          endDateStr: '2018-05-09',
+        }, {
+          title: '국사5',
+          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
+          classId: 1,
+          teacherlist: ['러러러'],
+          startDateStr: '2018-01-05',
+          endDateStr: '2018-05-09',
+        }, {
+          title: '국사6',
+          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
+          classId: 1,
+          teacherlist: ['러러러'],
+          startDateStr: '2018-01-05',
+          endDateStr: '2018-05-09',
+        }, {
+          title: '국사7',
+          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
+          classId: 1,
+          teacherlist: ['러러러'],
+          startDateStr: '2018-01-05',
+          endDateStr: '2018-05-09',
+        }, {
+          title: '국사8',
+          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
+          classId: 1,
+          teacherlist: ['러러러'],
+          startDateStr: '2018-01-05',
+          endDateStr: '2018-05-09',
+        }, {
+          title: '국사9',
+          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
+          classId: 1,
+          teacherlist: ['러러러'],
+          startDateStr: '2018-01-05',
+          endDateStr: '2018-05-09',
+        }, {
+          title: '국사10',
+          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
+          classId: 1,
+          teacherlist: ['러러러'],
+          startDateStr: '2018-01-05',
+          endDateStr: '2018-05-09',
+        }],
       });
     },
   },

@@ -1,6 +1,6 @@
 <template>
-  <div id="teacher_lecture_new_wrapper" class="bt-container">
-    <h2>
+  <div id="teacher_lecture_new_wrapper" :class="{ 'bt-container': isManage }">
+    <h2 v-if="isManage === false">
       강의 추가
     </h2>
 
@@ -64,6 +64,17 @@ export default {
       input: Object.assign({}, initialInput), // 복사해서 넣음
     };
   },
+  async mounted() {
+    const vm = this;
+    if (vm.isManage) {
+      const res = await lectureService.getLecture({ lectureId: vm.lectureId });
+      // console.log('res', res.data);
+      vm.input.title = res.data.name || vm.initialInput.title;
+      vm.input.type = res.data.type || vm.initialInput.type;
+      vm.input.lcStartDate = res.data.intended_start || vm.initialInput.lcStartDate;
+      vm.input.lcEndDate = res.data.intended_end || vm.initialInput.lcEndDate;
+    }
+  },
   methods: {
     onSubmit() {
       const vm = this;
@@ -92,6 +103,16 @@ export default {
           });
         }
       });
+    },
+  },
+  computed: {
+    isManage() {
+      const vm = this;
+      return vm.$route.fullPath.includes('/manage');
+    },
+    lectureId() {
+      const vm = this;
+      return vm.$route.params.lectureId;
     },
   },
 };

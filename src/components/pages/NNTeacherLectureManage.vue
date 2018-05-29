@@ -87,6 +87,7 @@ export default {
       classId: vm.classId,
     });
     await vm.getLecture({ lectureId: vm.lectureId });
+    await vm.getKeywords();
   },
   computed: {
     ...mapState('NNclass', [
@@ -114,9 +115,22 @@ export default {
     ]),
     ...mapActions('lc', [
       'getLecture',
+      'deleteLectureKeywords',
+      'postLectureKeywords',
+      'getKeywords',
     ]),
-    onClick(type, payload) { // eslint-disable-line
-      // TODO: switch case 해서 SUBMIT_KEYWORDS 서버 전송
+    onClick(type) {
+      const vm = this;
+      switch (type) {
+        case 'SUBMIT_KEYWORDS': {
+          vm.deleteLectureKeywords();
+          vm.postLectureKeywords();
+          break;
+        }
+        default: {
+          throw new Error(`not defined type ${type}`);
+        }
+      }
     },
   },
 };
