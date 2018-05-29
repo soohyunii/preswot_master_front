@@ -16,7 +16,7 @@
         <lecture-keywords-editor />
       </el-col>
     </el-row>
-    <div class="align-right">
+    <div class="ps-align-right">
       <el-button @click="onClick('SUBMIT_KEYWORDS')" type="primary">키워드 수정 완료</el-button>
     </div>
   </div>
