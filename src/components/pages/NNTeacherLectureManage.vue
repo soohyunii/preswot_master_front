@@ -159,7 +159,6 @@ export default {
       });
     },
     beforeLeaveTab() {
-      console.log('activeTab', this.activeTab);
       if (this.activeTab === 'three') { // 강의 아이템 등록에서 떠나려는 경우
         this.updateCurrentEditingLectureItemId({
           currentEditingLectureItemId: null,
