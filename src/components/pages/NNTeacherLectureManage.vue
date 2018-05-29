@@ -147,7 +147,6 @@ export default {
       const vm = this;
       const targetLectureItem = vm.lectureItemList[index];
 
-      console.log('targetLectureItem', targetLectureItem);
       vm.$confirm('정말로 이 아이템을 삭제하시겠습니까?', `${targetLectureItem.name || ''} 삭제`, {
         confirmButtonText: '예, 삭제합니다.',
         cancelButtonText: '아니요, 삭제하지 않습니다.',
