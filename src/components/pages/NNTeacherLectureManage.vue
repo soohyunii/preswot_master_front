@@ -5,7 +5,7 @@
     <!-- ddd {{ currentTeachingClass(classId) }}<br /> -->
     isEditing: {{ isEditing }} <br />
 
-    <el-tabs v-model="activeTab">
+    <el-tabs v-model="activeTab" :before-leave="beforeLeaveTab">
       <el-tab-pane label="기본 정보 수정" name="one">
         강의 기본 정보 수정 부분뷰<br />
         TODO: NNTeacherLectureNew 가져와야함
@@ -144,6 +144,7 @@ export default {
   methods: {
     ...mapMutations('lcItem', [
       'updateCurrentEditingLectureItemId',
+      'updateLectureItem',
     ]),
     ...mapActions('NNclass', [
       'getMyClassLists',
@@ -156,6 +157,18 @@ export default {
       this.updateCurrentEditingLectureItemId({
         currentEditingLectureItemId: null,
       });
+    },
+    beforeLeaveTab() {
+      console.log('activeTab', this.activeTab);
+      if (this.activeTab === 'three') { // 강의 아이템 등록에서 떠나려는 경우
+        this.updateCurrentEditingLectureItemId({
+          currentEditingLectureItemId: null,
+        });
+        this.updateLectureItem({
+          lectureItem: null,
+        });
+      }
+      return true; // false인 경우 탭 전환 안됨
     },
     onClick(type, payload) { // eslint-disable-line
       // TODO: switch case 해서 SUBMIT_KEYWORDS 서버 전송
