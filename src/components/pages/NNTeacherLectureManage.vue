@@ -54,6 +54,9 @@
       <el-tab-pane label="채점 관리" name="six">
         채점 관리 부분뷰
       </el-tab-pane>
+      <el-tab-pane v-show="false" label="강의 아이템 등록" name="seven">
+        <lecture-add-item />
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -64,6 +67,8 @@ import NNTeacherLectureNew from './NNTeacherLectureNew';
 import MaterialUpload from '../partials/MaterialUpload';
 import RecommendKeywords from '../partials/RecommendKeywords';
 import LectureKeywordsEditor from '../partials/LectureKeywordsEditor';
+import LectureItemList from '../partials/LectureItemList';
+import LectureAddItem from '../partials/LectureAddItem';
 
 export default {
   name: 'TeacherLectureManage',
@@ -72,10 +77,12 @@ export default {
     MaterialUpload,
     RecommendKeywords,
     LectureKeywordsEditor,
+    LectureItemList,
+    LectureAddItem,
   },
   data() {
     return {
-      activeTab: 'two',
+      activeTab: 'one',
     };
   },
   async mounted() {
