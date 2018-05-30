@@ -23,6 +23,9 @@
       <el-tab-pane label="채점 관리" name="six">
         채점 관리 부분뷰
       </el-tab-pane>
+      <el-tab-pane v-show="false" label="강의 아이템 등록" name="seven">
+        <lecture-add-item />
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -32,6 +35,7 @@ import { mapState, mapActions, mapGetters, mapMutations } from 'vuex';
 import NNTeacherLectureNew from './NNTeacherLectureNew';
 import TlmTabMaterialAndKeywordEdit from '../partials/TlmTabMaterialAndKeywordEdit';
 import TlmTabLectureItemEdit from '../partials/TlmTabLectureItemEdit';
+import LectureAddItem from '../partials/LectureAddItem';
 // import utils from '../../utils';
 
 
@@ -41,10 +45,11 @@ export default {
     TeacherLectureNew: NNTeacherLectureNew,
     TlmTabMaterialAndKeywordEdit,
     TlmTabLectureItemEdit,
+    LectureAddItem,
   },
   data() {
     return {
-      activeTab: 'two',
+      activeTab: 'one',
     };
   },
   async created() {
