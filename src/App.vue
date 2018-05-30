@@ -88,7 +88,8 @@ body {
 }
 
 #teacher_theme {
-  background-color: darken($app-ultra-violet, 10%);
+  // background-color: darken($app-ultra-violet, 10%);
+  background-color: darken(#2497D8, 10%);
 }
 
 #teacher_lecture_live_theme {

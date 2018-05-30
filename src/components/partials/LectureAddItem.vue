@@ -202,7 +202,7 @@
         </el-form-item>
       </template>
     </el-form>
-    <div style="text-align:center;">
+    <div class="ps-align-right">
       <el-button type="primary">추가 / 수정</el-button>
     </div>
   </div>
