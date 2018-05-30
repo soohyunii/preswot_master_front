@@ -58,6 +58,10 @@ export default {
     await vm.getLecture({ lectureId: vm.lectureId });
     await vm.getKeywords();
   },
+  beforeRouteLeave() {
+    const vm = this;
+    vm.resetLectureItemEditTab();
+  },
   computed: {
     ...mapGetters('NNclass', [
       'currentTeachingClass',
@@ -90,15 +94,20 @@ export default {
       'getKeywords',
     ]),
     beforeLeaveTab() {
-      if (this.activeTab === 'item') { // 강의 아이템 등록에서 떠나려는 경우
-        this.updateCurrentEditingLectureItemId({
-          currentEditingLectureItemId: null,
-        });
-        this.updateLectureItem({
-          lectureItem: null,
-        });
+      const vm = this;
+      if (vm.activeTab === 'item') { // 강의 아이템 등록에서 떠나려는 경우
+        vm.resetLectureItemEditTab();
       }
       return true; // false인 경우 탭 전환 안됨
+    },
+    resetLectureItemEditTab() {
+      const vm = this;
+      vm.updateCurrentEditingLectureItemId({
+        currentEditingLectureItemId: null,
+      });
+      vm.updateLectureItem({
+        lectureItem: null,
+      });
     },
     onClick(type) {
       const vm = this;

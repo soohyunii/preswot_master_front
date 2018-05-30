@@ -16,8 +16,8 @@
           <el-radio-button :label="2">복습</el-radio-button>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="도구 유형">
-        <el-select @change="onChange('Head')" v-model="inputHead.toolType">
+      <el-form-item label="아이템 유형">
+        <el-select @change="onChange('Head')" v-model="inputHead.lcItemType">
           <el-option
             v-for="option in selectOptionList"
             :key="option.value"
@@ -26,11 +26,11 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="도구 이름">
-        <el-input v-model="inputHead.toolName" placeholder="내용을 입력해주세요."></el-input>
+      <el-form-item label="아이템 이름">
+        <el-input v-model="inputHead.lcItemName" placeholder="내용을 입력해주세요."></el-input>
       </el-form-item>
 
-      <template v-if="inputHead.toolType === 'question'">
+      <template v-if="inputHead.lcItemType === 'question'">
         <el-form-item label="문항 유형">
           <el-radio-group @change="onChange('Body')" v-model="inputBody.questionType">
             <el-radio-button label="multipleChoice">객관</el-radio-button>
@@ -166,7 +166,7 @@
         </el-form-item>
       </template>
 
-      <template v-if="inputHead.toolType === 'survey'">
+      <template v-if="inputHead.lcItemType === 'survey'">
         <el-form-item label="문항 유형">
           <el-radio-group @change="onChange('Body')" v-model="inputBody.questionType">
             <el-radio-button label="multipleChoice">객관</el-radio-button>
@@ -190,13 +190,13 @@
         </template>
       </template>
 
-      <template v-if="inputHead.toolType === 'practice'">
+      <template v-if="inputHead.lcItemType === 'practice'">
         <el-form-item label="코드">
           <el-input v-model="inputTail.code" placeholder="내용을 입력해주세요." type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
         </el-form-item>
       </template>
 
-      <template v-if="inputHead.toolType === 'discussion'">
+      <template v-if="inputHead.lcItemType === 'discussion'">
         <el-form-item label="토론 주제">
           <el-input v-model="inputTail.code" placeholder="내용을 입력해주세요." type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
         </el-form-item>
@@ -312,7 +312,7 @@ export default {
         }
         case 'Body': {
           vm.inputTail = {};
-          if (vm.inputHead.toolType === 'question') {
+          if (vm.inputHead.lcItemType === 'question') {
             // 이 인스턴스 메소드는 vue에서 추적 가능한 속성을 생성하는 기능을 함.
             vm.$set(vm.inputTail, 'keywordPointList', []);
           }
