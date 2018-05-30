@@ -57,6 +57,7 @@ export default {
       const vm = this;
       switch (type) {
         case 'SHOWLIST': {
+          // eslint-disable-next-line
           console.log(vm.attendeeList);
           break;
         }
