@@ -1,11 +1,11 @@
 <template>
   <div id="tlm_tab_lecture_item_edit_wrapper">
     This is tlm_lecture_item_edit_tab_wrapper template
-    <div class="ps-align-right">
-      TODO: 자동 모드 toggle
-    </div>
     <!-- 존나 신기하게 functional component는 v-show를 안먹는다 -->
     <div v-show="!isEditing">
+      <div class="ps-align-right">
+        TODO: 자동 모드 toggle
+      </div>
       <lecture-item-list
         @delete="onClickDeleteLectureItem"
         @edit="onClickEditLectureItem"
