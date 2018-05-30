@@ -109,7 +109,7 @@
             <el-button @click="onClick('addTestCase')">추가</el-button>
           </el-form-item>
           <template v-if="inputTail.testCaseList !== undefined">
-            <div v-for="(testCase,index) in inputTail.testCaseList">
+            <div v-for="(testCase, index) in inputTail.testCaseList" :key="index">
               <el-form-item label='테스트 케이스 입력'>
                 <el-input v-model="testCase.input" placeholder="내용을 입력해주세요." type="textarea"></el-input>
               </el-form-item>
@@ -117,7 +117,7 @@
                 <el-input v-model="testCase.output" placeholder="내용을 입력해주세요." type="textarea"></el-input>
               </el-form-item>
               <div style="text-align: right;">
-              <el-button @click="onClick('deleteTestCase',index)">테스트 케이스 {{ index }} 삭제</el-button>
+              <el-button @click="onClick('deleteTestCase', index)">테스트 케이스 {{ index }} 삭제</el-button>
               </div>
             </div>
           </template>
@@ -178,7 +178,7 @@
         </el-form-item>
         <template v-if="inputBody.questionType === 'multipleChoice'">
           <el-form-item v-if="inputTail.questionList !== undefined" label="항목">
-            <div v-for="(question, index) in inputTail.questionList">
+            <div v-for="(question, index) in inputTail.questionList" :key="index">
               <span>{{ index+1 }}</span>
                 <div style="display: inline-block; width: 90%;">
                   <el-input v-model="question.question" placeholder="내용을 입력해주세요."></el-input>
@@ -189,7 +189,7 @@
           </el-form-item>
         </template>
       </template>
-      
+
       <template v-if="inputHead.toolType === 'practice'">
         <el-form-item label="코드">
           <el-input v-model="inputTail.code" placeholder="내용을 입력해주세요." type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
@@ -288,7 +288,7 @@ export default {
           break;
         }
         case 'addFile': {
-          console.log('//TODO add File');
+          console.log('//TODO add File'); // eslint-disable-line no-console
           break;
         }
         case 'addQuestion': {
