@@ -1,13 +1,14 @@
 <template functional>
-  <div id="class_list_wrapper">
+  <div id="lecture_item_list_wrapper">
     <div v-if="props.list.length === 0">
-      강의 중인 과목이 없습니다.
+      강의 아이템 목록이 비었습니다.
     </div>
     <div v-else>
-      <el-table :data="props.list" stripe @row-click="listeners['row-click']">
+      {{ props.list }}
+      <el-table :data="props.list" stripe>
         <el-table-column
           prop="index"
-          label="과목 번호"
+          label="번호"
           width="100"
           align="center"
         >
@@ -17,33 +18,26 @@
         </el-table-column>
 
         <el-table-column
+          prop="type"
+          label="타입"
+          width="100"
+          align="center"
+        ></el-table-column>
+
+        <el-table-column
           prop="name"
-          label="과목"
+          label="강의 아이템 이름"
           width="225"
           align="center"
         ></el-table-column>
 
         <el-table-column
-          prop="description"
-          label="과목 소개"
-          width="300"
+          prop="activeTime"
+          label="활성화 시간"
+          width="500"
           align="center"
         >
-          <template slot-scope="scope">
-            {{ scope.row.description | truncate(20) }}
-          </template>
-        </el-table-column>
-
-        <el-table-column
-          label="기간"
-          width="300"
-          align="center"
-        >
-          <template slot-scope="scope">
-            {{ scope.row.start_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') : '미정' }}
-            ~
-            {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString('ko-KR') : '미정' }}
-          </template>
+          // TODO:
         </el-table-column>
 
         <el-table-column
@@ -52,11 +46,10 @@
           align="center"
         >
           <template slot-scope="scope">
-            <router-link :to="`/a/teacher/NNclass/${scope.row.class_id}/edit`">
-              <el-button>수정</el-button>
-            </router-link>
+            <el-button @click="listeners['edit'](scope.row.lecture_item_id)">수정</el-button>
           </template>
         </el-table-column>
+
         <el-table-column
           label="-"
           width="80"
@@ -66,6 +59,7 @@
             <el-button type="danger" @click="listeners['delete'](scope.$index)">삭제</el-button>
           </template>
         </el-table-column>
+
       </el-table>
     </div>
   </div>
@@ -73,7 +67,7 @@
 
 <script>
 export default {
-  name: 'ClassList',
+  name: 'LectureItemList',
   props: {
     type: {
       type: String,
