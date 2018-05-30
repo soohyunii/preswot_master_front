@@ -5,22 +5,22 @@
     <!-- ddd {{ currentTeachingClass(classId) }}<br /> -->
 
     <el-tabs v-model="activeTab" :before-leave="beforeLeaveTab">
-      <el-tab-pane label="기본 정보 수정" name="one">
+      <el-tab-pane label="기본 정보 수정" name="basic">
         <teacher-lecture-new />
       </el-tab-pane>
-      <el-tab-pane label="강의 자료 및 키워드 등록" name="two">
+      <el-tab-pane label="강의 자료 및 키워드 등록" name="material">
         <tlm-tab-material-and-keyword-edit />
       </el-tab-pane>
-      <el-tab-pane label="강의 아이템 수정" name="three">
+      <el-tab-pane label="강의 아이템 수정" name="item">
         <tlm-tab-lecture-item-edit />
       </el-tab-pane>
-      <el-tab-pane label="강의 허용 프로그램 설정" name="four">
+      <el-tab-pane label="강의 허용 프로그램 설정" name="program">
         강의 허용 프로그램 설정 부분뷰
       </el-tab-pane>
-      <el-tab-pane label="강의 지식맵 관리" name="five">
+      <el-tab-pane label="강의 지식맵 관리" name="map">
         강의 지식맵 관리 부분뷰
       </el-tab-pane>
-      <el-tab-pane label="채점 관리" name="six">
+      <el-tab-pane label="채점 관리" name="grade">
         채점 관리 부분뷰
       </el-tab-pane>
       <el-tab-pane v-show="false" label="강의 아이템 등록" name="seven">
@@ -49,7 +49,7 @@ export default {
   },
   data() {
     return {
-      activeTab: 'one',
+      activeTab: 'item',
     };
   },
   async created() {
@@ -95,7 +95,7 @@ export default {
       'getKeywords',
     ]),
     beforeLeaveTab() {
-      if (this.activeTab === 'three') { // 강의 아이템 등록에서 떠나려는 경우
+      if (this.activeTab === 'item') { // 강의 아이템 등록에서 떠나려는 경우
         this.updateCurrentEditingLectureItemId({
           currentEditingLectureItemId: null,
         });
