@@ -21,6 +21,7 @@
     </div>
     <div v-show="isEditing">
       <el-button @click="TODOdeleteClick">TODO: Delete this el-button and click listener</el-button>
+      <lecture-add-item />
     </div>
   </div>
 </template>
@@ -30,11 +31,13 @@ import { mapGetters, mapMutations } from 'vuex';
 import LectureItemList from '../partials/LectureItemList';
 import utils from '../../utils';
 import lectureItemService from '../../services/lectureItemService';
+import LectureAddItem from '../partials/LectureAddItem';
 
 export default {
   name: 'TlmLectureItemEditTab',
   components: {
     LectureItemList,
+    LectureAddItem,
   },
   computed: {
     ...mapGetters('lcItem', [

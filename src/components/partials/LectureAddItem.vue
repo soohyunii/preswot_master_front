@@ -1,7 +1,7 @@
 <template>
   <div id="teacher_lecture_new_wrapper">
     <h2>
-      도구 추가
+      강의 아이템 추가 TODO: isEditing이면 강의 아이템 수정으로
     </h2>
 
     {{ inputHead }}<br /><br />
