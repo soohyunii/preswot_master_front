@@ -6,15 +6,16 @@
         <i class="el-icon-close" @click="onClick('CLOSE_STATUSBAR')" />
       </el-col>
     </el-row>
-    <el-row :gutter="20" id="student_score">
+    <el-row>
+      <h1>수강생 목록</h1>
+    </el-row>
+    <el-row :gutter="20">
       <el-col :span="3" v-for="item in forLoopData" :key="item">
-        <div class="one_user"  v-on:click="select($event, item.user_id)">
-          <div class="user_pic" v-bind:style='{ backgroundImage: "url(" + item.latest_pic_path + ")", }'></div>
+        <div class="one_user" v-on:click="select($event, item.user_id)">
           <div class="user_info">
-            <div class="user_name">{{item.name}}</div>
-            <div class="participation_score">참여도: {{item.participation_score}}</div>
-            <div class="concentration_score">집중도: {{item.concentration_score}}</div>
-            <div class="concentration_score">이해도: {{item.understanding_score}}</div>
+            <!-- TODO : 사진 넣기 -->
+            <div class="user_name">이름 : {{item.name}}</div>
+            <div class="user_id">아이디 : {{item.user_id}}</div>
           </div>
         </div>
       </el-col>
@@ -99,70 +100,36 @@
 
 </style>
 <script>
-  import { mapState, mapMutations } from 'vuex';
-  import realtimeLectureService from '../../services/realtimeLectureService';
+import { mapState, mapActions } from 'vuex';
+
 
   export default {
     // TODO: 전달되는 데이터 명 확인
     name: 'ReportStudentList',
-    props: ['lectureId'],
+    props: ['attendeeList'],
     data() {
       return {
-        forLoopData: null,
-        loopInterval: 0,
+        forLoopData: this.attendeeList,
       };
     },
     computed: {
-      ...mapState('analysis', ['analysisData', 'isActiveInfo', 'classId']),
+      ...mapState('report', ['isAttendeeVisable', 'currentClassId'])
     },
     methods: {
-      ...mapMutations('analysis', ['updateClassId', 'updateUserId', 'updateIsStudent', 'updateIsActiveInfo', 'updateLectureId']),
+      ...mapActions('report', ['toggleAttendeeVisable']),
       select(e, userId) {
         const vm = this;
-        vm.$router.push(`/a/student/class/${vm.classId}/${userId}/journal`);
-      },
-      async getLectureStat() {
-        const vm = this;
-        try {
-          const lectureData = await realtimeLectureService.getStudentLectureLog({
-            lectureId: vm.lectureId, opt: vm.opt,
-          });
-          for (let i = 0; i < lectureData.data.length; i += 1) {
-            // eslint-disable-next-line
-            lectureData.data[i].latest_pic_path = '"'+ lectureData.data[i].latest_pic_path + '"';
-            // eslint-disable-next-line
-          }
-
-          vm.forLoopData = lectureData.data;
-        } catch (e) {
-          throw new Error('request error');
-        }
+        console.log(userId);
+        vm.$router.push(`/a/report/student/${userId}/class/${vm.currentClassId}/`);
       },
       onClick(type) {
         const vm = this;
         switch (type) {
-          case 'GET_LECTURE_SCORE_ORDER_BY_CONCENTRATION': {
-            vm.opt = 0;
-            vm.getLectureStat();
-            break;
-          }
-          case 'GET_LECTURE_SCORE_ORDER_BY_PARTICIPATION': {
-            vm.opt = 1;
-            vm.getLectureStat();
-            break;
-          }
-          case 'GET_LECTURE_SCORE_ORDER_BY_UNDERSTANDING': {
-            vm.opt = 2;
-            vm.getLectureStat();
-            break;
-          }
           case 'CLOSE_STATUSBAR': {
-            vm.updateIsActiveInfo({
-              isActiveInfo: false,
-            });
+            vm.toggleAttendeeVisable();
             break;
           }
-          default: {
+          default : {
             break;
           }
         }

@@ -13,8 +13,9 @@ export default {
     currentClassId: null,
     currentClassStat: [],
     resultData: [],
-    currentClassAttendee: [],
+    currentClassAttendee: null,
     attendee: [],
+    isAttendeeVisable: false,
   },
   getters: {
     sizeOfReports(state) {
@@ -39,6 +40,13 @@ export default {
     },
     updateCurrentClassAttendee(state, { currentClassAttendee }) {
       state.currentClassAttendee = currentClassAttendee;
+    },
+    updateAttendeeVisable(state) {
+      if (state.isAttendeeVisable) {
+        state.isAttendeeVisable = false;
+      } else {
+        state.isAttendeeVisable = true;
+      }
     },
   },
   actions: {
@@ -211,6 +219,9 @@ export default {
       commit('updateCurrentClassAttendee', {
         currentClassAttendee: res.data,
       });
+    },
+    toggleAttendeeVisable({ commit }) {
+      commit('updateAttendeeVisable');
     },
   },
 };
