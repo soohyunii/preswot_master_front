@@ -87,7 +87,7 @@
         </el-form-item>
       </template> -->
     </el-form>
-    <div class="ps-align-right">
+    <div class="ps-align-right" id="lecture_item_editor_button_wrapper">
       <el-button type="primary">추가 / 수정</el-button>
     </div>
   </div>

@@ -122,7 +122,7 @@
         </el-option>
       </el-select> -->
       <div style="display: inline-block; width: 100px;">
-        <el-input v-model="inputTail.keywordPoint" placeholder="배점"></el-input>
+        <el-input id="input_keyword_point" v-model="inputTail.keywordPoint" placeholder="배점"></el-input>
       </div>
       <el-button @click="onClick('ADD_KEYWORD')">추가</el-button><br>
       <div v-for="item in inputTail.assignedKeywordList" :key="item.keywordName" style="display: inline-block; width: 200px;">
@@ -130,8 +130,8 @@
         <el-button @click="onClick('DELETE_KEYWORD',item.keywordName)" type="danger" style="margin: 0px">X</el-button>
       </div>
     </el-form-item>
-    <el-form-item label="난이도">
-      <el-select v-model="inputTail.difficulty">
+    <el-form-item label="난이도" id="difficulty">
+      <el-select v-model.number="inputTail.difficulty">
         <el-option
           v-for="level in difficultyList"
           :key="level"
@@ -152,6 +152,7 @@ export default {
     };
     const initialInputTail = {
       assignedKeywordList: [],
+      difficulty: 3,
     };
     return {
       initialInputBody,

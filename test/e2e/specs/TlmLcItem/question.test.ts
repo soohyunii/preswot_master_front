@@ -47,8 +47,14 @@ export default {
     // 단답 선택
     client.click('#question_type .el-radio-group label:nth-child(1)');
 
-    client.setValue('#question input', '1 + 1 = ?');
-    // client.cli
+    client.setValue('#question textarea', '1 + 1 = ?');
+    client.setValue('#keyword input:nth-child(1)', '키워드1');
+    client.setValue('#input_keyword_point', '5');
+    client.click('#keyword button');
+
+    client.click('#lecture_item_editor_button_wrapper button');
+
+    client.saveScreenshot('./sdf.png');
 
     client.end();
   },
