@@ -1,5 +1,5 @@
 <template>
-  <div id="teacher_lecture_new_wrapper">
+  <div id="lecture_item_editor_wrapper">
     <h2>
       강의 아이템 추가 TODO: isEditing이면 강의 아이템 수정으로
     </h2>

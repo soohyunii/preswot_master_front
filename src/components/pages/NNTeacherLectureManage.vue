@@ -58,9 +58,10 @@ export default {
     await vm.getLecture({ lectureId: vm.lectureId });
     await vm.getKeywords();
   },
-  beforeRouteLeave() {
+  beforeRouteLeave(to, from, next) {
     const vm = this;
     vm.resetLectureItemEditTab();
+    next();
   },
   computed: {
     ...mapGetters('NNclass', [

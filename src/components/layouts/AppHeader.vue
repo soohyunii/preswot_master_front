@@ -50,7 +50,7 @@
               </el-button>
             </router-link>
 
-            <router-link to="/a/teacher/NNclass" v-show="isJwtValid">
+             <router-link to="/a/teacher/NNclass" v-show="isJwtValid" id="btn_teacher_home">
               <el-button :type="appTheme" plain>
                 <i class="fas fa-edit"></i>2
               </el-button>

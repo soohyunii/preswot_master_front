@@ -14,7 +14,7 @@
       />
       <div class="ps-align-right">
         <br />
-        <el-button @click="onClick('ADD_NEW_LC_ITEM')" type="primary">
+        <el-button id="btn_add_new_lc_item" @click="onClick('ADD_NEW_LC_ITEM')" type="primary">
           강의 아이템 추가
         </el-button>
       </div>
