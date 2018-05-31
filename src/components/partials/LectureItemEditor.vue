@@ -8,25 +8,31 @@
     inputBody: {{ inputBody }}<br /><br />
     inputTail: {{ inputTail }}<br /><br />
 
-    <el-form label-width="125px" style="max-width: 800px;">
-      <el-form-item label="타입">
+    <el-form :model="inputHead" label-width="125px" style="max-width: 800px;">
+      <el-form-item label="타입" prop="type" id="radio_type">
         <el-radio-group v-model.number="inputHead.type">
           <el-radio-button :label="0">예습</el-radio-button>
           <el-radio-button :label="1">본강</el-radio-button>
           <el-radio-button :label="2">복습</el-radio-button>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="아이템 유형">
-        <el-select v-model="inputHead.lcItemType">
+      <el-form-item label="아이템 유형" prop="lcItemType" id="lc_item_type">
+        <el-radio-group v-model="inputHead.lcItemType">
+          <el-radio-button label="question">문항</el-radio-button>
+          <el-radio-button label="survey">설문</el-radio-button>
+          <el-radio-button label="practice">실습</el-radio-button>
+          <el-radio-button label="discussion">토론</el-radio-button>
+        </el-radio-group>
+        <!-- <el-select v-model="inputHead.lcItemType">
           <el-option
             v-for="option in selectOptionList"
             :key="option.value"
             :label="option.label"
             :value="option.value">
           </el-option>
-        </el-select>
+        </el-select> -->
       </el-form-item>
-      <el-form-item label="아이템 이름">
+      <el-form-item label="아이템 이름" prop="lcItemName" id="lc_item_name">
         <el-input v-model="inputHead.lcItemName" placeholder="내용을 입력해주세요."></el-input>
       </el-form-item>
 

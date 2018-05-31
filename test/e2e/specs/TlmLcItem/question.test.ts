@@ -19,7 +19,11 @@ export default {
     client.click('#btn_login')
       .waitForElementPresent('#btn_teacher_home', 5000);
 
-    client.click('#btn_teacher_home')
+    client.pause(400);
+    // client.saveScreenshot('./sdf.png');
+    // client.click('a#btn_teacher_home')
+    //   .waitForElementVisible('.el-table__row', 5000);
+    client.url(`${devServer}/a/teacher/NNclass`)
       .waitForElementVisible('.el-table__row', 5000);
     client.pause(200);
     client.click('.el-table__row')
@@ -32,7 +36,20 @@ export default {
   '단답 문항 강의 아이템이 올바른 값을 넣었을 때 생성되어야 한다': (client: NightwatchBrowser) => {
     client.click('#btn_add_new_lc_item')
       .waitForElementPresent('#lecture_item_editor_wrapper', 5000);
-    client.saveScreenshot('./sdf.png');
+
+    // Click 본강
+    client.click('#radio_type label:nth-child(2)');
+
+    // 문항 선택
+    client.click('#lc_item_type .el-radio-group label:nth-child(1)');
+    client.setValue('#lc_item_name input', 'item name');
+
+    // 단답 선택
+    client.click('#question_type .el-radio-group label:nth-child(1)');
+
+    client.setValue('#question input', '1 + 1 = ?');
+    // client.cli
+
     client.end();
   },
 };

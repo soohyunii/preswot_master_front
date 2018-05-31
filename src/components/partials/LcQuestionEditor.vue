@@ -1,6 +1,6 @@
 <template>
   <div id="lc_question_editor_wrapper">
-    <el-form-item label="문항 유형">
+    <el-form-item label="문항 유형" id="question_type">
       <el-radio-group @change="onChangeBody" v-model="inputBody.questionType">
         <el-radio-button label="shortAnswer">단답</el-radio-button>
         <el-radio-button label="multipleChoice">객관</el-radio-button>
@@ -9,7 +9,7 @@
         <el-radio-button label="sql">SQL</el-radio-button>
       </el-radio-group>
     </el-form-item>
-    <el-form-item label="문제">
+    <el-form-item label="문제" id="question">
         <el-input v-model="inputTail.question" placeholder="내용을 입력해주세요." type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
     </el-form-item>
     <template v-if="inputBody.questionType === 'multipleChoice'">
@@ -105,15 +105,22 @@
         <el-input v-model="inputTail.question" placeholder="내용을 입력해주세요." type="textarea"></el-input>
       </el-form-item>
     </template>
-    <el-form-item label="키워드">
-      <el-select v-model="inputTail.keywordName">
+    <el-form-item label="키워드" id="keyword">
+      <el-autocomplete
+        class="input-new-tag"
+        v-model="inputTail.keywordName"
+        :fetch-suggestions="querySearch"
+        ref="saveTagInput"
+        placeholder="키워드"
+      />
+      <!-- <el-select v-model="inputTail.keywordName">
         <el-option
           v-for="keyword in keywordList"
           :key="keyword.value"
           :label="keyword.label"
           :value="keyword.value">
         </el-option>
-      </el-select>
+      </el-select> -->
       <div style="display: inline-block; width: 100px;">
         <el-input v-model="inputTail.keywordPoint" placeholder="배점"></el-input>
       </div>
@@ -186,6 +193,18 @@ export default {
       const vm = this;
       vm.inputTail = Object.assign({}, vm.initialInputTail);
       // vm.$set(vm.inputTail, 'selectedKeywordList', []);
+    },
+    querySearch(queryString, cb) {
+      const vm = this;
+      const results = queryString ?
+        vm.keywordList.filter(vm.createFilter(queryString)) : vm.keywordList;
+      // call callback function to return suggestions
+      cb(results);
+    },
+    createFilter(queryString) { // eslint-disable-next-line
+      return (link) => {
+        return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+      };
     },
     onClick(type, arg) {
       const vm = this;
