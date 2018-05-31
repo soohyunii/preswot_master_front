@@ -12,6 +12,13 @@
     <el-form-item label="문제" id="question">
         <el-input v-model="inputTail.question" placeholder="내용을 입력해주세요." type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
     </el-form-item>
+
+    <template v-if="inputBody.questionType === 'shortAnswer'">
+      <el-form-item label="답" id="textarea_short_answer">
+        <el-input v-model="inputTail.answer" placeholder="내용을 입력해주세요." type="textarea"></el-input>
+      </el-form-item>
+    </template>
+
     <template v-if="inputBody.questionType === 'multipleChoice'">
       <el-form-item v-if="inputTail.questionList !== undefined" label="보기">
         <p>정답</p>
@@ -44,13 +51,10 @@
         </el-radio-group>
       </el-form-item>
     </template>
-    <template v-if="inputBody.questionType === 'shortAnswer'">
-      <el-form-item label="답">
-        <el-input v-model="inputTail.question" placeholder="내용을 입력해주세요." type="textarea"></el-input>
-      </el-form-item>
-    </template>
+
     <template v-if="inputBody.questionType === 'description'">
     </template>
+
     <template v-if="inputBody.questionType === 'sw'">
       <el-form-item label="언어">
         <el-select v-model="inputTail.language">
@@ -97,6 +101,7 @@
         <el-input v-model="inputTail.timeLimit" placeholder="내용을 입력해주세요." type="textarea"></el-input>
       </el-form-item>
     </template>
+
     <template v-if="inputBody.questionType === 'sql'">
       <el-form-item label="SQLite">
         <el-button @click="onClick('ADD_FILE')">파일추가</el-button>
@@ -105,6 +110,7 @@
         <el-input v-model="inputTail.question" placeholder="내용을 입력해주세요." type="textarea"></el-input>
       </el-form-item>
     </template>
+
     <el-form-item label="키워드" id="keyword">
       <el-autocomplete
         class="input-new-tag"
@@ -113,14 +119,6 @@
         ref="saveTagInput"
         placeholder="키워드"
       />
-      <!-- <el-select v-model="inputTail.keywordName">
-        <el-option
-          v-for="keyword in keywordList"
-          :key="keyword.value"
-          :label="keyword.label"
-          :value="keyword.value">
-        </el-option>
-      </el-select> -->
       <div style="display: inline-block; width: 100px;">
         <el-input id="input_keyword_point" v-model="inputTail.keywordPoint" placeholder="배점"></el-input>
       </div>

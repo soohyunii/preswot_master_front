@@ -48,6 +48,7 @@ export default {
     client.click('#question_type .el-radio-group label:nth-child(1)');
 
     client.setValue('#question textarea', '1 + 1 = ?');
+    client.setValue('#textarea_short_answer textarea', '2');
     client.setValue('#keyword input:nth-child(1)', '키워드1');
     client.setValue('#input_keyword_point', '5');
     client.click('#keyword button');
