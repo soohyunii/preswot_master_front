@@ -103,7 +103,7 @@ export default {
     node1,
     node2,
   }) {
-    return http.delete(`/lecture/${lectureId}/${node1}/${node2}`);
+    return http.delete(`/lectures/${lectureId}/keyword-relations/${node1}/${node2}`);
   },
   getLectureCoverage({ id }) {
     return http.get(`/lectures/${id}/coverage`);
