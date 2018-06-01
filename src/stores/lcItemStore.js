@@ -1,4 +1,4 @@
-// import lectureItemService from '../services/lectureItemService';
+import lectureItemService from '../services/lectureItemService';
 // import fileService from '../services/fileService';
 // import questionService from '../services/questionService';
 // import materialService from '../services/materialService';
@@ -9,7 +9,9 @@
 // import discussionService from '../services/discussionService';
 // import { baseUrl } from '../services/config';
 
-// import utils from '../utils';
+import utils from '../utils';
+
+import QuestionHandler from '../handlers/lcItem/question';
 
 export default {
   namespaced: true,
@@ -38,5 +40,33 @@ export default {
     },
   },
   actions: {
+    async postLcItem({ rootState }, { inputHead, inputBody, inputTail }) {
+      console.log('lcItemType', inputHead);
+
+      const lcItemType = utils.convertLcItemType(inputHead.lcItemType);
+      switch (lcItemType) {
+        case 0: { // * 문항
+          QuestionHandler.postLcItem({
+            lectureId: rootState.lc.lecture.lecture_id,
+            inputHead,
+            inputBody,
+            inputTail,
+          });
+          break;
+        }
+        // case 1: {
+        //   break;
+        // }
+        // case 2: {
+        //   break;
+        // }
+        // case 3: {
+        //   break;
+        // }
+        default: {
+          throw new Error(`not defined lcItemType ${lcItemType}`);
+        }
+      }
+    },
   },
 };

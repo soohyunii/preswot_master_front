@@ -114,6 +114,31 @@ export default {
     }
     return new Error(`not defined scItemType ${scItemType}`);
   },
+  convertLcItemType(lcItemType) {
+    const mapping = ['question', 'survey', 'practice', 'discussion'];
+    if (typeof lcItemType === 'number') {
+      return mapping[lcItemType];
+    } else if (typeof lcItemType === 'string') {
+      return mapping.indexOf(lcItemType);
+    }
+    return new Error(`not defined lcItemType ${lcItemType}`);
+  },
+  // 시즌2용 유틸함수
+  convertQuestionType2(questionType) {
+    const mapping = [
+      'MULTIPLE_CHOICE',
+      'SHORT_ANSWER',
+      'DESCRIPTION',
+      'SW',
+      'SQL',
+    ];
+    if (typeof questionType === 'number') {
+      return mapping[questionType];
+    } else if (typeof questionType === 'string') {
+      return mapping.indexOf(questionType);
+    }
+    return new Error(`not defined questionType ${questionType}`);
+  },
   convertQuestionType(questionType) {
     const mapping = ['객관', '단답', '서술', 'SW', 'SQL'];
     if (typeof questionType === 'number') {

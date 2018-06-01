@@ -87,14 +87,16 @@
         </el-form-item>
       </template> -->
     </el-form>
-    <div class="ps-align-right" id="lecture_item_editor_button_wrapper">
-      <el-button type="primary">추가 / 수정</el-button>
+    <div class="ps-align-right" id="lecture_item_editor_submit_button_wrapper">
+      <el-button type="primary" @click="onSubmit">추가 / 수정</el-button>
     </div>
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import LcQuestionEditor from './LcQuestionEditor';
+// import utils from '../../utils';
 
 export default {
   name: 'LectureItemEditor',
@@ -146,6 +148,21 @@ export default {
     },
   },
   methods: {
+    ...mapActions('lcItem', [
+      'postLcItem',
+    ]),
+    onSubmit() {
+      const vm = this;
+      console.log('inputHead', vm.inputHead);
+      console.log('inputBody', vm.inputBody);
+      console.log('inputTail', vm.inputTail);
+      vm.postLcItem({
+        inputHead: vm.inputHead,
+        inputBody: vm.inputBody,
+        inputTail: vm.inputTail,
+        // lcItemType: utils.convertLcItemType(vm.inputHead.lcItemType),
+      });
+    },
   },
 };
 </script>

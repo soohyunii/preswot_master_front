@@ -53,7 +53,7 @@ export default {
     client.setValue('#input_keyword_point', '5');
     client.click('#keyword button');
 
-    client.click('#lecture_item_editor_button_wrapper button');
+    client.click('#lecture_item_editor_submit_button_wrapper button');
 
     client.saveScreenshot('./sdf.png');
 

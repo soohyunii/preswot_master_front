@@ -2,24 +2,24 @@
   <div id="lc_question_editor_wrapper">
     <el-form-item label="문항 유형" id="question_type">
       <el-radio-group @change="onChangeBody" v-model="inputBody.questionType">
-        <el-radio-button label="shortAnswer">단답</el-radio-button>
-        <el-radio-button label="multipleChoice">객관</el-radio-button>
-        <el-radio-button label="description">서술</el-radio-button>
-        <el-radio-button label="sw">SW</el-radio-button>
-        <el-radio-button label="sql">SQL</el-radio-button>
+        <el-radio-button label="SHORT_ANSWER">단답</el-radio-button>
+        <el-radio-button label="MULTIPLE_CHOICE">객관</el-radio-button>
+        <el-radio-button label="DESCRIPTION">서술</el-radio-button>
+        <el-radio-button label="SW">SW</el-radio-button>
+        <el-radio-button label="SQL">SQL</el-radio-button>
       </el-radio-group>
     </el-form-item>
     <el-form-item label="문제" id="question">
         <el-input v-model="inputTail.question" placeholder="내용을 입력해주세요." type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
     </el-form-item>
 
-    <template v-if="inputBody.questionType === 'shortAnswer'">
+    <template v-if="inputBody.questionType === 'SHORT_ANSWER'">
       <el-form-item label="답" id="textarea_short_answer">
         <el-input v-model="inputTail.answer" placeholder="내용을 입력해주세요." type="textarea"></el-input>
       </el-form-item>
     </template>
 
-    <template v-if="inputBody.questionType === 'multipleChoice'">
+    <template v-if="inputBody.questionType === 'MULTIPLE_CHOICE'">
       <el-form-item v-if="inputTail.questionList !== undefined" label="보기">
         <p>정답</p>
         <el-radio-group v-model="inputTail.answer" style="width: 100%;">
@@ -52,10 +52,10 @@
       </el-form-item>
     </template>
 
-    <template v-if="inputBody.questionType === 'description'">
+    <template v-if="inputBody.questionType === 'DESCRIPTION'">
     </template>
 
-    <template v-if="inputBody.questionType === 'sw'">
+    <template v-if="inputBody.questionType === 'SW'">
       <el-form-item label="언어">
         <el-select v-model="inputTail.language">
           <el-option
@@ -102,7 +102,7 @@
       </el-form-item>
     </template>
 
-    <template v-if="inputBody.questionType === 'sql'">
+    <template v-if="inputBody.questionType === 'SQL'">
       <el-form-item label="SQLite">
         <el-button @click="onClick('ADD_FILE')">파일추가</el-button>
       </el-form-item>
@@ -123,8 +123,8 @@
         <el-input id="input_keyword_point" v-model="inputTail.keywordPoint" placeholder="배점"></el-input>
       </div>
       <el-button @click="onClick('ADD_KEYWORD')">추가</el-button><br>
-      <div v-for="item in inputTail.assignedKeywordList" :key="item.keywordName" style="display: inline-block; width: 200px;">
-        <el-button>{{ item.keywordName }} / {{ item.keywordPoint }}</el-button>
+      <div v-for="item in inputTail.assignedKeywordList" :key="item.keyword" style="display: inline-block; width: 200px;">
+        <el-button>{{ item.keyword }} / {{ item.score }}</el-button>
         <el-button @click="onClick('DELETE_KEYWORD',item.keywordName)" type="danger" style="margin: 0px">X</el-button>
       </div>
     </el-form-item>
@@ -210,8 +210,8 @@ export default {
       switch (type) {
         case 'ADD_KEYWORD': {
           vm.inputTail.assignedKeywordList.push({
-            keywordName: vm.inputTail.keywordName,
-            keywordPoint: vm.inputTail.keywordPoint,
+            keyword: vm.inputTail.keywordName,
+            score: vm.inputTail.keywordPoint,
           });
           vm.inputTail.keywordName = null;
           vm.inputTail.keywordPoint = null;

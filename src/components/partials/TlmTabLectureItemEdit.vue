@@ -104,14 +104,14 @@ export default {
             // TODO: delete lectureItem from lecture.lecture_items
             vm.$notify({
               title: '삭제됨',
-              message: '과목이 삭제됨',
+              message: '강의 아이템이 삭제됨',
               type: 'success',
               duration: 3000,
             });
           } catch (error) {
             console.error(error); // eslint-disable-line no-console
             vm.$notify({
-              title: '과목 삭제 실패',
+              title: '강의 아이템 삭제 실패',
               message: error.toString(),
               type: 'error',
               duration: 3000,
@@ -121,7 +121,7 @@ export default {
         .catch(() => {
           vm.$notify({
             title: '취소됨',
-            message: '과목 삭제 취소됨',
+            message: '강의 아이템 삭제 취소됨',
             type: 'info',
             duration: 3000,
           });
