@@ -3,7 +3,6 @@ import utils from '../../utils';
 
 export default class LcItemHandler {
   static async postLcItem({ lectureId, inputHead, inputBody, inputTail }) {
-    console.log('LcItemHandler postLcItem');
     const res1 = await lectureItemService.postLectureItem({
       lectureId,
       lectureItemOrder: inputHead.type,

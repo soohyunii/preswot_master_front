@@ -1,4 +1,4 @@
-import lectureItemService from '../services/lectureItemService';
+// import lectureItemService from '../services/lectureItemService';
 // import fileService from '../services/fileService';
 // import questionService from '../services/questionService';
 // import materialService from '../services/materialService';
@@ -41,7 +41,7 @@ export default {
   },
   actions: {
     async postLcItem({ rootState }, { inputHead, inputBody, inputTail }) {
-      console.log('lcItemType', inputHead);
+      // console.log('lcItemType', inputHead);
 
       const lcItemType = utils.convertLcItemType(inputHead.lcItemType);
       switch (lcItemType) {

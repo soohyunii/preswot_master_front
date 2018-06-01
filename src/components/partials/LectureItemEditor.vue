@@ -153,14 +153,10 @@ export default {
     ]),
     onSubmit() {
       const vm = this;
-      console.log('inputHead', vm.inputHead);
-      console.log('inputBody', vm.inputBody);
-      console.log('inputTail', vm.inputTail);
       vm.postLcItem({
         inputHead: vm.inputHead,
         inputBody: vm.inputBody,
         inputTail: vm.inputTail,
-        // lcItemType: utils.convertLcItemType(vm.inputHead.lcItemType),
       });
     },
   },
