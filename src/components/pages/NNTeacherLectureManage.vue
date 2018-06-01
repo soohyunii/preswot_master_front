@@ -4,7 +4,7 @@
     <!-- lecture id: {{ lectureId }} {{ lecture }}<br /> <br /> -->
     <!-- ddd {{ currentTeachingClass(classId) }}<br /> -->
 
-    <el-tabs v-model="activeTab">
+    <el-tabs @tab-click="onClick('tabClick')" v-model="activeTab">
       <el-tab-pane label="기본 정보 수정" name="one">
         강의 기본 정보 수정 부분뷰<br />
         TODO: NNTeacherLectureNew 가져와야함
@@ -49,7 +49,7 @@
         강의 허용 프로그램 설정 부분뷰
       </el-tab-pane>
       <el-tab-pane label="강의 지식맵 관리" name="five">
-        강의 지식맵 관리 부분뷰
+        <knowledgeMap />
       </el-tab-pane>
       <el-tab-pane label="채점 관리" name="six">
         채점 관리 부분뷰
@@ -64,6 +64,7 @@ import NNTeacherLectureNew from './NNTeacherLectureNew';
 import MaterialUpload from '../partials/MaterialUpload';
 import RecommendKeywords from '../partials/RecommendKeywords';
 import LectureKeywordsEditor from '../partials/LectureKeywordsEditor';
+import KnowledgeMap from '../partials/NNKnowledgeMap';
 
 export default {
   name: 'TeacherLectureManage',
@@ -72,6 +73,7 @@ export default {
     MaterialUpload,
     RecommendKeywords,
     LectureKeywordsEditor,
+    KnowledgeMap,
   },
   data() {
     return {
@@ -119,12 +121,25 @@ export default {
       'postLectureKeywords',
       'getKeywords',
     ]),
+    ...mapActions('kMap', [
+      'getKeywordsAndWeights',
+      'getLectureKeywordRelations',
+      'reDrawD3Network',
+    ]),
     onClick(type) {
       const vm = this;
       switch (type) {
         case 'SUBMIT_KEYWORDS': {
           vm.deleteLectureKeywords();
           vm.postLectureKeywords();
+          break;
+        }
+        case 'tabClick': {
+          if (vm.activeTab === 'five') {
+            vm.getKeywordsAndWeights(vm.$route.params);
+            vm.getLectureKeywordRelations(vm.$route.params);
+            vm.reDrawD3Network();
+          }
           break;
         }
         default: {

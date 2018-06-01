@@ -86,7 +86,7 @@ export default {
     postLectureKeywords({ state }) {
       let mixedList = [];
       mixedList = mixedList.concat(state.movedKeywordList.concat(state.addedKeywordList));
-      mixedList = mixedList.map(x => ({ keyword: x }));
+      mixedList = mixedList.map(x => ({ keyword: x, weight: 20 }));
       lectureService.postLectureKeywords({
         lectureId: state.lecture.lecture_id,
         lectureKeywords: mixedList,
