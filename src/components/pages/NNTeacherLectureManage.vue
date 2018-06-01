@@ -4,7 +4,7 @@
     <!-- lecture id: {{ lectureId }} {{ lecture }}<br /> <br /> -->
     <!-- ddd {{ currentTeachingClass(classId) }}<br /> -->
 
-    <el-tabs v-model="activeTab" :before-leave="beforeLeaveTab">
+    <el-tabs v-model="activeTab" :before-leave="beforeLeaveTab" @tab-click="onClick('TAB_CLICK')">
       <el-tab-pane label="기본 정보 수정" name="basic">
         <teacher-lecture-new />
       </el-tab-pane>
@@ -17,8 +17,8 @@
       <el-tab-pane label="강의 허용 프로그램 설정" name="program">
         강의 허용 프로그램 설정 부분뷰
       </el-tab-pane>
-      <el-tab-pane label="강의 지식맵 관리" name="map">
-        강의 지식맵 관리 부분뷰
+      <el-tab-pane label="강의 지식맵 관리" name="kmap">
+        <knowledgeMap />
       </el-tab-pane>
       <el-tab-pane label="채점 관리" name="grade">
         채점 관리 부분뷰
@@ -33,6 +33,10 @@ import NNTeacherLectureNew from './NNTeacherLectureNew';
 import TlmTabMaterialAndKeywordEdit from '../partials/TlmTabMaterialAndKeywordEdit';
 import TlmTabLectureItemEdit from '../partials/TlmTabLectureItemEdit';
 // import utils from '../../utils';
+// import MaterialUpload from '../partials/MaterialUpload';
+// import RecommendKeywords from '../partials/RecommendKeywords';
+// import LectureKeywordsEditor from '../partials/LectureKeywordsEditor';
+import KnowledgeMap from '../partials/NNKnowledgeMap';
 
 
 export default {
@@ -41,6 +45,7 @@ export default {
     TeacherLectureNew: NNTeacherLectureNew,
     TlmTabMaterialAndKeywordEdit,
     TlmTabLectureItemEdit,
+    KnowledgeMap,
   },
   data() {
     return {
@@ -110,12 +115,25 @@ export default {
         lectureItem: null,
       });
     },
+    ...mapActions('kMap', [
+      'getKeywordsAndWeights',
+      'getLectureKeywordRelations',
+      'reDrawD3Network',
+    ]),
     onClick(type) {
       const vm = this;
       switch (type) {
         case 'SUBMIT_KEYWORDS': {
           vm.deleteLectureKeywords();
           vm.postLectureKeywords();
+          break;
+        }
+        case 'TAB_CLICK': {
+          if (vm.activeTab === 'kmap') {
+            vm.getKeywordsAndWeights(vm.$route.params);
+            vm.getLectureKeywordRelations(vm.$route.params);
+            vm.reDrawD3Network();
+          }
           break;
         }
         default: {

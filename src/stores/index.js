@@ -11,6 +11,7 @@ import sibalClassIsReservedWord from './classStore';
 import NNclass from './NNclassStore';
 import analysis from './analysisStore';
 import board from './boardStore';
+import kMap from './kMapStore';
 
 Vue.use(Vuex);
 
@@ -26,5 +27,6 @@ export default new Vuex.Store({
     NNclass,
     analysis,
     board,
+    kMap,
   },
 });

@@ -1,5 +1,5 @@
 <template>
-  <div id="landing_page_wrapper">
+  <div id="landing_page_wrapper" class="bt-container">
     <resize-observer @notify="handleResize" />
     <landing-search-header/>
     <class-intro-card-grid :onClick="onClick" :span="span" :popularClassList="popularClassList"></class-intro-card-grid>
