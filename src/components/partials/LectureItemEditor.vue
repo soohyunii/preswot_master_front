@@ -94,7 +94,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 import LcQuestionEditor from './LcQuestionEditor';
 // import utils from '../../utils';
 
@@ -146,18 +146,61 @@ export default {
       }
       return vm.$refs[`${lcItemType}Editor`].inputTail;
     },
+    lectureId() {
+      const vm = this;
+      return Number.parseInt(vm.$route.params.lectureId, 10);
+    },
   },
   methods: {
+    ...mapActions('lc', [
+      'getLecture',
+    ]),
+    ...mapMutations('lcItem', [
+      'updateCurrentEditingLectureItemId',
+      'updateLectureItem',
+    ]),
     ...mapActions('lcItem', [
       'postLcItem',
     ]),
-    onSubmit() {
+    reset() {
       const vm = this;
-      vm.postLcItem({
-        inputHead: vm.inputHead,
-        inputBody: vm.inputBody,
-        inputTail: vm.inputTail,
+      vm.updateCurrentEditingLectureItemId({
+        currentEditingLectureItemId: null,
       });
+      vm.updateLectureItem({
+        lectureItem: null,
+      });
+      const lcItemType = vm.inputHead.lcItemType;
+      vm.$refs[`${lcItemType}Editor`].reset();
+      vm.inputHead = Object.assign({}, vm.initialInputHead);
+    },
+    async onSubmit() {
+      const vm = this;
+      try {
+        await vm.postLcItem({
+          inputHead: vm.inputHead,
+          inputBody: vm.inputBody,
+          inputTail: vm.inputTail,
+        });
+        vm.$notify({
+          title: '강의 아이템 생성 성공',
+          message: `${vm.inputHead.lcItemName} 생성됨`,
+          type: 'success',
+          duration: 3000,
+        });
+
+        vm.reset();
+
+        await vm.getLecture({ lectureId: vm.lectureId }); // lecture item list 업데이트
+        console.log('get lecture 불림', vm.lectureId);
+      } catch (error) {
+        vm.$notify({
+          title: '생성 실패',
+          message: error.toString(),
+          type: 'error',
+          duration: 0,
+        });
+      }
     },
   },
 };

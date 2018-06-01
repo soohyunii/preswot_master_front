@@ -46,7 +46,7 @@ export default {
       const lcItemType = utils.convertLcItemType(inputHead.lcItemType);
       switch (lcItemType) {
         case 0: { // * 문항
-          QuestionHandler.postLcItem({
+          await QuestionHandler.postLcItem({
             lectureId: rootState.lc.lecture.lecture_id,
             inputHead,
             inputBody,

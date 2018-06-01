@@ -205,6 +205,12 @@ export default {
         return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
       };
     },
+    reset() {
+      const vm = this;
+      vm.inputBody = Object.assign({}, vm.initialInputBody);
+      vm.inputTail = Object.assign({}, vm.initialInputTail);
+      // TODO: reset keyword list
+    },
     onClick(type, arg) {
       const vm = this;
       switch (type) {

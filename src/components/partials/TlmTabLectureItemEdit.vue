@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
 import LectureItemList from '../partials/LectureItemList';
 import utils from '../../utils';
 import lectureItemService from '../../services/lectureItemService';
@@ -53,8 +53,15 @@ export default {
       }
       return [];
     },
+    lectureId() {
+      const vm = this;
+      return Number.parseInt(vm.$route.params.lectureId, 10);
+    },
   },
   methods: {
+    ...mapActions('lc', [
+      'getLecture',
+    ]),
     ...mapMutations('lcItem', [
       'updateCurrentEditingLectureItemId',
       'updateLectureItem',
@@ -108,6 +115,7 @@ export default {
               type: 'success',
               duration: 3000,
             });
+            await vm.getLecture({ lectureId: vm.lectureId });
           } catch (error) {
             console.error(error); // eslint-disable-line no-console
             vm.$notify({
