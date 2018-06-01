@@ -30,6 +30,9 @@ export default {
     isEditing(state) {
       return !!state.currentEditingLectureItemId;
     },
+    isNewItem(state) {
+      return state.currentEditingLectureItemId === -1;
+    },
   },
   mutations: {
     updateCurrentEditingLectureItemId(state, { currentEditingLectureItemId }) {

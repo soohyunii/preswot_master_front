@@ -1,7 +1,12 @@
 <template>
   <div id="lecture_item_editor_wrapper">
+    isNewItem: {{ isNewItem }} <br />
     <h2>
-      강의 아이템 추가 TODO: isEditing이면 강의 아이템 수정으로
+      <template v-show="isNewItem">
+        강의 아이템 추가
+      </template><template v-show="!isNewItem">
+        강의 아이템 수정
+      </template>
     </h2>
 
     inputHead: {{ inputHead }}<br /><br />
@@ -94,7 +99,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions, mapMutations, mapGetters } from 'vuex';
 import LcQuestionEditor from './LcQuestionEditor';
 // import utils from '../../utils';
 
@@ -102,6 +107,12 @@ export default {
   name: 'LectureItemEditor',
   components: {
     LcQuestionEditor,
+  },
+  async mounted() {
+    const vm = this;
+    if (vm.isNewItem) {
+      // TODO: get lectureItem
+    }
   },
   data() {
     const initialInputHead = {
@@ -130,6 +141,9 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('lcItem', [
+      'isNewItem',
+    ]),
     inputBody() {
       const vm = this;
       const lcItemType = vm.inputHead.lcItemType;
@@ -192,7 +206,6 @@ export default {
         vm.reset();
 
         await vm.getLecture({ lectureId: vm.lectureId }); // lecture item list 업데이트
-        console.log('get lecture 불림', vm.lectureId);
       } catch (error) {
         vm.$notify({
           title: '생성 실패',

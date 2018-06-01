@@ -47,6 +47,7 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex';
 import lectureService from '../../services/lectureService';
 import utils from '../../utils';
 
@@ -67,23 +68,29 @@ export default {
   async mounted() {
     const vm = this;
     if (vm.isManage) {
-      const res = await lectureService.getLecture({ lectureId: vm.lectureId });
-      // console.log('res', res.data);
-      vm.input.title = res.data.name || vm.initialInput.title;
-      vm.input.type = res.data.type || vm.initialInput.type;
-      vm.input.lcStartDate = res.data.intended_start || vm.initialInput.lcStartDate;
-      vm.input.lcEndDate = res.data.intended_end || vm.initialInput.lcEndDate;
+      // TODO: getLecture({ lectureId: }) 그 액션으로 가져오기
+      // TODO: 그리고 onSubmit 마지막에 updateLecture null 조져주기
+      await vm.getLecture({ lectureId: vm.lectureId });
+      vm.input.title = vm.lecture.name || vm.initialInput.title;
+      vm.input.type = vm.lecture.type || vm.initialInput.type;
+      vm.input.lcStartDate = vm.lecture.intended_start || vm.initialInput.lcStartDate;
+      vm.input.lcEndDate = vm.lecture.intended_end || vm.initialInput.lcEndDate;
     }
   },
   methods: {
+    ...mapActions('lc', [
+      'getLecture',
+    ]),
     onSubmit() {
       const vm = this;
       vm.$refs.elForm.validate(async (/* valid, fields */) => {
         // TODO: if valid === true 로 감싸기
         // TODO: valid === false 인 경우 notify
         try {
+          // TODO: isManage === true 인 경우 post하지 말고...
           const userId = utils.getUserIdFromJwt();
           const classId = vm.$route.query.classId;
+          // TODO: input에 있는 데이터 다 보내기
           await lectureService.postLecture({
             classId,
             teacherId: userId,
@@ -106,6 +113,9 @@ export default {
     },
   },
   computed: {
+    ...mapState('lc', [
+      'lecture',
+    ]),
     isManage() {
       const vm = this;
       return vm.$route.fullPath.includes('/manage');
