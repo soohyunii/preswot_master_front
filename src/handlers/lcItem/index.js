@@ -8,8 +8,14 @@ export default class LcItemHandler {
       lectureItemOrder: inputHead.type,
       lectureItemType: utils.convertLcItemType(inputHead.lcItemType),
     });
-    this.postChildLectureItem({
-      lcItemId: res1.data.lecture_item_id,
+
+    const lectureItemId = res1.data.lecture_item_id;
+    await lectureItemService.putLectureItem({
+      lectureItemId,
+      name: inputHead.lcItemName,
+    });
+    await this.postChildLectureItem({
+      lcItemId: lectureItemId,
       inputBody,
       inputTail,
     });
