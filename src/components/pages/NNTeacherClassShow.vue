@@ -96,7 +96,7 @@ export default {
         .then(async () => {
           try {
             const currentClass = vm.teachingClassList.find(item => item.class_id === vm.classId);
-            const targetLecture = currentClass.scenarioList[index];
+            const targetLecture = currentClass.lectures[index];
             await lectureService.deleteLecture({ lectureId: targetLecture.lecture_id });
             vm.$notify({
               title: '삭제됨',
@@ -104,7 +104,6 @@ export default {
               type: 'success',
               duration: 3000,
             });
-            // TODO: delete lecture from scenarioList
             vm.deleteScenario({
               classId: vm.classId,
               lectureId: targetLecture.lecture_id,

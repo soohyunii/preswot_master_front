@@ -1,4 +1,4 @@
-import lectureItemService from '../services/lectureItemService';
+// import lectureItemService from '../services/lectureItemService';
 // import fileService from '../services/fileService';
 // import questionService from '../services/questionService';
 // import materialService from '../services/materialService';
@@ -31,6 +31,9 @@ export default {
     isEditing(state) {
       return !!state.currentEditingLectureItemId;
     },
+    isNewItem(state) {
+      return state.currentEditingLectureItemId === -1;
+    },
   },
   mutations: {
     updateCurrentEditingLectureItemId(state, { currentEditingLectureItemId }) {
@@ -42,12 +45,12 @@ export default {
   },
   actions: {
     async postLcItem({ rootState }, { inputHead, inputBody, inputTail }) {
-      console.log('lcItemType', inputHead);
+      // console.log('lcItemType', inputHead);
 
       const lcItemType = utils.convertLcItemType(inputHead.lcItemType);
       switch (lcItemType) {
         case 0: { // * 문항
-          QuestionHandler.postLcItem({
+          await QuestionHandler.postLcItem({
             lectureId: rootState.lc.lecture.lecture_id,
             inputHead,
             inputBody,

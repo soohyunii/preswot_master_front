@@ -24,7 +24,7 @@ export default class QuestionHandler extends LcItemHandler {
     const answer = Array.isArray(inputTail.answer) ?
       inputTail.answer : [inputTail.answer];
     // TODO: add params such as choice, ... etc.
-    questionService.putQuestion({
+    await questionService.putQuestion({
       questionId: res1.data.question_id,
       question: inputTail.question,
       // choice:
@@ -32,7 +32,7 @@ export default class QuestionHandler extends LcItemHandler {
       difficulty: inputTail.difficulty,
     });
 
-    lectureItemService.postQuestionKeywords({
+    await lectureItemService.postQuestionKeywords({
       questionId,
       data: inputTail.assignedKeywordList,
     });

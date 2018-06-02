@@ -3,14 +3,19 @@ import utils from '../../utils';
 
 export default class LcItemHandler {
   static async postLcItem({ lectureId, inputHead, inputBody, inputTail }) {
-    console.log('LcItemHandler postLcItem');
     const res1 = await lectureItemService.postLectureItem({
       lectureId,
       lectureItemOrder: inputHead.type,
       lectureItemType: utils.convertLcItemType(inputHead.lcItemType),
     });
-    this.postChildLectureItem({
-      lcItemId: res1.data.lecture_item_id,
+
+    const lectureItemId = res1.data.lecture_item_id;
+    await lectureItemService.putLectureItem({
+      lectureItemId,
+      name: inputHead.lcItemName,
+    });
+    await this.postChildLectureItem({
+      lcItemId: lectureItemId,
       inputBody,
       inputTail,
     });
