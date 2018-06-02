@@ -51,29 +51,13 @@
         v-show="inputHead.lcItemType === 'question'"
       />
 
-      <!-- <template v-if="inputHead.lcItemType === 'survey'">
-        <el-form-item label="문항 유형">
-          <el-radiov-model="inputBody.questionType">
-            <el-radio-button label="multipleChoice">객관</el-radio-button>
-            <el-radio-button label="description">서술</el-radio-button>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="설문 질문">
-          <el-input v-model="inputTail.question" placeholder="내용을 입력해주세요." type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
-        </el-form-item>
-        <template v-if="inputBody.questionType === 'multipleChoice'">
-          <el-form-item v-if="inputTail.questionList !== undefined" label="항목">
-            <div v-for="(question, index) in inputTail.questionList" :key="index">
-              <span>{{ index+1 }}</span>
-                <div style="display: inline-block; width: 90%;">
-                  <el-input v-model="question.question" placeholder="내용을 입력해주세요."></el-input>
-                </div>
-              <br>
-            </div>
-            <el-button @click="onClick('addQuestion')" style="width: 80%;">항목 추가</el-button>
-          </el-form-item>
-        </template>
-      </template>
+      <!-- v-if를 쓰면 ref가 안 먹음 -->
+      <lc-survey-editor
+        ref="surveyEditor"
+        v-show="inputHead.lcItemType === 'survey'"
+      />
+
+      <!-- 
 
       <template v-if="inputHead.lcItemType === 'practice'">
         <el-form-item label="코드">
@@ -96,12 +80,14 @@
 <script>
 import { mapActions } from 'vuex';
 import LcQuestionEditor from './LcQuestionEditor';
+import LcSurveyEditor from './LcSurveyEditor';
 // import utils from '../../utils';
 
 export default {
   name: 'LectureItemEditor',
   components: {
     LcQuestionEditor,
+    LcSurveyEditor,
   },
   data() {
     const initialInputHead = {

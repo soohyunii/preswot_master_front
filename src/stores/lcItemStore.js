@@ -12,6 +12,7 @@ import lectureItemService from '../services/lectureItemService';
 import utils from '../utils';
 
 import QuestionHandler from '../handlers/lcItem/question';
+import SurveyHandler from '../handlers/lcItem/survey';
 
 export default {
   namespaced: true,
@@ -54,9 +55,15 @@ export default {
           });
           break;
         }
-        // case 1: {
-        //   break;
-        // }
+        case 1: { // * 설문
+          SurveyHandler.postLcItem({
+            lectureId: rootState.lc.lecture.lecture_id,
+            inputHead,
+            inputBody,
+            inputTail,
+          });
+          break;
+        }
         // case 2: {
         //   break;
         // }

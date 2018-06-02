@@ -139,6 +139,19 @@ export default {
     }
     return new Error(`not defined questionType ${questionType}`);
   },
+  // 시즌2용 유틸함수
+  convertSurveyType2(surveyType) {
+    const mapping = [
+      'MULTIPLE_CHOICE',
+      'DESCRIPTION',
+    ];
+    if (typeof surveyType === 'number') {
+      return mapping[surveyType];
+    } else if (typeof surveyType === 'string') {
+      return mapping.indexOf(surveyType);
+    }
+    return new Error(`not defined surveyType ${surveyType}`);
+  },
   convertQuestionType(questionType) {
     const mapping = ['객관', '단답', '서술', 'SW', 'SQL'];
     if (typeof questionType === 'number') {
