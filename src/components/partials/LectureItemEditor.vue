@@ -56,7 +56,6 @@
         v-show="inputHead.lcItemType === 'question'"
       />
 
-      <!-- v-if를 쓰면 ref가 안 먹음 -->
       <lc-survey-editor
         ref="surveyEditor"
         v-show="inputHead.lcItemType === 'survey'"
@@ -70,11 +69,11 @@
         </el-form-item>
       </template>
 
-      <template v-if="inputHead.lcItemType === 'discussion'">
-        <el-form-item label="토론 주제">
-          <el-input v-model="inputTail.code" placeholder="내용을 입력해주세요." type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
-        </el-form-item>
-      </template> -->
+      -->
+      <lc-discussion-editor
+        ref="discussionEditor"
+        v-show="inputHead.lcItemType === 'discussion'"
+      />
     </el-form>
     <div class="ps-align-right" id="lecture_item_editor_submit_button_wrapper">
       <el-button type="primary" @click="onSubmit">추가 / 수정</el-button>
@@ -86,6 +85,7 @@
 import { mapActions, mapMutations, mapGetters } from 'vuex';
 import LcQuestionEditor from './LcQuestionEditor';
 import LcSurveyEditor from './LcSurveyEditor';
+import LcDiscussionEditor from './LcDiscussionEditor';
 // import utils from '../../utils';
 
 export default {
@@ -93,6 +93,7 @@ export default {
   components: {
     LcQuestionEditor,
     LcSurveyEditor,
+    LcDiscussionEditor,
   },
   async mounted() {
     const vm = this;

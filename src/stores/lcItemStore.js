@@ -13,6 +13,7 @@ import utils from '../utils';
 
 import QuestionHandler from '../handlers/lcItem/question';
 import SurveyHandler from '../handlers/lcItem/survey';
+import DiscussionHandler from '../handlers/lcItem/discussion';
 
 export default {
   namespaced: true,
@@ -59,7 +60,7 @@ export default {
           break;
         }
         case 1: { // * 설문
-          SurveyHandler.postLcItem({
+          await SurveyHandler.postLcItem({
             lectureId: rootState.lc.lecture.lecture_id,
             inputHead,
             inputBody,
@@ -70,9 +71,15 @@ export default {
         // case 2: {
         //   break;
         // }
-        // case 3: {
-        //   break;
-        // }
+        case 3: { // * 토론
+          await DiscussionHandler.postLcItem({
+            lectureId: rootState.lc.lecture.lecture_id,
+            inputHead,
+            inputBody,
+            inputTail,
+          });
+          break;
+        }
         default: {
           throw new Error(`not defined lcItemType ${lcItemType}`);
         }
