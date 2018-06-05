@@ -14,6 +14,7 @@ import utils from '../utils';
 import QuestionHandler from '../handlers/lcItem/question';
 import lectureItemService from '../services/lectureItemService';
 import SurveyHandler from '../handlers/lcItem/survey';
+import PracticeHandler from '../handlers/lcItem/practice';
 
 export default {
   namespaced: true,
@@ -76,9 +77,15 @@ export default {
           });
           break;
         }
-        // case 2: {
-        //   break;
-        // }
+        case 2: { // * 실습
+          await PracticeHandler.postLcItem({
+            lectureId: rootState.lc.lecture.lecture_id,
+            inputHead,
+            inputBody,
+            inputTail,
+          });
+          break;
+        }
         // case 3: {
         //   break;
         // }
