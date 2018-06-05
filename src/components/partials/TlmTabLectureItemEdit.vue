@@ -47,7 +47,7 @@ export default {
       const lecture = this.$store.state.lc.lecture;
       if (lecture && Array.isArray(lecture.lecture_items)) {
         return lecture.lecture_items.map((x) => {
-          x.type = utils.convertScType(x.type); // eslint-disable-line no-param-reassign
+          x.type = utils.convertLcItemTypeKor(x.type); // eslint-disable-line no-param-reassign
           return x;
         });
       }
