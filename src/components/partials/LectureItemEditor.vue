@@ -99,12 +99,35 @@ export default {
     if (!vm.isNewItem) {
       await vm.getLcItem();
       const item = vm.lectureItem;
+      console.log('getLcItem res', item); // eslint-disable-line no-console
+
       vm.inputHead.type = item.order;
       vm.inputHead.lcItemType = utils.convertLcItemType(item.type);
       vm.inputHead.lcItemName = item.name;
 
-      // TODO: init inputBody, tail
-      // vm.inputBody.question
+      // * Init inputBody, tail
+      switch (vm.inputHead.lcItemType) {
+        case 'question': {
+          const q = item.questions[0];
+          vm.inputTail.question = q.question;
+          vm.inputTail.difficulty = q.difficulty;
+          // TODO: keyword init
+          switch (q.type) {
+            case 1: { // 단답
+              vm.inputBody.questionType = 'SHORT_ANSWER';
+              vm.inputTail.answer = q.answer[0];
+              break;
+            }
+            default: {
+              throw new Error(`not defined question type ${q.type}`);
+            }
+          }
+          break;
+        }
+        default: {
+          throw new Error(`not defined lcItemType ${vm.inputHead.lcItemType}`);
+        }
+      }
     }
   },
   data() {
