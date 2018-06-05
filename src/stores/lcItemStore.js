@@ -12,6 +12,8 @@
 import utils from '../utils';
 
 import QuestionHandler from '../handlers/lcItem/question';
+import lectureItemService from '../services/lectureItemService';
+import SurveyHandler from '../handlers/lcItem/survey';
 
 export default {
   namespaced: true,
@@ -43,6 +45,14 @@ export default {
     },
   },
   actions: {
+    async getLcItem({ state, commit }) {
+      const res = await lectureItemService.getLectureItem({
+        lectureItemId: state.currentEditingLectureItemId,
+      });
+      commit('updateLectureItem', {
+        lectureItem: res.data,
+      });
+    },
     async postLcItem({ rootState }, { inputHead, inputBody, inputTail }) {
       // console.log('lcItemType', inputHead);
 
@@ -57,9 +67,15 @@ export default {
           });
           break;
         }
-        // case 1: {
-        //   break;
-        // }
+        case 1: { // * 설문
+          await SurveyHandler.postLcItem({
+            lectureId: rootState.lc.lecture.lecture_id,
+            inputHead,
+            inputBody,
+            inputTail,
+          });
+          break;
+        }
         // case 2: {
         //   break;
         // }
