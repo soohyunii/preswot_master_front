@@ -32,15 +32,8 @@
         <span v-show="!isNewItem">
           &nbsp; * 아이템 유형은 수정 불가
         </span>
-        <!-- <el-select v-model="inputHead.lcItemType">
-          <el-option
-            v-for="option in selectOptionList"
-            :key="option.value"
-            :label="option.label"
-            :value="option.value">
-          </el-option>
-        </el-select> -->
       </el-form-item>
+
       <el-form-item label="아이템 이름" prop="lcItemName" id="lc_item_name">
         <el-input v-model="inputHead.lcItemName" placeholder="내용을 입력해주세요."></el-input>
       </el-form-item>
@@ -64,6 +57,11 @@
       <lc-survey-editor
         ref="surveyEditor"
         v-show="inputHead.lcItemType === 'survey'"
+      />
+
+      <lc-practice-editor
+        ref="practiceEditor"
+        v-show="inputHead.lcItemType === 'practice'"
       />
 
       <!--
@@ -90,6 +88,8 @@
 import { mapActions, mapMutations, mapGetters, mapState } from 'vuex';
 import LcQuestionEditor from './LcQuestionEditor';
 import LcSurveyEditor from './LcSurveyEditor';
+import LcDiscussionEditor from './LcDiscussionEditor';
+import LcPracticeEditor from './LcPracticeEditor';
 import utils from '../../utils';
 
 export default {
@@ -97,6 +97,8 @@ export default {
   components: {
     LcQuestionEditor,
     LcSurveyEditor,
+    LcDiscussionEditor,
+    LcPracticeEditor,
   },
   async mounted() {
     const vm = this;
