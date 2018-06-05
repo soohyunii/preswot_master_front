@@ -55,7 +55,6 @@ export default {
     },
     lectureId() {
       const vm = this;
-      console.log('sdfsdf', vm);
       return Number.parseInt(vm.$route.params.lectureId, 10);
     },
   },
