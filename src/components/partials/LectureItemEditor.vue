@@ -90,6 +90,7 @@ import LcQuestionEditor from './LcQuestionEditor';
 import LcSurveyEditor from './LcSurveyEditor';
 import LcDiscussionEditor from './LcDiscussionEditor';
 import LcPracticeEditor from './LcPracticeEditor';
+import QuestionHandler from '../../handlers/lcItem/question';
 import utils from '../../utils';
 
 export default {
@@ -114,20 +115,7 @@ export default {
       // * Init inputBody, tail
       switch (vm.inputHead.lcItemType) {
         case 'question': {
-          const q = item.questions[0];
-          vm.inputTail.question = q.question;
-          vm.inputTail.difficulty = q.difficulty;
-          // TODO: keyword init
-          switch (q.type) {
-            case 1: { // 단답
-              vm.inputBody.questionType = 'SHORT_ANSWER';
-              vm.inputTail.answer = q.answer[0];
-              break;
-            }
-            default: {
-              throw new Error(`not defined question type ${q.type}`);
-            }
-          }
+          QuestionHandler.initViewModel(vm);
           break;
         }
         default: {
