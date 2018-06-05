@@ -107,6 +107,16 @@ export default {
           });
           break;
         }
+        case 2: {
+          await PracticeHandler.putLcItem({
+            lectureItemId: state.currentEditingLectureItemId,
+            practiceId: state.lectureItem.lecture_code_practices[0].lecture_code_practice_id,
+            inputHead,
+            inputBody,
+            inputTail,
+          });
+          break;
+        }
         default: {
           throw new Error(`not defined lcItemType ${lcItemType}`);
         }

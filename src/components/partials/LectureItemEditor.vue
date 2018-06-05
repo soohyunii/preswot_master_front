@@ -91,6 +91,7 @@ import LcSurveyEditor from './LcSurveyEditor';
 import LcDiscussionEditor from './LcDiscussionEditor';
 import LcPracticeEditor from './LcPracticeEditor';
 import QuestionHandler from '../../handlers/lcItem/question';
+import PracticeHandler from '../../handlers/lcItem/practice';
 import utils from '../../utils';
 
 export default {
@@ -116,6 +117,10 @@ export default {
       switch (vm.inputHead.lcItemType) {
         case 'question': {
           QuestionHandler.initViewModel(vm);
+          break;
+        }
+        case 'practice': {
+          PracticeHandler.initViewModel(vm);
           break;
         }
         default: {
