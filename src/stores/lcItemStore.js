@@ -12,6 +12,7 @@
 import utils from '../utils';
 
 import QuestionHandler from '../handlers/lcItem/question';
+import lectureItemService from '../services/lectureItemService';
 
 export default {
   namespaced: true,
@@ -43,6 +44,14 @@ export default {
     },
   },
   actions: {
+    async getLcItem({ state, commit }) {
+      const res = await lectureItemService.getLectureItem({
+        lectureItemId: state.currentEditingLectureItemId,
+      });
+      commit('updateLectureItem', {
+        lectureItem: res.data,
+      });
+    },
     async postLcItem({ rootState }, { inputHead, inputBody, inputTail }) {
       // console.log('lcItemType', inputHead);
 

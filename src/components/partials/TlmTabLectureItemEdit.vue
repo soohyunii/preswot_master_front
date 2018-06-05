@@ -19,7 +19,7 @@
         </el-button>
       </div>
     </div>
-    <div v-show="isEditing">
+    <div v-if="isEditing">
       <el-button @click="TODOdeleteClick">TODO: Delete this el-button and click listener</el-button>
       <lecture-item-editor />
     </div>
@@ -55,6 +55,7 @@ export default {
     },
     lectureId() {
       const vm = this;
+      console.log('sdfsdf', vm);
       return Number.parseInt(vm.$route.params.lectureId, 10);
     },
   },

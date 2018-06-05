@@ -99,7 +99,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations, mapGetters } from 'vuex';
+import { mapActions, mapMutations, mapGetters, mapState } from 'vuex';
 import LcQuestionEditor from './LcQuestionEditor';
 // import utils from '../../utils';
 
@@ -110,8 +110,15 @@ export default {
   },
   async mounted() {
     const vm = this;
-    if (vm.isNewItem) {
-      // TODO: get lectureItem
+    if (!vm.isNewItem) {
+      await vm.getLcItem();
+      const item = vm.lectureItem;
+      vm.inputHead.type = item.order;
+      vm.inputHead.lcItemType = item.type;
+      vm.inputHead.lcItemName = item.name;
+
+      // TODO: init inputBody, tail
+      vm.inputBody.question
     }
   },
   data() {
@@ -141,6 +148,9 @@ export default {
     };
   },
   computed: {
+    ...mapState('lcItem', [
+      'lectureItem',
+    ]),
     ...mapGetters('lcItem', [
       'isNewItem',
     ]),
@@ -174,6 +184,7 @@ export default {
       'updateLectureItem',
     ]),
     ...mapActions('lcItem', [
+      'getLcItem',
       'postLcItem',
     ]),
     reset() {
