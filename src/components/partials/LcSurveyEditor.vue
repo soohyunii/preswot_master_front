@@ -1,4 +1,4 @@
-<template v-if="inputHead.lcItemType === 'survey'">
+<template>
   <div id="lc_survey_editor_wrapper">
     <el-form-item label="문항 유형">
       <el-radio-group v-model="inputBody.surveyType">
