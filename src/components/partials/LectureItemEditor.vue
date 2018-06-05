@@ -22,12 +22,16 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="아이템 유형" prop="lcItemType" id="lc_item_type">
-        <el-radio-group v-model="inputHead.lcItemType">
+        <el-radio-group v-model="inputHead.lcItemType" :disabled="!isNewItem">
           <el-radio-button label="question">문항</el-radio-button>
           <el-radio-button label="survey">설문</el-radio-button>
           <el-radio-button label="practice">실습</el-radio-button>
           <el-radio-button label="discussion">토론</el-radio-button>
         </el-radio-group>
+
+        <span v-show="!isNewItem">
+          &nbsp; * 아이템 유형은 수정 불가
+        </span>
         <!-- <el-select v-model="inputHead.lcItemType">
           <el-option
             v-for="option in selectOptionList"
@@ -86,7 +90,7 @@ import { mapActions, mapMutations, mapGetters, mapState } from 'vuex';
 import LcQuestionEditor from './LcQuestionEditor';
 import LcSurveyEditor from './LcSurveyEditor';
 import LcDiscussionEditor from './LcDiscussionEditor';
-// import utils from '../../utils';
+import utils from '../../utils';
 
 export default {
   name: 'LectureItemEditor',
@@ -100,12 +104,35 @@ export default {
     if (!vm.isNewItem) {
       await vm.getLcItem();
       const item = vm.lectureItem;
+      console.log('getLcItem res', item); // eslint-disable-line no-console
+
       vm.inputHead.type = item.order;
-      vm.inputHead.lcItemType = item.type;
+      vm.inputHead.lcItemType = utils.convertLcItemType(item.type);
       vm.inputHead.lcItemName = item.name;
 
-      // TODO: init inputBody, tail
-      // vm.inputBody.question
+      // * Init inputBody, tail
+      switch (vm.inputHead.lcItemType) {
+        case 'question': {
+          const q = item.questions[0];
+          vm.inputTail.question = q.question;
+          vm.inputTail.difficulty = q.difficulty;
+          // TODO: keyword init
+          switch (q.type) {
+            case 1: { // 단답
+              vm.inputBody.questionType = 'SHORT_ANSWER';
+              vm.inputTail.answer = q.answer[0];
+              break;
+            }
+            default: {
+              throw new Error(`not defined question type ${q.type}`);
+            }
+          }
+          break;
+        }
+        default: {
+          throw new Error(`not defined lcItemType ${vm.inputHead.lcItemType}`);
+        }
+      }
     }
   },
   data() {
@@ -173,6 +200,7 @@ export default {
     ...mapActions('lcItem', [
       'getLcItem',
       'postLcItem',
+      'putLcItem',
     ]),
     reset() {
       const vm = this;
@@ -188,29 +216,59 @@ export default {
     },
     async onSubmit() {
       const vm = this;
-      try {
-        await vm.postLcItem({
-          inputHead: vm.inputHead,
-          inputBody: vm.inputBody,
-          inputTail: vm.inputTail,
-        });
-        vm.$notify({
-          title: '강의 아이템 생성 성공',
-          message: `${vm.inputHead.lcItemName} 생성됨`,
-          type: 'success',
-          duration: 3000,
-        });
 
-        vm.reset();
+      if (vm.isNewItem) {
+        try {
+          await vm.postLcItem({
+            inputHead: vm.inputHead,
+            inputBody: vm.inputBody,
+            inputTail: vm.inputTail,
+          });
+          vm.$notify({
+            title: '강의 아이템 생성 성공',
+            message: `${vm.inputHead.lcItemName} 생성됨`,
+            type: 'success',
+            duration: 3000,
+          });
 
-        await vm.getLecture({ lectureId: vm.lectureId }); // lecture item list 업데이트
-      } catch (error) {
-        vm.$notify({
-          title: '생성 실패',
-          message: error.toString(),
-          type: 'error',
-          duration: 0,
-        });
+          vm.reset();
+
+          await vm.getLecture({ lectureId: vm.lectureId }); // lecture item list 업데이트item list 업데이트
+        } catch (error) {
+          vm.$notify({
+            title: '생성 실패',
+            message: error.toString(),
+            type: 'error',
+            duration: 0,
+          });
+        }
+      } else {
+        try {
+          await vm.putLcItem({
+            inputHead: vm.inputHead,
+            inputBody: vm.inputBody,
+            inputTail: vm.inputTail,
+          });
+
+          vm.$notify({
+            title: '강의 아이템 수정 성공',
+            message: `${vm.inputHead.lcItemName} 수정됨`,
+            type: 'success',
+            duration: 3000,
+          });
+
+          vm.reset();
+
+          await vm.getLecture({ lectureId: vm.lectureId }); // lecture item list 업데이트
+        } catch (error) {
+          vm.$notify({
+            title: '수정 실패',
+            message: error.toString(),
+            type: 'error',
+            duration: 0,
+          });
+          console.error(error); // eslint-disable-line
+        }
       }
     },
   },

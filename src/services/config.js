@@ -7,10 +7,14 @@ let backPort = 8000;
 let socketPort = 8001;
 // let backPort = 3000;
 
-
+const isProd = document.URL.includes('preswot');
 const isTest = document.URL.includes('13.124.196.202');
 // const isTest = true;
-if (isTest) {
+if (isProd) {
+  serverUrl = 'http://13.125.31.75';
+  backPort = 8001;
+  socketPort = 8002;
+} else if (isTest) {
   serverUrl = 'http://13.124.236.81';
   backPort = 8000;
   socketPort = 8001;

@@ -19,7 +19,7 @@
           <el-button type="danger" @click="onClick('DELETE_SURVEY_ITEM',index)">X</el-button>
         </div>
         <el-button @click="onClick('ADD_SURVEY_ITEM')" style="width: 100%;">항목 추가</el-button>
-      </el-form-item>  
+      </el-form-item>
     </template>
   </div>
 </template>
@@ -58,6 +58,11 @@ export default {
       return (link) => {
         return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
       };
+    },
+    reset() {
+      const vm = this;
+      vm.inputBody = Object.assign({}, vm.initialInputBody);
+      vm.inputTail = Object.assign({}, vm.initialInputTail);
     },
     onClick(type, arg) {
       const vm = this;
