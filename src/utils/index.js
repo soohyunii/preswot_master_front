@@ -123,6 +123,9 @@ export default {
     }
     return new Error(`not defined lcItemType ${lcItemType}`);
   },
+  convertLcItemTypeKor(lcItemType) {
+    return ['문항', '설문', '실습', '토론'][lcItemType];
+  },
   // 시즌2용 유틸함수
   convertQuestionType2(questionType) {
     const mapping = [
