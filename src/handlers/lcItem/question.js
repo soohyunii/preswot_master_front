@@ -14,6 +14,10 @@ export default class QuestionHandler extends LcItemHandler {
       lectureItemId: lcItemId,
     });
     const questionId = res1.data.question_id;
+    this.putChildLectureItem({ questionId, inputBody, inputTail });
+  }
+
+  static async putChildLectureItem({ questionId, inputBody, inputTail }) {
     const questionType = utils.convertQuestionType2(inputBody.questionType);
 
     questionService.putQuestionType({
@@ -25,7 +29,7 @@ export default class QuestionHandler extends LcItemHandler {
       inputTail.answer : [inputTail.answer];
     // TODO: add params such as choice, ... etc.
     await questionService.putQuestion({
-      questionId: res1.data.question_id,
+      questionId,
       question: inputTail.question,
       // choice:
       answer,

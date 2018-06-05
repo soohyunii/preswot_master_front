@@ -87,5 +87,23 @@ export default {
         }
       }
     },
+    async putLcItem({ state }, { inputHead, inputBody, inputTail }) {
+      const lcItemType = utils.convertLcItemType(inputHead.lcItemType);
+      switch (lcItemType) {
+        case 0: { // * 문항
+          await QuestionHandler.putLcItem({
+            lectureItemId: state.currentEditingLectureItemId,
+            questionId: state.lectureItem.questions[0].question_id,
+            inputHead,
+            inputBody,
+            inputTail,
+          });
+          break;
+        }
+        default: {
+          throw new Error(`not defined lcItemType ${lcItemType}`);
+        }
+      }
+    },
   },
 };
