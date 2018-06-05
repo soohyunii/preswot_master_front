@@ -67,10 +67,10 @@
         </el-select>
       </el-form-item>
       <el-form-item label="입력 설명">
-        <el-input v-model="inputTail.inputDesc" placeholder="내용을 입력해주세요." type="textarea"></el-input>
+        <el-input v-model="inputTail.inputDescription" placeholder="내용을 입력해주세요." type="textarea"></el-input>
       </el-form-item>
       <el-form-item label="출력 설명">
-        <el-input v-model="inputTail.outputDesc" placeholder="내용을 입력해주세요." type="textarea"></el-input>
+        <el-input v-model="inputTail.outputDescription" placeholder="내용을 입력해주세요." type="textarea"></el-input>
       </el-form-item>
       <el-form-item label="샘플 입력">
         <el-input v-model="inputTail.sampleInput" placeholder="내용을 입력해주세요." type="textarea"></el-input>
@@ -90,7 +90,8 @@
             <el-input v-model="testCase.output" placeholder="내용을 입력해주세요." type="textarea"></el-input>
           </el-form-item>
           <div style="text-align: right;">
-          <el-button @click="onClick('DELETE_TEST_CASE', index)">테스트 케이스 {{ index }} 삭제</el-button>
+          <el-button type="danger" @click="onClick('DELETE_TEST_CASE', index)">테스트 케이스 {{ index }} 삭제</el-button>
+          <br /><br /><br />
           </div>
         </div>
       </template>
@@ -123,9 +124,9 @@
         <el-input id="input_keyword_point" v-model="inputTail.keywordPoint" placeholder="배점"></el-input>
       </div>
       <el-button @click="onClick('ADD_KEYWORD')">추가</el-button><br>
-      <div v-for="item in inputTail.assignedKeywordList" :key="item.keyword" style="display: inline-block; width: 200px;">
+      <div v-for="(item,index) in inputTail.assignedKeywordList" :key="item.keyword" style="display: inline-block; width: 200px;">
         <el-button>{{ item.keyword }} / {{ item.score }}</el-button>
-        <el-button @click="onClick('DELETE_KEYWORD',item.keywordName)" type="danger" style="margin: 0px">X</el-button>
+        <el-button @click="onClick('DELETE_KEYWORD',index)" type="danger" style="margin: 0px">X</el-button>
       </div>
     </el-form-item>
     <el-form-item label="난이도" id="difficulty">
@@ -150,6 +151,7 @@ export default {
     };
     const initialInputTail = {
       assignedKeywordList: [],
+      testCaseList: [],
       difficulty: 3,
     };
     return {
@@ -192,6 +194,12 @@ export default {
       const vm = this;
       vm.inputTail = Object.assign({}, vm.initialInputTail);
       // vm.$set(vm.inputTail, 'selectedKeywordList', []);
+      if (vm.inputBody.questionType === 'MULTIPLE_CHOICE') {
+        vm.$set(vm.inputTail, 'questionList', []);
+
+        // 여기서 아래 방식은 알 수 없는 이유로 항목이 동적으로 변하지 않습니다.
+        // vm.inputTail = Object.assign(vm.inputTail, { questionList: [] });
+      }
     },
     querySearch(queryString, cb) {
       const vm = this;
@@ -224,8 +232,7 @@ export default {
           break;
         }
         case 'DELETE_KEYWORD': {
-          const index = vm.inputTail.assignedKeywordList.findIndex(x => x.keywordName === arg);
-          vm.inputTail.assignedKeywordList.splice(index, 1);
+          vm.inputTail.assignedKeywordList.splice(arg, 1);
           break;
         }
         case 'ADD_TEST_CASE': {
@@ -241,13 +248,6 @@ export default {
         }
         case 'ADD_FILE': {
           console.log('//TODO add File'); // eslint-disable-line no-console
-          break;
-        }
-        case 'addQuestion': { // TODO: move to lc survey editor
-          // TODO: rename add choice
-          vm.inputTail.questionList.push({
-            question: '',
-          });
           break;
         }
         default : {
