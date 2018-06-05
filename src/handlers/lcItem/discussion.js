@@ -1,6 +1,6 @@
 import LcItemHandler from './index';
-import discussionService from '../../services/discussionService';
-import utils from '../../utils';
+// import discussionService from '../../services/discussionService';
+// import utils from '../../utils';
 
 export default class SurveyHandler extends LcItemHandler {
   static postLcItem({ lectureId, inputHead, inputBody, inputTail }) {
@@ -9,21 +9,12 @@ export default class SurveyHandler extends LcItemHandler {
 
   // @Override
   static async postChildLectureItem({ lcItemId, inputBody, inputTail }) {
-    console.log('//TODO 서버측 스펙 답변을 받으면 이 부분을 구현할 것.');
     /*
-    const res1 = await discussionService.postSurvey({
-      lectureItemId: lcItemId,
-    });
-    const surveyId = res1.data.survey_id;
-    const surveyType = utils.convertSurveyType2(inputBody.surveyType);
-
-    discussionService.putSurvey({
-      surveyId,
-      comment: inputTail.comment,
-      type: surveyType,
-      choice: (inputTail.surveyItemList === undefined) ? undefined :
-        inputTail.surveyItemList.map(item => item.value),
-    });
+      TODO
+      현재 post discussion은 없음.
+      post lectureItem에서 type = discussion으로 생성하는게 토론 생성의 전부인 상태.
+      토론주제, 키워드, 난이도를 저장하려면 서버 스펙을 변경해야 함.
+      서버 개발자분께 말씀드리고 기다리고 있는 상태
     */
   }
 }

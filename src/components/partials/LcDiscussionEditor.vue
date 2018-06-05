@@ -16,9 +16,9 @@
         <el-input id="input_keyword_point" v-model="inputTail.keywordPoint" placeholder="배점"></el-input>
       </div>
       <el-button @click="onClick('ADD_KEYWORD')">추가</el-button><br>
-      <div v-for="item in inputTail.assignedKeywordList" :key="item.keyword" style="display: inline-block; width: 200px;">
+      <div v-for="(item, index) in inputTail.assignedKeywordList" :key="item.keyword" style="display: inline-block; width: 200px;">
         <el-button>{{ item.keyword }} / {{ item.score }}</el-button>
-        <el-button @click="onClick('DELETE_KEYWORD',item.keywordName)" type="danger" style="margin: 0px">X</el-button>
+        <el-button @click="onClick('DELETE_KEYWORD',index)" type="danger" style="margin: 0px">X</el-button>
       </div>
     </el-form-item>
     <el-form-item label="난이도" id="difficulty">
@@ -90,8 +90,7 @@ export default {
           break;
         }
         case 'DELETE_KEYWORD': {
-          const index = vm.inputTail.assignedKeywordList.findIndex(x => x.keywordName === arg);
-          vm.inputTail.assignedKeywordList.splice(index, 1);
+          vm.inputTail.assignedKeywordList.splice(arg, 1);
           break;
         }
         default : {
