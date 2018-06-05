@@ -86,7 +86,7 @@
 import { mapActions, mapMutations, mapGetters, mapState } from 'vuex';
 import LcQuestionEditor from './LcQuestionEditor';
 import LcSurveyEditor from './LcSurveyEditor';
-// import utils from '../../utils';
+import utils from '../../utils';
 
 export default {
   name: 'LectureItemEditor',
@@ -100,7 +100,7 @@ export default {
       await vm.getLcItem();
       const item = vm.lectureItem;
       vm.inputHead.type = item.order;
-      vm.inputHead.lcItemType = item.type;
+      vm.inputHead.lcItemType = utils.convertLcItemType(item.type);
       vm.inputHead.lcItemName = item.name;
 
       // TODO: init inputBody, tail
