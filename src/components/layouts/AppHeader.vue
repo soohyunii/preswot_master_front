@@ -5,7 +5,8 @@
       <!-- TODO: replace span with :xs, :sm, :md, :lg, :xl -->
       <el-col :span="13">
         <el-button
-        :type="appTheme" plain
+          v-if="!isProd"
+          :type="appTheme"
           id="navigation_toggle"
           @click="onClick('TOGGLE_NAVIGATION')"
         >
@@ -16,12 +17,11 @@
           <el-button :type="appTheme" plain>Preswot</el-button>
         </router-link>
         <!-- TODO: translate placeholder -->
-        <el-input placeholder="Please input" v-model="searchText" style="max-width: 250px;">
+        <!-- <el-input placeholder="Please input" v-model="searchText" style="max-width: 250px;">
         </el-input>
-        <!-- <el-button icon="el-icon-search" type="primary"></el-button> -->
         <el-button :type="appTheme" plain>
           <i class="fas fa-search"></i>
-        </el-button>
+        </el-button> -->
       </el-col>
 
       <el-col :span="11">
@@ -115,6 +115,7 @@ export default {
   data() {
     return {
       searchText: '',
+      isProd: document.URL.includes('preswot'),
     };
   },
   computed: {
