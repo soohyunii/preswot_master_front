@@ -16,7 +16,7 @@
           <el-button :type="appTheme" plain>Brand Logo</el-button>
         </router-link>
         <!-- TODO: translate placeholder -->
-        <el-input placeholder="Please input" v-model="searchText">
+        <el-input placeholder="Please input" v-model="searchText" style="max-width: 250px;">
         </el-input>
         <!-- <el-button icon="el-icon-search" type="primary"></el-button> -->
         <el-button :type="appTheme" plain>
