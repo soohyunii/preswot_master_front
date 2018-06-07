@@ -13,7 +13,7 @@
         </el-button>
         <router-link to="/">
           <!-- TODO: replace 브랜드 로고 -->
-          <el-button :type="appTheme" plain>Brand Logo</el-button>
+          <el-button :type="appTheme" plain>Preswot</el-button>
         </router-link>
         <!-- TODO: translate placeholder -->
         <el-input placeholder="Please input" v-model="searchText" style="max-width: 250px;">
