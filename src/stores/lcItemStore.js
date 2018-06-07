@@ -14,6 +14,7 @@ import utils from '../utils';
 import QuestionHandler from '../handlers/lcItem/question';
 import lectureItemService from '../services/lectureItemService';
 import SurveyHandler from '../handlers/lcItem/survey';
+import DiscussionHandler from '../handlers/lcItem/discussion';
 
 export default {
   namespaced: true,
@@ -79,9 +80,33 @@ export default {
         // case 2: {
         //   break;
         // }
-        // case 3: {
-        //   break;
-        // }
+        case 3: { // * 토론
+          await DiscussionHandler.postLcItem({
+            lectureId: rootState.lc.lecture.lecture_id,
+            inputHead,
+            inputBody,
+            inputTail,
+          });
+          break;
+        }
+        default: {
+          throw new Error(`not defined lcItemType ${lcItemType}`);
+        }
+      }
+    },
+    async putLcItem({ state }, { inputHead, inputBody, inputTail }) {
+      const lcItemType = utils.convertLcItemType(inputHead.lcItemType);
+      switch (lcItemType) {
+        case 0: { // * 문항
+          await QuestionHandler.putLcItem({
+            lectureItemId: state.currentEditingLectureItemId,
+            questionId: state.lectureItem.questions[0].question_id,
+            inputHead,
+            inputBody,
+            inputTail,
+          });
+          break;
+        }
         default: {
           throw new Error(`not defined lcItemType ${lcItemType}`);
         }
