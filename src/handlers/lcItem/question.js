@@ -4,10 +4,9 @@ import lectureItemService from '../../services/lectureItemService';
 import utils from '../../utils';
 
 export default class QuestionHandler extends LcItemHandler {
-  // static postLcItem() {
-  //   super.postLcItem();
-  //   console.log('QuestionHandler postLcItem');
-  // }
+  static postLcItem({ lectureId, inputHead, inputBody, inputTail }) {
+    super.postLcItem({ lectureId, inputHead, inputBody, inputTail });
+  }
 
   static async postChildLectureItem({ lcItemId, inputBody, inputTail }) {
     const res1 = await questionService.postQuestion({
@@ -31,7 +30,7 @@ export default class QuestionHandler extends LcItemHandler {
     await questionService.putQuestion({
       questionId,
       question: inputTail.question,
-      // choice:
+      choice: inputTail.questionList,
       answer,
       difficulty: inputTail.difficulty,
     });
@@ -40,5 +39,26 @@ export default class QuestionHandler extends LcItemHandler {
       questionId,
       data: inputTail.assignedKeywordList,
     });
+
+    // SW인 경우 testCase 입력
+    if (inputTail.testCaseList.length > 0) {
+      inputTail.testCaseList.forEach((testcase) => {
+        questionService.postQuestionTestCase({
+          questionId: res1.data.question_id,
+          input: testcase.input,
+          output: testcase.output,
+        });
+      });
+    }
+
+    // SQL인 경우 fileList 입력
+    if (inputTail.sqlFileUidGuidList !== undefined) {
+      inputTail.sqlFileUidGuidList.forEach((element) => {
+        questionService.postQuestionSQLiteFile({
+          questionId,
+          file: element.raw,
+        });
+      });
+    }
   }
 }
