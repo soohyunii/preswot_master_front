@@ -68,7 +68,8 @@ export default {
         keywordList: res1.data.map(x => x.keyword),
       });
       commit('updateRecommendKeywordList', {
-        recommendKeywordList: ['d', 'e'], // 이게 의사코드에서 leftRecommendKeywordList
+        // recommendKeywordList: ['d', 'e'], // 이게 의사코드에서 leftRecommendKeywordList
+        recommendKeywordList: [],
       });
       state.removedKeywordList = [];
     },

@@ -36,15 +36,23 @@ export default class QuestionHandler extends LcItemHandler {
       data: inputTail.assignedKeywordList,
     });
 
+    // SW인 경우 testCase 입력
     if (inputTail.testCaseList.length > 0) {
-      console.log('@postChildLectureItem/inputTail.testCaseList.length = ', inputTail.testCaseList.length);
       inputTail.testCaseList.forEach((testcase) => {
-        console.log(testcase.input);
-        console.log(testcase.output);
         questionService.postQuestionTestCase({
           questionId: res1.data.question_id,
           input: testcase.input,
           output: testcase.output,
+        });
+      });
+    }
+
+    // SQL인 경우 fileList 입력
+    if (inputTail.sqlFileUidGuidList !== undefined) {
+      inputTail.sqlFileUidGuidList.forEach((element) => {
+        questionService.postQuestionSQLiteFile({
+          questionId,
+          file: element.raw,
         });
       });
     }

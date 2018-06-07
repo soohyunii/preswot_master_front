@@ -105,7 +105,15 @@
 
     <template v-if="inputBody.questionType === 'SQL'">
       <el-form-item label="SQLite">
-        <el-button @click="onClick('ADD_FILE')">파일추가</el-button>
+        <el-upload
+        action="#"
+        :auto-upload="false"
+        :file-list="initFileList"
+        :limit=1
+        :on-exceed="handleExceed"
+        ref="sqlUpload">
+          <el-button>파일 추가</el-button>
+        </el-upload>
       </el-form-item>
       <el-form-item label="답">
         <el-input v-model="inputTail.question" placeholder="내용을 입력해주세요." type="textarea"></el-input>
@@ -143,6 +151,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: 'LcQuestionEditor',
   data() {
@@ -187,18 +197,19 @@ export default {
           label: '현재 언어 목록은 MOCK입니다.',
         },
       ],
+      initFileList: [], // 초기 파일 목록이며, 양방향 바인딩에 사용되지 않음.
     };
   },
   methods: {
     onChangeBody() {
       const vm = this;
+      // console.log((vm.$refs.sqlUpload.uploadFiles !== undefined) ? vm.$refs.sqlUpload.uploadFiles : null);
       vm.inputTail = Object.assign({}, vm.initialInputTail);
-      // vm.$set(vm.inputTail, 'selectedKeywordList', []);
       if (vm.inputBody.questionType === 'MULTIPLE_CHOICE') {
         vm.$set(vm.inputTail, 'questionList', []);
-
-        // 여기서 아래 방식은 알 수 없는 이유로 항목이 동적으로 변하지 않습니다.
-        // vm.inputTail = Object.assign(vm.inputTail, { questionList: [] });
+      }
+      if (vm.inputBody.questionType === 'SQL') {
+        vm.$set(vm.inputTail, 'sqlFileUidGuidList', vm.$refs.sqlUpload.uploadFiles);
       }
     },
     querySearch(queryString, cb) {
@@ -246,16 +257,16 @@ export default {
           vm.inputTail.testCaseList.splice(arg, 1);
           break;
         }
-        case 'ADD_FILE': {
-          console.log('//TODO add File'); // eslint-disable-line no-console
-          break;
-        }
         default : {
           break;
         }
       }
     },
+    handleExceed() {
+      this.$message.warning(
+        'SQLite Database 파일은 1개만 업로드 할 수 있습니다.',
+      );
+    },
   },
 };
 </script>
-
