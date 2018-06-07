@@ -44,15 +44,15 @@
               </el-button>
             </router-link>
 
-            <router-link to="/a/teacher/class" v-show="isJwtValid">
+            <router-link v-if="!isProd" to="/a/teacher/class" v-show="isJwtValid">
               <el-button :type="appTheme" plain>
-                <i class="fas fa-edit"></i>
+                <i class="fas fa-edit"></i>1
               </el-button>
             </router-link>
 
              <router-link to="/a/teacher/NNclass" v-show="isJwtValid" id="btn_teacher_home">
               <el-button :type="appTheme" plain>
-                <i class="fas fa-edit"></i>2
+                <i class="fas fa-edit"></i> <span v-show="!isProd">2</span>
               </el-button>
             </router-link>
 
