@@ -11,7 +11,9 @@
         </el-button>
     </el-col>
     <t :resultData="resultData" :attendeeList="currentClassAttendee"></t>
-    <!-- <rsl></rsl> -->
+    <el-row v-if="isAttendeeVisable">
+      <rsl :attendeeList="currentClassAttendee"></rsl>
+    </el-row>
   </div>
 </template>
 
@@ -35,7 +37,7 @@ export default {
   },
   computed: {
     ...mapState('report', [
-      'userId', 'reports', 'currentClassId', 'currentClassStat', 'resultData', 'currentClassAttendee',
+      'userId', 'reports', 'currentClassId', 'currentClassStat', 'resultData', 'currentClassAttendee', 'isAttendeeVisable',
     ]),
     ...mapGetters('report', [
       'sizeOfReports',
@@ -52,13 +54,13 @@ export default {
       'setClassStat',
       'setResultData',
       'setCurrentClassAttendee',
+      'toggleAttendeeVisable',
     ]),
     async onClick(type) {
       const vm = this;
       switch (type) {
         case 'SHOWLIST': {
-          // eslint-disable-next-line
-          console.log(vm.attendeeList);
+          vm.toggleAttendeeVisable();
           break;
         }
         default : {

@@ -13,8 +13,9 @@ export default {
     currentClassId: null,
     currentClassStat: [],
     resultData: [],
-    currentClassAttendee: [],
+    currentClassAttendee: null,
     attendee: [],
+    isAttendeeVisable: false,
   },
   getters: {
     sizeOfReports(state) {
@@ -39,6 +40,13 @@ export default {
     },
     updateCurrentClassAttendee(state, { currentClassAttendee }) {
       state.currentClassAttendee = currentClassAttendee;
+    },
+    updateAttendeeVisable(state) {
+      if (state.isAttendeeVisable) {
+        state.isAttendeeVisable = false;
+      } else {
+        state.isAttendeeVisable = true;
+      }
     },
   },
   actions: {
@@ -66,13 +74,9 @@ export default {
       for (let i = 0; i < state.reports.length; i += 1) {
         const tempLectureId = state.currentClassStat[i * 3].lecture_id;
         let tempReport = [];
-        for (let j = 0; j < state.reports.length; j += 1) {
-          if (tempLectureId === state.reports[j].lecture_id) {
-            tempReport = state.reports[j];
-          }
-        }
+        tempReport = state.reports[i];
         // 예습데이터 order 0, -1일 경우에 대한 예외처리 포함
-        const preNumberOfStudent = state.currentClassStat[i * 3].number_of_student;
+        const preNumberOfStudent = state.currentClassStat[i].number_of_student;
         let preGradeParti;
         if (tempReport.pre_rank_participation_score === -1) {
           preGradeParti = '-';
@@ -95,7 +99,8 @@ export default {
           ((tempReport.pre_rank_concentration_score / preNumberOfStudent) * 10).toFixed(1);
         }
         // 본강데이터 order 1
-        const lecNumberOfStudent = state.currentClassStat[(i * 3) + 1].number_of_student;
+        const lecNumberOfStudent
+          = state.currentClassStat[i + (state.reports.length * 1)].number_of_student;
         let lecGradeParti;
         if (tempReport.lec_rank_participation_score === -1) {
           lecGradeParti = '-';
@@ -118,7 +123,8 @@ export default {
         ((tempReport.lec_rank_concentration_score / lecNumberOfStudent) * 10).toFixed(1);
         }
         // 복습데이터 order 2
-        const revNumberOfStudent = state.currentClassStat[(i * 3) + 2].number_of_student;
+        const revNumberOfStudent
+          = state.currentClassStat[i + (state.reports.length * 2)].number_of_student;
         let revGradeParti;
         if (tempReport.rev_rank_participation_score === -1) {
           revGradeParti = '-';
@@ -213,6 +219,9 @@ export default {
       commit('updateCurrentClassAttendee', {
         currentClassAttendee: res.data,
       });
+    },
+    toggleAttendeeVisable({ commit }) {
+      commit('updateAttendeeVisable');
     },
   },
 };
