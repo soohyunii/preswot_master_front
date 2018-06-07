@@ -25,4 +25,21 @@ export default class LcItemHandler {
     // JAVA에서 함수이름 + 인자까지 다 보는 것과는 상반됨
     throw new Error('Child class should implement postChildLectureItem()');
   }
+
+  static async putLcItem({ lectureItemId, inputHead, ...others }) {
+    await lectureItemService.putLectureItem({
+      lectureItemId,
+      name: inputHead.lcItemName,
+      order: inputHead.type,
+    });
+
+    await this.putChildLectureItem({
+      lectureItemId,
+      ...others,
+    });
+  }
+
+  static putChildLectureItem() {
+    throw new Error('Child class should implement putChildLectureItem()');
+  }
 }
