@@ -3,6 +3,13 @@ import LcItemHandler from './index';
 // import utils from '../../utils';
 
 export default class SurveyHandler extends LcItemHandler {
+  static initViewModel(vm) {
+    const item = vm.lectureItem;
+    const d = item.discussions[0]; // eslint-disable-line
+    console.log('아직 API가 안 뚫려서 discussions가 빈 배열로 들어온닷..!'); // eslint-disable-line
+    // TODO: init vm.inputTail with d
+  }
+
   static postLcItem({ lectureId, inputHead, inputBody, inputTail }) {
     super.postLcItem({ lectureId, inputHead, inputBody, inputTail });
   }
