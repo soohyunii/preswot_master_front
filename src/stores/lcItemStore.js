@@ -15,6 +15,7 @@ import QuestionHandler from '../handlers/lcItem/question';
 import lectureItemService from '../services/lectureItemService';
 import SurveyHandler from '../handlers/lcItem/survey';
 import DiscussionHandler from '../handlers/lcItem/discussion';
+import PracticeHandler from '../handlers/lcItem/practice';
 
 export default {
   namespaced: true,
@@ -77,9 +78,15 @@ export default {
           });
           break;
         }
-        // case 2: {
-        //   break;
-        // }
+        case 2: { // * 실습
+          await PracticeHandler.postLcItem({
+            lectureId: rootState.lc.lecture.lecture_id,
+            inputHead,
+            inputBody,
+            inputTail,
+          });
+          break;
+        }
         case 3: { // * 토론
           await DiscussionHandler.postLcItem({
             lectureId: rootState.lc.lecture.lecture_id,
@@ -101,6 +108,16 @@ export default {
           await QuestionHandler.putLcItem({
             lectureItemId: state.currentEditingLectureItemId,
             questionId: state.lectureItem.questions[0].question_id,
+            inputHead,
+            inputBody,
+            inputTail,
+          });
+          break;
+        }
+        case 2: {
+          await PracticeHandler.putLcItem({
+            lectureItemId: state.currentEditingLectureItemId,
+            practiceId: state.lectureItem.lecture_code_practices[0].lecture_code_practice_id,
             inputHead,
             inputBody,
             inputTail,
