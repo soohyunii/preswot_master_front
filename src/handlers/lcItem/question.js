@@ -64,7 +64,7 @@ export default class QuestionHandler extends LcItemHandler {
     if (inputTail.testCaseList.length > 0) {
       inputTail.testCaseList.forEach((testcase) => {
         questionService.postQuestionTestCase({
-          questionId: res1.data.question_id,
+          questionId,
           input: testcase.input,
           output: testcase.output,
         });

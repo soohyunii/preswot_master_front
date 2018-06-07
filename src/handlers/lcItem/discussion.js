@@ -8,7 +8,7 @@ export default class SurveyHandler extends LcItemHandler {
   }
 
   // @Override
-  static async postChildLectureItem({ lcItemId, inputBody, inputTail }) {
+  static async postChildLectureItem({ lcItemId, inputBody, inputTail }) { // eslint-disable-line no-unused-vars, max-len
     /*
       TODO
       현재 post discussion은 없음.
