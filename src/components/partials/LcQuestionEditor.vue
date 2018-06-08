@@ -103,7 +103,7 @@
       </el-form-item>
     </template>
 
-    <template v-if="inputBody.questionType === 'SQL'">
+    <div v-show="inputBody.questionType === 'SQL'">
       <el-form-item label="SQLite">
         <el-upload
         action="#"
@@ -116,9 +116,9 @@
         </el-upload>
       </el-form-item>
       <el-form-item label="답">
-        <el-input v-model="inputTail.question" placeholder="내용을 입력해주세요." type="textarea"></el-input>
+        <el-input v-model="inputTail.answer" placeholder="내용을 입력해주세요." type="textarea"></el-input>
       </el-form-item>
-    </template>
+    </div>
 
     <el-form-item label="키워드" id="keyword">
       <el-autocomplete
@@ -151,8 +151,6 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-
 export default {
   name: 'LcQuestionEditor',
   data() {
@@ -203,13 +201,12 @@ export default {
   methods: {
     onChangeBody() {
       const vm = this;
-      // console.log((vm.$refs.sqlUpload.uploadFiles !== undefined) ? vm.$refs.sqlUpload.uploadFiles : null);
       vm.inputTail = Object.assign({}, vm.initialInputTail);
       if (vm.inputBody.questionType === 'MULTIPLE_CHOICE') {
         vm.$set(vm.inputTail, 'questionList', []);
       }
       if (vm.inputBody.questionType === 'SQL') {
-        vm.$set(vm.inputTail, 'sqlFileUidGuidList', vm.$refs.sqlUpload.uploadFiles);
+        vm.$set(vm.inputTail, 'sqlFile', vm.$refs.sqlUpload.uploadFiles);
       }
     },
     querySearch(queryString, cb) {
