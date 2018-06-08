@@ -131,6 +131,7 @@ export default {
       const res = await classService.getMainClassLists();
       const mainClass = res.data.main_classes;
       for (let i = 0; i < mainClass.length; i += 1) {
+        mainClass[i].classId = mainClass[i].class_id;
         mainClass[i].title = mainClass[i].name;
         mainClass[i]['teacher-list'] = [mainClass[i].master_name];
         const a = new Date(mainClass[i].start_time);

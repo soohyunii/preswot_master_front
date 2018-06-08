@@ -7,7 +7,8 @@
     <h5 v-for="teacher in props.teacherList" :key="teacher">{{ teacher }}</h5>
     <p v-if="props.startDateStr != undefined">{{ props.startDateStr }} ~ {{ props.endDateStr }}</p>
     <p>{{ props.description }}</p>
-    <el-button style="width: 100%" @click="props.onClick()">수강 하기</el-button>
+    <el-button style="width: 100%" @click="props.onClick()" disabled>수강 하기</el-button>
+    <el-button style="width: 100%; margin-left:0px; margin-top:6px;" @click="props.onClick('details', props.classId)">상세 보기</el-button>
   </div>
 </template>
 

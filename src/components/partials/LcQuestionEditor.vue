@@ -151,7 +151,6 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
 
 export default {
   name: 'LcQuestionEditor',
@@ -203,7 +202,6 @@ export default {
   methods: {
     onChangeBody() {
       const vm = this;
-      // console.log((vm.$refs.sqlUpload.uploadFiles !== undefined) ? vm.$refs.sqlUpload.uploadFiles : null);
       vm.inputTail = Object.assign({}, vm.initialInputTail);
       if (vm.inputBody.questionType === 'MULTIPLE_CHOICE') {
         vm.$set(vm.inputTail, 'questionList', []);

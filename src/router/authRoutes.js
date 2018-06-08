@@ -23,7 +23,6 @@ import TeacherLectureJournal from '../components/pages/TeacherLectureJournal';
 import ClassQuestionAnswer from '../components/pages/ClassQuestionAnswer';
 import ClassQuestionAnswerWrite from '../components/pages/ClassQuestionAnswerWrite';
 import ClassQuestionAnswerDetail from '../components/pages/ClassQuestionAnswerDetail';
-import ClassDetail from '../components/pages/ClassDetail';
 import test from '../components/partials/test';
 
 
@@ -148,15 +147,6 @@ export default function authRoutes(root) {
       component: ClassQuestionAnswer,
       meta: {
         title: 'Class Q&A',
-        auth: true,
-      },
-    },
-    {
-      path: '/class/:classId/classdetail',
-      name: 'ClassDetail',
-      component: ClassDetail,
-      meta: {
-        title: 'Class Detail',
         auth: true,
       },
     },
