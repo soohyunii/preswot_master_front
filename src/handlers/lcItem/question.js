@@ -8,6 +8,25 @@ export default class QuestionHandler extends LcItemHandler {
   //   super.postLcItem();
   //   console.log('QuestionHandler postLcItem');
   // }
+  /* eslint-disable no-param-reassign */
+  static initViewModel(vm) {
+    const item = vm.lectureItem;
+    const q = item.questions[0];
+    vm.inputTail.question = q.question;
+    vm.inputTail.difficulty = q.difficulty;
+    // TODO: keyword init
+    switch (q.type) {
+      case 1: { // 단답
+        vm.inputBody.questionType = 'SHORT_ANSWER';
+        vm.inputTail.answer = q.answer[0];
+        break;
+      }
+      default: {
+        throw new Error(`not defined question type ${q.type}`);
+      }
+    }
+  }
+  /* eslint-enable no-param-reassign */
 
   static async postChildLectureItem({ lcItemId, inputBody, inputTail }) {
     const res1 = await questionService.postQuestion({
@@ -31,7 +50,7 @@ export default class QuestionHandler extends LcItemHandler {
     await questionService.putQuestion({
       questionId,
       question: inputTail.question,
-      // choice:
+      choice: inputTail.questionList,
       answer,
       difficulty: inputTail.difficulty,
     });
@@ -40,5 +59,26 @@ export default class QuestionHandler extends LcItemHandler {
       questionId,
       data: inputTail.assignedKeywordList,
     });
+
+    // SW인 경우 testCase 입력
+    if (inputTail.testCaseList.length > 0) {
+      inputTail.testCaseList.forEach((testcase) => {
+        questionService.postQuestionTestCase({
+          questionId: res1.data.question_id,
+          input: testcase.input,
+          output: testcase.output,
+        });
+      });
+    }
+
+    // SQL인 경우 fileList 입력
+    if (inputTail.sqlFileUidGuidList !== undefined) {
+      inputTail.sqlFileUidGuidList.forEach((element) => {
+        questionService.postQuestionSQLiteFile({
+          questionId,
+          file: element.raw,
+        });
+      });
+    }
   }
 }

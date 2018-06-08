@@ -1,5 +1,5 @@
 <template>
-  <div id="login_wrapper">
+  <div id="login_wrapper" class="bt-container">
     <el-container>
 
       <el-row>
@@ -60,9 +60,9 @@
         </el-col>
       </el-row>
     </el-container>
-    jwt: {{ jwt }} <br />
+    <!-- jwt: {{ jwt }} <br />
     input: {{ input }} <br />
-    redirectTo: {{ redirectTo }}
+    redirectTo: {{ redirectTo }} -->
   </div>
 </template>
 
@@ -74,8 +74,10 @@ export default {
   data() {
     return {
       input: {
-        email: 'adoji92@gmail.com',
-        password: 'adjadj1234',
+        // email: 'adoji92@gmail.com',
+        // password: 'adjadj1234',
+        email: '',
+        password: '',
       },
       isModalVisible: false,
       findingPasswordEmail: '',

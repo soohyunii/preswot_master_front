@@ -5,7 +5,8 @@
       <!-- TODO: replace span with :xs, :sm, :md, :lg, :xl -->
       <el-col :span="13">
         <el-button
-        :type="appTheme" plain
+          v-if="!isProd"
+          :type="appTheme"
           id="navigation_toggle"
           @click="onClick('TOGGLE_NAVIGATION')"
         >
@@ -13,15 +14,14 @@
         </el-button>
         <router-link to="/">
           <!-- TODO: replace 브랜드 로고 -->
-          <el-button :type="appTheme" plain>Brand Logo</el-button>
+          <el-button :type="appTheme" plain>Preswot</el-button>
         </router-link>
         <!-- TODO: translate placeholder -->
-        <el-input placeholder="Please input" v-model="searchText">
+        <!-- <el-input placeholder="Please input" v-model="searchText" style="max-width: 250px;">
         </el-input>
-        <!-- <el-button icon="el-icon-search" type="primary"></el-button> -->
         <el-button :type="appTheme" plain>
           <i class="fas fa-search"></i>
-        </el-button>
+        </el-button> -->
       </el-col>
 
       <el-col :span="11">
@@ -44,15 +44,15 @@
               </el-button>
             </router-link>
 
-            <router-link to="/a/teacher/class" v-show="isJwtValid">
+            <router-link v-if="!isProd" to="/a/teacher/class" v-show="isJwtValid">
               <el-button :type="appTheme" plain>
-                <i class="fas fa-edit"></i>
+                <i class="fas fa-edit"></i>1
               </el-button>
             </router-link>
 
              <router-link to="/a/teacher/NNclass" v-show="isJwtValid" id="btn_teacher_home">
               <el-button :type="appTheme" plain>
-                <i class="fas fa-edit"></i>2
+                <i class="fas fa-edit"></i> <span v-show="!isProd">2</span>
               </el-button>
             </router-link>
 
@@ -115,6 +115,7 @@ export default {
   data() {
     return {
       searchText: '',
+      isProd: document.URL.includes('preswot'),
     };
   },
   computed: {

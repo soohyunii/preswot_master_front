@@ -55,8 +55,13 @@ export default {
   },
   postQuestionTestCase({
     questionId,
+    input,
+    output,
   }) {
-    return http.post(`/questions/${questionId}/testcases`);
+    return http.post(`/questions/${questionId}/testcases`, {
+      input,
+      output,
+    });
   },
   putQuestionTestCase({
     questionId,
