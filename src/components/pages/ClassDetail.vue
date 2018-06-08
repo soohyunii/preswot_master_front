@@ -5,14 +5,14 @@
       <div class="class-title-info">
         <div class="left">
           <div class="top">
-            한국사
+            {{classes.name}}
           </div>
           <div class="bottom">
-            설민석 강사
+            {{classes.master.name}}
           </div>
         </div>
         <div class="right">
-          <el-button>수강하기</el-button>
+          <el-button disabled>수강하기</el-button>
         </div>
       </div>
     </div>
@@ -26,10 +26,7 @@
             <img :src="require('@/assets/profi.png')" class="profile-pic">
           </div>
           <div class="right">
-            가즈아@@@@@@@@@@@@@@@@@  가즈아@@@@@@@@@@@@@@@@@  가즈아@@@@@@@@@@@@@@@@@  가즈아@@@@@@@@@@@@@@@@@  가즈아@@@@@@@@@@@@@@@@@
-            가즈아@@@@@@@@@@@@@@@@@  가즈아@@@@@@@@@@@@@@@@@  가즈아@@@@@@@@@@@@@@@@@  가즈아@@@@@@@@@@@@@@@@@  가즈아@@@@@@@@@@@@@@@@@
-            가즈아@@@@@@@@@@@@@@@@@  가즈아@@@@@@@@@@@@@@@@@  가즈아@@@@@@@@@@@@@@@@@  가즈아@@@@@@@@@@@@@@@@@  가즈아@@@@@@@@@@@@@@@@@
-            가즈아@@@@@@@@@@@@@@@@@  가즈아@@@@@@@@@@@@@@@@@  가즈아@@@@@@@@@@@@@@@@@
+            {{classes.lecturer_description}}
           </div>
         </div>
       </div>
@@ -40,10 +37,7 @@
           <img :src="require('@/assets/test.jpg')" height="300" width="100%">
         </div>
         <div class="wrapper-box-row">
-          가즈아@@@@@@@@@@@@@@@@@  가즈아@@@@@@@@@@@@@@@@@  가즈아@@@@@@@@@@@@@@@@@  가즈아@@@@@@@@@@@@@@@@@  가즈아@@@@@@@@@@@@@@@@@
-          가즈아@@@@@@@@@@@@@@@@@  가즈아@@@@@@@@@@@@@@@@@  가즈아@@@@@@@@@@@@@@@@@  가즈아@@@@@@@@@@@@@@@@@  가즈아@@@@@@@@@@@@@@@@@
-          가즈아@@@@@@@@@@@@@@@@@  가즈아@@@@@@@@@@@@@@@@@  가즈아@@@@@@@@@@@@@@@@@  가즈아@@@@@@@@@@@@@@@@@  가즈아@@@@@@@@@@@@@@@@@
-          가즈아@@@@@@@@@@@@@@@@@  가즈아@@@@@@@@@@@@@@@@@  가즈아@@@@@@@@@@@@@@@@@
+          {{classes.description}}
         </div>
       </div>
     </div>
@@ -51,27 +45,40 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
-import utils from '../../utils';
+import classService from '../../services/classService';
 
 export default {
   name: 'ClassDetail',
   components: {
   },
-  beforeMount() {
+  async mounted() {
+    const vm = this;
+    const b = {
+      id: Number.parseInt(vm.$route.params.classId, 10),
+    };
+    const a = await classService.getClass(b);
+    if (a.data.master.user_profile === null) {
+      a.data.master.user_profile = {};
+      a.data.master.user_profile.client_path = '';
+    }
+    vm.classes = a.data;
   },
   computed: {
-    ...mapState('NNclass', ['popularClassList']),
   },
   data() {
     return {
-      span: 0,
+      classes: {
+        name: null,
+        master: {
+          name: null,
+          user_profile: {
+            client_path: '',
+          },
+        },
+      },
     };
   },
   methods: {
-    ...mapActions('NNclass', [
-      'getPopularClassList',
-    ]),
   },
 };
 </script>
@@ -124,7 +131,10 @@ export default {
 }
 #teacher-info .bottom .left {
   width: 15%;
-  float: left;
+  display: inline-block;
+}
+#teacher-info .bottom .right {
+  display: inline-block;
 }
 #class-info {
   margin-top: 60px;
