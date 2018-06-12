@@ -42,13 +42,13 @@ export default {
     };
     const initialInputTail = {
       assignedKeywordList: [],
+      difficulty: 3,
     };
     return {
       initialInputBody,
       initialInputTail,
       inputBody: Object.assign({}, initialInputBody),
       inputTail: Object.assign({}, initialInputTail),
-      difficulty: 3,
       difficultyList: [5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5, 0],
       keywordList: [ // TODO: extract it to somewhere else
         {
@@ -76,6 +76,11 @@ export default {
       return (link) => {
         return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
       };
+    },
+    reset() {
+      const vm = this;
+      vm.inputBody = Object.assign({}, vm.initialInputBody);
+      vm.inputTail = Object.assign({}, vm.initialInputTail);
     },
     onClick(type, arg) {
       const vm = this;
