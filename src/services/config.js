@@ -12,8 +12,8 @@ const isTest = document.URL.includes('13.124.196.202');
 // const isTest = true;
 if (isTest) {
   serverUrl = 'http://13.124.236.81';
-  backPort = 8000;
-  socketPort = 8001;
+  backPort = 8002;
+  socketPort = 8003;
 }
 
 export const baseUrl = `${serverUrl}:${backPort}`;
