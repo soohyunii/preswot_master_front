@@ -85,7 +85,6 @@
                     <div v-else>
                       <el-button icon="el-icon-refresh" @click="onClick('REFRESH_STATISTICS')">새로고침</el-button>
                       <br /> <br />
-                      <!--
                       <div v-if="currentEditingScItem.result">
                         제출자 수: {{currentEditingScItem.result.num_students_total}} <br />
                         <span v-if="currentEditingScItemType === '문항'">
@@ -101,7 +100,6 @@
                           </el-table-column>
                         </el-table>
                       </div>
-                      -->
                     </div>
                   </el-tab-pane>
                 </el-tabs>
