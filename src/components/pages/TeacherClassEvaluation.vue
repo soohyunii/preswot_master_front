@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="bt-container">
     <el-container>
       <el-main v-if="currentTeachingClass">
 
