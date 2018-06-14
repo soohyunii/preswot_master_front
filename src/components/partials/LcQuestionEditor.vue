@@ -151,6 +151,7 @@
 </template>
 
 <script>
+
 export default {
   name: 'LcQuestionEditor',
   data() {

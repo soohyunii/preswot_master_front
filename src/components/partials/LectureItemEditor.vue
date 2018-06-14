@@ -91,6 +91,7 @@ import LcDiscussionEditor from './LcDiscussionEditor';
 import LcPracticeEditor from './LcPracticeEditor';
 import QuestionHandler from '../../handlers/lcItem/question';
 import PracticeHandler from '../../handlers/lcItem/practice';
+import DiscussionHandler from '../../handlers/lcItem/discussion';
 import utils from '../../utils';
 
 export default {
@@ -120,6 +121,10 @@ export default {
         }
         case 'practice': {
           PracticeHandler.initViewModel(vm);
+          break;
+        }
+        case 'discussion': {
+          DiscussionHandler.initViewModel(vm);
           break;
         }
         default: {

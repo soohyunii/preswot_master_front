@@ -8,8 +8,8 @@
         class="upload-demo"
         action="#"
         :on-remove="handleRemove"
-        :before-remove="beforeRemove"
         multiple
+        :before-remove="beforeRemove"
         :limit="3"
         :on-exceed="handleExceed"
         :http-request="doUpload">
