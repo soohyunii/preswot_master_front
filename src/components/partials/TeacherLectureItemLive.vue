@@ -7,6 +7,7 @@
     </div>
     <lecture-item
       :data="data"
+      :lectureItemId="lectureItemId"
       :onClick="onClick"/>
   </div>
 </template>

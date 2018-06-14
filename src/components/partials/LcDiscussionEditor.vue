@@ -21,5 +21,12 @@ export default {
       inputTail: Object.assign({}, initialInputTail),
     };
   },
+  methods: {
+    reset() {
+      const vm = this;
+      vm.inputBody = Object.assign({}, vm.initialInputBody);
+      vm.inputTail = Object.assign({}, vm.initialInputTail);
+    },
+  },
 };
 </script>

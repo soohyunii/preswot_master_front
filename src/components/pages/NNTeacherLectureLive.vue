@@ -33,6 +33,10 @@
         />
       </el-col>
     </el-row>
+    <div class="statusbar">
+      <!-- <div class="statusbar_for_click" @click="onClick('TOGGLE_STATUS_INFO')"></div> -->
+      <teacher-lecture-live-summary :lectureId="lectureId"/>
+    </div>
   </div>
 </template>
 
@@ -41,6 +45,7 @@ import lectureService from '../../services/lectureService';
 import YoutubeVideo from '../partials/YoutubeVideo';
 import TeacherLectureItemListLive from '../partials/TeacherLectureItemListLive';
 import TeacherLectureItemLive from '../partials/TeacherLectureItemLive';
+import TeacherLectureLiveSummary from '../partials/TeacherLectureLiveSummary';
 
 export default {
   name: 'TeacherLectureLive',
@@ -67,6 +72,7 @@ export default {
     YoutubeVideo,
     TeacherLectureItemListLive,
     TeacherLectureItemLive,
+    TeacherLectureLiveSummary,
   },
   methods: {
     onClick(type, data) {
@@ -118,5 +124,22 @@ export default {
 }
 .bg-purple-light {
   background: #e5e9f2;
+}
+.statusbar {
+  position:fixed;
+  left:0px;
+  bottom:0px;
+  width:100%;
+  padding: 8px 0px 5px 0px;
+  background:rgba(0, 0, 0, 0.6);
+  color: white;
+  -webkit-transition: max-height 1s;
+  -moz-transition: max-height 1s;
+  -ms-transition: max-height 1s;
+  -o-transition: max-height 1s;
+  transition: max-height 1s;
+  overflow: hidden;
+  height:100%;
+  max-height:25px;
 }
 </style>

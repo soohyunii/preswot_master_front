@@ -67,28 +67,23 @@
     </div>
     <div v-if="data.type === 3">
       <p>토론</p>
-      <el-input type="textarea" :autosize="{ minRows: 10, maxRows: 15 }" :disabled="true"></el-input>
-      <el-input placeholder="내용을 입력해주세요." v-model="input"></el-input>
-      <el-button style="float:right" type="primary" @click="sendMsg([data.type, input])">제출</el-button>
+      <discussion :lectureItemId="lectureItemId"/>
     </div>
   </div>
 </template>
 
 <script>
+import Discussion from './NNDiscussion';
+
 export default {
-  props: ['data', 'onClick'],
+  props: ['data', 'onClick', 'lectureItemId'],
   data() {
     return {
       answer: '',
-      input: '',
     };
   },
-  methods: {
-    sendMsg(args) {
-      const vm = this;
-      vm.onClick('SUBMIT', args);
-      vm.input = '';
-    },
+  components: {
+    Discussion,
   },
 };
 </script>
