@@ -7,6 +7,9 @@ export default {
   getClassLists() {
     return http.get('/classes');
   },
+  getMainClassLists() {
+    return http.get('/main_classes');
+  },
   getMyClassList() { //
     return http.get('/classes/my');
   },

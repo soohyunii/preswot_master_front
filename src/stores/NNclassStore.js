@@ -128,113 +128,19 @@ export default {
       });
     },
     async getPopularClassList({ commit }) {
+      const res = await classService.getMainClassLists();
+      const mainClass = res.data.main_classes;
+      for (let i = 0; i < mainClass.length; i += 1) {
+        mainClass[i].classId = mainClass[i].class_id;
+        mainClass[i].title = mainClass[i].name;
+        mainClass[i]['teacher-list'] = [mainClass[i].master_name];
+        const a = new Date(mainClass[i].start_time);
+        const b = new Date(mainClass[i].end_time);
+        mainClass[i].startDateStr = a.toLocaleDateString();
+        mainClass[i].endDateStr = b.toLocaleDateString();
+      }
       commit('updatePopularClassList', {
-        popularClassList: [{
-          title: '한국사',
-          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
-          classId: 1,
-          teacherlist: ['설민석'],
-          startDateStr: '2018-01-05',
-          endDateStr: '2018-05-09',
-        }, {
-          title: '미국사',
-          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
-          classId: 1,
-          teacherlist: ['미미미'],
-          startDateStr: '2018-01-05',
-          endDateStr: '2018-05-09',
-        }, {
-          title: '중국사',
-          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
-          classId: 1,
-          teacherlist: ['중중중'],
-          startDateStr: '2018-01-05',
-          endDateStr: '2018-05-09',
-        }, {
-          title: '일국사',
-          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
-          classId: 1,
-          teacherlist: ['일일일'],
-          startDateStr: '2018-01-05',
-          endDateStr: '2018-05-09',
-        }, {
-          title: '러국사',
-          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
-          classId: 1,
-          teacherlist: ['러러러'],
-          startDateStr: '2018-01-05',
-          endDateStr: '2018-05-09',
-        }, {
-          title: '국사',
-          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
-          classId: 1,
-          teacherlist: ['러러러'],
-          startDateStr: '2018-01-05',
-          endDateStr: '2018-05-09',
-        }, {
-          title: '국사2',
-          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
-          classId: 1,
-          teacherlist: ['러러러'],
-          startDateStr: '2018-01-05',
-          endDateStr: '2018-05-09',
-        }, {
-          title: '국사3',
-          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
-          classId: 1,
-          teacherlist: ['러러러'],
-          startDateStr: '2018-01-05',
-          endDateStr: '2018-05-09',
-        }, {
-          title: '국사4',
-          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
-          classId: 1,
-          teacherlist: ['러러러'],
-          startDateStr: '2018-01-05',
-          endDateStr: '2018-05-09',
-        }, {
-          title: '국사5',
-          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
-          classId: 1,
-          teacherlist: ['러러러'],
-          startDateStr: '2018-01-05',
-          endDateStr: '2018-05-09',
-        }, {
-          title: '국사6',
-          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
-          classId: 1,
-          teacherlist: ['러러러'],
-          startDateStr: '2018-01-05',
-          endDateStr: '2018-05-09',
-        }, {
-          title: '국사7',
-          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
-          classId: 1,
-          teacherlist: ['러러러'],
-          startDateStr: '2018-01-05',
-          endDateStr: '2018-05-09',
-        }, {
-          title: '국사8',
-          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
-          classId: 1,
-          teacherlist: ['러러러'],
-          startDateStr: '2018-01-05',
-          endDateStr: '2018-05-09',
-        }, {
-          title: '국사9',
-          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
-          classId: 1,
-          teacherlist: ['러러러'],
-          startDateStr: '2018-01-05',
-          endDateStr: '2018-05-09',
-        }, {
-          title: '국사10',
-          description: '과목 소개 불라불라 불라불라불라불라불라불라불라불라',
-          classId: 1,
-          teacherlist: ['러러러'],
-          startDateStr: '2018-01-05',
-          endDateStr: '2018-05-09',
-        }],
+        popularClassList: mainClass,
       });
     },
   },

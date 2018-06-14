@@ -6,6 +6,7 @@ import FindingPasswordPage from '../components/pages/FindingPasswordPage';
 import Register from '../components/pages/Register';
 import NotFound from '../components/pages/NotFound';
 import ClassIndex from '../components/pages/ClassIndex';
+import ClassDetail from '../components/pages/ClassDetail';
 // import Test from '../components/TestComponent';
 import authRoutes from './authRoutes';
 
@@ -38,6 +39,15 @@ export default new Router({
       path: '/classes',
       name: 'ClassIndex',
       component: ClassIndex,
+    },
+    {
+      path: '/class/:classId/classdetail',
+      name: 'ClassDetail',
+      component: ClassDetail,
+      meta: {
+        title: 'Class Detail',
+        auth: true,
+      },
     },
     ...authRoutes('/a'),
     {

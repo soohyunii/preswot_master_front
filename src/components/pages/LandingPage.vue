@@ -37,8 +37,13 @@ export default {
     ...mapActions('NNclass', [
       'getPopularClassList',
     ]),
-    async onClick(type) {
+    async onClick(type, classId) {
       switch (type) {
+        case 'details': {
+          const vm = this;
+          vm.$router.push(`/class/${classId}/classdetail`);
+          break;
+        }
         default: {
           console.log('@LandingPage.vue/onClick(type)/default : 할 일을 입력하세요.'); // eslint-disable-line
           // throw new Error(`not defined type ${type}`);
