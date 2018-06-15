@@ -12,7 +12,7 @@
         <youtube-video />
       </el-col>
       <el-col :span="12">
-        <teacher-lecture-item-live        
+        <teacher-lecture-item-live
         v-if="lectureItemIdList[0] !== -1"
         :lectureItemId="lectureItemIdList[0]"
         :onClick="onClick"
@@ -26,7 +26,7 @@
         :onClick="onClick"/>
       </el-col>
       <el-col :span="12">
-        <teacher-lecture-item-live        
+        <teacher-lecture-item-live
         v-if="lectureItemIdList[1] !== -1"
         :lectureItemId="lectureItemIdList[1]"
         :onClick="onClick"

@@ -22,8 +22,8 @@ export default {
     const res = await lectureItemService.getLectureItem({
       lectureItemId: vm.lectureItemId,
     });
-    console.log('@TeacherLectureItemLive: res.data = ');
-    console.log(res.data);
+    console.log('@TeacherLectureItemLive: res.data = '); // eslint-disable-line
+    console.log(res.data); // eslint-disable-line
     vm.data = res.data;
   },
   props: ['onClick', 'lectureItemId'],
