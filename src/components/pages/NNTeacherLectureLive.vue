@@ -12,7 +12,7 @@
         <youtube-video />
       </el-col>
       <el-col :span="12">
-        <teacher-lecture-item-live        
+        <teacher-lecture-item-live
         v-if="lectureItemIdList[0] !== -1"
         :lectureItemId="lectureItemIdList[0]"
         :onClick="onClick"
@@ -26,7 +26,7 @@
         :onClick="onClick"/>
       </el-col>
       <el-col :span="12">
-        <teacher-lecture-item-live        
+        <teacher-lecture-item-live
         v-if="lectureItemIdList[1] !== -1"
         :lectureItemId="lectureItemIdList[1]"
         :onClick="onClick"
@@ -81,11 +81,19 @@ export default {
         case 'SHOW': {
           const index = vm.lectureItemIdList.indexOf(-1);
           if (index === -1) {
-            console.log('빈 슬롯이 없습니다. 먼저 슬롯을 확보하세요.');
+            vm.$notify({
+              title: '알림',
+              message: '빈 슬롯이 없습니다. 먼저 슬롯을 확보하세요.',
+              type: 'warning',
+            });
             break;
           }
           if (vm.lectureItemIdList.indexOf(data) !== -1) {
-            console.log('이미 추가된 항목입니다. 먼저 슬롯을 확인하세요.');
+            vm.$notify({
+              title: '알림',
+              message: '이미 추가된 항목입니다. 먼저 슬롯을 확인하세요.',
+              type: 'warning',
+            });
             break;
           }
           vm.lectureItemIdList.splice(index, 1, data);
@@ -94,15 +102,23 @@ export default {
         case 'HIDE': {
           const index = vm.lectureItemIdList.indexOf(data);
           if (index === -1) {
-            console.log('이미 삭제된 항목입니다.');
+            vm.$notify({
+              title: '알림',
+              message: '이미 삭제된 항목입니다.',
+              type: 'warning',
+            });
             break;
           }
           vm.lectureItemIdList.splice(index, 1, -1);
           break;
         }
         case 'SUBMIT': {
-          console.log('onClick(SUBMIT) 이벤트 발생');
-          console.log('data = ', data);
+          // TODO: SUBMIT 처리
+          vm.$notify({
+            title: '알림',
+            message: '공사중인 기능입니다...',
+            type: 'warning',
+          });
           break;
         }
         default: {

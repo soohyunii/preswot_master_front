@@ -141,7 +141,7 @@
       },
       pShare: {
         get() {
-          const vm = this;
+          // const vm = this;
           // return vm.currentEditingScItem.discussionShare;
           return true;
         },
