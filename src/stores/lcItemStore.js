@@ -114,10 +114,29 @@ export default {
           });
           break;
         }
-        case 2: {
+        case 1: { // * 설문
+          await SurveyHandler.putLcItem({
+            lectureItemId: state.currentEditingLectureItemId,
+            surveyId: state.lectureItem.surveys[0].survey_id,
+            inputHead,
+            inputBody,
+            inputTail,
+          });
+          break;
+        }
+        case 2: { // 실습
           await PracticeHandler.putLcItem({
             lectureItemId: state.currentEditingLectureItemId,
             practiceId: state.lectureItem.lecture_code_practices[0].lecture_code_practice_id,
+            inputHead,
+            inputBody,
+            inputTail,
+          });
+          break;
+        }
+        case 3: { // 토론
+          await DiscussionHandler.putLcItem({
+            lectureItemId: state.currentEditingLectureItemId,
             inputHead,
             inputBody,
             inputTail,
