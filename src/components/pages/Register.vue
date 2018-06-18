@@ -13,6 +13,7 @@
 
             <el-form-item :label="$t('REG.PASSWORD_LABEL')" prop="password" id="password">
               <el-input :placeholder="$t('LOGIN.PASSWORD_PH')" v-model="input.password" type="password"></el-input>
+              <br />* 문자, 숫자, 특수문자를 포함한 8글자 이상의 비밀번호
             </el-form-item>
 
             <el-form-item :label="$t('REG.PASSWORD_CHECK_LABEL')" prop="password2" id="password2">
@@ -60,7 +61,7 @@
             <!-- 핸드폰 번호 인증 어떻게?? -->
             <el-form-item :label="$t('REG.PHONE_NUMBER_LABEL')" prop="phoneNumber" id="phoneNumber">
               <el-input :placeholder="$t('REG.PHONE_NUMBER_PH')" v-model="input.phoneNumber" v-mask="['###-####-####', '###-###-####']" type="tel"></el-input>
-              <el-button type="primary" @click="dummy()">{{$t('REG.PHONE_NUMBER_VERIFY_BUTTON')}}</el-button>
+              <!-- <el-button type="primary" @click="dummy()">{{$t('REG.PHONE_NUMBER_VERIFY_BUTTON')}}</el-button> -->
             </el-form-item>
 
             <br />

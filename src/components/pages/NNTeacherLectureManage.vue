@@ -10,7 +10,7 @@
       </el-tab-pane>
       <!-- <el-tab-pane label="강의 자료 및 키워드 등록" name="material"> -->
       <el-tab-pane label="키워드 등록" name="material">
-        <tlm-tab-material-and-keyword-edit />
+        <tlm-tab-material-and-keyword-edit :onClick="onClick"/>
       </el-tab-pane>
       <el-tab-pane label="강의 아이템 수정" name="item">
         <tlm-tab-lecture-item-edit />
