@@ -2,7 +2,7 @@
   <div id="teacher_lecture_index_wrapper" class="bt-container">
     <h2>{{ currentTeachingClass(classId) ? currentTeachingClass(classId).name : '' }}</h2>
     <div class="right-align margin-bottom-15">
-      <el-button>과목진단</el-button>
+      <el-button @click="onClick('EVALUATION')">과목진단</el-button>
       <el-button @click="onClick('ANALYSIS')">과목저널링</el-button>
       <el-button @click="onClick('Q&A')">Q&amp;A</el-button>
     </div>
@@ -85,8 +85,12 @@ export default {
     ]),
     onClick(type) {
       const vm = this;
-      const userId = utils.getUserIdFromJwt();
+      // const userId = utils.getUserIdFromJwt();
       switch (type) {
+        case 'EVALUATION': {
+          vm.$router.push(`/a/teacher/class/${vm.classId}/evaluation`);
+          break;
+        }
         case 'ANALYSIS': {
           vm.$router.push(`/a/teacher/class/${vm.classId}/journal`);
           break;
