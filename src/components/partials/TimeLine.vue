@@ -1,5 +1,5 @@
 <template>
-  <div id='TimeChart' />
+  <div id='TimeChart' v-if="chartData.length>0" />
 </template>
 
 <script>
