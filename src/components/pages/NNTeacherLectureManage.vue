@@ -15,11 +15,9 @@
       <el-tab-pane label="강의 아이템 수정" name="item">
         <tlm-tab-lecture-item-edit />
       </el-tab-pane>
-      <!--
       <el-tab-pane label="강의 허용 프로그램 설정" name="program">
-        강의 허용 프로그램 설정 부분뷰
+        <tlm-tab-allowed-program />
       </el-tab-pane>
-      -->
       <el-tab-pane label="강의 지식맵 관리" name="kmap">
         <knowledgeMap />
       </el-tab-pane>
@@ -37,6 +35,7 @@ import { mapState, mapActions, mapGetters, mapMutations } from 'vuex';
 import NNTeacherLectureNew from './NNTeacherLectureNew';
 import TlmTabMaterialAndKeywordEdit from '../partials/TlmTabMaterialAndKeywordEdit';
 import TlmTabLectureItemEdit from '../partials/TlmTabLectureItemEdit';
+import TlmTabAllowedProgram from '../partials/TlmTabAllowedProgram';
 // import utils from '../../utils';
 // import MaterialUpload from '../partials/MaterialUpload';
 // import RecommendKeywords from '../partials/RecommendKeywords';
@@ -50,11 +49,12 @@ export default {
     TeacherLectureNew: NNTeacherLectureNew,
     TlmTabMaterialAndKeywordEdit,
     TlmTabLectureItemEdit,
+    TlmTabAllowedProgram,
     KnowledgeMap,
   },
   data() {
     return {
-      activeTab: 'item',
+      activeTab: 'program',
     };
   },
   async created() {
