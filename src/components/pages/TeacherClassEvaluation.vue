@@ -8,11 +8,11 @@
             <h2>{{ currentTeachingClass.name }}</h2>
           </el-col>
           <el-col :span="8">
-            <el-menu class="bt-pull-right" :default-active="activeIndex" mode="horizontal" @select="handelSelect">
+            <el-menu class="bt-pull-right" :default-active="activeIndex" mode="horizontal">
               <el-submenu index="2">
-                <template slot="title">강의 선택</template>
-                <el-menu-item index="0">과목 통합</el-menu-item>
-                <el-menu-item v-for="item in scenarioList" :index="item.lecture_id.toString()" :key="item.name">
+                <template slot="title">{{ activeLecture }}</template>
+                <el-menu-item index="0" @click="handelSelect(0, '과목 통합')">과목 통합</el-menu-item>
+                <el-menu-item v-for="item in scenarioList" :index="item.lecture_id.toString()" :key="item.name" @click="handelSelect(item.lecture_id.toString(), item.name)">
                   {{ item.name }}
                 </el-menu-item>
               </el-submenu>
@@ -204,6 +204,7 @@ export default {
       coverage: null,
       forWordCloud: null,
       activeIndex: '0',
+      activeLecture: '과목 통합',
       radio1: 'Question',
       activeTab: 'keyword',
     };
@@ -236,9 +237,10 @@ export default {
       'getClassCoverage',
     ]),
     ...mapActions('sc', ['getScCoverage']),
-    async handelSelect(key) {
+    async handelSelect(index, name) {
       const vm = this;
-      const keyInt = parseInt(key, 10);
+      const keyInt = parseInt(index, 10);
+      vm.activeLecture = name;
       if (keyInt === 0) {
         await vm.getClassCoverage({ type: 'TEACHER' });
         vm.coverage = vm.currentClassCoverage;
