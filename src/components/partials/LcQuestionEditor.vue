@@ -151,6 +151,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 
 export default {
   name: 'LcQuestionEditor',
@@ -168,18 +169,17 @@ export default {
       initialInputTail,
       inputBody: Object.assign({}, initialInputBody),
       inputTail: Object.assign({}, initialInputTail),
+/*
       keywordList: [ // TODO: extract it to somewhere else
         {
           value: '키워드1',
-          label: '키워드1',
         }, {
           value: '키워드2',
-          label: '키워드2',
         }, {
           value: '키워드3',
-          label: '키워드3',
         },
       ],
+*/
       difficultyList: [5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5, 0],
       languageList: [
         {
@@ -199,6 +199,15 @@ export default {
       initFileList: [], // 초기 파일 목록이며, 양방향 바인딩에 사용되지 않음.
     };
   },
+  computed: {
+    ...mapState('lc', [
+      'keywordList',
+    ]),
+    modifiedKeywordList() {
+      const vm = this;
+      return vm.keywordList.map(x => ({ value: x }));
+    },
+  },
   methods: {
     onChangeBody() {
       const vm = this;
@@ -213,7 +222,7 @@ export default {
     querySearch(queryString, cb) {
       const vm = this;
       const results = queryString ?
-        vm.keywordList.filter(vm.createFilter(queryString)) : vm.keywordList;
+        vm.modifiedKeywordList.filter(vm.createFilter(queryString)) : vm.modifiedKeywordList;
       // call callback function to return suggestions
       cb(results);
     },
@@ -232,6 +241,22 @@ export default {
       const vm = this;
       switch (type) {
         case 'ADD_KEYWORD': {
+          if (vm.keywordList.indexOf(vm.inputTail.keywordName) === -1) {
+            vm.$notify({
+              title: '알림',
+              message: '키워드 등록 탭에 등록되지 않은 키워드는 등록할 수 없습니다.',
+              type: 'warning',
+            });
+            break;
+          }
+          if (vm.inputTail.assignedKeywordList.map(x => x.keyword).indexOf(vm.inputTail.keywordName) !== -1) {
+            vm.$notify({
+              title: '알림',
+              message: '이미 등록한 키워드는 등록할 수 없습니다.',
+              type: 'warning',
+            });
+            break;
+          }
           vm.inputTail.assignedKeywordList.push({
             keyword: vm.inputTail.keywordName,
             score: vm.inputTail.keywordPoint,
