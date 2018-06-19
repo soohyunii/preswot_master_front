@@ -1,5 +1,12 @@
 // import utils from '../utils';
 import lectureService from '../services/lectureService';
+// TODO: keyword 관련된 애들 따로 store 빼는 게 나을듯.
+// state.recommendKeywordList, keywordList, movedKeywordList, addedKeywordList
+// getters.isKeywordDuplicated, isRecommendKeyword
+// mutations.updateRecommendKeywordList, updateKeywordList, updateMovedKeywordList,
+// updateAddedKeywordList
+// actions.getKeywords, deleteLectureKeywords, postLectureKeywords, deleteKeyword
+// TODO: 끝
 
 export default {
   namespaced: true,
