@@ -251,12 +251,10 @@
         'getAnalysisData',
       ]),
       nullToZero(s) {
-        if (typeof s == 'undefined' || s == null) {
+        if (typeof s === 'undefined' || s === null) {
           return '0';
         }
-        else {
-          return s.toFixed(1).toString();
-        }
+        return s.toFixed(1).toString();
       },
       onClick(type, lectureId) {
         const vm = this;

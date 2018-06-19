@@ -242,12 +242,10 @@
         'getAnalysisData',
       ]),
       nullToZero(s) {
-        if (typeof s == 'undefined' || s == null) {
+        if (typeof s === 'undefined' || s === null) {
           return '0';
         }
-        else {
-          return s.toFixed(1).toString();
-        }
+        return s.toFixed(1).toString();
       },
       onClick(type, lectureId) {
         const vm = this;
@@ -268,6 +266,7 @@
         }
       },
     },
+    /* eslint-enable max-len */
     computed: {
       ...mapState('analysis', ['analysisData', 'lectureId', 'keyword']),
       tableData: {
@@ -380,5 +379,6 @@
         },
       },
     },
+    /* eslint-enable max-len */
   };
 </script>
