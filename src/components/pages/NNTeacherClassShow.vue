@@ -66,7 +66,14 @@ export default {
       if (currentClass && currentClass.lectures) {
         return currentClass.lectures.map((item) => {
           const type = utils.convertScType(item.type);
-          item.type = type; // eslint-disable-line no-param-reassign
+          // eslint-disable-next-line no-param-reassign
+          item.type = type;
+          // eslint-disable-next-line no-param-reassign
+          item.수강한학생수 = '0'; // TODO 변수명 변경, 값 할당
+          // eslint-disable-next-line no-param-reassign
+          item.capacity = vm.currentTeachingClass(vm.classId).capacity;
+          // eslint-disable-next-line no-param-reassign
+          item.수강생이해도 = '0'; // TODO 변수명 변경, 값 할당
           return item;
         });
       }

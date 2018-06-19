@@ -12,11 +12,17 @@ export default {
   },
   postLecture({
     classId,
-    teacherId,
+    type,
+    name,
+    start_time,
+    end_time,
   }) {
     return http.post('/lectures', {
       classId,
-      teacherId,
+      type,
+      name,
+      start_time,
+      end_time,
     });
   },
   postLecturePlist({

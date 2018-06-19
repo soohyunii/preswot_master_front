@@ -2,10 +2,12 @@
   <div class="wrapper"> <!-- position:absolute의 부모가 되기 위해 relative 속성 부여 -->
     <img :src="require('@/assets/test.jpg')" height="400" width="100%">
     <div class="btn-input-wrapper">
+      <!-- TODO
       <el-button icon="el-icon-search"></el-button>
       <div class="el-input">
         <el-input placeholder="What do you want to learn?" v-model="searchText"></el-input>
       </div>
+      -->
     </div>
   </div>
 </template>

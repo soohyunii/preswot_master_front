@@ -44,6 +44,12 @@
               </el-button>
             </router-link>
 
+            <router-link to="/a/student/NNclass" v-show="isJwtValid">
+              <el-button :type="appTheme" plain>
+                <i class="fas fa-graduation-cap"></i>2
+              </el-button>
+            </router-link>
+
             <router-link v-if="!isProd" to="/a/teacher/class" v-show="isJwtValid">
               <el-button :type="appTheme" plain>
                 <i class="fas fa-edit"></i>1

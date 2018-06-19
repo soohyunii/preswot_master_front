@@ -249,7 +249,8 @@ export default {
             });
             break;
           }
-          if (vm.inputTail.assignedKeywordList.map(x => x.keyword).indexOf(vm.inputTail.keywordName) !== -1) {
+          if (vm.inputTail.assignedKeywordList.map(x => x.keyword)
+            .indexOf(vm.inputTail.keywordName) !== -1) {
             vm.$notify({
               title: '알림',
               message: '이미 등록한 키워드는 등록할 수 없습니다.',
