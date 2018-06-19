@@ -37,5 +37,6 @@ export default {
     RecommendKeywords,
     LectureKeywordsEditor,
   },
+  props: ['onClick'],
 };
 </script>

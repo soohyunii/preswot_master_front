@@ -78,7 +78,8 @@
       />
     </el-form>
     <div class="ps-align-right" id="lecture_item_editor_submit_button_wrapper">
-      <el-button type="primary" @click="onSubmit">추가 / 수정</el-button>
+      <el-button type="primary" v-show="isNewItem" @click="onSubmit">추가</el-button>
+      <el-button type="primary" v-show="!isNewItem" @click="onSubmit">수정</el-button>
     </div>
   </div>
 </template>
@@ -92,6 +93,7 @@ import LcPracticeEditor from './LcPracticeEditor';
 import QuestionHandler from '../../handlers/lcItem/question';
 import PracticeHandler from '../../handlers/lcItem/practice';
 import DiscussionHandler from '../../handlers/lcItem/discussion';
+import SurveyHandler from '../../handlers/lcItem/survey';
 import utils from '../../utils';
 
 export default {
@@ -121,6 +123,10 @@ export default {
         }
         case 'practice': {
           PracticeHandler.initViewModel(vm);
+          break;
+        }
+        case 'survey': {
+          SurveyHandler.initViewModel(vm);
           break;
         }
         case 'discussion': {
