@@ -1,7 +1,12 @@
 <template>
   <div id="teacher_lecture_index_wrapper" class="bt-container">
     <h2>{{ currentTeachingClass(classId) ? currentTeachingClass(classId).name : '' }}</h2>
-
+    <div class="right-align margin-bottom-15">
+      <el-button>과목진단</el-button>
+      <el-button @click="onClick('ANALYSIS')">과목저널링</el-button>
+      <el-button @click="onClick('Report')">성적표</el-button>
+      <el-button @click="onClick('Q&A')">Q&amp;A</el-button>
+    </div>
     <lecture-list
       @row-click="onClickLecture"
       @delete="onClickDelete"
@@ -79,6 +84,27 @@ export default {
       'getMyClassLists',
       'deleteScenario',
     ]),
+    onClick(type) {
+      const vm = this;
+      const userId = utils.getUserIdFromJwt();
+      switch (type) {
+        case 'ANALYSIS': {
+          vm.$router.push(`/a/teacher/class/${vm.classId}/journal`);
+          break;
+        }
+        case 'Report': {
+          vm.$router.push(`/a/report/teacher/${userId}/class/${vm.classId}/`);
+          break;
+        }
+        case 'Q&A': {
+          vm.$router.push(`/a/class/${vm.classId}/questionanswer/0`);
+          break;
+        }
+        default: {
+          throw new Error(`not defined type ${type}`);
+        }
+      }
+    },
     onClickLecture(row, _, column) {
       if (column.label === '-') {
         return;
@@ -135,6 +161,8 @@ export default {
   .right-align {
     text-align: right;
   }
+  .margin-bottom-15 {
+    margin-bottom: 15px;
+  }
 }
 </style>
-
