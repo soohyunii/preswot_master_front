@@ -84,6 +84,9 @@ export default {
     },
     hasChange() {
       const vm = this;
+      if (!vm.allowedProgramList) {
+        return false;
+      }
       const originalAllowedPlistIdSet = new Set(vm.allowedProgramList.map(x => x.plist_id));
       const currentSet = new Set(vm.tempAllowedProgramPlistIdList);
       return !isEqual(originalAllowedPlistIdSet, currentSet);
