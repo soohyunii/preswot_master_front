@@ -12,7 +12,6 @@ import NNclass from './NNclassStore';
 import analysis from './analysisStore';
 import board from './boardStore';
 import kMap from './kMapStore';
-import report from './reportStore';
 
 Vue.use(Vuex);
 
@@ -29,6 +28,5 @@ export default new Vuex.Store({
     analysis,
     board,
     kMap,
-    report,
   },
 });

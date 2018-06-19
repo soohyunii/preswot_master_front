@@ -4,7 +4,6 @@
     <div class="right-align margin-bottom-15">
       <el-button>과목진단</el-button>
       <el-button @click="onClick('ANALYSIS')">과목저널링</el-button>
-      <el-button @click="onClick('Report')">성적표</el-button>
       <el-button @click="onClick('Q&A')">Q&amp;A</el-button>
     </div>
     <lecture-list
@@ -90,10 +89,6 @@ export default {
       switch (type) {
         case 'ANALYSIS': {
           vm.$router.push(`/a/teacher/class/${vm.classId}/journal`);
-          break;
-        }
-        case 'Report': {
-          vm.$router.push(`/a/report/teacher/${userId}/class/${vm.classId}/`);
           break;
         }
         case 'Q&A': {
