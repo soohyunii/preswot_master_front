@@ -268,8 +268,7 @@
         switch (type) {
           case 'STUDENT_STAT': {
             vm.updateLectureId({
-              // eslint-disable-next-line
-              lectureId: lectureId,
+              lectureId,
             });
             vm.updateIsActiveInfo({
               isActiveInfo: true,
@@ -278,8 +277,7 @@
           }
           case 'LECTURE_ANALYSIS': {
             vm.updateLectureId({
-              // eslint-disable-next-line
-              lectureId: lectureId,
+              lectureId,
             });
             vm.$router.push(`/a/teacher/lecture/${lectureId}/journal`);
             break;

@@ -261,8 +261,7 @@
         switch (type) {
           case 'LECTURE_ANALYSIS': {
             vm.updateLectureId({
-              // eslint-disable-next-line
-              lectureId: lectureId,
+              lectureId,
             });
             vm.$router.push(`/a/student/lecture/${lectureId}/${Number.parseInt(vm.$route.params.userId, 10)}/journal`);
             break;
