@@ -251,20 +251,17 @@
         'getAnalysisData',
       ]),
       nullToZero(s) {
-        if (typeof s == 'undefined' || s == null) {
+        if (typeof s === 'undefined' || s === null) {
           return '0';
         }
-        else {
-          return s.toFixed(1).toString();
-        }
+        return s.toFixed(1).toString();
       },
       onClick(type, lectureId) {
         const vm = this;
         switch (type) {
           case 'LECTURE_ANALYSIS': {
             vm.updateLectureId({
-              // eslint-disable-next-line
-              lectureId: lectureId,
+              lectureId,
             });
             vm.$router.push(`/a/student/lecture/${lectureId}/${Number.parseInt(vm.$route.params.userId, 10)}/journal`);
             break;

@@ -258,20 +258,17 @@
         'getAnalysisData',
       ]),
       nullToZero(s) {
-        if (typeof s == 'undefined' || s == null) {
+        if (typeof s === 'undefined' || s === null) {
           return '0';
         }
-        else {
-          return s.toFixed(1).toString();
-        }
+        return s.toFixed(1).toString();
       },
       onClick(type, lectureId) {
         const vm = this;
         switch (type) {
           case 'STUDENT_STAT': {
             vm.updateLectureId({
-              // eslint-disable-next-line
-              lectureId: lectureId,
+              lectureId,
             });
             vm.updateIsActiveInfo({
               isActiveInfo: true,
@@ -280,8 +277,7 @@
           }
           case 'LECTURE_ANALYSIS': {
             vm.updateLectureId({
-              // eslint-disable-next-line
-              lectureId: lectureId,
+              lectureId,
             });
             vm.$router.push(`/a/teacher/lecture/${lectureId}/journal`);
             break;
@@ -290,10 +286,6 @@
             throw new Error('not defined type', type);
           }
         }
-      },
-      mover() {
-        const vm = this;
-        console.log('asd');
       },
     },
     computed: {
