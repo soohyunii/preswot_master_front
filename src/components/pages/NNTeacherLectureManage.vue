@@ -8,7 +8,6 @@
       <el-tab-pane label="기본 정보 수정" name="basic">
         <teacher-lecture-new />
       </el-tab-pane>
-      <!-- <el-tab-pane label="강의 자료 및 키워드 등록" name="material"> -->
       <el-tab-pane label="키워드 등록" name="material">
         <tlm-tab-material-and-keyword-edit :onClick="onClick"/>
       </el-tab-pane>
@@ -21,11 +20,6 @@
       <el-tab-pane label="강의 지식맵 관리" name="kmap">
         <knowledgeMap />
       </el-tab-pane>
-      <!--
-      <el-tab-pane label="채점 관리" name="grade">
-        채점 관리 부분뷰
-      </el-tab-pane>
-      -->
     </el-tabs>
   </div>
 </template>
