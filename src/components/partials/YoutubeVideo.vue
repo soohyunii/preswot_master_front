@@ -21,7 +21,8 @@ import { getIdFromURL } from 'vue-youtube-embed';
 export default {
   name: 'YoutubeVideo',
   computed: {
-    youtubeId: () => (getIdFromURL('https://www.youtube.com/watch?v=xRbPAVnqtcs')),
+    // 영상 로드 시 콘솔창에 Failed to execute 'postMessage' on 'DOMWindow': The target origin provided ('https://www.youtube.com') does not match the recipient window's origin ... 에러 해결을 위해 http로 변경합니다.
+    youtubeId: () => (getIdFromURL('http://www.youtube.com/watch?v=xRbPAVnqtcs')),
   },
 };
 </script>

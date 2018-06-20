@@ -143,5 +143,10 @@ export default {
         popularClassList: mainClass,
       });
     },
+    async postClassUser(_, { classId }) {
+      await classService.postClassUser({
+        id: classId,
+      });
+    },
   },
 };

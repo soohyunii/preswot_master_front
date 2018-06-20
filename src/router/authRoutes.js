@@ -7,6 +7,7 @@ import NNTeacherClassShow from '../components/pages/NNTeacherClassShow';
 import NNTeacherLectureNew from '../components/pages/NNTeacherLectureNew';
 import NNTeacherLectureManage from '../components/pages/NNTeacherLectureManage';
 import NNTeacherLectureLive from '../components/pages/NNTeacherLectureLive';
+import NNStudentClassIndex from '../components/pages/NNStudentClassIndex';
 import TeacherLectureNew from '../components/pages/TeacherLectureNew';
 import TeacherLectureLive from '../components/pages/TeacherLectureLive';
 import StudentClassIndex from '../components/pages/StudentClassIndex';
@@ -191,6 +192,14 @@ export default function authRoutes(root) {
       component: StudentClassIndex,
       meta: {
         title: 'Student Class Index', // TODO: import from i18n
+      },
+    },
+    {
+      path: '/student/NNclass/',
+      name: 'NNStudentClass',
+      component: NNStudentClassIndex,
+      meta: {
+        title: 'NN Student Class Index', // TODO: import from i18n
       },
     },
     {

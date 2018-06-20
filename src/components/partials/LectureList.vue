@@ -4,7 +4,7 @@
       생성된 강의가 없습니다.
     </div>
     <div v-else>
-      <!-- {{ props.list }}<br /> -->
+       <!-- {{ props.list }}<br /> -->
 
       <!-- 번호(1), 타입(숙제), 강의(근대사 1강), 기간, 수강한 학생수, 수강생 이해도(평균), 강의, 관리, 삭제 -->
       <el-table :data="props.list" stripe @row-click="listeners['row-click']">
@@ -39,9 +39,11 @@
           align="center"
         >
           <template slot-scope="scope">
-            {{ scope.row.intended_start ? new Date(scope.row.intended_start).toLocaleDateString('ko-KR') : '미정' }}
+            <!-- {{ scope.row.intended_start ? new Date(scope.row.intended_start).toLocaleDateString('ko-KR') : '미정' }} // Legacy : 필요없다면 지워주세요.-->
+            {{ scope.row.start_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') : '미정' }}
             ~
-            {{ scope.row.intended_end ? new Date(scope.row.intended_end).toLocaleDateString('ko-KR') : '미정' }}
+            <!-- {{ scope.row.intended_end ? new Date(scope.row.intended_end).toLocaleDateString('ko-KR') : '미정' }} // Legacy : 필요없다면 지워주세요. -->
+            {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString('ko-KR') : '미정' }}
           </template>
         </el-table-column>
 
@@ -50,7 +52,7 @@
           width="110"
         >
           <template slot-scope="scope">
-            몇명 / 몇명
+            몇명 / {{ scope.row.capacity }}
           </template>
         </el-table-column>
 

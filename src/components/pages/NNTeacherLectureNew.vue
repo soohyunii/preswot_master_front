@@ -49,7 +49,6 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import lectureService from '../../services/lectureService';
-import utils from '../../utils';
 
 export default {
   name: 'TeacherLectureNew',
@@ -73,8 +72,8 @@ export default {
       await vm.getLecture({ lectureId: vm.lectureId });
       vm.input.title = vm.lecture.name || vm.initialInput.title;
       vm.input.type = vm.lecture.type || vm.initialInput.type;
-      vm.input.lcStartDate = vm.lecture.intended_start || vm.initialInput.lcStartDate;
-      vm.input.lcEndDate = vm.lecture.intended_end || vm.initialInput.lcEndDate;
+      vm.input.lcStartDate = vm.lecture.start_time || vm.initialInput.lcStartDate;
+      vm.input.lcEndDate = vm.lecture.end_time || vm.initialInput.lcEndDate;
     }
   },
   methods: {
@@ -86,28 +85,54 @@ export default {
       vm.$refs.elForm.validate(async (/* valid, fields */) => {
         // TODO: if valid === true 로 감싸기
         // TODO: valid === false 인 경우 notify
-        try {
-          // TODO: isManage === true 인 경우 post하지 말고...
-          const userId = utils.getUserIdFromJwt();
-          const classId = vm.$route.query.classId;
-          // TODO: input에 있는 데이터 다 보내기
-          await lectureService.postLecture({
-            classId,
-            teacherId: userId,
-          });
-          vm.$notify({
-            title: '강의 추가 성공',
-            message: '성공적으로 강의가 추가됨',
-            type: 'success',
-          });
-          vm.$router.go(-1);
-        } catch (error) {
-          vm.$notify({
-            title: '강의 추가 실패',
-            message: error.toString(),
-            type: 'error',
-            duration: 0,
-          });
+        // TODO: isManage === true 인 경우 post하지 말고...
+        const classId = vm.$route.query.classId;
+        if (vm.isManage) {
+          try {
+            await lectureService.putLecture({
+              lectureId: vm.lectureId,
+              type: vm.input.type,
+              name: vm.input.title,
+              start_time: vm.input.lcStartDate,
+              end_time: vm.input.lcEndDate,
+            });
+            vm.$notify({
+              title: '강의 수정 성공',
+              message: '성공적으로 강의가 수정됨',
+              type: 'success',
+            });
+            vm.$router.go(-1);
+          } catch (error) {
+            vm.$notify({
+              title: '강의 수정 실패',
+              message: error.toString(),
+              type: 'error',
+              duration: 0,
+            });
+          }
+        } else {
+          try {
+            await lectureService.postLecture({
+              classId,
+              type: vm.input.type,
+              name: vm.input.title,
+              start_time: vm.input.lcStartDate,
+              end_time: vm.input.lcEndDate,
+            });
+            vm.$notify({
+              title: '강의 추가 성공',
+              message: '성공적으로 강의가 추가됨',
+              type: 'success',
+            });
+            vm.$router.go(-1);
+          } catch (error) {
+            vm.$notify({
+              title: '강의 추가 실패',
+              message: error.toString(),
+              type: 'error',
+              duration: 0,
+            });
+          }
         }
       });
     },

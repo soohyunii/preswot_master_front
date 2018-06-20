@@ -7,7 +7,7 @@ export default {
   getClassLists() {
     return http.get('/classes');
   },
-  getMainClassLists() {
+  getMainClassLists() { // TODO : 필요 없다면 삭제할 것.
     return http.get('/main_classes');
   },
   getMyClassList() { //
