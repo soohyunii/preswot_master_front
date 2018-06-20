@@ -18,7 +18,6 @@
         </el-container>
       </el-container>
     </el-container>
-    {{ appTheme }}
   </div>
 </template>
 

@@ -5,7 +5,21 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: 'TeacherClassGrading',
+  created() {
+    const vm = this;
+    const classId = vm.$route.params.classId;
+    vm.getClassNeedGrading({
+      classId,
+    });
+  },
+  methods: {
+    ...mapActions('grading', [
+      'getClassNeedGrading',
+    ]),
+  },
 };
 </script>

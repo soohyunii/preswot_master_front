@@ -14,6 +14,7 @@ import board from './boardStore';
 import kMap from './kMapStore';
 import report from './reportStore';
 import allowedProgram from './allowedProgramStore';
+import grading from './gradingStore';
 
 Vue.use(Vuex);
 
@@ -32,5 +33,6 @@ export default new Vuex.Store({
     kMap,
     report,
     allowedProgram,
+    grading,
   },
 });
