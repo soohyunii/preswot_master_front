@@ -38,15 +38,15 @@
               </el-dropdown-menu>
             </el-dropdown> -->
 
-            <router-link to="/a/student/class" v-show="isJwtValid">
+            <router-link v-if="!isProd" to="/a/student/class" v-show="isJwtValid">
               <el-button :type="appTheme" plain>
-                <i class="fas fa-graduation-cap"></i>
+                <i class="fas fa-graduation-cap"></i> 1
               </el-button>
             </router-link>
 
             <router-link to="/a/student/NNclass" v-show="isJwtValid">
               <el-button :type="appTheme" plain>
-                <i class="fas fa-graduation-cap"></i>2
+                <i class="fas fa-graduation-cap"></i> <span v-show="!isProd">2</span>
               </el-button>
             </router-link>
 
