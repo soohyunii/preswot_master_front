@@ -27,7 +27,7 @@
       <el-col :span="11">
 
         <el-row type="flex" justify="end">
-          <el-col :span="14">
+          <el-col :span="isProd ? 14 : 24">
             <!-- <el-dropdown @command="onClick">
               <el-button :type="appTheme" plain>
                 {{ $t('HEADER.LANG_INFO') }}<i class="el-icon-arrow-down el-icon--right"></i>
