@@ -1,6 +1,5 @@
 <template>
   <div id="lecture_keywords_editor_wrapper">
-    lecture keywords editor template
     <!-- {{ keywordList }} -->
     <draggable element="div" v-model="keywordList" :options="dragOptions">
       <transition-group type="transition">
