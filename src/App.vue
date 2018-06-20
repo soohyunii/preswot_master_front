@@ -58,7 +58,7 @@ export default {
       } else if (path.includes('student')) {
         return 'student_theme';
       }
-      return null;
+      return 'default_theme';
     },
   },
 };
@@ -79,12 +79,12 @@ body {
 }
 
 #app_router_view_wrapper {
-  background-color: $app-oatmeal;
+  background-color: lighten($app-oatmeal, 50%);
   flex: 1;
 }
 
 #app_footer_wrapper {
-  background-color: $app-oatmeal;
+  background-color: lighten($app-oatmeal, 50%);
 }
 
 #teacher_theme {
@@ -98,5 +98,9 @@ body {
 
 #student_theme {
   background-color: darken($app-oatmeal, 70%);
+}
+
+#default_theme {
+  background-color: darken(#2497D8, 10%);
 }
 </style>
