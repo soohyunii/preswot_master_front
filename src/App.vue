@@ -22,13 +22,14 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 // import './app.scss';
 // import './variables.scss'; // * To use $--color-primary scss variable
 
 import AppNavigation from './components/layouts/AppNavigation';
 import AppHeader from './components/layouts/AppHeader';
 import AppFooter from './components/layouts/AppFooter';
+import utils from './utils';
 
 export default {
   name: 'app',
@@ -59,6 +60,31 @@ export default {
       }
       return 'default_theme';
     },
+  },
+  methods: {
+    ...mapMutations('auth', ['updateJwt']),
+    validateJwt() {
+      const vm = this;
+      const jwt = utils.getJwtFromLocalStorage();
+      if (!jwt) { // * 로그인 안한 경우
+        // * do nothing
+      } else if (utils.isJwtExpired(jwt)) { // * 로그인은 했었는데 jwt 만료됨
+        const redirect = confirm('로그인 세션이 만료되었습니다. 확인을 누르면 로그인 페이지로 이동합니다.'); // eslint-disable-line no-alert
+        if (redirect) {
+          vm.updateJwt({
+            jwt: '',
+          });
+          vm.$router.push('/login');
+        }
+      }
+    },
+  },
+  mounted() {
+    const vm = this;
+    vm.validateJwt();
+    window.setInterval(() => {
+      vm.validateJwt();
+    }, 60 * 1000);
   },
 };
 </script>

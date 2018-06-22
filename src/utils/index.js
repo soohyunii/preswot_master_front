@@ -38,7 +38,7 @@ export default {
     let isExpired;
     try {
       const payload = jwtDecode(jwt);
-      isExpired = Date.now() < payload.exp;
+      isExpired = Date.now() > payload.exp * 1000;
     } catch (error) {
       isExpired = true;
     }
