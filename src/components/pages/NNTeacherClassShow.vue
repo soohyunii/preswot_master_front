@@ -93,7 +93,7 @@ export default {
     ]),
     onClick(type) {
       const vm = this;
-      // const userId = utils.getUserIdFromJwt();
+      const userId = utils.getUserIdFromJwt();
       switch (type) {
         case 'EVALUATION': {
           vm.$router.push(`/a/teacher/class/${vm.classId}/evaluation`);
