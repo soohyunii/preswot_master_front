@@ -37,7 +37,7 @@ import utils from '../../utils';
 
 export default {
   name: 'LectureItemList',
-  props: ['dataList', 'onClick'],
+  props: ['dataList', 'onClick', 'isAuto'],
   methods: {
     convertLcItemTypeKor(row) {
       return utils.convertLcItemTypeKor(row.type);

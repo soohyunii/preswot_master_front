@@ -1,65 +1,103 @@
 <template>
   <div id="teacher_lecture_live_wrapper" class="bt-container">
-    NN teacher lecture live template,<br />
-    lecture id : {{ lectureId }}<br />
-    lectureItemIdList : {{ lectureItemIdList }}<br />
-    tableItemList : {{ tableItemList }}<br />
-    <el-row>
-      <el-col :span="24"><div class="bg-purple-light">여기는 강의제목이 들어갈 곳입니다. lecture id : {{ lectureId }}</div></el-col>
-    </el-row>
+      <h2>{{ path }}</h2>
     <el-row :gutter="20">
       <el-col :span="12">
-        <youtube-video />
+        <youtube
+          id="video"
+          :video-id="youtubeId"
+          player-width="100%"
+          player-height="500px"
+          :player-vars="{ autoplay: 1 }"
+          :mute="true">
+        </youtube>
       </el-col>
       <el-col :span="12">
-        <teacher-lecture-item-live
-        v-if="lectureItemIdList[0] !== -1"
-        :lectureItemId="lectureItemIdList[0]"
+        <teacher-lecture-live-item
+        v-if="currentLectureItemId !== -1"
+        :lectureItemId="currentLectureItemId"
         :onClick="onClick"
+        :isAuto="isAuto"
         />
       </el-col>
     </el-row>
     <el-row :gutter="20">
       <el-col :span="12">
-        <teacher-lecture-item-list-live
-        :dataList="tableItemList"
-        :onClick="onClick"/>
-      </el-col>
-      <el-col :span="12">
-        <teacher-lecture-item-live
-        v-if="lectureItemIdList[1] !== -1"
-        :lectureItemId="lectureItemIdList[1]"
-        :onClick="onClick"
+        <teacher-lecture-live-item-list
+          :dataList="tableItemList"
+          :onClick="onClick"
+          :isAuto="isAuto"
         />
       </el-col>
+      <!-- // TODO : 실시간 질문
+      <el-col :span="12">
+        <teacher-lecture-live-chat
+          v-if="isAuto === false"
+        />
+      </el-col>
+      -->
     </el-row>
     <div class="statusbar">
-      <!-- <div class="statusbar_for_click" @click="onClick('TOGGLE_STATUS_INFO')"></div> -->
       <teacher-lecture-live-summary :lectureId="lectureId"/>
     </div>
   </div>
 </template>
 
 <script>
+// FIXME : Failed to execute 'postMessage' on 'DOMWindow': The target origin provided ('<URL>')
+//   does not match the recipient window's origin ('<URL>'). 에러 해결
+import { getIdFromURL } from 'vue-youtube-embed';
 import lectureService from '../../services/lectureService';
-import YoutubeVideo from '../partials/YoutubeVideo';
-import TeacherLectureItemListLive from '../partials/TeacherLectureItemListLive';
-import TeacherLectureItemLive from '../partials/TeacherLectureItemLive';
+import classService from '../../services/classService';
+import TeacherLectureLiveItemList from '../partials/TeacherLectureLiveItemList';
+import TeacherLectureLiveItem from '../partials/TeacherLectureLiveItem';
+import TeacherLectureLiveChat from '../partials/TeacherLectureLiveChat';
 import TeacherLectureLiveSummary from '../partials/TeacherLectureLiveSummary';
+import utils from '../../utils';
 
 export default {
   name: 'TeacherLectureLive',
   async created() {
     const vm = this;
+    // 강의 아이템 목록, 과목, 강의명 가져오기
     const res = await lectureService.getLecture({
-      lectureId: vm.$route.params.lectureId,
+      lectureId: vm.lectureId,
     });
     vm.tableItemList = res.data.lecture_items;
+    const res2 = await classService.getClass({
+      id: res.data.class_id,
+    });
+    vm.path = res2.data.name.concat(' > ', res.data.name);
+
+    // 소켓 연결 및 주기적으로 보내는 신호 설정
+    vm.$socket.connect();
+    const params = {
+      lecture_id: Number.parseInt(vm.lectureId, 10),
+    };
+    vm.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
+    vm.sUpdateTimelineLogIntervalId = setInterval(() => {
+      vm.$socket.emit('UPDATE_TIMELINE_LOG', JSON.stringify(params));
+    }, 18000);
+    vm.sHeartbeatIntervalId = setInterval(() => {
+      const params2 = {
+        lecture_id: Number.parseInt(vm.lectureId, 10),
+        user_id: utils.getUserIdFromJwt(),
+      };
+      vm.$socket.emit('HEART_BEAT', JSON.stringify(params2));
+    }, 3000);
+
+    // opened 상태인 아이템이 이미 있다면 보이기
+    const res3 = await lectureService.getOpenedLectureItem({ lectureId: vm.lectureId });
+    if (res3.data !== null) {
+      vm.currentLectureItemId = res3.data.lecture_item_id;
+    }
   },
   data() {
     return {
       tableItemList: [],
-      lectureItemIdList: [-1, -1],
+      currentLectureItemId: -1,
+      path: '',
+      isAuto: false,
     };
   },
   computed: {
@@ -67,11 +105,12 @@ export default {
       const vm = this;
       return vm.$route.params.lectureId;
     },
+    youtubeId: () => (getIdFromURL('https://www.youtube.com/watch?v=actDWRiD9RI&list=UUEgIN0yG3PeVF4JfJ-ZG0UQ')),
   },
   components: {
-    YoutubeVideo,
-    TeacherLectureItemListLive,
-    TeacherLectureItemLive,
+    TeacherLectureLiveItemList,
+    TeacherLectureLiveItem,
+    TeacherLectureLiveChat,
     TeacherLectureLiveSummary,
   },
   methods: {
@@ -79,44 +118,37 @@ export default {
       const vm = this;
       switch (type) {
         case 'SHOW': {
-          const index = vm.lectureItemIdList.indexOf(-1);
-          if (index === -1) {
+          if (vm.currentLectureItemId !== -1) {
             vm.$notify({
               title: '알림',
-              message: '빈 슬롯이 없습니다. 먼저 슬롯을 확보하세요.',
+              message: '다른 아이템을 보이려면 기존 아이템을 내려주세요.',
               type: 'warning',
             });
             break;
           }
-          if (vm.lectureItemIdList.indexOf(data) !== -1) {
-            vm.$notify({
-              title: '알림',
-              message: '이미 추가된 항목입니다. 먼저 슬롯을 확인하세요.',
-              type: 'warning',
-            });
-            break;
-          }
-          vm.lectureItemIdList.splice(index, 1, data);
+          vm.currentLectureItemId = data;
+          const params = {
+            lecture_id: Number.parseInt(vm.lectureId, 10),
+            opened: 1,
+            lecture_item_id: Number.parseInt(vm.currentLectureItemId, 10),
+          };
+          vm.$socket.emit('LECTURE_ITEM_ACTIVATION', JSON.stringify(params));
           break;
         }
         case 'HIDE': {
-          const index = vm.lectureItemIdList.indexOf(data);
-          if (index === -1) {
-            vm.$notify({
-              title: '알림',
-              message: '이미 삭제된 항목입니다.',
-              type: 'warning',
-            });
-            break;
-          }
-          vm.lectureItemIdList.splice(index, 1, -1);
+          const params = {
+            lecture_id: Number.parseInt(vm.lectureId, 10),
+            opened: 0,
+            lecture_item_id: Number.parseInt(vm.currentLectureItemId, 10),
+          };
+          vm.$socket.emit('LECTURE_ITEM_ACTIVATION', JSON.stringify(params));
+          vm.currentLectureItemId = -1;
           break;
         }
         case 'SUBMIT': {
-          // TODO: SUBMIT 처리
           vm.$notify({
             title: '알림',
-            message: '공사중인 기능입니다...',
+            message: '이 버튼은 현재 수강중인 학생만 이용할 수 있습니다.',
             type: 'warning',
           });
           break;
@@ -126,6 +158,9 @@ export default {
         }
       }
     },
+  },
+  beforeDestroy() {
+    this.$socket.close();
   },
 };
 </script>

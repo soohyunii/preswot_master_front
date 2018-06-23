@@ -11,4 +11,9 @@ export default {
       topic,
     });
   },
+  getDiscussion({
+    id,
+  }) {
+    return http.get(`/discussions/${id}`);
+  },
 };
