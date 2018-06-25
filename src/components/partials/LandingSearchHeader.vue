@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper"> <!-- position:absolute의 부모가 되기 위해 relative 속성 부여 -->
-    <img :src="require('@/assets/home.png')" width="100%" style="height: 410px; object-fit: cover; object-position: top;">
+    <img :src="require('@/assets/home.jpg')" width="100%" style="height: 410px; object-fit: cover; object-position: top;">
     <div class="btn-input-wrapper">
       <!-- TODO
       <el-button icon="el-icon-search"></el-button>
