@@ -4,6 +4,7 @@
 
     <el-tabs v-model="activeTab">
       <el-tab-pane label="강의 흐름" name="basic">
+        <el-row>
         <time-line :chartData = "analysisData.result2"/>
         <el-table
           :data="tableData"
@@ -97,17 +98,6 @@
           </el-table-column>
         </el-table>
           </el-col>
-          <el-col :span="12">
-            <word-cloud
-              style="min-height: 400px;"
-              :data="keyword"
-              nameKey="keyword"
-              valueKey="understanding"
-              fontScale="sqrt"
-              :fontSize="[40, 120]"
-              :wordClick="() => {}"
-            ></word-cloud>
-          </el-col>
         </el-row>
       </el-tab-pane>
       <el-tab-pane label="키워드 저널링" name="keyword">
@@ -129,13 +119,13 @@
      </el-col>
      <el-col :span="12">
        <word-cloud
-         style="min-height: 400px;"
-         :data="keyword"
-         nameKey="keyword"
-         valueKey="understanding"
-         fontScale="sqrt"
-         :fontSize="[40, 120]"
-         :wordClick="() => {}"
+        style="min-height: 400px;"
+        :data="keyword"
+        nameKey="keyword"
+        valueKey="understanding"
+        fontScale="sqrt"
+        :fontSize="[40, 120]"
+        :wordClick="() => {}"
        ></word-cloud>
      </el-col>
    </el-row>
