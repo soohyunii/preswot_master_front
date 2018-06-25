@@ -44,6 +44,20 @@ export default {
     }
     return isExpired;
   },
+  getAuthTypeFromJwt(jwt) {
+    if (jwt.length === 0) {
+      return null;
+    }
+    let decodedJwt;
+
+    try {
+      decodedJwt = jwtDecode(jwt);
+    } catch (error) {
+      console.error(error.toString); // eslint-disable-line no-console
+    }
+
+    return decodedJwt ? decodedJwt.authType : null;
+  },
   getEmailFromJwt() {
     const jwt = this.getJwtFromLocalStorage();
     if (jwt.length === 0) {
