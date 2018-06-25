@@ -11,7 +11,8 @@ import NNStudentClassIndex from '../components/pages/NNStudentClassIndex';
 import TeacherLectureNew from '../components/pages/TeacherLectureNew';
 import TeacherLectureLive from '../components/pages/TeacherLectureLive';
 import StudentClassIndex from '../components/pages/StudentClassIndex';
-import StudentLectureLive from '../components/pages/StudentLectureLive';
+// import StudentLectureLive from '../components/pages/NNStudentLectureLive';
+import NNStudentLectureLive from '../components/pages/NNStudentLectureLive';
 import TeacherClassNew from '../components/pages/TeacherClassNew';
 import TeacherClassEdit from '../components/pages/TeacherClassEdit';
 import TeacherClassEvaluation from '../components/pages/TeacherClassEvaluation';
@@ -202,10 +203,20 @@ export default function authRoutes(root) {
         title: 'NN Student Class Index', // TODO: import from i18n
       },
     },
+    /*
     {
       path: '/student/lecture/:scId/:order',
       name: 'StudentLectureLive',
       component: StudentLectureLive,
+      meta: {
+        title: 'Student Lecture Live',
+      },
+    },
+    */
+    {
+      path: '/student/NNlecture/:lectureId/:order',
+      name: 'NNStudentLectureLive',
+      component: NNStudentLectureLive,
       meta: {
         title: 'Student Lecture Live',
       },

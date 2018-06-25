@@ -60,6 +60,7 @@
 <script>
   import { mapGetters, mapMutations } from 'vuex';
   import utils from '../../utils';
+  import discussionService from '../../services/discussionService';
 
   export default {
     components: {
@@ -73,14 +74,16 @@
       };
       vm.$socket.emit('JOIN_DISCUSSION', JSON.stringify(params));
     },
-    mounted() {
+    async mounted() {
       const vm = this;
       vm.pre = vm.lectureItemId;
       vm.isStudent = vm.$route.path.includes('/student/lecture/');
+      /* 이 부분에서 에러가 발생하여 임시로 주석 처리
       vm.$nextTick(() => {
         const container = vm.$el.querySelector('#chat-wrap');
         container.scrollTop = container.scrollHeight;
       });
+      */
       vm.$socket.on('ARRIVE_NEW_DISCUSSION', (msg) => {
         const jsonMSG = JSON.parse(msg);
         if (this.pShare === true ||
@@ -95,6 +98,20 @@
           vm.$forceUpdate();
         }
       });
+
+      const res = await discussionService.getDiscussion({ id: vm.lectureItemId });
+      const discuss = JSON.parse(JSON.stringify(res.data.discussion));
+      const dLength = discuss.length;
+      for (let i = 0; i < dLength; i += 1) {
+        if (!(this.pShare === true ||
+          discuss[i].is_teacher === 1 ||
+          discuss[i].user_id === utils.getUserIdFromJwt())) {
+          delete discuss[i];
+        } else {
+          discuss[i].created_at = utils.formatDate(new Date(discuss[i].created_at));
+        }
+      }
+      vm.discuss = discuss;
     },
     beforeUpdate() {
       const vm = this;
@@ -116,29 +133,12 @@
         isStudent: true,
         updating: false,
         pre: -1,
-        discussion: [],
+        discuss: [],
       };
     },
     computed: {
       ...mapGetters('scItem', ['currentEditingScItem']),
       ...mapGetters('sc', ['scId']),
-      discuss: {
-        get() {
-          const vm = this;
-          const discuss = JSON.parse(JSON.stringify(vm.discussion));
-          const dLength = discuss.length;
-          for (let i = 0; i < dLength; i += 1) {
-            if (!(this.pShare === true ||
-              discuss[i].is_teacher === 1 ||
-              discuss[i].user_id === utils.getUserIdFromJwt())) {
-              delete discuss[i];
-            } else {
-              discuss[i].created_at = utils.formatDate(new Date(discuss[i].created_at));
-            }
-          }
-          return discuss;
-        },
-      },
       pShare: {
         get() {
           // const vm = this;
