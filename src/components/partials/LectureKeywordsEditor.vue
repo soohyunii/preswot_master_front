@@ -1,7 +1,6 @@
 <template>
   <div id="lecture_keywords_editor_wrapper">
-    lecture keywords editor template
-    {{ keywordList }}
+    <!-- {{ keywordList }} -->
     <draggable element="div" v-model="keywordList" :options="dragOptions">
       <transition-group type="transition">
         <el-tag class="tag" type="primary" v-for="k in keywordList" :key="k" closable @close="onClick('DELETE_TAG', k)">{{ k }}</el-tag>
@@ -48,10 +47,10 @@ export default {
     };
   },
   computed: {
-    ...mapState('lc', [
+    ...mapState('keyword', [
       'addedKeywordList',
     ]),
-    ...mapGetters('lc', [
+    ...mapGetters('keyword', [
       'isKeywordDuplicated',
     ]),
     keywordList: {
@@ -71,11 +70,11 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('lc', [
+    ...mapMutations('keyword', [
       'updateMovedKeywordList',
       'updateAddedKeywordList',
     ]),
-    ...mapActions('lc', [
+    ...mapActions('keyword', [
       'deleteKeyword',
     ]),
     onClick(type, payload) {

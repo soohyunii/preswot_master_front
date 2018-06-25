@@ -14,7 +14,7 @@
         </el-button>
         <router-link to="/">
           <!-- TODO: replace 브랜드 로고 -->
-          <el-button :type="appTheme" plain>Preswot</el-button>
+          <el-button :type="appTheme" plain>Preswot {{ authType }}</el-button>
         </router-link>
         <!-- TODO: translate placeholder -->
         <!-- <el-input placeholder="Please input" v-model="searchText" style="max-width: 250px;">
@@ -27,7 +27,7 @@
       <el-col :span="11">
 
         <el-row type="flex" justify="end">
-          <el-col :span="14">
+          <el-col :span="isProd ? 14 : 24">
             <!-- <el-dropdown @command="onClick">
               <el-button :type="appTheme" plain>
                 {{ $t('HEADER.LANG_INFO') }}<i class="el-icon-arrow-down el-icon--right"></i>
@@ -38,15 +38,15 @@
               </el-dropdown-menu>
             </el-dropdown> -->
 
-            <router-link to="/a/student/class" v-show="isJwtValid">
+            <router-link v-if="!isProd" to="/a/student/class" v-show="isJwtValid">
               <el-button :type="appTheme" plain>
-                <i class="fas fa-graduation-cap"></i>
+                <i class="fas fa-graduation-cap"></i> 1
               </el-button>
             </router-link>
 
             <router-link to="/a/student/NNclass" v-show="isJwtValid">
               <el-button :type="appTheme" plain>
-                <i class="fas fa-graduation-cap"></i>2
+                <i class="fas fa-graduation-cap"></i> <span v-show="!isProd">2</span>
               </el-button>
             </router-link>
 
@@ -56,7 +56,7 @@
               </el-button>
             </router-link>
 
-             <router-link to="/a/teacher/NNclass" v-show="isJwtValid" id="btn_teacher_home">
+             <router-link v-if="authType === 1 || !isProd" to="/a/teacher/NNclass" v-show="isJwtValid" id="btn_teacher_home">
               <el-button :type="appTheme" plain>
                 <i class="fas fa-edit"></i> <span v-show="!isProd">2</span>
               </el-button>
@@ -115,6 +115,7 @@
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex';
+import utils from '../../utils';
 
 export default {
   name: 'AppHeader',
@@ -128,6 +129,11 @@ export default {
     ...mapState('auth', ['jwt', 'locale']),
     ...mapState('layout', ['isNavCollapsed']),
     ...mapGetters('auth', ['isJwtValid']),
+    authType() {
+      const vm = this;
+      const jwt = vm.$store.state.auth.jwt;
+      return utils.getAuthTypeFromJwt(jwt);
+    },
     appTheme() {
       const vm = this;
       const path = vm.$route.path;
@@ -199,4 +205,3 @@ export default {
   },
 };
 </script>
-

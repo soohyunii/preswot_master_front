@@ -4,7 +4,7 @@
       강의 추가
     </h2>
 
-    {{ input }}<br /><br />
+    <!-- {{ input }}<br /><br /> -->
 
     <el-form :model="input" ref="elForm" label-width="125px" style="max-width: 800px;">
       <el-form-item label="타입">

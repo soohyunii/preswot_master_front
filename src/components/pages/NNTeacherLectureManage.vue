@@ -20,11 +20,6 @@
       <el-tab-pane label="강의 지식맵 관리" name="kmap">
         <knowledgeMap />
       </el-tab-pane>
-      <!--
-      <el-tab-pane label="채점 관리" name="grade">
-        채점 관리 부분뷰
-      </el-tab-pane>
-      -->
     </el-tabs>
   </div>
 </template>
@@ -99,6 +94,8 @@ export default {
     ]),
     ...mapActions('lc', [
       'getLecture',
+    ]),
+    ...mapActions('keyword', [
       'deleteLectureKeywords',
       'postLectureKeywords',
       'getKeywords',
