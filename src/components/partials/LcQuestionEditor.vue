@@ -200,7 +200,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('lc', [
+    ...mapState('keyword', [
       'keywordList',
     ]),
     modifiedKeywordList() {

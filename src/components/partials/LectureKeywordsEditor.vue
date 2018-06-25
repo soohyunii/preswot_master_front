@@ -47,10 +47,10 @@ export default {
     };
   },
   computed: {
-    ...mapState('lc', [
+    ...mapState('keyword', [
       'addedKeywordList',
     ]),
-    ...mapGetters('lc', [
+    ...mapGetters('keyword', [
       'isKeywordDuplicated',
     ]),
     keywordList: {
@@ -70,11 +70,11 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('lc', [
+    ...mapMutations('keyword', [
       'updateMovedKeywordList',
       'updateAddedKeywordList',
     ]),
-    ...mapActions('lc', [
+    ...mapActions('keyword', [
       'deleteKeyword',
     ]),
     onClick(type, payload) {

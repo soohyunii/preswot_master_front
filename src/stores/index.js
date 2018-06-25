@@ -13,6 +13,7 @@ import analysis from './analysisStore';
 import board from './boardStore';
 import kMap from './kMapStore';
 import report from './reportStore';
+import keyword from './keywordStore';
 import allowedProgram from './allowedProgramStore';
 import grading from './gradingStore';
 
@@ -31,6 +32,7 @@ export default new Vuex.Store({
     analysis,
     board,
     kMap,
+    keyword,
     report,
     allowedProgram,
     grading,

@@ -94,6 +94,8 @@ export default {
     ]),
     ...mapActions('lc', [
       'getLecture',
+    ]),
+    ...mapActions('keyword', [
       'deleteLectureKeywords',
       'postLectureKeywords',
       'getKeywords',
