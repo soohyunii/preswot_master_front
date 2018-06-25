@@ -122,4 +122,19 @@ export default {
     };
     return http.post(`/lectures/${id}/keyword-extractor`, param);
   },
+  postLectureMaterial({ lectureId, file }) {
+    const form = new FormData();
+    form.append('file', file, file.name);
+    return http.post(`/lectures/${lectureId}/material`, form, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  },
+  getLectureMaterialAdditional({ lectureId }) {
+    return http.get(`/lectures/${lectureId}/materials`);
+  },
+  getOpenedLectureItem({ lectureId }) {
+    return http.get(`/lectures/${lectureId}/opened-item`);
+  },
 };
