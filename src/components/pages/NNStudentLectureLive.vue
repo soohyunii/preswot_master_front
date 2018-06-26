@@ -146,32 +146,34 @@ export default {
           }
           break;
         }
+        /*
         case 'SENDREALTIMEQUESTION': {
-          // vm.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
           break;
         }
+        */
         default: {
           throw new Error(`not defined type ${type}`);
         }
       }
     },
-    async refreshLectureItem(notify) {
+    refreshLectureItem(notify) {
       const vm = this;
-
-      // opened 상태인 아이템이 있다면 보이기
-      const res3 = await lectureService.getOpenedLectureItem({ lectureId: vm.lectureId });
-      if (res3.data !== null) {
-        vm.lectureItem = res3.data;
-      } else {
-        vm.lectureItem = undefined;
-      }
-      if (notify !== false) {
-        vm.$notify({
-          title: '알림',
-          message: '강의아이템이 변경되었습니다.',
-          type: 'warning',
-        });
-      }
+      // opened 상태인 아이템이 있다면 보이기 : 빠른 속도로 아이템 보임/숨김 조작하는 경우 버그 해결하기위해 1초 지연
+      setTimeout(async () => {
+        const res3 = await lectureService.getOpenedLectureItem({ lectureId: vm.lectureId });
+        if (res3.data !== null) {
+          vm.lectureItem = res3.data;
+        } else {
+          vm.lectureItem = undefined;
+        }
+        if (notify !== false) {
+          vm.$notify({
+            title: '알림',
+            message: '강의아이템이 변경되었습니다.',
+            type: 'warning',
+          });
+        }
+      }, 1000);
     },
   },
   beforeDestroy() {
