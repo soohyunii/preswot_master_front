@@ -123,7 +123,7 @@
             align="center"
           >
             <template slot-scope="scope">
-              수강여부
+              {{ scope.row.heard }}
             </template>
           </el-table-column>
           <el-table-column

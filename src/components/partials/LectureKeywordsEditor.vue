@@ -80,8 +80,11 @@ export default {
     onClick(type, payload) {
       switch (type) {
         case 'ADD': {
+          console.log('ADD1');
           this.$refs.elForm.validate(((valid) => {
+            console.log('ADD2');
             if (valid) {
+              console.log('ADD3');
               const keyword = this.input.keyword.trim();
               if (keyword.length === 0) {
                 // 존나 이유를 모르겠는데 가끔 keydown이 두번씩 들어옴 그걸 validate에서 거르지도 못함 병신임
@@ -93,7 +96,9 @@ export default {
                 this.$refs.elForm.resetFields();
                 return;
               }
+              console.log('ADD4');
               const newAddedKeywordList = deepCopy(this.addedKeywordList);
+              console.log('ADD5');
               newAddedKeywordList.push(keyword);
               this.updateAddedKeywordList({
                 addedKeywordList: newAddedKeywordList,

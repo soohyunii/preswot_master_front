@@ -31,10 +31,7 @@ export default {
   async mounted() {
     const vm = this;
     await vm.getMyClassLists();
-    // FIXME: vm.getClass가 불릴 때 classStore.state.teachingClassList가
-    // 아직 채워지지 않은 경우가 있음
-    // 그래서 그냥 불렀는데. 구조적으로 개선이 필요함
-    // 지금 꽤나 여러군데에서 getMyClassLists를 부르고 있다는 것이.. 좀..
+    console.log('vm.currentStudyingClass(vm.classId).name = ', vm.currentStudyingClass(vm.classId).name);
     await vm.getClass({
       type: 'STUDENT',
       classId: vm.classId,
@@ -52,17 +49,22 @@ export default {
       return Number.parseInt(vm.$route.params.classId, 10);
     },
     lectureList() {
+      console.log('computed!');
       const vm = this;
       if (!vm.studyingClassList) {
         return [];
       }
       const currentClass = vm.currentStudyingClass(vm.classId);
+      console.log('currentClass = ', currentClass);
+      console.log('currentClass.name = ', currentClass.name);
+      console.log('currentClass.lectures = ', currentClass.lectures);
       if (currentClass && currentClass.lectures) {
         return currentClass.lectures.map((item) => {
           const type = utils.convertLcItemTypeKor(item.type);
           // eslint-disable-next-line no-param-reassign
           item.type = type;
-          // TODO : 수강 여부 서버쪽 개발되면 반영할 것
+          // eslint-disable-next-line no-param-reassign
+          item.heard = (item.realtime_lecture_heartbeats.length > 0) ? '수강완료' : '수강미완료';
           return item;
         });
       }
