@@ -39,6 +39,12 @@ export default {
       }
       return state.teachingClassList.find(item => item.class_id === classId);
     },
+    currentStudyingClass: state => (classId) => {
+      if (!Array.isArray(state.studyingClassList)) {
+        return null;
+      }
+      return state.studyingClassList.find(item => item.class_id === classId);
+    },
   },
   mutations: {
     updateOpenedClassList(state, { openedClassList }) {

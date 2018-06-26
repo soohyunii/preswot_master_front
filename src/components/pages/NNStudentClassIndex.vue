@@ -50,8 +50,7 @@ export default {
       const vm = this;
       switch (type) {
         case 'GOTOLECTURE': {
-          // TODO
-          console.log('강의 보기 페이지로 이동'); // eslint-disable-line
+          vm.$router.push(`/a/student/NNclass/${data}`);
           break;
         }
         case 'DETAIL': {
