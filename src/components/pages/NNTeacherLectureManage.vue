@@ -48,7 +48,7 @@ export default {
   },
   data() {
     return {
-      activeTab: 'program',
+      activeTab: 'basic',
     };
   },
   async created() {

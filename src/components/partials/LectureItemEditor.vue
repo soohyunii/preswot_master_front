@@ -1,6 +1,5 @@
 <template>
   <div id="lecture_item_editor_wrapper">
-    isNewItem: {{ isNewItem }} <br />
     <h2>
       <template v-show="isNewItem">
         강의 아이템 추가
@@ -9,9 +8,9 @@
       </template>
     </h2>
 
-    inputHead: {{ inputHead }}<br /><br />
-    inputBody: {{ inputBody }}<br /><br />
-    inputTail: {{ inputTail }}<br /><br />
+    <!-- inputHead: {{ inputHead }}<br /><br /> -->
+    <!-- inputBody: {{ inputBody }}<br /><br /> -->
+    <!-- inputTail: {{ inputTail }}<br /><br /> -->
 
     <el-form :model="inputHead" label-width="125px" style="max-width: 800px;">
       <el-form-item label="타입" prop="type" id="radio_type">
