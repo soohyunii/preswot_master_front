@@ -172,11 +172,6 @@ export default {
           type: 'warning',
         });
       }
-
-      // FIXME : 강사 화면에서 빠른속도로 아이템 보임/숨김을 조작하는 경우, 가끔 학생 화면에서 반영이 안되는 문제 있음
-      // FIXME : 실제 DB에서 가져오는 opened 값이 변하지 않은것을 확인
-      // console.log('@refreshLectureItem / getOpenedLectureItem / res3.data.opened = ');
-      // console.log(res3.data === null ? null : res3.data.opened);
     },
   },
   beforeDestroy() {

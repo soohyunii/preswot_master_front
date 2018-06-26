@@ -119,7 +119,7 @@
           </el-table-column>
           <el-table-column
             label="수강여부"
-            width="80"
+            width="100"
             align="center"
           >
             <template slot-scope="scope">
