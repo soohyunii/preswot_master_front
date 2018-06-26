@@ -16,7 +16,7 @@ if (isProd) {
   backPort = 8000;
   socketPort = 8001;
 } else if (isTest) {
-  serverUrl = 'http://13.124.236.81';
+  serverUrl = 'http://13.125.249.159';
   backPort = 8000;
   socketPort = 8001;
 }
