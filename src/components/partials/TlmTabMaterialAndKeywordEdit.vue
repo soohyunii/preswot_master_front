@@ -1,7 +1,6 @@
 <template>
   <div id="tlm_tab_material_and_keyword_edit_wrapper">
     <el-row>
-      
       <el-col :span="12">
         <h3>강의 자료 업로드</h3>
         <material-upload />
