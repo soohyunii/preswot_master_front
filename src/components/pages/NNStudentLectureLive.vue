@@ -146,37 +146,34 @@ export default {
           }
           break;
         }
+        /*
         case 'SENDREALTIMEQUESTION': {
-          // vm.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
           break;
         }
+        */
         default: {
           throw new Error(`not defined type ${type}`);
         }
       }
     },
-    async refreshLectureItem(notify) {
+    refreshLectureItem(notify) {
       const vm = this;
-
-      // opened 상태인 아이템이 있다면 보이기
-      const res3 = await lectureService.getOpenedLectureItem({ lectureId: vm.lectureId });
-      if (res3.data !== null) {
-        vm.lectureItem = res3.data;
-      } else {
-        vm.lectureItem = undefined;
-      }
-      if (notify !== false) {
-        vm.$notify({
-          title: '알림',
-          message: '강의아이템이 변경되었습니다.',
-          type: 'warning',
-        });
-      }
-
-      // FIXME : 강사 화면에서 빠른속도로 아이템 보임/숨김을 조작하는 경우, 가끔 학생 화면에서 반영이 안되는 문제 있음
-      // FIXME : 실제 DB에서 가져오는 opened 값이 변하지 않은것을 확인
-      // console.log('@refreshLectureItem / getOpenedLectureItem / res3.data.opened = ');
-      // console.log(res3.data === null ? null : res3.data.opened);
+      // opened 상태인 아이템이 있다면 보이기 : 빠른 속도로 아이템 보임/숨김 조작하는 경우 버그 해결하기위해 1초 지연
+      setTimeout(async () => {
+        const res3 = await lectureService.getOpenedLectureItem({ lectureId: vm.lectureId });
+        if (res3.data !== null) {
+          vm.lectureItem = res3.data;
+        } else {
+          vm.lectureItem = undefined;
+        }
+        if (notify !== false) {
+          vm.$notify({
+            title: '알림',
+            message: '강의아이템이 변경되었습니다.',
+            type: 'warning',
+          });
+        }
+      }, 1000);
     },
   },
   beforeDestroy() {
