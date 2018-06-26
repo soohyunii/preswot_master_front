@@ -28,6 +28,7 @@ import ClassQuestionAnswerDetail from '../components/pages/ClassQuestionAnswerDe
 import test from '../components/partials/test';
 import StudentClassReport from '../components/pages/StudentReport';
 import TeacherClassReport from '../components/pages/TeacherReport';
+import TeacherClassGrading from '../components/pages/TeacherClassGrading';
 
 export default function authRoutes(root) {
   return [
@@ -145,12 +146,19 @@ export default function authRoutes(root) {
       },
     },
     {
+      path: '/teacher/class/:classId/grading',
+      name: 'TeacherClassGraading',
+      component: TeacherClassGrading,
+      meta: {
+        title: 'Teacher Class Grading',
+      },
+    },
+    {
       path: '/class/:classId/questionanswer/:pageNum',
       name: 'ClassQuestionAnswer',
       component: ClassQuestionAnswer,
       meta: {
         title: 'Class Q&A',
-        auth: true,
       },
     },
     {
@@ -159,7 +167,6 @@ export default function authRoutes(root) {
       component: ClassQuestionAnswerWrite,
       meta: {
         title: 'Class Q&A Write',
-        auth: true,
       },
     },
     {
@@ -168,7 +175,6 @@ export default function authRoutes(root) {
       component: ClassQuestionAnswerDetail,
       meta: {
         title: 'Class Q&A Detail',
-        auth: true,
       },
     },
     {
@@ -259,7 +265,6 @@ export default function authRoutes(root) {
       component: StudentClassReport,
       meta: {
         title: '학생 강의 보고서 페이지',
-        auth: true,
       },
     },
     {
@@ -268,7 +273,6 @@ export default function authRoutes(root) {
       component: TeacherClassReport,
       meta: {
         title: '강사 강의 보고서 페이지',
-        auth: true,
       },
     },
   ].map((route) => {

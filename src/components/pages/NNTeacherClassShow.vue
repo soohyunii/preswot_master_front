@@ -6,6 +6,7 @@
       <el-button @click="onClick('ANALYSIS')">과목저널링</el-button>
       <el-button @click="onClick('Report')">성적표</el-button>
       <el-button @click="onClick('Q&A')">Q&amp;A</el-button>
+      <el-button @click="onClick('GRADING')">채점관리</el-button>
     </div>
     <lecture-list
       @row-click="onClickLecture"
@@ -109,6 +110,10 @@ export default {
         }
         case 'Q&A': {
           vm.$router.push(`/a/class/${vm.classId}/questionanswer/0`);
+          break;
+        }
+        case 'GRADING': {
+          vm.$router.push(`/a/teacher/class/${vm.classId}/grading`);
           break;
         }
         default: {

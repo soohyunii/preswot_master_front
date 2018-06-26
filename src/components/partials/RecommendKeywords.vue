@@ -54,7 +54,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('lc', [
+    ...mapMutations('keyword', [
       'updateMovedKeywordList',
       'updateKeywordList',
     ]),

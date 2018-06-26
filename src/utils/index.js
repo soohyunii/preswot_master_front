@@ -38,11 +38,25 @@ export default {
     let isExpired;
     try {
       const payload = jwtDecode(jwt);
-      isExpired = Date.now() < payload.exp;
+      isExpired = Date.now() > payload.exp * 1000;
     } catch (error) {
       isExpired = true;
     }
     return isExpired;
+  },
+  getAuthTypeFromJwt(jwt) {
+    if (jwt.length === 0) {
+      return null;
+    }
+    let decodedJwt;
+
+    try {
+      decodedJwt = jwtDecode(jwt);
+    } catch (error) {
+      console.error(error.toString); // eslint-disable-line no-console
+    }
+
+    return decodedJwt ? decodedJwt.authType : null;
   },
   getEmailFromJwt() {
     const jwt = this.getJwtFromLocalStorage();

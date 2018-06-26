@@ -4,7 +4,7 @@
       강의 아이템 목록이 비었습니다.
     </div>
     <div v-else>
-      {{ props.list }}
+      <!-- {{ props.list }} -->
       <el-table :data="props.list" stripe>
         <el-table-column
           prop="index"
