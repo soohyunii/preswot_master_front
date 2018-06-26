@@ -181,21 +181,34 @@ export default {
       ],
 */
       difficultyList: [5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5, 0],
-      languageList: [
-        {
-          value: 'C',
-          label: 'C',
-        }, {
-          value: 'Java',
-          label: 'Java',
-        }, {
-          value: 'Python',
-          label: 'Python',
-        }, {
-          value: '현재 언어 목록은 MOCK입니다.',
-          label: '현재 언어 목록은 MOCK입니다.',
-        },
-      ],
+      languageList: [{
+        value: 'c',
+        label: 'C',
+      }, {
+        value: 'cpp',
+        label: 'C++',
+      }, {
+        value: 'cshop',
+        label: 'C#',
+      }, {
+        value: 'java',
+        label: 'Java',
+      }, {
+        value: 'python3',
+        label: 'Python3',
+      }, {
+        value: 'shell_script',
+        label: 'Shell Script',
+      }, {
+        value: 'free_basic',
+        label: 'Free Basic',
+      }, {
+        value: 'go',
+        label: 'Go',
+      }, {
+        value: 'php',
+        label: 'PHP',
+      }],
       initFileList: [], // 초기 파일 목록이며, 양방향 바인딩에 사용되지 않음.
     };
   },
