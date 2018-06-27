@@ -2,9 +2,9 @@
   <div id="tlm_tab_lecture_item_edit_wrapper">
     <!-- 존나 신기하게 functional component는 v-show를 안먹는다 -->
     <div v-show="!isEditing">
-      <div class="ps-align-right">
+      <!-- <div class="ps-align-right">
         TODO: 자동 모드 toggle
-      </div>
+      </div> -->
       <lecture-item-list
         @delete="onClickDeleteLectureItem"
         @edit="onClickEditLectureItem"
@@ -19,7 +19,7 @@
       </div>
     </div>
     <div v-if="isEditing">
-      <el-button @click="TODOdeleteClick">TODO: Delete this el-button and click listener</el-button>
+      <el-button @click="onClick('CANCEL_EDIT')" icon="el-icon-back"> 뒤로 가기</el-button>
       <lecture-item-editor />
     </div>
   </div>
@@ -65,17 +65,18 @@ export default {
       'updateCurrentEditingLectureItemId',
       'updateLectureItem',
     ]),
-    TODOdeleteClick() {
-      this.updateCurrentEditingLectureItemId({
-        currentEditingLectureItemId: null,
-      });
-    },
     onClick(type) {
       // const vm = this;
       switch (type) {
         case 'ADD_NEW_LC_ITEM': {
           this.updateCurrentEditingLectureItemId({
             currentEditingLectureItemId: -1,
+          });
+          break;
+        }
+        case 'CANCEL_EDIT': {
+          this.updateCurrentEditingLectureItemId({
+            currentEditingLectureItemId: null,
           });
           break;
         }

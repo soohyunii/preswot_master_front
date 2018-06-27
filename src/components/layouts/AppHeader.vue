@@ -5,7 +5,7 @@
       <!-- TODO: replace span with :xs, :sm, :md, :lg, :xl -->
       <el-col :span="13">
         <el-button
-          v-if="!isProd"
+          v-if="!$isProd"
           :type="appTheme"
           id="navigation_toggle"
           @click="onClick('TOGGLE_NAVIGATION')"
@@ -27,7 +27,7 @@
       <el-col :span="11">
 
         <el-row type="flex" justify="end">
-          <el-col :span="isProd ? 14 : 24">
+          <el-col :span="$isProd ? 14 : 24">
             <!-- <el-dropdown @command="onClick">
               <el-button :type="appTheme" plain>
                 {{ $t('HEADER.LANG_INFO') }}<i class="el-icon-arrow-down el-icon--right"></i>
@@ -38,7 +38,7 @@
               </el-dropdown-menu>
             </el-dropdown> -->
 
-            <router-link v-if="!isProd" to="/a/student/class" v-show="isJwtValid">
+            <router-link v-if="!$isProd" to="/a/student/class" v-show="isJwtValid">
               <el-button :type="appTheme" plain>
                 <i class="fas fa-graduation-cap"></i> 1
               </el-button>
@@ -46,19 +46,19 @@
 
             <router-link to="/a/student/NNclass" v-show="isJwtValid">
               <el-button :type="appTheme" plain>
-                <i class="fas fa-graduation-cap"></i> <span v-show="!isProd">2</span>
+                <i class="fas fa-graduation-cap"></i> <span v-show="!$isProd">2</span>
               </el-button>
             </router-link>
 
-            <router-link v-if="!isProd" to="/a/teacher/class" v-show="isJwtValid">
+            <router-link v-if="!$isProd" to="/a/teacher/class" v-show="isJwtValid">
               <el-button :type="appTheme" plain>
                 <i class="fas fa-edit"></i>1
               </el-button>
             </router-link>
 
-             <router-link v-if="authType === 1 || !isProd" to="/a/teacher/NNclass" v-show="isJwtValid" id="btn_teacher_home">
+             <router-link v-if="authType === 1 || !$isProd" to="/a/teacher/NNclass" v-show="isJwtValid" id="btn_teacher_home">
               <el-button :type="appTheme" plain>
-                <i class="fas fa-edit"></i> <span v-show="!isProd">2</span>
+                <i class="fas fa-edit"></i> <span v-show="!$isProd">2</span>
               </el-button>
             </router-link>
 
@@ -80,11 +80,11 @@
             <!-- <router-link to="/a/profile" v-show="isJwtValid">
             </router-link> -->
 
-            <router-link to="/register" v-show="!isJwtValid">
+            <!-- <router-link to="/register" v-show="!isJwtValid">
               <el-button :type="appTheme" plain>
                 회원가입
               </el-button>
-            </router-link>
+            </router-link> -->
           </el-col>
         </el-row>
 
@@ -122,7 +122,6 @@ export default {
   data() {
     return {
       searchText: '',
-      isProd: document.URL.includes('preswot'),
     };
   },
   computed: {

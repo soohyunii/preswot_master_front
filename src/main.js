@@ -19,8 +19,10 @@ import store from './stores';
 import messages from './messages';
 import utils from './utils';
 import { websocketUrl } from './services/config';
+import appPlugin from './utils/appPlugin';
 
 
+Vue.use(appPlugin);
 Vue.config.productionTip = false;
 Vue.use(Element, {
   locale,
