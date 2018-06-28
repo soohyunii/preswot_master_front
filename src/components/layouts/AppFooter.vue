@@ -1,5 +1,5 @@
 <template>
-  <div id="app_footer_wrapper">
+  <div id="app_footer_wrapper" v-show="!isLive">
     <div class="bt-container">
       <el-row>
         <el-col :span="24" class="first-section">
@@ -18,10 +18,24 @@
   </div>
 </template>
 
+
+<script>
+export default {
+  name: 'AppFooter',
+  computed: {
+    isLive() {
+      return this.$route.fullPath.includes('live');
+    },
+  },
+};
+</script>
+
+
 <style lang="scss" scoped>
 @import "~@/variables.scss";
 
 #app_footer_wrapper {
+  background-color: lighten($app-oatmeal, 50%);
   border-top: lightgray 1px solid;
   .first-section {
     text-align: center;
@@ -42,10 +56,3 @@
   }
 }
 </style>
-
-
-<script>
-export default {
-  name: 'AppFooter',
-};
-</script>
