@@ -57,9 +57,9 @@ export default {
       get() {
         const res = [];
         // JAVA에서의 List.addAll()
-        Array.prototype.push.apply(res, this.$store.state.lc.keywordList);
-        Array.prototype.push.apply(res, this.$store.state.lc.movedKeywordList);
-        Array.prototype.push.apply(res, this.$store.state.lc.addedKeywordList);
+        Array.prototype.push.apply(res, this.$store.state.keyword.keywordList);
+        Array.prototype.push.apply(res, this.$store.state.keyword.movedKeywordList);
+        Array.prototype.push.apply(res, this.$store.state.keyword.addedKeywordList);
         return res;
       },
       set(/* value */) {

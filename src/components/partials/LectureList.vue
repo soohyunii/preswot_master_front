@@ -26,18 +26,89 @@
           align="center"
         ></el-table-column>
 
-        <el-table-column
-          prop="name"
-          label="강의"
-          width="225"
-          align="center"
-        ></el-table-column>
+        <template v-if="props.type === 'TEACHER'">
+            <el-table-column
+              prop="name"
+              label="강의"
+              width="225"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+            label="기간"
+            width="300"
+            align="center"
+          >
+            <template slot-scope="scope">
+              {{ scope.row.start_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') : '미정' }}
+              ~
+              {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString('ko-KR') : '미정' }}
+            </template>
+          </el-table-column>
 
-        <el-table-column
-          label="기간"
-          width="300"
-          align="center"
-        >
+          <el-table-column
+            label="수강한 학생 수"
+            width="110"
+          >
+            <template slot-scope="scope">
+              몇명 / {{ scope.row.capacity }}
+            </template>
+          </el-table-column>
+
+          <el-table-column
+            label="수강생 이해도"
+            width="110"
+          >
+            <template slot-scope="scope">
+              몇%
+            </template>
+          </el-table-column>
+
+          <el-table-column
+            label="-"
+            width="80"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <router-link :to="`/a/teacher/NNlecture/${scope.row.lecture_id}/live`">
+                <el-button>강의</el-button>
+              </router-link>
+            </template>
+          </el-table-column>
+
+          <el-table-column
+            label="-"
+            width="80"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <router-link :to="`/a/teacher/NNlecture/${scope.row.lecture_id}/manage?classId=${scope.row.class_id}`">
+                <el-button>관리</el-button>
+              </router-link>
+            </template>
+          </el-table-column>
+
+          <el-table-column
+            label="-"
+            width="80"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <el-button type="danger" @click="listeners['delete'](scope.$index)">삭제</el-button>
+            </template>
+          </el-table-column>
+        </template>
+
+        <template v-if="props.type === 'STUDENT'">
+          <el-table-column
+            prop="name"
+            label="강의"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            label="기간"
+            width="300"
+            align="center"
+          >
           <template slot-scope="scope">
             <!-- {{ scope.row.intended_start ? new Date(scope.row.intended_start).toLocaleDateString('ko-KR') : '미정' }} // Legacy : 필요없다면 지워주세요.-->
             {{ scope.row.start_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') : '미정' }}
@@ -45,66 +116,35 @@
             <!-- {{ scope.row.intended_end ? new Date(scope.row.intended_end).toLocaleDateString('ko-KR') : '미정' }} // Legacy : 필요없다면 지워주세요. -->
             {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString('ko-KR') : '미정' }}
           </template>
-        </el-table-column>
-
-        <el-table-column
-          label="수강한 학생 수"
-          width="110"
-        >
-          <template slot-scope="scope">
-            몇명 / {{ scope.row.capacity }}
-          </template>
-        </el-table-column>
-
-        <el-table-column
-          label="수강생 이해도"
-          width="110"
-        >
-          <template slot-scope="scope">
-            몇%
-          </template>
-        </el-table-column>
-
-        <el-table-column
-          label="-"
-          width="80"
-          align="center"
-        >
-          <template slot-scope="scope">
-            <router-link :to="`/a/teacher/NNlecture/${scope.row.lecture_id}/live`">
-              <el-button>강의</el-button>
-            </router-link>
-          </template>
-        </el-table-column>
-
-        <el-table-column
-          label="-"
-          width="80"
-          align="center"
-        >
-          <template slot-scope="scope">
-            <router-link :to="`/a/teacher/NNlecture/${scope.row.lecture_id}/manage?classId=${scope.row.class_id}`">
-              <el-button>관리</el-button>
-            </router-link>
-          </template>
-        </el-table-column>
-
-        <el-table-column
-          label="-"
-          width="80"
-          align="center"
-        >
-          <template slot-scope="scope">
-            <el-button type="danger" @click="listeners['delete'](scope.$index)">삭제</el-button>
-          </template>
-        </el-table-column>
-
+          </el-table-column>
+          <el-table-column
+            label="수강여부"
+            width="100"
+            align="center"
+          >
+            <template slot-scope="scope">
+              {{ scope.row.heard }}
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="-"
+            width="120"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <router-link :to="`/a/student/NNlecture/${scope.row.lecture_id}/live`">
+                <el-button>강의보기</el-button>
+              </router-link>
+            </template>
+          </el-table-column>
+        </template>
       </el-table>
     </div>
   </div>
 </template>
 
 <script>
+// TODO : 몇명, 몇% 실제 값 대입
 import isArray from 'lodash.isarray';
 
 export default {

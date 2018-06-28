@@ -209,6 +209,13 @@ export default {
     },
     async submitForm(formName) {
       const vm = this;
+
+      if (vm.$isProd) {
+        vm.$notify({
+          message: 'ㅎㅎ! 막아놨음',
+        });
+        return;
+      }
       const fieldList = [
         'email_id',
         'password',
