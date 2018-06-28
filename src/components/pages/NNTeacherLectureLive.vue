@@ -1,5 +1,4 @@
 <template>
-<br><br/>
   <div id="teacher_lecture_live_wrapper" class="bt-container">
       <h2>{{ path }}</h2>
     <el-row :gutter="20">
