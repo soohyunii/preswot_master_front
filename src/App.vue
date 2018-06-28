@@ -12,7 +12,7 @@
           <el-main id="app_router_view_wrapper" >
             <router-view :key="$route.fullPath"></router-view> <!-- vue router에서 동일한 path 호출시 새로고침 효과 -->
           </el-main>
-          <el-footer id="app_footer_wrapper">
+          <el-footer>
             <app-footer />
           </el-footer>
         </el-container>
@@ -106,10 +106,6 @@ body {
 #app_router_view_wrapper {
   background-color: lighten($app-oatmeal, 50%);
   flex: 1;
-}
-
-#app_footer_wrapper {
-  background-color: lighten($app-oatmeal, 50%);
 }
 
 #teacher_theme {
