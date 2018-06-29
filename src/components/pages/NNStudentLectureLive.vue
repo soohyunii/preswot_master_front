@@ -89,9 +89,9 @@ export default {
       }
     });
     vm.$socket.on('GET_REALTIME_STAT', (msg) => {
-      const jsonMSG = JSON.parse(msg);
+      const jsonMSG = (JSON.parse(msg))[0];
       const result = utils.checkBrowser();
-      if (jsonMSG.on_program !== true && result.os.includes('Windows') === true) {
+      if (typeof jsonMSG.on_program !== 'undefined' && !jsonMSG.on_program && result.os.includes('Windows') === true) {
         // eslint-disable-next-line
         alert("교육 데이터 수집 프로그램을 실행하셔야 강의에 입장하실 수 있습니다.");
         window.location.href = '/download';
