@@ -13,6 +13,7 @@
     <!-- inputTail: {{ inputTail }}<br /><br /> -->
 
     <el-form :model="inputHead" label-width="125px" style="max-width: 800px;">
+      <!--
       <el-form-item label="타입" prop="type" id="radio_type">
         <el-radio-group v-model.number="inputHead.type">
           <el-radio-button :label="0">예습</el-radio-button>
@@ -20,12 +21,13 @@
           <el-radio-button :label="2">복습</el-radio-button>
         </el-radio-group>
       </el-form-item>
+      -->
       <el-form-item label="아이템 유형" prop="lcItemType" id="lc_item_type">
         <el-radio-group v-model="inputHead.lcItemType" :disabled="!isNewItem">
           <el-radio-button label="question">문항</el-radio-button>
           <el-radio-button label="survey">설문</el-radio-button>
           <el-radio-button label="practice">실습</el-radio-button>
-          <el-radio-button label="discussion">토론</el-radio-button>
+          <!-- <el-radio-button label="discussion">토론</el-radio-button> -->
         </el-radio-group>
 
         <span v-show="!isNewItem">
@@ -108,7 +110,6 @@ export default {
     if (!vm.isNewItem) {
       await vm.getLcItem();
       const item = vm.lectureItem;
-      console.log('getLcItem res', item); // eslint-disable-line no-console
 
       vm.inputHead.type = item.order;
       vm.inputHead.lcItemType = utils.convertLcItemType(item.type);
@@ -136,6 +137,8 @@ export default {
           throw new Error(`not defined lcItemType ${vm.inputHead.lcItemType}`);
         }
       }
+    } else {
+      vm.inputHead.type = 1; // FIXME: 예습, 복습 감춤으로 인해 항상 본강만 선택되도록 임시 조치. 추후 예습 복습 살리면 지울 것
     }
   },
   data() {

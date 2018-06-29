@@ -7,6 +7,7 @@
     <!-- {{ input }}<br /><br /> -->
 
     <el-form :model="input" ref="elForm" label-width="125px" style="max-width: 800px;">
+      <!-- 20180629 강의 타입 제거
       <el-form-item label="타입">
         <el-radio-group v-model.number="input.type">
           <el-radio-button :label="0">본강</el-radio-button>
@@ -14,6 +15,7 @@
           <el-radio-button :label="2">시험</el-radio-button>
         </el-radio-group>
       </el-form-item>
+      -->
 
       <el-form-item label="강의 타이틀">
         <el-input v-model="input.title"></el-input>
@@ -74,6 +76,8 @@ export default {
       vm.input.type = vm.lecture.type || vm.initialInput.type;
       vm.input.lcStartDate = vm.lecture.start_time || vm.initialInput.lcStartDate;
       vm.input.lcEndDate = vm.lecture.end_time || vm.initialInput.lcEndDate;
+    } else {
+      vm.input.type = 1; // 20180629 강의 타입 제거
     }
   },
   methods: {
