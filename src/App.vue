@@ -12,7 +12,7 @@
           <el-main id="app_router_view_wrapper" >
             <router-view :key="$route.fullPath"></router-view> <!-- vue router에서 동일한 path 호출시 새로고침 효과 -->
           </el-main>
-          <el-footer id="app_footer_wrapper">
+          <el-footer>
             <app-footer />
           </el-footer>
         </el-container>
@@ -78,9 +78,20 @@ export default {
         }
       }
     },
+    chromeChecker() {
+      const result = utils.checkBrowser();
+      if (result.name !== 'chrome') {
+        // eslint-disable-next-line
+        const r = confirm('Preswot은 chrome에서만 지원 가능합니다. chrome 다운로드 페이지로 이동하시겠습니까?');
+        if (r === true) {
+          window.open('https://www.google.co.kr/chrome/index.html', '_blank');
+        }
+      }
+    },
   },
   mounted() {
     const vm = this;
+    vm.chromeChecker();
     vm.validateJwt();
     window.setInterval(() => {
       vm.validateJwt();
@@ -106,10 +117,6 @@ body {
 #app_router_view_wrapper {
   background-color: lighten($app-oatmeal, 50%);
   flex: 1;
-}
-
-#app_footer_wrapper {
-  background-color: lighten($app-oatmeal, 50%);
 }
 
 #teacher_theme {
