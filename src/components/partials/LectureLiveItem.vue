@@ -67,6 +67,7 @@
       <div v-if="data.type === 2">
         <p>실습</p>
         <h3>강사의 지시에 따라주세요.</h3>
+        <h3>{{ data.lecture_code_practices[0].code }}</h3>
       </div>
       <div v-if="data.type === 3">
         <p>토론</p>
