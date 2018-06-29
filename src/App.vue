@@ -78,9 +78,20 @@ export default {
         }
       }
     },
+    chromeChecker() {
+      const result = utils.checkBrowser();
+      if (result.name !== 'chrome') {
+        // eslint-disable-next-line
+        const r = confirm('Preswot은 chrome에서만 지원 가능합니다. chrome 다운로드 페이지로 이동하시겠습니까?');
+        if (r === true) {
+          window.open('https://www.google.co.kr/chrome/index.html', '_blank');
+        }
+      }
+    },
   },
   mounted() {
     const vm = this;
+    vm.chromeChecker();
     vm.validateJwt();
     window.setInterval(() => {
       vm.validateJwt();
