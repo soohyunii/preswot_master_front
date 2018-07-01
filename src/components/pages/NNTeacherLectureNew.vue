@@ -38,7 +38,7 @@
           type="primary"
           @click="onSubmit"
         >
-          과목 추가하기
+          {{ isManage ? '과목 수정하기' : '과목 추가하기'}}
         </el-button>
       </el-form-item>
 
@@ -93,8 +93,8 @@ export default {
               lectureId: vm.lectureId,
               type: vm.input.type,
               name: vm.input.title,
-              start_time: vm.input.lcStartDate,
-              end_time: vm.input.lcEndDate,
+              startTime: vm.input.lcStartDate,
+              endTime: vm.input.lcEndDate,
             });
             vm.$notify({
               title: '강의 수정 성공',
