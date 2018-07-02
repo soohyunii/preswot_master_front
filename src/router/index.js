@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import LandingPage from '../components/pages/LandingPage';
+import LandingPage from '../components/pages/LandingPage/index';
 import Login from '../components/pages/Login';
 import FindingPasswordPage from '../components/pages/FindingPasswordPage';
 import Register from '../components/pages/Register';

@@ -4,18 +4,17 @@
     <el-container class="container" id="landing_page_container">
       <el-main>
         <el-row type="flex" justify="center">
-          <el-col :span="12">
-            영상 썸네일
-            <div class="image-wrapper">
-              <img :src="require('@/assets/dev/ratio_4_3.png')">
-            </div>
-          </el-col>
+            <el-col :span="8">
+              영상 썸네일
+            <class-video></class-video>
+            </el-col>
         </el-row>
 
         <!-- TODO: translation -->
         <div class="">인기 강의 목록<hr></div>
         <el-row :gutter="10" >
-          <template v-for="(item, index) in popularClassList">
+          <popular-class-list></popular-class-list>
+          <!-- <template v-for="(item, index) in popularClassList">
             <el-col :key="item.class_id" :span="24/elementNumber" v-if="index < elementNumber">
               <class-intro-card
                 :title="item.name"
@@ -29,6 +28,7 @@
               />
             </el-col>
           </template>
+           -->
         </el-row>
         <br/>
 
@@ -55,13 +55,19 @@
 <script>
 import { mapActions } from 'vuex';
 import deepEqual from 'deep-equal';
-import ClassIntroCard from '../partials/ClassIntroCard';
-import studentService from '../../services/studentService';
+import ClassIntroCard from '../../partials/ClassIntroCard';
+import studentService from '../../../services/studentService';
+import ClassVideo from './ClassVideoCP/index';
+import PopularClassList from './PopularClassesCP/index';
+import MyClassesList from './MyClassessCP/index';
+
 
 export default {
   name: 'LandingPage',
   components: {
     ClassIntroCard,
+    ClassVideo,
+    PopularClassList,
   },
   data() {
     const vm = this;
@@ -104,16 +110,16 @@ export default {
             });
           }
 
-          try {
-            await vm.getPopularClassList();
-          } catch (error) {
-            vm.$notify({
-              title: '과목 목록 가져오기 실패',
-              message: error.toString(),
-              type: 'error',
-              duration: 0,
-            });
-          }
+          // try {
+          //   await vm.getPopularClassList();
+          // } catch (error) {
+          //   vm.$notify({
+          //     title: '과목 목록 가져오기 실패',
+          //     message: error.toString(),
+          //     type: 'error',
+          //     duration: 0,
+          //   });
+          // }
           break;
         }
         default: {
@@ -154,9 +160,9 @@ export default {
     },
   },
   async mounted() {
-    const vm = this;
-    await vm.getPopularClassList();
-    vm.handleResize();
+    // const vm = this;
+    // await vm.getPopularClassList();
+    // vm.handleResize();
   },
 };
 </script>
@@ -212,15 +218,5 @@ export default {
     line-height: 320px;
   }
 
-  .image-wrapper {
-    position: relative;
-    padding-bottom: 56.25%;
-  }
 
-  .image-wrapper img {
-    position: absolute;
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
-  }
 </style>
