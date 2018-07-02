@@ -137,6 +137,8 @@ export default {
                 message: '제출하였습니다.',
                 type: 'success',
               });
+              vm.lectureItem = undefined;
+              vm.refreshLectureItem(false);
               break;
             }
             case 1: { // 설문
@@ -149,6 +151,8 @@ export default {
                 message: '제출하였습니다.',
                 type: 'success',
               });
+              vm.lectureItem = undefined;
+              vm.refreshLectureItem(false);
               break;
             }
             default: {
