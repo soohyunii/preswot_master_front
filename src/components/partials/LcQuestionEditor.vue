@@ -154,6 +154,7 @@
 </template>
 
 <script>
+// TODO : 메모리, 시간 정수형으로 validate!!!
 import { mapState } from 'vuex';
 
 export default {
@@ -172,17 +173,6 @@ export default {
       initialInputTail,
       inputBody: Object.assign({}, initialInputBody),
       inputTail: Object.assign({}, initialInputTail),
-/*
-      keywordList: [ // TODO: extract it to somewhere else
-        {
-          value: '키워드1',
-        }, {
-          value: '키워드2',
-        }, {
-          value: '키워드3',
-        },
-      ],
-*/
       difficultyList: [5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5, 0],
       languageList: [{
         value: 'python3',

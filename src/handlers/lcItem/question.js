@@ -1,3 +1,4 @@
+import deepCopy from 'deep-copy';
 import LcItemHandler from './index';
 import questionService from '../../services/questionService';
 import lectureItemService from '../../services/lectureItemService';
@@ -54,7 +55,7 @@ export default class QuestionHandler extends LcItemHandler {
         vm.$set(vm.inputTail, 'memoryLimit', q.memory_limit);
         vm.$set(vm.inputTail, 'timeLimit', q.time_limit);
         vm.$set(vm.inputTail, 'testCaseList', q.problem_testcases);
-        vm.$set(vm.inputTail, 'testCaseListOld', q.problem_testcases);
+        vm.$set(vm.inputTail, 'testCaseListOld', deepCopy(q.problem_testcases));
         break;
       }
       case 4: { // SQL
@@ -128,10 +129,10 @@ export default class QuestionHandler extends LcItemHandler {
     if (inputBody.questionType === 'SW') {
       // 기존 testCase가 있다면 싹다 지운다.
       if (inputTail.testCaseListOld !== undefined) {
-        inputTail.testCaseListOld.forEach((element, index) => {
+        inputTail.testCaseListOld.forEach((element) => {
           questionService.deleteQuestionTestCase({
             questionId,
-            num: index,
+            num: element.num,
           });
         });
       }
