@@ -41,6 +41,7 @@ export default class QuestionHandler extends LcItemHandler {
       }
       case 2: { // 서술
         vm.inputBody.questionType = 'DESCRIPTION';
+        vm.$set(vm.inputTail, 'answer', q.answer[0]);
         break;
       }
       case 3: { // SW

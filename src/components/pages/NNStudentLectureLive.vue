@@ -2,6 +2,7 @@
   <div>
       <h2>{{ path }}</h2>
     <el-row :gutter="20">
+      <!--
       <el-col :span="12">
         <youtube
           id="video"
@@ -12,7 +13,8 @@
           :mute="true">
         </youtube>
       </el-col>
-      <el-col :span="12">
+      -->
+      <el-col :span="24">
         <el-tabs type="card">
           <el-tab-pane label="강의아이템">
             <lecture-live-item
