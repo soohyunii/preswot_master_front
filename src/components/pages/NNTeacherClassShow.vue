@@ -26,7 +26,7 @@
 </template>
 
 <script>
-// TODO : 180629 - 기존 Q&A 가 '게시판' 으로 바꼈습니다. 모든 변수, 파일명의 Q&A를 board로 바꿀지..? 
+// TODO : 180629 - 기존 Q&A 가 '게시판' 으로 바꼈습니다. 모든 변수, 파일명의 Q&A를 board로 바꿀지..?
 import { mapState, mapActions, mapGetters } from 'vuex';
 import LectureList from '../partials/LectureList';
 import utils from '../../utils';
