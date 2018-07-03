@@ -130,7 +130,7 @@ export default {
                 questionId: data[1],
                 answers: data[2],
                 interval: 0,
-                codeLanguage: undefined,
+                codeLanguage: data[3],
               });
               vm.$notify({
                 title: '알림',
