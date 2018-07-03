@@ -82,17 +82,17 @@ export default {
       }
     },
     onDetail(row) {
-      this.$router.push(`/a/class/${this.$route.params.classId}/questionanswerdetail/${row.board_id}`);
+      this.$router.push(`/a/class/${this.$route.params.classId}/boarddetail/${row.board_id}`);
     },
     onClick(type, arg) {
       const vm = this;
       switch (type) {
         case 'SEARCH': {
-          vm.$router.push({ path: `/a/class/${vm.$route.params.classId}/questionanswer/${vm.$route.params.pageNum}`, query: { type: `${vm.$data.searchType}`, query: `${vm.$data.searchWord}` } });
+          vm.$router.push({ path: `/a/class/${vm.$route.params.classId}/board/${vm.$route.params.pageNum}`, query: { type: `${vm.$data.searchType}`, query: `${vm.$data.searchWord}` } });
           break;
         }
         case 'WRITE': {
-          vm.$router.push(`/a/class/${vm.$route.params.classId}/questionanswerwrite`);
+          vm.$router.push(`/a/class/${vm.$route.params.classId}/boardwrite`);
           break;
         }
         case 'CHANGEPAGE': {

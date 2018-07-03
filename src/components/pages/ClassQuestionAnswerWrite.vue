@@ -89,7 +89,7 @@ export default {
               fileGuid: fileGuidList,
             });
           }
-          vm.$router.push(`/a/class/${this.$route.params.classId}/questionanswer/0`);
+          vm.$router.push(`/a/class/${this.$route.params.classId}/board/0`);
           break;
         }
         case 'CANCEL': {

@@ -83,7 +83,7 @@ export default {
           vm.setModifyMode({
             flag: true,
           });
-          await vm.$router.push(`/a/class/${this.$route.params.classId}/questionanswerwrite`);
+          await vm.$router.push(`/a/class/${this.$route.params.classId}/boardwrite`);
           break;
         }
         case 'DELETEPOST': {
