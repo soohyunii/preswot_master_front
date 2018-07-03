@@ -104,10 +104,6 @@ export default {
 @import "~@/app.scss";
 @import "~@/variables.scss";
 
-body {
-  font-family: 'Noto Sans KR', sans-serif !important;
-}
-
 #app {
   display: flex;
   min-height: 108vh;
