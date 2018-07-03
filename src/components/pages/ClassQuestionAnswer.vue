@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div id="class_board_wrapper" class="bt-container">
     <h3>게시판</h3>
     <el-table :data="postList" @cell-click="onDetail" style="width: 100%">
       <el-table-column prop="board_id" label="번호" width="130">
@@ -29,7 +29,7 @@
           :label="option.label"
           :value="option.value">
         </el-option>
-      </el-select>      
+      </el-select>
       <div style="display: inline-block; width: 400px">
         <el-input placeholder="검색어를 입력하세요." v-model="searchWord" @keyup.enter="onClick('SEARCH')"></el-input>
       </div>
