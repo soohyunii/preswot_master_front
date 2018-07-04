@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="bt-container">
     <resize-observer @notify="handleResize" />
-    <p>수강중인 과목</p>
+    <h2>수강중인 과목</h2>
     <class-intro-card-grid
     v-if="studyingClassListTemp.length > 0"
     :onClick="onClick"
@@ -93,3 +93,15 @@ export default {
   },
 };
 </script>
+
+
+<style lang="scss">
+.bt-container h2{
+  margin-top:50px;
+  margin-left:20px;
+  margin-bottom:30px;
+}
+
+
+
+</style>

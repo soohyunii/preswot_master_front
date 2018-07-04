@@ -7,7 +7,7 @@
       <el-table :data="props.list" stripe @row-click="listeners['row-click']">
         <el-table-column
           prop="index"
-          label="과목 번호"
+          label="No."
           width="100"
           align="center"
         >
@@ -18,7 +18,7 @@
 
         <el-table-column
           prop="name"
-          label="과목"
+          label="강의명"
           width="225"
           align="center"
         ></el-table-column>
@@ -45,7 +45,6 @@
             {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString('ko-KR') : '미정' }}
           </template>
         </el-table-column>
-
         <el-table-column
           label="-"
           width="80"
@@ -120,3 +119,14 @@ export default {
   },
 };
 </script>
+
+<!-- sh s -->
+<style lang="scss" scoped>
+  .el-table{
+    width: 940px;
+    /* opacity: 0; */
+    background-color: #f5f7fa;
+  }
+
+</style>
+<!-- sh e -->

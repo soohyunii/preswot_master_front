@@ -1,7 +1,7 @@
 <template>
   <div class="bt-container">
     <div class="wrapper"> <!-- position:absolute의 부모가 되기 위해 relative 속성 부여 -->
-      <img :src="require('@/assets/orange.png')" height="400" width="100%">
+      <img class="opac" :src="require('@/assets/study01.jpg')" height="500" width="100%">
       <div class="class-title-info">
         <div class="left">
           <div class="top">
@@ -16,6 +16,8 @@
         </div>
       </div>
     </div>
+
+   <!--  <div class="bt-container"> --><!-- sh change -->
     <div class="wrapper">
       <div class="wrapper-box" id = "teacher-info">
         <div class="top semi-title-font">
@@ -31,17 +33,21 @@
         </div>
       </div>
       <div class="wrapper-box" id = "class-info">
-        <div class="wrapper-box-row semi-title-font">과목 상세 소개
+        <div class="wrapper-box-row semi-title-font">강의 상세 소개
         </div>
-        <div class="wrapper-box-row">
+
+        <!-- sh : 강의 상세 소개에 이미지가 필요한가? -->
+        <!-- <div class="wrapper-box-row">
           <img :src="require('@/assets/test.jpg')" height="300" width="100%">
-        </div>
+        </div> -->
+        <!-- sh e -->
         <div class="wrapper-box-row">
           {{classes.description}}
         </div>
       </div>
     </div>
   </div>
+  <!-- </div> -->
 </template>
 
 <script>
@@ -123,6 +129,13 @@ export default {
   background-color: #ffffff;
   padding: 25px;
 }
+
+/* sh s*/
+.opac{
+  opacity:0.65;
+}
+/* sh e */
+
 #teacher-info {
   margin-top: 30px;
 }

@@ -122,3 +122,12 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+#landing_page_wrapper h3{
+  margin-top:45px;
+}
+
+
+
+</style>
