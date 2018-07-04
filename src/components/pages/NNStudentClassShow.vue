@@ -2,8 +2,9 @@
   <div id="student_lecture_index_wrapper" class="bt-container">
     <h2>{{ currentStudyingClass(classId) ? currentStudyingClass(classId).name : '' }}</h2>
     <div class="right-align margin-bottom-15">
-      <el-button @click="onClick('KNOWLEDGEMAP')">과목지식맵</el-button>
-      <el-button @click="onClick('ANALYSIS')">과목저널링</el-button>
+      <!-- <el-button @click="onClick('KNOWLEDGEMAP')">과목지식맵</el-button> -->
+      <!-- <el-button @click="onClick('ANALYSIS')">과목저널링</el-button> -->
+      <el-button @click="onClick('Q&A')">게시판</el-button>
     </div>
     <lecture-list
       @row-click="onClickLecture"
@@ -73,6 +74,7 @@ export default {
       'deleteScenario',
     ]),
     onClick(type) {
+      const vm = this;
       switch (type) {
         case 'KNOWLEDGEMAP': {
           // TODO : link
@@ -82,6 +84,10 @@ export default {
         case 'ANALYSIS': {
           // TODO : link
           // vm.$router.push(`/a/teacher/class/${vm.classId}/journal`);
+          break;
+        }
+        case 'Q&A': {
+          vm.$router.push(`/a/class/${vm.classId}/board/0`);
           break;
         }
         default: {

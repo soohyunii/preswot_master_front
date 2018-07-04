@@ -172,7 +172,7 @@ export default function authRoutes(root) {
       },
     },
     {
-      path: '/class/:classId/questionanswer/:pageNum',
+      path: '/class/:classId/board/:pageNum',
       name: 'ClassQuestionAnswer',
       component: ClassQuestionAnswer,
       meta: {
@@ -180,7 +180,7 @@ export default function authRoutes(root) {
       },
     },
     {
-      path: '/class/:classId/questionanswerwrite',
+      path: '/class/:classId/boardwrite',
       name: 'ClassQuestionAnswerWrite',
       component: ClassQuestionAnswerWrite,
       meta: {
@@ -188,7 +188,7 @@ export default function authRoutes(root) {
       },
     },
     {
-      path: '/class/:classId/questionanswerdetail/:boardId',
+      path: '/class/:classId/boarddetail/:boardId',
       name: 'ClassQuestionDetail',
       component: ClassQuestionAnswerDetail,
       meta: {

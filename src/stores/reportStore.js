@@ -99,8 +99,7 @@ export default {
           ((tempReport.pre_rank_concentration_score / preNumberOfStudent) * 10).toFixed(1);
         }
         // 본강데이터 order 1
-        const lecNumberOfStudent
-          = state.currentClassStat[i + (state.reports.length * 1)].number_of_student;
+        const lecNumberOfStudent = state.currentClassStat[i].number_of_student;
         let lecGradeParti;
         if (tempReport.lec_rank_participation_score === -1) {
           lecGradeParti = '-';
@@ -123,8 +122,7 @@ export default {
         ((tempReport.lec_rank_concentration_score / lecNumberOfStudent) * 10).toFixed(1);
         }
         // 복습데이터 order 2
-        const revNumberOfStudent
-          = state.currentClassStat[i + (state.reports.length * 2)].number_of_student;
+        const revNumberOfStudent = state.currentClassStat[i].number_of_student;
         let revGradeParti;
         if (tempReport.rev_rank_participation_score === -1) {
           revGradeParti = '-';
@@ -207,10 +205,10 @@ export default {
           parti_rea_avg: state.currentClassStat[(i * 3) + 1].avg_participation_score,
           parti_rev_avg: state.currentClassStat[(i * 3) + 2].avg_participation_score,
         });
+        commit('updateResultData', {
+          ResultData: resultData,
+        });
       }
-      commit('updateResultData', {
-        ResultData: resultData,
-      });
     },
     async setCurrentClassAttendee({ state, commit }) {
       const res = await reportService.getClassAttendeeList({
