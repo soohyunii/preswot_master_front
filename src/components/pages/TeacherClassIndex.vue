@@ -171,7 +171,7 @@ export default {
           break;
         }
         case 'Q&A': {
-          vm.$router.push(`/a/class/${vm.currentTeachingClass.class_id}/questionanswer/0`);
+          vm.$router.push(`/a/class/${vm.currentTeachingClass.class_id}/board/0`);
           break;
         }
         default: {

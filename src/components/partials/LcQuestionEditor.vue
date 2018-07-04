@@ -53,6 +53,9 @@
     </template>
 
     <template v-if="inputBody.questionType === 'DESCRIPTION'">
+      <el-form-item label="모범답안" id="textarea_short_answer">
+        <el-input v-model="inputTail.answer" placeholder="내용을 입력해주세요." type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
+      </el-form-item>
     </template>
 
     <template v-if="inputBody.questionType === 'SW'">
@@ -151,6 +154,7 @@
 </template>
 
 <script>
+// TODO : 메모리, 시간 정수형으로 validate!!!
 import { mapState } from 'vuex';
 
 export default {
@@ -169,19 +173,11 @@ export default {
       initialInputTail,
       inputBody: Object.assign({}, initialInputBody),
       inputTail: Object.assign({}, initialInputTail),
-/*
-      keywordList: [ // TODO: extract it to somewhere else
-        {
-          value: '키워드1',
-        }, {
-          value: '키워드2',
-        }, {
-          value: '키워드3',
-        },
-      ],
-*/
       difficultyList: [5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5, 0],
       languageList: [{
+        value: 'python3',
+        label: 'Python3',
+      }, {
         value: 'c',
         label: 'C',
       }, {
@@ -193,9 +189,6 @@ export default {
       }, {
         value: 'java',
         label: 'Java',
-      }, {
-        value: 'python3',
-        label: 'Python3',
       }, {
         value: 'shell_script',
         label: 'Shell Script',

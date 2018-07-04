@@ -4,11 +4,15 @@ import moment from 'moment';
 import isNil from 'lodash.isnil';
 import isBoolean from 'lodash.isboolean';
 import isNumber from 'lodash.isnumber';
-
+import browser from 'browser-detect';
 // eslint-disable-next-line
 const re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
 export default {
+  checkBrowser() {
+    const result = browser();
+    return result;
+  },
   getJwtFromLocalStorage() {
     const jwt = localStorage.getItem('jwt') || '';
     // TODO: Check expiration date periodically

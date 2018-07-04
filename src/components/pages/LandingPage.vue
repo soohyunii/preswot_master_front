@@ -3,7 +3,7 @@
     <resize-observer @notify="handleResize" />
     <landing-search-header/>
     <!-- <h3>인기 과목 보기</h3> -->
-    <h3>개설된 과목 목록</h3>
+    <!-- <h3>개설된 과목 목록</h3>
     <class-intro-card-grid
       v-if="openedClassListTemp.length > 0"
       :onClick="onClick"
@@ -12,7 +12,7 @@
     />
     <p v-if="openedClassListTemp.length === 0">
       개설된 과목 목록이 없습니다.
-    </p>
+    </p> -->
   </div>
 </template>
 

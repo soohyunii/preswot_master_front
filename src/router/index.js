@@ -4,6 +4,8 @@ import LandingPage from '../components/pages/LandingPage';
 import Login from '../components/pages/Login';
 import FindingPasswordPage from '../components/pages/FindingPasswordPage';
 import Register from '../components/pages/Register';
+import DownloadPage from '../components/pages/DownloadPage';
+import PolicyPage from '../components/pages/PolicyPage';
 import NotFound from '../components/pages/NotFound';
 import ClassIndex from '../components/pages/ClassIndex';
 import ClassDetail from '../components/pages/ClassDetail';
@@ -34,6 +36,16 @@ export default new Router({
       path: '/register',
       name: 'Register',
       component: Register,
+    },
+    {
+      path: '/download',
+      name: 'Download',
+      component: DownloadPage,
+    },
+    {
+      path: '/policy',
+      name: 'Policy',
+      component: PolicyPage,
     },
     {
       path: '/classes',

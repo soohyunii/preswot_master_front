@@ -1,6 +1,6 @@
 <template>
-  <div class="wrapper">
-    <h3>Q &amp; A</h3>
+  <div>
+    <h3>게시판</h3>
     <el-input :disabled="true" :value="name"></el-input>
     <el-input :disabled="true" :value="content" type="textarea" :autosize="{ minRows: 10, maxRows: 15}"></el-input>
     <el-button v-if="isPostOwner" @click="onClick('MODIFY')" plain>수정</el-button>
@@ -83,7 +83,7 @@ export default {
           vm.setModifyMode({
             flag: true,
           });
-          await vm.$router.push(`/a/class/${this.$route.params.classId}/questionanswerwrite`);
+          await vm.$router.push(`/a/class/${this.$route.params.classId}/boardwrite`);
           break;
         }
         case 'DELETEPOST': {
