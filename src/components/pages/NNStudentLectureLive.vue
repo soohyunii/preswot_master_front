@@ -131,7 +131,7 @@ export default {
             case 1: { // 설문
               studentService.submitSurvey({
                 surveyId: data[1],
-                answer: data[2],
+                answer: [data[3]],
               });
               vm.$notify({
                 title: '알림',

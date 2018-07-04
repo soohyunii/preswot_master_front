@@ -22,6 +22,9 @@ export default {
   getClassNeedScoring({ id }) {
     return http.get(`/classes/${id}/need-scoring`);
   },
+  getClassTotalResult({ id }) {
+    return http.get(`/classes/${id}/total-result`);
+  },
   getClassKeywordRelations({ id }) {
     return http.get(`/classes/${id}/keyword-relations`);
   },

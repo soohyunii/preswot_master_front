@@ -6,7 +6,7 @@
       <el-button @click="onClick('ANALYSIS')">과목저널링</el-button>
       <el-button @click="onClick('Report')">성적표</el-button>
       <el-button @click="onClick('Q&A')">Q&amp;A</el-button>
-      <el-button @click="onClick('GRADING')">채점관리</el-button>
+      <el-button @click="onClick('GRADING')">결과보기</el-button>
     </div>
     <lecture-list
       @row-click="onClickLecture"
