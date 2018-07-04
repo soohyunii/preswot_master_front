@@ -1,12 +1,13 @@
 <template>
   <div id="teacher_lecture_index_wrapper" class="bt-container">
-    <h2>{{ currentTeachingClass(classId) ? currentTeachingClass(classId).name : '' }}</h2>
-    <div class="right-align margin-bottom-15">
-      <el-button @click="onClick('EVALUATION')">과목진단</el-button>
-      <el-button @click="onClick('ANALYSIS')">과목저널링</el-button>
-      <el-button @click="onClick('Report')">성적표</el-button>
-      <el-button @click="onClick('Q&A')">Q&amp;A</el-button>
-      <el-button @click="onClick('GRADING')">채점관리</el-button>
+      <h2 class="page-title">{{ currentTeachingClass(classId) ? currentTeachingClass(classId).name : '' }}
+        </h2>
+    <div class="right-align-margin-bottom-15">
+      <el-button @click="onClick('EVALUATION')" class="el-btn">과목진단</el-button>
+      <el-button @click="onClick('ANALYSIS')" class="el-btn">과목저널링</el-button>
+      <el-button @click="onClick('Report')" class="el-btn">성적표</el-button>
+      <el-button @click="onClick('Q&A')" class="el-btn">Q&amp;A</el-button>
+      <el-button @click="onClick('GRADING')" class="el-btn">채점관리</el-button>
     </div>
     <lecture-list
       @row-click="onClickLecture"
@@ -19,7 +20,9 @@
 
     <div class="right-align">
       <router-link :to="`/a/teacher/NNlecture/new?classId=${classId}`">
-        <el-button type="primary">강의 추가</el-button>
+        <el-button type="primary" class="right-align-btn">
+          <div class="right-align-btn-layer">강의 추가</div>
+          </el-button>
       </router-link>
     </div>
   </div>
@@ -174,11 +177,93 @@ export default {
 
 <style lang="scss" scoped>
 #teacher_lecture_index_wrapper {
-  .right-align {
-    text-align: right;
+  
+  .page-title{
+    float:left;
+    width:400px;
+    
+    font-family: SpoqaHanSans;
+    font-size: 25px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.2;
+    letter-spacing: normal;
+    color: #000000;
+  
+     margin-top : 40px;
+    margin-left : 12px;
+    margin-bottom : 25px;
   }
-  .margin-bottom-15 {
-    margin-bottom: 15px;
+ 
+ .right-align-margin-bottom-15 {
+    display:inline-block;
+    text-align: center;  
+     margin-top : 40px;
+       margin-bottom : 25px;
+  }
+
+  .right-align {
+    text-align: right;    
+  }
+  .right-align-btn {
+    width: 100%;
+    height: 40px;
+    border-radius: 3px;
+    border: solid 1px #1989fa;
+}
+.right-align-btn-layer {
+    width: 94px;
+    height: 12px;
+    font-family: SpoqaHanSans;
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: center;
+    color: #ffffff;
+    margin-left: auto;
+    margin-right: auto;
+}
+ 
+  .el-btn{
+    width: 140px;
+    height: 40px;
+    border-radius: 3px;
+    background-color: #ffffff;
+    border: solid 1px #1989fa;
+      
+    font-family: SpoqaHanSans;
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: center;
+    color: #1989fa;
+  
+  }
+ 
+  .el-btn:hover{
+    width: 140px;
+    height: 40px;
+    border-radius: 3px;
+    background-color: #1989fa;
+    border: solid 1px #1989fa;
+
+    font-family: SpoqaHanSans;
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: center;
+    color: #ffffff;
   }
 }
+
 </style>

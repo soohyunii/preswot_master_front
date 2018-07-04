@@ -1,9 +1,10 @@
 <template>
-  <div id="teacher_lecture_new_wrapper" :class="{ 'bt-container': isManage }">
-    <h2 v-if="isManage === false">
+<div id="teacher_lecture_new_wrapper" class="bt-container"> 
+ <!-- <div id="teacher_lecture_new_wrapper" :class="{ 'bt-container': isManage }">
+   -->
+     <h2 v-if="isManage === false" class="page-title">
       강의 추가
     </h2>
-
     <!-- {{ input }}<br /><br /> -->
 
     <el-form :model="input" ref="elForm" label-width="125px" style="max-width: 800px;">
@@ -16,29 +17,30 @@
       </el-form-item>
 
       <el-form-item label="강의 타이틀">
-        <el-input v-model="input.title"></el-input>
+        <el-input v-model="input.title"  class="lecture-title"></el-input>
       </el-form-item>
 
-      <el-form-item label="강의 시작 시각">
+      <el-form-item label="강의 활성화 시간">
         <el-date-picker
           v-model="input.lcStartDate"
-          type="datetime"
+          type="datetime"  class="lecture-startDate"
         ></el-date-picker>
-      </el-form-item>
-
-      <el-form-item label="강의 종료 시각">
+         ~ 
         <el-date-picker
           v-model="input.lcEndDate"
-          type="datetime"
+          type="datetime" class="lecture-endDate"
         ></el-date-picker>
       </el-form-item>
 
+      
       <el-form-item>
         <el-button
           type="primary"
-          @click="onSubmit"
+          @click="onSubmit" class="putLecture-btn"
         >
-          과목 추가하기
+         <div class="putLecture-btn-layer">
+          강의 추가
+          </div>
         </el-button>
       </el-form-item>
 
@@ -153,3 +155,105 @@ export default {
 };
 </script>
 
+<style lang="scss" scoped>
+#teacher_lecture_new_wrapper {
+ .bt_container{
+   margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+
+    margin-top : 40px;
+    margin-left : 12px;
+    margin-bottom : 25px;
+ } 
+
+.page-title{
+    float:left;
+    width:1000px;
+    height: 24px;
+      
+    font-family: SpoqaHanSans;
+    font-size: 25px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.2;
+    letter-spacing: normal;
+    color: #000000;
+ 
+    margin-top : 40px;
+    margin-left : 12px;
+    margin-bottom : 25px;
+ }
+
+
+.lecture-title{
+   width: 300px;
+  height: 40px;
+  border-radius: 4px;
+  background-color: #ffffff;
+  border: solid 1px #dcdfe6;
+  font-family: AppleSDGothicNeo;
+  font-size: 14px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  color: #909399;
+}
+
+.lecture-startDate{
+   width: 140px;
+  height: 40px;
+  border-radius: 4px;
+  background-color: #ffffff;
+  border: solid 1px #d8dce6;
+
+  font-family: AppleSDGothicNeo;
+  font-size: 14px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  color: #909399;
+}
+
+.lecture-endDate{
+  width: 140px;
+  height: 40px;
+  border-radius: 4px;
+  background-color: #ffffff;
+  border: solid 1px #d8dce6;
+
+  font-family: AppleSDGothicNeo;
+  font-size: 14px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  color: #909399;
+}
+.putLecture-btn{
+   width: 300px;
+  height: 40px;
+  border-radius: 3px;
+  background-color: #1989fa;
+
+}
+.putLecture-btn-layer{
+  font-family: SpoqaHanSans;
+  font-size: 12px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-align: center;
+  color: #ffffff;
+}
+}
+</style>
