@@ -48,8 +48,8 @@ export default {
     name,
     description,
     location,
-    startDate,
-    endDate,
+    startTime,
+    endTime,
     opened,
     videoLink,
     teacherEmail,
@@ -62,8 +62,8 @@ export default {
     utils.assignIfNotNil(param, { name });
     utils.assignIfNotNil(param, { description });
     utils.assignIfNotNil(param, { location });
-    utils.assignIfNotNil(param, { startDate }, 'intended_start');
-    utils.assignIfNotNil(param, { endDate }, 'intended_end');
+    utils.assignIfNotNil(param, { startTime }, 'start_time');
+    utils.assignIfNotNil(param, { endTime }, 'end_time');
     utils.assignIfNotNil(param, { opened });
     utils.assignIfNotNil(param, { videoLink }, 'video_link');
     utils.assignIfNotNil(param, { teacherEmail }, 'teacher_email');

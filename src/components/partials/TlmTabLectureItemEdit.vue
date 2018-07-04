@@ -45,10 +45,17 @@ export default {
     lectureItemList() {
       const lecture = this.$store.state.lc.lecture;
       if (lecture && Array.isArray(lecture.lecture_items)) {
-        return lecture.lecture_items.map((x) => {
+        const lectureItemList = lecture.lecture_items.map((x) => {
           x.type = utils.convertLcItemTypeKor(x.type); // eslint-disable-line no-param-reassign
           return x;
         });
+        // * 먼저 만든 것 기준으로 정렬하기
+        lectureItemList.sort((a, b) => {
+          const aCreatedAt = new Date(a.createdAt);
+          const bCreatedAt = new Date(b.createdAt);
+          return aCreatedAt.getTime() - bCreatedAt.getTime();
+        });
+        return lectureItemList;
       }
       return [];
     },

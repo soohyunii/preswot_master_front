@@ -1,6 +1,6 @@
 <template>
-  <div class="wrapper">
-    <h3>Q &amp; A</h3>
+  <div id="class_board_wrapper" class="bt-container">
+    <h3>게시판</h3>
     <el-table :data="postList" @cell-click="onDetail" style="width: 100%">
       <el-table-column prop="board_id" label="번호" width="130">
       </el-table-column>
@@ -29,7 +29,7 @@
           :label="option.label"
           :value="option.value">
         </el-option>
-      </el-select>      
+      </el-select>
       <div style="display: inline-block; width: 400px">
         <el-input placeholder="검색어를 입력하세요." v-model="searchWord" @keyup.enter="onClick('SEARCH')"></el-input>
       </div>
@@ -82,17 +82,17 @@ export default {
       }
     },
     onDetail(row) {
-      this.$router.push(`/a/class/${this.$route.params.classId}/questionanswerdetail/${row.board_id}`);
+      this.$router.push(`/a/class/${this.$route.params.classId}/boarddetail/${row.board_id}`);
     },
     onClick(type, arg) {
       const vm = this;
       switch (type) {
         case 'SEARCH': {
-          vm.$router.push({ path: `/a/class/${vm.$route.params.classId}/questionanswer/${vm.$route.params.pageNum}`, query: { type: `${vm.$data.searchType}`, query: `${vm.$data.searchWord}` } });
+          vm.$router.push({ path: `/a/class/${vm.$route.params.classId}/board/${vm.$route.params.pageNum}`, query: { type: `${vm.$data.searchType}`, query: `${vm.$data.searchWord}` } });
           break;
         }
         case 'WRITE': {
-          vm.$router.push(`/a/class/${vm.$route.params.classId}/questionanswerwrite`);
+          vm.$router.push(`/a/class/${vm.$route.params.classId}/boardwrite`);
           break;
         }
         case 'CHANGEPAGE': {

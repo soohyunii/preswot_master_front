@@ -8,6 +8,7 @@
     <!-- {{ input }}<br /><br /> -->
 
     <el-form :model="input" ref="elForm" label-width="125px" style="max-width: 800px;">
+      <!-- 20180629 강의 타입 제거
       <el-form-item label="타입">
         <el-radio-group v-model.number="input.type">
           <el-radio-button :label="0">본강</el-radio-button>
@@ -15,6 +16,7 @@
           <el-radio-button :label="2">시험</el-radio-button>
         </el-radio-group>
       </el-form-item>
+      -->
 
       <el-form-item label="강의 타이틀">
         <el-input v-model="input.title"  class="lecture-title"></el-input>
@@ -39,7 +41,7 @@
           @click="onSubmit" class="putLecture-btn"
         >
          <div class="putLecture-btn-layer">
-          강의 추가
+            {{ isManage ? '과목 수정하기' : '과목 추가하기'}}
           </div>
         </el-button>
       </el-form-item>
@@ -76,6 +78,8 @@ export default {
       vm.input.type = vm.lecture.type || vm.initialInput.type;
       vm.input.lcStartDate = vm.lecture.start_time || vm.initialInput.lcStartDate;
       vm.input.lcEndDate = vm.lecture.end_time || vm.initialInput.lcEndDate;
+    } else {
+      vm.input.type = 1; // 20180629 강의 타입 제거
     }
   },
   methods: {
@@ -95,8 +99,8 @@ export default {
               lectureId: vm.lectureId,
               type: vm.input.type,
               name: vm.input.title,
-              start_time: vm.input.lcStartDate,
-              end_time: vm.input.lcEndDate,
+              startTime: vm.input.lcStartDate,
+              endTime: vm.input.lcEndDate,
             });
             vm.$notify({
               title: '강의 수정 성공',

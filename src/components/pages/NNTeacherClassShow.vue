@@ -6,7 +6,7 @@
       <el-button @click="onClick('EVALUATION')" class="el-btn">과목진단</el-button>
       <el-button @click="onClick('ANALYSIS')" class="el-btn">과목저널링</el-button>
       <el-button @click="onClick('Report')" class="el-btn">성적표</el-button>
-      <el-button @click="onClick('Q&A')" class="el-btn">Q&amp;A</el-button>
+      <el-button @click="onClick('Q&A')" class="el-btn">게시판</el-button>
       <el-button @click="onClick('GRADING')" class="el-btn">채점관리</el-button>
     </div>
     <lecture-list
@@ -29,6 +29,7 @@
 </template>
 
 <script>
+// TODO : 180629 - 기존 Q&A 가 '게시판' 으로 바꼈습니다. 모든 변수, 파일명의 Q&A를 board로 바꿀지..?
 import { mapState, mapActions, mapGetters } from 'vuex';
 import LectureList from '../partials/LectureList';
 import utils from '../../utils';
@@ -112,7 +113,7 @@ export default {
           break;
         }
         case 'Q&A': {
-          vm.$router.push(`/a/class/${vm.classId}/questionanswer/0`);
+          vm.$router.push(`/a/class/${vm.classId}/board/0`);
           break;
         }
         case 'GRADING': {
