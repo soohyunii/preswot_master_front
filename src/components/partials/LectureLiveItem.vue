@@ -12,7 +12,7 @@
           <template v-else>
             <p>문항 - 객관</p>
             <pre>{{ data.questions[0].question }}</pre>
-            <el-radio-group v-model="answer" style="width: 100%;">
+            <el-radio-group v-model="answer2" @change="onChange" style="width: 100%;">
               <div v-for="(choice,index) in data.questions[0].choice" :key="index">
                 <el-radio :label="index">{{ index + 1 }} . {{ choice }}</el-radio>
               </div>
@@ -73,7 +73,7 @@
             <el-input placeholder="내용을 입력해주세요." v-model="answer" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
           </template>
         </div>
-        <el-button v-if="data.questions[0].student_answer_logs.length === 0" style="float:right" type="primary" @click="preOnClick('SUBMIT', [data.type, data.questions[0].question_id, [answer]])">제출</el-button>
+        <el-button v-if="data.questions[0].student_answer_logs.length === 0" style="float:right" type="primary" @click="preOnClick('SUBMIT', [data.type, data.questions[0].question_id, [answer], data.questions[0].accept_language[0]])">제출</el-button>
       </div>
       <div v-if="data.type === 1">
         <div v-if="data.surveys[0].type === 0">
@@ -123,6 +123,7 @@ export default {
   data() {
     return {
       answer: '',
+      answer2: '', // 이 값은 사용하지 않습니다. 값하나 물려야 el-radio button이 활성화돼서 사용합니다. 없어도 돌아가게 할 방법을 찾는다면 제거해주세요.
     };
   },
   methods: {
@@ -130,6 +131,10 @@ export default {
       const vm = this;
       vm.onClick(...args);
       vm.answer = '';
+    },
+    onChange(data) { // 문항 - 객관값 보정 (0 1 2 3 4를 1 2 3 4 5로) 을 위한 함수
+      const vm = this;
+      vm.answer = data + 1;
     },
   },
   components: {
