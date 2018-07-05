@@ -137,6 +137,11 @@ export default {
                 message: '제출하였습니다.',
                 type: 'success',
               });
+              const params = {
+                lecture_item_id: Number.parseInt(vm.lectureItem.lecture_item_id, 10),
+                user_id: utils.getUserIdFromJwt(),
+              };
+              vm.$socket.emit('DOING_LECTURE_ITEM', JSON.stringify(params));
               vm.lectureItem = undefined;
               vm.refreshLectureItem(false);
               break;
@@ -151,6 +156,11 @@ export default {
                 message: '제출하였습니다.',
                 type: 'success',
               });
+              const params = {
+                lecture_item_id: Number.parseInt(vm.lectureItem.lecture_item_id, 10),
+                user_id: utils.getUserIdFromJwt(),
+              };
+              vm.$socket.emit('DOING_LECTURE_ITEM', JSON.stringify(params));
               vm.lectureItem = undefined;
               vm.refreshLectureItem(false);
               break;
