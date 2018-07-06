@@ -3,8 +3,8 @@
     <div v-if="data === undefined"> <!-- 입력값 없음 -->
       강사님의 신호를 기다리는 중입니다.
     </div>
-    <div v-else>
-      <div v-if="data.type === 0"> <!-- 질문 -->
+    <div v-else class="lecture-item">
+      <div v-if="data.type === 0" class="question-box"> <!-- 질문 -->
         <div v-if="data.questions[0].type === 0">
           <template v-if="data.questions[0].student_answer_logs.length > 0"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
@@ -13,7 +13,7 @@
             <p>문항 - 객관</p>
             <pre>{{ data.questions[0].question }}</pre>
             <el-radio-group v-model="answer" style="width: 100%;">
-              <div v-for="(choice,index) in data.questions[0].choice" :key="index">
+              <div v-for="(choice,index) in data.questions[0].choice" :key="index" id="radio-one">
                 <el-radio :label="index">{{ index + 1 }} . {{ choice }}</el-radio>
               </div>
             </el-radio-group>
@@ -26,7 +26,7 @@
           <template v-else>
             <p>문항 - 단답</p>
             <pre>{{ data.questions[0].question }}</pre>
-            <span>답 : </span>
+            <!-- <span>답 : </span> -->
             <el-input placeholder="내용을 입력해주세요." v-model="answer"></el-input>
           </template>
         </div>
@@ -38,8 +38,8 @@
           <template v-else>
             <p>문항 - 서술</p>
             <pre>{{ data.questions[0].question }}</pre>
-            <span>답 : </span>
-            <el-input placeholder="내용을 입력해주세요." v-model="answer" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
+            <!-- <span>답 : </span> -->
+            <el-input class="margin-text" placeholder="내용을 입력해주세요." v-model="answer" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
           </template>
         </div>
         <div v-if="data.questions[0].type === 3">
@@ -60,7 +60,7 @@
             </div>
             <pre>메모리 제한(MB) : {{ data.questions[0].memory_limit }}</pre>
             <pre>시간 제한(초) : {{ data.questions[0].time_limit }}</pre>
-            <el-input placeholder="내용을 입력해주세요." v-model="answer" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
+            <el-input class="margin-text" placeholder="내용을 입력해주세요." v-model="answer" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
           </template>
         </div>
         <div v-if="data.questions[0].type === 4">
@@ -102,12 +102,12 @@
         </div>
         <el-button v-if="data.surveys[0].student_surveys.length === 0"  style="float:right" type="primary" @click="preOnClick('SUBMIT', [data.type, data.surveys[0].survey_id, data.surveys[0].type, answer])">제출</el-button>
       </div>
-      <div v-if="data.type === 2">
+      <div v-if="data.type === 2" class="practice">
         <p>실습</p>
-        <h3>강사의 지시에 따라주세요.</h3>
+        <h3 style="margin:20px;">강사의 지시에 따라주세요.</h3>
         <pre>{{ data.lecture_code_practices[0].code }}</pre>
       </div>
-      <div v-if="data.type === 3">
+      <div v-if="data.type === 3" class="discuss">
         <p>토론</p>
         <discussion :lectureItemId="data.lecture_item_id"/>
       </div>
@@ -139,5 +139,58 @@ export default {
 </script>
 
 <style>
+#radio-one{
+  /*border:1px solid red;*/
+  margin:15px;
+}
+
+.lecture-item{
+  /*border:1px solid green;*/
+  margin:30px 0;
+}
+
+.lecture-item .question-box{
+  padding:5px 0 0 0;
+}
+
+.lecture-item p{  /*sh : 이 경우 <p>제출이 완료되었습니다.</p>도 스타일이 적용되기 때문에 후에 분리시키는 조치가 필요*/
+  margin: 10px 0 0 10px;
+  font-size: 1.1em;
+}
+
+
+.lecture-item pre{
+  /*border:1px solid red;*/
+  margin: 20px 0 0 15px;
+}
+
+
+/*.lecture-item span{
+  <span>답 : </span> 을 아예 없애는건?
+}
+*/
+
+.lecture-item .el-button{
+  margin:10px 0;
+}
+
+.lecture-item .el-input{
+  margin:20px 0 0 0;
+}
+
+.lecture-item .margin-text{ /*문항 - 서술,SW*/
+  margin:20px 0 0 0;
+}
+
+.lecture-item .practice{
+  padding:5px 0 20px 0;
+}
+
+.lecture-item .discuss{
+  padding:5px 0 0 0;
+  height:530px;
+}
+
+
 
 </style>

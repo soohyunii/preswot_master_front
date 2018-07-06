@@ -12,7 +12,8 @@
           </div>
         </div>
         <div class="right">
-          <el-button disabled>수강하기</el-button>
+          <!-- <el-button disabled>수강하기</el-button> -->
+          <el-button>수강하기</el-button>
         </div>
       </div>
     </div>
@@ -94,29 +95,36 @@ export default {
 }
 .class-title-info {
   position:absolute;
-  top: 200px;
+  top: 0px;
   width: 97.5%;
-  height: 200px;
+  height: 500px;
 }
 .class-title-info .left {
   position: absolute;
-  left: 5%;
+  left: 46.5%;
   width: 50%;
   font-size: 21px;
 }
 .class-title-info .left .top {
   position: absolute;
-  top: 0px;
+  top: 100px;
+  font-size:2em;
+  font-weight:300px;
+  /* border:1px solid black; */
 }
 .class-title-info .left .bottom {
   position: absolute;
-  top: 100px;
+  top: 190px;
+  /* border:1px solid green; */
 }
 .class-title-info .right {
   position: absolute;
-  right: 5%;
-  top: 90px;
+  right: 37.5%;
+  top: 350px;
+  /* border:1px solid red; */
 }
+
+
 .profile-pic {
   width: 100px;
   height: 100px;
@@ -134,6 +142,24 @@ export default {
 .opac{
   opacity:0.65;
 }
+
+.right .el-button{
+  /* border:1px solid red; */
+  width: 300px;
+  height: 50px;
+  border-radius: 20px;
+  background-color: #1989fa;
+  color:#ffffff;
+  font-size:1.2em;
+
+}
+
+.right .el-button:hover{
+  /* opacity:0.8; */
+  /* box-shadow: 10px black; */
+  background-color: rgba(0,0,0,0.2);
+}
+
 /* sh e */
 
 #teacher-info {
