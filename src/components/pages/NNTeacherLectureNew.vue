@@ -40,7 +40,7 @@
           type="primary"
           @click="onSubmit"
         >
-          {{ isManage ? '과목 수정하기' : '과목 추가하기'}}
+          {{ isManage ? '강의 수정하기' : '강의 추가하기'}}
         </el-button>
       </el-form-item>
 
@@ -77,7 +77,7 @@ export default {
       vm.input.lcStartDate = vm.lecture.start_time || vm.initialInput.lcStartDate;
       vm.input.lcEndDate = vm.lecture.end_time || vm.initialInput.lcEndDate;
     } else {
-      vm.input.type = 1; // 20180629 강의 타입 제거
+      vm.input.type = 0; // 20180629 강의 타입 제거
     }
   },
   methods: {
