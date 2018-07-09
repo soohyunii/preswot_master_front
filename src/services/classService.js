@@ -25,6 +25,9 @@ export default {
   getClassTotalResult({ id }) {
     return http.get(`/classes/${id}/total-result`);
   },
+  getClassStudentResult({ id }) {
+    return http.get(`/classes/${id}/student-result`);
+  },
   getClassKeywordRelations({ id }) {
     return http.get(`/classes/${id}/keyword-relations`);
   },

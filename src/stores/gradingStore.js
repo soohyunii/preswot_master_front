@@ -27,10 +27,18 @@ export default {
     },
   },
   actions: {
-    async getClassTotalResult({ commit }, { classId }) {
-      const res = await classService.getClassTotalResult({
-        id: classId,
-      });
+    async getClassTotalResult({ commit }, { classId, isStudent }) {
+      let res = null;
+      if (isStudent) {
+        res = await classService.getClassStudentResult({
+          id: classId,
+        });
+      } else {
+        res = await classService.getClassTotalResult({
+          id: classId,
+        });
+      }
+
       commit('updateTheResult', {
         result: res.data.result,
       });
@@ -146,6 +154,7 @@ export default {
       questionResult.score = theQuestion.score;
       questionResult.avgScore = theQuestion.avgScore;
       questionResult.numberOfStudent = theQuestion.numberOfStudent;
+      questionResult.summitted = questionResult.numberOfStudent > 0;
       questionResult.answers = theQuestion.answers;
       questionResult.answer = theQuestion.answer;
       questionResult.inputDescription = theQuestion.inputDescription;

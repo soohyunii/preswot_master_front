@@ -78,6 +78,12 @@ export default {
     },
   },
   actions: {
+    async putScore({ state }, { id, score }) {
+      const res = await classService.putScore({
+        id, score,
+      });
+      return res;
+    },
     async getClassLists({ commit }) {
       const res = await classService.getClassLists();
       commit('updateOpenedClassList', {
