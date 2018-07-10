@@ -1,7 +1,8 @@
 <template>
   <div id="class_board_wrapper" class="bt-container">
-    <h3>게시판</h3>
-    <el-table :data="postList" @cell-click="onDetail" style="width: 100%">
+    <h3 class="page-title">게시판</h3>
+     
+    <el-table :data="postList" @cell-click="onDetail" style="width: 100%" class="elTable-board">
       <el-table-column prop="board_id" label="번호" width="130">
       </el-table-column>
       <el-table-column prop="name" label="제목">
@@ -14,14 +15,15 @@
       </el-table-column>
     </el-table>
     <div class="liner">
-      <div style="display: inline; position:relative; left:30%;">
-        <el-button @click="onClick('NAVBACK')">&lt;&lt;</el-button>
-        <el-button :key="navNum" v-for="navNum in navNumList" plain @click="onClick('CHANGEPAGE',navNum)">{{ navNum }}</el-button>
-        <el-button @click="onClick('NAVNEXT')">&gt;&gt;</el-button>
+      <div style="display: inline; position:relative; left:30%;" >
+        <el-button @click="onClick('NAVBACK')"  class="board-pages-btn" >&lt;&lt;</el-button>
+        <el-button :key="navNum" v-for="navNum in navNumList" plain @click="onClick('CHANGEPAGE',navNum)"  class="board-pages-btn" >{{ navNum }} </el-button>
+        <el-button @click="onClick('NAVNEXT')"  class="board-pages-btn" >&gt;&gt;</el-button>
       </div>
-      <el-button style="float:right;" @click="onClick('WRITE')" plain>글쓰기</el-button>
+      <el-button style="float:right;" @click="onClick('WRITE')" plain class="write-btn">글쓰기</el-button>
     </div>
-    <div style="display: inline; position:relative; left:34%;">
+    <div class="searchWord-margin-top" > 
+    <div style="display: inline; position:relative; left:19%;">
       <el-select v-model="searchType" style="display: inline-block; width: 100px">
         <el-option
           v-for="option in selectOptionList"
@@ -30,10 +32,11 @@
           :value="option.value">
         </el-option>
       </el-select>
-      <div style="display: inline-block; width: 400px">
+      <div style="display: inline-block; width: 400px;" >
         <el-input placeholder="검색어를 입력하세요." v-model="searchWord" @keyup.enter="onClick('SEARCH')"></el-input>
       </div>
       <el-button @click="onClick('SEARCH')" icon="el-icon-search" circle></el-button>
+     </div>
     </div>
   </div>
 </template>
@@ -154,3 +157,60 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+#class_board_wrapper {
+  .page-title{
+    float:left;
+    width:1000px;
+    height: 24px;
+    
+    font-family: SpoqaHanSans;
+    font-size: 25px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.2;
+    letter-spacing: normal;
+    color: #000000;
+  
+    margin-top : 40px;
+    // margin-left : 12px;
+    margin-bottom : 25px;
+  }
+
+  .board-pages{
+    margin-top : 40px;
+    text-align: center;
+  }
+
+  .write-btn{
+    width: 140px;
+    height: 40px;
+    border-radius: 3px;
+    background-color: #ffffff;
+    border: solid 1px #1989fa;
+    
+    font-family: SpoqaHanSans;
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: center;
+    color: #1989fa;   
+
+    margin-top : 10px;
+  }
+ .board-pages-btn{
+    margin-top : 80px; 
+    text-align:center;
+  } 
+  .searchWord-margin-top{
+    margin-top : 12px;
+    float:center;
+  }
+ 
+}
+</style>

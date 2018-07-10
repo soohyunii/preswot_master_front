@@ -1,11 +1,13 @@
 <template>
-  <div>
-    <h3>게시판</h3>
+  <div id="class_board_detail_wrapper" class="bt-container">
+    <h3 class="page-title">게시판</h3>
     <el-input :disabled="true" :value="name"></el-input>
     <el-input :disabled="true" :value="content" type="textarea" :autosize="{ minRows: 10, maxRows: 15}"></el-input>
-    <el-button v-if="isPostOwner" @click="onClick('MODIFY')" plain>수정</el-button>
-    <el-button v-if="isPostOwner" @click="onClick('DELETEPOST')" type="danger" plain>삭제</el-button>
-    <el-button @click="onClick('CANCEL')" plain>뒤로가기</el-button>
+    <div class="detail-align">
+    <el-button v-if="isPostOwner" @click="onClick('MODIFY')" plain class="detail-btn">수정</el-button>
+    <el-button v-if="isPostOwner" @click="onClick('DELETEPOST')" type="danger" plain class="detail-btn">삭제</el-button>
+    <el-button @click="onClick('CANCEL')" plain class="detail-btn">뒤로가기</el-button>
+    </div>
     <p></p>
     <p></p>
     <div v-if="fileLength > 0">
@@ -13,7 +15,7 @@
       <h4>첨부된 파일 :</h4>
       <div :key="file.file_guid" v-for="file in post.files" style="margin: 20px 0px 20px 10px;">
         <span>파일명 : {{ file.name }} </span>
-        <el-button @click="onClick('DOWNLOAD',file.client_path,file.name)">다운로드</el-button>
+        <el-button @click="onClick('DOWNLOAD',file.client_path,file.name)" class="download-btn">다운로드</el-button>
       </div>
     </div>
     <hr>
@@ -124,3 +126,79 @@ export default {
   },
 };
 </script>
+
+
+
+<style lang="scss" scoped>
+#class_board_detail_wrapper {
+  font-family: SpoqaHanSans;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    color: #606266;
+
+  .page-title{
+    float:left;
+     width:1000px;
+  height: 24px;
+    
+    font-family: SpoqaHanSans;
+    font-size: 25px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.2;
+    letter-spacing: normal;
+    color: #000000;
+  
+    margin-top : 40px;
+    margin-bottom : 25px;
+  }
+
+  .detail-btn{
+    width: 140px;
+    height: 40px;
+    
+    border-radius: 3px;
+    background-color: #1989fa;
+    font-family: SpoqaHanSans;
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: center;
+    color: #ffffff;
+
+    margin-top : 10px;
+  }
+
+  .detail-align{
+    text-align:right;
+  }
+
+ .download-btn{
+    width: 100px;
+    height: 40px;
+      
+    border-radius: 3px;
+    background-color: #1989fa;
+    font-family: SpoqaHanSans;
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: center;
+    color: #ffffff;
+    margin-left : 10px;
+ }
+   
+  
+}
+</style>

@@ -7,7 +7,7 @@
        <!-- {{ props.list }}<br /> -->
 
       <!-- 번호(1), 타입(숙제), 강의(근대사 1강), 기간, 수강한 학생수, 수강생 이해도(평균), 강의, 관리, 삭제 -->
-      <el-table :data="props.list" @row-click="listeners['row-click']" class="elTable-label">
+      <el-table :data="props.list" @row-click="listeners['row-click']" :row-class-name="listeners['row-class-name']" :header-row-class-name="listeners['header-row-class-name']">
         <el-table-column
           prop="index"
           label="강의 번호"
@@ -103,13 +103,26 @@
         <template v-if="props.type === 'STUDENT'">
           <el-table-column
             prop="name"
-            label="강의"
-            align="center"
+            label="강의명"
+            align="left"
           ></el-table-column>
+
+          <el-table-column
+            label="-"
+            width="150"
+            align="left"
+          >
+            <template slot-scope="scope">
+              <router-link :to="`/a/student/NNlecture/${scope.row.lecture_id}/live`"> 
+                <el-button  class="lecture-live-btn" >강의보기</el-button>
+              </router-link>
+            </template>
+          </el-table-column>
+
           <el-table-column
             label="기간"
-            width="300"
-            align="center"
+            width="210"
+            align="left"
           >
           <template slot-scope="scope">
             <!-- {{ scope.row.intended_start ? new Date(scope.row.intended_start).toLocaleDateString('ko-KR') : '미정' }} // Legacy : 필요없다면 지워주세요.-->
@@ -122,23 +135,13 @@
           <el-table-column
             label="수강여부"
             width="100"
-            align="center"
+            align="left"
           >
             <template slot-scope="scope">
               {{ scope.row.heard }}
             </template>
           </el-table-column>
-          <el-table-column
-            label="-"
-            width="120"
-            align="center"
-          >
-            <template slot-scope="scope">
-              <router-link :to="`/a/student/NNlecture/${scope.row.lecture_id}/live`">
-                <el-button>강의보기</el-button>
-              </router-link>
-            </template>
-          </el-table-column>
+          
         </template>
       </el-table>
     </div>
@@ -198,6 +201,48 @@ export default {
 };
 </script>
 
+
+<style>
+ .rowOthers{
+  font-family: SpoqaHanSans;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    color: #606266;
+} 
+.headerRow{
+  font-family: SpoqaHanSans;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    color: #909399;
+}
+.lecture-live-btn{
+  width: 90px;
+  height: 40px;
+  border-radius: 3px;
+  background-color: #1989fa;
+
+  font-family: SpoqaHanSans;
+  font-size: 12px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-align: center;
+  color: #ffffff;
+}
+
+</style>
+
+
 <style lang="scss" scoped>
 #lecture_list_wrapper {
   .elTable-label {
@@ -211,27 +256,6 @@ export default {
   color: #909399;
   text-align: center;
   }
-.elTable-label th {
-  font-family: SpoqaHanSans;
-  font-size: 14px;
-  font-weight: bold;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1;
-  letter-spacing: normal;
-  color: #909399;
-}
-.elTable-label td {
-  font-family: SpoqaHanSans;
-  font-size: 20px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1;
-  letter-spacing: normal;
-  color: #606266;
-
-}
 .edit-btn {
   font-family: SpoqaHanSans;
   font-size: 14px;
@@ -241,6 +265,16 @@ export default {
   line-height: 1;
   letter-spacing: normal;
   color: #1989fa;
+}
+.board-btn {
+  width: 140px;
+  height: 32px;
+  border-radius: 3px;
+  background-color: #ffffff;
+  border: solid 1px #1989fa;
+
+
+  
 }
 }
 </style>

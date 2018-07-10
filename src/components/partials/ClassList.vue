@@ -4,7 +4,7 @@
       강의 중인 과목이 없습니다.
     </div>
     <div v-else>
-      <el-table :data="props.list"  @row-click="listeners['row-click']" class="elTable-label">
+      <el-table :data="props.list"  @row-click="listeners['row-click']" :row-class-name="listeners['row-class-name']" :header-row-class-name="listeners['header-row-class-name']">
         <el-table-column
           prop="index"
           label="과목 번호"
@@ -121,8 +121,33 @@ export default {
 };
 </script>
 
+<style>
+ .rowOthers{
+  font-family: SpoqaHanSans;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    color: #606266;
+} 
+.headerRow{
+  font-family: SpoqaHanSans;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    color: #909399;
+}
+</style>
+
 <style lang="scss" scoped>
+
 #class_list_wrapper {
+
   .elTable-label {
     font-family: SpoqaHanSans;
     font-size: 14px;
@@ -133,26 +158,6 @@ export default {
     letter-spacing: normal;
     color: #909399;
     text-align: center;
-  }
-  .elTable-label tr {
-    font-family: SpoqaHanSans;
-    font-size: 14px;
-    font-weight: bold;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: 1;
-    letter-spacing: normal;
-    color: #909399;
-  }
-  .elTable-label td {
-    font-family: SpoqaHanSans;
-    font-size: 14px;
-    font-weight: normal;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: 1;
-    letter-spacing: normal;
-    color: #606266;
   }
   .edit-btn{
     

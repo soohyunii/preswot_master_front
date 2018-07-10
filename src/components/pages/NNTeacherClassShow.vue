@@ -12,6 +12,8 @@
     <lecture-list
       @row-click="onClickLecture"
       @delete="onClickDelete"
+      @row-class-name="rowClassName"
+      @header-row-class-name="headerRowClassName"
       type="TEACHER"
       :list="lectureList"
     />
@@ -20,9 +22,7 @@
 
     <div class="right-align">
       <router-link :to="`/a/teacher/NNlecture/new?classId=${classId}`">
-        <el-button type="primary" class="right-align-btn">
-          <div class="right-align-btn-layer">강의 추가</div>
-          </el-button>
+        <el-button type="primary" class="right-align-btn">강의 추가</el-button>
       </router-link>
     </div>
   </div>
@@ -172,6 +172,16 @@ export default {
           });
         });
     },
+    rowClassName({rowIndex}){
+      // if(rowIndex===1){
+      //   return 'rowOne';
+      // }
+      return 'rowOthers';
+    },
+    headerRowClassName({rowIndex}){
+      return 'headerRow';
+
+    },
   },
 };
 </script>
@@ -193,7 +203,7 @@ export default {
     color: #000000;
   
      margin-top : 40px;
-    margin-left : 12px;
+    // margin-left : 12px;
     margin-bottom : 25px;
   }
  
@@ -212,10 +222,7 @@ export default {
     height: 40px;
     border-radius: 3px;
     border: solid 1px #1989fa;
-}
-.right-align-btn-layer {
-    width: 94px;
-    height: 12px;
+
     font-family: SpoqaHanSans;
     font-size: 12px;
     font-weight: bold;
@@ -225,9 +232,9 @@ export default {
     letter-spacing: normal;
     text-align: center;
     color: #ffffff;
-    margin-left: auto;
-    margin-right: auto;
+    
 }
+
  
   .el-btn{
     width: 140px;

@@ -8,15 +8,15 @@
     <!-- {{ input }}<br /><br /> -->
 
     <el-form :model="input" ref="elForm" label-width="125px" style="max-width: 800px;">
-      <!-- 20180629 강의 타입 제거
+      <!-- 20180629 강의 타입 제거 -->
       <el-form-item label="타입">
         <el-radio-group v-model.number="input.type">
-          <el-radio-button :label="0">본강</el-radio-button>
-          <el-radio-button :label="1">숙제</el-radio-button>
-          <el-radio-button :label="2">시험</el-radio-button>
+          <el-radio :label="0">본강</el-radio>
+          <el-radio :label="1">숙제</el-radio>
+          <el-radio :label="2">시험</el-radio>
         </el-radio-group>
       </el-form-item>
-      -->
+      
 
       <el-form-item label="강의 타이틀">
         <el-input v-model="input.title"  class="lecture-title"></el-input>
@@ -39,10 +39,8 @@
         <el-button
           type="primary"
           @click="onSubmit" class="putLecture-btn"
-        >
-         <div class="putLecture-btn-layer">
-            {{ isManage ? '과목 수정하기' : '과목 추가하기'}}
-          </div>
+        >    
+            {{ isManage ? '강의 수정하기' : '강의 추가하기'}}
         </el-button>
       </el-form-item>
 
@@ -162,13 +160,13 @@ export default {
 <style lang="scss" scoped>
 #teacher_lecture_new_wrapper {
  .bt_container{
-   margin-right: auto;
+    margin-right: auto;
     margin-left: auto;
     padding-left: 15px;
     padding-right: 15px;
 
     margin-top : 40px;
-    margin-left : 12px;
+    // margin-left : 12px;
     margin-bottom : 25px;
  } 
 
@@ -193,71 +191,69 @@ export default {
 
 
 .lecture-title{
-   width: 300px;
-  height: 40px;
-  border-radius: 4px;
-  background-color: #ffffff;
-  border: solid 1px #dcdfe6;
-  font-family: AppleSDGothicNeo;
-  font-size: 14px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1;
-  letter-spacing: normal;
-  color: #909399;
+    width: 300px;
+    height: 40px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    border: solid 1px #dcdfe6;
+    font-family: AppleSDGothicNeo;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    color: #909399;
 }
 
 .lecture-startDate{
-   width: 140px;
-  height: 40px;
-  border-radius: 4px;
-  background-color: #ffffff;
-  border: solid 1px #d8dce6;
+    width: 140px;
+    height: 40px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    border: solid 1px #d8dce6;
 
-  font-family: AppleSDGothicNeo;
-  font-size: 14px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1;
-  letter-spacing: normal;
-  color: #909399;
+    font-family: AppleSDGothicNeo;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    color: #909399;
 }
 
 .lecture-endDate{
-  width: 140px;
-  height: 40px;
-  border-radius: 4px;
-  background-color: #ffffff;
-  border: solid 1px #d8dce6;
+    width: 140px;
+    height: 40px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    border: solid 1px #d8dce6;
 
-  font-family: AppleSDGothicNeo;
-  font-size: 14px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1;
-  letter-spacing: normal;
-  color: #909399;
+    font-family: AppleSDGothicNeo;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    color: #909399;
 }
 .putLecture-btn{
-   width: 300px;
-  height: 40px;
-  border-radius: 3px;
-  background-color: #1989fa;
+    width: 300px;
+    height: 40px;
+    border-radius: 3px;
+    background-color: #1989fa;
 
-}
-.putLecture-btn-layer{
-  font-family: SpoqaHanSans;
-  font-size: 12px;
-  font-weight: bold;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1;
-  letter-spacing: normal;
-  text-align: center;
-  color: #ffffff;
-}
+    font-family: SpoqaHanSans;
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: center;
+    color: #ffffff;
+  }
 }
 </style>

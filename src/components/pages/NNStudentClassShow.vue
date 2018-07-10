@@ -1,13 +1,15 @@
 <template>
   <div id="student_lecture_index_wrapper" class="bt-container">
-    <h2>{{ currentStudyingClass(classId) ? currentStudyingClass(classId).name : '' }}</h2>
+    <h2 class="page-title">{{ currentStudyingClass(classId) ? currentStudyingClass(classId).name : '' }}</h2>
     <div class="right-align margin-bottom-15">
       <!-- <el-button @click="onClick('KNOWLEDGEMAP')">과목지식맵</el-button> -->
       <!-- <el-button @click="onClick('ANALYSIS')">과목저널링</el-button> -->
-      <el-button @click="onClick('Q&A')">게시판</el-button>
+      <el-button @click="onClick('Q&A')" class="right-align-btn">게시판</el-button>
     </div>
     <lecture-list
       @row-click="onClickLecture"
+      @row-class-name="rowClassName"
+      @header-row-class-name="headerRowClassName"
       type="STUDENT"
       :list="lectureList"
     />
@@ -98,6 +100,16 @@ export default {
     onClickLecture() {
       // 없으면 LectureList.vue 에러나는데 TeacherClassShow와 같이 쓰고있어서 빈 메소드를 넣어둠.
     },
+    rowClassName({rowIndex}){
+      // if(rowIndex===1){
+      //   return 'rowOne';
+      // }
+      return 'rowOthers';
+    },
+    headerRowClassName({rowIndex}){
+      return 'headerRow';
+
+    },
   },
 };
 </script>
@@ -110,5 +122,51 @@ export default {
   .margin-bottom-15 {
     margin-bottom: 15px;
   }
+  .page-title{
+    float:left;
+    width:1000px;
+    height: 24px;
+      
+    font-family: SpoqaHanSans;
+    font-size: 25px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.2;
+    letter-spacing: normal;
+    color: #000000;
+ 
+    margin-top : 40px;
+    // margin-left : 12px;
+    margin-bottom : 25px;
+ }
+ 
+.right-align-btn {
+    width: 140px;
+    height: 40px;
+    border-radius: 3px;
+    background-color: #ffffff;
+    border: solid 1px #1989fa;
+    margin-top : 40px;
+    margin-left : 12px;
+    margin-bottom : 25px;
+
+
+    font-family: SpoqaHanSans;
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: center;
+    color: #1989fa;
+}
+
+
 }
 </style>
+
+
+
+

@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h3>게시판</h3>
+  <div id="class_board_write_wrapper" class="bt-container">
+    <h3 class="page-title">게시판</h3>
     <el-input placeholder="글 제목을 작성하세요." v-model="name"></el-input>
     <el-input placeholder="글 내용을 작성하세요." v-model="content" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
     <div>
@@ -13,7 +13,7 @@
         :limit="3"
         :on-exceed="handleExceed"
         :http-request="doUpload">
-        <el-button size="small" type="primary">파일 업로드</el-button>
+        <el-button size="small" type="primary" class="fileUpload-btn" >파일 업로드</el-button>
       </el-upload>
     </div>
     <div v-if="storedFileList.length > 0">
@@ -25,9 +25,9 @@
       </div>
     </div>
     <hr>
-    <div>
-      <el-button @click="onClick('WRITE')" plain>등록하기</el-button>
-      <el-button @click="onClick('CANCEL')" plain>취소</el-button>
+    <div class="write-align">
+      <el-button @click="onClick('WRITE')" plain class="write-btn">등록하기</el-button>
+      <el-button @click="onClick('CANCEL')" plain  class="write-btn">취소</el-button>
     </div>
   </div>
 </template>
@@ -162,3 +162,65 @@ export default {
   },
 };
 </script>
+
+
+<style lang="scss" scoped>
+#class_board_write_wrapper {
+  .page-title{
+    float:left;
+    width:1000px;
+    height: 24px;
+    
+    font-family: SpoqaHanSans;
+    font-size: 25px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.2;
+    letter-spacing: normal;
+    color: #000000;
+  
+    margin-top : 40px;
+    // margin-left : 12px;
+    margin-bottom : 25px;
+  }
+
+.fileUpload-btn{
+    width: 100px;
+    height: 40px;
+    
+    border-radius: 3px;
+    background-color: #1989fa;
+    font-family: SpoqaHanSans;
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: center;
+    color: #ffffff;
+    margin-top : 10px;
+  }
+  .write-btn{
+    width: 140px;
+    height: 40px;
+    border-radius: 3px;
+    background-color: #1989fa;
+    font-family: SpoqaHanSans;
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: center;
+    color: #ffffff;
+
+  }
+
+  .write-align{
+    text-align:right;
+  }
+}
+</style>

@@ -27,11 +27,11 @@
       </el-form-item>
 
       <el-form-item label="과목 제목">
-        <el-input v-model="input.title" class="subject-title"></el-input>
+        <el-input v-model="input.title" class="subject-title" placeholder="과목 제목을 입력해주세요."></el-input>
       </el-form-item>
 
       <el-form-item label="과목 요약 소개">
-        <el-input type="textarea" :rows="3" v-model="input.summary" class="subject-summary" ></el-input>
+        <el-input type="textarea" :rows="3" v-model="input.summary" class="subject-summary" placeholder="과목 요약 소개를 입력해주세요."></el-input>
       </el-form-item>
 
       
@@ -39,13 +39,13 @@
       <el-form-item label="강의 기간">
         <el-date-picker
           v-model="input.activeStartDate"
-          type="datetime" class="subject-startDate"
+          type="datetime" class="subject-startDate" placeholder="Dropdown"
         >
         </el-date-picker>
          ~
          <el-date-picker
           v-model="input.activeEndDate"
-          type="datetime" class="subject-endDate"
+          type="datetime" class="subject-endDate" placeholder="Dropdown"
         >
         </el-date-picker>
       </el-form-item>
@@ -59,11 +59,11 @@
       </el-form-item>
 
       <el-form-item label="강사 소개">
-        <el-input type="textarea" :rows="3" v-model="input.teacherDescription" class="teacher-description"></el-input>
+        <el-input type="textarea" :rows="3" v-model="input.teacherDescription" class="teacher-description" placeholder="강사 소개를 입력해주세요."></el-input>
       </el-form-item>
 
       <el-form-item label="과목 상세 소개">
-        <el-input type="textarea" :rows="6" v-model="input.description" class="subject-description"></el-input>
+        <el-input type="textarea" :rows="6" v-model="input.description" class="subject-description" placeholder="과목 상세 소개를 입력해주세요."></el-input>
       </el-form-item>
 
       <el-form-item>
@@ -215,13 +215,13 @@ export default {
     color: #000000;
  
     margin-top : 40px;
-    margin-left : 12px;
+    // margin-left : 12px;
     margin-bottom : 25px;
  }
 
 .elForm-label el-form-item{
-text-align : left;
-font-family: SpoqaHanSans;
+  text-align : left;
+  font-family: SpoqaHanSans;
   font-size: 16px;
   font-weight: normal;
   font-style: normal;
@@ -233,7 +233,7 @@ font-family: SpoqaHanSans;
 }
 
 .subject-title{
-   width: 300px;
+  width: 300px;
   height: 40px;
   border-radius: 4px;
   background-color: #ffffff;
@@ -249,7 +249,7 @@ font-family: SpoqaHanSans;
 }
 
 .subject-summary{
-   width: 300px;
+  width: 300px;
   height: 100%;
   border-radius: 4px;
   background-color: #ffffff;
@@ -265,7 +265,7 @@ font-family: SpoqaHanSans;
 }
 
 .subject-startDate{
-   width: 140px;
+  width: 140px;
   height: 40px;
   border-radius: 4px;
   background-color: #ffffff;
@@ -297,7 +297,7 @@ font-family: SpoqaHanSans;
 }
 
 .subject-capacity{
-    width: 300px;
+  width: 300px;
   height: 40px;
   border-radius: 4px;
   background-color: #ffffff;
@@ -345,11 +345,11 @@ font-family: SpoqaHanSans;
 }
 
 .subject-btn{
-   width: 300px;
+  width: 300px;
   height: 40px;
   border-radius: 3px;
   background-color: #1989fa;
-   font-family: SpoqaHanSans;
+  font-family: SpoqaHanSans;
   font-size: 12px;
   font-weight: bold;
   font-style: normal;
