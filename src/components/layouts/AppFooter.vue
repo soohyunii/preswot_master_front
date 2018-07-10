@@ -37,6 +37,8 @@ export default {
 #app_footer_wrapper {
   background-color: lighten($app-oatmeal, 50%);
   border-top: lightgray 1px solid;
+  margin-top: 10%; 
+  /* sh : margin-top추가 */ 
   .first-section {
     text-align: center;
     h3.first-section-title {

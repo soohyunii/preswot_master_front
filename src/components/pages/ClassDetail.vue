@@ -1,7 +1,7 @@
 <template>
   <div class="bt-container">
     <div class="wrapper"> <!-- position:absolute의 부모가 되기 위해 relative 속성 부여 -->
-      <img class="opac" :src="require('@/assets/study01.jpg')" height="500" width="100%">
+      <img class="opac" :src="require('@/assets/image10.jpg')" height="500" width="100%">
       <div class="class-title-info">
         <div class="left">
           <div class="top">
@@ -98,30 +98,32 @@ export default {
   top: 0px;
   width: 97.5%;
   height: 500px;
+  margin-left:auto;
+  margin-right:auto;
 }
 .class-title-info .left {
   position: absolute;
-  left: 46.5%;
-  width: 50%;
+  /* left: 50%; */
+  text-align:center;
+  width: 1170px;
   font-size: 21px;
+  margin-left:auto;
+  margin-right:auto; 
 }
 .class-title-info .left .top {
-  position: absolute;
-  top: 100px;
+  position: relative;
+  top: 140px;
   font-size:2em;
   font-weight:300px;
-  /* border:1px solid black; */
 }
 .class-title-info .left .bottom {
-  position: absolute;
+  position: relative;
   top: 190px;
-  /* border:1px solid green; */
 }
 .class-title-info .right {
   position: absolute;
-  right: 37.5%;
-  top: 350px;
-  /* border:1px solid red; */
+  right: 38.5%;
+  top: 370px;
 }
 
 
@@ -140,26 +142,29 @@ export default {
 
 /* sh s*/
 .opac{
-  opacity:0.65;
+  opacity:0.8;
 }
 
 .right .el-button{
-  /* border:1px solid red; */
-  width: 300px;
+  border:1.5px solid #1989fa;
+  width: 260px;
   height: 50px;
-  border-radius: 20px;
-  background-color: #1989fa;
-  color:#ffffff;
+  border-radius: 0.5em;
+  color:#1989fa;
   font-size:1.2em;
-
+  font-weight:bold;
 }
+
+
 
 .right .el-button:hover{
   /* opacity:0.8; */
   /* box-shadow: 10px black; */
   background-color: rgba(0,0,0,0.2);
-}
-
+  background-color: #1989fa;
+  color:#ffffff;
+  border-bottom: 4px solid darken(#1989fa, 10%);
+  }
 /* sh e */
 
 #teacher-info {

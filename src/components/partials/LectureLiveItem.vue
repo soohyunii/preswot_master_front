@@ -153,7 +153,7 @@ export default {
   padding:5px 0 0 0;
 }
 
-.lecture-item p{  /*sh : 이 경우 <p>제출이 완료되었습니다.</p>도 스타일이 적용되기 때문에 후에 분리시키는 조치가 필요*/
+.lecture-item p{  /*sh : 이 경우 <p>제출이 완료되었습니다.</p>도 스타일이 적용되기 때문에 후에 분리시키는 조치가 필요함*/
   margin: 10px 0 0 10px;
   font-size: 1.1em;
 }

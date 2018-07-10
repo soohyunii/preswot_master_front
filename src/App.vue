@@ -125,11 +125,11 @@ export default {
 }
 
 #student_theme {
-  background-color: darken($app-oatmeal, 70%);
+  background-color: darken($--color-primary, 10%);
 }
 
 #default_theme {
-  background-color: darken(#2497D8, 10%); 
+  background-color: darken($--color-primary, 10%); 
   /* sh s : png파일 문제*/
   /* background-color: rgba(0, 0, 0, 0.7); */
   /* background-color: rgba(0, 0, 0, 0); */
