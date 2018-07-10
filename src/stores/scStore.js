@@ -302,8 +302,8 @@ export default {
         lectureId: state.scId,
         name: state.scTitle,
         description: state.scDescription,
-        startDate: state.scStartDate,
-        endDate: state.scEndDate,
+        startTime: state.scStartDate,
+        endTime: state.scEndDate,
         // TODO: add state.scLocation
         location: null,
         opened: true,
