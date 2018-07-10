@@ -5,6 +5,7 @@
       <!-- <el-button @click="onClick('KNOWLEDGEMAP')">과목지식맵</el-button> -->
       <!-- <el-button @click="onClick('ANALYSIS')">과목저널링</el-button> -->
       <el-button @click="onClick('Q&A')">게시판</el-button>
+      <el-button @click="onClick('GRADE')">결과보기</el-button>
     </div>
     <lecture-list
       @row-click="onClickLecture"
@@ -88,6 +89,10 @@ export default {
         }
         case 'Q&A': {
           vm.$router.push(`/a/class/${vm.classId}/board/0`);
+          break;
+        }
+        case 'GRADE': {
+          vm.$router.push(`/a/student/class/${vm.classId}/grade`);
           break;
         }
         default: {

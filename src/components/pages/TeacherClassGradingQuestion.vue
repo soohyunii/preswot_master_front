@@ -88,7 +88,8 @@
           label="선택한 학생 수">
         </el-table-column>
       </el-table>
-      <el-table v-if="['객관', '서술', '단답', 'SQL'].includes(questionResult.type)"
+
+      <el-table v-if="['객관', '단답', 'SQL'].includes(questionResult.type)"
                 :data="questionResult.answers"
                 border
                 height="500">
@@ -109,6 +110,38 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-table v-if="['서술'].includes(questionResult.type)"
+                :data="questionResult.answers"
+                border
+                height="500">
+        <el-table-column
+          label="학생 아이디">
+          <template slot-scope="scope">
+            <p>{{ scope.row.user.email_id }}</p>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="answer"
+          label="답변">
+        </el-table-column>
+        <el-table-column
+          label="점수">
+          <template slot-scope="scope">
+            <el-input placeholder="Please input"
+                      v-model="scope.row.score"
+                      type="number"
+                      min="0"
+                      :max="questionResult.score"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="확인">
+          <template slot-scope="scope">
+            <el-button type="success" icon="el-icon-check" circle @click="scoreSubmit(scope.row.score, scope.row.student_answer_log_id)"></el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
       <el-table v-if="['SW'].includes(questionResult.type)"
                 :data="questionResult.answers"
                 border
@@ -201,6 +234,29 @@
         'getClassTotalResult',
         'getQuestionResult',
       ]),
+      ...mapActions('NNclass', [
+        'putScore',
+      ]),
+      async scoreSubmit(score, id) {
+        const vm = this;
+        if (score < 0 || score > vm.questionResult.score) {
+          vm.$notify({
+            title: '점수 범위를 확인하세요',
+            message: '',
+            type: 'error',
+            duration: 2000,
+          });
+          return;
+        }
+        const res = await vm.putScore({ id, score });
+        if (res && res.status === 200) {
+          vm.$notify({
+            title: '완료',
+            type: 'success',
+            duration: 1000,
+          });
+        }
+      },
     },
   };
 </script>

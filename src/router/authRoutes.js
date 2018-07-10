@@ -31,6 +31,7 @@ import TeacherClassReport from '../components/pages/TeacherReport';
 import TeacherClassGrading from '../components/pages/TeacherClassGrading';
 import TeacherClassGradingQuestion from '../components/pages/TeacherClassGradingQuestion';
 import TeacherClassGradingSurvey from '../components/pages/TeacherClassGradingSurvey';
+import StudentClassGrade from '../components/pages/StudentClassGrade';
 
 export default function authRoutes(root) {
   return [
@@ -169,6 +170,14 @@ export default function authRoutes(root) {
       component: TeacherClassGradingSurvey,
       meta: {
         title: 'Teacher Class Grading Survey',
+      },
+    },
+    {
+      path: '/student/class/:classId/grade',
+      name: 'StudentClassGrade',
+      component: StudentClassGrade,
+      meta: {
+        title: 'Student Class Grade',
       },
     },
     {
