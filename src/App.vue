@@ -125,10 +125,18 @@ export default {
 }
 
 #student_theme {
-  background-color: darken($app-oatmeal, 70%);
+  background-color: darken($--color-primary, 10%);
 }
 
 #default_theme {
-  background-color: darken(#2497D8, 10%);
+  background-color: darken($--color-primary, 10%); 
+  /* sh s : png파일 문제*/
+  /* background-color: rgba(0, 0, 0, 0.7); */
+  /* background-color: rgba(0, 0, 0, 0); */
+  /* box-shadow: 0 1px 2px rgba(0,0,0,0.9); */
+/*   background-image: url('https://cdn.zeplin.io/5b1f513665ca1be045ff097e/screens/8AB2F00A-8758-4DC0-B3AE-BF54C3A629F6.png'); */
+  height:100px;
+
+  /* sh e */
 }
 </style>

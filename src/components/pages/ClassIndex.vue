@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <!-- <div class="class-index"> -->
+  <div class="bt-container">
     <el-row>
       <el-col
         v-for="item in openedClassList"
@@ -89,3 +90,15 @@ export default {
   },
 };
 </script>
+
+
+<style lang="scss">
+.bt-container .el-col-8{
+  /* border:1px solid red; */
+  width:22%;
+  margin-left:15px;
+  margin-top:25px;
+}
+
+
+</style>
