@@ -13,7 +13,7 @@
             <p>문항 - 객관</p>
             <pre>{{ data.questions[0].question }}</pre>
             <el-radio-group v-model="answer" style="width: 100%;">
-              <div v-for="(choice,index) in data.questions[0].choice" :key="index" id="radio-one">
+              <div v-for="(choice,index) in data.questions[0].choice" :key="index" class="radio-one">
                 <el-radio :label="index">{{ index + 1 }} . {{ choice }}</el-radio>
               </div>
             </el-radio-group>

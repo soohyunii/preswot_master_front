@@ -1,7 +1,7 @@
 <template functional>
 
     <div style="display: inline-block; width: 180px; background-color: #ffffff;">
-    <div id="class_card" @click="props.onClick('DETAIL', props.classId)" style="display: inline-block; height: 380px;">
+    <div class="class_card" @click="props.onClick('DETAIL', props.classId)" style="display: inline-block; height: 380px;">
       <div style="text-align: center; margin: 0px 0px 15px 0px;">
         <img :src="require('@/assets/profi.png')" width="180" height="180" style="background-color: #eeeeee;">
       </div>
