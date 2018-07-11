@@ -15,7 +15,7 @@ export default {
       const res = await classService.getClassNeedScoring({
         id: classId,
       });
-      console.log('getClassNeedGrading', res.data);
+      console.log('getClassNeedGrading', res.data); // eslint-disable-line
       commit('updateItemList', {
         itemList: res.data.items,
       });
