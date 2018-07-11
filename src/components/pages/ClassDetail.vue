@@ -1,7 +1,7 @@
 <template>
   <div class="bt-container">
     <div class="wrapper"> <!-- position:absolute의 부모가 되기 위해 relative 속성 부여 -->
-      <img :src="require('@/assets/orange.png')" height="400" width="100%">
+      <img class="opac" :src="require('@/assets/image10.jpg')" height="500" width="100%">
       <div class="class-title-info">
         <div class="left">
           <div class="top">
@@ -12,10 +12,13 @@
           </div>
         </div>
         <div class="right">
-          <el-button disabled>수강하기</el-button>
+          <!-- <el-button disabled>수강하기</el-button> -->
+          <el-button>수강하기</el-button>
         </div>
       </div>
     </div>
+
+   <!--  <div class="bt-container"> --><!-- sh change -->
     <div class="wrapper">
       <div class="wrapper-box" id = "teacher-info">
         <div class="top semi-title-font">
@@ -31,17 +34,21 @@
         </div>
       </div>
       <div class="wrapper-box" id = "class-info">
-        <div class="wrapper-box-row semi-title-font">과목 상세 소개
+        <div class="wrapper-box-row semi-title-font">강의 상세 소개
         </div>
-        <div class="wrapper-box-row">
+
+        <!-- sh : 강의 상세 소개에 이미지가 필요한가? -->
+        <!-- <div class="wrapper-box-row">
           <img :src="require('@/assets/test.jpg')" height="300" width="100%">
-        </div>
+        </div> -->
+        <!-- sh e -->
         <div class="wrapper-box-row">
           {{classes.description}}
         </div>
       </div>
     </div>
   </div>
+  <!-- </div> -->
 </template>
 
 <script>
@@ -88,29 +95,38 @@ export default {
 }
 .class-title-info {
   position:absolute;
-  top: 200px;
+  top: 0px;
   width: 97.5%;
-  height: 200px;
+  height: 500px;
+  margin-left:auto;
+  margin-right:auto;
 }
 .class-title-info .left {
   position: absolute;
-  left: 5%;
-  width: 50%;
+  /* left: 50%; */
+  text-align:center;
+  width: 1170px;
   font-size: 21px;
+  margin-left:auto;
+  margin-right:auto; 
 }
 .class-title-info .left .top {
-  position: absolute;
-  top: 0px;
+  position: relative;
+  top: 140px;
+  font-size:2em;
+  font-weight:300px;
 }
 .class-title-info .left .bottom {
-  position: absolute;
-  top: 100px;
+  position: relative;
+  top: 190px;
 }
 .class-title-info .right {
   position: absolute;
-  right: 5%;
-  top: 90px;
+  right: 38.5%;
+  top: 370px;
 }
+
+
 .profile-pic {
   width: 100px;
   height: 100px;
@@ -123,6 +139,34 @@ export default {
   background-color: #ffffff;
   padding: 25px;
 }
+
+/* sh s*/
+.opac{
+  opacity:0.8;
+}
+
+.right .el-button{
+  border:1.5px solid #1989fa;
+  width: 260px;
+  height: 50px;
+  border-radius: 0.5em;
+  color:#1989fa;
+  font-size:1.2em;
+  font-weight:bold;
+}
+
+
+
+.right .el-button:hover{
+  /* opacity:0.8; */
+  /* box-shadow: 10px black; */
+  background-color: rgba(0,0,0,0.2);
+  background-color: #1989fa;
+  color:#ffffff;
+  border-bottom: 4px solid darken(#1989fa, 10%);
+  }
+/* sh e */
+
 #teacher-info {
   margin-top: 30px;
 }

@@ -11,9 +11,10 @@
 
     <br />
 
-    <div class="right-align">
+    <!-- <div class="right-align"> --><!-- soohyun -->
+      <div class="center-align">
       <router-link to="/a/teacher/NNclass/new">
-        <el-button type="primary">과목 개설</el-button>
+        <el-button type="primary">강의 추가</el-button>
       </router-link>
     </div>
   </div>
@@ -102,8 +103,20 @@ export default {
 
 <style lang="scss" scoped>
 #teacher_class_index_wrapper {
+  /* sh del */
   .right-align {
     text-align: right;
   }
+
+  /* sh s */
+/*   .el-button--primary{
+    width:940px;
+    height:40px;
+    border-radius: 3px;
+    background-color: #1989fa;
+    text-align: center;
+  } */
+  /* sh e */
+
 }
 </style>
