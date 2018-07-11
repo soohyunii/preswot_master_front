@@ -1,5 +1,5 @@
 <template>
-  <div style="background: #e5e9f2">
+  <div class="lecture-live-item-wrapper" style="background: #e5e9f2">
     <div v-if="data === undefined"> <!-- 입력값 없음 -->
       강사님의 신호를 기다리는 중입니다.
     </div>
@@ -12,7 +12,7 @@
           <template v-else>
             <p>문항 - 객관</p>
             <pre>{{ data.questions[0].question }}</pre>
-            <el-radio-group v-model="answer" style="width: 100%;">
+            <el-radio-group v-model="answer2" @change="onChange" style="width: 100%;">
               <div v-for="(choice,index) in data.questions[0].choice" :key="index" class="radio-one">
                 <el-radio :label="index">{{ index + 1 }} . {{ choice }}</el-radio>
               </div>
@@ -123,6 +123,7 @@ export default {
   data() {
     return {
       answer: '',
+      answer2: '', // 이 값은 사용하지 않습니다. 값하나 물려야 el-radio button이 활성화돼서 사용합니다. 없어도 돌아가게 할 방법을 찾는다면 제거해주세요.
     };
   },
   methods: {
@@ -131,6 +132,10 @@ export default {
       vm.onClick(...args);
       vm.answer = '';
     },
+    onChange(data) { // 문항 - 객관값 보정 (0 1 2 3 4를 1 2 3 4 5로) 을 위한 함수
+      const vm = this;
+      vm.answer = data + 1;
+    },
   },
   components: {
     Discussion,
@@ -138,59 +143,68 @@ export default {
 };
 </script>
 
-<style>
-#radio-one{
-  /*border:1px solid red;*/
-  margin:15px;
+<style lang="scss">
+.lecture-live-item-wrapper {
+  pre {
+    overflow-x: auto; /* Use horizontal scroller if needed; for Firefox 2, not needed in Firefox 3 */
+    white-space: pre-wrap; /* css-3 */
+    white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    /* width: 99%; */
+    word-wrap: break-word; /* Internet Explorer 5.5+ */
+  }
+
+  .radio-one {
+    /*border:1px solid red;*/
+    margin:15px;
+  }
+
+  .lecture-item {
+    /*border:1px solid green;*/
+    margin:30px 0;
+  }
+
+  .lecture-item .question-box{
+    padding:5px 0 0 0;
+  }
+
+  .lecture-item p{  /*sh : 이 경우 <p>제출이 완료되었습니다.</p>도 스타일이 적용되기 때문에 후에 분리시키는 조치가 필요함*/
+    margin: 10px 0 0 10px;
+    font-size: 1.1em;
+  }
+
+
+  .lecture-item pre{
+    /*border:1px solid red;*/
+    margin: 20px 0 0 15px;
+  }
+
+
+  /*.lecture-item span{
+    <span>답 : </span> 을 아예 없애는건?
+  }
+  */
+
+  .lecture-item .el-button{
+    margin:10px 0;
+  }
+
+  .lecture-item .el-input{
+    margin:20px 0 0 0;
+  }
+
+  .lecture-item .margin-text{ /*문항 - 서술,SW*/
+    margin:20px 0 0 0;
+  }
+
+  .lecture-item .practice{
+    padding:5px 0 20px 0;
+  }
+
+  .lecture-item .discuss{
+    padding:5px 0 0 0;
+    height:530px;
+  }
 }
-
-.lecture-item{
-  /*border:1px solid green;*/
-  margin:30px 0;
-}
-
-.lecture-item .question-box{
-  padding:5px 0 0 0;
-}
-
-.lecture-item p{  /*sh : 이 경우 <p>제출이 완료되었습니다.</p>도 스타일이 적용되기 때문에 후에 분리시키는 조치가 필요함*/
-  margin: 10px 0 0 10px;
-  font-size: 1.1em;
-}
-
-
-.lecture-item pre{
-  /*border:1px solid red;*/
-  margin: 20px 0 0 15px;
-}
-
-
-/*.lecture-item span{
-  <span>답 : </span> 을 아예 없애는건?
-}
-*/
-
-.lecture-item .el-button{
-  margin:10px 0;
-}
-
-.lecture-item .el-input{
-  margin:20px 0 0 0;
-}
-
-.lecture-item .margin-text{ /*문항 - 서술,SW*/
-  margin:20px 0 0 0;
-}
-
-.lecture-item .practice{
-  padding:5px 0 20px 0;
-}
-
-.lecture-item .discuss{
-  padding:5px 0 0 0;
-  height:530px;
-}
-
-
-
 </style>

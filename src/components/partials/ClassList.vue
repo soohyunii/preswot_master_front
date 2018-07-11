@@ -4,7 +4,7 @@
       강의 중인 과목이 없습니다.
     </div>
     <div v-else>
-      <el-table :data="props.list" stripe @row-click="listeners['row-click']">
+      <el-table :data="props.list" stripe>
         <el-table-column
           prop="index"
           label="No."
@@ -26,7 +26,7 @@
         <el-table-column
           prop="description"
           label="과목 소개"
-          width="300"
+          width="270"
           align="center"
         >
           <template slot-scope="scope">
@@ -36,7 +36,7 @@
 
         <el-table-column
           label="기간"
-          width="300"
+          width="280"
           align="center"
         >
           <template slot-scope="scope">
@@ -47,15 +47,28 @@
         </el-table-column>
         <el-table-column
           label="-"
-          width="80"
+          width="105"
           align="center"
         >
           <template slot-scope="scope">
             <router-link :to="`/a/teacher/NNclass/${scope.row.class_id}/edit`">
-              <el-button>수정</el-button>
+              <el-button>과목 수정</el-button>
             </router-link>
           </template>
         </el-table-column>
+
+        <el-table-column
+          label="-"
+          width="105"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <router-link :to="`/a/teacher/NNclass/${scope.row.class_id}`">
+              <el-button>강의 목록</el-button>
+            </router-link>
+          </template>
+        </el-table-column>
+
         <el-table-column
           label="-"
           width="80"
