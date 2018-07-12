@@ -23,6 +23,7 @@
         <teacher-lecture-live-item
         v-if="currentLectureItemId !== -1"
         :lectureItemId="currentLectureItemId"
+        :lectureId="lectureId"
         :onClick="onClick"
         :isAuto="isAuto"
         />
