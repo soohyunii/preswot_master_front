@@ -12,13 +12,12 @@
 
     <!-- 실시간 제출 현황 -->
     <br>
-    <div>
-    <p>학생 답변 : 총 {{ questionResult.numberOfStudent }} 건</p>
-    <el-button style="float:right" type="primary" size="small" icon="el-icon-refresh" @click="refresh()">새로고침</el-button>
-    <p>정답 : {{ questionResult.answer }} 번 </p>
-    </div>
-      <!-- <el-col :span="8">평균점수 {{ questionResult.avgScore }} / {{ questionResult.score }}</el-col> -->
     <div v-if="data.type === 0">
+      <p>학생 답변 : 총 {{ questionResult.numberOfStudent }} 건</p>
+      <!-- <el-col :span="8">평균점수 {{ questionResult.avgScore }} / {{ questionResult.score }}</el-col> -->
+      <el-button style="float:right" type="primary" size="small" icon="el-icon-refresh" @click="refresh()">새로고침</el-button>
+      <!-- <p>정답 : {{ questionResult.answer }} 번 </p> -->
+
       <el-table v-if="questionResult.type === '객관'"
                 :data="questionResult.obAnswers"
                 size="small"
@@ -122,6 +121,34 @@
         </el-table-column>
       </el-table>
     </div>
+    <div v-if="data.type === 1">
+      <p>학생 답변 : 총 {{ surveyResult.numberOfStudent }} 건</p>
+      <!-- <el-col :span="8">평균점수 {{ questionResult.avgScore }} / {{ questionResult.score }}</el-col> -->
+      <el-button style="float:right" type="primary" size="small" icon="el-icon-refresh" @click="refresh()">새로고침</el-button>
+      <!-- <p>정답 : {{ questionResult.answer }} 번 </p> -->
+      <el-table v-if="surveyResult.type === '서술'" :data="surveyResult.answers" border height="500">
+        <el-table-column
+          label="학생 아이디">
+          <template slot-scope="scope">
+            <p>***</p>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="answer"
+          label="답변">
+        </el-table-column>
+      </el-table>
+      <el-table v-if="surveyResult.type === '객관'" :data="surveyResult.answers" border>
+        <el-table-column
+          prop="choice"
+          label="보기">
+        </el-table-column>
+        <el-table-column
+          prop="number"
+          label="선택한 학생 수">
+        </el-table-column>
+      </el-table>
+    </div>
   </div>
 </template>
 
@@ -147,6 +174,11 @@ export default {
         itemId: vm.lectureItemId,
       });
     }
+    else if (vm.data.type === 1) {
+      vm.getSurveyResult({
+        itemId: vm.lectureItemId,
+      });
+    }
   },
   props: ['onClick', 'lectureItemId', 'lectureId'],
   data() {
@@ -158,12 +190,14 @@ export default {
     ...mapState('grading', [
       'theResult',
       'questionResult',
+      'surveyResult',
     ]),
   },
   methods: {
     ...mapActions('grading', [
       'getClassTotalResult',
       'getQuestionResult',
+      'getSurveyResult',
     ]),
     async refresh() {
       const vm = this;
@@ -171,10 +205,16 @@ export default {
         classId: vm.lectureId,
         isStudent: false,
       });
-      vm.getQuestionResult({
-        itemId: vm.lectureItemId,
-      });
-      console.log(vm.questionResult);
+      if (vm.data.type === 0) {
+        vm.getQuestionResult({
+          itemId: vm.lectureItemId,
+        });
+      }
+      else if (vm.data.type === 1) {
+        vm.getSurveyResult({
+          itemId: vm.lectureItemId,
+        });
+      }
     },
   },
   components: {
