@@ -181,3 +181,30 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.el-input{
+  margin:10px;
+}
+
+#btn_login{
+  margin:0 20px 0 100px;
+  width:150px;
+}
+
+#login_wrapper{
+  margin-top:70px;
+  padding-left:100px;
+}
+
+#login_wrapper h1{
+  margin:0.67em 15px;
+}
+
+.el-form-item label{
+  font-size:1.2em;
+  margin-left: 10px;
+  padding-bottom:0px;
+}
+
+</style>

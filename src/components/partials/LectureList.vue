@@ -30,12 +30,12 @@
             <el-table-column
               prop="name"
               label="강의"
-              width="225"
+              width="200"
               align="center"
             ></el-table-column>
             <el-table-column
             label="기간"
-            width="300"
+            width="275"
             align="center"
           >
             <template slot-scope="scope">
@@ -65,24 +65,24 @@
 
           <el-table-column
             label="-"
-            width="80"
+            width="105"
             align="center"
           >
             <template slot-scope="scope">
               <router-link :to="`/a/teacher/NNlecture/${scope.row.lecture_id}/live`">
-                <el-button>강의</el-button>
+                <el-button>강의하기</el-button>
               </router-link>
             </template>
           </el-table-column>
 
           <el-table-column
             label="-"
-            width="80"
+            width="105"
             align="center"
           >
             <template slot-scope="scope">
               <router-link :to="`/a/teacher/NNlecture/${scope.row.lecture_id}/manage?classId=${scope.row.class_id}`">
-                <el-button>관리</el-button>
+                <el-button>강의 관리</el-button>
               </router-link>
             </template>
           </el-table-column>

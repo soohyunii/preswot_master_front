@@ -1,7 +1,7 @@
 <template>
   <el-card class="box-card" style="max-width:480px;">
     <el-row style="padding:0;">
-      <el-col id="chat-wrap" style="height: 222px; overflow-y: scroll">
+      <el-col id="chat-wrap" style="height: 300px; overflow-y: scroll">
         <el-card v-for="(d, index) in discuss" :key="index" class="chat">
           <div class="chat-head">
             <span>{{d.user.name}}</span>
@@ -16,12 +16,12 @@
     <hr style="margin-left: -20px; margin-right: -20px">
     <el-row style="padding:0;">
       <el-col>
-        <el-form @submit.native.prevent :inline="true" label-width="0px">
+        <el-form @submit.native.prevent :inline="true" label-width="0px" class="chat-msg-box">
           <el-form-item class="chat-msg" >
             <el-input
               type="textarea"
               :rows="2"
-              style="width:330px;"
+              style="width:352px;"
               v-model="msg"></el-input>
           </el-form-item>
           <el-form-item>
@@ -38,8 +38,10 @@
 
 <style scoped>
   .box-card {
-    height: 330px;
-    margin-left: 120px;
+    /*height: 330px;*/
+    height: 450px;
+    margin:20px 35px 0 35px;
+
   }
   .chat-msg {
     margin-bottom: 0;
@@ -54,6 +56,8 @@
   .chat-head {
     margin-bottom: 5px;
   }
+
+
 </style>
 
 
