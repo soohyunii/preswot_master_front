@@ -23,7 +23,7 @@
         <teacher-lecture-live-item
         v-if="currentLectureItemId !== -1"
         :lectureItemId="currentLectureItemId"
-        :lectureId="lectureId"
+        :classId="classId"
         :onClick="onClick"
         :isAuto="isAuto"
         />
@@ -50,6 +50,7 @@
 <script>
 // FIXME : Failed to execute 'postMessage' on 'DOMWindow': The target origin provided ('<URL>')
 //   does not match the recipient window's origin ('<URL>'). 에러 해결
+import { mapActions } from 'vuex';
 import { getIdFromURL } from 'vue-youtube-embed';
 import lectureService from '../../services/lectureService';
 import classService from '../../services/classService';
@@ -63,7 +64,7 @@ export default {
   name: 'TeacherLectureLive',
   async created() {
     const vm = this;
-    // 강의 아이템 목록, 과목, 강의명 가져오기
+    // 강의 아이템 목록, 과목, 강의명 가져오기 + 강의 참여 유저수
     const res = await lectureService.getLecture({
       lectureId: vm.lectureId,
     });
@@ -72,6 +73,9 @@ export default {
       id: res.data.class_id,
     });
     vm.path = res2.data.name.concat(' > ', res.data.name);
+    await vm.getClassUser({
+      classId: vm.classId,
+    });
 
     // 소켓 연결 및 주기적으로 보내는 신호 설정
     vm.$socket.connect();
@@ -110,6 +114,10 @@ export default {
       return vm.$route.params.lectureId;
     },
     youtubeId: () => (getIdFromURL('https://www.youtube.com/watch?v=actDWRiD9RI&list=UUEgIN0yG3PeVF4JfJ-ZG0UQ')),
+    classId() {
+      const vm = this;
+      return Number.parseInt(vm.$route.query.classId, 10);
+    },
   },
   components: {
     TeacherLectureLiveItemList,
@@ -118,6 +126,9 @@ export default {
     TeacherLectureLiveSummary,
   },
   methods: {
+    ...mapActions('class', [
+      'getClassUser',
+    ]),
     onClick(type, data) {
       const vm = this;
       switch (type) {

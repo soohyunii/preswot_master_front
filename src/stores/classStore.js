@@ -49,6 +49,10 @@ export default {
      */
     currentClassCoverage: null,
     currentClassNeedScoring: null,
+    /**
+     * @var {Array} currentClassUser : 과목 학생 목록
+     */
+    currentClassUser: null,
     // //////////////////////////절취선////////////////////////// //
     /**
      * ClassKnowledgeMap 관련 변수들
@@ -115,6 +119,13 @@ export default {
         return null;
       }
       return state.studyingClassList[index];
+    },
+    numberOfStudentInClass(state) {
+      const user = state.currentClassUser;
+      if (user === null) {
+        return 0;
+      }
+      return state.currentClassUser.length;
     },
   },
   mutations: {
@@ -228,6 +239,9 @@ export default {
     },
     updateCurrentClassNeedScoring(state, { currentClassNeedScoring }) {
       state.currentClassNeedScoring = currentClassNeedScoring;
+    },
+    updateCurrentClassUser(state, { currentClassUser }) {
+      state.currentClassUser = currentClassUser;
     },
   },
   actions: {
@@ -394,6 +408,14 @@ export default {
       });
       commit('updateCurrentClassNeedScoring', {
         currentClassNeedScoring: res.data,
+      });
+    },
+    async getClassUser({ state, getters, commit }, { classId }) {
+      const res = await classService.getClassUser({
+        id: classId,
+      });
+      commit('updateCurrentClassUser', {
+        currentClassUser: res.data,
       });
     },
     async postClassUser(_, { classId }) {

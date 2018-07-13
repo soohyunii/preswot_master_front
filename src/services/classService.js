@@ -31,6 +31,9 @@ export default {
   getClassKeywordRelations({ id }) {
     return http.get(`/classes/${id}/keyword-relations`);
   },
+  getClassUser({ id }) {
+    return http.get(`/classes/${id}/user`);
+  },
   postClass({ //
     title,
     description,
