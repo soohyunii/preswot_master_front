@@ -18,8 +18,11 @@
     <br />
 
     <div class="right-align">
-      <router-link :to="`/a/teacher/NNlecture/new?classId=${classId}`">
-        <el-button type="primary">강의 추가</el-button>
+      <router-link :to="`/a/teacher/NNlecture/add/new?classId=${classId}`">
+        <el-button type="primary">새로운 강의 추가</el-button>
+      </router-link>
+      <router-link :to="`/a/teacher/NNlecture/add/ori?classId=${classId}`">
+        <el-button type="primary">기존 강의에서 추가</el-button>
       </router-link>
     </div>
   </div>

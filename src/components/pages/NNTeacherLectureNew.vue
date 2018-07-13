@@ -1,5 +1,6 @@
 <template>
   <div id="teacher_lecture_new_wrapper" :class="{ 'bt-container': isManage }">
+
     <h2 v-if="isManage === false">
       강의 추가
     </h2>
@@ -61,6 +62,7 @@ export default {
       lcStartDate: new Date(),
       lcEndDate: new Date(),
     };
+
     return {
       initialInput,
       input: Object.assign({}, initialInput), // 복사해서 넣음
