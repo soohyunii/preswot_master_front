@@ -15,7 +15,8 @@
       </el-row>
       <el-table v-if="questionResult.type === '객관'"
                 :data="questionResult.obAnswers"
-                border
+                size="mini"
+                stripe
                 style="margin-bottom: 20px;">
         <el-table-column
           prop="choice"
@@ -29,7 +30,7 @@
 
       <el-table v-show="['객관', '단답', 'SQL'].includes(questionResult.type)"
                 :data="questionResult.answers"
-                border
+                stripe
                 height="500">
                 <!-- :default-sort="{prop: 'score', order: 'descending'}"> -->
         <el-table-column
@@ -45,6 +46,7 @@
         <el-table-column
           prop="score"
           label="점수"
+          width="70px"
           sortable>
           <template slot-scope="scope">
             <p>{{ scope.row.score }}</p>
@@ -53,7 +55,7 @@
       </el-table>
       <el-table v-show="['서술'].includes(questionResult.type)"
                 :data="questionResult.answers"
-                border
+                stripe
                 height="500">
         <el-table-column
           label="학생 아이디">
@@ -68,6 +70,7 @@
         <el-table-column
           prop="score"
           label="점수"
+          width="70px"
           sortable>
           <template slot-scope="scope">
             <p v-if="scope.row.score === null">-</p>
@@ -78,7 +81,7 @@
 
       <el-table v-show="['SW'].includes(questionResult.type)"
                 :data="questionResult.answers"
-                border
+                stripe
                 height="500">
         <el-table-column
           label="학생 아이디">
@@ -91,7 +94,8 @@
           label="답변">
         </el-table-column>
         <el-table-column
-          label="결과">
+          label="결과"
+          width="60px">
           <template slot-scope="scope">
             <p>{{ scope.row.swResult }}</p>
             <!-- time 부분에서 null 에러 발생 -->
@@ -103,7 +107,8 @@
         <el-table-column
           prop="score"
           label="점수"
-          sortalbe>
+          width="70px"
+          sortable>
           <template slot-scope="scope">
             <p v-if="scope.row.score === null">-</p>
             <p v-else>{{ scope.row.score }}</p>
