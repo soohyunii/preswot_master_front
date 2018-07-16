@@ -12,7 +12,10 @@
         <el-col :span="3">총 {{ surveyResult.numberOfStudent }}건</el-col>
         <el-button style="float:right" type="primary" size="small" icon="el-icon-refresh" @click="refresh()">새로고침</el-button>
       </el-row>
-      <el-table v-show="surveyResult.type === '서술'" :data="surveyResult.answers" stripe height="500">
+      <el-table v-show="surveyResult.type === '서술'"
+                :data="surveyResult.answers"
+                :header-cell-style="changeHead"
+                height="500">
         <el-table-column
           label="학생 아이디">
           <template slot-scope="scope">
@@ -24,7 +27,9 @@
           label="답변">
         </el-table-column>
       </el-table>
-      <el-table v-show="surveyResult.type === '객관'" :data="surveyResult.answers" stripe>
+      <el-table v-show="surveyResult.type === '객관'"
+                :data="surveyResult.answers"
+                :header-cell-style="changeHead">
         <el-table-column
           prop="choice"
           label="보기">
@@ -110,6 +115,9 @@
             itemId: vm.itemId,
           });
         }
+      },
+      changeHead() {
+        return { backgroundColor: 'rgb(229, 233, 242)' };
       },
     },
   };

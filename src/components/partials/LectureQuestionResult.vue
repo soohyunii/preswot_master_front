@@ -11,12 +11,11 @@
         <el-col :span="5"><strong>학생 제출</strong></el-col>
         <el-col :span="8">총 {{ questionResult.numberOfStudent }}건</el-col>
         <el-button style="float:right" type="primary" size="small" icon="el-icon-refresh" @click="refresh()">새로고침</el-button>
-        <!-- <el-col :span="5">평균점수 {{ questionResult.avgScore }} / {{ questionResult.score }}</el-col> -->
       </el-row>
       <el-table v-if="questionResult.type === '객관'"
                 :data="questionResult.obAnswers"
                 size="mini"
-                stripe
+                :header-cell-style="changeHead"
                 style="margin-bottom: 20px;">
         <el-table-column
           prop="choice"
@@ -30,9 +29,8 @@
 
       <el-table v-show="['객관', '단답', 'SQL'].includes(questionResult.type)"
                 :data="questionResult.answers"
-                stripe
+                :header-cell-style="changeHead"
                 height="500">
-                <!-- :default-sort="{prop: 'score', order: 'descending'}"> -->
         <el-table-column
           label="학생 아이디">
           <template slot-scope="scope">
@@ -55,7 +53,7 @@
       </el-table>
       <el-table v-show="['서술'].includes(questionResult.type)"
                 :data="questionResult.answers"
-                stripe
+                :header-cell-style="changeHead"
                 height="500">
         <el-table-column
           label="학생 아이디">
@@ -81,7 +79,7 @@
 
       <el-table v-show="['SW'].includes(questionResult.type)"
                 :data="questionResult.answers"
-                stripe
+                :header-cell-style="changeHead"
                 height="500">
         <el-table-column
           label="학생 아이디">
@@ -191,6 +189,9 @@
             itemId: vm.itemId,
           });
         }
+      },
+      changeHead() {
+        return { backgroundColor: 'rgb(229, 233, 242)' };
       },
     },
   };

@@ -267,7 +267,6 @@ export default {
 
           const date = (() => {
             if (!sc.intended_start) {
-              console.log(sc.intended_start);
               return '미정 TODO: 미정 없어져야함'; // TODO: intended_start 꼭 있어야함!
             }
             const startDate = new Date(sc.intended_start);
