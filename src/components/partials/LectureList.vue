@@ -7,12 +7,12 @@
        <!-- {{ props.list }}<br /> -->
 
       <!-- 번호(1), 타입(숙제), 강의(근대사 1강), 기간, 수강한 학생수, 수강생 이해도(평균), 강의, 관리, 삭제 -->
-      <el-table :data="props.list" stripe @row-click="listeners['row-click']">
+      <el-table :data="props.list" @row-click="listeners['row-click']" class="elTable-label">
         <el-table-column
           prop="index"
           label="강의 번호"
-          width="80"
-          align="center"
+          width="90"
+          align="left"
         >
           <template slot-scope="scope">
             {{ scope.$index + 1 }}
@@ -23,20 +23,19 @@
           prop="type"
           label="타입"
           width="90"
-          align="center"
+          align="left"
         ></el-table-column>
 
         <template v-if="props.type === 'TEACHER'">
             <el-table-column
               prop="name"
-              label="강의"
-              width="200"
-              align="center"
+              label="강의명"
+              align="left"
             ></el-table-column>
             <el-table-column
             label="기간"
-            width="275"
-            align="center"
+            width="210"
+            align="left"
           >
             <template slot-scope="scope">
               {{ scope.row.start_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') : '미정' }}
@@ -46,8 +45,9 @@
           </el-table-column>
 
           <el-table-column
-            label="수강한 학생 수"
-            width="110"
+            label="수강 학생 수"
+            width="135"
+             align="left"
           >
             <template slot-scope="scope">
               몇명 / {{ scope.row.capacity }}
@@ -55,8 +55,9 @@
           </el-table-column>
 
           <el-table-column
-            label="수강생 이해도"
-            width="110"
+            label="수강 이해도(평균)"
+            width="135"
+             align="left"
           >
             <template slot-scope="scope">
               몇%
@@ -65,8 +66,8 @@
 
           <el-table-column
             label="-"
-            width="105"
-            align="center"
+            width="90"
+            align="left"
           >
             <template slot-scope="scope">
               <router-link :to="`/a/teacher/NNlecture/${scope.row.lecture_id}/live`">
@@ -77,20 +78,20 @@
 
           <el-table-column
             label="-"
-            width="105"
-            align="center"
+            width="90"
+            align="left"
           >
             <template slot-scope="scope">
               <router-link :to="`/a/teacher/NNlecture/${scope.row.lecture_id}/manage?classId=${scope.row.class_id}`">
-                <el-button>강의 관리</el-button>
+                <el-button class="edit-btn">수정</el-button>on>
               </router-link>
             </template>
           </el-table-column>
 
           <el-table-column
             label="-"
-            width="80"
-            align="center"
+            width="90"
+            align="left"
           >
             <template slot-scope="scope">
               <el-button type="danger" @click="listeners['delete'](scope.$index)">삭제</el-button>
@@ -196,3 +197,49 @@ export default {
 };
 </script>
 
+<style lang="scss" scoped>
+#lecture_list_wrapper {
+  .elTable-label {
+  font-family: SpoqaHanSans;
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  color: #909399;
+  text-align: center;
+  }
+.elTable-label th {
+  font-family: SpoqaHanSans;
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  color: #909399;
+}
+.elTable-label td {
+  font-family: SpoqaHanSans;
+  font-size: 20px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  color: #606266;
+
+}
+.edit-btn {
+  font-family: SpoqaHanSans;
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  color: #1989fa;
+}
+}
+</style>

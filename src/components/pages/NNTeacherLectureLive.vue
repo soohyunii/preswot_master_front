@@ -1,6 +1,6 @@
 <template>
   <div id="teacher_lecture_live_wrapper" class="bt-container">
-      <h2>{{ path }}</h2>
+      <h2>{{ path }}</h2><br/>
     <el-row :gutter="20">
       <el-col :span="12">
         <!--
