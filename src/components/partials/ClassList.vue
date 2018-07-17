@@ -136,9 +136,9 @@ export default {
 <!-- sh s -->
 <style lang="scss" scoped>
   .el-table{
-    width: 940px;
+    // width: 940px;
     /* opacity: 0; */
-    background-color: #f5f7fa;
+    // background-color: #f5f7fa;
   }
 
 </style>
