@@ -66,13 +66,8 @@
 
           <el-table-column
             label="-"
-<<<<<<< HEAD
-            width="105"
-            align="center"
-=======
             width="90"
             align="left"
->>>>>>> css 수정
           >
             <template slot-scope="scope">
               <router-link :to="`/a/teacher/NNlecture/${scope.row.lecture_id}/live`">
@@ -83,21 +78,12 @@
 
           <el-table-column
             label="-"
-<<<<<<< HEAD
-            width="105"
-            align="center"
-          >
-            <template slot-scope="scope">
-              <router-link :to="`/a/teacher/NNlecture/${scope.row.lecture_id}/manage?classId=${scope.row.class_id}`">
-                <el-button>강의 관리</el-button>
-=======
             width="90"
             align="left"
           >
             <template slot-scope="scope">
               <router-link :to="`/a/teacher/NNlecture/${scope.row.lecture_id}/manage?classId=${scope.row.class_id}`">
-                <el-button class="edit-btn">수정</el-button>
->>>>>>> css 수정
+                <el-button class="edit-btn">수정</el-button>on>
               </router-link>
             </template>
           </el-table-column>
