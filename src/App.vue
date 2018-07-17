@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
+  <div id="app" :style="{ backgroundImage: ('url('+require('@/assets/study05.jpg')+')') }">
     <el-container>
-      <el-header :id="appTheme">
+      <el-header>
         <app-header />
       </el-header>
       <el-container>
@@ -9,11 +9,11 @@
           <app-navigation />
         </el-aside>
         <el-container>
-          <el-main id="app_router_view_wrapper" >
+          <el-main :id="isMainPage?'app_router_view_wrapper_main':'app_router_view_wrapper'" >
             <router-view :key="$route.fullPath"></router-view> <!-- vue router에서 동일한 path 호출시 새로고침 효과 -->
           </el-main>
-          <el-footer>
-            <app-footer />
+          <el-footer style="padding: 0px;">
+            <app-footer style="height: 60px;"/>
           </el-footer>
         </el-container>
       </el-container>
@@ -27,8 +27,8 @@ import { mapState, mapMutations } from 'vuex';
 // import './variables.scss'; // * To use $--color-primary scss variable
 
 import AppNavigation from './components/layouts/AppNavigation';
-import AppHeader from './components/layouts/AppHeader';
-import AppFooter from './components/layouts/AppFooter';
+import AppHeader from './components/layouts/NNAppHeader';
+import AppFooter from './components/layouts/NNAppFooter';
 import utils from './utils';
 
 export default {
@@ -47,18 +47,8 @@ export default {
   },
   computed: {
     ...mapState('layout', ['isNavCollapsed']),
-    appTheme() {
-      const vm = this;
-      const path = vm.$route.path;
-      if (path.includes('teacher')) {
-        if (path.includes('live')) {
-          return 'teacher_lecture_live_theme';
-        }
-        return 'teacher_theme';
-      } else if (path.includes('student')) {
-        return 'student_theme';
-      }
-      return 'default_theme';
+    isMainPage() {
+      return this.$route.path === '/';
     },
   },
   methods: {
@@ -106,8 +96,12 @@ export default {
 
 #app {
   display: flex;
-  min-height: 108vh;
+  min-height: 100vh;
   flex-direction: column;
+}
+
+#app_router_view_wrapper_main {
+  flex: 1;
 }
 
 #app_router_view_wrapper {
