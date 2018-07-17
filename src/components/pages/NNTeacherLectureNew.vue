@@ -1,12 +1,8 @@
 <template>
-<div id="teacher_lecture_new_wrapper" class="bt-container"> 
- <!-- <div id="teacher_lecture_new_wrapper" :class="{ 'bt-container': isManage }">
-   -->
-     <h2 v-if="isManage === false" class="page-title">
+  <div id="teacher_lecture_new_wrapper" class="bt-container"> 
+    <h2 v-if="isManage === false" class="page-title">
       강의 추가
     </h2>
-    <!-- {{ input }}<br /><br /> -->
-
     <el-form :model="input" ref="elForm" label-width="125px" style="max-width: 800px;">
       <!-- 20180629 강의 타입 제거
       <el-form-item label="타입">
@@ -34,7 +30,6 @@
         ></el-date-picker>
       </el-form-item>
 
-      
       <el-form-item>
         <el-button
           type="primary"
@@ -45,7 +40,6 @@
           </div>
         </el-button>
       </el-form-item>
-
     </el-form>
   </div>
 </template>

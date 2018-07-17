@@ -1,7 +1,6 @@
 <template>
   <div id="teacher_lecture_index_wrapper" class="bt-container">
-      <h2 class="page-title">{{ currentTeachingClass(classId) ? currentTeachingClass(classId).name : '' }}
-        </h2>
+      <h2 class="page-title">{{ currentTeachingClass(classId) ? currentTeachingClass(classId).name : '' }}</h2>
     <div class="right-align-margin-bottom-15">
       <el-button @click="onClick('EVALUATION')" class="el-btn">과목진단</el-button>
       <el-button @click="onClick('ANALYSIS')" class="el-btn">과목저널링</el-button>
