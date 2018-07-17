@@ -1,19 +1,5 @@
 <template>
-  <div class="wrapper">
-    
-     <!-- position:absolute의 부모가 되기 위해 relative 속성 부여 -->
-  <!--
-    <img :src="require('@/assets/home.jpg')" width="100%" style="height: 410px; object-fit: cover; object-position: top;">
-    <div class="btn-input-wrapper"> -->
-      <!-- TODO
-      <el-button icon="el-icon-search"></el-button>
-      <div class="el-input">
-        <el-input placeholder="What do you want to learn?" v-model="searchText"></el-input>
-      </div>
-      -->
-  <!--
-    </div>
-    -->
+  <div class="wrapper"> <!-- position:absolute의 부모가 되기 위해 relative 속성 부여 -->
     <pre id="centerWord" style="position:absolute; top: 450px; left: 50%; margin-left: -190px">
       배움은 우연히 얻을 수 없다. 그것은 타는 열정으로
       구해야 하며, 부지런함으로 참여해야 한다.
