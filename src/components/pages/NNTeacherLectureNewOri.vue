@@ -196,7 +196,35 @@ export default {
       const vm = this;
       const classId = vm.$route.query.classId;
       let sucNum = 0, errNum = 0, totalNum = vm.selectedLectureList.length;
-      await vm.selectedLectureList.forEach(async (lec) => {
+      const newLecArray = vm.selectedLectureList.map((lec) => {
+        return {
+          classId: classId,
+          oriLecId: lec.lecture_id,
+          type: lec.type,
+          name: lec.newName,
+          start_time: lec.lcStartDate,
+          end_time: lec.lcEndDate,
+        };
+      });
+
+      try {
+        await lectureService.postLectureFromOrigin(newLecArray);
+        vm.$notify({
+          title: '강의 수정 성공',
+          message: '성공적으로 강의가 수정됨',
+          type: 'success',
+        });
+        vm.$router.go(-1);
+      } catch (error) {
+        console.log(error);
+        vm.$notify({
+          title: '강의 수정 실패',
+          message: error.toString(),
+          type: 'error',
+          duration: 0,
+        });
+      }
+      /* await vm.selectedLectureList.forEach(async (lec) => {
         try {
             await lectureService.postLecture({
               classId,
@@ -218,7 +246,7 @@ export default {
             });
             vm.$router.go(-1);
           }
-      });
+      }); */
     },
     selectedLectureClass({ row }) {
       if (row.isSelected) return 'selected-lc-class';

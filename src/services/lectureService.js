@@ -137,4 +137,11 @@ export default {
   getOpenedLectureItem({ lectureId }) {
     return http.get(`/lectures/${lectureId}/opened-item`);
   },
+  postLectureFromOrigin({
+    classId, lectureInfoArray
+  }) {
+    return http.post(`/lectures/copy`, {
+      classId, lectureInfoArray
+    });
+  }
 };
