@@ -12,8 +12,8 @@
           <el-main :id="isMainPage?'app_router_view_wrapper_main':'app_router_view_wrapper'" >
             <router-view :key="$route.fullPath"></router-view> <!-- vue router에서 동일한 path 호출시 새로고침 효과 -->
           </el-main>
-          <el-footer style="padding: 0px;">
-            <app-footer style="height: 60px;"/>
+          <el-footer style="padding: 0px; height: 45px;">
+            <app-footer style="height: 45px;"/>
           </el-footer>
         </el-container>
       </el-container>

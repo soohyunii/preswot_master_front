@@ -2,7 +2,7 @@
   <div id="app_nav_wrapper" class="bt-container">
     <div style="position: relative">
       <router-link to="/">
-        <div style="display:inline-block; position:absolute; top: 11px; left:50px;">
+        <div style="display:inline-block; position:absolute; top: 14px; left:50px;">
           <span class="title">PRESWOT</span>
           <!--<span id="header1" class="class1" :class="{class2: testFlag}">PRESWOT</span>-->
         </div>
@@ -73,7 +73,7 @@
     width: 45px;
     height: 14px;
     font-family: SpoqaHanSans;
-    font-size: 16px;
+    font-size: 13px;
     font-weight: bold;
     font-style: normal;
     font-stretch: normal;
@@ -82,7 +82,7 @@
     color: #ffffff;
   }
   .normal:hover {
-    font-size: 16px;
+    font-size: 13px;
     font-weight: bold;
     color: #20a0ff;
   }
