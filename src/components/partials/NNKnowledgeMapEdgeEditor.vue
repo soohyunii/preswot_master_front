@@ -3,6 +3,7 @@
     <el-table
       :data="edges"
       border
+      :header-cell-style="changeHead"
       style="width: 600px">
       <el-table-column label="From" align="center">
         <template slot-scope="scope">
@@ -34,7 +35,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="Weight" align="center">
+      <el-table-column label="중요도" align="center">
         <template slot-scope="scope">
           <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].weight">
             <el-input type="number" v-model="edges[scope.$index].weight" />
@@ -113,6 +114,9 @@ export default {
       return (link) => {
         return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
       };
+    },
+    changeHead() {
+      return { backgroundColor: '#ebeef5' };
     },
   },
   /*

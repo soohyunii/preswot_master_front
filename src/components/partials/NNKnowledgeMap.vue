@@ -13,6 +13,7 @@
       -->
       <div class="networkVis" id="myNetwork"></div>
       <!-- <el-button type="success" @click="fit">그래프 전체보기 <i class="el-icon-zoom-out"></i></el-button> -->
+      <br>
       <el-row>
         <el-col :span="8">
           <el-button @click="save" type="primary">

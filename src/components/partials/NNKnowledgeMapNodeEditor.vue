@@ -3,15 +3,16 @@
     <el-table
       :data="nodes"
       border
+      :header-cell-style="changeHead"
       style="width: 500px">
-      <el-table-column label="Name" align="center">
+      <el-table-column label="키워드" align="center">
         <template slot-scope="scope">
           <div>
             {{ scope.row.label }}
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="Weight" align="center">
+      <el-table-column label="중요도" align="center">
         <template slot-scope="scope">
           <div v-if="inputFlag[scope.$index]">
             <div style="display:inline-block; width: 100px">
@@ -71,6 +72,9 @@ export default {
           throw new Error('not defined type', type);
         }
       }
+    },
+    changeHead() {
+      return { backgroundColor: '#ebeef5' };
     },
   },
 };
