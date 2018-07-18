@@ -1,12 +1,21 @@
 <template>
   <div id="teacher_class_index_wrapper" class="bt-container">
-    <h2>강의 중인 과목 목록</h2>
+    <h2 class="page-title">강의 중인 과목</h2>
+    
+    <div class="right-align">
+      <router-link to="/a/teacher/NNclass/new">
+        <el-button type="primary" class="right-align-btn">
+           <div class="right-align-btn-layer">과목 개설</div>
+        </el-button>
+      </router-link>
+    </div>
 
     <class-list
       @row-click="onClickClass"
       @delete="onClickDelete"
       type="TEACHER"
       :list="teachingClassList || []"
+      class="elTable-font"
     />
 
     <br />
@@ -19,6 +28,7 @@
     </div>
   </div>
 </template>
+
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex';
@@ -102,21 +112,77 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 #teacher_class_index_wrapper {
-  /* sh del */
-  .right-align {
-    text-align: right;
+  .page-title{
+    float:left;
+     width:1000px;
+  height: 24px;
+    
+    font-family: SpoqaHanSans;
+    font-size: 25px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.2;
+    letter-spacing: normal;
+    color: #000000;
+  
+    margin-top : 40px;
+    margin-left : 12px;
+    margin-bottom : 25px;
   }
+.right-align {
+    text-align: right;
+}
 
-  /* sh s */
-/*   .el-button--primary{
-    width:940px;
-    height:40px;
-    border-radius: 3px;
-    background-color: #1989fa;
-    text-align: center;
-  } */
-  /* sh e */
+.right-align-btn {
+     width: 140px;
+  height: 40px;
+  border-radius: 3px;
+  background-color: #ffffff;
+  border: solid 1px #1989fa;
+   margin-top : 40px;
+    margin-left : 12px;
+    margin-bottom : 25px;
+}
 
+.right-align-btn-layer {
+    width: 47px;
+  height: 12px;
+  font-family: SpoqaHanSans;
+  font-size: 12px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-align: center;
+  color: #1989fa;
+   
+    margin-left: auto;
+    margin-right: auto;
+}
+.el-table th{
+  font-family: SpoqaHanSans;
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  color: #909399;
+}
+
+.el-table td{
+  font-family: SpoqaHanSans;
+  font-size: 14px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  color: #1989fa;
+}
 }
 </style>

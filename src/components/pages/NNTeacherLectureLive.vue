@@ -1,6 +1,6 @@
 <template>
   <div id="teacher_lecture_live_wrapper" class="bt-container">
-      <h2>{{ path }}</h2>
+      <h2>{{ path }}</h2><br/>
     <el-row :gutter="20">
       <el-col :span="12">
         <!--
@@ -31,7 +31,7 @@
     </el-row>
     <!--
     <el-row :gutter="20">
-      <el-col :span="12">  
+      <el-col :span="12">
       </el-col>
       // TODO : 실시간 질문
       <el-col :span="12">
@@ -41,8 +41,9 @@
       </el-col>
     </el-row>
     -->
-    <div class="statusbar">
-      <teacher-lecture-live-summary :lectureId="lectureId"/>
+    <div class="statusbar" v-bind:class="{ activeInfo: isInfoVisible}">
+      <div class="statusbar_for_click" @click="onClick('TOGGLE_STATUS_INFO')"></div>
+      <teacher-lecture-live-summary :lectureId= "lectureId"/>
     </div>
   </div>
 </template>
@@ -106,6 +107,7 @@ export default {
       currentLectureItemId: -1,
       path: '',
       isAuto: false,
+      isInfoVisible: false,
     };
   },
   computed: {
@@ -168,6 +170,10 @@ export default {
           });
           break;
         }
+        case 'TOGGLE_STATUS_INFO': {
+          vm.isInfoVisible = !vm.isInfoVisible;
+          break;
+        }
         default: {
           throw new Error(`not defined type ${type}`);
         }
@@ -207,5 +213,14 @@ export default {
   overflow: hidden;
   height:100%;
   max-height:25px;
+}
+.statusbar_for_click{
+  width:100%;
+  height:30px;
+  position:absolute;
+  z-index:999;
+}
+.statusbar.activeInfo{
+  max-height: 85%;
 }
 </style>
