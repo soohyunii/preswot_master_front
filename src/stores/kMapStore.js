@@ -25,10 +25,12 @@ export default {
         lectureId,
       });
       const nodes = res.data.map(item => ({
-        value: item.keyword,
+        // value: item.keyword,
         id: item.keyword,
-        name: item.keyword,
+        label: item.keyword,
         _size: item.weight,
+        color: { background: '#97C2FC' },
+        size: 25,
       }));
       commit('updateNodes', {
         nodes,
@@ -39,8 +41,8 @@ export default {
         lectureId,
       });
       const edges = res.data.map(item => ({
-        sid: item.node1,
-        tid: item.node2,
+        from: item.node1,
+        to: item.node2,
         weight: item.weight,
       }));
       commit('updateEdges', {
@@ -49,7 +51,7 @@ export default {
     },
     async postLectureKeywords({ state }, { lectureId }) {
       const nodes = state.nodes.map(item => ({
-        keyword: item.name,
+        keyword: item.label,
         weight: Number(item._size), // eslint-disable-line
       }));
       lectureService.postLectureKeywords({
@@ -59,8 +61,8 @@ export default {
     },
     async postLectureKeywordRelations({ state }, { lectureId }) {
       const edges = state.edges.map(item => ({
-        node1: item.sid,
-        node2: item.tid,
+        node1: item.from,
+        node2: item.to,
         weight: item.weight,
       }));
       lectureService.postLectureKeywordRelations({
@@ -72,8 +74,8 @@ export default {
     async deleteLectureKeywordRelation({ state }, { index, lectureId }) {
       lectureService.deleteLectureKeywordRelation({
         lectureId,
-        node1: state.edges[index].sid,
-        node2: state.edges[index].tid,
+        node1: state.edges[index].from,
+        node2: state.edges[index].to,
       });
       state.edges.splice(index, 1);
     },

@@ -4,42 +4,33 @@
       :data="edges"
       border
       style="width: 600px">
-      <template slot="append">
-        <tr>
-          <td width="600px" align="center">
-            <div class="cell">
-              <i class="el-icon-circle-plus-outline" @click="onClick('addEdge')" />
-            </div>
-          </td>
-        </tr>
-      </template>
-      <el-table-column label="Sid" align="center">
+      <el-table-column label="From" align="center">
         <template slot-scope="scope">
-          <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].sid">
+          <!-- <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].sid">
             <el-autocomplete
               class="inline-input"
               v-model="edges[scope.$index].sid"
               :fetch-suggestions="querySearch"
             />
             <el-button @click="onClick('saveEdgeSid', scope.$index)">확인</el-button>
-          </div>
-          <div v-else>
-            {{ scope.row.sid }}<i class="el-icon-edit" @click="onClick('changeEdgeSid', scope.$index)" />
+          </div> -->
+          <div>
+            {{ scope.row.from }}
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="Tid" align="center">
+      <el-table-column label="To" align="center">
         <template slot-scope="scope">
-          <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].tid">
+          <!-- <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].tid">
             <el-autocomplete
               class="inline-input"
               v-model="edges[scope.$index].tid"
               :fetch-suggestions="querySearch"
             />
             <el-button @click="onClick('saveEdgeTid', scope.$index)">확인</el-button>
-          </div>
-          <div v-else>
-            {{ scope.row.tid }}<i class="el-icon-edit" @click="onClick('changeEdgeTid', scope.$index)" />
+          </div> -->
+          <div>
+            {{ scope.row.to }}
           </div>
         </template>
       </el-table-column>
@@ -82,118 +73,9 @@ export default {
     ...mapActions('kMap', [
       'deleteLectureKeywordRelation',
     ]),
-    isValidEdge(sidInputFlag, tidInputFlag, index) {
-      const vm = this;
-      let isValid = true;
-
-      if (sidInputFlag && tidInputFlag) {
-        return isValid;
-      }
-
-      const inputSid = vm.edges[index].sid;
-      const inputTid = vm.edges[index].tid;
-      if (inputSid === inputTid) {
-        // TODO: translate
-        vm.$notify({
-          title: '알림',
-          message: 'Source ID와 Target ID는 같을 수 없습니다.',
-          type: 'warning',
-        });
-        isValid = false;
-      }
-
-      vm.edges.forEach((edge, idx) => {
-        const isMe = idx === index;
-        if (!isMe) {
-          const isduplicatedEdge = edge.sid === inputSid && edge.tid === inputTid;
-          // const isduplicatedReverseEdge = edge.tid === inputSid && edge.sid === inputTid;
-          // if (isduplicatedEdge || isduplicatedReverseEdge) {
-          if (isduplicatedEdge) {
-            // TODO: translate
-            vm.$notify({
-              title: '알림',
-              message: '입력한 edge와 일치하는 edge가 이미 존재합니다.',
-              type: 'warning',
-            });
-            isValid = false;
-          }
-        }
-      });
-
-      return isValid;
-    },
-    isValidEdgeId(id) {
-      const vm = this;
-
-      // Case of Empty value
-      if (!id) {
-        // TODO: transalte
-        vm.$notify({
-          title: '알림',
-          message: '값을 입력해주세요.',
-          type: 'warning',
-        });
-        return false;
-      }
-
-      // Value is not in nodes(vuex)
-      const nodesNames = [];
-      for (let i = 0; i < vm.nodes.length; i += 1) {
-        nodesNames.push(vm.nodes[i].name);
-      }
-      if (!nodesNames.includes(id)) {
-        // TODO: transalte
-        vm.$notify({
-          title: '알림',
-          message: 'Name에 존재하는 값을 입력해야 합니다.',
-          type: 'warning',
-        });
-        return false;
-      }
-
-      return true;
-    },
     onClick(type, index) {
       const vm = this;
       switch (type) {
-        case 'addEdge': {
-          vm.edges.push({ sid: '', tid: '', weight: 50 });
-          break;
-        }
-        case 'changeEdgeSid': {
-          vm.checkAndCreateInputFlag(index);
-          vm.inputFlag[index].sid = true;
-          break;
-        }
-        case 'saveEdgeSid': {
-          if (!vm.isValidEdgeId(vm.edges[index].sid)) {
-            break;
-          }
-          const sidInputFlag = vm.inputFlag[index].sid;
-          const tidInputFlag = vm.inputFlag[index].tid;
-          if (!vm.isValidEdge(sidInputFlag, tidInputFlag, index)) {
-            break;
-          }
-          vm.inputFlag[index].sid = false;
-          break;
-        }
-        case 'changeEdgeTid': {
-          vm.checkAndCreateInputFlag(index);
-          vm.inputFlag[index].tid = true;
-          break;
-        }
-        case 'saveEdgeTid': {
-          if (!vm.isValidEdgeId(vm.edges[index].tid)) {
-            break;
-          }
-          const sidInputFlag = vm.inputFlag[index].sid;
-          const tidInputFlag = vm.inputFlag[index].tid;
-          if (!vm.isValidEdge(sidInputFlag, tidInputFlag, index)) {
-            break;
-          }
-          vm.inputFlag[index].tid = false;
-          break;
-        }
         case 'changeEdgeWeight': {
           vm.checkAndCreateInputFlag(index);
           vm.inputFlag[index].weight = true;

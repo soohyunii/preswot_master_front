@@ -42,6 +42,7 @@
     "lodash.kebabcase": "^4.1.1",
     "moment": "^2.20.1",
     "normalize.css": "^7.0.0",
+    "vis": "^4.21.0",
     "vlf": "^1.0.3",
     "vue": "2.5.16",
     "vue-d3-network": "^0.1.24",

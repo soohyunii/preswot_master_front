@@ -4,7 +4,7 @@
     <!-- lecture id: {{ lectureId }} {{ lecture }}<br /> <br /> -->
     <!-- ddd {{ currentTeachingClass(classId) }}<br /> -->
 
-    <el-tabs v-model="activeTab" :before-leave="beforeLeaveTab" @tab-click="onClick('TAB_CLICK')">
+    <el-tabs v-model="activeTab" :before-leave="beforeLeaveTab">
       <el-tab-pane label="기본 정보 수정" name="basic">
         <teacher-lecture-new />
       </el-tab-pane>
@@ -17,9 +17,11 @@
       <el-tab-pane label="강의 허용 프로그램 설정" name="program">
         <tlm-tab-allowed-program />
       </el-tab-pane>
-      <el-tab-pane label="강의 지식맵 관리" name="kmap">
+      <!-- knowledgeMap 렌더링 시 노드가 캔버스의 범위를 벗어나는 이슈가 발생하여 ':lazy="true" 추가 -->
+      <el-tab-pane label="강의 지식맵 관리" name="kmap" :lazy="true">
         <knowledgeMap />
       </el-tab-pane>
+      <!-- <knowledgeMap /> -->
     </el-tabs>
   </div>
 </template>
@@ -49,6 +51,7 @@ export default {
   data() {
     return {
       activeTab: 'basic',
+      isNowledgeMap: false,
     };
   },
   async created() {
@@ -116,25 +119,12 @@ export default {
         lectureItem: null,
       });
     },
-    ...mapActions('kMap', [
-      'getKeywordsAndWeights',
-      'getLectureKeywordRelations',
-      'reDrawD3Network',
-    ]),
     onClick(type) {
       const vm = this;
       switch (type) {
         case 'SUBMIT_KEYWORDS': {
           vm.deleteLectureKeywords();
           vm.postLectureKeywords();
-          break;
-        }
-        case 'TAB_CLICK': {
-          if (vm.activeTab === 'kmap') {
-            vm.getKeywordsAndWeights(vm.$route.params);
-            vm.getLectureKeywordRelations(vm.$route.params);
-            vm.reDrawD3Network();
-          }
           break;
         }
         default: {

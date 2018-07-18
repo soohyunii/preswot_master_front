@@ -7,7 +7,7 @@
       <el-table-column label="Name" align="center">
         <template slot-scope="scope">
           <div>
-            {{ scope.row.value }}
+            {{ scope.row.label }}
           </div>
         </template>
       </el-table-column>
