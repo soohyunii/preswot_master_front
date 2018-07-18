@@ -2,16 +2,16 @@
   <div id="app_footer_wrapper" v-show="!isLive">
     <div class="bt-container">
       <div style="position: relative">
-        <div style="display:inline-block; position:absolute; top: 20px; left:50px;">
+        <div style="display:inline-block; position:absolute; top: 15px; left:50px;">
           <span class="title">PRESWOT</span>
         </div>
         <router-link to="/policy">
-          <div style="display:inline-block; position:absolute; top: 20px; left:990px;">
+          <div style="display:inline-block; position:absolute; top: 15px; left:990px;">
             <span class="normal">Policy</span>
           </div>
         </router-link>
         <router-link to="/download">
-          <div style="display:inline-block; position:absolute; top: 20px; left:1089px;">
+          <div style="display:inline-block; position:absolute; top: 15px; left:1089px;">
             <span class="normal">Download</span>
           </div>
         </router-link>
@@ -49,7 +49,7 @@ export default {
   width: 45px;
   height: 14px;
   font-family: SpoqaHanSans;
-  font-size: 18px;
+  font-size: 13px;
   font-weight: bold;
   font-style: normal;
   font-stretch: normal;
@@ -58,7 +58,7 @@ export default {
   color: #20a0ff;
 }
 .normal:hover {
-  font-size: 18px;
+  font-size: 13px;
   font-weight: bold;
   color: #ffffff;
 }
