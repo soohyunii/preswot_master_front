@@ -27,7 +27,8 @@
             <el-table-column
               label="평균 점수">
               <template slot-scope="scope">
-                {{ scope.row.avgScore }} / {{scope.row.score}}
+                <!-- 평균 점수를 소수점 첫째자리까지 출력, ex) 3.333333 => 3.3 -->
+                {{ scope.row.avgScore.toFixed(1) }} / {{scope.row.score}}
               </template>
             </el-table-column>
             <el-table-column
