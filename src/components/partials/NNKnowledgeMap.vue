@@ -49,12 +49,22 @@
       return {
         network: null,
         container: '',
-        physics: true,
         options: {
           manipulation: {
-            enabled: false,
+            enabled: true,
+            addNode: false,
+            editEdge: false,
+            deleteNode(data, callback) {
+              callback(data);
+              const index = vm.nodes.findIndex(item => item.id === data.nodes[0]);
+              vm.nodes.splice(index, 1);
+            },
+            deleteEdge(data, callback) {
+              callback(data);
+              const index = vm.edges.findIndex(item => item.id === data.edges[0]);
+              vm.edges.splice(index, 1);
+            },
             addEdge(data, callback) {
-              window.console.log('add edge', data);
               if (data.from !== data.to) {
                 callback(data);
                 // after each adding you will be back to addEdge mode
@@ -116,9 +126,7 @@
           },
           edges: {
             arrows: {
-              to: { enabled: false, scaleFactor: 1, type: 'arrow' },
-              middle: { enabled: false, scaleFactor: 1, type: 'arrow' },
-              from: { enabled: false, scaleFactor: 1, type: 'arrow' },
+              to: { enabled: true, scaleFactor: 1, type: 'arrow' },
             },
             selectionWidth(width) {
               return width * 3;
@@ -145,10 +153,8 @@
         nodes: vm.nodes,
         edges: vm.edges,
       };
-      console.log(vm.edges);
       vm.network = new vis.Network(vm.container, data, vm.options);
       // vm.network.fit();
-      vm.network.addEdgeMode();
     },
     computed: {
       ...mapState('kMap', ['nodes', 'edges']),
