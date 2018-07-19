@@ -15,11 +15,11 @@
       <!-- <el-button type="success" @click="fit">그래프 전체보기 <i class="el-icon-zoom-out"></i></el-button> -->
       <br>
       <el-row>
-        <el-col :span="8">
+        <div class="ps-align-right">
           <el-button @click="save" type="primary">
             강의 지식맵 저장
           </el-button>
-        </el-col>
+        </div>
       </el-row>
       <br />
       <el-row>
