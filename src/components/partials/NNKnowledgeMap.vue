@@ -1,142 +1,204 @@
 <template>
   <div class="wrapper" ref="wrapper">
-    
-    <!-- 디버그 용도
-    <p>{{ nodes }}</p>
-    <p>{{ edges }}</p>
-    -->
+      <!-- 디버그 용도
+      <p>{{ nodes }}</p>
+      <p>{{ edges }}</p> -->
 
-    <!-- TODO 키워드 추출 부분 수정 후 작성할 것
-    <div v-if="false"> 
-      <br /><br />
-      키워드 추출 진행중 <i class="el-icon-loading"> </i><br />
-      다른 작업은 삼가 주세요.
-    </div>
-    -->
-    
-    <div>
-      <svg style="width: 0px; height: 0px; float: left;">
-        <defs>
-          <marker id="m-end" markerWidth="10" markerHeight="10" refX="11" refY="3" orient="auto" markerUnits="strokeWidth" >
-            <path d="M0,0 L0,6 L9,3 z"></path>
-          </marker>
-        </defs>
-      </svg>
-      <div class="network">
-        <div class="bg" @click="selectReset()" v-if="d3DrawFlag === true">
-          <d3-network 
-            :net-nodes="nodes"
-            :net-links="validEdges"
-            :selection="{nodes: selectedNode, links: {}}"
-            :options="options"
-            :link-cb="lcb"
-            @node-click="nodeClick" />
-        </div>
-        <el-row>
-          <el-col :span="8">
-            <el-button @click="save" type="primary">
-              강의 지식맵 저장
-            </el-button>
-          </el-col>
-        </el-row>
-        <br />
-        <el-row>
-          <el-col :span="12">
-            <knowledge-map-node-editor></knowledge-map-node-editor>
-          </el-col>
-          <el-col :span="12">
-            <knowledge-map-edge-editor></knowledge-map-edge-editor>
-          </el-col>
-        </el-row>
+      <!-- TODO 키워드 추출 부분 수정 후 작성할 것
+      <div v-if="false">
+        <br /><br />
+        키워드 추출 진행중 <i class="el-icon-loading"> </i><br />
+        다른 작업은 삼가 주세요.
       </div>
-    </div>
+      -->
+      <div class="networkVis" id="myNetwork"></div>
+      <!-- <el-button type="success" @click="fit">그래프 전체보기 <i class="el-icon-zoom-out"></i></el-button> -->
+      <br>
+      <el-row>
+        <div class="ps-align-right">
+          <el-button @click="save" type="primary">
+            강의 지식맵 저장
+          </el-button>
+        </div>
+      </el-row>
+      <br />
+      <el-row>
+        <el-col :span="12">
+          <knowledge-map-node-editor></knowledge-map-node-editor>
+        </el-col>
+        <el-col :span="12">
+          <knowledge-map-edge-editor></knowledge-map-edge-editor>
+        </el-col>
+      </el-row>
   </div>
 </template>
 
 <script>
-  import { mapState, mapActions } from 'vuex';
-  import D3Network from 'vue-d3-network';
+  import { mapState, mapActions, mapMutations } from 'vuex';
+  import vis from 'vis';
   import KnowledgeMapNodeEditor from './NNKnowledgeMapNodeEditor';
   import KnowledgeMapEdgeEditor from './NNKnowledgeMapEdgeEditor';
 
   export default {
     components: {
-      D3Network,
       KnowledgeMapNodeEditor,
       KnowledgeMapEdgeEditor,
     },
     data() {
+      const vm = this;
       return {
-        mode: 'NOT_PINNED',
-        selectedNode: {},
-        nodeSize: 20,
-        canvas: false,
-        linkWidth: 2.5,
-        fontSize: 20,
-        resetFlag: true,
-        numberOfKeyword: 10,
-        keywordLength: 2,
+        network: null,
+        container: '',
+        options: {
+          manipulation: {
+            enabled: true,
+            addNode: false,
+            editEdge: false,
+            deleteNode(data, callback) {
+              callback(data);
+              const index = vm.nodes.findIndex(item => item.id === data.nodes[0]);
+              vm.nodes.splice(index, 1);
+            },
+            deleteEdge(data, callback) {
+              callback(data);
+              const index = vm.edges.findIndex(item => item.id === data.edges[0]);
+              vm.deleteLectureKeywordRelation({ index, lectureId: vm.$route.params.lectureId });
+              vm.edges.splice(index, 1);
+            },
+            addEdge(data, callback) {
+              if (data.from !== data.to) {
+                callback(data);
+                // after each adding you will be back to addEdge mode
+                vm.network.addEdgeMode();
+                vm.edges.push({
+                  from: data.from,
+                  to: data.to,
+                  id: data.from.concat(data.to),
+                  weight: 20,
+                });
+              }
+            },
+            // initiallyActive: true,
+          },
+          layout: {
+            randomSeed: 3,
+            improvedLayout: true,
+            hierarchical: {
+              enabled: false,
+              levelSeparation: 150,
+              nodeSpacing: 100,
+              treeSpacing: 200,
+              blockShifting: true,
+              edgeMinimization: true,
+              parentCentralization: true,
+              direction: 'LR',        // UD, DU, LR, RL
+              sortMethod: 'hubsize',   // hubsize, directed
+            },
+          },
+          autoResize: true,
+          physics: {
+            enabled: true,
+            barnesHut: {
+              gravitationalConstant: -1000,
+              centralGravity: 0.1,
+              springLength: 300,
+              springConstant: 0.05,
+              damping: 0.1,
+            },
+            repulsion: {
+              centralGravity: 0.2,
+              springLength: 200,
+              springConstant: 0.05,
+              nodeDistance: 200,
+              damping: 0.09,
+            },
+            solver: 'repulsion',
+            stabilization: {
+              enabled: true,
+              iterations: 1000,
+              updateInterval: 100,
+              onlyDynamicEdges: false,
+              fit: true,
+            },
+          },
+          // interaction: {
+          //   hideEdgesOnDrag: true,
+          //   hover: true,
+          // },
+          nodes: {
+            borderWidth: 2,
+            chosen: {
+              node: (values) => {
+                values.borderWidth *= 3;  // eslint-disable-line
+                values.color = '#f1f1f1'; // eslint-disable-line
+              },
+            },
+            shape: 'dot',
+            font: {
+              size: 25,
+            },
+            color: {
+              background: '#97C2FC',
+            },
+          },
+          edges: {
+            arrows: {
+              to: { enabled: true, scaleFactor: 1, type: 'arrow' },
+            },
+            selectionWidth(width) {
+              return width * 3;
+            },
+            hoverWidth(width) {
+              return width * 2;
+            },
+          },
+        },
+        animation: { // -------------------> can be a boolean too!
+          duration: 1000,
+          easingFunction: 'easeInOutQuad',
+        },
       };
     },
+    async mounted() {
+      const vm = this;
+      await vm.getKeywordsAndWeights(vm.$route.params);
+      await vm.getLectureKeywordRelations(vm.$route.params);
+      vm.container = document.getElementById('myNetwork');
+      const data = {
+        nodes: vm.nodes,
+        edges: vm.edges,
+      };
+      vm.network = new vis.Network(vm.container, data, vm.options);
+    },
     computed: {
-      ...mapState('kMap', ['nodes', 'edges', 'd3DrawFlag']),
-      validEdges() {
-        const vm = this;
-        const edges = [];
-        const nodesNames = [];
-        for (let i = 0; i < vm.nodes.length; i += 1) {
-          nodesNames.push(vm.nodes[i].name);
-        }
-        for (let i = 0; i < vm.edges.length; i += 1) {
-          if (nodesNames.includes(vm.edges[i].sid) &&
-            nodesNames.includes(vm.edges[i].tid)) {
-            edges.push({
-              sid: vm.edges[i].sid,
-              tid: vm.edges[i].tid,
-              // weight: vm.edges[i].weight,
-            });
-          }
-        }
-        return edges;
-      },
-      options() {
+      ...mapState('kMap', ['nodes', 'edges', 'drawFlag']),
+      graph_data() {
         const vm = this;
         return {
-          force: 6000,
-          nodeSize: vm.nodeSize,
-          nodeLabels: true,
-          canvas: vm.canvas,
-          linkWidth: vm.linkWidth,
-          fontSize: vm.fontSize,
+          nodes: vm.nodes,
+          edges: vm.edges,
         };
+      },
+      reDrawFlag() {
+        const vm = this;
+        return vm.drawFlag;
+      },
+    },
+    watch: {
+      reDrawFlag: {
+        async handler(newVal) {
+          const vm = this;
+          if (newVal) {
+            vm.container = document.getElementById('myNetwork');
+            vm.network = await new vis.Network(vm.container, vm.graph_data, vm.options);
+            vm.updateDrawFlag(!vm.reDrawFlag);
+          }
+        },
       },
     },
     methods: {
-      ...mapActions('kMap', ['postLectureKeywords', 'postLectureKeywordRelations']),
-      nodeClick(event, node) {
-        const vm = this;
-        vm.resetFlag = false;
-        if (vm.selectedNode) {
-          vm.selectReset(true);
-        }
-        vm.selectedNode[node.id] = node;
-      },
-      selectReset(immediately) {
-        const vm = this;
-        if (vm.resetFlag || immediately) {
-          vm.selectedNode = {};
-        }
-        if (!immediately) {
-          vm.resetFlag = true;
-        }
-      },
-      lcb(link) {
-        link._svgAttrs = { // eslint-disable-line
-          'marker-end': 'url(#m-end)',
-          'marker-start': 'url(#m-start)',
-        };
-        return link;
-      },
+      ...mapActions('kMap', ['postLectureKeywords', 'postLectureKeywordRelations', 'getKeywordsAndWeights', 'getLectureKeywordRelations', 'deleteLectureKeywordRelation']),
+      ...mapMutations('kMap', ['updateDrawFlag']),
       save() {
         const vm = this;
         vm.postLectureKeywords(vm.$route.params);
@@ -146,72 +208,12 @@
   };
 </script>
 
-<style lang="scss" scoped>
-  .wrapper {
-
-    .network {
-      min-height: 600px;
-      background-color: white;
-    }
-
-    #m-end path, #m-start{
-      fill: rgba(18, 120, 98, 0.8);
-    }
-
-    .test {
-      fill: rgb(255, 0, 0);
-    }
-  }
+<style src="vis/dist/vis.min.css">
 </style>
 
-<style lang="scss">
-  .net {
-    height: 100%;
-    margin: 0;
-  }
-  .node {
-    stroke: rgba(18, 120, 98, .7);
-    stroke-width: 3px;
-    transition: fill .5s ease;
-    fill: #dcfaf3
-  }
-  .node.import {
-    stroke: rgba(255, 0, 0, .7);
-  }
-  .node.selected {
-    stroke: #caa455;
-  }
-  .node.pinned {
-    stroke: rgba(58, 56, 190, 0.6);
-  }
-  .link {
-    stroke: rgba(18, 120, 98, .3);
-  }
-  .link, .node {
-    stroke-linecap: round;
-  }
-  .link:hover, .node:hover {
-    stroke: #be385d;
-    stroke-width: 5px
-  }
-  .link.selected {
-    stroke: rgba(202, 164, 85, .6);
-  }
-  .curve {
-    fill: none;
-  }
-  .link-label, .node-label {
-    fill: #127862;
-  }
-  .link-label {
-    -webkit-transform: translateY(-.5em);
-    -ms-transform: translateY(-.5em);
-    transform: translateY(-.5em);
-    text-anchor: middle;
-  }
-  canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
+<style lang="scss" scoped>
+    #myNetwork {
+      height: 600px;
+      border: 1px solid lightgray;
+    }
 </style>
