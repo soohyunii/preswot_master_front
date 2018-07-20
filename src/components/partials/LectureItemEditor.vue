@@ -1,19 +1,15 @@
 <template>
   <div id="lecture_item_editor_wrapper">
     <h2>
-      <template v-show="isNewItem">
+      <div v-show="isNewItem">
         강의 아이템 추가
-      </template><template v-show="!isNewItem">
+      </div>
+      <div v-show="!isNewItem">
         강의 아이템 수정
-      </template>
+      </div>
     </h2>
 
-    <!-- inputHead: {{ inputHead }}<br /><br /> -->
-    <!-- inputBody: {{ inputBody }}<br /><br /> -->
-    <!-- inputTail: {{ inputTail }}<br /><br /> -->
-
     <el-form :model="inputHead" label-width="125px" style="max-width: 800px;">
-      <!--
       <el-form-item label="타입" prop="type" id="radio_type">
         <el-radio-group v-model.number="inputHead.type">
           <el-radio-button :label="0">예습</el-radio-button>
@@ -21,13 +17,13 @@
           <el-radio-button :label="2">복습</el-radio-button>
         </el-radio-group>
       </el-form-item>
-      -->
       <el-form-item label="아이템 유형" prop="lcItemType" id="lc_item_type">
         <el-radio-group v-model="inputHead.lcItemType" :disabled="!isNewItem">
           <el-radio-button label="question">문항</el-radio-button>
           <el-radio-button label="survey">설문</el-radio-button>
           <el-radio-button label="practice">실습</el-radio-button>
-          <!-- <el-radio-button label="discussion">토론</el-radio-button> -->
+          <el-radio-button label="discussion">토론</el-radio-button>
+          <el-radio-button label="material">자료</el-radio-button>
         </el-radio-group>
 
         <span v-show="!isNewItem">
@@ -46,6 +42,7 @@
           type="warning"
           show-icon center>
         </el-alert>
+        <br>
       </div>
 
       <!-- v-if를 쓰면 ref가 안 먹음 -->
@@ -53,31 +50,25 @@
         ref="questionEditor"
         v-show="inputHead.lcItemType === 'question'"
       />
-
       <lc-survey-editor
         ref="surveyEditor"
         v-show="inputHead.lcItemType === 'survey'"
       />
-
       <lc-practice-editor
         ref="practiceEditor"
         v-show="inputHead.lcItemType === 'practice'"
       />
-
-      <!--
-
-      <template v-if="inputHead.lcItemType === 'practice'">
-        <el-form-item label="코드">
-          <el-input v-model="inputTail.code" placeholder="내용을 입력해주세요." type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
-        </el-form-item>
-      </template>
-
-      -->
       <lc-discussion-editor
         ref="discussionEditor"
         v-show="inputHead.lcItemType === 'discussion'"
       />
+      <lc-material-editor
+        ref="materialEditor"
+        v-show="inputHead.lcItemType === 'material'"
+      />
+
     </el-form>
+
     <div class="ps-align-right" id="lecture_item_editor_submit_button_wrapper">
       <el-button type="primary" v-show="isNewItem" @click="onSubmit">추가</el-button>
       <el-button type="primary" v-show="!isNewItem" @click="onSubmit">수정</el-button>
@@ -87,14 +78,18 @@
 
 <script>
 import { mapActions, mapMutations, mapGetters, mapState } from 'vuex';
+
 import LcQuestionEditor from './LcQuestionEditor';
 import LcSurveyEditor from './LcSurveyEditor';
 import LcDiscussionEditor from './LcDiscussionEditor';
 import LcPracticeEditor from './LcPracticeEditor';
+import LcMaterialEditor from './LcMaterialEditor';
+
 import QuestionHandler from '../../handlers/lcItem/question';
 import PracticeHandler from '../../handlers/lcItem/practice';
 import DiscussionHandler from '../../handlers/lcItem/discussion';
 import SurveyHandler from '../../handlers/lcItem/survey';
+import MaterialHandler from '../../handlers/lcItem/material';
 import utils from '../../utils';
 
 export default {
@@ -104,6 +99,7 @@ export default {
     LcSurveyEditor,
     LcDiscussionEditor,
     LcPracticeEditor,
+    LcMaterialEditor,
   },
   async mounted() {
     const vm = this;
@@ -133,12 +129,14 @@ export default {
           DiscussionHandler.initViewModel(vm);
           break;
         }
+        case 'material': {
+          MaterialHandler.initViewModel(vm);
+          break;
+        }
         default: {
           throw new Error(`not defined lcItemType ${vm.inputHead.lcItemType}`);
         }
       }
-    } else {
-      vm.inputHead.type = 1; // FIXME: 예습, 복습 감춤으로 인해 항상 본강만 선택되도록 임시 조치. 추후 예습 복습 살리면 지울 것
     }
   },
   data() {
@@ -162,6 +160,9 @@ export default {
       }, {
         value: 'discussion',
         label: '토론',
+      }, {
+        value: 'material',
+        label: '자료',
       },
       ],
       flag: false,

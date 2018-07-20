@@ -55,11 +55,11 @@ export default {
   }) {
     return http.get(`/questions/${questionId}/keywords`);
   },
-  getMaterialKeywords({
-    materialId,
-  }) {
-    return http.get(`/materials/${materialId}/keywords`);
-  },
+  // getMaterialKeywords({
+  //   materialId,
+  // }) {
+  //   return http.get(`/materials/${materialId}/keywords`);
+  // },
   postQuestionKeywords({
     questionId,
     data,
@@ -68,24 +68,24 @@ export default {
       data,
     });
   },
-  postMaterialKeywords({
-    materialId,
-    data,
-  }) {
-    return http.post(`/materials/${materialId}/keywords`, {
-      data,
-    });
-  },
+  // postMaterialKeywords({
+  //   materialId,
+  //   data,
+  // }) {
+  //   return http.post(`/materials/${materialId}/keywords`, {
+  //     data,
+  //   });
+  // },
   deleteQuestionKeywords({
     questionId,
   }) {
     return http.delete(`/questions/${questionId}/keywords`);
   },
-  deleteMaterialKeywords({
-    materialId,
-  }) {
-    return http.delete(`/materials/${materialId}/keywords`);
-  },
+  // deleteMaterialKeywords({
+  //   materialId,
+  // }) {
+  //   return http.delete(`/materials/${materialId}/keywords`);
+  // },
   scoringFinish({
     lectureItemId,
   }) {

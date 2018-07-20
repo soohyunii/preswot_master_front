@@ -133,7 +133,7 @@ export default {
     return new Error(`not defined scItemType ${scItemType}`);
   },
   convertLcItemType(lcItemType) {
-    const mapping = ['question', 'survey', 'practice', 'discussion'];
+    const mapping = ['question', 'survey', 'practice', 'discussion', 'material'];
     if (typeof lcItemType === 'number') {
       return mapping[lcItemType];
     } else if (typeof lcItemType === 'string') {
@@ -142,7 +142,7 @@ export default {
     return new Error(`not defined lcItemType ${lcItemType}`);
   },
   convertLcItemTypeKor(lcItemType) {
-    return ['문항', '설문', '실습', '토론'][lcItemType];
+    return ['문항', '설문', '실습', '토론', '자료'][lcItemType];
   },
   // 시즌2용 유틸함수
   convertQuestionType2(questionType) {
@@ -172,6 +172,19 @@ export default {
       return mapping.indexOf(surveyType);
     }
     return new Error(`not defined surveyType ${surveyType}`);
+  },
+  convertMaterialType2(materialType) {
+    const mapping = [
+      'FILE',
+      'LINK',
+      'YOUTUBE',
+    ];
+    if (typeof materialType === 'number') {
+      return mapping[materialType];
+    } else if (typeof materialType === 'string') {
+      return mapping.indexOf(materialType);
+    }
+    return new Error(`not defined surveyType ${materialType}`);
   },
   convertQuestionType(questionType) {
     const mapping = ['객관', '단답', '서술', 'SW', 'SQL'];
