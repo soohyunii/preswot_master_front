@@ -7,14 +7,6 @@
       style="width: 600px">
       <el-table-column label="From" align="center">
         <template slot-scope="scope">
-          <!-- <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].sid">
-            <el-autocomplete
-              class="inline-input"
-              v-model="edges[scope.$index].sid"
-              :fetch-suggestions="querySearch"
-            />
-            <el-button @click="onClick('saveEdgeSid', scope.$index)">확인</el-button>
-          </div> -->
           <div>
             {{ scope.row.from }}
           </div>
@@ -22,14 +14,6 @@
       </el-table-column>
       <el-table-column label="To" align="center">
         <template slot-scope="scope">
-          <!-- <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].tid">
-            <el-autocomplete
-              class="inline-input"
-              v-model="edges[scope.$index].tid"
-              :fetch-suggestions="querySearch"
-            />
-            <el-button @click="onClick('saveEdgeTid', scope.$index)">확인</el-button>
-          </div> -->
           <div>
             {{ scope.row.to }}
           </div>
@@ -37,8 +21,8 @@
       </el-table-column>
       <el-table-column label="중요도" align="center">
         <template slot-scope="scope">
-          <div v-if="inputFlag[scope.$index] && inputFlag[scope.$index].weight">
-            <el-input type="number" v-model="edges[scope.$index].weight" />
+          <div v-if="inputFlag[scope.$index]">
+            <el-input type="number" v-model="newWeight[scope.$index]" />
             <el-button @click="onClick('saveEdgeWeight', scope.$index)">확인</el-button>
           </div>
           <div v-else>
@@ -58,19 +42,25 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 
 export default {
   name: 'KnowledgeMapEdgeEditor',
   data() {
     return {
       inputFlag: [],
+      newWeight: [],
     };
   },
   computed: {
-    ...mapState('kMap', ['nodes', 'edges']),
+    ...mapState('kMap', ['edges', 'drawFlag']),
+    reDrawFlag() {
+      const vm = this;
+      return vm.drawFlag;
+    },
   },
   methods: {
+    ...mapMutations('kMap', ['updateDrawFlag']),
     ...mapActions('kMap', [
       'deleteLectureKeywordRelation',
     ]),
@@ -79,14 +69,17 @@ export default {
       switch (type) {
         case 'changeEdgeWeight': {
           vm.checkAndCreateInputFlag(index);
-          vm.inputFlag[index].weight = true;
+          vm.inputFlag[index] = true;
           break;
         }
         case 'saveEdgeWeight': {
-          vm.inputFlag[index].weight = false;
+          vm.edges[index].weight = vm.newWeight[index];
+          vm.newWeight[index] = null;
+          vm.inputFlag.splice(index, 1, false);
           break;
         }
         case 'delete': {
+          vm.updateDrawFlag(!vm.reDrawFlag);
           vm.deleteLectureKeywordRelation({ index, lectureId: vm.$route.params.lectureId });
           vm.inputFlag.splice(index, 1);
           break;
@@ -100,33 +93,12 @@ export default {
       const vm = this;
       if (vm.inputFlag[index] === undefined) {
         vm.inputFlag[index] = null;
-        vm.inputFlag.splice(index, 1, { sid: false, tid: false, weight: false });
+        vm.inputFlag.splice(index, 1);
       }
-    },
-    querySearch(queryString, cb) {
-      const vm = this;
-      const links = vm.nodes;
-      const results = queryString ? links.filter(vm.createFilter(queryString)) : links;
-      // call callback function to return suggestions
-      cb(results);
-    },
-    createFilter(queryString) { // eslint-disable-next-line
-      return (link) => {
-        return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-      };
     },
     changeHead() {
       return { backgroundColor: '#ebeef5' };
     },
   },
-  /*
-  async mounted() {
-    const vm = this;
-    await vm.$nextTick();
-    vm.edges.forEach(() => {
-      vm.inputFlag.push({ sid: false, tid: false, weight: false });
-    });
-  },
-  */
 };
 </script>

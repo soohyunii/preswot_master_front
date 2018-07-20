@@ -5,7 +5,7 @@ export default {
   state: {
     nodes: [],
     edges: [],
-    d3DrawFlag: false,
+    drawFlag: false,
   },
   mutations: {
     updateNodes(state, { nodes }) {
@@ -14,8 +14,8 @@ export default {
     updateEdges(state, { edges }) {
       state.edges = edges;
     },
-    updateD3Network(state, boolean) {
-      state.d3DrawFlag = boolean;
+    updateDrawFlag(state, boolean) {
+      state.drawFlag = boolean;
     },
   },
   actions: {
@@ -24,14 +24,27 @@ export default {
       const res = await lectureService.getLectureKeywords({
         lectureId,
       });
-      const nodes = res.data.map(item => ({
-        // value: item.keyword,
-        id: item.keyword,
-        label: item.keyword,
-        _size: item.weight,
-        color: { background: '#97C2FC' },
-        size: 25,
-      }));
+      const nodes = res.data.map((item) => {
+        // 키워드의 중요도 별 색상 구분을 위해 Single-Hue Color Scale을 사용하였음.
+        // https://blogs.adobe.com/creativedialogue/ko/design-ko/the-power-of-the-palette-why-color-is-key-in-data-visualization-and-how-to-use-it/
+        // https://www.w3schools.com/colors/colors_monochromatic.asp
+        let color = '#E4F1F6';
+        if (item.weight > 75) {
+          color = '#1A3E4C';
+        } else if (item.weight > 50) {
+          color = '#347B98';
+        } else if (item.weight > 25) {
+          color = '#67AFCB';
+        }
+
+        return {
+          id: item.keyword,
+          label: item.keyword,
+          weight: item.weight,
+          color,
+          size: 25,
+        };
+      });
       commit('updateNodes', {
         nodes,
       });
@@ -41,6 +54,7 @@ export default {
         lectureId,
       });
       const edges = res.data.map(item => ({
+        id: item.node1.concat(item.node2),
         from: item.node1,
         to: item.node2,
         weight: item.weight,
@@ -52,7 +66,7 @@ export default {
     async postLectureKeywords({ state }, { lectureId }) {
       const nodes = state.nodes.map(item => ({
         keyword: item.label,
-        weight: Number(item._size), // eslint-disable-line
+        weight: Number(item.weight), // eslint-disable-line
       }));
       lectureService.postLectureKeywords({
         lectureId,
@@ -63,7 +77,7 @@ export default {
       const edges = state.edges.map(item => ({
         node1: item.from,
         node2: item.to,
-        weight: item.weight,
+        weight: Number(item.weight),
       }));
       lectureService.postLectureKeywordRelations({
         lectureId,
@@ -72,6 +86,7 @@ export default {
     },
     // deleteList를 따로 만들어서 모았다가 확인 버튼과 함께 지우는 구조를 구상했었는데 sync 문제로 꼬일것같아 보류합니다..
     async deleteLectureKeywordRelation({ state }, { index, lectureId }) {
+      console.log(state.edges[index]);
       lectureService.deleteLectureKeywordRelation({
         lectureId,
         node1: state.edges[index].from,

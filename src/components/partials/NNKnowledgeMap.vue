@@ -2,8 +2,8 @@
   <div class="wrapper" ref="wrapper">
       <!-- 디버그 용도
       <p>{{ nodes }}</p>
-      <p>{{ edges }}</p>
-      -->
+      <p>{{ edges }}</p> -->
+
       <!-- TODO 키워드 추출 부분 수정 후 작성할 것
       <div v-if="false">
         <br /><br />
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-  import { mapState, mapActions } from 'vuex';
+  import { mapState, mapActions, mapMutations } from 'vuex';
   import vis from 'vis';
   import KnowledgeMapNodeEditor from './NNKnowledgeMapNodeEditor';
   import KnowledgeMapEdgeEditor from './NNKnowledgeMapEdgeEditor';
@@ -62,6 +62,7 @@
             deleteEdge(data, callback) {
               callback(data);
               const index = vm.edges.findIndex(item => item.id === data.edges[0]);
+              vm.deleteLectureKeywordRelation({ index, lectureId: vm.$route.params.lectureId });
               vm.edges.splice(index, 1);
             },
             addEdge(data, callback) {
@@ -72,11 +73,27 @@
                 vm.edges.push({
                   from: data.from,
                   to: data.to,
+                  id: data.from.concat(data.to),
                   weight: 20,
                 });
               }
             },
             // initiallyActive: true,
+          },
+          layout: {
+            randomSeed: 3,
+            improvedLayout: true,
+            hierarchical: {
+              enabled: false,
+              levelSeparation: 150,
+              nodeSpacing: 100,
+              treeSpacing: 200,
+              blockShifting: true,
+              edgeMinimization: true,
+              parentCentralization: true,
+              direction: 'LR',        // UD, DU, LR, RL
+              sortMethod: 'hubsize',   // hubsize, directed
+            },
           },
           autoResize: true,
           physics: {
@@ -144,20 +161,17 @@
     },
     async mounted() {
       const vm = this;
-      await vm.$nextTick();
       await vm.getKeywordsAndWeights(vm.$route.params);
       await vm.getLectureKeywordRelations(vm.$route.params);
       vm.container = document.getElementById('myNetwork');
-      // await vm.$nextTick();
       const data = {
         nodes: vm.nodes,
         edges: vm.edges,
       };
       vm.network = new vis.Network(vm.container, data, vm.options);
-      // vm.network.fit();
     },
     computed: {
-      ...mapState('kMap', ['nodes', 'edges']),
+      ...mapState('kMap', ['nodes', 'edges', 'drawFlag']),
       graph_data() {
         const vm = this;
         return {
@@ -165,9 +179,26 @@
           edges: vm.edges,
         };
       },
+      reDrawFlag() {
+        const vm = this;
+        return vm.drawFlag;
+      },
+    },
+    watch: {
+      reDrawFlag: {
+        async handler(newVal) {
+          const vm = this;
+          if (newVal) {
+            vm.container = document.getElementById('myNetwork');
+            vm.network = await new vis.Network(vm.container, vm.graph_data, vm.options);
+            vm.updateDrawFlag(!vm.reDrawFlag);
+          }
+        },
+      },
     },
     methods: {
-      ...mapActions('kMap', ['postLectureKeywords', 'postLectureKeywordRelations', 'getKeywordsAndWeights', 'getLectureKeywordRelations']),
+      ...mapActions('kMap', ['postLectureKeywords', 'postLectureKeywordRelations', 'getKeywordsAndWeights', 'getLectureKeywordRelations', 'deleteLectureKeywordRelation']),
+      ...mapMutations('kMap', ['updateDrawFlag']),
       save() {
         const vm = this;
         vm.postLectureKeywords(vm.$route.params);
