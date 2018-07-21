@@ -12,7 +12,6 @@
       </div>
       -->
       <div class="networkVis" id="myNetwork"></div>
-      <!-- <el-button type="success" @click="fit">그래프 전체보기 <i class="el-icon-zoom-out"></i></el-button> -->
       <br>
       <el-row>
         <div class="ps-align-right">
@@ -24,17 +23,18 @@
       <br />
       <el-row>
         <el-col :span="12">
-          <knowledge-map-node-editor></knowledge-map-node-editor>
+          <knowledge-map-node-editor
+            :updateNodeData="updateNodeData"/>
         </el-col>
         <el-col :span="12">
-          <knowledge-map-edge-editor></knowledge-map-edge-editor>
+          <knowledge-map-edge-editor/>
         </el-col>
       </el-row>
   </div>
 </template>
 
 <script>
-  import { mapState, mapActions, mapMutations } from 'vuex';
+  import { mapState, mapActions } from 'vuex';
   import vis from 'vis';
   import KnowledgeMapNodeEditor from './NNKnowledgeMapNodeEditor';
   import KnowledgeMapEdgeEditor from './NNKnowledgeMapEdgeEditor';
@@ -49,9 +49,42 @@
       return {
         network: null,
         container: '',
+        nodeData: new vis.DataSet(),
+        edgeData: new vis.DataSet(),
         options: {
+          locales: {
+            en: {
+              edit: 'edit',
+              del: '선택 항목 삭제하기',
+              back: '뒤로가기',
+              addEdge: '키워드 연결하기',
+              edgeDescription: '키워드를 클릭한 후, 드래그 앤 드롭으로 키워드를 서로 연결하세요.',
+            },
+          },
+          edges: {
+            arrows: {
+              to: { enabled: true, scaleFactor: 1, type: 'arrow' },
+            },
+          },
+          nodes: {
+            borderWidth: 2,
+            chosen: {
+              node: (values) => {
+                values.borderWidth *= 3;  // eslint-disable-line
+                values.color = '#f1f1f1'; // eslint-disable-line
+              },
+            },
+            shape: 'dot',
+            font: {
+              size: 25,
+            },
+          },
+          interaction: {
+            hover: true,
+          },
           manipulation: {
             enabled: true,
+            initiallyActive: true,
             addNode: false,
             editEdge: false,
             deleteNode(data, callback) {
@@ -66,7 +99,9 @@
               vm.edges.splice(index, 1);
             },
             addEdge(data, callback) {
-              if (data.from !== data.to) {
+              // * from, to가 서로 같은 경우, 이미 존재하는 에지를 추가하는 경우는 vm.edges에 대한 정보를 업데이트 하지 않음
+              if (data.from !== data.to &&
+                  vm.edges.findIndex(item => item.from === data.from && item.to === data.to) === -1) {
                 callback(data);
                 // after each adding you will be back to addEdge mode
                 vm.network.addEdgeMode();
@@ -78,84 +113,7 @@
                 });
               }
             },
-            // initiallyActive: true,
           },
-          layout: {
-            randomSeed: 3,
-            improvedLayout: true,
-            hierarchical: {
-              enabled: false,
-              levelSeparation: 150,
-              nodeSpacing: 100,
-              treeSpacing: 200,
-              blockShifting: true,
-              edgeMinimization: true,
-              parentCentralization: true,
-              direction: 'LR',        // UD, DU, LR, RL
-              sortMethod: 'hubsize',   // hubsize, directed
-            },
-          },
-          autoResize: true,
-          physics: {
-            enabled: true,
-            barnesHut: {
-              gravitationalConstant: -1000,
-              centralGravity: 0.1,
-              springLength: 300,
-              springConstant: 0.05,
-              damping: 0.1,
-            },
-            repulsion: {
-              centralGravity: 0.2,
-              springLength: 200,
-              springConstant: 0.05,
-              nodeDistance: 200,
-              damping: 0.09,
-            },
-            solver: 'repulsion',
-            stabilization: {
-              enabled: true,
-              iterations: 1000,
-              updateInterval: 100,
-              onlyDynamicEdges: false,
-              fit: true,
-            },
-          },
-          // interaction: {
-          //   hideEdgesOnDrag: true,
-          //   hover: true,
-          // },
-          nodes: {
-            borderWidth: 2,
-            chosen: {
-              node: (values) => {
-                values.borderWidth *= 3;  // eslint-disable-line
-                values.color = '#f1f1f1'; // eslint-disable-line
-              },
-            },
-            shape: 'dot',
-            font: {
-              size: 25,
-            },
-            color: {
-              background: '#97C2FC',
-            },
-          },
-          edges: {
-            arrows: {
-              to: { enabled: true, scaleFactor: 1, type: 'arrow' },
-            },
-            selectionWidth(width) {
-              return width * 3;
-            },
-            hoverWidth(width) {
-              return width * 2;
-            },
-          },
-        },
-        animation: { // -------------------> can be a boolean too!
-          duration: 1000,
-          easingFunction: 'easeInOutQuad',
         },
       };
     },
@@ -164,14 +122,16 @@
       await vm.getKeywordsAndWeights(vm.$route.params);
       await vm.getLectureKeywordRelations(vm.$route.params);
       vm.container = document.getElementById('myNetwork');
+      vm.nodeData.add(vm.nodes);
+      vm.edgeData.add(vm.edges);
       const data = {
-        nodes: vm.nodes,
-        edges: vm.edges,
+        nodes: vm.nodeData,
+        edges: vm.edgeData,
       };
       vm.network = new vis.Network(vm.container, data, vm.options);
     },
     computed: {
-      ...mapState('kMap', ['nodes', 'edges', 'drawFlag']),
+      ...mapState('kMap', ['nodes', 'edges']),
       graph_data() {
         const vm = this;
         return {
@@ -179,30 +139,40 @@
           edges: vm.edges,
         };
       },
-      reDrawFlag() {
-        const vm = this;
-        return vm.drawFlag;
-      },
-    },
-    watch: {
-      reDrawFlag: {
-        async handler(newVal) {
-          const vm = this;
-          if (newVal) {
-            vm.container = document.getElementById('myNetwork');
-            vm.network = await new vis.Network(vm.container, vm.graph_data, vm.options);
-            vm.updateDrawFlag(!vm.reDrawFlag);
-          }
-        },
-      },
     },
     methods: {
       ...mapActions('kMap', ['postLectureKeywords', 'postLectureKeywordRelations', 'getKeywordsAndWeights', 'getLectureKeywordRelations', 'deleteLectureKeywordRelation']),
-      ...mapMutations('kMap', ['updateDrawFlag']),
       save() {
         const vm = this;
         vm.postLectureKeywords(vm.$route.params);
         vm.postLectureKeywordRelations(vm.$route.params);
+      },
+      updateNodeData(index) {
+        const vm = this;
+        vm.nodeData.update({
+          id: vm.nodes[index].id,
+          weight: vm.nodes[index].weight,
+          color: vm.updateNodeColor(vm.nodes[index].weight),
+        });
+      },
+      // * 그래프에서 엣지 스타일에 대한 dynamic change가 필요할 시 사용
+      // updateEdgeData(index) {
+      //   const vm = this;
+      //   vm.edgeData.update({
+      //     id: vm.edges[index].id,
+      //     weight: vm.edges[index].weight,
+      //   });
+      // },
+      updateNodeColor(weight) {
+        let color = '#E4F1F6';
+        if (weight > 75) {
+          color = '#1A3E4C';
+        } else if (weight > 50) {
+          color = '#347B98';
+        } else if (weight > 25) {
+          color = '#67AFCB';
+        }
+        return color;
       },
     },
   };

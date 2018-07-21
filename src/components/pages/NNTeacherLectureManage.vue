@@ -18,7 +18,7 @@
         <tlm-tab-allowed-program />
       </el-tab-pane>
       <!-- knowledgeMap 렌더링 시 노드가 캔버스의 범위를 벗어나는 이슈가 발생하여 ':lazy="true" 추가 -->
-      <el-tab-pane label="강의 지식맵 관리" name="kmap" :lazy="true">
+      <el-tab-pane label="강의 지식맵 관리" name="kmap" lazy>
         <knowledgeMap />
       </el-tab-pane>
       <!-- <knowledgeMap /> -->

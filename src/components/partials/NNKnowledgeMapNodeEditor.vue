@@ -16,7 +16,7 @@
         <template slot-scope="scope">
           <div v-if="inputFlag[scope.$index]">
             <div style="display:inline-block; width: 100px">
-              <el-input type="number" step="1" v-model="newWeight[scope.$index]" />
+              <el-input type="number" step="1" v-model="nodes[scope.$index].weight" />
             </div>
             <el-button @click="onClick('saveNodeWeight', scope.$index)">확인</el-button>
           </div>
@@ -30,28 +30,22 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   name: 'KnowledgeMapNodeEditor',
+  props: ['updateNodeData'],
   data() {
     return {
       inputFlag: [],
-      newWeight: [],
     };
   },
   computed: {
     ...mapState('kMap', [
       'nodes',
-      'drawFlag',
     ]),
-    reDrawFlag() {
-      const vm = this;
-      return vm.drawFlag;
-    },
   },
   methods: {
-    ...mapMutations('kMap', ['updateDrawFlag']),
     onClick(type, index) {
       const vm = this;
       switch (type) {
@@ -73,10 +67,7 @@ export default {
             vm.nodes[index].weight = 20; // eslint-disable-line
             break;
           }
-          vm.nodes[index].weight = vm.newWeight[index];
-          vm.nodes[index].color = vm.updateNodeColor(vm.newWeight[index]);
-          vm.newWeight[index] = null;
-          vm.updateDrawFlag(!vm.reDrawFlag);
+          vm.updateNodeData(index);
           vm.inputFlag.splice(index, 1, false);
           break;
         }
@@ -91,17 +82,6 @@ export default {
         vm.inputFlag[index] = null;
         vm.inputFlag.splice(index, 1);
       }
-    },
-    updateNodeColor(weight) {
-      let color = '#E4F1F6';
-      if (weight > 75) {
-        color = '#1A3E4C';
-      } else if (weight > 50) {
-        color = '#347B98';
-      } else if (weight > 25) {
-        color = '#67AFCB';
-      }
-      return color;
     },
     changeHead() {
       return { backgroundColor: '#ebeef5' };

@@ -22,7 +22,7 @@
       <el-table-column label="중요도" align="center">
         <template slot-scope="scope">
           <div v-if="inputFlag[scope.$index]">
-            <el-input type="number" v-model="newWeight[scope.$index]" />
+            <el-input type="number" v-model="edges[scope.$index].weight" />
             <el-button @click="onClick('saveEdgeWeight', scope.$index)">확인</el-button>
           </div>
           <div v-else>
@@ -42,25 +42,19 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'KnowledgeMapEdgeEditor',
   data() {
     return {
       inputFlag: [],
-      newWeight: [],
     };
   },
   computed: {
-    ...mapState('kMap', ['edges', 'drawFlag']),
-    reDrawFlag() {
-      const vm = this;
-      return vm.drawFlag;
-    },
+    ...mapState('kMap', ['edges']),
   },
   methods: {
-    ...mapMutations('kMap', ['updateDrawFlag']),
     ...mapActions('kMap', [
       'deleteLectureKeywordRelation',
     ]),
@@ -73,13 +67,10 @@ export default {
           break;
         }
         case 'saveEdgeWeight': {
-          vm.edges[index].weight = vm.newWeight[index];
-          vm.newWeight[index] = null;
           vm.inputFlag.splice(index, 1, false);
           break;
         }
         case 'delete': {
-          vm.updateDrawFlag(!vm.reDrawFlag);
           vm.deleteLectureKeywordRelation({ index, lectureId: vm.$route.params.lectureId });
           vm.inputFlag.splice(index, 1);
           break;

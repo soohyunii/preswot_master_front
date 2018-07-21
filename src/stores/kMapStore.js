@@ -5,7 +5,6 @@ export default {
   state: {
     nodes: [],
     edges: [],
-    drawFlag: false,
   },
   mutations: {
     updateNodes(state, { nodes }) {
@@ -13,9 +12,6 @@ export default {
     },
     updateEdges(state, { edges }) {
       state.edges = edges;
-    },
-    updateDrawFlag(state, boolean) {
-      state.drawFlag = boolean;
     },
   },
   actions: {
@@ -42,7 +38,7 @@ export default {
           label: item.keyword,
           weight: item.weight,
           color,
-          size: 25,
+          size: 20,
         };
       });
       commit('updateNodes', {
@@ -54,6 +50,7 @@ export default {
         lectureId,
       });
       const edges = res.data.map(item => ({
+        // 엣지 아이디를 'item.from+item.to' 로 설정
         id: item.node1.concat(item.node2),
         from: item.node1,
         to: item.node2,
@@ -86,17 +83,12 @@ export default {
     },
     // deleteList를 따로 만들어서 모았다가 확인 버튼과 함께 지우는 구조를 구상했었는데 sync 문제로 꼬일것같아 보류합니다..
     async deleteLectureKeywordRelation({ state }, { index, lectureId }) {
-      console.log(state.edges[index]);
       lectureService.deleteLectureKeywordRelation({
         lectureId,
         node1: state.edges[index].from,
         node2: state.edges[index].to,
       });
       state.edges.splice(index, 1);
-    },
-    reDrawD3Network({ commit }) { // 알수 없는 이유로 vue-D3-Network의 작동에 버그가 발생해서 임시방편으로 해결해둡니다.
-      commit('updateD3Network', false);
-      setTimeout(() => { commit('updateD3Network', true); }, 150);
     },
   },
 };
