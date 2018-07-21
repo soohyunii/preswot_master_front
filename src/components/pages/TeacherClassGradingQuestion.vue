@@ -69,109 +69,11 @@
       </div>
       <br />
       <br />
-      <el-row>
-        <el-col :span="3"><strong>학생 제출</strong></el-col>
-        <el-col :span="8">총 {{ questionResult.numberOfStudent }}건</el-col>
-        <el-col :span="5">평균점수 {{ questionResult.avgScore }} / {{ questionResult.score }}</el-col>
-      </el-row>
-      <br>
-      <el-table v-if="questionResult.type === '객관'"
-                :data="questionResult.obAnswers"
-                border
-                style="margin-bottom: 20px;">
-        <el-table-column
-          prop="choice"
-          label="보기">
-        </el-table-column>
-        <el-table-column
-          prop="number"
-          label="선택한 학생 수">
-        </el-table-column>
-      </el-table>
-
-      <el-table v-if="['객관', '단답', 'SQL'].includes(questionResult.type)"
-                :data="questionResult.answers"
-                border
-                height="500">
-        <el-table-column
-          label="학생 아이디">
-          <template slot-scope="scope">
-            <p>{{ scope.row.user.email_id }}</p>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="answer"
-          label="답변">
-        </el-table-column>
-        <el-table-column
-          label="점수">
-          <template slot-scope="scope">
-            <p>{{ scope.row.score }}</p>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-table v-if="['서술'].includes(questionResult.type)"
-                :data="questionResult.answers"
-                border
-                height="500">
-        <el-table-column
-          label="학생 아이디">
-          <template slot-scope="scope">
-            <p>{{ scope.row.user.email_id }}</p>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="answer"
-          label="답변">
-        </el-table-column>
-        <el-table-column
-          label="점수">
-          <template slot-scope="scope">
-            <el-input placeholder="Please input"
-                      v-model="scope.row.score"
-                      type="number"
-                      min="0"
-                      :max="questionResult.score"></el-input>
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="확인">
-          <template slot-scope="scope">
-            <el-button type="success" icon="el-icon-check" circle @click="scoreSubmit(scope.row.score, scope.row.student_answer_log_id)"></el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-
-      <el-table v-if="['SW'].includes(questionResult.type)"
-                :data="questionResult.answers"
-                border
-                height="500">
-        <el-table-column
-          label="학생 아이디">
-          <template slot-scope="scope">
-            <p>{{ scope.row.user.email_id }}</p>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="answer"
-          label="답변">
-        </el-table-column>
-        <el-table-column
-          label="결과">
-          <template slot-scope="scope">
-            <p>{{ scope.row.swResult }}</p>
-            <p>{{ scope.row.oj_solution.time }}ms, {{ scope.row.oj_solution.memory }}KB</p>
-            <p v-if="scope.row.swResult === '컴파일 에러'">{{ scope.row.oj_compileinfo.error }}</p>
-            <p v-if="scope.row.swResult === '런타임 에러'">{{ scope.row.oj_runtimeinfo.error }}</p>
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="점수">
-          <template slot-scope="scope">
-            <p>{{ scope.row.score }}</p>
-          </template>
-        </el-table-column>
-      </el-table>
+      <n-n-lecture-question-result
+        :classId="classId"
+        :itemId="itemId"
+        resultType="결과보기"
+      />
     </div>
   </div>
 </template>
@@ -193,6 +95,7 @@
 
 <script>
   import { mapActions, mapState, mapGetters } from 'vuex';
+  import NNLectureQuestionResult from '../partials/NNLectureQuestionResult';
 
   export default {
     name: 'TeacherClassGradingQuestion',
@@ -218,8 +121,12 @@
         return Number.parseInt(vm.$route.params.itemId, 10);
       },
     },
+    components: {
+      NNLectureQuestionResult,
+    },
     async created() {
       const vm = this;
+
       if (!vm.theResult) {
         await vm.getClassTotalResult({
           classId: vm.classId,
