@@ -34,7 +34,7 @@
 </template>
 
 <script>
-  import { mapState, mapActions } from 'vuex';
+  import { mapState, mapActions, mapMutations } from 'vuex';
   import vis from 'vis';
   import KnowledgeMapNodeEditor from './NNKnowledgeMapNodeEditor';
   import KnowledgeMapEdgeEditor from './NNKnowledgeMapEdgeEditor';
@@ -89,13 +89,25 @@
             editEdge: false,
             deleteNode(data, callback) {
               callback(data);
+              // * find the deleted node index
               const index = vm.nodes.findIndex(item => item.id === data.nodes[0]);
+              // * delete edges which were connected to the deleted node
+              const edges = vm.edges.filter(edge =>
+                edge.from !== vm.nodes[index].id && edge.to !== vm.nodes[index].id);
+              vm.updateEdges({ edges });
+              vm.deleteLectureKeyword({
+                index,
+                lectureId: vm.$route.params.lectureId,
+              });
               vm.nodes.splice(index, 1);
             },
             deleteEdge(data, callback) {
               callback(data);
               const index = vm.edges.findIndex(item => item.id === data.edges[0]);
-              vm.deleteLectureKeywordRelation({ index, lectureId: vm.$route.params.lectureId });
+              vm.deleteLectureKeywordRelation({
+                index,
+                lectureId: vm.$route.params.lectureId,
+              });
               vm.edges.splice(index, 1);
             },
             addEdge(data, callback) {
@@ -132,16 +144,17 @@
     },
     computed: {
       ...mapState('kMap', ['nodes', 'edges']),
-      graph_data() {
-        const vm = this;
-        return {
-          nodes: vm.nodes,
-          edges: vm.edges,
-        };
-      },
     },
     methods: {
-      ...mapActions('kMap', ['postLectureKeywords', 'postLectureKeywordRelations', 'getKeywordsAndWeights', 'getLectureKeywordRelations', 'deleteLectureKeywordRelation']),
+      ...mapActions('kMap', [
+        'postLectureKeywords',
+        'postLectureKeywordRelations',
+        'getKeywordsAndWeights',
+        'getLectureKeywordRelations',
+        'deleteLectureKeywordRelation',
+        'deleteLectureKeyword',
+      ]),
+      ...mapMutations('kMap', ['updateEdges']),
       save() {
         const vm = this;
         vm.postLectureKeywords(vm.$route.params);

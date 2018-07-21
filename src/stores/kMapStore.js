@@ -81,6 +81,12 @@ export default {
         lectureRelations: edges,
       });
     },
+    async deleteLectureKeyword({ state }, { index, lectureId }) {
+      lectureService.deleteLectureKeyword({
+        lectureId,
+        lectureKeyword: state.nodes[index].id,
+      });
+    },
     // deleteList를 따로 만들어서 모았다가 확인 버튼과 함께 지우는 구조를 구상했었는데 sync 문제로 꼬일것같아 보류합니다..
     async deleteLectureKeywordRelation({ state }, { index, lectureId }) {
       lectureService.deleteLectureKeywordRelation({
