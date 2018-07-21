@@ -4,7 +4,7 @@
     <!-- lecture id: {{ lectureId }} {{ lecture }}<br /> <br /> -->
     <!-- ddd {{ currentTeachingClass(classId) }}<br /> -->
 
-    <el-tabs v-model="activeTab" :before-leave="beforeLeaveTab">
+    <el-tabs v-model="activeTab" :before-leave="beforeLeaveTab" @tab-click="onClick('TAB_CLICK')">
       <el-tab-pane label="기본 정보 수정" name="basic">
         <teacher-lecture-new />
       </el-tab-pane>
@@ -37,6 +37,7 @@ import TlmTabAllowedProgram from '../partials/TlmTabAllowedProgram';
 // import RecommendKeywords from '../partials/RecommendKeywords';
 // import LectureKeywordsEditor from '../partials/LectureKeywordsEditor';
 import KnowledgeMap from '../partials/NNKnowledgeMap';
+import { EventBus } from '../../event-bus';
 
 
 export default {
@@ -125,6 +126,12 @@ export default {
         case 'SUBMIT_KEYWORDS': {
           vm.deleteLectureKeywords();
           vm.postLectureKeywords();
+          break;
+        }
+        case 'TAB_CLICK': {
+          if (vm.activeTab === 'kmap') {
+            EventBus.$emit('drawNetwork');
+          }
           break;
         }
         default: {

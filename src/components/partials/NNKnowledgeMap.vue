@@ -38,6 +38,7 @@
   import vis from 'vis';
   import KnowledgeMapNodeEditor from './NNKnowledgeMapNodeEditor';
   import KnowledgeMapEdgeEditor from './NNKnowledgeMapEdgeEditor';
+  import { EventBus } from '../../event-bus';
 
   export default {
     components: {
@@ -129,18 +130,10 @@
         },
       };
     },
-    async mounted() {
+    mounted() {
       const vm = this;
-      await vm.getKeywordsAndWeights(vm.$route.params);
-      await vm.getLectureKeywordRelations(vm.$route.params);
-      vm.container = document.getElementById('myNetwork');
-      vm.nodeData.add(vm.nodes);
-      vm.edgeData.add(vm.edges);
-      const data = {
-        nodes: vm.nodeData,
-        edges: vm.edgeData,
-      };
-      vm.network = new vis.Network(vm.container, data, vm.options);
+      EventBus.$on('drawNetwork', vm.drawNetwork);
+      vm.drawNetwork();
     },
     computed: {
       ...mapState('kMap', ['nodes', 'edges']),
@@ -155,6 +148,25 @@
         'deleteLectureKeyword',
       ]),
       ...mapMutations('kMap', ['updateEdges']),
+      async drawNetwork() {
+        const vm = this;
+        // * get knowledgemap data
+        await vm.getKeywordsAndWeights(vm.$route.params);
+        await vm.getLectureKeywordRelations(vm.$route.params);
+
+        vm.container = document.getElementById('myNetwork');
+        // * initialize and add network DataSet
+        vm.nodeData.clear();
+        vm.edgeData.clear();
+        vm.nodeData.add(vm.nodes);
+        vm.edgeData.add(vm.edges);
+        const data = {
+          nodes: vm.nodeData,
+          edges: vm.edgeData,
+        };
+        // * draw network graph
+        vm.network = new vis.Network(vm.container, data, vm.options);
+      },
       save() {
         const vm = this;
         vm.postLectureKeywords(vm.$route.params);
