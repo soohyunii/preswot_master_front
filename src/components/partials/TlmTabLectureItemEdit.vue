@@ -15,7 +15,7 @@
       <div class="ps-align-right">
         <br />
         <el-button id="btn_add_new_lc_item" @click="onClick('ADD_LC_ITEM_ORDER')" type="primary">
-          강의 순서 저장
+          강의 아이템 순서 저장
         </el-button>
         <el-button id="btn_add_new_lc_item" @click="onClick('ADD_NEW_LC_ITEM')" type="primary">
           강의 아이템 추가
