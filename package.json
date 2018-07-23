@@ -30,7 +30,7 @@
     "deep-copy": "^1.4.2",
     "deep-equal": "^1.0.1",
     "delay": "^3.0.0",
-    "element-ui": "2.4.0",
+    "element-ui": "^2.4.4",
     "guid": "0.0.12",
     "jwt-decode": "^2.2.0",
     "localforage": "^1.5.5",
