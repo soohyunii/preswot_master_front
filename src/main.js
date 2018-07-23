@@ -11,7 +11,6 @@ import Vlf from 'vlf';
 import VueScrollTo from 'vue-scrollto';
 import VueYoutubeEmbed from 'vue-youtube-embed';
 import VueSocketio from 'vue-socket.io';
-import Buefy from 'buefy';
 
 import authPlugin from './utils/authPlugin';
 import App from './App';
@@ -39,7 +38,6 @@ Vue.use(Vlf);
 Vue.use(VueScrollTo);
 Vue.use(VueYoutubeEmbed);
 Vue.use(VueSocketio, websocketUrl, store);
-Vue.use(Buefy);
 
 const defaultLocale = utils.getDefaultLocale();
 

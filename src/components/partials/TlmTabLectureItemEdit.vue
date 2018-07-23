@@ -71,7 +71,7 @@ const createSortable = (el, options, vnode) => { //eslint-disable-line
 const sortable = {
   name: 'sortable',
   bind(el, binding, vnode) {
-    const table = el.querySelector('table');
+    const table = el.querySelector('.el-table__body-wrapper');
     table._sortable = createSortable(table.querySelector('tbody'), binding.value, vnode); //eslint-disable-line
   },
 };

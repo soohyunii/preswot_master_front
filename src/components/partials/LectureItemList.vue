@@ -5,63 +5,64 @@
     </div>
     <div v-else>
       <!-- {{ props.list }} -->
-      <b-table :data="props.list"
+      <el-table :data="props.list"
+                sortable
                 v-sortable="data.attrs.sortableOptions">
-        <template slot-scope="props">
-          <b-table-column
-            field="index"
-            label="번호"
-            width="100"
-            centered
-          >
-            {{ props.index + 1 }}
-          </b-table-column>
+        <el-table-column
+          prop="index"
+          label="번호"
+          width="100"
+          align="center"
+        >
+          <template slot-scope="scope">
+            {{ scope.$index + 1 }}
+          </template>
+        </el-table-column>
 
-          <b-table-column
-            field="type"
-            label="타입"
-            width="100"
-            centered>
-            {{ props.row.type }}
-          </b-table-column>
+        <el-table-column
+          prop="type"
+          label="타입"
+          width="100"
+          align="center"
+        ></el-table-column>
 
-          <b-table-column
-            field="name"
-            label="강의 아이템 이름"
-            width="225"
-            centered>
-            {{ props.row.name }}
-          </b-table-column>
+        <el-table-column
+          prop="name"
+          label="강의 아이템 이름"
+          width="225"
+          align="center"
+        ></el-table-column>
 
-          <b-table-column
-            field="activeTime"
-            label="활성화 시간"
-            width="500"
-            centered
-          >
-            // TODO:
-          </b-table-column>
+        <el-table-column
+          prop="activeTime"
+          label="활성화 시간"
+          width="500"
+          align="center"
+        >
+          // TODO:
+        </el-table-column>
 
-          <b-table-column
-            label=" "
-            width="80"
-          >
-            <!-- <template slot-scope="scope"> -->
-            <el-button size="small" @click="listeners['edit'](props.row.lecture_item_id)">수정</el-button>
-            <!-- </template> -->
-          </b-table-column>
+        <el-table-column
+          label="-"
+          width="80"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <el-button size="small" @click="listeners['edit'](scope.row.lecture_item_id)">수정</el-button>
+          </template>
+        </el-table-column>
 
-          <b-table-column
-            label="-"
-            width="80"
-            centered
-          >
-            <!-- <template slot-scope="scope"> -->
-            <el-button type="danger" size="small" @click="listeners['delete'](props.index)">삭제</el-button>
-            <!-- </template> -->
-          </b-table-column>
-        </template>
-      </b-table>
+        <el-table-column
+          label="-"
+          width="80"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <el-button size="small" type="danger" @click="listeners['delete'](scope.$index)">삭제</el-button>
+          </template>
+        </el-table-column>
+
+      </el-table>
     </div>
   </div>
 </template>
