@@ -10,8 +10,8 @@
     </h2>
 
     <el-form :model="inputHead" label-width="125px" style="max-width: 800px;">
-      <el-form-item label="타입" prop="type" id="radio_type">
-        <el-radio-group v-model.number="inputHead.type">
+      <el-form-item label="타입" prop="order" id="lc_item_order">
+        <el-radio-group v-model.number="inputHead.lcItemOrder">
           <el-radio-button :label="0">예습</el-radio-button>
           <el-radio-button :label="1">본강</el-radio-button>
           <el-radio-button :label="2">복습</el-radio-button>
@@ -107,7 +107,7 @@ export default {
       await vm.getLcItem();
       const item = vm.lectureItem;
 
-      vm.inputHead.type = item.order;
+      vm.inputHead.lcItemOrder = item.order;
       vm.inputHead.lcItemType = utils.convertLcItemType(item.type);
       vm.inputHead.lcItemName = item.name;
 
@@ -141,7 +141,7 @@ export default {
   },
   data() {
     const initialInputHead = {
-      type: null,
+      lcItemOrder: null,
       lcItemName: null,
       lcItemType: null,
     };
