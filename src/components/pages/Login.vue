@@ -13,7 +13,7 @@
           <el-input placeholder="abc@gmail.com" v-model="input.email" type="email">
             <template slot="prepend">{{ $t('LOGIN.EMAIL_LABEL') }}</template>
           </el-input>
-          <el-input placeholder="********" v-model="input.password" type="password">
+          <el-input placeholder="********" v-model="input.password" type="password" @keydown.enter.native="onClick('LOGIN')">
             <template slot="prepend">{{ $t('LOGIN.PASSWORD_LABEL') }}</template>
           </el-input>
           <br />
