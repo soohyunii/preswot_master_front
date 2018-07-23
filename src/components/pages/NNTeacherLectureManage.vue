@@ -21,7 +21,6 @@
       <el-tab-pane label="강의 지식맵 관리" name="kmap" lazy>
         <knowledgeMap />
       </el-tab-pane>
-      <!-- <knowledgeMap /> -->
     </el-tabs>
   </div>
 </template>
@@ -52,7 +51,6 @@ export default {
   data() {
     return {
       activeTab: 'basic',
-      isNowledgeMap: false,
     };
   },
   async created() {
