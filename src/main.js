@@ -12,7 +12,6 @@ import VueScrollTo from 'vue-scrollto';
 import VueYoutubeEmbed from 'vue-youtube-embed';
 import VueSocketio from 'vue-socket.io';
 import Buefy from 'buefy';
-import 'buefy/lib/buefy.css';
 
 import authPlugin from './utils/authPlugin';
 import App from './App';

@@ -115,3 +115,6 @@ export default {
   },
 };
 </script>
+
+<style src="buefy/lib/buefy.css">
+</style>
