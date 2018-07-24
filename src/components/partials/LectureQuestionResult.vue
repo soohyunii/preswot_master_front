@@ -46,6 +46,11 @@
           prop="answer"
           label="답변"
           align="center">
+          <template slot-scope="scope">
+            <span v-for="(answer, index) in scope.row.answer" class="item" :key="index">
+              <span>{{ answer }}</span>
+            </span>
+          </template>
         </el-table-column>
         <el-table-column
           v-if="questionResult.type === 'SW'"
@@ -109,6 +114,9 @@
     padding-bottom: 0px;
     padding-left: 0px;
     padding-right: 0px;
+  }
+  .item + .item:before {
+    content: ", ";
   }
 </style>
 
