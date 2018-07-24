@@ -66,7 +66,8 @@ export default {
       "QUESTION": "Question",
       "SURVEY": "Survey",
       "HOMEWORK": "Homework",
-      "MATERIAL": "Material"
+      "MATERIAL": "Material",
+      "NOTE": "Note",
     },
     "ADDER": {
       "ITEM_ADDER": "Item Adder"
@@ -138,7 +139,8 @@ export default {
       "QUESTION": "문항",
       "SURVEY": "설문",
       "HOMEWORK": "숙제",
-      "MATERIAL": "강의자료"
+      "MATERIAL": "강의자료",
+      "Note": "자료"
     },
     "ADDER": {
       "ITEM_ADDER": "아이템 추가 도구\n"

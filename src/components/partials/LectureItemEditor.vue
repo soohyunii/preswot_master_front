@@ -19,11 +19,11 @@
       </el-form-item>
       <el-form-item label="아이템 유형" prop="lcItemType" id="lc_item_type">
         <el-radio-group v-model="inputHead.lcItemType" :disabled="!isNewItem">
+          <el-radio-button label="note">자료</el-radio-button>
           <el-radio-button label="question">문항</el-radio-button>
           <el-radio-button label="survey">설문</el-radio-button>
           <el-radio-button label="practice">실습</el-radio-button>
           <el-radio-button label="discussion">토론</el-radio-button>
-          <el-radio-button label="material">자료</el-radio-button>
         </el-radio-group>
 
         <span v-show="!isNewItem">
@@ -32,7 +32,9 @@
       </el-form-item>
 
       <el-form-item label="아이템 이름" prop="lcItemName" id="lc_item_name">
-        <el-input v-model="inputHead.lcItemName" placeholder="내용을 입력해주세요."></el-input>
+        <div style="display: inline-block; width: 400px">
+          <el-input v-model="inputHead.lcItemName" placeholder="내용을 입력해주세요."></el-input>
+        </div>
       </el-form-item>
 
       <div v-show="!inputHead.lcItemType">
@@ -62,9 +64,9 @@
         ref="discussionEditor"
         v-show="inputHead.lcItemType === 'discussion'"
       />
-      <lc-material-editor
-        ref="materialEditor"
-        v-show="inputHead.lcItemType === 'material'"
+      <lc-note-editor
+        ref="noteEditor"
+        v-show="inputHead.lcItemType === 'note'"
       />
 
     </el-form>
@@ -83,13 +85,13 @@ import LcQuestionEditor from './LcQuestionEditor';
 import LcSurveyEditor from './LcSurveyEditor';
 import LcDiscussionEditor from './LcDiscussionEditor';
 import LcPracticeEditor from './LcPracticeEditor';
-import LcMaterialEditor from './LcMaterialEditor';
+import LcNoteEditor from './LcNoteEditor';
 
 import QuestionHandler from '../../handlers/lcItem/question';
 import PracticeHandler from '../../handlers/lcItem/practice';
 import DiscussionHandler from '../../handlers/lcItem/discussion';
 import SurveyHandler from '../../handlers/lcItem/survey';
-import MaterialHandler from '../../handlers/lcItem/material';
+import NoteHandler from '../../handlers/lcItem/note';
 import utils from '../../utils';
 
 export default {
@@ -99,7 +101,7 @@ export default {
     LcSurveyEditor,
     LcDiscussionEditor,
     LcPracticeEditor,
-    LcMaterialEditor,
+    LcNoteEditor,
   },
   async mounted() {
     const vm = this;
@@ -129,8 +131,8 @@ export default {
           DiscussionHandler.initViewModel(vm);
           break;
         }
-        case 'material': {
-          MaterialHandler.initViewModel(vm);
+        case 'note': {
+          NoteHandler.initViewModel(vm);
           break;
         }
         default: {
@@ -161,7 +163,7 @@ export default {
         value: 'discussion',
         label: '토론',
       }, {
-        value: 'material',
+        value: 'note',
         label: '자료',
       },
       ],

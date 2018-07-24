@@ -133,7 +133,7 @@ export default {
     return new Error(`not defined scItemType ${scItemType}`);
   },
   convertLcItemType(lcItemType) {
-    const mapping = ['question', 'survey', 'practice', 'discussion', 'material'];
+    const mapping = ['question', 'survey', 'practice', 'discussion', 'note'];
     if (typeof lcItemType === 'number') {
       return mapping[lcItemType];
     } else if (typeof lcItemType === 'string') {
@@ -173,18 +173,20 @@ export default {
     }
     return new Error(`not defined surveyType ${surveyType}`);
   },
-  convertMaterialType2(materialType) {
+  convertNoteType(noteType) {
     const mapping = [
-      'FILE',
+      'IMAGE',
+      'PDF',
+      'VIDEO',
       'LINK',
       'YOUTUBE',
     ];
-    if (typeof materialType === 'number') {
-      return mapping[materialType];
-    } else if (typeof materialType === 'string') {
-      return mapping.indexOf(materialType);
+    if (typeof noteType === 'number') {
+      return mapping[noteType];
+    } else if (typeof noteType === 'string') {
+      return mapping.indexOf(noteType);
     }
-    return new Error(`not defined surveyType ${materialType}`);
+    return new Error(`not defined noteType ${noteType}`);
   },
   convertQuestionType(questionType) {
     const mapping = ['객관', '단답', '서술', 'SW', 'SQL'];
