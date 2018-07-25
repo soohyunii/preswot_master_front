@@ -2,23 +2,23 @@
   <div id="app_nav_wrapper" class="bt-container">
     <div style="position: relative">
       <router-link to="/">
-        <div style="display:inline-block; position:absolute; top: 14px; left:50px;">
+        <div style="display:inline-block; position:absolute; top: 14px; left:5%;">
           <span class="title">PRESWOT</span>
           <!--<span id="header1" class="class1" :class="{class2: testFlag}">PRESWOT</span>-->
         </div>
       </router-link>
       <router-link to="/classes">
-        <div style="display:inline-block; position:absolute; top: 15px; left:230px;">
+        <div style="display:inline-block; position:absolute; top: 15px; left:20%;">
           <span class="normal">과목목록</span>
         </div>
       </router-link>
       <router-link to="/a/student/NNclass" v-if="authType === 0" v-show="isJwtValid">
-        <div style="display:inline-block; position:absolute; top: 15px; left:335px;">
+        <div style="display:inline-block; position:absolute; top: 15px; left:30%;">
           <span class="normal">수강중인 과목</span>
         </div>
       </router-link>
       <router-link to="/a/teacher/NNclass" v-if="authType === 1" v-show="isJwtValid">
-        <div style="display:inline-block; position:absolute; top: 15px; left:335px;">
+        <div style="display:inline-block; position:absolute; top: 15px; left:30%;">
           <span class="normal">강의중인 과목</span>
         </div>
       </router-link>
@@ -29,16 +29,16 @@
       </div>
       -->
       <router-link to="/register" v-show="!isJwtValid">
-        <div style="display:inline-block; position:absolute; top: 15px; left:990px;">
+        <div style="display:inline-block; position:absolute; top: 15px; left:83%;">
           <span class="normal">회원가입</span>
         </div>
       </router-link>
       <router-link to="/login" v-show="!isJwtValid">
-        <div style="display:inline-block; position:absolute; top: 15px; left:1089px;">
+        <div style="display:inline-block; position:absolute; top: 15px; left:92%;">
           <span class="normal">로그인</span>
         </div>
       </router-link>
-      <div style="display:inline-block; position:absolute; top: 15px; left:1089px;" v-show="isJwtValid"  @click="onClick('LOGOUT')">
+      <div style="display:inline-block; position:absolute; top: 15px; left:92%;" v-show="isJwtValid"  @click="onClick('LOGOUT')">
         <span class="normal">로그아웃</span>
       </div>
     </div>

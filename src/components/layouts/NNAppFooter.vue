@@ -2,16 +2,16 @@
   <div id="app_footer_wrapper" v-show="!isLive">
     <div class="bt-container">
       <div style="position: relative">
-        <div style="display:inline-block; position:absolute; top: 15px; left:50px;">
+        <div style="display:inline-block; position:absolute; top: 15px; left:5%;">
           <span class="title">PRESWOT</span>
         </div>
         <router-link to="/policy">
-          <div style="display:inline-block; position:absolute; top: 15px; left:990px;">
+          <div style="display:inline-block; position:absolute; top: 15px; left:83%;">
             <span class="normal">Policy</span>
           </div>
         </router-link>
         <router-link to="/download">
-          <div style="display:inline-block; position:absolute; top: 15px; left:1089px;">
+          <div style="display:inline-block; position:absolute; top: 15px; left:92%;">
             <span class="normal">Download</span>
           </div>
         </router-link>
