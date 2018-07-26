@@ -8,6 +8,19 @@ export default class NoteHandler extends LcItemHandler {
     const item = vm.lectureItem;
     const n = item.notes[0];
 
+    const keywordList = await noteService.getNoteKeywords({
+      noteId: n.note_id,
+    });
+    keywordList.data.forEach((element) => {
+      element.score = element.score_portion;
+    });
+    vm.inputTail.assignedKeywordList = keywordList.data;
+
+    // const res = await noteService.getNoteFile({
+    //   noteId: n.note_id,
+    // });
+    // vm.$refs.noteEditor.initialFileList = res.data.file;
+
     switch (n.type) {
       case 0: {
         vm.inputBody.noteType = 'IMAGE';
@@ -16,7 +29,9 @@ export default class NoteHandler extends LcItemHandler {
           if (n.file[0] !== undefined) {
             vm.$refs.noteEditor.$refs.noteUpload.uploadFiles.push({
               name: n.file[0].name,
-              file_guid: n.file[0].file_guid,
+            });
+            vm.$set(vm.inputTail, 'oldfile', {
+              name: n.file[0].name,
             });
           }
         });
@@ -29,37 +44,24 @@ export default class NoteHandler extends LcItemHandler {
           if (n.file[0] !== undefined) {
             vm.$refs.noteEditor.$refs.noteUpload.uploadFiles.push({
               name: n.file[0].name,
-              file_guid: n.file[0].file_guid,
+            });
+            vm.$set(vm.inputTail, 'oldfile', {
+              name: n.file[0].name,
             });
           }
         });
         break;
       }
       case 2: {
-        vm.inputBody.noteType = 'VIDEO';
-        vm.$nextTick(() => {
-          vm.$set(vm.inputTail, 'file', vm.$refs.noteEditor.$refs.noteUpload.uploadFiles);
-          if (n.file[0] !== undefined) {
-            vm.$refs.noteEditor.$refs.noteUpload.uploadFiles.push({
-              name: n.file[0].name,
-              file_guid: n.file[0].file_guid,
-            });
-          }
-        });
-        vm.$set(vm.inputTail, 'video_start', n.video_start);
-        vm.$set(vm.inputTail, 'video_end', n.video_end);
-        break;
-      }
-      case 3: {
         vm.inputBody.noteType = 'LINK';
         vm.$set(vm.inputTail, 'URL', n.URL);
         break;
       }
-      case 4: {
+      case 3: {
         vm.inputBody.noteType = 'YOUTUBE';
         vm.$set(vm.inputTail, 'URL', n.URL);
-        vm.$set(vm.inputTail, 'video_start', n.video_start);
-        vm.$set(vm.inputTail, 'video_end', n.video_end);
+        vm.$set(vm.inputTail, 'video_start', n.videoStart);
+        vm.$set(vm.inputTail, 'video_end', n.videoEnd);
         break;
       }
       default: {
@@ -88,5 +90,42 @@ export default class NoteHandler extends LcItemHandler {
       video_start: inputTail.video_start,
       video_end: inputTail.video_end,
     });
+
+    await noteService.deleteNoteKeywords({
+      noteId,
+    });
+
+    await noteService.postNoteKeywords({
+      noteId,
+      data: inputTail.assignedKeywordList,
+    });
+
+    if (inputBody.noteType === 'IMAGE' || inputBody.noteType === 'PDF') {
+      if (inputTail.oldfile !== undefined) {
+        if (inputTail.file[0] === undefined) {
+          noteService.deleteNoteFile({ noteId });
+        }
+        if (inputTail.file !== undefined
+          && inputTail.file[0] !== undefined
+          && inputTail.file[0].raw !== undefined) {
+          await noteService.deleteNoteFile({ noteId });
+          noteService.postNoteFile({
+            noteId,
+            file: inputTail.file[0].raw,
+          });
+        }
+      }
+
+      if (inputTail.oldfile === undefined) {
+        if (inputTail.file !== undefined
+          && inputTail.file[0] !== undefined
+          && inputTail.file[0].raw !== undefined) {
+          noteService.postNoteFile({
+            noteId,
+            file: inputTail.file[0].raw,
+          });
+        }
+      }
+    }
   }
 }

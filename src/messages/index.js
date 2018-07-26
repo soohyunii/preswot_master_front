@@ -140,7 +140,7 @@ export default {
       "SURVEY": "설문",
       "HOMEWORK": "숙제",
       "MATERIAL": "강의자료",
-      "Note": "자료"
+      "NOTE": "자료"
     },
     "ADDER": {
       "ITEM_ADDER": "아이템 추가 도구\n"

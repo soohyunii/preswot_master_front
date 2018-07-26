@@ -4,7 +4,6 @@
       <el-radio-group @change="onChangeBody" v-model="inputBody.noteType">
         <el-radio-button label="IMAGE">사진</el-radio-button>
         <el-radio-button label="PDF">PDF</el-radio-button>
-        <el-radio-button label="VIDEO">동영상</el-radio-button>
         <el-radio-button label="LINK">링크</el-radio-button>
         <el-radio-button label="YOUTUBE">유튜브</el-radio-button>
       </el-radio-group>
@@ -13,124 +12,123 @@
     <template v-if="inputBody.noteType === 'IMAGE'">
       <el-form-item label="사진">
         <el-upload
-          class="image-uploader"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :show-file-list="false"
-          :on-success="handleImageSuccess"
-          :before-upload="beforeImageUpload"
-          ref="noteUpload">
-          <img v-if="imageUrl" :src="imageUrl" class="image">
-          <i v-else class="el-icon-plus image-uploader-icon"></i>
+          action="#"
+          :auto-upload="false"
+          :file-list="initialFileList"
+          :limit=1
+          :on-exceed="handleExceed"
+          list-type="picture"
+          ref=noteUpload>
+          <el-button slot="trigger" type="primary">파일 추가</el-button>
         </el-upload>
       </el-form-item>
-      {{inputTail.noteFile}}
     </template>
 
     <template v-if="inputBody.noteType === 'PDF'">
-      <el-form-item label="PDF 파일">
+      <el-form-item label="문서">
         <el-upload
           action="#"
           :auto-upload="false"
-          :file-list="initFileList"
+          :file-list="initialFileList"
           :limit=1
-          :before-upload="beforePDFUpload"
           :on-exceed="handleExceed"
-          ref="noteUpload">
+          list-type="picture"
+          ref=noteUpload>
           <el-button slot="trigger" type="primary">파일 추가</el-button>
         </el-upload>
-      </el-form-item>
-    </template>
-
-    <template v-if="inputBody.noteType === 'VIDEO'">
-      <el-form-item label="동영상">
-        <el-upload
-          action="#"
-          :auto-upload="false"
-          :file-list="initFileList"
-          :limit=1
-          :before-upload="beforeVideoUpload"
-          :on-exceed="handleExceed"
-          ref="noteUpload">
-          <el-button slot="trigger" type="primary">파일 추가</el-button>
-        </el-upload>
-      </el-form-item>
-      <el-form-item label="재생 구간">
-        <el-input v-model="inputTail.videoStart" placeholder="시작시간" style="display: inline-block; width: 100px;"></el-input>
-        ~
-        <el-input v-model="inputTail.clipEnd" placeholder="종료시간" style="display: inline-block; width: 100px;"></el-input>
       </el-form-item>
     </template>
 
     <template v-if="inputBody.noteType === 'LINK'">
-      <!-- TODO: LINK -->
       <el-form-item label="URL" >
-        <el-input v-model="inputTail.link" >
-          <el-button type="success" slot="append">미리보기</el-button>
+        <el-input v-model="inputTail.link" style="width: 400px">
+          <el-button v-if="previewFLAG === false" type="success" slot="append" @click="onClick('PREVIEW')">확인</el-button>
+          <el-button v-if="previewFLAG === true" type="success" slot="append" @click="onClick('PREVIEW')">닫기</el-button>
         </el-input>
+        <link-prevue v-show="previewFLAG" :url="inputTail.link" :showButton="false"></link-prevue>
       </el-form-item>
     </template>
 
     <template v-if="inputBody.noteType === 'YOUTUBE'">
       <!-- TODO: 유튜브 특정 구간 링크 -->
       <el-form-item label="영상 URL">
-        <el-input v-model="inputTail.clip" placeholder="링크" style="width: 400px;"></el-input>
+        <el-input v-model="inputTail.link" placeholder="링크" style="width: 400px;"></el-input>
       </el-form-item>
       <el-form-item label="재생 구간">
         <el-input v-model="inputTail.videoStart" placeholder="시작시간" style="display: inline-block; width: 100px;"></el-input>
         ~
-        <el-input v-model="inputTail.clipEnd" placeholder="종료시간" style="display: inline-block; width: 100px;"></el-input>
+        <el-input v-model="inputTail.videoEnd" placeholder="종료시간" style="display: inline-block; width: 100px;"></el-input>
       </el-form-item>
     </template>
 
-    <!-- TODO: 키워드 관련 추가
-    <el-form-item label="난이도" id="difficulty">
-      <el-select v-model.number="inputTail.difficulty">
-        <el-option
-          v-for="level in difficultyList"
-          :key="level"
-          :label="level"
-          :value="level">
-        </el-option>
-      </el-select>
-    </el-form-item> -->
+    <!-- TODO: 키워드 관련 추가 -->
+    <el-form-item label="키워드" id="keyword">
+      <el-autocomplete
+        class="input-new-tag"
+        v-model="inputTail.keywordName"
+        :fetch-suggestions="querySearch"
+        ref="saveTagInput"
+        placeholder="키워드"
+      />
+      <div style="display: inline-block; width: 100px;">
+        <el-input id="input_keyword_point" v-model="inputTail.keywordPoint" placeholder="배점"></el-input>
+      </div>
+      <el-button @click="onClick('ADD_KEYWORD')">추가</el-button><br>
+      <div v-for="(item,index) in inputTail.assignedKeywordList" :key="item.keyword" style="display: inline-block; width: 200px;">
+        <el-button>{{ item.keyword }} / {{ item.score }}</el-button>
+        <el-button @click="onClick('DELETE_KEYWORD',index)" type="danger" style="margin: 0px">X</el-button>
+      </div>
+    </el-form-item>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+import LinkPrevue from 'link-prevue';
+
 export default {
   name: 'LcNoteEditor',
   components: {
+    LinkPrevue,
   },
   data() {
     const initialInputBody = {
       noteType: null,
     };
     const initialInputTail = {
-      // TODO: 키워드
-      // assignedKeywordList: [],
-      // difficulty: 3,
+      assignedKeywordList: [],
     };
+
     return {
       initialInputBody,
       initialInputTail,
       inputBody: Object.assign({}, initialInputBody),
       inputTail: Object.assign({}, initialInputTail),
-
-      imageUrl: '',
-      initFileList: [],
-      // difficultyList: [5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5, 0],
+      initialFileList: [],
+      previewFLAG: false,
     };
+  },
+  computed: {
+    ...mapState('keyword', [
+      'keywordList',
+    ]),
+    modifiedKeywordList() {
+      const vm = this;
+      return vm.keywordList.map(x => ({ value: x }));
+    },
   },
   methods: {
     onChangeBody() {
       const vm = this;
       vm.inputTail = Object.assign({}, vm.initialInputTail);
-      this.imageUrl = '';
 
-      if (vm.inputBody.noteType === 'IMAGE' ||
-      vm.inputBody.noteType === 'PDF' ||
-      vm.inputBody.noteType === 'VIDEO') {
-        vm.$set(vm.inputTail, 'noteFile', vm.$refs.noteUpload.uploadFiles);
+      if (vm.inputBody.noteType === 'IMAGE' || vm.inputBody.noteType === 'PDF') {
+        vm.$refs.noteUpload.uploadFiles = [];
+        vm.$set(vm.inputTail, 'file', vm.$refs.noteUpload.uploadFiles);
+      }
+
+      if (vm.inputBody.noteType === 'LINK') {
+        vm.previewFLAG = false;
       }
     },
     reset() {
@@ -138,62 +136,67 @@ export default {
       vm.inputBody = Object.assign({}, vm.initialInputBody);
       vm.inputTail = Object.assign({}, vm.initialInputTail);
     },
-    handleImageSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
-      console.log(this.imageUrl)
+    querySearch(queryString, cb) {
+      const vm = this;
+      const results = queryString ?
+        vm.modifiedKeywordList.filter(vm.createFilter(queryString)) : vm.modifiedKeywordList;
+      cb(results);
     },
-    beforeImageUpload(file) {
-      const isJPG = file.type === 'image/jpeg';
-      if (!isJPG) {
-        this.$message.error('JPG 형식의 파일만 업로드 할 수 있습니다.');
-      }
-      return isJPG;
+    createFilter(queryString) { // eslint-disable-next-line
+      return (link) => {
+        return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+      };
     },
-    beforePDFUpload(file) {
-      const isPDF = file.type === 'image/jpeg';
-      if (!isPDF) {
-        this.$message.error('PDF 형식의 파일만 업로드 할 수 있습니다.');
+    onClick(type, arg) {
+      const vm = this;
+      switch (type) {
+        case 'ADD_KEYWORD': {
+          if (vm.keywordList.indexOf(vm.inputTail.keywordName) === -1) {
+            vm.$notify({
+              title: '알림',
+              message: '키워드 등록 탭에 등록되지 않은 키워드는 등록할 수 없습니다.',
+              type: 'warning',
+            });
+            break;
+          }
+          if (vm.inputTail.assignedKeywordList.map(x => x.keyword).indexOf(vm.inputTail.keywordName) !== -1) { // eslint-disable-line
+            vm.$notify({
+              title: '알림',
+              message: '이미 등록한 키워드는 등록할 수 없습니다.',
+              type: 'warning',
+            });
+            break;
+          }
+          vm.inputTail.assignedKeywordList.push({
+            keyword: vm.inputTail.keywordName,
+            score: vm.inputTail.keywordPoint,
+          });
+          vm.inputTail.keywordName = null;
+          vm.inputTail.keywordPoint = null;
+          break;
+        }
+        case 'DELETE_KEYWORD': {
+          vm.inputTail.assignedKeywordList.splice(arg, 1);
+          break;
+        }
+        case 'PREVIEW': {
+          if (vm.previewFLAG === true) {
+            vm.previewFLAG = false;
+          } else {
+            vm.previewFLAG = true;
+          }
+          break;
+        }
+        default : {
+          break;
+        }
       }
-      return isPDF;
-    },
-    beforeVideoUpload(file) {
-      const isJPG = file.type === 'image/jpeg';
-      if (!isAVI) {
-        this.$message.error('AVI 형식의 파일만 업로드 할 수 있습니다.');
-      }
-      return isAVI;
     },
     handleExceed() {
       this.$message.warning(
         '강의 아이템당 파일 1개만 업로드 할 수 있습니다.',
       );
     },
-  }
+  },
 };
 </script>
-
-<style>
-   .image-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .image-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .image-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
-    text-align: center;
-  }
-  .image {
-    width: 178px;
-    height: 178px;
-    display: block;
-  }
-</style>

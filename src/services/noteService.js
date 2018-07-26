@@ -43,4 +43,22 @@ export default {
   deleteNoteFile({ noteId }) {
     return http.delete(`/notes/${noteId}/files`);
   },
+  postNoteKeywords({
+    noteId,
+    data,
+  }) {
+    return http.post(`/notes/${noteId}/keywords`, {
+      data,
+    });
+  },
+  getNoteKeywords({
+    noteId,
+  }) {
+    return http.get(`/notes/${noteId}/keywords`);
+  },
+  deleteNoteKeywords({
+    noteId,
+  }) {
+    return http.delete(`/notes/${noteId}/keywords`);
+  },
 };

@@ -177,7 +177,6 @@ export default {
     const mapping = [
       'IMAGE',
       'PDF',
-      'VIDEO',
       'LINK',
       'YOUTUBE',
     ];
