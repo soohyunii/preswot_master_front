@@ -3,7 +3,6 @@
       <h2>{{ path }}</h2><br/>
     <el-row :gutter="20">
       <el-col :span="12">
-        <!--
         <youtube
           id="video"
           :video-id="youtubeId"
@@ -12,7 +11,6 @@
           :player-vars="{ autoplay: 1 }"
           :mute="true">
         </youtube>
-        -->
         <teacher-lecture-live-item-list
           :dataList="tableItemList"
           :onClick="onClick"
