@@ -100,7 +100,8 @@ export default {
             });
             // console.log('login res', JSON.stringify(res));
             // TODO: translate
-            vm.openNoti('success', 'Login Success !!', 'Success');
+
+            // vm.openNoti('success', 'Login Success !!', 'Success');
             if (vm.redirectTo) {
               // jwt 업데이트 후 페이지 이동 이루어지도록
               vm.$router.push(vm.redirectTo);

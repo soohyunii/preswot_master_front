@@ -2,24 +2,23 @@
   <div id="app_nav_wrapper" class="bt-container">
     <div style="position: relative">
       <router-link to="/">
-        <div style="display:inline-block; position:absolute; top: 14px; left:5%;">
-          <span class="title">PRESWOT</span>
-          <!--<span id="header1" class="class1" :class="{class2: testFlag}">PRESWOT</span>-->
+        <div :class="$addReactablePostfix('div1')">
+          <span :class="$addReactablePostfix('title')">PRESWOT</span>
         </div>
       </router-link>
       <router-link to="/classes">
-        <div style="display:inline-block; position:absolute; top: 15px; left:20%;">
-          <span class="normal">과목목록</span>
+        <div :class="$addReactablePostfix('div2')">
+          <span :class="$addReactablePostfix('common')">과목목록</span>
         </div>
       </router-link>
       <router-link to="/a/student/NNclass" v-if="authType === 0" v-show="isJwtValid">
-        <div style="display:inline-block; position:absolute; top: 15px; left:30%;">
-          <span class="normal">수강중인 과목</span>
+        <div :class="$addReactablePostfix('div3')">
+          <span :class="$addReactablePostfix('common')">수강중인 과목</span>
         </div>
       </router-link>
       <router-link to="/a/teacher/NNclass" v-if="authType === 1" v-show="isJwtValid">
-        <div style="display:inline-block; position:absolute; top: 15px; left:30%;">
-          <span class="normal">강의중인 과목</span>
+        <div :class="$addReactablePostfix('div3')">
+          <span :class="$addReactablePostfix('common')">강의중인 과목</span>
         </div>
       </router-link>
       <!--
@@ -29,23 +28,53 @@
       </div>
       -->
       <router-link to="/register" v-show="!isJwtValid">
-        <div style="display:inline-block; position:absolute; top: 15px; left:83%;">
-          <span class="normal">회원가입</span>
+        <div :class="$addReactablePostfix('div4')">
+          <span :class="$addReactablePostfix('common')">회원가입</span>
         </div>
       </router-link>
       <router-link to="/login" v-show="!isJwtValid">
-        <div style="display:inline-block; position:absolute; top: 15px; left:92%;">
-          <span class="normal">로그인</span>
+        <div :class="$addReactablePostfix('div5')">
+          <span :class="$addReactablePostfix('common')">로그인</span>
         </div>
       </router-link>
-      <div style="display:inline-block; position:absolute; top: 15px; left:92%;" v-show="isJwtValid"  @click="onClick('LOGOUT')">
-        <span class="normal">로그아웃</span>
+      <div :class="$addReactablePostfix('div5')" v-show="isJwtValid" @click="onClick('LOGOUT')">
+        <span :class="$addReactablePostfix('common')">로그아웃</span>
       </div>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
+  .div1 {
+    display:inline-block;
+    position:absolute;
+    top: 14px;
+    left:5%;
+  }
+  .div2 {
+    display:inline-block;
+    position:absolute;
+    top: 15px;
+    left:20%;
+  }
+  .div3 {
+    display:inline-block;
+    position:absolute;
+    top: 15px;
+    left:30%;
+  }
+  .div4 {
+    display:inline-block;
+    position:absolute;
+    top: 15px;
+    left:83%;
+  }
+  .div5 {
+    display:inline-block;
+    position:absolute;
+    top: 15px;
+    left:92%;
+  }
   #navigation_toggle {
     border: 0;
     padding: 6px 10px;
@@ -57,6 +86,7 @@
   #app_nav_wrapper {
     padding: 8px 0;
   }
+
   .title {
     width: 101px;
     height: 22px;
@@ -69,7 +99,19 @@
     letter-spacing: normal;
     color: #ffffff;
   }
-  .normal {
+  .title-phone {
+    width: 101px;
+    height: 22px;
+    font-family: Verdana;
+    font-size: 18px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #ff0000;
+  }
+  .common {
     width: 45px;
     height: 14px;
     font-family: SpoqaHanSans;
@@ -81,15 +123,15 @@
     letter-spacing: normal;
     color: #ffffff;
   }
-  .normal:hover {
+  .common:hover {
     font-size: 13px;
     font-weight: bold;
     color: #20a0ff;
   }
+  /*
   #header2:hover {
     background-color:blueviolet;
   }
-
   #header3:hover:after {
     content: "";
     display: inline-block;
@@ -100,6 +142,7 @@
     height: 7px;
     background: black;
   }
+  */
 </style>
 
 <script>
@@ -168,12 +211,14 @@ export default {
           if (vm.$route.meta.auth) {
             vm.$router.push('/');
           }
+          /*
           // TODO: translation
           vm.$notify({
             title: '로그아웃',
             message: '로그아웃 성공',
             type: 'success',
           });
+          */
           setTimeout(() => {
             location.reload();
           }, 800);
