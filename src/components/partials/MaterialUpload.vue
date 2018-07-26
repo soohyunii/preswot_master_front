@@ -28,7 +28,6 @@ export default {
     const vm = this;
     const res = await lectureService.getLectureMaterialAdditional({
       lectureId: vm.$route.params.lectureId,
-      // lecuterItemId :vm.$route.params.lectureItemId
     });
     vm.initFileList = res.data.material; // TODO 불러올때 초기 파일 리스트 입력
   },
@@ -36,15 +35,17 @@ export default {
     async doUpload(req) {
       const vm = this;
       // 서버에 저장할 것.
+
       const res = await lectureService.postLectureMaterial({
         lectureId: vm.$route.params.lectureId,
-        // lecuterItemId :vm.$route.params.lectureItemId
         file: req.file,
       });
+
       // guid 받아서 uploadFiles 배열속 객체의 guid 속성으로 넣을 것
       const res2 = vm.$refs.materialUpload.uploadFiles.find(
         element => element.uid === req.file.uid,
       );
+
       res2.file_guid = res.data.file.file_guid;
     },
     async handleRemove(file) {
