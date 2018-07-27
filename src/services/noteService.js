@@ -25,7 +25,7 @@ export default {
 
     return http.put(`/notes/${noteId}`, param);
   },
-  putNoteFile({
+  postNoteFile({
     noteId,
     file,
   }) {

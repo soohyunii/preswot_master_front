@@ -38,7 +38,7 @@ export default class NoteHandler extends LcItemHandler {
         break;
       }
       case 1: {
-        vm.inputBody.noteType = 'PDF';
+        vm.inputBody.noteType = 'DOCS';
         vm.$nextTick(() => {
           vm.$set(vm.inputTail, 'file', vm.$refs.noteEditor.$refs.noteUpload.uploadFiles);
           if (n.file[0] !== undefined) {
@@ -100,7 +100,7 @@ export default class NoteHandler extends LcItemHandler {
       data: inputTail.assignedKeywordList,
     });
 
-    if (inputBody.noteType === 'IMAGE' || inputBody.noteType === 'PDF') {
+    if (inputBody.noteType === 'IMAGE' || inputBody.noteType === 'DOCS') {
       if (inputTail.oldfile !== undefined) {
         if (inputTail.file[0] === undefined) {
           noteService.deleteNoteFile({ noteId });

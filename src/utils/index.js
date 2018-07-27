@@ -176,7 +176,7 @@ export default {
   convertNoteType(noteType) {
     const mapping = [
       'IMAGE',
-      'PDF',
+      'DOCS',
       'LINK',
       'YOUTUBE',
     ];
