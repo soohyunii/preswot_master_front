@@ -23,10 +23,24 @@
         <teacher-lecture-live-item
         v-if="currentLectureItemId !== -1"
         :lectureItemId="currentLectureItemId"
+        :classId="classId"
         :onClick="onClick"
         :isAuto="isAuto"
         />
       </el-col>
+    </el-row>
+    <br />
+    <el-row>
+      <lecture-question-result
+        v-if="currentLectureItemId !== -1 && tableItemList[tableItemIndex] && tableItemList[tableItemIndex].type === 0"
+        :classId="classId"
+        :itemId="currentLectureItemId"
+        resultType="실시간"/>
+      <lecture-survey-result
+        v-if="currentLectureItemId !== -1 && tableItemList[tableItemIndex] && tableItemList[tableItemIndex].type === 1"
+        :classId="classId"
+        :itemId="currentLectureItemId"
+        resultType="실시간"/>
     </el-row>
     <!--
     <el-row :gutter="20">
@@ -57,6 +71,8 @@ import TeacherLectureLiveItemList from '../partials/TeacherLectureLiveItemList';
 import TeacherLectureLiveItem from '../partials/TeacherLectureLiveItem';
 import TeacherLectureLiveChat from '../partials/TeacherLectureLiveChat';
 import TeacherLectureLiveSummary from '../partials/TeacherLectureLiveSummary';
+import LectureQuestionResult from '../partials/LectureQuestionResult';
+import LectureSurveyResult from '../partials/LectureSurveyResult';
 import utils from '../../utils';
 
 export default {
@@ -78,7 +94,6 @@ export default {
       id: res.data.class_id,
     });
     vm.path = res2.data.name.concat(' > ', res.data.name);
-
     // 소켓 연결 및 주기적으로 보내는 신호 설정
     vm.$socket.connect();
     const params = {
@@ -101,10 +116,12 @@ export default {
     if (res3.data !== null) {
       vm.currentLectureItemId = res3.data.lecture_item_id;
     }
+    vm.tableItemIndex = vm.tableItemList.findIndex(item => item.lecture_item_id === vm.currentLectureItemId); // eslint-disable-line
   },
   data() {
     return {
       tableItemList: [],
+      tableItemIndex: -1,
       currentLectureItemId: -1,
       path: '',
       isAuto: false,
@@ -117,18 +134,25 @@ export default {
       return vm.$route.params.lectureId;
     },
     youtubeId: () => (getIdFromURL('https://www.youtube.com/watch?v=actDWRiD9RI&list=UUEgIN0yG3PeVF4JfJ-ZG0UQ')),
+    classId() {
+      const vm = this;
+      return Number.parseInt(vm.$route.query.classId, 10);
+    },
   },
   components: {
     TeacherLectureLiveItemList,
     TeacherLectureLiveItem,
     TeacherLectureLiveChat,
     TeacherLectureLiveSummary,
+    LectureQuestionResult,
+    LectureSurveyResult,
   },
   methods: {
-    onClick(type, data) {
+    onClick(type, data, index) {
       const vm = this;
       switch (type) {
         case 'SHOW': {
+          vm.tableItemIndex = index;
           if (vm.currentLectureItemId !== -1) {
             vm.$notify({
               title: '알림',

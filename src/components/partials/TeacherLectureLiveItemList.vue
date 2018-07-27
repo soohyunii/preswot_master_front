@@ -24,7 +24,7 @@
       align="center"
     >
       <template slot-scope="scope">
-        <el-button type="primary" size="small" @click="onClick('SHOW', scope.row.lecture_item_id)">
+        <el-button type="primary" size="small" @click="onClick('SHOW', scope.row.lecture_item_id, scope.$index)">
           보이기
         </el-button>
       </template>

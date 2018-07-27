@@ -3,11 +3,11 @@
     <div v-if="questionResult">
       <el-row v-if="resultType === '실시간'">
         <el-col :span="5"><strong>현재 수강 인원</strong></el-col>
-        <el-col :span="8"> 실시간 수강 인원  / {{ numberOfStudentInClass }} </el-col>
+        <!-- <el-col :span="8"> 실시간 수강 인원  / {{ numberOfStudentInClass }} </el-col> -->
       </el-row>
       <el-row>
-        <el-col :span="2"><strong>학생 답변</strong></el-col>
-        <el-col :span="8">총 {{ questionResult.numberOfStudent }}건</el-col>
+        <el-col :span="3"><strong>학생 답변</strong></el-col>
+        <el-col :span="7">총 {{ questionResult.numberOfStudent }}건</el-col>
         <el-button v-if="resultType === '실시간'" style="float:right" type="primary" size="small" icon="el-icon-refresh" @click="refresh()">새로고침</el-button>
       </el-row>
       <br />
@@ -33,6 +33,7 @@
 
       <el-table :data="questionResult.answers"
                 :header-cell-style="changeHead"
+                :default-sort="{prop: 'score', order: 'ascending'}"
                 height="500">
         <el-table-column
           label="학생 아이디"
@@ -58,7 +59,6 @@
           align="center">
           <template slot-scope="scope">
             <p>{{ scope.row.swResult }}</p>
-            <!-- time 부분에서 null 에러 발생 -->
             <p>{{ scope.row.oj_solution.time }}ms, {{ scope.row.oj_solution.memory }}KB</p>
             <p v-if="scope.row.swResult === '컴파일 에러'">{{ scope.row.oj_compileinfo.error }}</p>
             <p v-if="scope.row.swResult === '런타임 에러'">{{ scope.row.oj_runtimeinfo.error }}</p>
@@ -68,8 +68,7 @@
           prop="score"
           label="점수"
           width="150px"
-          align="center"
-          sortable>
+          align="center">
             <template slot-scope="scope">
               <div v-if="questionResult.type !== '서술'">
                 <p v-if="scope.row.score === null">-</p>
@@ -146,18 +145,19 @@
     },
     async created() {
       const vm = this;
-    //   if (!vm.theResult) {
-      // await vm.getClassTotalResult({
-      //   classId: vm.classId,
-      // });
-    //   }
+      // TODO: 부모 component에서 받아 오는 형식으로 수정
+      if (!vm.theResult) {
+        await vm.getClassTotalResult({
+          classId: vm.classId,
+        });
+      }
       vm.getQuestionResult({
         itemId: vm.itemId,
       });
     },
     methods: {
       ...mapActions('grading', [
-        // 'getClassTotalResult',
+        'getClassTotalResult',
         'getQuestionResult',
       ]),
       ...mapActions('NNclass', [
@@ -165,10 +165,10 @@
       ]),
       async refresh() {
         const vm = this;
-        // await vm.getClassTotalResult({
-        //   classId: vm.classId,
-        //   isStudent: false,
-        // });
+        await vm.getClassTotalResult({
+          classId: vm.classId,
+          isStudent: false,
+        });
         vm.getQuestionResult({
           itemId: vm.itemId,
         });

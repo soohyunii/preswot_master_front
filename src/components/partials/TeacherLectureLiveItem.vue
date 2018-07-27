@@ -9,12 +9,25 @@
       :data="data"
       :lectureItemId="lectureItemId"
       :onClick="onClick"/>
+    <!-- <lecture-question-result
+      v-if="data.type === 0"
+      :classId="classId"
+      :itemId="lectureItemId"
+      resultType="실시간"/>
+    <lecture-survey-result
+      v-if="data.type === 1"
+      :classId="classId"
+      :itemId="lectureItemId"
+      resultType="실시간"/> -->
   </div>
 </template>
 
 <script>
+import { mapActions, mapGetters, mapState } from 'vuex';
 import lectureItemService from '../../services/lectureItemService';
 import LectureLiveItem from './LectureLiveItem';
+import LectureQuestionResult from './LectureQuestionResult';
+import LectureSurveyResult from './LectureSurveyResult';
 
 export default {
   async created() {
@@ -24,18 +37,33 @@ export default {
     });
     vm.data = res.data;
   },
-  props: ['onClick', 'lectureItemId'],
+  props: ['onClick', 'lectureItemId', 'classId'],
   data() {
     return {
       data: {},
     };
   },
+  computed: {
+    ...mapState('grading', [
+      'theResult',
+      'questionResult',
+      'surveyResult',
+    ]),
+    ...mapGetters('class', [
+      'numberOfStudentInClass',
+    ]),
+  },
+  methods: {
+    ...mapActions('grading', [
+      'getClassTotalResult',
+      'getQuestionResult',
+      'getSurveyResult',
+    ]),
+  },
   components: {
     LectureLiveItem,
+    LectureQuestionResult,
+    LectureSurveyResult,
   },
 };
 </script>
-
-<style>
-
-</style>
