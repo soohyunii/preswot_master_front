@@ -2,23 +2,23 @@
   <div id="app_nav_wrapper" class="bt-container">
     <div style="position: relative">
       <router-link to="/">
-        <div :class="$addReactablePostfix('div1')">
-          <span :class="$addReactablePostfix('title')">PRESWOT</span>
+        <div :class="$attachReactablePostfix('div1')">
+          <span :class="$attachReactablePostfix('title')">PRESWOT</span>
         </div>
       </router-link>
       <router-link to="/classes">
-        <div :class="$addReactablePostfix('div2')">
-          <span :class="$addReactablePostfix('common')">과목목록</span>
+        <div :class="$attachReactablePostfix('div2')">
+          <span :class="$attachReactablePostfix('common')">과목목록</span>
         </div>
       </router-link>
       <router-link to="/a/student/NNclass" v-if="authType === 0" v-show="isJwtValid">
-        <div :class="$addReactablePostfix('div3')">
-          <span :class="$addReactablePostfix('common')">수강중인 과목</span>
+        <div :class="$attachReactablePostfix('div3')">
+          <span :class="$attachReactablePostfix('common')">수강중인 과목</span>
         </div>
       </router-link>
       <router-link to="/a/teacher/NNclass" v-if="authType === 1" v-show="isJwtValid">
-        <div :class="$addReactablePostfix('div3')">
-          <span :class="$addReactablePostfix('common')">강의중인 과목</span>
+        <div :class="$attachReactablePostfix('div3')">
+          <span :class="$attachReactablePostfix('common')">강의중인 과목</span>
         </div>
       </router-link>
       <!--
@@ -28,23 +28,26 @@
       </div>
       -->
       <router-link to="/register" v-show="!isJwtValid">
-        <div :class="$addReactablePostfix('div4')">
-          <span :class="$addReactablePostfix('common')">회원가입</span>
+        <div :class="$attachReactablePostfix('div4')">
+          <span :class="$attachReactablePostfix('common')">회원가입</span>
         </div>
       </router-link>
       <router-link to="/login" v-show="!isJwtValid">
-        <div :class="$addReactablePostfix('div5')">
-          <span :class="$addReactablePostfix('common')">로그인</span>
+        <div :class="$attachReactablePostfix('div5')">
+          <span :class="$attachReactablePostfix('common')">로그인</span>
         </div>
       </router-link>
-      <div :class="$addReactablePostfix('div5')" v-show="isJwtValid" @click="onClick('LOGOUT')">
-        <span :class="$addReactablePostfix('common')">로그아웃</span>
+      <div :class="$attachReactablePostfix('div5')" v-show="isJwtValid" @click="onClick('LOGOUT')">
+        <span :class="$attachReactablePostfix('common')">로그아웃</span>
       </div>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
+  #app_nav_wrapper {
+    padding: 8px 0;
+  }
   .div1 {
     display:inline-block;
     position:absolute;
@@ -75,18 +78,6 @@
     top: 15px;
     left:92%;
   }
-  #navigation_toggle {
-    border: 0;
-    padding: 6px 10px;
-    vertical-align: middle;
-    // .fa.fa-bars {
-    //   top: 100px;
-    // }
-  }
-  #app_nav_wrapper {
-    padding: 8px 0;
-  }
-
   .title {
     width: 101px;
     height: 22px;
@@ -98,18 +89,6 @@
     line-height: normal;
     letter-spacing: normal;
     color: #ffffff;
-  }
-  .title-phone {
-    width: 101px;
-    height: 22px;
-    font-family: Verdana;
-    font-size: 18px;
-    font-weight: bold;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: normal;
-    letter-spacing: normal;
-    color: #ff0000;
   }
   .common {
     width: 45px;
@@ -128,21 +107,66 @@
     font-weight: bold;
     color: #20a0ff;
   }
-  /*
-  #header2:hover {
-    background-color:blueviolet;
+
+  .div1-phone {
+    display:inline-block;
+    position:absolute;
+    top: 14px;
+    left:5%;
   }
-  #header3:hover:after {
-    content: "";
-    display: inline-block;
-    position: absolute;
-    bottom: -10px;
-    left: calc(50% - 25px);
-    width: 50px;
-    height: 7px;
-    background: black;
+  .div2-phone {
+    display:none;
+    position:absolute;
+    top: 14px;
+    left:20%;
   }
-  */
+  .div3-phone {
+    display:inline-block;
+    position:absolute;
+    top: 14px;
+    left:35%;
+  }
+  .div4-phone {
+    display:inline-block;
+    position:absolute;
+    top: 15px;
+    left:60%;
+  }
+  .div5-phone {
+    display:inline-block;
+    position:absolute;
+    top: 15px;
+    left:80%;
+  }
+  .title-phone {
+    width: 101px;
+    height: 22px;
+    font-family: Verdana;
+    font-size: 18px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #ffffff;
+  }
+  .common-phone {
+    width: 45px;
+    height: 14px;
+    font-family: SpoqaHanSans;
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.17;
+    letter-spacing: normal;
+    color: #ffffff;
+  }
+  .common-phone:hover {
+    font-size: 13px;
+    font-weight: bold;
+    color: #20a0ff;
+  }
 </style>
 
 <script>

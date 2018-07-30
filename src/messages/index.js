@@ -89,7 +89,7 @@ export default {
       "PASSWORD_PH": "********",
       "ERR_PASSWORD_MATCH": "비밀번호가 일치하지 않습니다.",
       "LOGIN_BUTTON": "로그인",
-      "FORGOT_PASSWORD_BUTTON": "비밀번호를 잊어버리셨나요?",
+      "FORGOT_PASSWORD_BUTTON": "비밀번호 찾기",
       "LOGIN_REQUIRED": "로그인이 필요합니다."
     },
     "REG": {

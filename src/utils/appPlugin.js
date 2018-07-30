@@ -10,7 +10,7 @@ export default {
     Vue.prototype.$isPhone = MD.phone();
 
     // 일반 클래스 명을 받아서 반응형 접미사를 붙인 클래스명을 반환하는 메소드
-    Vue.prototype.$addReactablePostfix = function $addReactablePostfix(className) {
+    Vue.prototype.$attachReactablePostfix = function $attachReactablePostfix(className) {
       if (Vue.prototype.$isPhone) {
         return `${className}-phone`;
       }

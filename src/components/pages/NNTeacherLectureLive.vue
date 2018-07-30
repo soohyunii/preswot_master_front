@@ -1,8 +1,7 @@
 <template>
   <div id="teacher_lecture_live_wrapper" class="bt-container">
+    <template v-if="$isPhone">
       <h2>{{ path }}</h2><br/>
-    <el-row :gutter="20">
-      <el-col :span="12">
         <youtube
           id="video"
           :video-id="youtubeId"
@@ -16,32 +15,51 @@
           :onClick="onClick"
           :isAuto="isAuto"
         />
-      </el-col>
-      <el-col :span="12">
-        <teacher-lecture-live-item
-        v-if="currentLectureItemId !== -1"
-        :lectureItemId="currentLectureItemId"
-        :onClick="onClick"
-        :isAuto="isAuto"
-        />
-      </el-col>
-    </el-row>
-    <!--
-    <el-row :gutter="20">
-      <el-col :span="12">
-      </el-col>
-      // TODO : 실시간 질문
-      <el-col :span="12">
-        <teacher-lecture-live-chat
-          v-if="isAuto === false"
-        />
-      </el-col>
-    </el-row>
-    -->
-    <div class="statusbar" v-bind:class="{ activeInfo: isInfoVisible}">
-      <div class="statusbar_for_click" @click="onClick('TOGGLE_STATUS_INFO')"></div>
-      <teacher-lecture-live-summary :lectureId= "lectureId"/>
-    </div>
+    </template>
+    <template v-if="!$isPhone">
+      <h2>{{ path }}</h2><br/>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <youtube
+              id="video"
+              :video-id="youtubeId"
+              player-width="100%"
+              player-height="500px"
+              :player-vars="{ autoplay: 1 }"
+              :mute="true">
+            </youtube>
+            <teacher-lecture-live-item-list
+              :dataList="tableItemList"
+              :onClick="onClick"
+              :isAuto="isAuto"
+            />
+          </el-col>
+          <el-col :span="12">
+            <teacher-lecture-live-item
+            v-if="currentLectureItemId !== -1"
+            :lectureItemId="currentLectureItemId"
+            :onClick="onClick"
+            :isAuto="isAuto"
+            />
+          </el-col>
+        </el-row>
+        <!--
+        <el-row :gutter="20">
+          <el-col :span="12">
+          </el-col>
+          // TODO : 실시간 질문
+          <el-col :span="12">
+            <teacher-lecture-live-chat
+              v-if="isAuto === false"
+            />
+          </el-col>
+        </el-row>
+        -->
+        <div class="statusbar" v-bind:class="{ activeInfo: isInfoVisible}">
+        <div class="statusbar_for_click" @click="onClick('TOGGLE_STATUS_INFO')"></div>
+        <teacher-lecture-live-summary :lectureId= "lectureId"/>
+      </div>
+    </template>
   </div>
 </template>
 
