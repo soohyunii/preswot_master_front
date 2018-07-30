@@ -99,7 +99,7 @@
           <template v-else>
             <p>설문 - 주관</p>
             <pre>{{ data.surveys[0].comment }}</pre>
-            <el-input placeholder="내용을 입력해주세요." v-model="answer"></el-input>
+            <el-input placeholder="내용을 입력해주세요." v-model="answer[0]"></el-input>
           </template>
         </div>
         <el-button v-if="data.surveys[0].student_surveys.length === 0"  style="float:right" type="primary" @click="preOnClick('SUBMIT', [data.type, data.surveys[0].survey_id, data.surveys[0].type, answer])">제출</el-button>
