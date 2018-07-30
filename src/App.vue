@@ -1,21 +1,16 @@
 <template>
-  <div id="app" :style="{ backgroundImage: ('url('+require('@/assets/study05.jpg')+')') }">
+  <div :id="$attachReactablePostfix('app')" :style="{ backgroundImage: ('url('+require('@/assets/study05.jpg')+')') }">
     <el-container>
       <el-header>
         <app-header />
       </el-header>
       <el-container>
-        <el-aside width="200px" v-show="!isNavCollapsed">
-          <app-navigation />
-        </el-aside>
-        <el-container>
-          <el-main :id="isMainPage?'app_router_view_wrapper_main':'app_router_view_wrapper'" >
-            <router-view :key="$route.fullPath"></router-view> <!-- vue router에서 동일한 path 호출시 새로고침 효과 -->
-          </el-main>
-          <el-footer style="padding: 0px; height: 45px;">
-            <app-footer style="height: 45px;"/>
-          </el-footer>
-        </el-container>
+        <el-main :id="isMainPage?'app_router_view_wrapper_main':'app_router_view_wrapper'" >
+          <router-view :key="$route.fullPath"></router-view> <!-- vue router에서 동일한 path 호출시 새로고침 효과 -->
+        </el-main>
+        <el-footer style="padding: 0px; height: 45px;">
+          <app-footer style="height: 45px;"/>
+        </el-footer>
       </el-container>
     </el-container>
   </div>
@@ -23,6 +18,7 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex';
+
 // import './app.scss';
 // import './variables.scss'; // * To use $--color-primary scss variable
 
@@ -96,8 +92,15 @@ export default {
 
 #app {
   display: flex;
-  min-height: 100vh;
   flex-direction: column;
+  min-height: 100vh;
+}
+
+#app-phone {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-size: cover;
 }
 
 #app_router_view_wrapper_main {

@@ -1,42 +1,66 @@
 <template>
   <div>
+    <template v-if="$isPhone">
       <h2>{{ path }}</h2>
-    <el-row :gutter="20">
-      <!--
-      <el-col :span="12">
-        <youtube
-          id="video"
-          :video-id="youtubeId"
-          player-width="100%"
-          player-height="500px"
-          :player-vars="{ autoplay: 1 }"
-          :mute="true">
-        </youtube>
-      </el-col>
-      -->
-      <el-col :span="24">
-        <el-tabs type="card">
-          <el-tab-pane label="강의아이템">
-            <lecture-live-item
-              :data="lectureItem"
-              :onClick="onClick"/>
-          </el-tab-pane>
-          <el-tab-pane label="강의자료">
-            <lecture-live-material
-              :materialList="materialList"
-              :additionalList="additionalList"
-              />
-          </el-tab-pane>
-          <!-- // TODO : 실시간 질문
-          <el-tab-pane label="실시간 질문">
-            <el-input v-model="comment" placeholder="내용을 입력해주세요." type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
-            <p> 실시간 질문은 강의시간 동안에 강사님만 볼 수 있습니다. </p>
-            <el-button type="primary" @click="onClick('SENDREALTIMEQUESTION')">보내기</el-button>
-          </el-tab-pane>
-          -->
-        </el-tabs>
-      </el-col>
-    </el-row>
+      <youtube
+        id="video"
+        :video-id="youtubeId"
+        player-width="100%"
+        player-height="300px"
+        :player-vars="{ autoplay: 1 }"
+        :mute="true">
+      </youtube>
+      <el-tabs type="card">
+        <el-tab-pane label="강의아이템">
+          <lecture-live-item
+            :data="lectureItem"
+            :onClick="onClick"/>
+        </el-tab-pane>
+        <el-tab-pane label="강의자료">
+          <lecture-live-material
+            :materialList="materialList"
+            :additionalList="additionalList"
+            />
+        </el-tab-pane>
+      </el-tabs>
+    </template>
+    <template v-if="!$isPhone">
+      <h2>{{ path }}</h2>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <youtube
+            id="video"
+            :video-id="youtubeId"
+            player-width="100%"
+            player-height="500px"
+            :player-vars="{ autoplay: 1 }"
+            :mute="true">
+          </youtube>
+        </el-col>
+        <el-col :span="24">
+          <el-tabs type="card">
+            <el-tab-pane label="강의아이템">
+              <lecture-live-item
+                :data="lectureItem"
+                :onClick="onClick"/>
+            </el-tab-pane>
+            <el-tab-pane label="강의자료">
+              <lecture-live-material
+                :materialList="materialList"
+                :additionalList="additionalList"
+                />
+            </el-tab-pane>
+            <!-- // TODO : 실시간 질문
+            <el-tab-pane label="실시간 질문">
+              <el-input v-model="comment" placeholder="내용을 입력해주세요." type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
+              <p> 실시간 질문은 강의시간 동안에 강사님만 볼 수 있습니다. </p>
+              <el-button type="primary" @click="onClick('SENDREALTIMEQUESTION')">보내기</el-button>
+            </el-tab-pane>
+            -->
+          </el-tabs>
+        </el-col>
+      </el-row>
+    </template>
   </div>
 </template>
 
