@@ -152,7 +152,7 @@ export default {
             case 0: { // 문항
               studentService.submitQuestion({
                 questionId: data[1],
-                answers: data[2],
+                answers: data[2][0],
                 interval: 0,
                 codeLanguage: data[3],
               });
