@@ -5,7 +5,9 @@
     </div>
     <div v-else>
       <!-- {{ props.list }} -->
-      <el-table :data="props.list" stripe>
+      <el-table :data="props.list"
+                sortable
+                v-sortable="data.attrs.sortableOptions">
         <el-table-column
           prop="index"
           label="번호"
@@ -46,7 +48,7 @@
           align="center"
         >
           <template slot-scope="scope">
-            <el-button @click="listeners['edit'](scope.row.lecture_item_id)">수정</el-button>
+            <el-button size="small" @click="listeners['edit'](scope.row.lecture_item_id)">수정</el-button>
           </template>
         </el-table-column>
 
@@ -56,7 +58,7 @@
           align="center"
         >
           <template slot-scope="scope">
-            <el-button type="danger" @click="listeners['delete'](scope.$index)">삭제</el-button>
+            <el-button size="small" type="danger" @click="listeners['delete'](scope.$index)">삭제</el-button>
           </template>
         </el-table-column>
 

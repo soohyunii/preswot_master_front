@@ -37,7 +37,7 @@ export default class QuestionHandler extends LcItemHandler {
       case 0: { // 객관
         vm.inputBody.questionType = 'MULTIPLE_CHOICE';
         vm.$set(vm.inputTail, 'questionList', q.choice);
-        vm.$set(vm.inputTail, 'answer', Number(q.answer[0]));
+        vm.$set(vm.inputTail, 'answer', q.answer);
         break;
       }
       case 2: { // 서술
