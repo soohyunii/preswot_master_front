@@ -119,6 +119,7 @@
 
 <script>
 import Discussion from './NNDiscussion';
+import { EventBus } from '../../event-bus';
 
 export default {
   props: ['data', 'onClick'],
@@ -127,15 +128,23 @@ export default {
       answer: [],
     };
   },
+  mounted() {
+    const vm = this;
+    EventBus.$on('clearAnswer', vm.clearAnswer);
+  },
   methods: {
     preOnClick(...args) {
       const vm = this;
       vm.onClick(...args);
-      vm.answer = [];
+      vm.clearAnswer();
     },
     onChange(data) { // 문항 - 객관값 보정 (0 1 2 3 4를 1 2 3 4 5로) 을 위한 함수
       const vm = this;
       vm.answer = data + 1;
+    },
+    clearAnswer() {
+      const vm = this;
+      vm.answer = [];
     },
   },
   components: {

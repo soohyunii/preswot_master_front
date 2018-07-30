@@ -54,6 +54,16 @@
 
         <el-table-column
           label="-"
+          width="100"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <el-button size="small" @click="listeners['simulate'](scope.row.lecture_item_id)">미리보기</el-button>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          label="-"
           width="80"
           align="center"
         >

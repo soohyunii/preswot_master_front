@@ -8,10 +8,28 @@
       <lecture-item-list
         @delete="onClickDeleteLectureItem"
         @edit="onClickEditLectureItem"
+        @simulate="onClickSimulateLectureItem"
         type="TEACHER"
         :list="lectureItemList"
         :sortableOptions="sortableOptions"
       />
+
+      <el-dialog
+        title="미리 보기"
+        :visible.sync="dialogVisible"
+        :before-close="handleClose"
+        center
+        width="30%">
+        <lecture-live-item
+          :data="lectureItem"
+          :onClick="onClick"/>
+        <br />
+        <br />
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="handleClose">닫기</el-button>
+        </span>
+      </el-dialog>
+
       <div class="ps-align-right">
         <br />
         <el-button id="btn_add_new_lc_item" @click="onClick('ADD_LC_ITEM_ORDER')" type="primary">
@@ -37,6 +55,9 @@ import LectureItemList from '../partials/LectureItemList';
 import utils from '../../utils';
 import lectureItemService from '../../services/lectureItemService';
 import LectureItemEditor from '../partials/LectureItemEditor';
+import LectureLiveItem from '../partials/LectureLiveItem';
+import studentService from '../../services/studentService';
+import { EventBus } from '../../event-bus';
 
 // * 드래그 앤 드롭으로 테이블 행 순서 변경
 // * https://buefy.github.io/#/extensions/sortablejs
@@ -82,12 +103,16 @@ export default {
   components: {
     LectureItemList,
     LectureItemEditor,
+    LectureLiveItem,
   },
   data() {
     return {
       sortableOptions: {
         chosenClass: 'is-selected',
       },
+      dialogVisible: false,
+      lectureItem: undefined,
+      currentLectureItemId: -1,
     };
   },
   computed: {
@@ -124,7 +149,7 @@ export default {
       'updateCurrentEditingLectureItemId',
       'updateLectureItem',
     ]),
-    onClick(type) {
+    onClick(type, data) {
       // const vm = this;
       switch (type) {
         // TODO: 강의 순서에 대한 변수 생성(at backend) 후, start_time을 순서 변수로 변경
@@ -149,6 +174,39 @@ export default {
           });
           break;
         }
+        case 'SUBMIT': {
+          switch (data[0]) {
+            case 0: { // 문항
+              studentService.submitQuestion({
+                questionId: data[1],
+                answers: data[2][0],
+                interval: 0,
+                codeLanguage: data[3],
+              });
+              this.$notify({
+                title: '알림',
+                message: '제출하였습니다.',
+                type: 'success',
+              });
+              this.lectureItem = undefined;
+              this.refreshLectureItem(this.currentLectureItemId);
+              break;
+            }
+            case 1: { // 설문
+              studentService.submitSurvey({
+                surveyId: data[1],
+                answer: [data[3]],
+              });
+              this.lectureItem = undefined;
+              this.refreshLectureItem(this.currentLectureItemId);
+              break;
+            }
+            default: {
+              throw new Error(`not defined type ${type}`);
+            }
+          }
+          break;
+        }
         default: {
           throw new Error(`not defined type ${type}`);
         }
@@ -163,6 +221,14 @@ export default {
     /**
      * 얘는 onClick에서 넘겨주면 index를 못받아와서 안됨
      */
+    async onClickSimulateLectureItem(lectureItemId) {
+      const vm = this;
+      const res = await lectureItemService.getLectureItem({ lectureItemId });
+      EventBus.$emit('clearAnswer');
+      vm.currentLectureItemId = lectureItemId;
+      vm.dialogVisible = true;
+      vm.lectureItem = res.data;
+    },
     onClickDeleteLectureItem(index) {
       const vm = this;
       const targetLectureItem = vm.lectureItemList[index];
@@ -203,6 +269,23 @@ export default {
             duration: 3000,
           });
         });
+    },
+    refreshLectureItem(lectureItemId) {
+      const vm = this;
+      // opened 상태인 아이템이 있다면 보이기 : 빠른 속도로 아이템 보임/숨김 조작하는 경우 버그 해결하기위해 1초 지연
+      setTimeout(async () => {
+        const res3 = await lectureItemService.getLectureItem({ lectureItemId });
+        if (res3.data !== null) {
+          vm.lectureItem = res3.data;
+        } else {
+          vm.lectureItem = undefined;
+        }
+      }, 1000);
+    },
+    handleClose() {
+      const vm = this;
+      vm.dialogVisible = false;
+      console.log('dialog closed!');
     },
   },
 };

@@ -79,22 +79,7 @@
       />
     </el-form>
 
-    <!-- TODO: 실시간 시뮬레이션 기획 확정되면 주석풀고 구현 -->
-    <!-- <el-dialog
-      title="Tips"
-      :visible.sync="dialogVisible"
-      width="30%">
-      <lecture-live-item
-        :data="lectureItem"
-        :onClick="onClick"/>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="dialogVisible = false">Confirm</el-button>
-      </span>
-    </el-dialog> -->
-
     <div class="ps-align-right" id="lecture_item_editor_submit_button_wrapper">
-      <el-button type="primary" v-show="isNewItem" @click="dialogVisible = true">시뮬레이션</el-button>
       <el-button type="primary" v-show="isNewItem" @click="onSubmit">추가</el-button>
       <el-button type="primary" v-show="!isNewItem" @click="onSubmit">수정</el-button>
     </div>
@@ -111,7 +96,6 @@ import QuestionHandler from '../../handlers/lcItem/question';
 import PracticeHandler from '../../handlers/lcItem/practice';
 import DiscussionHandler from '../../handlers/lcItem/discussion';
 import SurveyHandler from '../../handlers/lcItem/survey';
-import LectureLiveItem from '../partials/LectureLiveItem';
 
 import utils from '../../utils';
 
@@ -122,7 +106,6 @@ export default {
     LcSurveyEditor,
     LcDiscussionEditor,
     LcPracticeEditor,
-    LectureLiveItem,
   },
   async mounted() {
     const vm = this;
@@ -184,7 +167,6 @@ export default {
       },
       ],
       flag: false,
-      dialogVisible: false,
     };
   },
   computed: {
