@@ -68,6 +68,12 @@ export default {
       lectureId: vm.lectureId,
     });
     vm.tableItemList = res.data.lecture_items;
+    // TODO: 강의 아이템 순서 순으로 정렬하기 (강의 아이템 순서 변수(ex. ItemOrder ) 생성 후 주석 풀기)
+    // lectureItemList.sort((a, b) => {
+    //   const aItemOrder = Number(a.ItemOrder);
+    //   const bItemOrder = Number(b.ItemOrder);
+    //   return aItemOrder - bItemOrder;
+    // });
     const res2 = await classService.getClass({
       id: res.data.class_id,
     });

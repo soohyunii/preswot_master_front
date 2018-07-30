@@ -10,13 +10,15 @@
             <p>제출이 완료되었습니다.</p>
           </template>
           <template v-else>
+            <!-- 디버깅 용도 -->
+            <!-- {{ answer }} -->
             <p>문항 - 객관</p>
             <pre>{{ data.questions[0].question }}</pre>
-            <el-radio-group v-model="answer2" @change="onChange" style="width: 100%;">
+            <el-checkbox-group v-model="answer" style="width: 100%;">
               <div v-for="(choice,index) in data.questions[0].choice" :key="index" class="radio-one">
-                <el-radio :label="index">{{ index + 1 }} . {{ choice }}</el-radio>
+                <el-checkbox :label="(index + 1).toString()">{{ index + 1 }} . {{ choice }}</el-checkbox>
               </div>
-            </el-radio-group>
+            </el-checkbox-group>
           </template>
         </div>
         <div v-if="data.questions[0].type === 1">
@@ -27,7 +29,7 @@
             <p>문항 - 단답</p>
             <pre>{{ data.questions[0].question }}</pre>
             <!-- <span>답 : </span> -->
-            <el-input placeholder="내용을 입력해주세요." v-model="answer"></el-input>
+            <el-input placeholder="내용을 입력해주세요." v-model="answer[0]"></el-input>
           </template>
         </div>
         <div v-if="data.questions[0].type === 2">
@@ -39,7 +41,7 @@
             <p>문항 - 서술</p>
             <pre>{{ data.questions[0].question }}</pre>
             <!-- <span>답 : </span> -->
-            <el-input class="margin-text" placeholder="내용을 입력해주세요." v-model="answer" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
+            <el-input class="margin-text" placeholder="내용을 입력해주세요." v-model="answer[0]" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
           </template>
         </div>
         <div v-if="data.questions[0].type === 3">
@@ -60,7 +62,7 @@
             </div>
             <pre>메모리 제한(MB) : {{ data.questions[0].memory_limit }}</pre>
             <pre>시간 제한(초) : {{ data.questions[0].time_limit }}</pre>
-            <el-input class="margin-text" placeholder="내용을 입력해주세요." v-model="answer" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
+            <el-input class="margin-text" placeholder="내용을 입력해주세요." v-model="answer[0]" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
           </template>
         </div>
         <div v-if="data.questions[0].type === 4">
@@ -70,7 +72,7 @@
           <template v-else>
             <p>문항 - SQL</p>
             <pre>{{ data.questions[0].question }}</pre>
-            <el-input placeholder="내용을 입력해주세요." v-model="answer" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
+            <el-input placeholder="내용을 입력해주세요." v-model="answer[0]" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
           </template>
         </div>
         <el-button v-if="data.questions[0].student_answer_logs.length === 0" style="float:right" type="primary" @click="preOnClick('SUBMIT', [data.type, data.questions[0].question_id, [answer], data.questions[0].accept_language[0]])">제출</el-button>
@@ -83,7 +85,7 @@
           <template v-else>
             <p>설문 - 객관</p>
             <pre>{{ data.surveys[0].comment }}</pre>
-            <el-radio-group v-model="answer" style="width: 100%;">
+            <el-radio-group v-model="answer[0]" style="width: 100%;">
               <div v-for="(choice,index) in data.surveys[0].choice" :key="index">
                 <el-radio :label="index">{{ index }} . {{ choice }}</el-radio>
               </div>
@@ -122,15 +124,14 @@ export default {
   props: ['data', 'onClick'],
   data() {
     return {
-      answer: '',
-      answer2: '', // 이 값은 사용하지 않습니다. 값하나 물려야 el-radio button이 활성화돼서 사용합니다. 없어도 돌아가게 할 방법을 찾는다면 제거해주세요.
+      answer: [],
     };
   },
   methods: {
     preOnClick(...args) {
       const vm = this;
       vm.onClick(...args);
-      vm.answer = '';
+      vm.answer = [];
     },
     onChange(data) { // 문항 - 객관값 보정 (0 1 2 3 4를 1 2 3 4 5로) 을 위한 함수
       const vm = this;

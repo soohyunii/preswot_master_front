@@ -33,7 +33,7 @@
             <el-table-column
               label="">
               <template slot-scope="scope">
-                <el-button @click="onClickResult('QUESTION', scope.row.itemId)">결과보기</el-button>
+                <el-button size="small" @click="onClickResult('QUESTION', scope.row.itemId)">상세보기</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -63,7 +63,7 @@
             <el-table-column
               label="">
               <template slot-scope="scope">
-                <el-button @click="onClickResult('SURVEY', scope.row.itemId)">결과보기</el-button>
+                <el-button size="small" @click="onClickResult('SURVEY', scope.row.itemId)">결과보기</el-button>
               </template>
             </el-table-column>
           </el-table>

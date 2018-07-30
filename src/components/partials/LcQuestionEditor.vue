@@ -1,5 +1,7 @@
 <template>
   <div id="lc_question_editor_wrapper">
+    <!-- 디버깅 용도
+    {{ inputTail }} -->
     <el-form-item label="문항 유형" id="question_type">
       <el-radio-group @change="onChangeBody" v-model="inputBody.questionType">
         <el-radio-button label="SHORT_ANSWER">단답</el-radio-button>
@@ -15,46 +17,46 @@
 
     <template v-if="inputBody.questionType === 'SHORT_ANSWER'">
       <el-form-item label="답" id="textarea_short_answer">
-        <el-input v-model="inputTail.answer" placeholder="내용을 입력해주세요." type="textarea"></el-input>
+        <el-input v-model="inputTail.answer[0]" placeholder="내용을 입력해주세요." type="textarea"></el-input>
       </el-form-item>
     </template>
 
     <template v-if="inputBody.questionType === 'MULTIPLE_CHOICE'">
       <el-form-item v-if="inputTail.questionList !== undefined" label="보기">
         <p>정답</p>
-        <el-radio-group v-model="inputTail.answer" style="width: 100%;">
-          <el-radio :label="1">1.</el-radio>
+        <el-checkbox-group v-model="inputTail.answer" style="width: 100%;">
+          <el-checkbox label="1">1.</el-checkbox>
           <div style="display: inline-block; width: 90%;">
             <el-input v-model="inputTail.questionList[0]" placeholder="내용을 입력해주세요."></el-input>
           </div>
           <br>
-          <el-radio :label="2">2.</el-radio>
+          <el-checkbox label="2">2.</el-checkbox>
           <div style="display: inline-block; width: 90%;">
             <el-input v-model="inputTail.questionList[1]" placeholder="내용을 입력해주세요."></el-input>
           </div>
           <br>
-          <el-radio :label="3">3.</el-radio>
+          <el-checkbox label="3">3.</el-checkbox>
           <div style="display: inline-block; width: 90%;">
             <el-input v-model="inputTail.questionList[2]" placeholder="내용을 입력해주세요."></el-input>
           </div>
           <br>
-          <el-radio :label="4">4.</el-radio>
+          <el-checkbox label="4">4.</el-checkbox>
           <div style="display: inline-block; width: 90%;">
             <el-input v-model="inputTail.questionList[3]" placeholder="내용을 입력해주세요."></el-input>
           </div>
           <br>
-          <el-radio :label="5">5.</el-radio>
+          <el-checkbox label="5">5.</el-checkbox>
           <div style="display: inline-block; width: 90%;">
             <el-input v-model="inputTail.questionList[4]" placeholder="내용을 입력해주세요."></el-input>
           </div>
           <br>
-        </el-radio-group>
+        </el-checkbox-group>
       </el-form-item>
     </template>
 
     <template v-if="inputBody.questionType === 'DESCRIPTION'">
       <el-form-item label="모범답안" id="textarea_short_answer">
-        <el-input v-model="inputTail.answer" placeholder="내용을 입력해주세요." type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
+        <el-input v-model="inputTail.answer[0]" placeholder="내용을 입력해주세요." type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
       </el-form-item>
     </template>
 
@@ -119,7 +121,7 @@
         </el-upload>
       </el-form-item>
       <el-form-item label="답">
-        <el-input v-model="inputTail.answer" placeholder="내용을 입력해주세요." type="textarea"></el-input>
+        <el-input v-model="inputTail.answer[0]" placeholder="내용을 입력해주세요." type="textarea"></el-input>
       </el-form-item>
     </div>
 
@@ -166,6 +168,7 @@ export default {
     const initialInputTail = {
       assignedKeywordList: [],
       testCaseList: [],
+      answer: [],
       difficulty: 3,
     };
     return {
