@@ -46,24 +46,25 @@
         </el-table-column>
         <el-table-column
           label="-"
+          width="115"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <router-link :to="`/a/teacher/NNclass/${scope.row.class_id}`">
+              <el-button>강의 목록</el-button>
+            </router-link>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          v-if="!props.isPhone"
+          label="-"
           width="90"
           align="left"
         >
           <template slot-scope="scope">
             <router-link :to="`/a/teacher/NNclass/${scope.row.class_id}/edit`">
               <el-button class="edit-btn">수정</el-button>
-            </router-link>
-          </template>
-        </el-table-column>
-
-        <el-table-column
-          label="-"
-          width="105"
-          align="center"
-        >
-          <template slot-scope="scope">
-            <router-link :to="`/a/teacher/NNclass/${scope.row.class_id}`">
-              <el-button>강의 목록</el-button>
             </router-link>
           </template>
         </el-table-column>
@@ -127,6 +128,9 @@ export default {
         }
         return true;
       },
+    },
+    isPhone: {
+      type: null,
     },
   },
 };

@@ -282,6 +282,7 @@ export default {
         }
       }, 1000);
     },
+    // TODO: 백엔드 부분에서 선생님이 제출한 로그 삭제하는 api 추가되면, close시 제출 로그 삭제하는 기능 구현하기
     handleClose() {
       const vm = this;
       vm.dialogVisible = false;

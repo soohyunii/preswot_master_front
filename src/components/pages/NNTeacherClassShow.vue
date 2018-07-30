@@ -2,24 +2,25 @@
   <div id="teacher_lecture_index_wrapper" class="bt-container">
       <h2 class="page-title">{{ currentTeachingClass(classId) ? currentTeachingClass(classId).name : '' }}</h2>
     <div class="right-align-margin-bottom-15">
-      <el-button @click="onClick('EVALUATION')" class="el-btn">과목진단</el-button>
-      <el-button @click="onClick('ANALYSIS')" class="el-btn">과목저널링</el-button>
-      <el-button @click="onClick('Report')" class="el-btn">성적표</el-button>
-      <el-button @click="onClick('Q&A')" class="el-btn">게시판</el-button>
-      <el-button @click="onClick('GRADING')" class="el-btn">채점관리</el-button>
+      <el-button @click="onClick('EVALUATION')" :class="$attachReactablePostfix('el-btn')">과목진단</el-button>
+      <el-button @click="onClick('ANALYSIS')" :class="$attachReactablePostfix('el-btn')">과목저널링</el-button>
+      <el-button @click="onClick('Report')" :class="$attachReactablePostfix('el-btn')">성적표</el-button>
+      <el-button @click="onClick('Q&A')" :class="$attachReactablePostfix('el-btn')">게시판</el-button>
+      <el-button @click="onClick('GRADING')" :class="$attachReactablePostfix('el-btn')">채점관리</el-button>
     </div>
     <lecture-list
       @row-click="onClickLecture"
       @delete="onClickDelete"
       type="TEACHER"
       :list="lectureList"
+      :isPhone="$isPhone"
     />
 
     <br />
 
     <div class="right-align">
       <router-link :to="`/a/teacher/NNlecture/new?classId=${classId}`">
-        <el-button type="primary" class="right-align-btn">
+        <el-button type="primary" :class="$attachReactablePostfix('right-align-btn')">
           <div class="right-align-btn-layer">강의 추가</div>
           </el-button>
       </router-link>
@@ -263,6 +264,14 @@ export default {
     letter-spacing: normal;
     text-align: center;
     color: #ffffff;
+  }
+
+  .el-btn-phone{
+    display: none;
+  }
+
+  .right-align-btn-phone{
+    display: none;
   }
 }
 
