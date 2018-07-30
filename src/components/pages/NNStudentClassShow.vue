@@ -4,8 +4,8 @@
     <div class="right-align margin-bottom-15">
       <!-- <el-button @click="onClick('KNOWLEDGEMAP')">과목지식맵</el-button> -->
       <!-- <el-button @click="onClick('ANALYSIS')">과목저널링</el-button> -->
-      <el-button @click="onClick('Q&A')">게시판</el-button>
-      <el-button @click="onClick('GRADE')">결과보기</el-button>
+      <el-button :class="$attachReactablePostfix('btn-board')" @click="onClick('Q&A')">게시판</el-button>
+      <el-button :class="$attachReactablePostfix('btn-show-result')" @click="onClick('GRADE')">결과보기</el-button>
     </div>
     <lecture-list
       @row-click="onClickLecture"
@@ -115,5 +115,11 @@ export default {
   .margin-bottom-15 {
     margin-bottom: 15px;
   }
+}
+.btn-board-phone {
+  display: none;
+}
+.btn-show-result-phone {
+  display: none;
 }
 </style>
