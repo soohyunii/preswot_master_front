@@ -125,14 +125,14 @@ export default {
   postLectureMaterial({ lectureId, file }) {
     const form = new FormData();
     form.append('file', file, file.name);
-    return http.post(`/lectures/${lectureId}/material`, form, {
+    return http.post(`/lecture-items/${lectureId}/material`, form, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
   },
   getLectureMaterialAdditional({ lectureId }) {
-    return http.get(`/lectures/${lectureId}/materials`);
+    return http.get(`/lecture-items/${lectureId}/materials`);
   },
   getOpenedLectureItem({ lectureId }) {
     return http.get(`/lectures/${lectureId}/opened-item`);
