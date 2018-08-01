@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import LandingPage from '../components/pages/LandingPage';
 import Login from '../components/pages/Login';
 import FindingPasswordPage from '../components/pages/FindingPasswordPage';
+import Tos from '../components/pages/Tos';
 import Register from '../components/pages/Register';
 import DownloadPage from '../components/pages/DownloadPage';
 import PolicyPage from '../components/pages/PolicyPage';
@@ -31,6 +32,11 @@ export default new Router({
       path: '/forgot-password/:rand/:userId',
       name: 'FindingPasswordPage',
       component: FindingPasswordPage,
+    },
+    {
+      path: '/tos',
+      name: 'Tos',
+      component: Tos,
     },
     {
       path: '/register',

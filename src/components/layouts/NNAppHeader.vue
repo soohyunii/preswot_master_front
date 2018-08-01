@@ -27,7 +27,7 @@
         <i class="el-icon-search" @click="onClick('asdfsadf')"></i>
       </div>
       -->
-      <router-link to="/register" v-show="!isJwtValid">
+      <router-link to="/tos" v-show="!isJwtValid">
         <div :class="$attachReactablePostfix('div4')">
           <span :class="$attachReactablePostfix('common')">회원가입</span>
         </div>

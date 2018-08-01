@@ -78,26 +78,6 @@
             <br />
             <br />
 
-            <!-- TODO: terms of use / privacy policy text 주루루룩 -->
-            <el-form-item :label="$t('REG.TOU')" prop="checkTou" id="checkTou">
-              <div class="tos">
-                <p>
-                  이용 약관(영어: Terms of service terms of use이나
-                  terms and conditions으로도 알려짐,
-                  줄여서 ToS 또는 TOS라고 부르기도 함)은 서비스를
-                  이용하기 위해 동의해야만 하는 규칙이다.
-                </p>
-                <p>
-                  돈데기리기리 돈데기리기리 돈데돈데돈데 돈데크만
-                  카피카피 룸룸 카피카피 룸룸
-                  카피카피 룸룸 카피카피 룸룸
-                </p>
-              </div>
-              <el-checkbox v-model="input.checkTou" id="user_tou_input">{{ $t('REG.TOU_LABEL') }}</el-checkbox>
-            </el-form-item>
-
-            <br />
-
             <el-form-item>
               <el-button id="btn_submit_register" type="primary" @click="submitForm('elForm')">회원가입</el-button>
             </el-form-item>
@@ -136,7 +116,6 @@ export default {
         major: '',
         belong: '',
         sex: '0',
-        checkTou: false,
       },
       rules: generateRules(vm),
     };
@@ -228,7 +207,6 @@ export default {
         'phoneNumber',
         'major',
         'belong',
-        'checkTou',
       ];
 
       let allValid = true;

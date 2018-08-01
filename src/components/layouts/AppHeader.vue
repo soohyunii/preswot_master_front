@@ -80,7 +80,7 @@
             <!-- <router-link to="/a/profile" v-show="isJwtValid">
             </router-link> -->
 
-            <router-link to="/register" v-show="!isJwtValid">
+            <router-link to="/tos" v-show="!isJwtValid">
               <el-button :type="appTheme" plain>
                 회원가입
               </el-button>

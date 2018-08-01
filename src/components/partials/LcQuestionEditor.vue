@@ -214,7 +214,7 @@ export default {
     ]),
     modifiedKeywordList() {
       const vm = this;
-      return vm.keywordList.map(x => ({ value: x }));
+      return vm.keywordList.map(x => ({ value: x.keyword }));
     },
   },
   methods: {
@@ -248,9 +248,16 @@ export default {
     },
     onClick(type, arg) {
       const vm = this;
+      let i1;
       switch (type) {
         case 'ADD_KEYWORD': {
-          if (vm.keywordList.indexOf(vm.inputTail.keywordName) === -1) {
+          let isEnroll = false;
+          for (i1 = 0; i1 < vm.keywordList.length; i1 += 1) {
+            if (vm.keywordList[i1].keyword === vm.inputTail.keywordName) {
+              isEnroll = true;
+            }
+          }
+          if (isEnroll === false) {
             vm.$notify({
               title: '알림',
               message: '키워드 등록 탭에 등록되지 않은 키워드는 등록할 수 없습니다.',
