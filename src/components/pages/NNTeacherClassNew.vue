@@ -7,23 +7,24 @@
         과목 개설
       </template>
     </div>
-
-
-    <el-form :model="input" ref="elForm" label-width="125px" style="max-width: 800px;" class="elForm-label">
+    <el-form :model="input" ref="elForm" label-position="left" label-width="125px" style="max-width: 800px;" class="elForm-label">
       <el-form-item label="상태" class="radio-item">
         <el-radio-group v-model.number="input.opened">
           <el-radio :label="0">활성화</el-radio>
           <el-radio :label="1">숨김</el-radio>
           <el-radio :label="2">마감</el-radio>
-          <!-- <el-radio-button :label="0">활성화</el-radio-button>
-          <el-radio-button :label="1">숨김</el-radio-button>
-          <el-radio-button :label="2">마감</el-radio-button> -->
         </el-radio-group>
-        <br />
-        <!-- TODO: element-ui popover로 바꾸기 -->
-        활성화: 과목리스트에서 보임 + 과목 수강 가능<br />
-        숨김: 과목리스트에서 안 보임<br />
-        마감: 과목리스트에서 보임 + 과목 수강 불가<br />
+        <el-popover
+          style="position: relative; left: 30px; top: 3px;"
+          placement="top-start"
+          width="400"
+          trigger="hover">
+          <el-table :data="notice">
+            <el-table-column width="100" property="title" label="상태"></el-table-column>
+            <el-table-column width="300" property="content" label="내용"></el-table-column>
+          </el-table>
+          <i class="el-icon-question fa-lg" slot="reference"></i>
+        </el-popover>
       </el-form-item>
 
       <el-form-item label="과목 제목">
@@ -33,8 +34,6 @@
       <el-form-item label="과목 요약 소개">
         <el-input type="textarea" :rows="3" v-model="input.summary" class="subject-summary" ></el-input>
       </el-form-item>
-
-      
 
       <el-form-item label="강의 기간">
         <el-date-picker
@@ -106,6 +105,16 @@ export default {
     return {
       initialInput,
       input: Object.assign({}, initialInput), // 복사해서 넣음
+      notice: [{
+        title: '활성화',
+        content: '리스트에 노출되며 수강신청이 가능합니다.',
+      }, {
+        title: '숨김',
+        content: '리스트에 노출되지 않습니다.',
+      }, {
+        title: '마감',
+        content: '리스트에 노출되나 수강신청은 불가능합니다.',
+      }],
     };
   },
   async mounted() {
@@ -204,7 +213,6 @@ export default {
     float:left;
     width:1000px;
     height: 24px;
-      
     font-family: SpoqaHanSans;
     font-size: 25px;
     font-weight: bold;
@@ -213,151 +221,143 @@ export default {
     line-height: 1.2;
     letter-spacing: normal;
     color: #000000;
- 
     margin-top : 40px;
-    margin-left : 12px;
-    margin-bottom : 25px;
- }
-
-.elForm-label el-form-item{
-text-align : left;
-font-family: SpoqaHanSans;
-  font-size: 16px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 40px;
-  letter-spacing: normal;
-  color: #000000;
-  
-}
-
-.subject-title{
-   width: 300px;
-  height: 40px;
-  border-radius: 4px;
-  background-color: #ffffff;
-  border: solid 1px #dcdfe6;
-  font-family: AppleSDGothicNeo;
-  font-size: 14px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1;
-  letter-spacing: normal;
-  color: #909399;
-}
-
-.subject-summary{
-   width: 300px;
-  height: 100%;
-  border-radius: 4px;
-  background-color: #ffffff;
-  border: solid 1px #dcdfe6;
-  font-family: AppleSDGothicNeo;
-  font-size: 14px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1;
-  letter-spacing: normal;
-  color: #909399;
-}
-
-.subject-startDate{
-   width: 140px;
-  height: 40px;
-  border-radius: 4px;
-  background-color: #ffffff;
-  border: solid 1px #d8dce6;
-  font-family: AppleSDGothicNeo;
-  font-size: 14px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1;
-  letter-spacing: normal;
-  color: #909399;
-}
-
-.subject-endDate{
-  width: 140px;
-  height: 40px;
-  border-radius: 4px;
-  background-color: #ffffff;
-  border: solid 1px #d8dce6;
-  font-family: AppleSDGothicNeo;
-  font-size: 14px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1;
-  letter-spacing: normal;
-  color: #909399;
-}
-
-.subject-capacity{
+    margin-left : 7px;
+    margin-bottom : 30px;
+  }
+  .el-form-item__label {
+    font-size: 30px;
+  }
+  .elForm-label el-form-item{
+    text-align : left;
+    font-family: SpoqaHanSans;
+    font-size: 16px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 40px;
+    letter-spacing: normal;
+    color: #000000;
+  }
+  .subject-title{
     width: 300px;
-  height: 40px;
-  border-radius: 4px;
-  background-color: #ffffff;
-  border: solid 1px #dcdfe6;
-  font-family: AppleSDGothicNeo;
-  font-size: 14px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1;
-  letter-spacing: normal;
-  color: #909399;
-}
-
-.teacher-description{
-  width: 300px;
-  height: 100%;
-  border-radius: 4px;
-  background-color: #ffffff;
-  border: solid 1px #dcdfe6;
-  font-family: AppleSDGothicNeo;
-  font-size: 14px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1;
-  letter-spacing: normal;
-  color: #909399;
-}
-
-.subject-description{
-  width: 300px;
-  height: 100%;
-  border-radius: 4px;
-  background-color: #ffffff;
-  border: solid 1px #dcdfe6;
-  font-family: AppleSDGothicNeo;
-  font-size: 14px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1;
-  letter-spacing: normal;
-  color: #909399;
-}
-
-.subject-btn{
-   width: 300px;
-  height: 40px;
-  border-radius: 3px;
-  background-color: #1989fa;
-   font-family: SpoqaHanSans;
-  font-size: 12px;
-  font-weight: bold;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: 1;
-  letter-spacing: normal;
-  text-align: center;
-  color: #ffffff;
-}
+    height: 40px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    border: solid 1px #dcdfe6;
+    font-family: AppleSDGothicNeo;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    color: #909399;
+  }
+  .subject-summary{
+    width: 300px;
+    height: 100%;
+    border-radius: 4px;
+    background-color: #ffffff;
+    border: solid 1px #dcdfe6;
+    font-family: AppleSDGothicNeo;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    color: #909399;
+  }
+  .subject-startDate{
+    width: 140px;
+    height: 40px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    border: solid 1px #d8dce6;
+    font-family: AppleSDGothicNeo;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    color: #909399;
+  }
+  .subject-endDate{
+    width: 140px;
+    height: 40px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    border: solid 1px #d8dce6;
+    font-family: AppleSDGothicNeo;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    color: #909399;
+  }
+  .subject-capacity{
+      width: 300px;
+    height: 40px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    border: solid 1px #dcdfe6;
+    font-family: AppleSDGothicNeo;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    color: #909399;
+  }
+  .teacher-description{
+    width: 300px;
+    height: 100%;
+    border-radius: 4px;
+    background-color: #ffffff;
+    border: solid 1px #dcdfe6;
+    font-family: AppleSDGothicNeo;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    color: #909399;
+  }
+  .subject-description{
+    width: 300px;
+    height: 100%;
+    border-radius: 4px;
+    background-color: #ffffff;
+    border: solid 1px #dcdfe6;
+    font-family: AppleSDGothicNeo;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    color: #909399;
+  }
+  .subject-btn{
+    width: 300px;
+    height: 40px;
+    border-radius: 3px;
+    background-color: #1989fa;
+    font-family: SpoqaHanSans;
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: center;
+    color: #ffffff;
+  }
 }
 </style>
