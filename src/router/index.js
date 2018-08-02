@@ -7,7 +7,7 @@ import Register from '../components/pages/Register';
 import DownloadPage from '../components/pages/DownloadPage';
 import PolicyPage from '../components/pages/PolicyPage';
 import NotFound from '../components/pages/NotFound';
-import ClassIndex from '../components/pages/ClassIndex';
+import ClassIndex from '../components/pages/NNClassIndex';
 import ClassDetail from '../components/pages/ClassDetail';
 // import Test from '../components/TestComponent';
 import authRoutes from './authRoutes';
