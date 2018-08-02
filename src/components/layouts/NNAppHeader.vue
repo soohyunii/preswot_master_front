@@ -37,6 +37,12 @@
           <span :class="$attachReactablePostfix('common')">로그인</span>
         </div>
       </router-link>
+      <router-link to="/profile" v-show="isJwtValid">
+        <div :class="$attachReactablePostfix('div4')">
+          <span :class="$attachReactablePostfix('common')">프로필</span>
+        </div>
+      </router-link>
+      <!-- {{ $t('HEADER.PROFILE_BUTTON') }}<i class="el-icon-arrow-down el-icon-right"></i> -->
       <div :class="$attachReactablePostfix('div5')" v-show="isJwtValid" @click="onClick('LOGOUT')">
         <span :class="$attachReactablePostfix('common')">로그아웃</span>
       </div>

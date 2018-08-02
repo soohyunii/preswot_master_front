@@ -147,7 +147,7 @@
       ...mapActions('NNclass', [
         'putScore',
       ]),
-      async scoreSubmit(score, id) {
+      async scoreSubmit(score, id) { // eslint-disable-line
         const vm = this;
         if (score < 0 || score > vm.questionResult.score) {
           vm.$notify({
@@ -156,16 +156,12 @@
             type: 'error',
             duration: 2000,
           });
-          return;
         }
+        /*
         const res = await vm.putScore({ id, score });
         if (res && res.status === 200) {
-          vm.$notify({
-            title: '완료',
-            type: 'success',
-            duration: 1000,
-          });
         }
+        */
       },
     },
   };

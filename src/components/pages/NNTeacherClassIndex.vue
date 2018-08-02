@@ -82,12 +82,6 @@ export default {
             vm.deleteTeachingClass({
               teachingClassIndex: index,
             });
-            vm.$notify({
-              title: '삭제됨',
-              message: '과목이 삭제됨',
-              type: 'success',
-              duration: 3000,
-            });
           } catch (error) {
             console.error(error); // eslint-disable-line no-console
             vm.$notify({

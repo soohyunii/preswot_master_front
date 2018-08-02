@@ -150,11 +150,6 @@ export default {
               id,
               ...vm.input,
             });
-            vm.$notify({
-              title: '과목 수정 성공',
-              message: '성공적으로 과목이 수정됨',
-              type: 'success',
-            });
             vm.$router.go(-1);
           } catch (error) {
             vm.$notify({
@@ -168,11 +163,6 @@ export default {
           // TODO: wrap with try catch
           try {
             await classService.NNpostClass(vm.input);
-            vm.$notify({
-              title: '과목 생성 성공',
-              message: '성공적으로 과목이 생성됨',
-              type: 'success',
-            });
             vm.$router.go(-1);
           } catch (error) {
             vm.$notify({

@@ -55,11 +55,11 @@ export default {
             await vm.postClassUser({
               classId: data,
             });
-            vm.$notify({
+            /* vm.$notify({
               title: '수강 신청 요청 성공',
               message: '메세지',
               type: 'success',
-            });
+            }); */
           } catch (error) {
             vm.$notify({
               title: '수강 신청 요청 실패',
