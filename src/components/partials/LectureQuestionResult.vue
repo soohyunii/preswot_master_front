@@ -13,6 +13,7 @@
       <br />
       <el-row>
         <el-col :span="12">
+          {{ questionResult.obAnswers }}
           <el-table v-if="questionResult.type === '객관'"
                     :data="questionResult.obAnswers"
                     :header-cell-style="changeHead"
