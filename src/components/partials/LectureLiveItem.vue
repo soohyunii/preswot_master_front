@@ -111,12 +111,26 @@
         <p>토론</p>
         <discussion :lectureItemId="data.lecture_item_id"/>
       </div>
+      <!-- TODO: 자료 -->
+      <div v-if="data.type === 4" class="note">
+        <p>자료</p>
+        <div v-if="data.note[0].type === 0"></div>
+          <img :src="Url">
+        <div v-if="data.note[0].type === 1"></div>
+          <iframe class="doc-viewer" :src="Url"></iframe>
+        <div v-if="data.note[0].type === 2"></div>
+          <a :href="Url" target="_blank">{{data.note[0].link}}</a>
+        <div v-if="data.note[0].type === 3"></div>
+          <iframe width="420" height="315" :src="Url" frameborder="0"></iframe>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { getIdFromURL } from 'vue-youtube-embed';
 import Discussion from './NNDiscussion';
+import { baseUrl } from '../../services/config';
 
 export default {
   props: ['data', 'onClick'],
@@ -125,6 +139,29 @@ export default {
       answer: '',
       answer2: '', // 이 값은 사용하지 않습니다. 값하나 물려야 el-radio button이 활성화돼서 사용합니다. 없어도 돌아가게 할 방법을 찾는다면 제거해주세요.
     };
+  },
+  computed: {
+    Url() {
+      const vm = this;
+      if (vm.data.type === 4) {
+        if (vm.data.note[0].type === 0) {
+          const url = baseUrl + vm.data.note[0].client_path;
+          return url;
+        }
+        if (vm.data.note[0].type === 1) {
+          const url = baseUrl + vm.data.note[0].client_path;
+          return `https://view.officeapps.live.com/op/embed.aspx?src=${url}`;
+        }
+        if (vm.data.note[0].type === 2) {
+          return vm.data.note[0].url;
+        }
+        if (vm.data.note[0].type === 3) {
+          const id = getIdFromURL(vm.vm.data.note[0].url);
+          return `https://www.youtube.com/embed/${id}?start=${vm.vm.data.note[0].videoStart}&end=${vm.vm.data.note[0].videoEnd}`;
+        }
+      }
+      return '';
+    },
   },
   methods: {
     preOnClick(...args) {

@@ -12,16 +12,14 @@ export default {
   putNote({
     noteId,
     type,
-    URL,
-    video_start,
-    video_end,
+    url,
+    youtube_interval,
   }) {
     const param = {};
 
     utils.assignIfNotNil(param, { type });
-    utils.assignIfNotNil(param, { URL });
-    utils.assignIfNotNil(param, { video_start });
-    utils.assignIfNotNil(param, { video_end });
+    utils.assignIfNotNil(param, { url });
+    utils.assignIfNotNil(param, { youtube_interval });
 
     return http.put(`/notes/${noteId}`, param);
   },
@@ -31,7 +29,7 @@ export default {
   }) {
     const form = new FormData();
     form.append('file', file, file.name);
-    return http.put(`/notes/${noteId}/files`, form, {
+    return http.put(`/notes/${noteId}/file`, form, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -40,25 +38,5 @@ export default {
   getNoteFile({ noteId }) {
     return http.get(`/notes/${noteId}/files`);
   },
-  deleteNoteFile({ noteId }) {
-    return http.delete(`/notes/${noteId}/files`);
-  },
-  postNoteKeywords({
-    noteId,
-    data,
-  }) {
-    return http.post(`/notes/${noteId}/keywords`, {
-      data,
-    });
-  },
-  getNoteKeywords({
-    noteId,
-  }) {
-    return http.get(`/notes/${noteId}/keywords`);
-  },
-  deleteNoteKeywords({
-    noteId,
-  }) {
-    return http.delete(`/notes/${noteId}/keywords`);
-  },
+  // deleteFile은 FileService에 있는거 사용
 };

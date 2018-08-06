@@ -1,5 +1,6 @@
 import LcItemHandler from './index';
 import noteService from '../../services/noteService';
+// import fileService from '../../services/fileService';
 import utils from '../../utils';
 
 export default class NoteHandler extends LcItemHandler {
@@ -7,19 +8,6 @@ export default class NoteHandler extends LcItemHandler {
   static async initViewModel(vm) {
     const item = vm.lectureItem;
     const n = item.notes[0];
-
-    const keywordList = await noteService.getNoteKeywords({
-      noteId: n.note_id,
-    });
-    keywordList.data.forEach((element) => {
-      element.score = element.score_portion;
-    });
-    vm.inputTail.assignedKeywordList = keywordList.data;
-
-    // const res = await noteService.getNoteFile({
-    //   noteId: n.note_id,
-    // });
-    // vm.$refs.noteEditor.initialFileList = res.data.file;
 
     switch (n.type) {
       case 0: {
@@ -54,12 +42,12 @@ export default class NoteHandler extends LcItemHandler {
       }
       case 2: {
         vm.inputBody.noteType = 'LINK';
-        vm.$set(vm.inputTail, 'URL', n.URL);
+        vm.$set(vm.inputTail, 'url', n.url);
         break;
       }
       case 3: {
         vm.inputBody.noteType = 'YOUTUBE';
-        vm.$set(vm.inputTail, 'URL', n.URL);
+        vm.$set(vm.inputTail, 'url', n.url);
         vm.$set(vm.inputTail, 'video_start', n.videoStart);
         vm.$set(vm.inputTail, 'video_end', n.videoEnd);
         break;
@@ -86,29 +74,18 @@ export default class NoteHandler extends LcItemHandler {
     await noteService.putNote({
       noteId,
       type: noteType,
-      URL: inputTail.URL,
-      video_start: inputTail.video_start,
-      video_end: inputTail.video_end,
-    });
-
-    await noteService.deleteNoteKeywords({
-      noteId,
-    });
-
-    await noteService.postNoteKeywords({
-      noteId,
-      data: inputTail.assignedKeywordList,
+      url: inputTail.url,
+      youtube_interval: `${inputTail.video_start}<?>${inputTail.video_end}`,
     });
 
     if (inputBody.noteType === 'IMAGE' || inputBody.noteType === 'DOCS') {
       if (inputTail.oldfile !== undefined) {
         if (inputTail.file[0] === undefined) {
-          noteService.deleteNoteFile({ noteId });
+          // TODO: 파일삭제
         }
-        if (inputTail.file !== undefined
-          && inputTail.file[0] !== undefined
-          && inputTail.file[0].raw !== undefined) {
-          await noteService.deleteNoteFile({ noteId });
+        // eslint-disable-next-line
+        if (inputTail.file !== undefined && inputTail.file[0] !== undefined && inputTail.file[0].raw !== undefined) {
+          // TODO: 파일삭제
           noteService.postNoteFile({
             noteId,
             file: inputTail.file[0].raw,
@@ -117,9 +94,8 @@ export default class NoteHandler extends LcItemHandler {
       }
 
       if (inputTail.oldfile === undefined) {
-        if (inputTail.file !== undefined
-          && inputTail.file[0] !== undefined
-          && inputTail.file[0].raw !== undefined) {
+        // eslint-disable-next-line
+        if (inputTail.file !== undefined && inputTail.file[0] !== undefined && inputTail.file[0].raw !== undefined) {
           noteService.postNoteFile({
             noteId,
             file: inputTail.file[0].raw,

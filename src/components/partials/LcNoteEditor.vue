@@ -41,20 +41,20 @@
 
     <template v-if="inputBody.noteType === 'LINK'">
       <el-form-item label="URL" >
-        <el-input v-model="inputTail.link" style="width: 400px">
+        <el-input v-model="inputTail.url" style="width: 400px">
           <el-button v-if="previewFLAG === false" type="success" slot="append" @click="onClick('PREVIEW')">확인</el-button>
           <el-button v-if="previewFLAG === true" type="success" slot="append" @click="onClick('PREVIEW')">닫기</el-button>
         </el-input>
       </el-form-item>
       <el-form-item label="미리보기" v-if="previewFLAG === true">
-        <link-prevue v-show="previewFLAG" :url="inputTail.link" :showButton="false"></link-prevue>
+        <link-prevue v-show="previewFLAG" :url="inputTail.url" :showButton="false"></link-prevue>
       </el-form-item>
     </template>
 
     <template v-if="inputBody.noteType === 'YOUTUBE'">
       <!-- TODO: 유튜브 특정 구간 링크 -->
       <el-form-item label="URL">
-        <el-input v-model="inputTail.link" style="width: 400px">
+        <el-input v-model="inputTail.url" style="width: 400px">
           <el-button v-if="previewFLAG === false" type="success" slot="append" @click="onClick('PREVIEW')">확인</el-button>
           <el-button v-if="previewFLAG === true" type="success" slot="append" @click="onClick('PREVIEW')">닫기</el-button>
         </el-input>
@@ -65,33 +65,14 @@
         <el-input v-model="inputTail.videoEnd" placeholder="종료시간" style="display: inline-block; width: 100px;"></el-input>
       </el-form-item>
       <el-form-item label="미리보기" v-if="previewFLAG === true">
-        <iframe v-if="inputTail.link !== undefined" width="420" height="315" :src="combinedUrl" frameborder="0"></iframe>
+        <iframe v-if="inputTail.url !== undefined" width="420" height="315" :src="combinedUrl" frameborder="0"></iframe>
       </el-form-item>
     </template>
 
-    <!-- TODO: 키워드 관련 추가 -->
-    <el-form-item label="키워드" id="keyword">
-      <el-autocomplete
-        class="input-new-tag"
-        v-model="inputTail.keywordName"
-        :fetch-suggestions="querySearch"
-        ref="saveTagInput"
-        placeholder="키워드"
-      />
-      <div style="display: inline-block; width: 100px;">
-        <el-input id="input_keyword_point" v-model="inputTail.keywordPoint" placeholder="배점"></el-input>
-      </div>
-      <el-button @click="onClick('ADD_KEYWORD')">추가</el-button><br>
-      <div v-for="(item,index) in inputTail.assignedKeywordList" :key="item.keyword" style="display: inline-block; width: 200px;">
-        <el-button>{{ item.keyword }} / {{ item.score }}</el-button>
-        <el-button @click="onClick('DELETE_KEYWORD',index)" type="danger" style="margin: 0px">X</el-button>
-      </div>
-    </el-form-item>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
 import { getIdFromURL } from 'vue-youtube-embed';
 import LinkPrevue from 'link-prevue';
 
@@ -118,16 +99,9 @@ export default {
     };
   },
   computed: {
-    ...mapState('keyword', [
-      'keywordList',
-    ]),
-    modifiedKeywordList() {
-      const vm = this;
-      return vm.keywordList.map(x => ({ value: x }));
-    },
     combinedUrl() {
       const vm = this;
-      const id = getIdFromURL(vm.inputTail.link);
+      const id = getIdFromURL(vm.inputTail.url);
       return `https://www.youtube.com/embed/${id}?start=${vm.inputTail.videoStart}&end=${vm.inputTail.videoEnd}`;
     },
   },
@@ -150,49 +124,9 @@ export default {
       vm.inputBody = Object.assign({}, vm.initialInputBody);
       vm.inputTail = Object.assign({}, vm.initialInputTail);
     },
-    querySearch(queryString, cb) {
-      const vm = this;
-      const results = queryString ?
-        vm.modifiedKeywordList.filter(vm.createFilter(queryString)) : vm.modifiedKeywordList;
-      cb(results);
-    },
-    createFilter(queryString) { // eslint-disable-next-line
-      return (link) => {
-        return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-      };
-    },
-    onClick(type, arg) {
+    onClick(type) {
       const vm = this;
       switch (type) {
-        case 'ADD_KEYWORD': {
-          if (vm.keywordList.indexOf(vm.inputTail.keywordName) === -1) {
-            vm.$notify({
-              title: '알림',
-              message: '키워드 등록 탭에 등록되지 않은 키워드는 등록할 수 없습니다.',
-              type: 'warning',
-            });
-            break;
-          }
-          if (vm.inputTail.assignedKeywordList.map(x => x.keyword).indexOf(vm.inputTail.keywordName) !== -1) { // eslint-disable-line
-            vm.$notify({
-              title: '알림',
-              message: '이미 등록한 키워드는 등록할 수 없습니다.',
-              type: 'warning',
-            });
-            break;
-          }
-          vm.inputTail.assignedKeywordList.push({
-            keyword: vm.inputTail.keywordName,
-            score: vm.inputTail.keywordPoint,
-          });
-          vm.inputTail.keywordName = null;
-          vm.inputTail.keywordPoint = null;
-          break;
-        }
-        case 'DELETE_KEYWORD': {
-          vm.inputTail.assignedKeywordList.splice(arg, 1);
-          break;
-        }
         case 'PREVIEW': {
           if (vm.previewFLAG === true) {
             vm.previewFLAG = false;
