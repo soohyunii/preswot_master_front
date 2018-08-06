@@ -7,7 +7,8 @@ import Register from '../components/pages/Register';
 import DownloadPage from '../components/pages/DownloadPage';
 import PolicyPage from '../components/pages/PolicyPage';
 import NotFound from '../components/pages/NotFound';
-import ClassIndex from '../components/pages/NNClassIndex';
+import ClassIndexTable from '../components/pages/ClassIndexTable';
+import ClassIndexCard from '../components/pages/ClassIndexCard';
 import ClassDetail from '../components/pages/ClassDetail';
 // import Test from '../components/TestComponent';
 import authRoutes from './authRoutes';
@@ -49,8 +50,8 @@ export default new Router({
     },
     {
       path: '/classes',
-      name: 'ClassIndex',
-      component: ClassIndex,
+      name: 'ClassIndexTable',
+      component: ClassIndexTable,
     },
     {
       path: '/class/:classId/classdetail',

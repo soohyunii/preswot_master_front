@@ -5,7 +5,7 @@
     </pre>
     <div style="display:inline-block; position:absolute; top: 400px; left: 50%; margin-left: -180px">
       <i id="icon_search" class="el-icon-search" style="position:absolute; left: 18px; top: 7px" @click="onClick('SEARCH')"></i>
-      <input v-model="searchText" type="text" id="headerInput" placeholder="What do you want to learn?" @keydown.enter.native="onClick('SEARCH')"/>
+      <input v-model="searchText" type="text" id="headerInput" placeholder="What do you want to learn?" @keydown.enter="onClick('SEARCH')"/>
     </div>
   </div>
 </template>

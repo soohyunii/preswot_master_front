@@ -12,7 +12,7 @@
           <span class="normal">과목목록</span>
         </div>
       </router-link>
-      <router-link to="/a/student/NNclass" v-if="authType === 0" v-show="isJwtValid">
+      <router-link to="/a/student/classtable" v-if="authType === 0" v-show="isJwtValid">
         <div style="display:inline-block; position:absolute; top: 15px; left:335px;">
           <span class="normal">수강중인 과목</span>
         </div>

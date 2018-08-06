@@ -1,5 +1,4 @@
 <template>
-  <!-- <div class="class-index"> -->
   <div class="bt-container">
     <el-row>
       <el-col
