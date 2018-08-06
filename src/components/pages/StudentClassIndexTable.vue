@@ -135,6 +135,7 @@ export default {
           break;
         }
         case 'LISTEN': {
+          vm.$router.push(`/a/student/NNclass/${arg.class_id}`);
           break;
         }
         case 'CANCEL': {
@@ -145,7 +146,6 @@ export default {
           })
           .then(async () => {
             try {
-              console.log(arg);
               await classService.deleteClassUser({
                 classId: arg.class_id,
                 userId: vm.userId,

@@ -28,7 +28,7 @@ import ClassIntroCard from '../partials/ClassIntroCard';
 import utils from '../../utils';
 
 export default {
-  name: 'ClassIndex',
+  name: 'ClassIndexCard',
   components: {
     ClassIntroCard,
   },

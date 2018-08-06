@@ -8,11 +8,10 @@ import NNTeacherLectureNew from '../components/pages/NNTeacherLectureNew';
 import NNTeacherLectureManage from '../components/pages/NNTeacherLectureManage';
 import NNTeacherLectureLive from '../components/pages/NNTeacherLectureLive';
 import StudentClassIndexTable from '../components/pages/StudentClassIndexTable';
-import NNStudentClassIndex from '../components/pages/NNStudentClassIndex';
+import StudentClassIndexCard from '../components/pages/StudentClassIndexCard';
 import NNStudentClassShow from '../components/pages/NNStudentClassShow';
 import TeacherLectureNew from '../components/pages/TeacherLectureNew';
 import TeacherLectureLive from '../components/pages/TeacherLectureLive';
-import StudentClassIndex from '../components/pages/StudentClassIndex';
 import NNStudentLectureLive from '../components/pages/NNStudentLectureLive';
 import TeacherClassNew from '../components/pages/TeacherClassNew';
 import TeacherClassEdit from '../components/pages/TeacherClassEdit';
@@ -222,19 +221,11 @@ export default function authRoutes(root) {
       },
     },
     {
-      path: '/student/class/',
-      name: 'StudentClass',
-      component: StudentClassIndex,
+      path: '/student/classcard/',
+      name: 'StudentClassIndexCard',
+      component: StudentClassIndexCard,
       meta: {
-        title: 'Student Class Index', // TODO: import from i18n
-      },
-    },
-    {
-      path: '/student/NNclass/',
-      name: 'NNStudentClass',
-      component: NNStudentClassIndex,
-      meta: {
-        title: 'NN Student Class Index', // TODO: import from i18n
+        title: 'Student Class Index Card', // TODO: import from i18n
       },
     },
     {

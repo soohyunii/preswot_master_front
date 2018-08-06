@@ -22,7 +22,7 @@ import ClassIntroCardGrid from '../partials/ClassIntroCardGrid';
 import utils from '../../utils';
 
 export default {
-  name: 'ClassIndex',
+  name: 'StudentClassIndexCard',
   components: {
     ClassIntroCard,
     ClassIntroCardGrid,
