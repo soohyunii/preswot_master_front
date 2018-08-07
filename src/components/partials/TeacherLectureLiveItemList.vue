@@ -1,7 +1,7 @@
 <template>
   <div>
-    <!-- {{ currentData }} -->
     <el-table :data="currentData">
+      <!-- TODO: index를 sequence로 교체 -->
       <el-table-column
         type="index"
         label="No."
@@ -47,6 +47,8 @@ export default {
     const vm = this;
     return {
       currentData: [],
+      numData: 0,
+      numPageElement: 5,
     }
   },
   methods: {
@@ -55,19 +57,16 @@ export default {
     },
     handlePageChange(page) {
       const vm = this;
-      if (page === 1) {
-        vm.currentData = vm.dataList.slice(0, 5);
-      } else {
-        vm.currentData = vm.dataList.slice(5,10);
-      }
+      vm.currentData = vm.dataList.slice(vm.numPageElement * (page - 1), vm.numPageElement * page);
     },
   },
   async mounted() {
     const vm = this;
-    await vm.$nextTick();
-    vm.currentData = await vm.dataList.slice(0,5);
-    console.log(vm.dataList);
-    console.log(vm.currentData);
+    // 부모 component로부터 dataList를 받아오는데 걸리는 시간 문제가 발생하여 1초의 텀을 줌.
+    setTimeout(async () => {
+      vm.currentData = await vm.dataList.slice(0, vm.numPageElement);
+      vm.numData = vm.dataList.length;
+    }, 1000);
   },
 };
 </script>
