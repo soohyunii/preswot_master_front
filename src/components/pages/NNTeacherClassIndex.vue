@@ -1,7 +1,7 @@
 <template>
   <div id="teacher_class_index_wrapper" class="bt-container">
     <h2 class="page-title">강의 중인 과목</h2>
-    
+
     <div class="right-align">
       <router-link to="/a/teacher/NNclass/new">
         <el-button type="primary" class="right-align-btn">

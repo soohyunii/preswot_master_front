@@ -7,7 +7,7 @@ import Register from '../components/pages/Register';
 import DownloadPage from '../components/pages/DownloadPage';
 import PolicyPage from '../components/pages/PolicyPage';
 import NotFound from '../components/pages/NotFound';
-import ClassIndexTable from '../components/pages/ClassIndexTable';
+import ClassIndex from '../components/pages/ClassIndex';
 // import ClassIndexCard from '../components/pages/ClassIndexCard';
 import ClassDetail from '../components/pages/ClassDetail';
 // import Test from '../components/TestComponent';
@@ -50,8 +50,8 @@ export default new Router({
     },
     {
       path: '/classes',
-      name: 'ClassIndexTable',
-      component: ClassIndexTable,
+      name: 'ClassIndex',
+      component: ClassIndex,
     },
     {
       path: '/class/:classId/classdetail',
