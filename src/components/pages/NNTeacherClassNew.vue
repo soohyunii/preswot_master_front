@@ -10,18 +10,18 @@
     <el-form :model="input" ref="elForm" label-position="left" label-width="125px" style="max-width: 800px;" class="elForm-label">
       <el-form-item label="상태" class="radio-item">
         <el-radio-group v-model.number="input.opened">
-          <el-radio :label="0">활성화</el-radio>
-          <el-radio :label="1">숨김</el-radio>
+          <el-radio :label="0">공개</el-radio>
+          <el-radio :label="1">비공개</el-radio>
           <el-radio :label="2">마감</el-radio>
         </el-radio-group>
         <el-popover
           style="position: relative; left: 30px; top: 3px;"
           placement="top-start"
-          width="400"
+          width="500"
           trigger="hover">
           <el-table :data="notice">
             <el-table-column width="100" property="title" label="상태"></el-table-column>
-            <el-table-column width="300" property="content" label="내용"></el-table-column>
+            <el-table-column width="400" property="content" label="내용"></el-table-column>
           </el-table>
           <i class="el-icon-question fa-lg" slot="reference"></i>
         </el-popover>
@@ -106,14 +106,14 @@ export default {
       initialInput,
       input: Object.assign({}, initialInput), // 복사해서 넣음
       notice: [{
-        title: '활성화',
-        content: '리스트에 노출되며 수강신청이 가능합니다.',
+        title: '공개',
+        content: '학생의 과목 목록에 노출되며 수강신청이 가능합니다.',
       }, {
-        title: '숨김',
-        content: '리스트에 노출되지 않습니다.',
+        title: '비공개',
+        content: '학생의 과목 목록에 노출되지 않습니다.',
       }, {
         title: '마감',
-        content: '리스트에 노출되나 수강신청은 불가능합니다.',
+        content: '학생의 과목 목록에 노출되나 수강신청은 불가능합니다.',
       }],
     };
   },

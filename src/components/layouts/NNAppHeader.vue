@@ -6,19 +6,19 @@
           <span :class="$attachReactablePostfix('title')">PRESWOT</span>
         </div>
       </router-link>
-      <router-link to="/classes">
+      <router-link to="/classes" v-if="authType === 0" >
         <div :class="$attachReactablePostfix('div2')">
           <span :class="$attachReactablePostfix('common')">과목목록</span>
+        </div>
+      </router-link>
+      <router-link to="/a/teacher/NNclass" v-if="authType === 1" v-show="isJwtValid">
+        <div :class="$attachReactablePostfix('div2')">
+          <span :class="$attachReactablePostfix('common')">강의중인 과목</span>
         </div>
       </router-link>
       <router-link to="/a/student/NNclass" v-if="authType === 0" v-show="isJwtValid">
         <div :class="$attachReactablePostfix('div3')">
           <span :class="$attachReactablePostfix('common')">수강중인 과목</span>
-        </div>
-      </router-link>
-      <router-link to="/a/teacher/NNclass" v-if="authType === 1" v-show="isJwtValid">
-        <div :class="$attachReactablePostfix('div3')">
-          <span :class="$attachReactablePostfix('common')">강의중인 과목</span>
         </div>
       </router-link>
       <!--

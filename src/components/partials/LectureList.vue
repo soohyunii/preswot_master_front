@@ -44,6 +44,7 @@
             </template>
           </el-table-column>
 
+          <!-- TODO
           <el-table-column
             label="수강 학생 수"
             width="135"
@@ -63,6 +64,7 @@
               몇%
             </template>
           </el-table-column>
+          -->
 
           <el-table-column
             label="-"
