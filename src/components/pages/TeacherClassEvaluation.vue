@@ -211,13 +211,13 @@ export default {
   },
   async created() {
     const vm = this;
-    if (!vm.currentTeachingClass) {
-      await vm.getMyClassLists();
-      vm.updateCurrentClassIndex({
-        currentClassId: Number.parseInt(vm.$route.params.classId, 10),
-      });
-      await vm.getClass({ type: 'TEACHER' });
-    }
+    // if (!vm.currentTeachingClass) { FIXME : 일단 돌아가게만 주석처리함. 이후에 전체 구조를 보고 숙고할 것!
+    await vm.getMyClassLists();
+    vm.updateCurrentClassIndex({
+      currentClassId: Number.parseInt(vm.$route.params.classId, 10),
+    });
+    await vm.getClass({ type: 'TEACHER' });
+    // }
     await vm.getClassCoverage({ type: 'TEACHER' });
     vm.coverage = vm.currentClassCoverage;
     // console.log(vm.currentClassCoverage);
