@@ -49,7 +49,7 @@ export default {
       currentData: [],
       numData: 0,
       numPageElement: 5,
-    }
+    };
   },
   methods: {
     convertLcItemTypeKor(row) {

@@ -14,6 +14,7 @@ export default class LcItemHandler {
       lectureItemId,
       name: inputHead.lcItemName,
       sequence: inputHead.lcItemSequence,
+      result: inputHead.lcItemResult,
     });
     await this.postChildLectureItem({
       lcItemId: lectureItemId,
@@ -32,7 +33,7 @@ export default class LcItemHandler {
       lectureItemId,
       name: inputHead.lcItemName,
       order: inputHead.type,
-      result: utils.convertLcItemResult(inputHead.lcItem.Result),
+      result: inputHead.lcItemResult,
     });
 
     await this.putChildLectureItem({
