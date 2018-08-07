@@ -32,7 +32,7 @@
 
       <div class="ps-align-right">
         <br />
-        <el-button id="btn_add_new_lc_item" @click="onClick('ADD_LC_ITEM_ORDER')" type="primary">
+        <el-button id="btn_add_new_lc_item" @click="onClick('ADD_LC_ITEM_SEQUENCE')" type="primary">
           강의 아이템 순서 저장
         </el-button>
         <el-button id="btn_add_new_lc_item" @click="onClick('ADD_NEW_LC_ITEM')" type="primary">
@@ -42,7 +42,7 @@
     </div>
     <div v-if="isEditing">
       <el-button @click="onClick('CANCEL_EDIT')" icon="el-icon-back"> 뒤로 가기</el-button>
-      <lecture-item-editor />
+      <lecture-item-editor :numOfLectureItem="numOfLectureItem" />
     </div>
   </div>
 </template>
@@ -64,22 +64,22 @@ import { EventBus } from '../../event-bus';
 // * TODO: 강의 순서에 대한 변수 생성(at backend) 후, start_time을 순서 변수로 변경
 const createSortable = (el, options, vnode) => { //eslint-disable-line
 
-  let start_time = []; //eslint-disable-line
+  let sequence = []; //eslint-disable-line
   return Sortable.create(el, {
     ...options,
     onStart() {
       // when the sort starts, store the initial order of the array
-      start_time = this.toArray(); //eslint-disable-line
+      sequence = this.toArray(); //eslint-disable-line
     },
     onEnd(evt) {
       // when the sort ends, set the order to the initial state
-      this.sort(start_time); //eslint-disable-line
+      this.sort(sequence); //eslint-disable-line
       // change the order using splice
       const data = vnode.context.lectureItemList;
       data.splice(evt.newIndex, 0, ...data.splice(evt.oldIndex, 1));
       // now it is safe, you can update the order parameter
       data.forEach((o, i) => {
-        o.start_time = i + 1; //eslint-disable-line
+        o.sequence = i + 1; //eslint-disable-line
       });
     },
   });
@@ -126,12 +126,12 @@ export default {
           x.type = utils.convertLcItemTypeKor(x.type); // eslint-disable-line no-param-reassign
           return x;
         });
-        // * 먼저 만든 것 기준으로 정렬하기
-        // lectureItemList.sort((a, b) => {
-        //   const aCreatedAt = new Date(a.createdAt);
-        //   const bCreatedAt = new Date(b.createdAt);
-        //   return aCreatedAt.getTime() - bCreatedAt.getTime();
-        // });
+        // * sequence 순서대로 강의 아이템 정렬
+        lectureItemList.sort((a, b) => {
+          const aItemSequence = Number(a.sequence);
+          const bItemSequence = Number(b.sequence);
+          return aItemSequence - bItemSequence;
+        });
         return lectureItemList;
       }
       return [];
@@ -139,6 +139,10 @@ export default {
     lectureId() {
       const vm = this;
       return Number.parseInt(vm.$route.params.lectureId, 10);
+    },
+    numOfLectureItem() {
+      const vm = this;
+      return vm.lectureItemList.length;
     },
   },
   methods: {
@@ -153,11 +157,11 @@ export default {
       // const vm = this;
       switch (type) {
         // TODO: 강의 순서에 대한 변수 생성(at backend) 후, start_time을 순서 변수로 변경
-        case 'ADD_LC_ITEM_ORDER': {
+        case 'ADD_LC_ITEM_SEQUENCE': {
           this.lectureItemList.forEach((item) => {
             lectureItemService.putLectureItem({
               lectureItemId: item.lecture_item_id,
-              startTime: item.start_time,
+              sequence: item.sequence,
             });
           });
           break;

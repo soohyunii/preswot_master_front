@@ -4,20 +4,15 @@
       강의 아이템 목록이 비었습니다.
     </div>
     <div v-else>
-      <!-- {{ props.list }} -->
       <el-table :data="props.list"
                 sortable
                 v-sortable="data.attrs.sortableOptions">
         <el-table-column
-          prop="index"
+          prop="sequence"
           label="번호"
           width="100"
           align="center"
-        >
-          <template slot-scope="scope">
-            {{ scope.$index + 1 }}
-          </template>
-        </el-table-column>
+        ></el-table-column>
 
         <el-table-column
           prop="type"
