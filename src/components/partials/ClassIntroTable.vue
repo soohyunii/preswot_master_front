@@ -92,6 +92,15 @@ export default {
       return vm.list.slice((vm.pageNum - 1) * 10, vm.pageNum * 10);
     },
   },
+  created() {
+    const vm = this;
+    if (vm.$route.query.type !== undefined) {
+      vm.searchQuery.searchType = vm.$route.query.type;
+    }
+    if (vm.$route.query.text !== undefined) {
+      vm.searchQuery.searchText = vm.$route.query.text;
+    }
+  },
   methods: {
     formatDate: utils.formatDate,
     isApplied(arg) {

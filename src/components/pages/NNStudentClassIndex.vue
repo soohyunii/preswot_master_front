@@ -1,12 +1,10 @@
 <template>
   <div id="class_index_wrapper" class="bt-container">
     <h2 class="page-title">수강 중인 과목</h2>
-
     <student-class-table
       :list="list"
       :onClick="onClick"
     />
-
   </div>
 </template>
 
@@ -34,9 +32,9 @@ export default {
   async created() {
     const vm = this;
 
-    // TODO: 새로고침(F5)을 하면 studyingClassList를 받아오지 못해서 에러가 발생합니다.
-    //       vuex의 문제점으로 보이긴 하는데 추후에 해결이 필요해보입니다.
-    vm.getMyClassLists();
+    // 새로고침(Refresh, F5) 해도 목록을 가져올 수 있게 하는 부분.
+    // 속도가 눈에 보이게 느려지므로 다른 방법이 있다면 수정 요구.
+    await vm.getMyClassLists();
 
     // 검색 기능 : 서버에서 DB 쿼리로 처리하는 게 효율이 나을 것 같으면 나중에 수정.
     if (vm.studyingClassList !== null) {
