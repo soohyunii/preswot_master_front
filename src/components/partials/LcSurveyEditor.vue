@@ -1,7 +1,7 @@
 <template>
   <div id="lc_survey_editor_wrapper">
     <el-form-item label="문항 유형">
-      <el-radio-group v-model="inputBody.surveyType">
+      <el-radio-group v-model="inputBody.surveyType" @change="onChangeBody">
         <el-radio-button label="MULTIPLE_CHOICE">객관</el-radio-button>
         <el-radio-button label="DESCRIPTION">서술</el-radio-button>
       </el-radio-group>
@@ -34,9 +34,13 @@ export default {
     const initialInputTail = {
       surveyItemList: [],
     };
+    const multiInitialInputTail = {
+      surveyItemList: [{ value: '매우 그렇지 않다.' }, { value: '그렇지 않다.' }, { value: '보통이다.' }, { value: '그렇다.' }, { value: '매우 그렇다.' }],
+    };
     return {
       initialInputBody,
       initialInputTail,
+      multiInitialInputTail,
       inputBody: Object.assign({}, initialInputBody),
       inputTail: Object.assign({}, initialInputTail),
     };
@@ -44,7 +48,11 @@ export default {
   methods: {
     onChangeBody() {
       const vm = this;
-      vm.inputTail = Object.assign({}, vm.initialInputTail);
+      if (vm.inputBody.surveyType === 'MULTIPLE_CHOICE') {
+        vm.inputTail = Object.assign({}, vm.multiInitialInputTail);
+      } else {
+        vm.inputTail = Object.assign({}, vm.initialInputTail);
+      }
       // vm.$set(vm.inputTail, 'selectedKeywordList', []);
     },
     querySearch(queryString, cb) {

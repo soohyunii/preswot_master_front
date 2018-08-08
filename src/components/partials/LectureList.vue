@@ -66,7 +66,7 @@
 
           <el-table-column
             label="-"
-            width="90"
+            width="115"
             align="left"
           >
             <template slot-scope="scope">
@@ -77,13 +77,14 @@
           </el-table-column>
 
           <el-table-column
+            v-if="!props.isPhone"
             label="-"
             width="90"
             align="left"
           >
             <template slot-scope="scope">
               <router-link :to="`/a/teacher/NNlecture/${scope.row.lecture_id}/manage?classId=${scope.row.class_id}`">
-                <el-button class="edit-btn">수정</el-button>on>
+                <el-button class="edit-btn">수정</el-button>
               </router-link>
             </template>
           </el-table-column>
@@ -192,6 +193,9 @@ export default {
         }
         return true;
       },
+    },
+    isPhone: {
+      type: null,
     },
   },
 };

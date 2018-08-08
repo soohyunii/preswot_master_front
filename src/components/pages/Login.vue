@@ -1,5 +1,5 @@
 <template>
-  <div id="login_wrapper" class="bt-container">
+  <div :id="$attachReactablePostfix('login_wrapper')" class="bt-container">
     <el-container>
 
       <el-row>
@@ -20,7 +20,7 @@
           <br />
           <!-- TODO: add disabled attr according to validation -->
           <el-button
-            id="btn_login"
+            :id="$attachReactablePostfix('btn_login')"
             type="primary"
             @click="onClick('LOGIN')"
           >
@@ -35,7 +35,7 @@
           <el-dialog
             title="비밀번호 초기화"
             :visible.sync="isModalVisible"
-            width="30%"
+            :width="$isPhone?'80%':'30%'"
             center
           >
             <!-- TODO: replace 브랜드 로고 -->
@@ -100,7 +100,8 @@ export default {
             });
             // console.log('login res', JSON.stringify(res));
             // TODO: translate
-            vm.openNoti('success', 'Login Success !!', 'Success');
+
+            // vm.openNoti('success', 'Login Success !!', 'Success');
             if (vm.redirectTo) {
               // jwt 업데이트 후 페이지 이동 이루어지도록
               vm.$router.push(vm.redirectTo);
@@ -205,6 +206,15 @@ export default {
   font-size:1.2em;
   margin-left: 10px;
   padding-bottom:0px;
+}
+
+#login_wrapper-phone{
+  margin-top:70px;
+}
+
+#btn_login-phone{
+  margin:0 20px 0 20px;
+  width:100px;
 }
 
 </style>

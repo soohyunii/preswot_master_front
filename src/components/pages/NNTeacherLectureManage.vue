@@ -17,7 +17,8 @@
       <el-tab-pane label="강의 허용 프로그램 설정" name="program">
         <tlm-tab-allowed-program />
       </el-tab-pane>
-      <el-tab-pane label="강의 지식맵 관리" name="kmap">
+      <!-- knowledgeMap 렌더링 시 노드가 캔버스의 범위를 벗어나는 이슈가 발생하여 ':lazy="true" 추가 -->
+      <el-tab-pane label="강의 지식맵 관리" name="kmap" lazy>
         <knowledgeMap />
       </el-tab-pane>
     </el-tabs>
@@ -35,6 +36,7 @@ import TlmTabAllowedProgram from '../partials/TlmTabAllowedProgram';
 // import RecommendKeywords from '../partials/RecommendKeywords';
 // import LectureKeywordsEditor from '../partials/LectureKeywordsEditor';
 import KnowledgeMap from '../partials/NNKnowledgeMap';
+import { EventBus } from '../../event-bus';
 
 
 export default {
@@ -116,11 +118,6 @@ export default {
         lectureItem: null,
       });
     },
-    ...mapActions('kMap', [
-      'getKeywordsAndWeights',
-      'getLectureKeywordRelations',
-      'reDrawD3Network',
-    ]),
     onClick(type) {
       const vm = this;
       switch (type) {
@@ -131,9 +128,7 @@ export default {
         }
         case 'TAB_CLICK': {
           if (vm.activeTab === 'kmap') {
-            vm.getKeywordsAndWeights(vm.$route.params);
-            vm.getLectureKeywordRelations(vm.$route.params);
-            vm.reDrawD3Network();
+            EventBus.$emit('drawNetwork');
           }
           break;
         }

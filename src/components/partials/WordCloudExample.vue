@@ -50,8 +50,8 @@ export default {
       const vm = this;
       // TODO: 이해여부 값 수정 필요
       return vm.keywords.map(item => ({
-        name: item.name,
-        value: item._size, // eslint-disable-line
+        name: item.label,
+        value: item.weight, // eslint-disable-line
         understand: Math.random() > 0.5 ? ' notUnderstand' : ' understand',
       }));
     },

@@ -1,217 +1,214 @@
 <template>
   <div class="wrapper" ref="wrapper">
-    
-    <!-- 디버그 용도
-    <p>{{ nodes }}</p>
-    <p>{{ edges }}</p>
-    -->
+      <!-- 디버그 용도
+      <p>{{ nodes }}</p>
+      <p>{{ edges }}</p> -->
 
-    <!-- TODO 키워드 추출 부분 수정 후 작성할 것
-    <div v-if="false"> 
-      <br /><br />
-      키워드 추출 진행중 <i class="el-icon-loading"> </i><br />
-      다른 작업은 삼가 주세요.
-    </div>
-    -->
-    
-    <div>
-      <svg style="width: 0px; height: 0px; float: left;">
-        <defs>
-          <marker id="m-end" markerWidth="10" markerHeight="10" refX="11" refY="3" orient="auto" markerUnits="strokeWidth" >
-            <path d="M0,0 L0,6 L9,3 z"></path>
-          </marker>
-        </defs>
-      </svg>
-      <div class="network">
-        <div class="bg" @click="selectReset()" v-if="d3DrawFlag === true">
-          <d3-network 
-            :net-nodes="nodes"
-            :net-links="validEdges"
-            :selection="{nodes: selectedNode, links: {}}"
-            :options="options"
-            :link-cb="lcb"
-            @node-click="nodeClick" />
-        </div>
-        <el-row>
-          <el-col :span="8">
-            <el-button @click="save" type="primary">
-              강의 지식맵 저장
-            </el-button>
-          </el-col>
-        </el-row>
-        <br />
-        <el-row>
-          <el-col :span="12">
-            <knowledge-map-node-editor></knowledge-map-node-editor>
-          </el-col>
-          <el-col :span="12">
-            <knowledge-map-edge-editor></knowledge-map-edge-editor>
-          </el-col>
-        </el-row>
+      <!-- TODO 키워드 추출 부분 수정 후 작성할 것
+      <div v-if="false">
+        <br /><br />
+        키워드 추출 진행중 <i class="el-icon-loading"> </i><br />
+        다른 작업은 삼가 주세요.
       </div>
-    </div>
+      -->
+      <div class="networkVis" id="myNetwork"></div>
+      <br>
+      <el-row>
+        <div class="ps-align-right">
+          <el-button @click="save" type="primary">
+            강의 지식맵 저장
+          </el-button>
+        </div>
+      </el-row>
+      <br />
+      <el-row>
+        <el-col :span="12">
+          <knowledge-map-node-editor
+            :updateNodeData="updateNodeData"/>
+        </el-col>
+        <el-col :span="12">
+          <knowledge-map-edge-editor/>
+        </el-col>
+      </el-row>
   </div>
 </template>
 
 <script>
-  import { mapState, mapActions } from 'vuex';
-  import D3Network from 'vue-d3-network';
+  import { mapState, mapActions, mapMutations } from 'vuex';
+  import vis from 'vis';
   import KnowledgeMapNodeEditor from './NNKnowledgeMapNodeEditor';
   import KnowledgeMapEdgeEditor from './NNKnowledgeMapEdgeEditor';
+  import { EventBus } from '../../event-bus';
 
   export default {
     components: {
-      D3Network,
       KnowledgeMapNodeEditor,
       KnowledgeMapEdgeEditor,
     },
     data() {
+      const vm = this;
       return {
-        mode: 'NOT_PINNED',
-        selectedNode: {},
-        nodeSize: 20,
-        canvas: false,
-        linkWidth: 2.5,
-        fontSize: 20,
-        resetFlag: true,
-        numberOfKeyword: 10,
-        keywordLength: 2,
+        network: null,
+        container: '',
+        nodeData: new vis.DataSet(),
+        edgeData: new vis.DataSet(),
+        options: {
+          locales: {
+            en: {
+              edit: 'edit',
+              del: '선택 항목 삭제하기',
+              back: '뒤로가기',
+              addEdge: '키워드 연결하기',
+              edgeDescription: '키워드를 클릭한 후, 드래그 앤 드롭으로 키워드를 서로 연결하세요.',
+            },
+          },
+          edges: {
+            arrows: {
+              to: { enabled: true, scaleFactor: 1, type: 'arrow' },
+            },
+          },
+          nodes: {
+            borderWidth: 2,
+            chosen: {
+              node: (values) => {
+                values.borderWidth *= 3;  // eslint-disable-line
+                values.color = '#f1f1f1'; // eslint-disable-line
+              },
+            },
+            shape: 'dot',
+            font: {
+              size: 25,
+            },
+          },
+          interaction: {
+            hover: true,
+          },
+          manipulation: {
+            enabled: true,
+            initiallyActive: true,
+            addNode: false,
+            editEdge: false,
+            deleteNode(data, callback) {
+              callback(data);
+              // * find the deleted node index
+              const index = vm.nodes.findIndex(item => item.id === data.nodes[0]);
+              // * delete edges which were connected to the deleted node
+              const edges = vm.edges.filter(edge =>
+                edge.from !== vm.nodes[index].id && edge.to !== vm.nodes[index].id);
+              vm.updateEdges({ edges });
+              vm.deleteLectureKeyword({
+                index,
+                lectureId: vm.$route.params.lectureId,
+              });
+              vm.nodes.splice(index, 1);
+            },
+            deleteEdge(data, callback) {
+              callback(data);
+              const index = vm.edges.findIndex(item => item.id === data.edges[0]);
+              vm.deleteLectureKeywordRelation({
+                index,
+                lectureId: vm.$route.params.lectureId,
+              });
+              vm.edges.splice(index, 1);
+            },
+            addEdge(data, callback) {
+              // * from, to가 서로 같은 경우, 이미 존재하는 에지를 추가하는 경우는 vm.edges에 대한 정보를 업데이트 하지 않음
+              if (data.from !== data.to &&
+                  vm.edges.findIndex(item => item.from === data.from && item.to === data.to) === -1) {
+                callback(data);
+                // after each adding you will be back to addEdge mode
+                vm.network.addEdgeMode();
+                vm.edges.push({
+                  from: data.from,
+                  to: data.to,
+                  id: data.from.concat(data.to),
+                  weight: 20,
+                });
+              }
+            },
+          },
+        },
       };
     },
+    mounted() {
+      const vm = this;
+      EventBus.$on('drawNetwork', vm.drawNetwork);
+      vm.drawNetwork();
+    },
     computed: {
-      ...mapState('kMap', ['nodes', 'edges', 'd3DrawFlag']),
-      validEdges() {
-        const vm = this;
-        const edges = [];
-        const nodesNames = [];
-        for (let i = 0; i < vm.nodes.length; i += 1) {
-          nodesNames.push(vm.nodes[i].name);
-        }
-        for (let i = 0; i < vm.edges.length; i += 1) {
-          if (nodesNames.includes(vm.edges[i].sid) &&
-            nodesNames.includes(vm.edges[i].tid)) {
-            edges.push({
-              sid: vm.edges[i].sid,
-              tid: vm.edges[i].tid,
-              // weight: vm.edges[i].weight,
-            });
-          }
-        }
-        return edges;
-      },
-      options() {
-        const vm = this;
-        return {
-          force: 6000,
-          nodeSize: vm.nodeSize,
-          nodeLabels: true,
-          canvas: vm.canvas,
-          linkWidth: vm.linkWidth,
-          fontSize: vm.fontSize,
-        };
-      },
+      ...mapState('kMap', ['nodes', 'edges']),
     },
     methods: {
-      ...mapActions('kMap', ['postLectureKeywords', 'postLectureKeywordRelations']),
-      nodeClick(event, node) {
+      ...mapActions('kMap', [
+        'postLectureKeywords',
+        'postLectureKeywordRelations',
+        'getKeywordsAndWeights',
+        'getLectureKeywordRelations',
+        'deleteLectureKeywordRelation',
+        'deleteLectureKeyword',
+      ]),
+      ...mapMutations('kMap', ['updateEdges']),
+      async drawNetwork() {
         const vm = this;
-        vm.resetFlag = false;
-        if (vm.selectedNode) {
-          vm.selectReset(true);
-        }
-        vm.selectedNode[node.id] = node;
-      },
-      selectReset(immediately) {
-        const vm = this;
-        if (vm.resetFlag || immediately) {
-          vm.selectedNode = {};
-        }
-        if (!immediately) {
-          vm.resetFlag = true;
-        }
-      },
-      lcb(link) {
-        link._svgAttrs = { // eslint-disable-line
-          'marker-end': 'url(#m-end)',
-          'marker-start': 'url(#m-start)',
+        // * get knowledgemap data
+        await vm.getKeywordsAndWeights(vm.$route.params);
+        await vm.getLectureKeywordRelations(vm.$route.params);
+
+        vm.container = document.getElementById('myNetwork');
+        // * initialize and add network DataSet
+        vm.nodeData.clear();
+        vm.edgeData.clear();
+        vm.nodeData.add(vm.nodes);
+        vm.edgeData.add(vm.edges);
+        const data = {
+          nodes: vm.nodeData,
+          edges: vm.edgeData,
         };
-        return link;
+        // * draw network graph
+        vm.network = new vis.Network(vm.container, data, vm.options);
       },
       save() {
         const vm = this;
         vm.postLectureKeywords(vm.$route.params);
         vm.postLectureKeywordRelations(vm.$route.params);
       },
+      updateNodeData(index) {
+        const vm = this;
+        vm.nodeData.update({
+          id: vm.nodes[index].id,
+          weight: vm.nodes[index].weight,
+          color: vm.updateNodeColor(vm.nodes[index].weight),
+        });
+      },
+      // * 그래프에서 엣지 스타일에 대한 dynamic change가 필요할 시 사용
+      // updateEdgeData(index) {
+      //   const vm = this;
+      //   vm.edgeData.update({
+      //     id: vm.edges[index].id,
+      //     weight: vm.edges[index].weight,
+      //   });
+      // },
+      updateNodeColor(weight) {
+        let color = '#E4F1F6';
+        if (weight > 75) {
+          color = '#1A3E4C';
+        } else if (weight > 50) {
+          color = '#347B98';
+        } else if (weight > 25) {
+          color = '#67AFCB';
+        }
+        return color;
+      },
     },
   };
 </script>
 
-<style lang="scss" scoped>
-  .wrapper {
-
-    .network {
-      min-height: 600px;
-      background-color: white;
-    }
-
-    #m-end path, #m-start{
-      fill: rgba(18, 120, 98, 0.8);
-    }
-
-    .test {
-      fill: rgb(255, 0, 0);
-    }
-  }
+<style src="vis/dist/vis.min.css">
 </style>
 
-<style lang="scss">
-  .net {
-    height: 100%;
-    margin: 0;
-  }
-  .node {
-    stroke: rgba(18, 120, 98, .7);
-    stroke-width: 3px;
-    transition: fill .5s ease;
-    fill: #dcfaf3
-  }
-  .node.import {
-    stroke: rgba(255, 0, 0, .7);
-  }
-  .node.selected {
-    stroke: #caa455;
-  }
-  .node.pinned {
-    stroke: rgba(58, 56, 190, 0.6);
-  }
-  .link {
-    stroke: rgba(18, 120, 98, .3);
-  }
-  .link, .node {
-    stroke-linecap: round;
-  }
-  .link:hover, .node:hover {
-    stroke: #be385d;
-    stroke-width: 5px
-  }
-  .link.selected {
-    stroke: rgba(202, 164, 85, .6);
-  }
-  .curve {
-    fill: none;
-  }
-  .link-label, .node-label {
-    fill: #127862;
-  }
-  .link-label {
-    -webkit-transform: translateY(-.5em);
-    -ms-transform: translateY(-.5em);
-    transform: translateY(-.5em);
-    text-anchor: middle;
-  }
-  canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
+<style lang="scss" scoped>
+    #myNetwork {
+      height: 600px;
+      border: 1px solid lightgray;
+    }
 </style>
