@@ -5,7 +5,7 @@
         <app-header />
       </el-header>
       <el-container>
-        <el-main :id="isMainPage?'app_router_view_wrapper_main':'app_router_view_wrapper'" >
+        <el-main :id="isMainPage?'app_router_view_wrapper_main':'app_router_view_wrapper'" :class="$attachReactablePostfix('elmain')" >
           <router-view :key="$route.fullPath"></router-view> <!-- vue router에서 동일한 path 호출시 새로고침 효과 -->
         </el-main>
         <el-footer style="padding: 0px; height: 45px;">
@@ -89,6 +89,10 @@ export default {
 <style lang="scss">
 @import "~@/app.scss";
 @import "~@/variables.scss";
+
+.elmain-phone { // FIXME: 강의중인 과목 목록에서, 빈 화면에 대고 좌우 스크롤하면 빈공간 나타나는 문제 임시 해결
+  overflow: hidden;
+}
 
 #app {
   display: flex;
