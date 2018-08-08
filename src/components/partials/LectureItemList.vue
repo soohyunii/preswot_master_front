@@ -1,14 +1,16 @@
 <template functional>
+
   <div id="lecture_item_list_wrapper">
     <div v-if="props.list.length === 0">
       강의 아이템 목록이 비었습니다.
     </div>
     <div v-else>
       <el-table :data="props.list"
+                row-key="sequence"
                 sortable
                 v-sortable="data.attrs.sortableOptions">
         <el-table-column
-          prop="sequence"
+          type="index"
           label="번호"
           width="100"
           align="center"

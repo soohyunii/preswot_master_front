@@ -67,20 +67,16 @@ const createSortable = (el, options, vnode) => { //eslint-disable-line
   let sequence = []; //eslint-disable-line
   return Sortable.create(el, {
     ...options,
-    onStart() {
-      // when the sort starts, store the initial order of the array
-      sequence = this.toArray(); //eslint-disable-line
-    },
+    // onStart() {
+    //   // when the sort starts, store the initial order of the array
+    //   sequence = this.toArray(); //eslint-disable-line
+    // },
     onEnd(evt) {
       // when the sort ends, set the order to the initial state
-      this.sort(sequence); //eslint-disable-line
+      // this.sort(sequence); //eslint-disable-line
       // change the order using splice
       const data = vnode.context.lectureItemList;
       data.splice(evt.newIndex, 0, ...data.splice(evt.oldIndex, 1));
-      // now it is safe, you can update the order parameter
-      data.forEach((o, i) => {
-        o.sequence = i + 1; //eslint-disable-line
-      });
     },
   });
 };
@@ -94,6 +90,15 @@ const sortable = {
   bind(el, binding, vnode) {
     const table = el.querySelector('.el-table__body-wrapper');
     table._sortable = createSortable(table.querySelector('tbody'), binding.value, vnode); //eslint-disable-line
+  },
+  update(el, binding, vnode) {
+    const table = el.querySelector('.el-table__body-wrapper');
+    table._sortable.destroy(); //eslint-disable-line
+    table._sortable = createSortable(table.querySelector('tbody'), binding.value, vnode); //eslint-disable-line
+  },
+  unbind(el) {
+    const table = el.querySelector('.el-table__body-wrapper');
+    table._sortable.destroy(); //eslint-disable-line
   },
 };
 
@@ -158,10 +163,10 @@ export default {
       switch (type) {
         // TODO: 강의 순서에 대한 변수 생성(at backend) 후, start_time을 순서 변수로 변경
         case 'ADD_LC_ITEM_SEQUENCE': {
-          this.lectureItemList.forEach((item) => {
+          this.lectureItemList.forEach((item, index) => {
             lectureItemService.putLectureItem({
               lectureItemId: item.lecture_item_id,
-              sequence: item.sequence,
+              sequence: index + 1,
             });
           });
           break;
@@ -246,6 +251,14 @@ export default {
           try {
             await lectureItemService.deleteLectureItem({
               lectureItemId: targetLectureItem.lecture_item_id,
+            });
+            await vm.lectureItemList.forEach((item, i) => {
+              if (item.sequence - 1 > index) {
+                lectureItemService.putLectureItem({
+                  lectureItemId: vm.lectureItemList[i].lecture_item_id,
+                  sequence: item.sequence - 1,
+                });
+              }
             });
             // TODO: delete lectureItem from lecture.lecture_items
             vm.$notify({
