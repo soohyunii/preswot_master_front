@@ -11,6 +11,7 @@
           :mute="true">
         </youtube>
         <teacher-lecture-live-item-list
+          v-if="isTableItemListLoaded"
           :dataList="tableItemList"
           :onClick="onClick"
           :isAuto="isAuto"
@@ -29,6 +30,7 @@
               :mute="true">
             </youtube>
             <teacher-lecture-live-item-list
+              v-if="isTableItemListLoaded"
               :dataList="tableItemList"
               :onClick="onClick"
               :isAuto="isAuto"
@@ -152,6 +154,13 @@ export default {
     classId() {
       const vm = this;
       return Number.parseInt(vm.$route.query.classId, 10);
+    },
+    isTableItemListLoaded() {
+      const vm = this;
+      if (vm.tableItemList.length === 0) {
+        return false;
+      }
+      return true;
     },
   },
   components: {
