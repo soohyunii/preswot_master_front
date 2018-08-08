@@ -47,12 +47,13 @@
         </el-input>
       </el-form-item>
       <el-form-item label="미리보기" v-if="previewFLAG === true">
+        <!-- FIXME: link-prevue npm모듈 사용해서 링크 미리보기 확인합니다.
+                    특정 링크들은 한글이 깨져서 나옵니다. 수정가능하면 좋을 것 같습니다. -->
         <link-prevue v-show="previewFLAG" :url="inputTail.url" :showButton="false"></link-prevue>
       </el-form-item>
     </template>
 
     <template v-if="inputBody.noteType === 'YOUTUBE'">
-      <!-- TODO: 유튜브 특정 구간 링크 -->
       <el-form-item label="URL">
         <el-input v-model="inputTail.url" style="width: 400px">
           <el-button v-if="previewFLAG === false" type="success" slot="append" @click="onClick('PREVIEW')">확인</el-button>
@@ -60,11 +61,19 @@
         </el-input>
       </el-form-item>
       <el-form-item label="재생 구간">
-        <el-input v-model="inputTail.videoStart" placeholder="시작시간" style="display: inline-block; width: 100px;"></el-input>
+        <el-time-picker
+          is-range
+          v-model="inputTail.interval"
+          range-separator="To"
+          start-placeholder="Start time"
+          end-placeholder="End time">
+        </el-time-picker>
+        <!-- <el-input v-model="inputTail.videoStart" placeholder="시작시간" style="display: inline-block; width: 100px;"></el-input>
         ~
-        <el-input v-model="inputTail.videoEnd" placeholder="종료시간" style="display: inline-block; width: 100px;"></el-input>
+        <el-input v-model="inputTail.videoEnd" placeholder="종료시간" style="display: inline-block; width: 100px;"></el-input> -->
       </el-form-item>
       <el-form-item label="미리보기" v-if="previewFLAG === true">
+        <!-- 종료시간 설정을 위해서 iframe 태그 사용했습니다. url은 유튜브 공유 링크를 입력받는 것이 좋습니다. -->
         <iframe v-if="inputTail.url !== undefined" width="420" height="315" :src="combinedUrl" frameborder="0"></iframe>
       </el-form-item>
     </template>
@@ -86,7 +95,6 @@ export default {
       noteType: null,
     };
     const initialInputTail = {
-      assignedKeywordList: [],
     };
 
     return {
@@ -102,7 +110,11 @@ export default {
     combinedUrl() {
       const vm = this;
       const id = getIdFromURL(vm.inputTail.url);
-      return `https://www.youtube.com/embed/${id}?start=${vm.inputTail.videoStart}&end=${vm.inputTail.videoEnd}`;
+      const start = (3600 * vm.inputTail.interval[0].getHours()) +
+        (60 * vm.inputTail.interval[0].getMinutes()) + vm.inputTail.interval[0].getSeconds();
+      const end = (3600 * vm.inputTail.interval[1].getHours()) +
+        (60 * vm.inputTail.interval[1].getMinutes()) + vm.inputTail.interval[1].getSeconds();
+      return `https://www.youtube.com/embed/${id}?start=${start}&end=${end}`;
     },
   },
   methods: {
@@ -117,6 +129,11 @@ export default {
 
       if (vm.inputBody.noteType === 'LINK') {
         vm.previewFLAG = false;
+      }
+
+      if (vm.inputBody.noteType === 'YOUTUBE') {
+        vm.previewFLAG = false;
+        vm.$set(vm.inputTail, 'interval', [new Date(2018, 8, 15, 0, 0, 0), new Date(2018, 8, 15, 23, 59, 59)]);
       }
     },
     reset() {

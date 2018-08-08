@@ -48,8 +48,12 @@ export default class NoteHandler extends LcItemHandler {
       case 3: {
         vm.inputBody.noteType = 'YOUTUBE';
         vm.$set(vm.inputTail, 'url', n.url);
-        vm.$set(vm.inputTail, 'video_start', n.videoStart);
-        vm.$set(vm.inputTail, 'video_end', n.videoEnd);
+        // FIXME: 백엔드쪽에서 데이터가 어떤 형태로 올지 모르기 때문에 추후 수정.
+        const start = new Date(2018, 8, 15, 0, 0, 0);
+        start.setSeconds(n.youtube_interval);
+        const end = new Date(2018, 8, 15, 0, 0, 0);
+        end.setSeconds(n.youtube_interval);
+        vm.$set(vm.inputTail, 'interval', [start, end]);
         break;
       }
       default: {
@@ -70,12 +74,16 @@ export default class NoteHandler extends LcItemHandler {
   static async putChildLectureItem({ noteId, inputBody, inputTail }) {
     const noteType = utils.convertNoteType(inputBody.noteType);
 
-    // TODO: add params
+    const start = (3600 * inputTail.interval[0].getHours()) +
+      (60 * inputTail.interval[0].getMinutes()) + inputTail.interval[0].getSeconds();
+    const end = (3600 * inputTail.interval[1].getHours()) +
+      (60 * inputTail.interval[1].getMinutes()) + inputTail.interval[1].getSeconds();
+
     await noteService.putNote({
       noteId,
       type: noteType,
       url: inputTail.url,
-      youtube_interval: `${inputTail.video_start}<?>${inputTail.video_end}`,
+      youtube_interval: `${start}<?>${end}`,
     });
 
     if (inputBody.noteType === 'IMAGE' || inputBody.noteType === 'DOCS') {
