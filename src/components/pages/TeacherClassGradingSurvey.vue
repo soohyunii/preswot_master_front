@@ -1,5 +1,5 @@
 <template>
-  <div class="bt-container">
+  <div class="bt-container" oncontextmenu="return false">
     <div v-if="surveyResult">
       <h2>{{ currentTeachingClass(classId) ? currentTeachingClass(classId).name : '' }} > {{surveyResult.lectureName}}</h2>
       <br />
@@ -19,7 +19,7 @@
           <el-row v-if="surveyResult.type === '객관'">
             <el-col :span="4">보기</el-col>
             <el-col :span="20">
-              <span class="choices" v-for="(choice, index) in surveyResult.choice"><span class="index">{{ index + 1 }} .</span> {{ choice }}</span>
+              <span class="choices" v-for="(choice, index) in surveyResult.choice" :key="(choice, index)"><span class="index">{{ index + 1 }} .</span> {{ choice }}</span>
             </el-col>
           </el-row>
         </el-card>

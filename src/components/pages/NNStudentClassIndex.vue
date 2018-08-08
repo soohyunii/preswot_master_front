@@ -1,5 +1,5 @@
 <template>
-  <div class="bt-container">
+  <div class="bt-container" oncontextmenu="return false">
     <resize-observer @notify="handleResize" />
     <h2>수강중인 과목</h2>
     <class-intro-card-grid

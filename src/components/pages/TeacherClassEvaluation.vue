@@ -1,5 +1,5 @@
 <template>
-  <div class="bt-container">
+  <div class="bt-container" oncontextmenu="return false">
     <el-container>
       <el-main v-if="currentTeachingClass">
 

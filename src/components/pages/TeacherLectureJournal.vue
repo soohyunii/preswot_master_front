@@ -1,5 +1,5 @@
 <template>
-  <div v-if="analysisData && analysisData.result1 && analysisData.result1[0]">
+  <div v-if="analysisData && analysisData.result1 && analysisData.result1[0]" oncontextmenu="return false">
     <div class="classTitle">{{ analysisData['result1'][0].name }} > 저널링</div>
 
     <el-tabs v-model="activeTab">
@@ -97,7 +97,6 @@
             </template>
           </el-table-column>
         </el-table>
-          </el-col>
         </el-row>
       </el-tab-pane>
       <el-tab-pane label="키워드 저널링" name="keyword">

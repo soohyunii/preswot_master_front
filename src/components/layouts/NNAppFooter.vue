@@ -1,6 +1,6 @@
 <template>
   <!-- <div id="app_footer_wrapper" v-show="!isLive"> -->
-  <div id="app_footer_wrapper">
+  <div id="app_footer_wrapper" oncontextmenu="return false">
     <div class="bt-container">
       <div style="position: relative">
         <div :class="$attachReactablePostfix('div1')">

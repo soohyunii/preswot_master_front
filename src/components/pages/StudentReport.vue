@@ -1,5 +1,5 @@
 <template>
-  <div class="grid-content bg-white">
+  <div class="grid-content bg-white" oncontextmenu="return false">
     <h1>학생 보고서</h1>
     <hr />
     <h2>등급추이</h2>

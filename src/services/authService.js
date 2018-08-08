@@ -33,4 +33,15 @@ export default {
   register({ input }) {
     return http.post('/users', input);
   },
+  checkUserPW({ password }) {
+    return http.post('/users/check', {
+      password: password,  // eslint-disable-line
+    });
+  },
+  returnUserInfo({ userID }) {
+    return http.get(`users/${userID}`);
+  },
+  editUser({ userID, input }) {
+    return http.put(`users/${userID}`, input);
+  },
 };

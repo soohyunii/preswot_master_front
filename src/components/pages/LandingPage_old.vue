@@ -1,5 +1,5 @@
 <template>
-  <div id="landing_page_wrapper">
+  <div id="landing_page_wrapper" oncontextmenu="return false">
     <resize-observer @notify="handleResize" />
     <el-container class="container" id="landing_page_container">
       <el-main>

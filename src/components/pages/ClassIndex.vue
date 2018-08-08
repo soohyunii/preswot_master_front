@@ -1,6 +1,6 @@
 <template>
   <!-- <div class="class-index"> -->
-  <div class="bt-container">
+  <div class="bt-container" oncontextmenu="return false">
     <el-row>
       <el-col
         v-for="item in openedClassList"

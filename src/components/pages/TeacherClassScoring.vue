@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper" oncontextmenu="return false">
     <el-container>
       <el-main v-if="currentTeachingClass">
         <h2>{{ currentTeachingClass.name }}</h2><hr>

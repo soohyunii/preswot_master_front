@@ -1,5 +1,6 @@
 <template>
-  <div :id="$attachReactablePostfix('app')" :style="{ backgroundImage: ('url('+require('@/assets/study05.jpg')+')') }">
+  <div :id="$attachReactablePostfix('app')" :style="{ backgroundImage: ('url('+require('@/assets/study05.jpg')+')') }"
+   oncontextmenu="return false">
     <el-container>
       <el-header>
         <app-header />

@@ -1,5 +1,5 @@
 <template>
-  <div id="teacher_class_index_wrapper" class="bt-container">
+  <div id="teacher_class_index_wrapper" class="bt-container" oncontextmenu="return false">
     <h2 class="page-title">강의 중인 과목</h2>
     <div class="right-align">
       <router-link to="/a/teacher/NNclass/new">

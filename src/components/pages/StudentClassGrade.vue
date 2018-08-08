@@ -1,7 +1,7 @@
 <template>
-  <div id="student_class_grade_wrapper" class="bt-container">
+  <div id="student_class_grade_wrapper" class="bt-container" oncontextmenu="return false">
     <h2>{{ currentStudyingClass(classId) ? currentStudyingClass(classId).name : '' }} > 결과보기</h2>
-    <div class="one-lecture-wrapper" v-for="lecture in questionList">
+    <div class="one-lecture-wrapper" v-for="lecture in questionList" :key="lecture">
       <h3>{{ lecture.name }}</h3>
       <el-table :data="lecture.questions">
         <el-table-column

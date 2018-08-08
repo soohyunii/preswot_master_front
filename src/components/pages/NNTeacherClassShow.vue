@@ -1,5 +1,5 @@
 <template>
-  <div id="teacher_lecture_index_wrapper" class="bt-container">
+  <div id="teacher_lecture_index_wrapper" class="bt-container" oncontextmenu="return false">
       <h2 class="page-title">{{ currentTeachingClass(classId) ? currentTeachingClass(classId).name : '' }}</h2>
     <div class="right-align-margin-bottom-15">
       <el-button @click="onClick('EVALUATION')" :class="$attachReactablePostfix('el-btn')">과목진단</el-button>

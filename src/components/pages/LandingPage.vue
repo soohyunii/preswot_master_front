@@ -1,5 +1,5 @@
 <template>
-  <div id="landing_page_wrapper" class="bt-container">
+  <div id="landing_page_wrapper" class="bt-container" oncontextmenu="return false">
     <pre :class="$attachReactablePostfix('wise-saying')">
       배움은 우연히 얻을 수 없다. 그것은 타는 열정으로
       구해야 하며, 부지런함으로 참여해야 한다.

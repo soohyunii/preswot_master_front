@@ -1,9 +1,9 @@
 <template>
-  <div id="teacher_class_grading_wrapper" class="bt-container">
+  <div id="teacher_class_grading_wrapper" class="bt-container" oncontextmenu="return false">
     <h2>{{ currentTeachingClass(classId) ? currentTeachingClass(classId).name : '' }} > 결과보기</h2>
     <el-tabs v-model="activeTab">
       <el-tab-pane label="문항 결과" name="question">
-        <div class="one-lecture-wrapper" v-for="lecture in questionList">
+        <div class="one-lecture-wrapper" v-for="lecture in questionList" :key="lecture">
           <h3>{{ lecture.name }}</h3>
           <el-table :data="lecture.questions">
             <el-table-column
@@ -41,7 +41,7 @@
       </el-tab-pane>
 
       <el-tab-pane label="설문 결과" name="survey">
-        <div class="one-lecture-wrapper" v-for="lecture in surveyList">
+        <div class="one-lecture-wrapper" v-for="lecture in surveyList" :key="lecture">
           <h3>{{ lecture.name }}</h3>
           <el-table :data="lecture.surveys">
             <el-table-column

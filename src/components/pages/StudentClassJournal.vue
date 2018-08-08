@@ -1,5 +1,5 @@
 <template>
-  <div v-if="analysisData && analysisData[0]" class="bt-container">
+  <div v-if="analysisData && analysisData[0]" class="bt-container" oncontextmenu="return false">
     <div class="classTitle">{{ analysisData[0].class_name }} > 저널링</div>
     <el-tabs v-model="activeTab">
       <el-tab-pane label="강의 흐름" name="basic">

@@ -135,6 +135,7 @@ export default {
       'deleteLectureKeywords',
     ]),
     onClick(type, payload) {
+      const vm = this;
       switch (type) {
         case 'ADD': {
           this.$refs.elForm.validate(((valid) => {
@@ -148,7 +149,11 @@ export default {
               }
               // keyvalue의 값을 입력하지 않았거나 그 값이 1~100 사이의 값이 아닐 경우 다시 값을 요청받음
               if (keyvalue > 100 || keyvalue < 1 || keyvalue.length === 0) {
-                alert('키워드에 대한 중요도는 100 이하 1 이상의 값으로 입력해주세요.'); // eslint-disable-line
+                vm.$notify({
+                  title: '알림',
+                  message: '키워드에 대한 중요도는 100 이하 1 이상의 값으로 입력해주세요.',
+                  type: 'warning',
+                });
                 this.$refs.elForm.resetFields();
                 return;
               }
@@ -185,7 +190,11 @@ export default {
           const keyvalue = payload.weight;
           if (payload.edit === true) {
             if (keyvalue > 100 || keyvalue < 1 || keyvalue.length === 0) {
-              alert('키워드에 대한 중요도는 1 이상 100 이하의 값으로 입력해주세요.'); // eslint-disable-line
+              vm.$notify({
+                title: '알림',
+                message: '키워드에 대한 중요도는 100 이하 1 이상의 값으로 입력해주세요.',
+                type: 'warning',
+              });
               return;
             }
           }

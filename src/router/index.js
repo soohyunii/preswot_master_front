@@ -13,6 +13,7 @@ import ClassDetail from '../components/pages/ClassDetail';
 // import Test from '../components/TestComponent';
 import authRoutes from './authRoutes';
 import Profile from '../components/pages/Profile';
+import ProfileEdit from '../components/pages/ProfileEdit';
 
 Vue.use(Router);
 
@@ -38,6 +39,11 @@ export default new Router({
       path: '/profile',
       name: 'Profile',
       component: Profile,
+    },
+    {
+      path: '/profileEdit',
+      name: ProfileEdit,
+      component: ProfileEdit,
     },
     {
       path: '/tos',

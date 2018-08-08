@@ -1,5 +1,5 @@
 <template>
-  <div class="bt-container">
+  <div class="bt-container" oncontextmenu="return false">
     <div class="wrapper"> <!-- position:absolute의 부모가 되기 위해 relative 속성 부여 -->
       <img class="opac" :src="require('@/assets/image10.jpg')" height="500" width="100%">
       <div class="class-title-info">

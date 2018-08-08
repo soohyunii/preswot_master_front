@@ -1,5 +1,5 @@
 <template>
-  <div id="teacher_lecture_live_wrapper" class="bt-container">
+  <div id="teacher_lecture_live_wrapper" class="bt-container" oncontextmenu="return false">
     <template v-if="$isPhone">
       <h2>{{ path }}</h2><br/>
         <youtube

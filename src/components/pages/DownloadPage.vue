@@ -1,5 +1,5 @@
 <template>
-  <div id="download_page_wrapper" class="bt-container">
+  <div id="download_page_wrapper" class="bt-container" oncontextmenu="return false">
     <h1>다운로드 페이지</h1>
     <h3>- 로그 프로그램</h3>
     <a :href = "downloadLink">다운로드</a> <br /><br />
