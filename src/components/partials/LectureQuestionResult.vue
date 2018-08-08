@@ -10,28 +10,31 @@
         <el-col :span="7">총 {{ questionResult.numberOfStudent }}건</el-col>
         <el-button v-if="resultType === '실시간'" style="float:right" type="primary" size="small" icon="el-icon-refresh" @click="refresh()">새로고침</el-button>
       </el-row>
-      <br />
       <el-row>
         <el-col :span="12">
-          {{ questionResult.obAnswers }}
+          <span v-if="questionResult.type === '객관'" class="table-caption">단위 : 명</span>
           <el-table v-if="questionResult.type === '객관'"
-                    :data="questionResult.obAnswers"
+                    :data="questionResultSummary"
                     :header-cell-style="changeHead"
                     style="margin-bottom: 20px;">
             <el-table-column
-              prop="choice"
-              label="보기"
+              prop="numAnswer"
+              label="정답"
               align="center">
             </el-table-column>
             <el-table-column
-              prop="number"
-              label="선택한 학생 수"
+              prop="numPartialAnswer"
+              label="부분 정답"
+              align="center">
+            </el-table-column>
+            <el-table-column
+              prop="numWrongAnswer"
+              label="오답"
               align="center">
             </el-table-column>
           </el-table>
         </el-col>
       </el-row>
-
       <el-table :data="questionResult.answers"
                 :header-cell-style="changeHead"
                 :default-sort="{prop: 'score', order: 'ascending'}"
@@ -118,11 +121,15 @@
   .item + .item:before {
     content: ", ";
   }
+  .table-caption {
+    float: right;
+  }
 </style>
 
 
 <script>
   import { mapActions, mapState, mapGetters } from 'vuex';
+  import questionService from '../../services/questionService';
 
   export default {
     name: 'LectureQuestionResult',
@@ -130,6 +137,11 @@
     data() {
       return {
         activeTab: 'question',
+        questionResultSummary: [{
+          numAnswer: null,
+          numPartialAnswer: null,
+          numTotal: null,
+        }],
       };
     },
     computed: {
@@ -147,14 +159,22 @@
     async created() {
       const vm = this;
       // TODO: 부모 component에서 받아 오는 형식으로 수정
-      if (!vm.theResult) {
-        await vm.getClassTotalResult({
-          classId: vm.classId,
-        });
-      }
+      await vm.getClassTotalResult({
+        classId: vm.classId,
+      });
       vm.getQuestionResult({
         itemId: vm.itemId,
       });
+      const questionId = vm.questionResult.questionId;
+      const res = await questionService.getQuestionResult({
+        questionId,
+      });
+      const numAnswer = res.data.num_students_answer;
+      const numPartialAnswer = res.data.num_students_partial_answer;
+      const numTotal = res.data.num_students_total;
+      vm.questionResultSummary[0].numAnswer = numAnswer;
+      vm.questionResultSummary[0].numPartialAnswer = numPartialAnswer;
+      vm.questionResultSummary[0].numWrongAnswer = numTotal - numAnswer - numPartialAnswer;
     },
     methods: {
       ...mapActions('grading', [
@@ -173,6 +193,16 @@
         vm.getQuestionResult({
           itemId: vm.itemId,
         });
+        const questionId = vm.questionResult.questionId;
+        const res = await questionService.getQuestionResult({
+          questionId,
+        });
+        const numAnswer = res.data.num_students_answer;
+        const numPartialAnswer = res.data.num_students_partial_answer;
+        const numTotal = res.data.num_students_total;
+        vm.questionResultSummary[0].numAnswer = numAnswer;
+        vm.questionResultSummary[0].numPartialAnswer = numPartialAnswer;
+        vm.questionResultSummary[0].numWrongAnswer = numTotal - numAnswer - numPartialAnswer;
       },
       changeHead() {
         return { backgroundColor: '#EAEAEA' };

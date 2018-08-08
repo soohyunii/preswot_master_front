@@ -9,6 +9,16 @@
       :data="data"
       :lectureItemId="lectureItemId"
       :onClick="onClick"/>
+    <!-- <lecture-question-result
+      v-if="data.type === 0"
+      :classId="classId"
+      :itemId="lectureItemId"
+      resultType="실시간"/>
+    <lecture-survey-result
+      v-if="data.type === 1"
+      :classId="classId"
+      :itemId="lectureItemId"
+      resultType="실시간"/> -->
   </div>
 </template>
 

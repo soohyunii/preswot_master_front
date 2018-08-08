@@ -113,6 +113,7 @@ export default {
               score: item.questions[0].score,
               avgScore,
               itemId: item.lecture_item_id,
+              questionId: item.questions[0].question_id,
               question: item.questions[0].question,
               keywords: item.questions[0].question_keywords,
               choice: item.questions[0].choice,
@@ -147,48 +148,51 @@ export default {
           }
         }
       }
-      questionResult.itemName = theQuestion.name;
-      questionResult.type = theQuestion.type;
-      questionResult.question = theQuestion.question;
-      questionResult.keywords = theQuestion.keywords;
-      questionResult.score = theQuestion.score;
-      questionResult.avgScore = theQuestion.avgScore;
-      questionResult.numberOfStudent = theQuestion.numberOfStudent;
-      questionResult.summitted = questionResult.numberOfStudent > 0;
-      questionResult.answers = theQuestion.answers;
-      questionResult.answer = theQuestion.answer;
-      questionResult.inputDescription = theQuestion.inputDescription;
-      questionResult.outputDescription = theQuestion.outputDescription;
-      questionResult.sampleInput = theQuestion.sampleInput;
-      questionResult.sampleOutput = theQuestion.sampleOutput;
-      questionResult.timeLimit = theQuestion.timeLimit;
-      questionResult.memoryLimit = theQuestion.memoryLimit;
-      questionResult.acceptLanguage = theQuestion.acceptLanguage;
-      if (questionResult.type === '객관') {
-        questionResult.choice = theQuestion.choice;
-        questionResult.obAnswers = [];
-        for (let i = 0; i < questionResult.choice.length; i += 1) {
-          questionResult.obAnswers.push({
-            choice: questionResult.choice[i],
-            number: 0,
-          });
-        }
-        for (let i = 0; i < questionResult.numberOfStudent; i += 1) {
-          questionResult
-            .obAnswers[Number.parseInt(theQuestion.answers[i].answer, 10) - 1].number += 1;
-        }
-      } else if (questionResult.type === 'SW') {
-        for (let i = 0; i < questionResult.numberOfStudent; i += 1) {
-          const temp = questionResult.answers[i].oj_solution.result;
-          if (temp === 0) questionResult.answers[i].swResult = '대기중';
-          if (temp === 1 || temp === 11) questionResult.answers[i].swResult = '컴파일 에러';
-          if (temp === 3) questionResult.answers[i].swResult = '채점중';
-          if (temp === 4) questionResult.answers[i].swResult = '맞음';
-          if (temp === 6) questionResult.answers[i].swResult = '틀림';
-          if (temp === 7) questionResult.answers[i].swResult = '시간 초과';
-          if (temp === 8) questionResult.answers[i].swResult = '메모리 초과';
-          if (temp === 9) questionResult.answers[i].swResult = '출력 초과';
-          if (temp === 10) questionResult.answers[i].swResult = '런타임 에러';
+      if (theQuestion) {
+        questionResult.questionId = theQuestion.questionId;
+        questionResult.itemName = theQuestion.name;
+        questionResult.type = theQuestion.type;
+        questionResult.question = theQuestion.question;
+        questionResult.keywords = theQuestion.keywords;
+        questionResult.score = theQuestion.score;
+        questionResult.avgScore = theQuestion.avgScore;
+        questionResult.numberOfStudent = theQuestion.numberOfStudent;
+        questionResult.summitted = questionResult.numberOfStudent > 0;
+        questionResult.answers = theQuestion.answers;
+        questionResult.answer = theQuestion.answer;
+        questionResult.inputDescription = theQuestion.inputDescription;
+        questionResult.outputDescription = theQuestion.outputDescription;
+        questionResult.sampleInput = theQuestion.sampleInput;
+        questionResult.sampleOutput = theQuestion.sampleOutput;
+        questionResult.timeLimit = theQuestion.timeLimit;
+        questionResult.memoryLimit = theQuestion.memoryLimit;
+        questionResult.acceptLanguage = theQuestion.acceptLanguage;
+        if (questionResult.type === '객관') {
+          questionResult.choice = theQuestion.choice;
+          questionResult.obAnswers = [];
+          for (let i = 0; i < questionResult.choice.length; i += 1) {
+            questionResult.obAnswers.push({
+              choice: questionResult.choice[i],
+              number: 0,
+            });
+          }
+          for (let i = 0; i < questionResult.numberOfStudent; i += 1) {
+            questionResult
+              .obAnswers[Number.parseInt(theQuestion.answers[i].answer, 10) - 1].number += 1;
+          }
+        } else if (questionResult.type === 'SW') {
+          for (let i = 0; i < questionResult.numberOfStudent; i += 1) {
+            const temp = questionResult.answers[i].oj_solution.result;
+            if (temp === 0) questionResult.answers[i].swResult = '대기중';
+            if (temp === 1 || temp === 11) questionResult.answers[i].swResult = '컴파일 에러';
+            if (temp === 3) questionResult.answers[i].swResult = '채점중';
+            if (temp === 4) questionResult.answers[i].swResult = '맞음';
+            if (temp === 6) questionResult.answers[i].swResult = '틀림';
+            if (temp === 7) questionResult.answers[i].swResult = '시간 초과';
+            if (temp === 8) questionResult.answers[i].swResult = '메모리 초과';
+            if (temp === 9) questionResult.answers[i].swResult = '출력 초과';
+            if (temp === 10) questionResult.answers[i].swResult = '런타임 에러';
+          }
         }
       }
       commit('updateQuestionResult', {

@@ -1,9 +1,8 @@
 <template>
   <div>
     <el-table :data="currentData">
-      <!-- TODO: index를 sequence로 교체 -->
       <el-table-column
-        type="index"
+        prop="sequence"
         label="No."
         width="100"
         sortable >
@@ -26,14 +25,14 @@
         align="center"
       >
         <template slot-scope="scope">
-          <el-button type="primary" size="small" @click="onClick('SHOW', scope.row.lecture_item_id, scope.$index)">
+          <el-button type="primary" size="small" @click="onClick('SHOW', scope.row.lecture_item_id, scope.row.sequence - 1)">
             보이기
           </el-button>
         </template>
       </el-table-column>
     </el-table>
     <br />
-    <el-pagination id="lecture_item_pagination" layout="prev, pager, next" :page-size="5" :total="11" @current-change="handlePageChange" />
+    <el-pagination id="lecture_item_pagination" layout="prev, pager, next" :page-size="numPageElement" :total="numData" @current-change="handlePageChange" />
   </div>
 </template>
 
@@ -44,7 +43,6 @@ export default {
   name: 'LectureItemList',
   props: ['dataList', 'onClick', 'isAuto'],
   data() {
-    const vm = this;
     return {
       currentData: [],
       numData: 0,

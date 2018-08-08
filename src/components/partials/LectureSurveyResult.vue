@@ -91,11 +91,9 @@
     },
     async created() {
       const vm = this;
-      if (!vm.theResult) {
-        await vm.getClassTotalResult({
-          classId: vm.classId,
-        });
-      }
+      await vm.getClassTotalResult({
+        classId: vm.classId,
+      });
       vm.getSurveyResult({
         itemId: vm.itemId,
       });

@@ -303,7 +303,6 @@ export default {
     handleClose() {
       const vm = this;
       vm.dialogVisible = false;
-      console.log('dialog closed!');
     },
   },
 };
