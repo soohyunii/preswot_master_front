@@ -8,7 +8,7 @@
         <el-table-column
           prop="index"
           label="과목 번호"
-          width="150"
+          width="100"
           align="left"
         >
           <template slot-scope="scope">
@@ -19,7 +19,7 @@
         <el-table-column
           prop="name"
           label="과목"
-          width="150"
+          width="200"
           align="left"
         ></el-table-column>
 
