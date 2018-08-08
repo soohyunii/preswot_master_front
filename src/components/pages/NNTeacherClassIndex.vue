@@ -1,14 +1,6 @@
 <template>
   <div id="teacher_class_index_wrapper" class="bt-container">
-    <h2 class="page-title">강의 중인 과목</h2>
-    <div class="right-align">
-      <router-link to="/a/teacher/NNclass/new">
-        <el-button type="primary" :class="$attachReactablePostfix('right-align-btn')">
-           <div class="right-align-btn-layer">과목 개설</div>
-        </el-button>
-      </router-link>
-    </div>
-
+    <h2 class="page-title">강의중인 과목 목록</h2>
     <class-list
       @row-click="onClickClass"
       @delete="onClickDelete"
@@ -20,10 +12,11 @@
 
     <br />
 
-    <!-- <div class="right-align"> --><!-- soohyun -->
-      <div class="center-align">
+    <div class="right-align">
       <router-link to="/a/teacher/NNclass/new">
-        <el-button :class="$attachReactablePostfix('btn-add-lecture')" type="primary">강의 추가</el-button>
+        <el-button  type="primary" :class="$attachReactablePostfix('right-align-btn')">
+          <div class="right-align-btn-layer">과목 개설</div>
+        </el-button>
       </router-link>
     </div>
   </div>
@@ -135,20 +128,16 @@ export default {
   .right-align {
       text-align: right;
   }
-
+  
   .right-align-btn {
-      width: 140px;
+    width: 100%;
     height: 40px;
     border-radius: 3px;
-    background-color: #ffffff;
     border: solid 1px #1989fa;
-    margin-top : 40px;
-      margin-left : 12px;
-      margin-bottom : 25px;
   }
 
   .right-align-btn-layer {
-    width: 47px;
+    width: 94px;
     height: 12px;
     font-family: SpoqaHanSans;
     font-size: 12px;
@@ -158,11 +147,11 @@ export default {
     line-height: 1;
     letter-spacing: normal;
     text-align: center;
-    color: #1989fa;
-    
+    color: #ffffff;
     margin-left: auto;
     margin-right: auto;
   }
+  
   .el-table th{
     font-family: SpoqaHanSans;
     font-size: 14px;
@@ -187,10 +176,6 @@ export default {
 }
 
 .right-align-btn-phone {
-  display: none;
-}
-
-.btn-add-lecture-phone {
   display: none;
 }
 </style>

@@ -197,13 +197,16 @@ export default {
           // 평균
           concen_pre_avg: state.currentClassStat[i * 3].avg_concentration_score,
           concen_rea_avg: state.currentClassStat[(i * 3) + 1].avg_concentration_score,
-          concen_rev_avg: state.currentClassStat[(i * 3) + 2].avg_concentration_score,
+          concen_rev_avg: state.currentClassStat[(i * 3) + 2] ?
+            state.currentClassStat[(i * 3) + 2].avg_concentration_score : 0,
           unders_pre_avg: state.currentClassStat[i * 3].avg_understanding_score,
           unders_rea_avg: state.currentClassStat[(i * 3) + 1].avg_understanding_score,
-          unders_rev_avg: state.currentClassStat[(i * 3) + 2].avg_understanding_score,
+          unders_rev_avg: state.currentClassStat[(i * 3) + 2] ?
+            state.currentClassStat[(i * 3) + 2].avg_understanding_score : 0,
           parti_pre_avg: state.currentClassStat[i * 3].avg_participation_score,
           parti_rea_avg: state.currentClassStat[(i * 3) + 1].avg_participation_score,
-          parti_rev_avg: state.currentClassStat[(i * 3) + 2].avg_participation_score,
+          parti_rev_avg: state.currentClassStat[(i * 3) + 2] ?
+            state.currentClassStat[(i * 3) + 2].avg_participation_score : 0,
         });
         commit('updateResultData', {
           ResultData: resultData,
