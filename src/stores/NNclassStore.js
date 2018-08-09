@@ -100,18 +100,14 @@ export default {
       const res = await classService.getMyClassList();
 
       const sc = res.data.studyingClasses;
-      if (sc && sc.length !== 0) {
-        commit('updateStudyingClassList', {
-          studyingClassList: sc,
-        });
-      }
+      commit('updateStudyingClassList', {
+        studyingClassList: sc,
+      });
 
       const tc = res.data.teachingClasses;
-      if (tc && tc.length !== 0) {
-        commit('updateTeachingClassList', {
-          teachingClassList: tc,
-        });
-      }
+      commit('updateTeachingClassList', {
+        teachingClassList: tc,
+      });
     },
     async getClass({ state, commit }, { type, classId }) {
       const res = await classService.getClass({
@@ -158,6 +154,12 @@ export default {
     async postClassUser(_, { classId }) {
       await classService.postClassUser({
         id: classId,
+      });
+    },
+    async deleteClassUser(_, { classId, userId }) {
+      await classService.deleteClassUser({
+        classId,
+        userId,
       });
     },
   },

@@ -60,7 +60,6 @@ export default {
   },
   async mounted() {
     const vm = this;
-    // 부모 component로부터 dataList를 받아오는데 걸리는 시간 문제가 발생하여 1초의 텀을 줌.
     vm.currentData = await vm.dataList.slice(0, vm.numPageElement);
     vm.numData = vm.dataList.length;
   },

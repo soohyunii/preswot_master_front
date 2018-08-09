@@ -1,6 +1,5 @@
 <template>
   <div id="material_upload_wrapper">
-    <br />
     <el-upload
       action="#"
       multiple
@@ -9,7 +8,7 @@
       :file-list="initFileList"
       ref="materialUpload"
     >
-      <el-button slot="trigger" type="primary">강의 자료 추가 [+]</el-button>
+      <el-button slot="trigger" type="primary">강의 자료 추가</el-button>
     </el-upload>
   </div>
 </template>
@@ -36,14 +35,17 @@ export default {
     async doUpload(req) {
       const vm = this;
       // 서버에 저장할 것.
+
       const res = await lectureService.postLectureMaterial({
         lectureId: vm.$route.params.lectureId,
         file: req.file,
       });
+
       // guid 받아서 uploadFiles 배열속 객체의 guid 속성으로 넣을 것
       const res2 = vm.$refs.materialUpload.uploadFiles.find(
         element => element.uid === req.file.uid,
       );
+
       res2.file_guid = res.data.file.file_guid;
     },
     async handleRemove(file) {

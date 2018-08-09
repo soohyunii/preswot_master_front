@@ -118,6 +118,7 @@ export default {
       dialogVisible: false,
       lectureItem: undefined,
       currentLectureItemId: -1,
+      isSubmitted: false,
     };
   },
   computed: {
@@ -161,7 +162,6 @@ export default {
     onClick(type, data) {
       // const vm = this;
       switch (type) {
-        // TODO: 강의 순서에 대한 변수 생성(at backend) 후, start_time을 순서 변수로 변경
         case 'ADD_LC_ITEM_SEQUENCE': {
           this.lectureItemList.forEach((item, index) => {
             lectureItemService.putLectureItem({
@@ -184,6 +184,7 @@ export default {
           break;
         }
         case 'SUBMIT': {
+          this.isSubmitted = true;
           switch (data[0]) {
             case 0: { // 문항
               studentService.submitQuestion({
@@ -233,6 +234,10 @@ export default {
     async onClickSimulateLectureItem(lectureItemId) {
       const vm = this;
       const res = await lectureItemService.getLectureItem({ lectureItemId });
+      await lectureItemService.putLectureItem({
+        lectureItemId,
+        opened: 1,
+      });
       EventBus.$emit('clearAnswer');
       vm.currentLectureItemId = lectureItemId;
       vm.dialogVisible = true;
@@ -299,10 +304,24 @@ export default {
         }
       }, 1000);
     },
-    // TODO: 백엔드 부분에서 선생님이 제출한 로그 삭제하는 api 추가되면, close시 제출 로그 삭제하는 기능 구현하기
     handleClose() {
       const vm = this;
       vm.dialogVisible = false;
+      if (vm.isSubmitted) {
+        if (vm.lectureItem.type === 0) {
+          studentService.deleteQuestionAnswerLog({
+            questionId: vm.lectureItem.questions[0].question_id,
+          });
+        } else if (vm.lectureItem.type === 1) {
+          studentService.deleteSurveyAnswerLog({
+            surveyId: vm.lectureItem.surveys[0].survey_id,
+          });
+        }
+      }
+      lectureItemService.putLectureItem({
+        lectureItemId: vm.lectureItem.lecture_item_id,
+        opened: 0,
+      });
     },
   },
 };
