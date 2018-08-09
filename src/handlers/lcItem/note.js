@@ -128,5 +128,13 @@ export default class NoteHandler extends LcItemHandler {
         }
       }
     }
+
+    if (inputBody.noteType === 'LINK' || inputBody.noteType === 'YOUTUBE') {
+      if (inputTail.oldfile !== undefined) {
+        fileService.deleteFile({
+          fileGuid: inputTail.oldfile.file_guid,
+        });
+      }
+    }
   }
 }

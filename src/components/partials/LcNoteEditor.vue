@@ -117,7 +117,6 @@ export default {
   methods: {
     onChangeBody() {
       const vm = this;
-      vm.inputTail = Object.assign({}, vm.initialInputTail);
 
       if (vm.inputBody.noteType === 'IMAGE' || vm.inputBody.noteType === 'DOCS') {
         vm.$refs.noteUpload.uploadFiles = [];
