@@ -3,7 +3,7 @@
     <pre :class="$attachReactablePostfix('wise-saying')">
       {{selectedSaying}}
     </pre>
-    <div :class="$attachReactablePostfix('search-box')">
+    <div :class="$attachReactablePostfix('search-box')" v-if="authType !== 1">
       <i id="icon_search" class="el-icon-search" style="position:absolute; left: 18px; top: 8px" @click="onClick('asdfsadf')"></i>
       <input v-model="searchText" type="text" id="headerInput" placeholder="What do you want to learn?"/>
     </div>
@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import utils from '../../utils';
+
 export default {
   data() {
     const saying = [
@@ -28,6 +30,13 @@ export default {
     // 출력할 명언 무작위로 선택
     const index = Math.floor(Math.random() * this.saying.length);
     this.selectedSaying = this.saying[index];
+  },
+  computed: {
+    authType() {
+      const vm = this;
+      const jwt = vm.$store.state.auth.jwt;
+      return utils.getAuthTypeFromJwt(jwt);
+    },
   },
   methods: {
     async onClick(type) {
