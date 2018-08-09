@@ -113,12 +113,31 @@
         <p>토론</p>
         <discussion :lectureItemId="data.lecture_item_id"/>
       </div>
+      <!-- TODO: 자료 -->
+      <div v-if="data.type === 4" class="note">
+        <p>자료</p>
+        <br>
+        <div v-if="data.notes[0].note_type === 0">
+          <img :src="Url">
+        </div>
+        <div v-if="data.notes[0].note_type === 1">
+          <iframe width="500" height="470" frameborder="0" :src="Url"></iframe>
+        </div>
+        <div v-if="data.notes[0].note_type === 2">
+          <a :href="Url" target="_blank">{{data.notes[0].url}}</a>
+        </div>
+        <div v-if="data.notes[0].note_type === 3">
+          <iframe width="500" height="315" frameborder="0" :src="Url"></iframe>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { getIdFromURL } from 'vue-youtube-embed';
 import Discussion from './NNDiscussion';
+import { baseUrl } from '../../services/config';
 
 export default {
   props: ['data', 'onClick'],
@@ -126,6 +145,31 @@ export default {
     return {
       answer: [],
     };
+  },
+  computed: {
+    Url() {
+      const vm = this;
+      if (vm.data.type === 4) {
+        if (vm.data.notes[0].note_type === 0) {
+          const url = baseUrl + vm.data.notes[0].files[0].client_path;
+          return url;
+        }
+        if (vm.data.notes[0].note_type === 1) {
+          const url = baseUrl + vm.data.notes[0].files[0].client_path;
+          // return `https://view.officeapps.live.com/op/embed.aspx?src=${url}`;
+          return `http://docs.google.com/gview?url=${url}&embedded=true`;
+        }
+        if (vm.data.notes[0].note_type === 2) {
+          return vm.data.notes[0].url;
+        }
+        if (vm.data.notes[0].note_type === 3) {
+          const id = getIdFromURL(vm.data.notes[0].url);
+          const interval = vm.data.notes[0].youtube_interval.split('<?>');
+          return `https://www.youtube.com/embed/${id}?start=${interval[0]}&end=${interval[1]}`;
+        }
+      }
+      return '';
+    },
   },
   methods: {
     preOnClick(...args) {
@@ -205,6 +249,12 @@ export default {
 
   .lecture-item .discuss{
     padding:5px 0 0 0;
+    height:530px;
+  }
+
+  .lecture-item .note{
+    padding:10px;
+    margin:10px;
     height:530px;
   }
 }

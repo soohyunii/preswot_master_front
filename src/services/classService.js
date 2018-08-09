@@ -142,4 +142,10 @@ export default {
   }) {
     return http.post(`/classes/${id}/user`);
   },
+  deleteClassUser({
+    classId,
+    userId,
+  }) {
+    return http.delete(`/classes/${classId}/user/${userId}`);
+  },
 };

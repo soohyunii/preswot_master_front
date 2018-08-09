@@ -6,7 +6,7 @@
           <span :class="$attachReactablePostfix('title')">PRESWOT</span>
         </div>
       </router-link>
-      <router-link to="/classes" v-if="authType === 0" >
+      <router-link to="/classes" v-if="authType !== 1" >
         <div :class="$attachReactablePostfix('div2')">
           <span :class="$attachReactablePostfix('common')">과목목록</span>
         </div>
