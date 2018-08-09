@@ -11,13 +11,13 @@ export default {
   },
   putNote({
     noteId,
-    type,
+    note_type,
     url,
     youtube_interval,
   }) {
     const param = {};
 
-    utils.assignIfNotNil(param, { type });
+    utils.assignIfNotNil(param, { note_type });
     utils.assignIfNotNil(param, { url });
     utils.assignIfNotNil(param, { youtube_interval });
 
@@ -29,14 +29,11 @@ export default {
   }) {
     const form = new FormData();
     form.append('file', file, file.name);
-    return http.put(`/notes/${noteId}/file`, form, {
+    return http.post(`/notes/${noteId}/file`, form, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
-  },
-  getNoteFile({ noteId }) {
-    return http.get(`/notes/${noteId}/files`);
   },
   // deleteFile은 FileService에 있는거 사용
 };

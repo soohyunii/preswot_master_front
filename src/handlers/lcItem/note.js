@@ -1,7 +1,8 @@
 import LcItemHandler from './index';
 import noteService from '../../services/noteService';
-// import fileService from '../../services/fileService';
+import fileService from '../../services/fileService';
 import utils from '../../utils';
+import { baseUrl } from '../../services/config';
 
 export default class NoteHandler extends LcItemHandler {
   /* eslint-disable no-param-reassign */
@@ -9,17 +10,20 @@ export default class NoteHandler extends LcItemHandler {
     const item = vm.lectureItem;
     const n = item.notes[0];
 
-    switch (n.type) {
+    switch (n.note_type) {
       case 0: {
         vm.inputBody.noteType = 'IMAGE';
         vm.$nextTick(() => {
           vm.$set(vm.inputTail, 'file', vm.$refs.noteEditor.$refs.noteUpload.uploadFiles);
-          if (n.file[0] !== undefined) {
+          if (n.files[0] !== undefined) {
             vm.$refs.noteEditor.$refs.noteUpload.uploadFiles.push({
-              name: n.file[0].name,
+              name: n.files[0].name,
+              file_guid: n.files[0].file_guid,
+              url: `${baseUrl}${n.files[0].client_path}`,
             });
             vm.$set(vm.inputTail, 'oldfile', {
-              name: n.file[0].name,
+              name: n.files[0].name,
+              file_guid: n.files[0].file_guid,
             });
           }
         });
@@ -29,12 +33,14 @@ export default class NoteHandler extends LcItemHandler {
         vm.inputBody.noteType = 'DOCS';
         vm.$nextTick(() => {
           vm.$set(vm.inputTail, 'file', vm.$refs.noteEditor.$refs.noteUpload.uploadFiles);
-          if (n.file[0] !== undefined) {
+          if (n.files[0] !== undefined) {
             vm.$refs.noteEditor.$refs.noteUpload.uploadFiles.push({
-              name: n.file[0].name,
+              name: n.files[0].name,
+              file_guid: n.files[0].file_guid,
             });
             vm.$set(vm.inputTail, 'oldfile', {
-              name: n.file[0].name,
+              name: n.files[0].name,
+              file_guid: n.files[0].file_guid,
             });
           }
         });
@@ -48,11 +54,12 @@ export default class NoteHandler extends LcItemHandler {
       case 3: {
         vm.inputBody.noteType = 'YOUTUBE';
         vm.$set(vm.inputTail, 'url', n.url);
-        // FIXME: 백엔드쪽에서 데이터가 어떤 형태로 올지 모르기 때문에 추후 수정.
+
+        const interval = n.youtube_interval.split('<?>');
         const start = new Date(2018, 8, 15, 0, 0, 0);
-        start.setSeconds(n.youtube_interval);
+        start.setSeconds(interval[0]);
         const end = new Date(2018, 8, 15, 0, 0, 0);
-        end.setSeconds(n.youtube_interval);
+        end.setSeconds(interval[1]);
         vm.$set(vm.inputTail, 'interval', [start, end]);
         break;
       }
@@ -74,36 +81,46 @@ export default class NoteHandler extends LcItemHandler {
   static async putChildLectureItem({ noteId, inputBody, inputTail }) {
     const noteType = utils.convertNoteType(inputBody.noteType);
 
-    const start = (3600 * inputTail.interval[0].getHours()) +
-      (60 * inputTail.interval[0].getMinutes()) + inputTail.interval[0].getSeconds();
-    const end = (3600 * inputTail.interval[1].getHours()) +
-      (60 * inputTail.interval[1].getMinutes()) + inputTail.interval[1].getSeconds();
+    let interval = null;
+    if (noteType === 3) {
+      const start = (3600 * inputTail.interval[0].getHours()) +
+        (60 * inputTail.interval[0].getMinutes()) + inputTail.interval[0].getSeconds();
+      const end = (3600 * inputTail.interval[1].getHours()) +
+        (60 * inputTail.interval[1].getMinutes()) + inputTail.interval[1].getSeconds();
+      interval = `${start}<?>${end}`;
+    }
 
     await noteService.putNote({
       noteId,
-      type: noteType,
+      note_type: noteType,
       url: inputTail.url,
-      youtube_interval: `${start}<?>${end}`,
+      youtube_interval: interval,
     });
 
     if (inputBody.noteType === 'IMAGE' || inputBody.noteType === 'DOCS') {
+      // 기존 파일이 존재
       if (inputTail.oldfile !== undefined) {
+        // 새 파일 없으면 수정 전 파일 삭제
         if (inputTail.file[0] === undefined) {
-          // TODO: 파일삭제
+          fileService.deleteFile({
+            fileGuid: inputTail.oldfile.file_guid,
+          });
         }
-        // eslint-disable-next-line
-        if (inputTail.file !== undefined && inputTail.file[0] !== undefined && inputTail.file[0].raw !== undefined) {
-          // TODO: 파일삭제
+        // 수정 후 파일 존재할 경우 기존 파일 삭제 및 새 파일 추가
+        if (inputTail.file[0] !== undefined && inputTail.file[0].raw !== undefined) {
+          fileService.deleteFile({
+            fileGuid: inputTail.oldfile.file_guid,
+          });
           noteService.postNoteFile({
             noteId,
             file: inputTail.file[0].raw,
           });
         }
       }
-
+      // 수정 전 파일이 존재하지 않음
       if (inputTail.oldfile === undefined) {
-        // eslint-disable-next-line
-        if (inputTail.file !== undefined && inputTail.file[0] !== undefined && inputTail.file[0].raw !== undefined) {
+        // 수정 후 파일 존재할 경우 파일 추가
+        if (inputTail.file[0] !== undefined && inputTail.file[0].raw !== undefined) {
           noteService.postNoteFile({
             noteId,
             file: inputTail.file[0].raw,

@@ -116,14 +116,19 @@
       <!-- TODO: 자료 -->
       <div v-if="data.type === 4" class="note">
         <p>자료</p>
-        <div v-if="data.note[0].type === 0"></div>
+        <br>
+        <div v-if="data.notes[0].note_type === 0">
           <img :src="Url">
-        <div v-if="data.note[0].type === 1"></div>
-          <iframe class="doc-viewer" :src="Url"></iframe>
-        <div v-if="data.note[0].type === 2"></div>
-          <a :href="Url" target="_blank">{{data.note[0].link}}</a>
-        <div v-if="data.note[0].type === 3"></div>
-          <iframe width="420" height="315" :src="Url" frameborder="0"></iframe>
+        </div>
+        <div v-if="data.notes[0].note_type === 1">
+          <iframe width="500" height="470" frameborder="0" :src="Url"></iframe>
+        </div>
+        <div v-if="data.notes[0].note_type === 2">
+          <a :href="Url" target="_blank">{{data.notes[0].url}}</a>
+        </div>
+        <div v-if="data.notes[0].note_type === 3">
+          <iframe width="500" height="315" frameborder="0" :src="Url"></iframe>
+        </div>
       </div>
     </div>
   </div>
@@ -145,20 +150,22 @@ export default {
     Url() {
       const vm = this;
       if (vm.data.type === 4) {
-        if (vm.data.note[0].type === 0) {
-          const url = baseUrl + vm.data.note[0].client_path;
+        if (vm.data.notes[0].note_type === 0) {
+          const url = baseUrl + vm.data.notes[0].files[0].client_path;
           return url;
         }
-        if (vm.data.note[0].type === 1) {
-          const url = baseUrl + vm.data.note[0].client_path;
-          return `https://view.officeapps.live.com/op/embed.aspx?src=${url}`;
+        if (vm.data.notes[0].note_type === 1) {
+          const url = baseUrl + vm.data.notes[0].files[0].client_path;
+          // return `https://view.officeapps.live.com/op/embed.aspx?src=${url}`;
+          return `http://docs.google.com/gview?url=${url}&embedded=true`;
         }
-        if (vm.data.note[0].type === 2) {
-          return vm.data.note[0].url;
+        if (vm.data.notes[0].note_type === 2) {
+          return vm.data.notes[0].url;
         }
-        if (vm.data.note[0].type === 3) {
-          const id = getIdFromURL(vm.vm.data.note[0].url);
-          return `https://www.youtube.com/embed/${id}?start=${vm.vm.data.note[0].videoStart}&end=${vm.vm.data.note[0].videoEnd}`;
+        if (vm.data.notes[0].note_type === 3) {
+          const id = getIdFromURL(vm.data.notes[0].url);
+          const interval = vm.data.notes[0].youtube_interval.split('<?>');
+          return `https://www.youtube.com/embed/${id}?start=${interval[0]}&end=${interval[1]}`;
         }
       }
       return '';
@@ -242,6 +249,12 @@ export default {
 
   .lecture-item .discuss{
     padding:5px 0 0 0;
+    height:530px;
+  }
+
+  .lecture-item .note{
+    padding:10px;
+    margin:10px;
     height:530px;
   }
 }

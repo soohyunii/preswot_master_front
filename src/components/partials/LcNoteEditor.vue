@@ -68,9 +68,6 @@
           start-placeholder="Start time"
           end-placeholder="End time">
         </el-time-picker>
-        <!-- <el-input v-model="inputTail.videoStart" placeholder="시작시간" style="display: inline-block; width: 100px;"></el-input>
-        ~
-        <el-input v-model="inputTail.videoEnd" placeholder="종료시간" style="display: inline-block; width: 100px;"></el-input> -->
       </el-form-item>
       <el-form-item label="미리보기" v-if="previewFLAG === true">
         <!-- 종료시간 설정을 위해서 iframe 태그 사용했습니다. url은 유튜브 공유 링크를 입력받는 것이 좋습니다. -->
@@ -133,7 +130,7 @@ export default {
 
       if (vm.inputBody.noteType === 'YOUTUBE') {
         vm.previewFLAG = false;
-        vm.$set(vm.inputTail, 'interval', [new Date(2018, 8, 15, 0, 0, 0), new Date(2018, 8, 15, 23, 59, 59)]);
+        vm.$set(vm.inputTail, 'interval', [new Date(2018, 8, 15, 0, 0, 0), new Date(2018, 8, 15, 0, 59, 59)]);
       }
     },
     reset() {
