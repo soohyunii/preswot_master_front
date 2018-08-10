@@ -37,6 +37,11 @@
         </div>
       </el-form-item>
 
+      <el-form-item label="결과 공개 여부" prop="lcItemResult">
+        <el-switch v-model="resultVisible" @change="onChange"/>
+          <el-input v-model="inputHead.lcItemName" placeholder="내용을 입력해주세요."></el-input>
+      </el-form-item>
+
       <div v-show="!inputHead.lcItemType">
         <el-alert
           title="아이템 유형을 선택해주세요"
@@ -103,6 +108,7 @@ export default {
     LcPracticeEditor,
     LcNoteEditor,
   },
+  props: ['numOfLectureItem'],
   async mounted() {
     const vm = this;
     if (!vm.isNewItem) {
@@ -112,6 +118,8 @@ export default {
       vm.inputHead.lcItemOrder = item.order;
       vm.inputHead.lcItemType = utils.convertLcItemType(item.type);
       vm.inputHead.lcItemName = item.name;
+      vm.inputHead.lcItemResult = item.result;
+      vm.resultVisible = !!item.result;
 
       // * Init inputBody, tail
       switch (vm.inputHead.lcItemType) {
@@ -142,10 +150,13 @@ export default {
     }
   },
   data() {
+    const vm = this;
     const initialInputHead = {
       lcItemOrder: null,
       lcItemName: null,
       lcItemType: null,
+      lcItemSequence: vm.numOfLectureItem + 1,
+      lcItemResult: false,
     };
     return {
       initialInputHead,
@@ -167,7 +178,7 @@ export default {
         label: '자료',
       },
       ],
-      flag: false,
+      resultVisible: false,
     };
   },
   computed: {
@@ -278,6 +289,14 @@ export default {
           });
           console.error(error); // eslint-disable-line
         }
+      }
+    },
+    onChange() {
+      const vm = this;
+      if (!vm.resultVisible) {
+        vm.inputHead.lcItemResult = 0;
+      } else {
+        vm.inputHead.lcItemResult = 1;
       }
     },
   },

@@ -78,4 +78,14 @@ export default {
       }, 500);
     });
   },
+  deleteQuestionAnswerLog({
+    questionId,
+  }) {
+    return http.delete(`/student/answer/${questionId}`);
+  },
+  deleteSurveyAnswerLog({
+    surveyId,
+  }) {
+    return http.delete(`/student/survey/${surveyId}`);
+  },
 };
