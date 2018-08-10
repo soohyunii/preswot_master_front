@@ -46,15 +46,15 @@ export default {
     const vm = this;
     vm.$data.postTotalCount = await vm.getPostTotalCount({
       classId: vm.$route.params.classId,
-      type: this.$route.query.type,
-      query: this.$route.query.query,
+      type: this.$route.query.type !== undefined ? this.$route.query.type : '',
+      query: this.$route.query.query !== undefined ? this.$route.query.query : '',
     });
     vm.updateNavNumList(1);
     await vm.getPostList({
       classId: vm.$route.params.classId,
       pageNum: vm.$route.params.pageNum,
-      type: this.$route.query.type,
-      query: this.$route.query.query,
+      type: this.$route.query.type !== undefined ? this.$route.query.type : '',
+      query: this.$route.query.query !== undefined ? this.$route.query.query : '',
     });
   },
   computed: {
