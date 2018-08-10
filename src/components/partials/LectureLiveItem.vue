@@ -214,6 +214,7 @@
       </div>
       <div v-if="data.type === 3" class="discuss">
         <p>토론</p>
+        <pre>{{ data.discussion_info.topic }}</pre>
         <discussion :lectureItemId="data.lecture_item_id"/>
       </div>
       <!-- TODO: 자료 -->
