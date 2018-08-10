@@ -11,6 +11,7 @@
           :mute="true">
         </youtube>
         <teacher-lecture-live-item-list
+          v-if="isTableItemListLoaded"
           :dataList="tableItemList"
           :onClick="onClick"
           :isAuto="isAuto"
@@ -29,6 +30,7 @@
               :mute="true">
             </youtube>
             <teacher-lecture-live-item-list
+              v-if="isTableItemListLoaded"
               :dataList="tableItemList"
               :onClick="onClick"
               :isAuto="isAuto"
@@ -42,6 +44,19 @@
             :isAuto="isAuto"
             />
           </el-col>
+        </el-row>
+        <br />
+        <el-row>
+          <lecture-question-result
+            v-if="currentLectureItemId !== -1 && tableItemList[tableItemIndex] && tableItemList[tableItemIndex].type === 0"
+            :classId="classId"
+            :itemId="currentLectureItemId"
+            resultType="실시간"/>
+          <lecture-survey-result
+            v-if="currentLectureItemId !== -1 && tableItemList[tableItemIndex] && tableItemList[tableItemIndex].type === 1"
+            :classId="classId"
+            :itemId="currentLectureItemId"
+            resultType="실시간"/>
         </el-row>
         <!--
         <el-row :gutter="20">
@@ -73,6 +88,8 @@ import TeacherLectureLiveItemList from '../partials/TeacherLectureLiveItemList';
 import TeacherLectureLiveItem from '../partials/TeacherLectureLiveItem';
 import TeacherLectureLiveChat from '../partials/TeacherLectureLiveChat';
 import TeacherLectureLiveSummary from '../partials/TeacherLectureLiveSummary';
+import LectureQuestionResult from '../partials/LectureQuestionResult';
+import LectureSurveyResult from '../partials/LectureSurveyResult';
 import utils from '../../utils';
 
 export default {
@@ -84,17 +101,16 @@ export default {
       lectureId: vm.lectureId,
     });
     vm.tableItemList = res.data.lecture_items;
-    // TODO: 강의 아이템 순서 순으로 정렬하기 (강의 아이템 순서 변수(ex. ItemOrder ) 생성 후 주석 풀기)
-    // lectureItemList.sort((a, b) => {
-    //   const aItemOrder = Number(a.ItemOrder);
-    //   const bItemOrder = Number(b.ItemOrder);
-    //   return aItemOrder - bItemOrder;
-    // });
+    // sequence 순서대로 강의 아이템 정렬
+    vm.tableItemList.sort((a, b) => {
+      const aItemSequence = Number(a.sequence);
+      const bItemSequence = Number(b.sequence);
+      return aItemSequence - bItemSequence;
+    });
     const res2 = await classService.getClass({
       id: res.data.class_id,
     });
     vm.path = res2.data.name.concat(' > ', res.data.name);
-
     // 소켓 연결 및 주기적으로 보내는 신호 설정
     vm.$socket.connect();
     const params = {
@@ -117,10 +133,12 @@ export default {
     if (res3.data !== null) {
       vm.currentLectureItemId = res3.data.lecture_item_id;
     }
+    vm.tableItemIndex = vm.tableItemList.findIndex(item => item.lecture_item_id === vm.currentLectureItemId); // eslint-disable-line
   },
   data() {
     return {
       tableItemList: [],
+      tableItemIndex: -1,
       currentLectureItemId: -1,
       path: '',
       isAuto: false,
@@ -133,18 +151,32 @@ export default {
       return vm.$route.params.lectureId;
     },
     youtubeId: () => (getIdFromURL('https://www.youtube.com/watch?v=actDWRiD9RI&list=UUEgIN0yG3PeVF4JfJ-ZG0UQ')),
+    classId() {
+      const vm = this;
+      return Number.parseInt(vm.$route.query.classId, 10);
+    },
+    isTableItemListLoaded() {
+      const vm = this;
+      if (vm.tableItemList.length === 0) {
+        return false;
+      }
+      return true;
+    },
   },
   components: {
     TeacherLectureLiveItemList,
     TeacherLectureLiveItem,
     TeacherLectureLiveChat,
     TeacherLectureLiveSummary,
+    LectureQuestionResult,
+    LectureSurveyResult,
   },
   methods: {
-    onClick(type, data) {
+    onClick(type, data, index) {
       const vm = this;
       switch (type) {
         case 'SHOW': {
+          vm.tableItemIndex = index;
           if (vm.currentLectureItemId !== -1) {
             vm.$notify({
               title: '알림',

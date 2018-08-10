@@ -3,7 +3,7 @@
     <div v-if="surveyResult">
       <el-row v-if="resultType === '실시간'">
         <el-col :span="5"><strong>현재 수강 인원</strong></el-col>
-        <el-col :span="8"> 실시간 수강 인원  / {{ numberOfStudentInClass }} </el-col>
+        <!-- <el-col :span="8"> 실시간 수강 인원  / {{ numberOfStudentInClass }} </el-col> -->
       </el-row>
       <el-row>
         <el-col :span="3"><strong>학생 답변</strong></el-col>
@@ -74,7 +74,7 @@
     props: ['classId', 'itemId', 'resultType'],
     data() {
       return {
-        activeTab: 'question',
+        activeTab: 'survey',
       };
     },
     computed: {
@@ -91,55 +91,33 @@
     },
     async created() {
       const vm = this;
-    //   if (!vm.theResult) {
-      // await vm.getClassTotalResult({
-      //   classId: vm.classId,
-      // });
-    //   }
-      vm.getQuestionResult({
+      await vm.getClassTotalResult({
+        classId: vm.classId,
+      });
+      vm.getSurveyResult({
         itemId: vm.itemId,
       });
     },
     methods: {
       ...mapActions('grading', [
-        // 'getClassTotalResult',
-        'getQuestionResult',
+        'getClassTotalResult',
+        'getSurveyResult',
       ]),
       ...mapActions('NNclass', [
         'putScore',
       ]),
       async refresh() {
         const vm = this;
-        // await vm.getClassTotalResult({
-        //   classId: vm.classId,
-        //   isStudent: false,
-        // });
-        vm.getQuestionResult({
+        await vm.getClassTotalResult({
+          classId: vm.classId,
+          isStudent: false,
+        });
+        vm.getSurveyResult({
           itemId: vm.itemId,
         });
       },
       changeHead() {
         return { backgroundColor: '#EAEAEA' };
-      },
-      async scoreSubmit(score, id) {
-        const vm = this;
-        if (score < 0 || score > vm.questionResult.score) {
-          vm.$notify({
-            title: '점수 범위를 확인하세요',
-            message: '',
-            type: 'error',
-            duration: 2000,
-          });
-          return;
-        }
-        const res = await vm.putScore({ id, score });
-        if (res && res.status === 200) {
-          vm.$notify({
-            title: '완료',
-            type: 'success',
-            duration: 1000,
-          });
-        }
       },
     },
   };
