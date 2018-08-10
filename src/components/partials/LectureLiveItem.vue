@@ -211,6 +211,9 @@
         <p>실습</p>
         <h3 style="margin:20px;">강사의 지시에 따라주세요.</h3>
         <pre>{{ data.lecture_code_practices[0].code }}</pre>
+        <el-input placeholder="내용을 입력해주세요." v-model="answer[0]" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
+        <!-- TODO: 실습 제출 api 만들어지면 제출 버튼 구현 -->
+        <el-button v-if="true"  style="float:right" type="primary">제출</el-button>
       </div>
       <div v-if="data.type === 3" class="discuss">
         <p>토론</p>
@@ -363,7 +366,8 @@ export default {
   }
 
   .lecture-item .practice{
-    padding:5px 0 20px 0;
+    // padding:5px 0 20px 0;
+    padding:5px 0 0 0;
   }
 
   .lecture-item .discuss{
