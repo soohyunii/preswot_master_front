@@ -8,7 +8,7 @@ export default function editeRule(vm) {
       },
       {
         validator(rule, value, callback) {
-          if (!vm.input.changepw) {
+          if (!vm.changepw) {
             callback();
           }
           const checkNumber = value.search(/[0-9]/g);
@@ -33,7 +33,7 @@ export default function editeRule(vm) {
       },
       {
         validator(rule, value, callback) {
-          if (!vm.input.changepw) {
+          if (!vm.changepw) {
             callback();
           }
           if (value !== vm.input.password) {
