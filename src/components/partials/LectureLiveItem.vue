@@ -1,5 +1,6 @@
 <template>
   <div class="lecture-live-item-wrapper" style="background: #e5e9f2">
+    <!-- {{ data }} -->
     <div v-if="data === undefined"> <!-- 입력값 없음 -->
       강사님의 신호를 기다리는 중입니다.
     </div>
@@ -36,7 +37,7 @@
           <template v-else>
             <p>문항 - 객관</p>
             <pre>{{ data.questions[0].question }}</pre>
-            <el-checkbox-group v-model="answer" style="width: 100%;">
+            <el-checkbox-group v-model="answers[dataIndex]" style="width: 100%;">
               <div v-for="(choice,index) in data.questions[0].choice" :key="index" class="radio-one">
                 <el-checkbox :label="(index + 1).toString()">{{ index + 1 }} . {{ choice }}</el-checkbox>
               </div>
@@ -68,7 +69,7 @@
           <template v-else>
             <p>문항 - 단답</p>
             <pre>{{ data.questions[0].question }}</pre>
-            <el-input placeholder="내용을 입력해주세요." v-model="answer[0]"></el-input>
+            <el-input placeholder="내용을 입력해주세요." v-model="answers[dataIndex][0]"></el-input>
           </template>
         </div>
         <div v-if="data.questions[0].type === 2">
@@ -96,7 +97,7 @@
           <template v-else>
             <p>문항 - 서술</p>
             <pre>{{ data.questions[0].question }}</pre>
-            <el-input class="margin-text" placeholder="내용을 입력해주세요." v-model="answer[0]" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
+            <el-input class="margin-text" placeholder="내용을 입력해주세요." v-model="answers[dataIndex][0]" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
           </template>
         </div>
         <div v-if="data.questions[0].type === 3">
@@ -129,7 +130,7 @@
             </div>
             <pre>메모리 제한(MB) : {{ data.questions[0].memory_limit }}</pre>
             <pre>시간 제한(초) : {{ data.questions[0].time_limit }}</pre>
-            <el-input class="margin-text" placeholder="내용을 입력해주세요." v-model="answer[0]" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
+            <el-input class="margin-text" placeholder="내용을 입력해주세요." v-model="answers[dataIndex][0]" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
           </template>
         </div>
         <div v-if="data.questions[0].type === 4">
@@ -157,10 +158,10 @@
           <template v-else>
             <p>문항 - SQL</p>
             <pre>{{ data.questions[0].question }}</pre>
-            <el-input placeholder="내용을 입력해주세요." v-model="answer[0]" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
+            <el-input placeholder="내용을 입력해주세요." v-model="answers[dataIndex][0]" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
           </template>
         </div>
-        <el-button v-if="data.questions[0].student_answer_logs.length === 0" style="float:right" type="primary" @click="preOnClick('SUBMIT', [data.type, data.questions[0].question_id, [answer], data.questions[0].accept_language[0]])">제출</el-button>
+        <!-- <el-button v-if="data.questions[0].student_answer_logs.length === 0" style="float:right" type="primary" @click="preOnClick('SUBMIT', [data.type, data.questions[0].question_id, [answer], data.questions[0].accept_language[0]])">제출</el-button> -->
       </div>
       <div v-if="data.type === 1">
         <div v-if="data.surveys[0].type === 0">
@@ -188,7 +189,7 @@
           <template v-else>
             <p>설문 - 객관</p>
             <pre>{{ data.surveys[0].comment }}</pre>
-            <el-radio-group v-model="answer[0]" style="width: 100%;">
+            <el-radio-group v-model="answers[dataIndex][0]" style="width: 100%;">
               <div v-for="(choice,index) in data.surveys[0].choice" :key="index">
                 <el-radio :label="index">{{ index }} . {{ choice }}</el-radio>
               </div>
@@ -202,10 +203,10 @@
           <template v-else>
             <p>설문 - 주관</p>
             <pre>{{ data.surveys[0].comment }}</pre>
-            <el-input placeholder="내용을 입력해주세요." v-model="answer[0]"></el-input>
+            <el-input placeholder="내용을 입력해주세요." v-model="answers[dataIndex][0]"></el-input>
           </template>
         </div>
-        <el-button v-if="data.surveys[0].student_surveys.length === 0"  style="float:right" type="primary" @click="preOnClick('SUBMIT', [data.type, data.surveys[0].survey_id, data.surveys[0].type, answer])">제출</el-button>
+        <!-- <el-button v-if="data.surveys[0].student_surveys.length === 0"  style="float:right" type="primary" @click="preOnClick('SUBMIT', [data.type, data.surveys[0].survey_id, data.surveys[0].type, answer])">제출</el-button> -->
       </div>
       <div v-if="data.type === 2" class="practice">
         <p>실습</p>
@@ -245,7 +246,7 @@ import { baseUrl } from '../../services/config';
 import utils from '../../utils';
 
 export default {
-  props: ['data', 'onClick'],
+  props: ['data', 'onClick', 'answers', 'dataIndex'],
   data() {
     return {
       answer: [],

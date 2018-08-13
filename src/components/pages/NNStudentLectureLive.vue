@@ -1,6 +1,6 @@
 <template>
   <div>
-    <template v-if="$isPhone">
+    <!-- <template v-if="$isPhone">
       <h2>{{ path }}</h2>
       <youtube
         id="video"
@@ -23,7 +23,7 @@
             />
         </el-tab-pane>
       </el-tabs>
-    </template>
+    </template> -->
     <template v-if="!$isPhone">
       <h2>{{ path }}</h2>
       <el-row :gutter="20">
@@ -40,9 +40,23 @@
         <el-col :span="24">
           <el-tabs type="card">
             <el-tab-pane label="강의아이템">
-              <lecture-live-item
+              <div v-if="lectureItem.length === 0">
+                강사님의 신호를 기다리는 중입니다.
+              </div>
+              <div else>
+                <div v-for="(item, index) in lectureItem" :key="index">
+                  <lecture-live-item
+                    :dataIndex="index"
+                    :data="item"
+                    :answers="answers"
+                    :lectureItemId="item.lecture_item_id"
+                    :onClick="onClick"/>
+                </div>
+              </div>
+              <el-button style="float:right" type="primary" size="small" @click="onClick('SUBMIT')">제출</el-button>
+              <!-- <lecture-live-item
                 :data="lectureItem"
-                :onClick="onClick"/>
+                :onClick="onClick"/> -->
             </el-tab-pane>
             <el-tab-pane label="강의자료">
               <lecture-live-material
@@ -89,11 +103,11 @@ export default {
       id: res.data.class_id,
     });
     vm.path = res2.data.name.concat(' > ', res.data.name);
-    const res3 = await lectureService.getLectureMaterialAdditional({
-      lectureId: vm.lectureId,
-    });
-    vm.materialList = res3.data.material;
-    vm.additionalList = res3.data.additional;
+    // const res3 = await lectureService.getLectureMaterialAdditional({
+    //   lectureId: vm.lectureId,
+    // });
+    // vm.materialList = res3.data.material;
+    // vm.additionalList = res3.data.additional;
 
     // 소켓 연결 및 주기적으로 보내는 신호, 리스너 등록
     vm.$socket.connect();
@@ -108,7 +122,7 @@ export default {
       };
       vm.$socket.emit('HEART_BEAT', JSON.stringify(params2));
     }, 3000);
-    vm.$socket.on('RELOAD_LECTURE_ITEM', (msg) => {
+    vm.$socket.on('RELOAD_LECTURE_ITEMS', (msg) => {
       const jsonMSG = JSON.parse(msg);
       if (jsonMSG.reload === true) {
         vm.refreshLectureItem();
@@ -127,9 +141,10 @@ export default {
   data() {
     return {
       path: '', // 과목 , 강의 제목 이름
-      lectureItem: undefined, // 현재 표시중인 강의 아이템
+      lectureItem: [], // 현재 표시중인 강의 아이템
       materialList: undefined, // 강의자료 목록
       additionalList: undefined, // 참고자료 목록
+      answers: [],
     };
   },
   computed: {
@@ -144,55 +159,45 @@ export default {
     LectureLiveMaterial,
   },
   methods: {
-    async onClick(type, data) {
+    async onClick(type) {
       const vm = this;
       switch (type) {
         case 'SUBMIT': {
-          switch (data[0]) {
-            case 0: { // 문항
-              studentService.submitQuestion({
-                questionId: data[1],
-                answers: data[2][0],
-                interval: 0,
-                codeLanguage: data[3],
-              });
-              vm.$notify({
-                title: '알림',
-                message: '제출하였습니다.',
-                type: 'success',
-              });
-              const params = {
-                lecture_item_id: Number.parseInt(vm.lectureItem.lecture_item_id, 10),
-                user_id: utils.getUserIdFromJwt(),
-              };
-              vm.$socket.emit('DOING_LECTURE_ITEM', JSON.stringify(params));
-              vm.lectureItem = undefined;
-              vm.refreshLectureItem(false);
-              break;
+          vm.lectureItem.forEach((item, index) => {
+            switch (item.type) {
+              case 0: { // 문항
+                studentService.submitQuestion({
+                  questionId: item.questions[0].question_id,
+                  answers: vm.answers[index],
+                  interval: 0,
+                  codeLanguage: item.questions[0].accept_language[0],
+                });
+                break;
+              }
+              case 1: { // 설문
+                studentService.submitSurvey({
+                  surveyId: item.surveys[0].survey_id,
+                  answer: vm.answers[index],
+                });
+                break;
+              }
+              default: {
+                throw new Error(`not defined type ${type}`);
+              }
             }
-            case 1: { // 설문
-              studentService.submitSurvey({
-                surveyId: data[1],
-                answer: [data[3]],
-              });
-              vm.$notify({
-                title: '알림',
-                message: '제출하였습니다.',
-                type: 'success',
-              });
-              const params = {
-                lecture_item_id: Number.parseInt(vm.lectureItem.lecture_item_id, 10),
-                user_id: utils.getUserIdFromJwt(),
-              };
-              vm.$socket.emit('DOING_LECTURE_ITEM', JSON.stringify(params));
-              vm.lectureItem = undefined;
-              vm.refreshLectureItem(false);
-              break;
-            }
-            default: {
-              throw new Error(`not defined type ${type}`);
-            }
-          }
+          });
+          vm.$notify({
+            title: '알림',
+            message: '제출하였습니다.',
+            type: 'success',
+          });
+          const params = {
+            lecture_item_id: Number.parseInt(vm.lectureItem[0].lecture_item_id, 10),
+            user_id: utils.getUserIdFromJwt(),
+          };
+          vm.$socket.emit('DOING_LECTURE_ITEM', JSON.stringify(params));
+          vm.lectureItem = [];
+          vm.refreshLectureItem(false);
           break;
         }
         /*
@@ -209,11 +214,18 @@ export default {
       const vm = this;
       // opened 상태인 아이템이 있다면 보이기 : 빠른 속도로 아이템 보임/숨김 조작하는 경우 버그 해결하기위해 1초 지연
       setTimeout(async () => {
+        // TODO: 강의 아이템이 여러개인 경우, 빠른 속도로 조작 시 같은 아이템이 중복하여 들어가는 버그 발생
         const res3 = await lectureService.getOpenedLectureItem({ lectureId: vm.lectureId });
-        if (res3.data !== null) {
+        vm.answers = [];
+        if (res3.data.length !== 0) {
           vm.lectureItem = res3.data;
+          vm.lectureItem.forEach(() => {
+            // if (item.questions.length !== 0) {
+            vm.answers.push([]);
+            // }
+          });
         } else {
-          vm.lectureItem = undefined;
+          vm.lectureItem = [];
         }
         if (notify !== false) {
           vm.$notify({
