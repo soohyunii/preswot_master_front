@@ -11,8 +11,7 @@ import Vlf from 'vlf';
 import VueScrollTo from 'vue-scrollto';
 import VueYoutubeEmbed from 'vue-youtube-embed';
 import VueSocketio from 'vue-socket.io';
-import AsyncComputed from 'vue-async-computed';
-
+import Sortable from 'vue-sortable'
 import authPlugin from './utils/authPlugin';
 import App from './App';
 import router from './router';
@@ -39,7 +38,7 @@ Vue.use(Vlf);
 Vue.use(VueScrollTo);
 Vue.use(VueYoutubeEmbed);
 Vue.use(VueSocketio, websocketUrl, store);
-Vue.use(AsyncComputed);
+Vue.use(Sortable);
 
 const defaultLocale = utils.getDefaultLocale();
 
