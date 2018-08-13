@@ -13,8 +13,11 @@
 </template>
 
 <script>
+import { mapActions, mapGetters, mapState } from 'vuex';
 import lectureItemService from '../../services/lectureItemService';
 import LectureLiveItem from './LectureLiveItem';
+import LectureQuestionResult from './LectureQuestionResult';
+import LectureSurveyResult from './LectureSurveyResult';
 
 export default {
   async created() {
@@ -24,7 +27,7 @@ export default {
     });
     vm.data = res.data;
   },
-  props: ['onClick', 'lectureItemId'],
+  props: ['onClick', 'lectureItemId', 'classId'],
   data() {
     return {
       data: {},
@@ -32,6 +35,25 @@ export default {
   },
   components: {
     LectureLiveItem,
+    LectureQuestionResult,
+    LectureSurveyResult,
+  },
+  computed: {
+    ...mapState('grading', [
+      'theResult',
+      'questionResult',
+      'surveyResult',
+    ]),
+    ...mapGetters('class', [
+      'numberOfStudentInClass',
+    ]),
+  },
+  methods: {
+    ...mapActions('grading', [
+      'getClassTotalResult',
+      'getQuestionResult',
+      'getSurveyResult',
+    ]),
   },
 };
 </script>

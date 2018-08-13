@@ -44,6 +44,7 @@
             </template>
           </el-table-column>
 
+          <!-- TODO
           <el-table-column
             label="수강 학생 수"
             width="135"
@@ -63,6 +64,7 @@
               몇%
             </template>
           </el-table-column>
+          -->
 
           <el-table-column
             label="-"
@@ -70,7 +72,7 @@
             align="left"
           >
             <template slot-scope="scope">
-              <router-link :to="`/a/teacher/NNlecture/${scope.row.lecture_id}/live`">
+              <router-link :to="`/a/teacher/NNlecture/${scope.row.lecture_id}/live?classId=${scope.row.class_id}`">
                 <el-button>강의하기</el-button>
               </router-link>
             </template>

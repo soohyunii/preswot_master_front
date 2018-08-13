@@ -8,10 +8,32 @@
         <div v-if="data.questions[0].type === 0">
           <template v-if="data.questions[0].student_answer_logs.length > 0"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
+            <br />
+            <el-card v-if="data.result === 1">
+              <p>
+                <span>문제 : {{ data.questions[0].question }}</span>
+              </p>
+              <p>
+                <span>배점 : {{ data.questions[0].score }}</span>
+              </p>
+              <p>
+                <span>보기 : </span>
+                <span v-for="(choice, index) in data.questions[0].choice" class="item" :key="index">
+                  <span>({{ index + 1 }}) {{ data.questions[0].choice[index] }}</span>
+                </span>
+              </p>
+              <p>
+                <span>정답 : </span>
+                <span v-for="(answer, index) in data.questions[0].answer" class="item" :key="index">
+                  <span>({{ answer }})</span>
+                </span>
+              </p>
+              <p>
+                <span>점수 : {{ data.questions[0].student_answer_logs[studentAnswerLogIndex].score }}</span>
+              </p>
+            </el-card>
           </template>
           <template v-else>
-            <!-- 디버깅 용도 -->
-            <!-- {{ answer }} -->
             <p>문항 - 객관</p>
             <pre>{{ data.questions[0].question }}</pre>
             <el-checkbox-group v-model="answer" style="width: 100%;">
@@ -24,29 +46,74 @@
         <div v-if="data.questions[0].type === 1">
           <template v-if="data.questions[0].student_answer_logs.length > 0"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
+            <br />
+            <el-card v-if="data.result === 1">
+              <p>
+                <span>문제 : {{ data.questions[0].question }}</span>
+              </p>
+              <p>
+                <span>배점 : {{ data.questions[0].score }}</span>
+              </p>
+              <p>
+                <span>정답 : </span>
+                <span v-for="(answer, index) in data.questions[0].answer" class="item" :key="index">
+                  <span>{{ answer }}</span>
+                </span>
+              </p>
+              <p>
+                <span>점수 : {{ data.questions[0].student_answer_logs[studentAnswerLogIndex].score }}</span>
+              </p>
+            </el-card>
           </template>
           <template v-else>
             <p>문항 - 단답</p>
             <pre>{{ data.questions[0].question }}</pre>
-            <!-- <span>답 : </span> -->
             <el-input placeholder="내용을 입력해주세요." v-model="answer[0]"></el-input>
           </template>
         </div>
         <div v-if="data.questions[0].type === 2">
           <template v-if="data.questions[0].student_answer_logs.length > 0"> <!-- 이미 제출한 경우 -->
-            <p>제출이 완료되었습니다. 모범 답안은 다음과 같습니다.</p>
-            <pre>{{ data.questions[0].answer[0] }}</pre>
+            <p>제출이 완료되었습니다.</p>
+            <br />
+            <el-card v-if="data.result === 1">
+              <p>
+                <span>문제 : {{ data.questions[0].question }}</span>
+              </p>
+              <p>
+                <span>배점 : {{ data.questions[0].score }}</span>
+              </p>
+              <p>
+                <span>모범 답안 : </span>
+                <span v-for="(answer, index) in data.questions[0].answer" class="item" :key="index">
+                  <span>{{ answer }} . {{ data.questions[0].choice[answer - 1] }}</span>
+                </span>
+              </p>
+              <p>
+                <span>점수 : {{ data.questions[0].student_answer_logs[studentAnswerLogIndex].score }}</span>
+              </p>
+            </el-card>
           </template>
           <template v-else>
             <p>문항 - 서술</p>
             <pre>{{ data.questions[0].question }}</pre>
-            <!-- <span>답 : </span> -->
             <el-input class="margin-text" placeholder="내용을 입력해주세요." v-model="answer[0]" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
           </template>
         </div>
         <div v-if="data.questions[0].type === 3">
           <template v-if="data.questions[0].student_answer_logs.length > 0"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
+            <br />
+            <el-card v-if="data.result === 1">
+              <p>
+                <span>문제 : {{ data.questions[0].question }}</span>
+              </p>
+              <p>
+                <span>배점 : {{ data.questions[0].score }}</span>
+              </p>
+              <p>
+                <span>점수 : {{ data.questions[0].student_answer_logs[studentAnswerLogIndex].score }}</span>
+              </p>
+            </el-card>
           </template>
           <template v-else>
             <p>문항 - SW</p>
@@ -68,6 +135,24 @@
         <div v-if="data.questions[0].type === 4">
           <template v-if="data.questions[0].student_answer_logs.length > 0"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
+            <br />
+            <el-card v-if="data.result === 1">
+              <p>
+                <span>문제 : {{ data.questions[0].question }}</span>
+              </p>
+              <p>
+                <span>배점 : {{ data.questions[0].score }}</span>
+              </p>
+              <p>
+                <span>정답 : </span>
+                <span v-for="(answer, index) in data.questions[0].answer" class="item" :key="index">
+                  <span>{{ answer }}</span>
+                </span>
+              </p>
+              <p>
+                <span>점수 : {{ data.questions[0].student_answer_logs[studentAnswerLogIndex].score }}</span>
+              </p>
+            </el-card>
           </template>
           <template v-else>
             <p>문항 - SQL</p>
@@ -81,6 +166,24 @@
         <div v-if="data.surveys[0].type === 0">
           <template v-if="data.surveys[0].student_surveys.length > 0"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
+            <br />
+            <el-card v-if="data.result === 1">
+              <p>
+                <span>문제 : {{ data.questions[0].question }}</span>
+              </p>
+              <p>
+                <span>배점 : {{ data.questions[0].score }}</span>
+              </p>
+              <p>
+                <span>정답 : </span>
+                <span v-for="(answer, index) in data.questions[0].answer" class="item" :key="index">
+                  <span>{{ answer }}</span>
+                </span>
+              </p>
+              <p>
+                <span>점수 : {{ data.questions[0].student_answer_logs[studentAnswerLogIndex].score }}</span>
+              </p>
+            </el-card>
           </template>
           <template v-else>
             <p>설문 - 객관</p>
@@ -99,7 +202,7 @@
           <template v-else>
             <p>설문 - 주관</p>
             <pre>{{ data.surveys[0].comment }}</pre>
-            <el-input placeholder="내용을 입력해주세요." v-model="answer"></el-input>
+            <el-input placeholder="내용을 입력해주세요." v-model="answer[0]"></el-input>
           </template>
         </div>
         <el-button v-if="data.surveys[0].student_surveys.length === 0"  style="float:right" type="primary" @click="preOnClick('SUBMIT', [data.type, data.surveys[0].survey_id, data.surveys[0].type, answer])">제출</el-button>
@@ -113,12 +216,33 @@
         <p>토론</p>
         <discussion :lectureItemId="data.lecture_item_id"/>
       </div>
+      <!-- TODO: 자료 -->
+      <div v-if="data.type === 4" class="note">
+        <p>자료</p>
+        <br>
+        <div v-if="data.notes[0].note_type === 0">
+          <img :src="Url">
+        </div>
+        <div v-if="data.notes[0].note_type === 1">
+          <iframe width="500" height="470" frameborder="0" :src="Url"></iframe>
+        </div>
+        <div v-if="data.notes[0].note_type === 2">
+          <a :href="Url" target="_blank">{{data.notes[0].url}}</a>
+        </div>
+        <div v-if="data.notes[0].note_type === 3">
+          <iframe width="500" height="315" frameborder="0" :src="Url"></iframe>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { getIdFromURL } from 'vue-youtube-embed';
 import Discussion from './NNDiscussion';
+import { EventBus } from '../../event-bus';
+import { baseUrl } from '../../services/config';
+import utils from '../../utils';
 
 export default {
   props: ['data', 'onClick'],
@@ -127,15 +251,53 @@ export default {
       answer: [],
     };
   },
+  mounted() {
+    const vm = this;
+    EventBus.$on('clearAnswer', vm.clearAnswer);
+  },
+  computed: {
+    Url() {
+      const vm = this;
+      if (vm.data.type === 4) {
+        if (vm.data.notes[0].note_type === 0) {
+          const url = baseUrl + vm.data.notes[0].files[0].client_path;
+          return url;
+        }
+        if (vm.data.notes[0].note_type === 1) {
+          const url = baseUrl + vm.data.notes[0].files[0].client_path;
+          // return `https://view.officeapps.live.com/op/embed.aspx?src=${url}`;
+          return `http://docs.google.com/gview?url=${url}&embedded=true`;
+        }
+        if (vm.data.notes[0].note_type === 2) {
+          return vm.data.notes[0].url;
+        }
+        if (vm.data.notes[0].note_type === 3) {
+          const id = getIdFromURL(vm.data.notes[0].url);
+          const interval = vm.data.notes[0].youtube_interval.split('<?>');
+          return `https://www.youtube.com/embed/${id}?start=${interval[0]}&end=${interval[1]}`;
+        }
+      }
+      return '';
+    },
+    studentAnswerLogIndex() {
+      const vm = this;
+      const userId = utils.getUserIdFromJwt();
+      return vm.data.questions[0].student_answer_logs.findIndex(item => item.student_id === userId);
+    },
+  },
   methods: {
     preOnClick(...args) {
       const vm = this;
       vm.onClick(...args);
-      vm.answer = [];
+      vm.clearAnswer();
     },
     onChange(data) { // 문항 - 객관값 보정 (0 1 2 3 4를 1 2 3 4 5로) 을 위한 함수
       const vm = this;
       vm.answer = data + 1;
+    },
+    clearAnswer() {
+      const vm = this;
+      vm.answer = [];
     },
   },
   components: {
@@ -205,6 +367,15 @@ export default {
 
   .lecture-item .discuss{
     padding:5px 0 0 0;
+    height:530px;
+  }
+
+  .item + .item:before {
+    content: ", ";
+  }
+  .lecture-item .note{
+    padding:10px;
+    margin:10px;
     height:530px;
   }
 }

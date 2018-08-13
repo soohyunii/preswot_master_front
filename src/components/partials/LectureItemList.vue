@@ -1,23 +1,20 @@
 <template functional>
+
   <div id="lecture_item_list_wrapper">
     <div v-if="props.list.length === 0">
       강의 아이템 목록이 비었습니다.
     </div>
     <div v-else>
-      <!-- {{ props.list }} -->
       <el-table :data="props.list"
+                row-key="sequence"
                 sortable
                 v-sortable="data.attrs.sortableOptions">
         <el-table-column
-          prop="index"
+          type="index"
           label="번호"
           width="100"
           align="center"
-        >
-          <template slot-scope="scope">
-            {{ scope.$index + 1 }}
-          </template>
-        </el-table-column>
+        ></el-table-column>
 
         <el-table-column
           prop="type"
@@ -49,6 +46,16 @@
         >
           <template slot-scope="scope">
             <el-button size="small" @click="listeners['edit'](scope.row.lecture_item_id)">수정</el-button>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          label="-"
+          width="100"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <el-button size="small" @click="listeners['simulate'](scope.row.lecture_item_id)">미리보기</el-button>
           </template>
         </el-table-column>
 

@@ -1,11 +1,9 @@
 <template>
   <div id="landing_page_wrapper" class="bt-container" oncontextmenu="return false">
     <pre :class="$attachReactablePostfix('wise-saying')">
-      배움은 우연히 얻을 수 없다. 그것은 타는 열정으로
-      구해야 하며, 부지런함으로 참여해야 한다.
-      - 아비가일 애덤스
+      {{selectedSaying}}
     </pre>
-    <div :class="$attachReactablePostfix('search-box')">
+    <div :class="$attachReactablePostfix('search-box')" v-if="authType !== 1">
       <i id="icon_search" class="el-icon-search" style="position:absolute; left: 18px; top: 8px" @click="onClick('asdfsadf')"></i>
       <input v-model="searchText" type="text" id="headerInput" placeholder="What do you want to learn?"/>
     </div>
@@ -13,12 +11,45 @@
 </template>
 
 <script>
+import utils from '../../utils';
+
 export default {
-  name: 'LandingPage',
   data() {
+    const saying = [
+      '배움은 우연히 얻을 수 없다. 그것은 타는 열정으로\n구해야 하며, 부지런함으로 참여해야 한다.\n- 아비가일 애덤스',
+      '굳은 결심은 가장 유용한 지식이다.\n- 나폴레옹',
+      '꿈을 품고 시작하라.\n새로운 일을 시작하는 용기 속에\n당신의 천재성과 능력과 기적이 모두 숨어있다.\n- 요한 볼프강 괴테',
+    ];
     return {
+      saying,
+      selectedSaying: '',
       searchText: '',
     };
+  },
+  created() {
+    // 출력할 명언 무작위로 선택
+    const index = Math.floor(Math.random() * this.saying.length);
+    this.selectedSaying = this.saying[index];
+  },
+  computed: {
+    authType() {
+      const vm = this;
+      const jwt = vm.$store.state.auth.jwt;
+      return utils.getAuthTypeFromJwt(jwt);
+    },
+  },
+  methods: {
+    async onClick(type) {
+      switch (type) {
+        case 'SEARCH': {
+          this.$router.push({ path: '/classes', query: { type: 'name', text: `${this.searchText}` } });
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+    },
   },
 };
 </script>

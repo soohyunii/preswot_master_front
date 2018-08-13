@@ -5,7 +5,7 @@ export default class LcItemHandler {
   static async postLcItem({ lectureId, inputHead, inputBody, inputTail }) {
     const res1 = await lectureItemService.postLectureItem({
       lectureId,
-      lectureItemOrder: inputHead.type,
+      lectureItemOrder: inputHead.lcItemOrder,
       lectureItemType: utils.convertLcItemType(inputHead.lcItemType),
     });
 
@@ -13,6 +13,8 @@ export default class LcItemHandler {
     await lectureItemService.putLectureItem({
       lectureItemId,
       name: inputHead.lcItemName,
+      sequence: inputHead.lcItemSequence,
+      result: inputHead.lcItemResult,
     });
     await this.postChildLectureItem({
       lcItemId: lectureItemId,
@@ -30,7 +32,8 @@ export default class LcItemHandler {
     await lectureItemService.putLectureItem({
       lectureItemId,
       name: inputHead.lcItemName,
-      order: inputHead.type,
+      order: inputHead.lcItemOrder,
+      result: inputHead.lcItemResult,
     });
 
     await this.putChildLectureItem({

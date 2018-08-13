@@ -6,30 +6,35 @@
       <el-table :data="lecture.questions">
         <el-table-column
           prop="no"
-          label="No.">
+          label="No."
+          width="100px">
         </el-table-column>
         <el-table-column
           prop="type"
-          label="타입">
+          label="타입"
+          width="100px">
         </el-table-column>
         <el-table-column
           prop="question"
           label="문제">
         </el-table-column>
         <el-table-column
-          label="제출">
+          label="제출"
+          width="100px">
           <template slot-scope="scope">
             {{ scope.row.numberOfStudent === 1 ? '제출' : '미제출' }}
           </template>
         </el-table-column>
         <el-table-column
-          label="배점">
+          label="배점"
+          width="100px">
           <template slot-scope="scope">
             {{ scope.row.avgScore }} / {{scope.row.score}}
           </template>
         </el-table-column>
         <el-table-column
-          label="">
+          label=""
+          width="150px">
           <template slot-scope="scope">
             <el-button @click="onClickResult(scope.row.itemId)">상세보기</el-button>
           </template>

@@ -13,7 +13,7 @@
           <el-input placeholder="abc@gmail.com" v-model="input.email" type="email">
             <template slot="prepend">{{ $t('LOGIN.EMAIL_LABEL') }}</template>
           </el-input>
-          <el-input placeholder="********" v-model="input.password" type="password">
+          <el-input placeholder="********" v-model="input.password" type="password" @keydown.enter.native="onClick('LOGIN')">
             <template slot="prepend">{{ $t('LOGIN.PASSWORD_LABEL') }}</template>
           </el-input>
           <br />
@@ -183,7 +183,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped> // scoped 를 풀었을경우, 강사 로그인 - 내 강의 목록 - 강의 개설 이동시 폰트가 커지는 버그가 있음. 해당 화면 새로고침시 다시 작아짐..
 .el-input{
   margin:10px;
 }
