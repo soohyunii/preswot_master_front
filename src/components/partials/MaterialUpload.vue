@@ -8,7 +8,7 @@
       multiple
       :http-request="doUpload"
       :on-remove="handleRemove"
-      :file-list="fileNameList"
+      :file-list="fileList"
       ref="materialUpload"
     >
       <el-button slot="trigger" type="primary">강의 자료 추가</el-button>
@@ -18,7 +18,7 @@
     <h3>강의 자료-키워드 연결</h3>
     <el-table
       ref="multipleTable"
-      :data="initFileList"
+      :data="fileNameKeywordList"
       style="width: 100%"
       @selection-change="handleSelectionChange">
       <el-table-column
@@ -68,8 +68,8 @@ export default {
   name: 'MaterialUpload',
   data() {
     return {
-      initFileList: [],
-      fileNameList: [],
+      fileNameKeywordList: [],
+      fileList: [],
       input: {},
       multipleSelection: [],
     };
@@ -81,9 +81,10 @@ export default {
     const res = await lectureService.getLectureMaterial({
       lectureId: vm.$route.params.lectureId,
     });
-    for (i1 = 0; i1 < res.data.length; i1 += 1) {
-      vm.fileNameList.push(res.data[i1].file);
-    }
+    // data.forEach(x => { result.push(x + 3) });
+    res.data.forEach((x) => {
+      vm.fileList.push(x.file);
+    });
     for (i1 = 0; i1 < res.data.length; i1 += 1) {
       const dictMaterial = {};
       dictMaterial.data = res.data[i1];
@@ -91,13 +92,7 @@ export default {
         id: res.data[i1].material_id,
       });
       dictMaterial.keywordList = materialKeywords.data;
-      vm.initFileList.push(dictMaterial);
-      /*
-      materialKeywords.then(function(result) {  // eslint-disable-line
-        dictMaterial.keywordList = result.data;
-        vm.initFileList.push(dictMaterial);
-      });
-      */
+      vm.fileNameKeywordList.push(dictMaterial);
     }
   },
   computed: {
@@ -113,7 +108,6 @@ export default {
     // 강의자료 업로드 (이 때 키워드는 당연히 비어있음)
     async doUpload(req) {
       const vm = this;
-      let i;
       // 서버에 저장할 것.
 
       const res = await lectureService.postLectureMaterial({
@@ -131,35 +125,34 @@ export default {
       const newMaterial = await lectureService.getLectureMaterial({
         lectureId: vm.$route.params.lectureId,
       });
-      const nl = vm.initFileList.length + 1;
       // 서버에 가장 나중에 넣은 강의자료 찾기
       let lastUploadNum = 0;
       let lastUploadTime = newMaterial.data[0].created_at;
-      for (i = 0; i < nl; i += 1) {
-        if (lastUploadTime < newMaterial.data[i].created_at) {
+      newMaterial.data.forEach((x, i) => {
+        if (lastUploadTime < x.created_at) {
           lastUploadNum = i;
-          lastUploadTime = newMaterial.data[i].created_at;
+          lastUploadTime = x.created_at;
         }
-      }
+      });
 
       // 최신 강의자료를 빈 키워드리스트와 묶어서 list에 넣기
       const dictMaterial = {};
       dictMaterial.keywordList = [];
       dictMaterial.data = newMaterial.data[lastUploadNum];
-      vm.initFileList.push(dictMaterial);
-      vm.fileNameList.push(newMaterial.data[lastUploadNum].file);
+      vm.fileNameKeywordList.push(dictMaterial);
+      vm.fileList.push(newMaterial.data[lastUploadNum].file);
     },
     async handleRemove(file) {
       // 삭제하는 파일의 id를 이용하여 서버에서 파일 삭제
-      const indexFile = this.fileNameList.indexOf(file);
-      const materialId = this.initFileList[indexFile].data.material_id;
+      const indexFile = this.fileList.indexOf(file);
+      const materialId = this.fileNameKeywordList[indexFile].data.material_id;
       await lectureService.deleteMaterial({
         id: materialId,
       });
-      if (this.fileNameList.includes(file)) {
-        // const indexFile = this.fileNameList.indexOf(file);
-        this.fileNameList.splice(indexFile, 1);
-        this.initFileList.splice(indexFile, 1);
+      if (this.fileList.includes(file)) {
+        // const indexFile = this.fileList.indexOf(file);
+        this.fileList.splice(indexFile, 1);
+        this.fileNameKeywordList.splice(indexFile, 1);
       }
       // uploadFiles 배열에서 해당 항목 삭제 (자동적으로 이뤄짐)
     },
@@ -180,8 +173,6 @@ export default {
     },
     onClick(type, arg, arg2) {
       const vm = this;
-      let i1;
-      let i2;
       let checkDup;
       switch (type) {
         case 'ADD_KEYWORD': {
@@ -196,11 +187,11 @@ export default {
           }
           // 강의 키워드 목록에 없는 키워드인 경우
           let isEnroll = false;
-          for (i1 = 0; i1 < vm.keywordList.length; i1 += 1) {
-            if (vm.keywordList[i1].keyword === vm.input.keywordName) {
+          vm.keywordList.forEach((x) => {
+            if (x.keyword === vm.input.keywordName) {
               isEnroll = true;
             }
-          }
+          });
           if (isEnroll === false) {
             vm.$notify({
               title: '알림',
@@ -215,15 +206,14 @@ export default {
           dictKeyword.score = vm.input.keywordValue;
           // 중복된 키워드인지 검사
           checkDup = false;
-          for (i1 = 0; i1 < vm.multipleSelection.length; i1 += 1) {
-            const fileNum = vm.fileNameList.indexOf(vm.multipleSelection[i1].data.file);
-            const fileKeyNum = vm.initFileList[fileNum].keywordList.length;
-            for (i2 = 0; i2 < fileKeyNum; i2 += 1) {
-              if (vm.initFileList[fileNum].keywordList[i2].keyword === dictKeyword.keyword) {
+          vm.multipleSelection.forEach((x) => {
+            const fileNum = vm.fileList.indexOf(x.data.file);
+            vm.fileNameKeywordList[fileNum].keywordList.forEach((y) => {
+              if (y.keyword === dictKeyword.keyword) {
                 checkDup = true;
               }
-            }
-          }
+            });
+          });
           if (checkDup === true) {
             vm.$notify({
               title: '알림',
@@ -232,34 +222,34 @@ export default {
             });
             break;
           }
-          for (i1 = 0; i1 < vm.multipleSelection.length; i1 += 1) {
+          vm.multipleSelection.forEach((x) => {
             // 프론트 상에 추가
-            const fileNum = vm.fileNameList.indexOf(vm.multipleSelection[i1].data.file);
-            vm.initFileList[fileNum].keywordList.push(dictKeyword);
+            const fileNum = vm.fileList.indexOf(x.data.file);
+            vm.fileNameKeywordList[fileNum].keywordList.push(dictKeyword);
             // 서버 상에 추가
-            const materialId = this.initFileList[fileNum].data.material_id;
+            const materialId = this.fileNameKeywordList[fileNum].data.material_id;
             lectureService.postMaterialKeyword({
               id: materialId,
               keyword: dictKeyword.keyword,
               score: dictKeyword.score,
             });
-          }
+          });
           break;
         }
         // 키워드 삭제
         case 'DELETE_KEYWORD': {
           let keyNum;
-          const fileNum = vm.fileNameList.indexOf(arg.file);
-          const materialId = vm.initFileList[fileNum].data.material_id;
-          for (i1 = 0; i1 < vm.initFileList[fileNum].keywordList.length; i1 += 1) {
-            if (vm.initFileList[fileNum].keywordList[i1] === arg2) {
-              keyNum = i1;
+          const fileNum = vm.fileList.indexOf(arg.file);
+          const materialId = vm.fileNameKeywordList[fileNum].data.material_id;
+          vm.fileNameKeywordList[fileNum].keywordList.forEach((x, i) => {
+            if (x === arg2) {
+              keyNum = i;
             }
-          }
+          });
           // 프론트에서 삭제
-          const keywordName = vm.initFileList[fileNum].keywordList[keyNum].keyword;
-          // const scores = vm.initFileList[fileNum].keywordList[keyNum].score;
-          vm.initFileList[fileNum].keywordList.splice(keyNum, 1);
+          const keywordName = vm.fileNameKeywordList[fileNum].keywordList[keyNum].keyword;
+          // const scores = vm.fileNameKeywordList[fileNum].keywordList[keyNum].score;
+          vm.fileNameKeywordList[fileNum].keywordList.splice(keyNum, 1);
           // 서버에서 삭제
           lectureService.deleteMaterialKeyword({
             id: materialId,
@@ -275,18 +265,17 @@ export default {
     async deleteMKeyword(arg, arg2) {
       const vm = this;
       let keyNum;
-      let i1;
-      const fileNum = vm.fileNameList.indexOf(arg.file);
-      const materialId = vm.initFileList[fileNum].data.material_id;
-      for (i1 = 0; i1 < vm.initFileList[fileNum].keywordList.length; i1 += 1) {
-        if (vm.initFileList[fileNum].keywordList[i1] === arg2) {
-          keyNum = i1;
+      const fileNum = vm.fileList.indexOf(arg.file);
+      const materialId = vm.fileNameKeywordList[fileNum].data.material_id;
+      vm.fileNameKeywordList[fileNum].keywordList.forEach((x, i) => {
+        if (x === arg2) {
+          keyNum = i;
         }
-      }
+      });
       // 프론트에서 삭제
-      const keywordName = vm.initFileList[fileNum].keywordList[keyNum].keyword;
-      // const scores = vm.initFileList[fileNum].keywordList[keyNum].score;
-      vm.initFileList[fileNum].keywordList.splice(keyNum, 1);
+      const keywordName = vm.fileNameKeywordList[fileNum].keywordList[keyNum].keyword;
+      // const scores = vm.fileNameKeywordList[fileNum].keywordList[keyNum].score;
+      vm.fileNameKeywordList[fileNum].keywordList.splice(keyNum, 1);
       // 서버에서 삭제
       lectureService.deleteMaterialKeyword({
         id: materialId,
