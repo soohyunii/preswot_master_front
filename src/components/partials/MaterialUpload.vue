@@ -136,7 +136,7 @@ export default {
       let lastUploadNum = 0;
       let lastUploadTime = newMaterial.data[0].created_at;
       for (i = 0; i < nl; i += 1) {
-        if (newMaterial.data[lastUploadNum].created_at < newMaterial.data[i].created_at) {
+        if (lastUploadTime < newMaterial.data[i].created_at) {
           lastUploadNum = i;
           lastUploadTime = newMaterial.data[i].created_at;
         }
