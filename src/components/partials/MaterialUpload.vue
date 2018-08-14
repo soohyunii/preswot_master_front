@@ -208,7 +208,7 @@ export default {
             const fileNum = vm.fileNameList.indexOf(vm.multipleSelection[i1].data.file);
             const fileKeyNum = vm.initFileList[fileNum].keywordList.length;
             for (i2 = 0; i2 < fileKeyNum; i2 += 1) {
-              if(vm.initFileList[fileNum].keywordList[i2].keyword === dictKeyword.keyword) {
+              if (vm.initFileList[fileNum].keywordList[i2].keyword === dictKeyword.keyword) {
                 checkDup = true;
               }
             }
