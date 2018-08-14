@@ -74,7 +74,7 @@ export default function editeRule(vm) {
         trigger: 'change',
       },
     ],
-    phoneNumber: [
+    phone: [
       {
         required: true,
         message: vm.$t('FORM.ERR_REQUIRED'),
