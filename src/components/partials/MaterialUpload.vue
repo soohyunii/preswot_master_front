@@ -113,6 +113,7 @@ export default {
     // 강의자료 업로드 (이 때 키워드는 당연히 비어있음)
     async doUpload(req) {
       const vm = this;
+      let i;
       // 서버에 저장할 것.
 
       const res = await lectureService.postLectureMaterial({
@@ -130,13 +131,23 @@ export default {
       const newMaterial = await lectureService.getLectureMaterial({
         lectureId: vm.$route.params.lectureId,
       });
-      const nl = vm.initFileList.length;
-      // 빈 키워드리스트와 묶어서 list에 넣기
+      const nl = vm.initFileList.length + 1;
+      // 서버에 가장 나중에 넣은 강의자료 찾기
+      let lastUploadNum = 0;
+      let lastUploadTime = newMaterial.data[0].created_at;
+      for (i = 0; i < nl; i += 1) {
+        if (newMaterial.data[lastUploadNum].created_at < newMaterial.data[i].created_at) {
+          lastUploadNum = i;
+          lastUploadTime = newMaterial.data[i].created_at;
+        }
+      }
+
+      // 최신 강의자료를 빈 키워드리스트와 묶어서 list에 넣기
       const dictMaterial = {};
       dictMaterial.keywordList = [];
-      dictMaterial.data = newMaterial.data[nl];
+      dictMaterial.data = newMaterial.data[lastUploadNum];
       vm.initFileList.push(dictMaterial);
-      vm.fileNameList.push(newMaterial.data[nl].file);
+      vm.fileNameList.push(newMaterial.data[lastUploadNum].file);
     },
     async handleRemove(file) {
       // 삭제하는 파일의 id를 이용하여 서버에서 파일 삭제
