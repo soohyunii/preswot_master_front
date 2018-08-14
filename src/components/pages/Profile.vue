@@ -7,7 +7,7 @@
       <div>
         <h3>비밀번호를 한번 더 입력해 주세요.</h3>
         <el-form :model="input" :label-position="left" label-width="100px">
-          <el-form-item label="Password :" prop="pw">
+          <el-form-item label="Password " prop="pw">
             <el-input type="password" v-model="input.pw" clearable auto-complete="false"></el-input>
           </el-form-item>
           <el-form-item>

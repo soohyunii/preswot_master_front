@@ -45,7 +45,7 @@
             </el-form-item>
 
             <el-form-item label="주소" prop="address1" id="address1">
-              <el-input type="string" v-model="input.address1"></el-input>
+              <el-input type="string" v-model="input.address1" placeholder="빈칸일 경우, 변경되지 않습니다"></el-input>
               <el-button id="btn_search_address" type="primary" @click="execDaumPostcode()">주소 검색</el-button>
             </el-form-item>
 
@@ -54,12 +54,12 @@
               </el-input>
             </el-form-item>
 
-            <el-form-item>
+            <!--<el-form-item>
               {{ address }}
-            </el-form-item>
+            </el-form-item>-->
 
-            <el-form-item label="핸드폰 번호" prop="phoneNumber" id="phoneNumber">
-              <el-input v-model="input.phoneNumber" v-mask="['###-####-####', '###-###-####']" type="tel"></el-input>
+            <el-form-item label="핸드폰 번호" prop="phone" id="phone">
+              <el-input v-model="input.phone" v-mask="['###-####-####', '###-###-####']" type="tel"></el-input>
               <!--인증 부분 아직-->
               <!--<el-button type="primary" @click="dummy()">{{$t('REG.PHONE_NUMBER_VERIFY_BUTTON')}}</el-button>-->
             </el-form-item>
@@ -117,7 +117,7 @@ export default {
         address1: '', // 지역 주소
         address2: '', // 상세 주소
         initialaddress: '', // 기존 주소
-        phoneNumber: '',
+        phone: '',
         major: '',
         belong: '',
         sex: '0',
@@ -149,7 +149,7 @@ export default {
         vm.input.name = result.data.userInfo.name;
         vm.input.birth = result.data.userInfo.birth;
         vm.input.sex = result.data.userInfo.sex;
-        vm.input.phoneNumber = result.data.userInfo.phone;
+        vm.input.phone = result.data.userInfo.phone;
         vm.input.initialaddress = result.data.userInfo.address;
         vm.input.major = result.data.userInfo.major;
         vm.input.belong = result.data.userInfo.belong;
@@ -172,7 +172,7 @@ export default {
         vm.input.name = result.data.userInfo.name;
         vm.input.birth = result.data.userInfo.birth;
         vm.input.sex = result.data.userInfo.sex;
-        vm.input.phoneNumber = result.data.userInfo.phone;
+        vm.input.phone = result.data.userInfo.phone;
         vm.input.initialaddress = result.data.userInfo.address;
         vm.input.major = result.data.userInfo.major;
         vm.input.belong = result.data.userInfo.belong;
@@ -257,7 +257,7 @@ export default {
         'sex',
         'address1',
         'address2',
-        'phoneNumber',
+        'phone',
         'major',
         'belong',
       ];

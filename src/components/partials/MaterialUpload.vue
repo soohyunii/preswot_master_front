@@ -31,7 +31,7 @@
       <el-table-column label="키워드">
         <template slot-scope="scope">
           <!--<el-tag v-for="k in scope.row.keywordList" :key="k" closable @close="onClick('DELETE_KEYWORD', scope.row.data, k)">{{ k.keyword }} / {{ k.score }}</el-tag>-->
-          <el-tag v-for="k in scope.row.keywordList" :key="k" closable @close="deleteMKeyword(scope.row.data, k)">{{ k.keyword }} / {{ k.score }}</el-tag>
+          <el-tag v-for="(k, index) in scope.row.keywordList" :key="index" closable @close="deleteMKeyword(scope.row.data, k)">{{ k.keyword }} / {{ k.score }}</el-tag>
         </template>
       </el-table-column>
     </el-table>
@@ -170,6 +170,8 @@ export default {
     onClick(type, arg, arg2) {
       const vm = this;
       let i1;
+      let i2;
+      let checkDup;
       switch (type) {
         case 'ADD_KEYWORD': {
           // 키워드를 등록할 강의자료를 선택하지 않은 경우
@@ -200,6 +202,25 @@ export default {
           const dictKeyword = {};
           dictKeyword.keyword = vm.input.keywordName;
           dictKeyword.score = vm.input.keywordValue;
+          // 중복된 키워드인지 검사
+          checkDup = false;
+          for (i1 = 0; i1 < vm.multipleSelection.length; i1 += 1) {
+            const fileNum = vm.fileNameList.indexOf(vm.multipleSelection[i1].data.file);
+            const fileKeyNum = vm.initFileList[fileNum].keywordList.length;
+            for (i2 = 0; i2 < fileKeyNum; i2 += 1) {
+              if(vm.initFileList[fileNum].keywordList[i2].keyword === dictKeyword.keyword) {
+                checkDup = true;
+              }
+            }
+          }
+          if (checkDup === true) {
+            vm.$notify({
+              title: '알림',
+              message: '중복된 키워드입니다.',
+              type: 'warning',
+            });
+            break;
+          }
           for (i1 = 0; i1 < vm.multipleSelection.length; i1 += 1) {
             // 프론트 상에 추가
             const fileNum = vm.fileNameList.indexOf(vm.multipleSelection[i1].data.file);

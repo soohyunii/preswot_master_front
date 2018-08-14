@@ -31,7 +31,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="k in keywordList" :key="k">
+              <tr v-for="(k, index) in keywordList" :key="index">
                 <td>
                   <el-input v-model="k.keyword" v-show="k.edit"></el-input>
                   <span v-show="!k.edit">{{ k.keyword }}</span>
@@ -159,6 +159,11 @@ export default {
               }
               if (this.isKeywordDuplicated(keyname)) {
                 // TODO: notify user the keyword is duplicated
+                vm.$notify({
+                  title: '알림',
+                  message: '중복된 키워드입니다.',
+                  type: 'warning',
+                });
                 this.$refs.elForm.resetFields();
                 return;
               }

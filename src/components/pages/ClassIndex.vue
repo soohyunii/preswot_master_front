@@ -99,20 +99,7 @@ export default {
           break;
         }
         case 'APPLY': {
-<<<<<<< HEAD
-          try {
-            await vm.postClassUser({
-              classId: data,
-            });
-            /* vm.$notify({
-              title: '수강 신청 요청 성공',
-              message: '메세지',
-              type: 'success',
-            }); */
-          } catch (error) {
-=======
           if (vm.authType !== 0) {
->>>>>>> third/master
             vm.$notify({
               title: '로그인이 필요합니다',
               message: '학생 계정만 수강 신청을 할 수 있습니다.',
@@ -124,11 +111,6 @@ export default {
             try {
               await vm.postClassUser({
                 classId: arg.class_id,
-              });
-              vm.$notify({
-                title: '수강 신청 요청 성공',
-                message: '수강 신청 완료',
-                type: 'success',
               });
 
               try {
