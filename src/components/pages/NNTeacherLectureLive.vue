@@ -101,6 +101,7 @@ export default {
       lectureId: vm.lectureId,
     });
     vm.tableItemList = res.data.lecture_items;
+    vm.isAuto = res.data.is_auto;
     // sequence 순서대로 강의 아이템 정렬
     vm.tableItemList.sort((a, b) => {
       const aItemSequence = Number(a.sequence);
@@ -129,11 +130,29 @@ export default {
     }, 3000);
 
     // opened 상태인 아이템이 이미 있다면 보이기
-    const res3 = await lectureService.getOpenedLectureItem({ lectureId: vm.lectureId });
-    if (res3.data !== null) {
-      vm.currentLectureItemId = res3.data.lecture_item_id;
-    }
+    // TODO: 자동 강의 기능 구현 후, 적절히 적용하고 주석 풀기
+    // const res3 = await lectureService.getOpenedLectureItem({ lectureId: vm.lectureId });
+    // if (res3.data !== null) {
+    //   vm.currentLectureItemId = res3.data.lecture_item_id;
+    // }
     vm.tableItemIndex = vm.tableItemList.findIndex(item => item.lecture_item_id === vm.currentLectureItemId); // eslint-disable-line
+
+    let autoplayDelay = 0;
+    // isAuto가 true인 경우, 무인 강의(자동 강의) 기능 동작
+    if (vm.isAuto) {
+      vm.currentLectureItemId = vm.tableItemList[0].lecture_item_id;
+      await vm.tableItemList.forEach(async (item, index) => {
+        autoplayDelay += item.start_time;
+        setTimeout(async () => {
+          // TODO: LECTURE_ITEM_ACTIVATION 소켓 emit
+
+          await vm.onClick('HIDE');
+          if (vm.tableItemList.length > index + 1) {
+            await vm.onClick('SHOW', vm.tableItemList[index + 1].lecture_item_id, index + 1);
+          }
+        }, 1000 * autoplayDelay); // TODO: start_time 변수명 변경
+      });
+    }
   },
   data() {
     return {
