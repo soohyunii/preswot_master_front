@@ -257,11 +257,6 @@ export default {
     updateScenario() {
       const vm = this;
       vm.fleetingSc = vm.sc;
-      vm.$notify({
-        title: '시나리오 변경',
-        message: '시나리오 변경이 일어났습니다.',
-        type: 'success',
-      });
       vm.refreshScItems();
     },
   },

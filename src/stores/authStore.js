@@ -53,5 +53,11 @@ export default {
     async putPassword({ commit }, { newPassword, key, userId }) {
       await authService.putPassword({ newPassword, key, userId });
     },
+    async checkUserPW({ commit }, { password }) {
+      await authService.checkUserPW({ password });
+    },
+    returnUserInfo({ state }, { userID }) {
+      return authService.returnUserInfo({ userID });
+    },
   },
 };

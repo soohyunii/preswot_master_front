@@ -8,8 +8,11 @@
       <el-tab-pane label="기본 정보 수정" name="basic">
         <teacher-lecture-new />
       </el-tab-pane>
-      <el-tab-pane label="강의 자료 및 키워드 등록" name="material">
+      <el-tab-pane label="강의 키워드 관리" name="keyword">
         <tlm-tab-material-and-keyword-edit :onClick="onClick"/>
+      </el-tab-pane>
+      <el-tab-pane label="강의 자료 업로드" name="material">
+        <tlm-tab-material-edit />
       </el-tab-pane>
       <el-tab-pane label="강의 아이템 수정" name="item">
         <tlm-tab-lecture-item-edit />
@@ -17,7 +20,6 @@
       <el-tab-pane label="강의 허용 프로그램 설정" name="program">
         <tlm-tab-allowed-program />
       </el-tab-pane>
-      <!-- knowledgeMap 렌더링 시 노드가 캔버스의 범위를 벗어나는 이슈가 발생하여 ':lazy="true" 추가 -->
       <el-tab-pane label="강의 지식맵 관리" name="kmap" lazy>
         <knowledgeMap />
       </el-tab-pane>
@@ -31,6 +33,7 @@ import NNTeacherLectureNew from './NNTeacherLectureNew';
 import TlmTabMaterialAndKeywordEdit from '../partials/TlmTabMaterialAndKeywordEdit';
 import TlmTabLectureItemEdit from '../partials/TlmTabLectureItemEdit';
 import TlmTabAllowedProgram from '../partials/TlmTabAllowedProgram';
+import TlmTabMaterialEdit from '../partials/TlmTabMaterialEdit';
 // import utils from '../../utils';
 // import MaterialUpload from '../partials/MaterialUpload';
 // import RecommendKeywords from '../partials/RecommendKeywords';
@@ -44,6 +47,7 @@ export default {
   components: {
     TeacherLectureNew: NNTeacherLectureNew,
     TlmTabMaterialAndKeywordEdit,
+    TlmTabMaterialEdit,
     TlmTabLectureItemEdit,
     TlmTabAllowedProgram,
     KnowledgeMap,

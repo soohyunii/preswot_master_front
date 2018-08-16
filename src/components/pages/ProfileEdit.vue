@@ -1,85 +1,86 @@
 <template>
-  <div id="register_wrapper">
-    <el-container>
-      <el-row>
-        <el-col style="max-width: 700px;">
-          <el-form :model="input" :rules="rules" ref="elForm" :label-width="getLabelWidth()">
-            <el-form-item>
-              <h1>{{ $t('REG.REG_TITLE') }}</h1>
-            </el-form-item>
-            <el-form-item :label="$t('REG.EMAIL_LABEL')" prop="email_id" id="email_id">
-              <el-input :placeholder="$t('REG.EMAIL_PH')" v-model="input.email_id" type="email"></el-input>
+  <div>
+    <el-card class="box-card" style="width: 1200px; margin: 0 auto;">
+      <h1>회원정보 변경</h1>
+      <br>
+      <el-container>
+        <el-row>
+          <el-col style="max-width: 700px;">
+            <el-form :model="input" :rules="rules" ref="elForm" :label-width="getLabelWidth()">
+
+            <el-form-item label="비밀번호 변경" prop="changepw" id="changepw">
+              <el-checkbox v-model="changepw"></el-checkbox>
             </el-form-item>
 
-            <el-form-item :label="$t('REG.PASSWORD_LABEL')" prop="password" id="password">
-              <el-input :placeholder="$t('LOGIN.PASSWORD_PH')" v-model="input.password" type="password"></el-input>
+            <el-form-item label="비밀번호" prop="password" id="password">
+              <el-input v-model="input.password" type="password" :disabled="!changepw"></el-input>
               <br />* 문자, 숫자, 특수문자를 포함한 8글자 이상의 비밀번호
             </el-form-item>
 
-            <el-form-item :label="$t('REG.PASSWORD_CHECK_LABEL')" prop="password2" id="password2">
-              <el-input :placeholder="$t('LOGIN.PASSWORD_PH')" v-model="input.password2" type="password"></el-input>
+            <el-form-item label="비밀번호 확인" prop="password2" id="password2">
+              <el-input v-model="input.password2" type="password" :disabled="!changepw"></el-input>
             </el-form-item>
 
             <br />
             <br />
 
-            <el-form-item :label="$t('REG.NAME_LABEL')" prop="name" id="name">
-              <el-input :placeholder="$t('REG.NAME_PH')" v-model="input.name" type="string">
-              </el-input>
+            <el-form-item label="이름" prop="name" id="name">
+              <el-input v-model="input.name" type="string"></el-input>
             </el-form-item>
 
-
-            <el-form-item :label="$t('REG.BIRTHDAY_LABEL')" prop="birth" id="birth">
-              <el-date-picker :placeholder="$t('REG.BIRTHDAY_PH')" v-model="input.birth" type="date" id="user_birthday_input">
+            <el-form-item label="생년월일" prop="birth" id="birth">
+              <el-date-picker v-model="input.birth" type="date" id="user_birthday_input">
               </el-date-picker>
             </el-form-item>
 
-            <el-form-item :label="$t('REG.SEX_LABEL')" prop="sex" id="sex">
+            <el-form-item label="성별" prop="sex" id="sex">
               <el-radio-group v-model="input.sex" id="user_sex_input">
                 <el-radio-button label="0">{{ $t('REG.SEX_LABEL_MALE') }}</el-radio-button>
                 <el-radio-button label="1">{{ $t('REG.SEX_LABEL_FEMALE') }}</el-radio-button>
               </el-radio-group>
             </el-form-item>
 
-            <el-form-item :label="$t('REG.ADDRESS_LABEL')" prop="address1" id="address1">
-              <el-input type="string" :placeholder="$t('REG.ADDRESS_PH')" v-model="input.address1"></el-input>
-              <el-button id="btn_search_address" type="primary" @click="execDaumPostcode()">{{ $t('REG.ADDRESS_SEARCH_BUTTON') }}</el-button>
+            <el-form-item label="기존주소">
+              {{ input.initialaddress }}
             </el-form-item>
 
-            <el-form-item :label="$t('REG.ADDRESS2_LABEL')" prop="address2" id="address2">
-              <el-input id="detail" :placeholder="$t('REG.ADDRESS2_PH')" v-model="input.address2">
+            <el-form-item label="주소" prop="address1" id="address1">
+              <el-input type="string" v-model="input.address1" placeholder="빈칸일 경우, 변경되지 않습니다"></el-input>
+              <el-button id="btn_search_address" type="primary" @click="execDaumPostcode()">주소 검색</el-button>
+            </el-form-item>
+
+            <el-form-item label="상세 주소" prop="address2" id="address2">
+              <el-input id="detail" v-model="input.address2">
               </el-input>
             </el-form-item>
 
-            <el-form-item>
+            <!--<el-form-item>
               {{ address }}
-            </el-form-item>
+            </el-form-item>-->
 
-
-
-            <!-- TODO: 핸드폰 번호 -->
-            <!-- 핸드폰 번호 인증 어떻게?? -->
-            <el-form-item :label="$t('REG.PHONE_NUMBER_LABEL')" prop="phoneNumber" id="phoneNumber">
-              <el-input :placeholder="$t('REG.PHONE_NUMBER_PH')" v-model="input.phoneNumber" v-mask="['###-####-####', '###-###-####']" type="tel"></el-input>
-              <!-- <el-button type="primary" @click="dummy()">{{$t('REG.PHONE_NUMBER_VERIFY_BUTTON')}}</el-button> -->
+            <el-form-item label="핸드폰 번호" prop="phone" id="phone">
+              <el-input v-model="input.phone" v-mask="['###-####-####', '###-###-####']" type="tel"></el-input>
+              <!--인증 부분 아직-->
+              <!--<el-button type="primary" @click="dummy()">{{$t('REG.PHONE_NUMBER_VERIFY_BUTTON')}}</el-button>-->
             </el-form-item>
 
             <br />
             <br />
 
-            <el-form-item :label="$t('REG.MAJOR_LABEL')" prop="major" id="major">
-              <el-input :placeholder="$t('REG.MAJOR_PH')" v-model="input.major" type="string"></el-input>
+            <el-form-item label="전공" prop="major" id="major">
+              <el-input v-model="input.major" type="string"></el-input>
             </el-form-item>
 
-            <el-form-item :label="$t('REG.BELONG_LABEL')" prop="belong" id="belong">
-              <el-input :placeholder="$t('REG.BELONG_PH')" v-model="input.belong" type="string"></el-input>
+            <el-form-item label="소속" prop="belong" id="belong">
+              <el-input v-model="input.belong" type="string"></el-input>
             </el-form-item>
 
             <br />
             <br />
 
             <el-form-item>
-              <el-button id="btn_submit_register" type="primary" @click="submitForm('elForm')">회원가입</el-button>
+              <el-button id="btn_submit_register" type="primary" @click="submitForm('elForm')">변경 완료</el-button>
+              <el-button @click="reset()">되돌리기</el-button>
             </el-form-item>
             <br />
 
@@ -87,22 +88,25 @@
         </el-col>
       </el-row>
     </el-container>
+    </el-card>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import generateRules from '../../validations/registerValidation';
+import { mapState, mapActions } from 'vuex';
+import editRules from '../../validations/profileEditValidation';
 import authService from '../../services/authService';
+import utils from '../../utils';
 // id(string), password(string), name(string),
 // birth(1991-07-16 형식string), address(string), phone(string), major(string), belong(string소속)
 export default {
   directives: { focus },
-  name: 'Register',
+  name: 'ProfileEdit',
   data() {
     const vm = this;
     return {
       focused: false,
+      changepw: false,
       input: {
         email_id: '',
         password: '',
@@ -112,23 +116,73 @@ export default {
         postcode: '',
         address1: '', // 지역 주소
         address2: '', // 상세 주소
-        phoneNumber: '',
+        initialaddress: '', // 기존 주소
+        phone: '',
         major: '',
         belong: '',
         sex: '0',
       },
-      rules: generateRules(vm),
+      rules: editRules(vm),
     };
   },
   computed: {
     ...mapState('auth', ['locale']),
     address() {
       const vm = this;
+      if (vm.input.address1 === '') {
+        return vm.input.initialaddress.trim();
+      }
       const address = `${vm.input.address1} ${vm.input.address2} ${vm.input.postcode}`;
       return address.trim();
     },
   },
+  // 페이지 로딩시 기존 회원정보를 페이지의 form에 맞춰 올림
+  mounted: function () {  // eslint-disable-line
+    this.$nextTick(function () {  // eslint-disable-line
+      const vm = this;
+      const userID = utils.getUserIdFromJwt();
+      const userInfo = vm.returnUserInfo({
+        userID,
+      });
+      userInfo.then(function(result) {  // eslint-disable-line
+        vm.input.email_id = result.data.userInfo.email_id;
+        vm.input.name = result.data.userInfo.name;
+        vm.input.birth = result.data.userInfo.birth;
+        vm.input.sex = result.data.userInfo.sex;
+        vm.input.phone = result.data.userInfo.phone;
+        vm.input.initialaddress = result.data.userInfo.address;
+        vm.input.major = result.data.userInfo.major;
+        vm.input.belong = result.data.userInfo.belong;
+      });
+    });
+  },
   methods: {
+    ...mapActions('auth', [
+      'checkUserPW',
+      'returnUserInfo',
+    ]),
+    // 프로필 수정 기능 초기화
+    async reset() {
+      const vm = this;
+      const userID = utils.getUserIdFromJwt();
+      const userInfo = vm.returnUserInfo({
+        userID,
+      });
+      userInfo.then(function(result) {  // eslint-disable-line
+        vm.input.name = result.data.userInfo.name;
+        vm.input.birth = result.data.userInfo.birth;
+        vm.input.sex = result.data.userInfo.sex;
+        vm.input.phone = result.data.userInfo.phone;
+        vm.input.initialaddress = result.data.userInfo.address;
+        vm.input.major = result.data.userInfo.major;
+        vm.input.belong = result.data.userInfo.belong;
+      });
+      vm.input.address1 = '';
+      vm.input.address2 = '';
+      vm.changepw = false;
+      vm.input.password = '';
+      vm.input.password2 = '';
+    },
     execDaumPostcode() {
       const vm = this;
       new window.daum.Postcode({
@@ -196,7 +250,6 @@ export default {
         return;
       }
       const fieldList = [
-        'email_id',
         'password',
         'password2',
         'name',
@@ -204,7 +257,7 @@ export default {
         'sex',
         'address1',
         'address2',
-        'phoneNumber',
+        'phone',
         'major',
         'belong',
       ];
@@ -221,8 +274,10 @@ export default {
         console.log('error submit!!'); // eslint-disable-line
         return;
       }
+      const userID = utils.getUserIdFromJwt();
       try {
-        await authService.register({
+        await authService.editUser({
+          userID: userID,  // eslint-disable-line
           input: {
             ...vm.input, address: vm.address,
           },
@@ -270,22 +325,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.el-input {
-  width: 400px;
-}
-
-.el-button {
-  margin-left: 10px;
-}
-
-.tos {
-  background-color: white;
-  border-radius: 4px;
-  padding: 10px;
-}
-</style>
-
-
-
