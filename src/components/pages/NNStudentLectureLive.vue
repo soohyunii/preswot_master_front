@@ -156,11 +156,11 @@ export default {
                 interval: 0,
                 codeLanguage: data[3],
               });
-              vm.$notify({
+              /* vm.$notify({
                 title: '알림',
                 message: '제출하였습니다.',
                 type: 'success',
-              });
+              }); */
               const params = {
                 lecture_item_id: Number.parseInt(vm.lectureItem.lecture_item_id, 10),
                 user_id: utils.getUserIdFromJwt(),
@@ -175,11 +175,11 @@ export default {
                 surveyId: data[1],
                 answer: [data[3]],
               });
-              vm.$notify({
+              /* vm.$notify({
                 title: '알림',
                 message: '제출하였습니다.',
                 type: 'success',
-              });
+              }); */
               const params = {
                 lecture_item_id: Number.parseInt(vm.lectureItem.lecture_item_id, 10),
                 user_id: utils.getUserIdFromJwt(),

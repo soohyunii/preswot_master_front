@@ -1,5 +1,6 @@
 // import Test from '../components/TestComponent';
 import Profile from '../components/pages/Profile';
+import ProfileEdit from '../components/pages/ProfileEdit';
 import TeacherClassIndex from '../components/pages/TeacherClassIndex';
 import NNTeacherClassIndex from '../components/pages/NNTeacherClassIndex';
 import NNTeacherClassNew from '../components/pages/NNTeacherClassNew';
@@ -56,6 +57,14 @@ export default function authRoutes(root) {
       component: Profile,
       meta: {
         title: 'Profile', // TODO: import from i18n
+      },
+    },
+    {
+      path: '/profileEdit',
+      name: 'ProfileEdit',
+      component: ProfileEdit,
+      meta: {
+        title: 'ProfileEdit',
       },
     },
     {

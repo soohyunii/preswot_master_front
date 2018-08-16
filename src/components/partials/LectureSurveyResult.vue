@@ -119,6 +119,17 @@
       changeHead() {
         return { backgroundColor: '#EAEAEA' };
       },
+      async scoreSubmit(score, id) { // eslint-disable-line
+        const vm = this;
+        if (score < 0 || score > vm.questionResult.score) {
+          vm.$notify({
+            title: '점수 범위를 확인하세요',
+            message: '',
+            type: 'error',
+            duration: 2000,
+          });
+        }
+      },
     },
   };
 </script>

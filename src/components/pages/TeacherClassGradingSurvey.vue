@@ -19,7 +19,7 @@
           <el-row v-if="surveyResult.type === '객관'">
             <el-col :span="4">보기</el-col>
             <el-col :span="20">
-              <span class="choices" v-for="(choice, index) in surveyResult.choice"><span class="index">{{ index + 1 }} .</span> {{ choice }}</span>
+              <span class="choices" v-for="(choice, index) in surveyResult.choice" :key="(choice, index)"><span class="index">{{ index + 1 }} .</span> {{ choice }}</span>
             </el-col>
           </el-row>
         </el-card>

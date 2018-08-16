@@ -42,11 +42,6 @@ export default {
             await vm.postProgramList({
               tempAllowedProgramPlistIdList: vm.tempAllowedProgramPlistIdList,
             });
-            vm.$notify({
-              title: '허용 프로그램 수정 성공',
-              message: '성공적으로 저장됨',
-              type: 'success',
-            });
             const lectureId = Number.parseInt(vm.$route.params.lectureId, 10);
             await vm.getProgramLists({
               lectureId,
