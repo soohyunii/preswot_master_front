@@ -4,8 +4,8 @@
       {{selectedSaying}}
     </pre>
     <div :class="$attachReactablePostfix('search-box')" v-if="authType !== 1">
-      <i id="icon_search" class="el-icon-search" style="position:absolute; left: 18px; top: 8px" @click="onClick('asdfsadf')"></i>
-      <input v-model="searchText" type="text" id="headerInput" placeholder="What do you want to learn?"/>
+      <i id="icon_search" class="el-icon-search" style="position:absolute; left: 18px; top: 8px" @click="onClick('SEARCH')"></i>
+      <input v-model="searchText" type="text" id="headerInput" placeholder="What do you want to learn?" @keydown.enter="onClick('SEARCH')"/>
     </div>
   </div>
 </template>
@@ -42,7 +42,7 @@ export default {
     async onClick(type) {
       switch (type) {
         case 'SEARCH': {
-          this.$router.push({ path: '/classes', query: { type: 'name', text: `${this.searchText}` } });
+          this.$router.push({ path: '/classes', query: { type: 'name', text: this.searchText } });
           break;
         }
         default: {
