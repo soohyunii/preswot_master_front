@@ -27,6 +27,7 @@ export default {
     order,
     result, // TODO: get from user
     opened, // TODO: get from user? 이건 좀 애매한데
+    sequence,
   }) {
     const param = {};
 
@@ -38,6 +39,7 @@ export default {
     utils.assignIfNotNil(param, { order });
     utils.assignIfNotNil(param, { result });
     utils.assignIfNotNil(param, { opened });
+    utils.assignIfNotNil(param, { sequence });
     // TODO: rename prepare_lesson_review
     // Object.assign(param, {
     //   opened: 3, // TODO: 동일이형이랑 얘기하고 지우려면 지우자

@@ -1,6 +1,5 @@
 import { NightwatchBrowser } from 'nightwatch';
 
-
 function generateRandomEmail() {
   const id = Math.random().toString(36).substring(7);
   return `${id}@register-test.com`;
@@ -8,6 +7,8 @@ function generateRandomEmail() {
 
 const testPassword = 'adjadj1234';
 export default {
+  '@disabled': true,
+  '@tags': ['register'],
   '회원가입은 모든 필드에 올바른 값을 넣었을 떄 회원을 생성해야한다.': (client: NightwatchBrowser) => {
     const devServer = client.globals.devServerURL as string;
 
@@ -95,8 +96,6 @@ export default {
     client.expect.element('#email_id .el-form-item__error').text.to.be.equal('유효하지 않은 이메일입니다.');
 
     // TODO: 나머지 validation
-
-
     client.end();
   },
 };

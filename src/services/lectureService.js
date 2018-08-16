@@ -12,11 +12,17 @@ export default {
   },
   postLecture({
     classId,
-    teacherId,
+    type,
+    name,
+    start_time,
+    end_time,
   }) {
     return http.post('/lectures', {
       classId,
-      teacherId,
+      type,
+      name,
+      start_time,
+      end_time,
     });
   },
   postLecturePlist({
@@ -42,8 +48,8 @@ export default {
     name,
     description,
     location,
-    startDate,
-    endDate,
+    startTime,
+    endTime,
     opened,
     videoLink,
     teacherEmail,
@@ -56,8 +62,8 @@ export default {
     utils.assignIfNotNil(param, { name });
     utils.assignIfNotNil(param, { description });
     utils.assignIfNotNil(param, { location });
-    utils.assignIfNotNil(param, { startDate }, 'intended_start');
-    utils.assignIfNotNil(param, { endDate }, 'intended_end');
+    utils.assignIfNotNil(param, { startTime }, 'start_time');
+    utils.assignIfNotNil(param, { endTime }, 'end_time');
     utils.assignIfNotNil(param, { opened });
     utils.assignIfNotNil(param, { videoLink }, 'video_link');
     utils.assignIfNotNil(param, { teacherEmail }, 'teacher_email');
@@ -79,6 +85,12 @@ export default {
       data: lectureKeywords,
     });
   },
+  deleteLectureKeyword({
+    lectureId,
+    lectureKeyword,
+  }) {
+    return http.delete(`/lectures/${lectureId}/keywords/${lectureKeyword}`);
+  },
   getLectureKeywordRelations({
     lectureId,
   }) {
@@ -97,7 +109,7 @@ export default {
     node1,
     node2,
   }) {
-    return http.delete(`/lecture/${lectureId}/${node1}/${node2}`);
+    return http.delete(`/lectures/${lectureId}/keyword-relations/${node1}/${node2}`);
   },
   getLectureCoverage({ id }) {
     return http.get(`/lectures/${id}/coverage`);
@@ -109,5 +121,39 @@ export default {
       isFast: true,
     };
     return http.post(`/lectures/${id}/keyword-extractor`, param);
+  },
+  postLectureMaterial({ lectureId, file }) {
+    const form = new FormData();
+    form.append('lecture_Id', lectureId);
+    form.append('material_type', 0);
+    form.append('file', file, file.name);
+    return http.post('/materials', form, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  },
+  getLectureMaterial({ lectureId }) {
+    return http.get(`/materials/${lectureId}`);
+  },
+  getOpenedLectureItem({ lectureId }) {
+    return http.get(`/lectures/${lectureId}/opened-item`);
+  },
+  deleteMaterial({ id }) {
+    return http.delete(`/materials/${id}`);
+  },
+  getMaterialKeywords({ id }) {
+    return http.get(`/materials/${id}/keywords`);
+  },
+  postMaterialKeyword({ id, keyword, score }) {
+    return http.post(`/materials/${id}/keywords`, {
+      keyword,
+      score,
+    });
+  },
+  deleteMaterialKeyword({ id, keyword }) {
+    return http.delete(`/materials/${id}/keywords`, {
+      keyword: keyword, // eslint-disable-line
+    });
   },
 };

@@ -1,5 +1,5 @@
 <template>
-  <div id="login_wrapper">
+  <div :id="$attachReactablePostfix('login_wrapper')" class="bt-container">
     <el-container>
 
       <el-row>
@@ -13,14 +13,14 @@
           <el-input placeholder="abc@gmail.com" v-model="input.email" type="email">
             <template slot="prepend">{{ $t('LOGIN.EMAIL_LABEL') }}</template>
           </el-input>
-          <el-input placeholder="********" v-model="input.password" type="password">
+          <el-input placeholder="********" v-model="input.password" type="password" @keydown.enter.native="onClick('LOGIN')">
             <template slot="prepend">{{ $t('LOGIN.PASSWORD_LABEL') }}</template>
           </el-input>
           <br />
           <br />
           <!-- TODO: add disabled attr according to validation -->
           <el-button
-            id="btn_login"
+            :id="$attachReactablePostfix('btn_login')"
             type="primary"
             @click="onClick('LOGIN')"
           >
@@ -35,7 +35,7 @@
           <el-dialog
             title="비밀번호 초기화"
             :visible.sync="isModalVisible"
-            width="30%"
+            :width="$isPhone?'80%':'30%'"
             center
           >
             <!-- TODO: replace 브랜드 로고 -->
@@ -60,9 +60,9 @@
         </el-col>
       </el-row>
     </el-container>
-    jwt: {{ jwt }} <br />
+    <!-- jwt: {{ jwt }} <br />
     input: {{ input }} <br />
-    redirectTo: {{ redirectTo }}
+    redirectTo: {{ redirectTo }} -->
   </div>
 </template>
 
@@ -74,8 +74,10 @@ export default {
   data() {
     return {
       input: {
-        email: 'adoji92@gmail.com',
-        password: 'adjadj1234',
+        // email: 'adoji92@gmail.com',
+        // password: 'adjadj1234',
+        email: '',
+        password: '',
       },
       isModalVisible: false,
       findingPasswordEmail: '',
@@ -98,7 +100,8 @@ export default {
             });
             // console.log('login res', JSON.stringify(res));
             // TODO: translate
-            vm.openNoti('success', 'Login Success !!', 'Success');
+
+            // vm.openNoti('success', 'Login Success !!', 'Success');
             if (vm.redirectTo) {
               // jwt 업데이트 후 페이지 이동 이루어지도록
               vm.$router.push(vm.redirectTo);
@@ -179,3 +182,39 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped> // scoped 를 풀었을경우, 강사 로그인 - 내 강의 목록 - 강의 개설 이동시 폰트가 커지는 버그가 있음. 해당 화면 새로고침시 다시 작아짐..
+.el-input{
+  margin:10px;
+}
+
+#btn_login{
+  margin:0 20px 0 100px;
+  width:150px;
+}
+
+#login_wrapper{
+  margin-top:70px;
+  padding-left:100px;
+}
+
+#login_wrapper h1{
+  margin:0.67em 15px;
+}
+
+.el-form-item label{
+  font-size:1.2em;
+  margin-left: 10px;
+  padding-bottom:0px;
+}
+
+#login_wrapper-phone{
+  margin-top:70px;
+}
+
+#btn_login-phone{
+  margin:0 20px 0 20px;
+  width:100px;
+}
+
+</style>

@@ -1,55 +1,33 @@
 <template>
   <div id="teacher_class_index_wrapper" class="bt-container">
-    <class-list type="TEACHER" :list="[
-            {
-              class_id: 1,
-              name: 'asdf',
-              description: 'sdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdf',
-              intended_lecture_num: 0,
-              start_time: '2018-05-02T06:03:05.000Z',
-              end_time: null,
-              opened: 1,
-              created_at: '2018-05-15T06:03:06.000Z',
-              updated_at: '2018-05-15T07:12:08.000Z',
-              master_id: 11,
-              user_class: {
-                role: 'teacher',
-                class_id: 1,
-                user_id: 11,
-              },
-            },
-            {
-              class_id: 1,
-              name: 'asdf2',
-              description: 'sdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdf',
-              intended_lecture_num: 0,
-              start_time: '2018-05-02T06:03:05.000Z',
-              end_time: null,
-              opened: 1,
-              created_at: '2018-05-15T06:03:06.000Z',
-              updated_at: '2018-05-15T07:12:08.000Z',
-              master_id: 11,
-              user_class: {
-                role: 'teacher',
-                class_id: 1,
-                user_id: 11,
-              },
-            },
-          ]" />
+    <h2 class="page-title">강의중인 과목 목록</h2>
+    <class-list
+      @row-click="onClickClass"
+      @delete="onClickDelete"
+      type="TEACHER"
+      :list="teachingClassList || []"
+      class="elTable-font"
+      :isPhone="$isPhone"
+    />
 
     <br />
 
     <div class="right-align">
-      <router-link to="/a/teacher/class/new">
-        <el-button type="primary">과목 개설</el-button>
+      <router-link to="/a/teacher/NNclass/new">
+        <el-button  type="primary" :class="$attachReactablePostfix('right-align-btn')">
+          <div class="right-align-btn-layer">과목 개설</div>
+        </el-button>
       </router-link>
     </div>
   </div>
 </template>
 
+
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex';
 import ClassList from '../partials/ClassList';
+import classService from '../../services/classService';
+
 
 export default {
   name: 'TeacherClassIndex',
@@ -57,28 +35,141 @@ export default {
     ClassList,
   },
   computed: {
-    ...mapState('class', [
-      'currentClassIndex',
+    ...mapState('NNclass', [
       'teachingClassList',
-      'studyingClassList',
     ]),
   },
+  async beforeMount() {
+    const vm = this;
+    await vm.getMyClassLists();
+  },
   methods: {
-    ...mapMutations('class', [
-      'updateCurrentClassIndex',
+    ...mapMutations('NNclass', [
+      'deleteTeachingClass',
     ]),
-    ...mapActions('class', [
+    ...mapActions('NNclass', [
       'getMyClassLists',
-      'getKnowledgeMapData',
     ]),
+    onClickClass(row, _, column) {
+      if (column.label === '-') {
+        return;
+      }
+      const vm = this;
+      vm.$router.push(`/a/teacher/NNclass/${row.class_id}`);
+    },
+    onClickDelete(index) {
+      const vm = this;
+      const currentTeachingClass = vm.teachingClassList[index];
+      vm.$confirm('정말로 이 과목을 삭제하시겠습니까?', `${currentTeachingClass.name || ''} 삭제`, {
+        confirmButtonText: '예, 삭제합니다.',
+        cancelButtonText: '아니요, 삭제하지 않습니다.',
+        type: 'warning',
+      })
+        .then(async () => {
+          try {
+            // const index = vm.currentClassIndex;
+            const currentClass = vm.teachingClassList[index];
+            await classService.delete({
+              id: currentClass.class_id,
+            });
+            vm.deleteTeachingClass({
+              teachingClassIndex: index,
+            });
+          } catch (error) {
+            console.error(error); // eslint-disable-line no-console
+            vm.$notify({
+              title: '과목 삭제 실패',
+              message: error.toString(),
+              type: 'error',
+              duration: 3000,
+            });
+          }
+        })
+        .catch(() => {
+          vm.$notify({
+            title: '취소됨',
+            message: '과목 삭제 취소됨',
+            type: 'info',
+            duration: 3000,
+          });
+        });
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+
 #teacher_class_index_wrapper {
-  .right-align {
-    text-align: right;
+  .page-title{
+    float:left;
+    width:1000px;
+    height: 24px;
+      
+    font-family: SpoqaHanSans;
+    font-size: 25px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.2;
+    letter-spacing: normal;
+    color: #000000;
+  
+    margin-top : 40px;
+    margin-left : 12px;
+    margin-bottom : 25px;
   }
+  .right-align {
+      text-align: right;
+  }
+  
+  .right-align-btn {
+    width: 100%;
+    height: 40px;
+    border-radius: 3px;
+    border: solid 1px #1989fa;
+  }
+
+  .right-align-btn-layer {
+    width: 94px;
+    height: 12px;
+    font-family: SpoqaHanSans;
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: center;
+    color: #ffffff;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .el-table th{
+    font-family: SpoqaHanSans;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    color: #909399;
+  }
+
+  .el-table td{
+    font-family: SpoqaHanSans;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    color: #1989fa;
+  }
+}
+
+.right-align-btn-phone {
+  display: none;
 }
 </style>

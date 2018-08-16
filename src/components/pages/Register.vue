@@ -13,6 +13,7 @@
 
             <el-form-item :label="$t('REG.PASSWORD_LABEL')" prop="password" id="password">
               <el-input :placeholder="$t('LOGIN.PASSWORD_PH')" v-model="input.password" type="password"></el-input>
+              <br />* 문자, 숫자, 특수문자를 포함한 8글자 이상의 비밀번호
             </el-form-item>
 
             <el-form-item :label="$t('REG.PASSWORD_CHECK_LABEL')" prop="password2" id="password2">
@@ -60,7 +61,7 @@
             <!-- 핸드폰 번호 인증 어떻게?? -->
             <el-form-item :label="$t('REG.PHONE_NUMBER_LABEL')" prop="phoneNumber" id="phoneNumber">
               <el-input :placeholder="$t('REG.PHONE_NUMBER_PH')" v-model="input.phoneNumber" v-mask="['###-####-####', '###-###-####']" type="tel"></el-input>
-              <el-button type="primary" @click="dummy()">{{$t('REG.PHONE_NUMBER_VERIFY_BUTTON')}}</el-button>
+              <!-- <el-button type="primary" @click="dummy()">{{$t('REG.PHONE_NUMBER_VERIFY_BUTTON')}}</el-button> -->
             </el-form-item>
 
             <br />
@@ -75,26 +76,6 @@
             </el-form-item>
 
             <br />
-            <br />
-
-            <!-- TODO: terms of use / privacy policy text 주루루룩 -->
-            <el-form-item :label="$t('REG.TOU')" prop="checkTou" id="checkTou">
-              <div class="tos">
-                <p>
-                  이용 약관(영어: Terms of service terms of use이나
-                  terms and conditions으로도 알려짐,
-                  줄여서 ToS 또는 TOS라고 부르기도 함)은 서비스를
-                  이용하기 위해 동의해야만 하는 규칙이다.
-                </p>
-                <p>
-                  돈데기리기리 돈데기리기리 돈데돈데돈데 돈데크만
-                  카피카피 룸룸 카피카피 룸룸
-                  카피카피 룸룸 카피카피 룸룸
-                </p>
-              </div>
-              <el-checkbox v-model="input.checkTou" id="user_tou_input">{{ $t('REG.TOU_LABEL') }}</el-checkbox>
-            </el-form-item>
-
             <br />
 
             <el-form-item>
@@ -135,7 +116,6 @@ export default {
         major: '',
         belong: '',
         sex: '0',
-        checkTou: false,
       },
       rules: generateRules(vm),
     };
@@ -208,6 +188,13 @@ export default {
     },
     async submitForm(formName) {
       const vm = this;
+
+      if (vm.$isProd) {
+        vm.$notify({
+          message: 'ㅎㅎ! 막아놨음',
+        });
+        return;
+      }
       const fieldList = [
         'email_id',
         'password',
@@ -220,7 +207,6 @@ export default {
         'phoneNumber',
         'major',
         'belong',
-        'checkTou',
       ];
 
       let allValid = true;

@@ -87,11 +87,6 @@ export default {
       const vm = this;
       try {
         await vm.putClass();
-        vm.$notify({
-          title: '과목 수정 성공',
-          message: '성공적으로 과목이 수정됨',
-          type: 'success',
-        });
         vm.$router.push('/a/teacher/class');
       } catch (error) {
         vm.$notify({

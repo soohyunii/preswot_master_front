@@ -4,11 +4,15 @@ import moment from 'moment';
 import isNil from 'lodash.isnil';
 import isBoolean from 'lodash.isboolean';
 import isNumber from 'lodash.isnumber';
-
+import browser from 'browser-detect';
 // eslint-disable-next-line
 const re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
 export default {
+  checkBrowser() {
+    const result = browser();
+    return result;
+  },
   getJwtFromLocalStorage() {
     const jwt = localStorage.getItem('jwt') || '';
     // TODO: Check expiration date periodically
@@ -38,11 +42,25 @@ export default {
     let isExpired;
     try {
       const payload = jwtDecode(jwt);
-      isExpired = Date.now() < payload.exp;
+      isExpired = Date.now() > payload.exp * 1000;
     } catch (error) {
       isExpired = true;
     }
     return isExpired;
+  },
+  getAuthTypeFromJwt(jwt) {
+    if (jwt.length === 0) {
+      return null;
+    }
+    let decodedJwt;
+
+    try {
+      decodedJwt = jwtDecode(jwt);
+    } catch (error) {
+      console.error(error.toString); // eslint-disable-line no-console
+    }
+
+    return decodedJwt ? decodedJwt.authType : null;
   },
   getEmailFromJwt() {
     const jwt = this.getJwtFromLocalStorage();
@@ -113,6 +131,61 @@ export default {
       return mapping.indexOf(scItemType);
     }
     return new Error(`not defined scItemType ${scItemType}`);
+  },
+  convertLcItemType(lcItemType) {
+    const mapping = ['question', 'survey', 'practice', 'discussion', 'note'];
+    if (typeof lcItemType === 'number') {
+      return mapping[lcItemType];
+    } else if (typeof lcItemType === 'string') {
+      return mapping.indexOf(lcItemType);
+    }
+    return new Error(`not defined lcItemType ${lcItemType}`);
+  },
+  convertLcItemTypeKor(lcItemType) {
+    return ['문항', '설문', '실습', '토론', '자료'][lcItemType];
+  },
+  // 시즌2용 유틸함수
+  convertQuestionType2(questionType) {
+    const mapping = [
+      'MULTIPLE_CHOICE',
+      'SHORT_ANSWER',
+      'DESCRIPTION',
+      'SW',
+      'SQL',
+    ];
+    if (typeof questionType === 'number') {
+      return mapping[questionType];
+    } else if (typeof questionType === 'string') {
+      return mapping.indexOf(questionType);
+    }
+    return new Error(`not defined questionType ${questionType}`);
+  },
+  // 시즌2용 유틸함수
+  convertSurveyType2(surveyType) {
+    const mapping = [
+      'MULTIPLE_CHOICE',
+      'DESCRIPTION',
+    ];
+    if (typeof surveyType === 'number') {
+      return mapping[surveyType];
+    } else if (typeof surveyType === 'string') {
+      return mapping.indexOf(surveyType);
+    }
+    return new Error(`not defined surveyType ${surveyType}`);
+  },
+  convertNoteType(noteType) {
+    const mapping = [
+      'IMAGE',
+      'DOCS',
+      'LINK',
+      'YOUTUBE',
+    ];
+    if (typeof noteType === 'number') {
+      return mapping[noteType];
+    } else if (typeof noteType === 'string') {
+      return mapping.indexOf(noteType);
+    }
+    return new Error(`not defined noteType ${noteType}`);
   },
   convertQuestionType(questionType) {
     const mapping = ['객관', '단답', '서술', 'SW', 'SQL'];
@@ -189,5 +262,18 @@ export default {
     window.setTimeout(() => {
       document.body.removeChild(link);
     }, 1000);
+  },
+  getWindowSize() {
+    return {
+      width: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
+      height: Math.max(document.documentElement.clientHeight, window.innerHeight || 0),
+    };
+  },
+  getViewportSize() {
+    const width = this.getWindowSize().width;
+    if (width >= 1200) return 'lg';
+    if (width >= 992) return 'md';
+    if (width >= 768) return 'sm';
+    return 'xs';
   },
 };
