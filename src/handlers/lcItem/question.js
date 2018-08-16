@@ -15,6 +15,8 @@ export default class QuestionHandler extends LcItemHandler {
     const item = vm.lectureItem;
     const q = item.questions[0];
 
+    console.log(q);
+
     // FIXME: 아래 메소드가 일부 클라이언트에서 알 수 없는 이유로 동적 매핑이 안되는 현상이 있습니다. 임시로 vm.$set 을 사용합니다.
     // vm.inputTail.question = q.question;
     vm.$set(vm.inputTail, 'question', q.question);
@@ -43,6 +45,19 @@ export default class QuestionHandler extends LcItemHandler {
       case 2: { // 서술
         vm.inputBody.questionType = 'DESCRIPTION';
         vm.$set(vm.inputTail, 'answer', q.answer[0]);
+        vm.$nextTick(() => {
+          vm.$set(vm.inputTail, 'answerFile', vm.$refs.questionEditor.$refs.answerUpload.uploadFiles);
+          if (q.files[0] !== undefined) {
+            vm.$refs.questionEditor.$refs.answerUpload.uploadFiles.push({
+              name: q.files[0].name,
+              file_guid: q.files[0].file_guid,
+            });
+            vm.$set(vm.inputTail, 'oldfile', {
+              name: q.files[0].name,
+              file_guid: q.files[0].file_guid,
+            });
+          }
+        });
         break;
       }
       case 3: { // SW
@@ -124,6 +139,39 @@ export default class QuestionHandler extends LcItemHandler {
       questionId,
       data: inputTail.assignedKeywordList,
     });
+
+    // 서술형인 경우
+    if (inputBody.questionType === 'DESCRIPTION') {
+      // 기존 파일이 존재
+      if (inputTail.oldfile !== undefined) {
+        // 새 파일 없으면 수정 전 파일 삭제
+        if (inputTail.answerFile[0] === undefined) {
+          fileService.deleteFile({
+            fileGuid: inputTail.oldfile.file_guid,
+          });
+        }
+        // 수정 후 파일 존재할 경우 기존 파일 삭제 및 새 파일 추가
+        if (inputTail.answerFile[0] !== undefined && inputTail.answerFile[0].raw !== undefined) {
+          fileService.deleteFile({
+            fileGuid: inputTail.oldfile.file_guid,
+          });
+          questionService.postQuestionFile({
+            questionId,
+            file: inputTail.answerFile[0].raw,
+          });
+        }
+      }
+      // 수정 전 파일이 존재하지 않음
+      if (inputTail.oldfile === undefined) {
+        // 수정 후 파일 존재할 경우 파일 추가
+        if (inputTail.answerFile[0] !== undefined && inputTail.answerFile[0].raw !== undefined) {
+          questionService.postQuestionFile({
+            questionId,
+            file: inputTail.answerFile[0].raw,
+          });
+        }
+      }
+    }
 
     // SW인 경우
     if (inputBody.questionType === 'SW') {
