@@ -1,6 +1,6 @@
 <template>
   <div :id="$attachReactablePostfix('app')" :style="{ backgroundImage: ('url('+require('@/assets/study05.jpg')+')') }"
-   oncontextmenu="return false">
+   :oncontextmenu="authType === 1 ? '' : 'return false'" :ondragstart="authType === 1 ? '' : 'return false'">
     <el-container>
       <el-header>
         <app-header />
@@ -46,6 +46,11 @@ export default {
     ...mapState('layout', ['isNavCollapsed']),
     isMainPage() {
       return this.$route.path === '/';
+    },
+    authType() {
+      const vm = this;
+      const jwt = vm.$store.state.auth.jwt;
+      return utils.getAuthTypeFromJwt(jwt);
     },
   },
   methods: {

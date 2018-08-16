@@ -1,5 +1,5 @@
 <template>
-  <div id="teacher_lecture_manage_wrapper" class="bt-container" oncontextmenu="return false">
+  <div id="teacher_lecture_manage_wrapper" class="bt-container">
     <h2>{{ currentTeachingClass(classId) ? currentTeachingClass(classId).name : '' }} > {{ lecture ? lecture.name : '' }}</h2>
     <!-- lecture id: {{ lectureId }} {{ lecture }}<br /> <br /> -->
     <!-- ddd {{ currentTeachingClass(classId) }}<br /> -->

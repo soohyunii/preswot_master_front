@@ -1,5 +1,5 @@
 <template>
-  <div oncontextmenu="return false">
+  <div>
     <h3>게시판</h3>
     <el-input placeholder="글 제목을 작성하세요." v-model="name"></el-input>
     <el-input placeholder="글 내용을 작성하세요." v-model="content" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>

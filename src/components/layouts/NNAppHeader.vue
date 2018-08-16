@@ -1,5 +1,5 @@
 <template>
-  <div id="app_nav_wrapper" class="bt-container" oncontextmenu="return false">
+  <div id="app_nav_wrapper" class="bt-container">
     <div style="position: relative">
       <router-link to="/">
         <div :class="$attachReactablePostfix('div1')">

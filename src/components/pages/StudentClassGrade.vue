@@ -1,5 +1,5 @@
 <template>
-  <div id="student_class_grade_wrapper" class="bt-container" oncontextmenu="return false">
+  <div id="student_class_grade_wrapper" class="bt-container">
     <h2>{{ currentStudyingClass(classId) ? currentStudyingClass(classId).name : '' }} > 결과보기</h2>
     <div class="one-lecture-wrapper" v-for="lecture in questionList" :key="lecture">
       <h3>{{ lecture.name }}</h3>

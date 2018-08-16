@@ -1,5 +1,5 @@
 <template>
-  <div id="teacher_class_grading_wrapper" class="bt-container" oncontextmenu="return false">
+  <div id="teacher_class_grading_wrapper" class="bt-container">
     <h2>{{ currentTeachingClass(classId) ? currentTeachingClass(classId).name : '' }} > 결과보기</h2>
     <el-tabs v-model="activeTab">
       <el-tab-pane label="문항 결과" name="question">

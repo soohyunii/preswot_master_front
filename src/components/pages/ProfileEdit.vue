@@ -1,5 +1,5 @@
 <template>
-  <div oncontextmenu="return false">
+  <div>
     <el-card class="box-card" style="width: 1200px; margin: 0 auto;">
       <h1>회원정보 변경</h1>
       <br>

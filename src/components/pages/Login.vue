@@ -1,5 +1,5 @@
 <template>
-  <div :id="$attachReactablePostfix('login_wrapper')" class="bt-container" oncontextmenu="return false">
+  <div :id="$attachReactablePostfix('login_wrapper')" class="bt-container">
     <el-container>
 
       <el-row>

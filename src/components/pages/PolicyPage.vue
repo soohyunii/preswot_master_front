@@ -1,5 +1,5 @@
 <template>
-  <div id="policy_page_wrapper" class="bt-container" oncontextmenu="return false">
+  <div id="policy_page_wrapper" class="bt-container">
     <p>
       <p class="ls2 lh6 bs5 ts4">
         <em class="emphasis">

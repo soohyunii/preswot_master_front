@@ -1,5 +1,5 @@
 <template>
-  <div id="teacher_class_new_wrapper" class="bt-container" oncontextmenu="return false">
+  <div id="teacher_class_new_wrapper" class="bt-container">
      <div class="page-title">
       <template v-if="isEdit">
         과목 수정

@@ -1,5 +1,5 @@
 <template>
-  <div id="tos_wrapper" oncontextmenu="return false">
+  <div id="tos_wrapper">
     <el-container>
       <el-row>
         <el-col style="max-width: 700px;">

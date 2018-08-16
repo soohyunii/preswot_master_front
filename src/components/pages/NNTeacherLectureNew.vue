@@ -1,5 +1,5 @@
 <template>
-  <div id="teacher_lecture_new_wrapper" class="bt-container" oncontextmenu="return false"> 
+  <div id="teacher_lecture_new_wrapper" class="bt-container"> 
     <h2 v-if="isManage === false" class="page-title">
       강의 추가
     </h2>

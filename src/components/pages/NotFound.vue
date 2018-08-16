@@ -1,5 +1,5 @@
 <template>
-  <div oncontextmenu="return false">
+  <div>
     <h1 class="not-found">Not Found 404</h1>
     <i18n path="NOTFOUND.REDIRECT_MESSAGE" tag="h2" class="redirect-message">
       <span place="REDIRECT_MESSAGE1">{{ $t('NOTFOUND.REDIRECT_MESSAGE1') }}</span>

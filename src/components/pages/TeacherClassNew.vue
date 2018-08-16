@@ -1,5 +1,5 @@
 <template>
-  <div oncontextmenu="return false">
+  <div>
     <h1>과목 생성</h1>
     <el-row>
       <el-col style="max-width: 600px;">

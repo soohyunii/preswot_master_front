@@ -1,5 +1,5 @@
 <template>
-  <div id="class_board_wrapper" class="bt-container" oncontextmenu="return false">
+  <div id="class_board_wrapper" class="bt-container">
     <h3>게시판</h3>
     <el-table :data="postList" @cell-click="onDetail" style="width: 100%">
       <el-table-column prop="board_id" label="번호" width="130">

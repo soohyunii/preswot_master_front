@@ -1,5 +1,5 @@
 <template>
-  <div id="student_lecture_index_wrapper" class="bt-container" oncontextmenu="return false">
+  <div id="student_lecture_index_wrapper" class="bt-container">
     <h2>{{ currentStudyingClass(classId) ? currentStudyingClass(classId).name : '' }}</h2>
     <div class="right-align margin-bottom-15">
       <!-- <el-button @click="onClick('KNOWLEDGEMAP')">과목지식맵</el-button> -->

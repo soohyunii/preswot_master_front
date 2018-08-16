@@ -1,5 +1,5 @@
 <template>
-  <div id="class_index_wrapper" class="bt-container" oncontextmenu="return false">
+  <div id="class_index_wrapper" class="bt-container">
     <h2 class="page-title">과목 목록</h2>
     <class-intro-table
       :list="list"

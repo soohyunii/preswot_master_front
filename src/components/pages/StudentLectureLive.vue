@@ -1,5 +1,5 @@
 <template>
-  <div oncontextmenu="return false">
+  <div>
     <el-row v-if="isVideoVisible">
       <el-col>
         <youtube

@@ -1,5 +1,5 @@
 <template>
-  <div id="landing_page_wrapper" class="bt-container" oncontextmenu="return false">
+  <div id="landing_page_wrapper" class="bt-container">
     <pre :class="$attachReactablePostfix('wise-saying')">
       {{selectedSaying}}
     </pre>

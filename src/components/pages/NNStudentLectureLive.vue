@@ -1,5 +1,5 @@
 <template>
-  <div oncontextmenu="return false">
+  <div>
     <template v-if="$isPhone">
       <h2>{{ path }}</h2>
       <youtube

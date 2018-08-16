@@ -1,5 +1,5 @@
 <template>
-  <div oncontextmenu="return false">
+  <div>
     <el-container>
       <el-aside width="150px">
         <!-- <teaching-class-list-aside /> -->

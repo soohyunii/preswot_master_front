@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper bt-container" oncontextmenu="return false">
+  <div class="wrapper bt-container">
     <el-container>
       <class-list-aside type="STUDENT" />
 

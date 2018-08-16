@@ -1,5 +1,5 @@
 <template>
-  <div oncontextmenu="return false">
+  <div>
     <h3>게시판</h3>
     <el-input :disabled="true" :value="name"></el-input>
     <el-input :disabled="true" :value="content" type="textarea" :autosize="{ minRows: 10, maxRows: 15}"></el-input>

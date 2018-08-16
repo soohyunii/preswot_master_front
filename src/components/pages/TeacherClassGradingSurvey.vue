@@ -1,5 +1,5 @@
 <template>
-  <div class="bt-container" oncontextmenu="return false">
+  <div class="bt-container">
     <div v-if="surveyResult">
       <h2>{{ currentTeachingClass(classId) ? currentTeachingClass(classId).name : '' }} > {{surveyResult.lectureName}}</h2>
       <br />
