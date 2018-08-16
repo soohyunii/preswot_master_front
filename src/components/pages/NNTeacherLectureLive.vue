@@ -18,6 +18,8 @@
         />
     </template>
     <template v-if="!$isPhone">
+      <!-- {{ currentLectureItemId }} -->
+      <!-- {{ questionItemIdList }} -->
       <h2>{{ path }}</h2><br/>
         <el-row :gutter="20">
           <el-col :span="12">
@@ -29,6 +31,12 @@
               :player-vars="{ autoplay: 1 }"
               :mute="true">
             </youtube>
+          <el-button type="primary" size="small" @click="onClick('SHOWALL', questionItemIdList)">
+            문항 모두 보이기
+          </el-button>
+          <el-button type="primary" size="small" @click="onClick('SHOWALL', surveyItemIdList)">
+            설문 모두 보이기
+          </el-button>
             <teacher-lecture-live-item-list
               v-if="isTableItemListLoaded"
               :dataList="tableItemList"
@@ -38,7 +46,7 @@
           </el-col>
           <el-col :span="12">
             <teacher-lecture-live-item
-            v-if="currentLectureItemId !== -1"
+            v-if="currentLectureItemId.length !== 0"
             :lectureItemId="currentLectureItemId"
             :onClick="onClick"
             :isAuto="isAuto"
@@ -46,18 +54,20 @@
           </el-col>
         </el-row>
         <br />
-        <el-row>
+        <!-- TODO: 실시간 제출 현황 부분 아이템 여러개인 경우 어떻게 보여야 할지 기획 정해지면 주석 풀고 수정하여 적용 -->
+        <!-- <el-row>
           <lecture-question-result
-            v-if="currentLectureItemId !== -1 && tableItemList[tableItemIndex] && tableItemList[tableItemIndex].type === 0"
+            v-if="currentLectureItemId.length === 1 && tableItemList[tableItemIndex] && tableItemList[tableItemIndex].type === 0"
             :classId="classId"
-            :itemId="currentLectureItemId"
+            :itemId="currentLectureItemId[0]"
             resultType="실시간"/>
           <lecture-survey-result
-            v-if="currentLectureItemId !== -1 && tableItemList[tableItemIndex] && tableItemList[tableItemIndex].type === 1"
+            v-if="currentLectureItemId === 1 && tableItemList[tableItemIndex] && tableItemList[tableItemIndex].type === 1"
             :classId="classId"
-            :itemId="currentLectureItemId"
+            :itemId="currentLectureItemId[0]"
             resultType="실시간"/>
-        </el-row>
+        </el-row> -->
+
         <!--
         <el-row :gutter="20">
           <el-col :span="12">
@@ -130,16 +140,20 @@ export default {
 
     // opened 상태인 아이템이 이미 있다면 보이기
     const res3 = await lectureService.getOpenedLectureItem({ lectureId: vm.lectureId });
-    if (res3.data !== null) {
-      vm.currentLectureItemId = res3.data.lecture_item_id;
+    if (res3.data.length !== 0) {
+      res3.data.forEach((item) => {
+        vm.currentLectureItemId.push(item.lecture_item_id);
+      });
     }
-    vm.tableItemIndex = vm.tableItemList.findIndex(item => item.lecture_item_id === vm.currentLectureItemId); // eslint-disable-line
+    // TODO: 실시간 제출 현황 기획 후 주석 풀고 수정
+    // eslint-disable-next-line
+    // vm.tableItemIndex = vm.tableItemList.findIndex(item => item.lecture_item_id === vm.currentLectureItemId); 
   },
   data() {
     return {
       tableItemList: [],
       tableItemIndex: -1,
-      currentLectureItemId: -1,
+      currentLectureItemId: [],
       path: '',
       isAuto: false,
       isInfoVisible: false,
@@ -162,6 +176,14 @@ export default {
       }
       return true;
     },
+    questionItemIdList() {
+      const vm = this;
+      return vm.tableItemList.filter(item => item.type === 0).map(item => item.lecture_item_id);
+    },
+    surveyItemIdList() {
+      const vm = this;
+      return vm.tableItemList.filter(item => item.type === 1).map(item => item.lecture_item_id);
+    },
   },
   components: {
     TeacherLectureLiveItemList,
@@ -175,9 +197,8 @@ export default {
     onClick(type, data, index) {
       const vm = this;
       switch (type) {
-        case 'SHOW': {
-          vm.tableItemIndex = index;
-          if (vm.currentLectureItemId !== -1) {
+        case 'SHOWALL': {
+          if (vm.currentLectureItemId.length !== 0) {
             vm.$notify({
               title: '알림',
               message: '다른 아이템을 보이려면 기존 아이템을 내려주세요.',
@@ -186,22 +207,53 @@ export default {
             break;
           }
           vm.currentLectureItemId = data;
-          const params = {
-            lecture_id: Number.parseInt(vm.lectureId, 10),
-            opened: 1,
-            lecture_item_id: Number.parseInt(vm.currentLectureItemId, 10),
-          };
-          vm.$socket.emit('LECTURE_ITEM_ACTIVATION', JSON.stringify(params));
+          const params = [];
+          vm.currentLectureItemId.forEach((item) => {
+            const param = {
+              lecture_id: Number.parseInt(vm.lectureId, 10),
+              opened: 1,
+              lecture_item_id: item,
+            };
+            params.push(param);
+          });
+          vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify(params));
+          break;
+        }
+        case 'SHOW': {
+          vm.tableItemIndex = index;
+          if (vm.currentLectureItemId.length !== 0) {
+            vm.$notify({
+              title: '알림',
+              message: '다른 아이템을 보이려면 기존 아이템을 내려주세요.',
+              type: 'warning',
+            });
+            break;
+          }
+          vm.currentLectureItemId.push(data);
+          const params = [];
+          vm.currentLectureItemId.forEach((item) => {
+            const param = {
+              lecture_id: Number.parseInt(vm.lectureId, 10),
+              opened: 1,
+              lecture_item_id: item,
+            };
+            params.push(param);
+          });
+          vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify(params));
           break;
         }
         case 'HIDE': {
-          const params = {
-            lecture_id: Number.parseInt(vm.lectureId, 10),
-            opened: 0,
-            lecture_item_id: Number.parseInt(vm.currentLectureItemId, 10),
-          };
-          vm.$socket.emit('LECTURE_ITEM_ACTIVATION', JSON.stringify(params));
-          vm.currentLectureItemId = -1;
+          const params = [];
+          vm.currentLectureItemId.forEach((item) => {
+            const param = {
+              lecture_id: Number.parseInt(vm.lectureId, 10),
+              opened: 0,
+              lecture_item_id: item,
+            };
+            params.push(param);
+          });
+          vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify(params));
+          vm.currentLectureItemId = [];
           break;
         }
         case 'SUBMIT': {
