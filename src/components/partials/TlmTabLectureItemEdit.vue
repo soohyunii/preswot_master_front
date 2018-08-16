@@ -223,7 +223,6 @@ export default {
       }
     },
     onClickEditLectureItem(lectureItemId) {
-      console.log('lectureItemId', lectureItemId); // eslint-disable-line
       this.updateCurrentEditingLectureItemId({
         currentEditingLectureItemId: lectureItemId,
       });
