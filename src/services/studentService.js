@@ -88,4 +88,16 @@ export default {
   }) {
     return http.delete(`/student/survey/${surveyId}`);
   },
+  postAnswerLogFile({
+    questionId,
+    file,
+  }) {
+    const form = new FormData();
+    form.append('file', file, file.name);
+    return http.post(`/student/answer/${questionId}/file`, form, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  },
 };
