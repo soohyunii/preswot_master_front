@@ -266,12 +266,6 @@ export default {
               }
             });
             // TODO: delete lectureItem from lecture.lecture_items
-            vm.$notify({
-              title: '삭제됨',
-              message: '강의 아이템이 삭제됨',
-              type: 'success',
-              duration: 3000,
-            });
             await vm.getLecture({ lectureId: vm.lectureId });
           } catch (error) {
             console.error(error); // eslint-disable-line no-console

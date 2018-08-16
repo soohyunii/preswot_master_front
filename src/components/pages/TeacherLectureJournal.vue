@@ -97,7 +97,6 @@
             </template>
           </el-table-column>
         </el-table>
-          </el-col>
         </el-row>
       </el-tab-pane>
       <el-tab-pane label="키워드 저널링" name="keyword">

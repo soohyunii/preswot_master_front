@@ -148,12 +148,6 @@ export default {
           });
           vm.fileList = [];
         }
-        vm.$notify({
-          title: '삭제 성공',
-          message: `${file.name} 삭제 성공`,
-          type: 'success',
-          duration: 3000,
-        });
       } catch (error) {
         vm.$notify({
           title: `${file.name} 삭제 실패`,
@@ -165,15 +159,10 @@ export default {
         vm.loading = false;
       }
     },
-    handleSuccess(res, file) {
+    handleSuccess(res, file) { // eslint-disable-line
       const vm = this;
       vm.loading = false;
       // console.log(res, file, fileList);
-      vm.$notify({
-        title: '업로드 성공',
-        message: `${file.name} 업로드 성공`,
-        type: 'success',
-      });
     },
     handleError(err, file) {
       const vm = this;

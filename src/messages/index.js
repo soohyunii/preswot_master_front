@@ -93,6 +93,9 @@ export default {
       "FORGOT_PASSWORD_BUTTON": "비밀번호 찾기",
       "LOGIN_REQUIRED": "로그인이 필요합니다."
     },
+    "TOS": {
+      "TOS_TITLE": "이용약관"
+    },
     "REG": {
       "REG_TITLE": "회원가입",
       "EMAIL_LABEL": "이메일",

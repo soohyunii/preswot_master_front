@@ -21,13 +21,18 @@
           <span :class="$attachReactablePostfix('common')">수강중인 과목</span>
         </div>
       </router-link>
+      <!--<router-link to="/a/student/NNclass" v-if="authType === 1" v-show="isJwtValid">
+        <div :class="$attachReactablePostfix('div3')">
+          <span :class="$attachReactablePostfix('common')">강의 은행</span>
+        </div>
+      </router-link>-->
       <!--
       <div style="display:inline-block; position:absolute; top: 20px; left:632px;">
         <input v-model="testData" type="text" id="headerInput" class="inputtestclass" placeholder="Please input"/>
         <i class="el-icon-search" @click="onClick('asdfsadf')"></i>
       </div>
       -->
-      <router-link to="/register" v-show="!isJwtValid">
+      <router-link to="/tos" v-show="!isJwtValid">
         <div :class="$attachReactablePostfix('div4')">
           <span :class="$attachReactablePostfix('common')">회원가입</span>
         </div>
@@ -37,6 +42,12 @@
           <span :class="$attachReactablePostfix('common')">로그인</span>
         </div>
       </router-link>
+      <router-link to="/profile" v-show="isJwtValid">
+        <div :class="$attachReactablePostfix('div4')">
+          <span :class="$attachReactablePostfix('common')">프로필</span>
+        </div>
+      </router-link>
+      <!-- {{ $t('HEADER.PROFILE_BUTTON') }}<i class="el-icon-arrow-down el-icon-right"></i> -->
       <div :class="$attachReactablePostfix('div5')" v-show="isJwtValid" @click="onClick('LOGOUT')">
         <span :class="$attachReactablePostfix('common')">로그아웃</span>
       </div>

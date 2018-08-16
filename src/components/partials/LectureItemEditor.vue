@@ -244,12 +244,6 @@ export default {
             inputBody: vm.inputBody,
             inputTail: vm.inputTail,
           });
-          vm.$notify({
-            title: '강의 아이템 생성 성공',
-            message: `${vm.inputHead.lcItemName} 생성됨`,
-            type: 'success',
-            duration: 3000,
-          });
 
           vm.reset();
 
@@ -268,13 +262,6 @@ export default {
             inputHead: vm.inputHead,
             inputBody: vm.inputBody,
             inputTail: vm.inputTail,
-          });
-
-          vm.$notify({
-            title: '강의 아이템 수정 성공',
-            message: `${vm.inputHead.lcItemName} 수정됨`,
-            type: 'success',
-            duration: 3000,
           });
 
           vm.reset();
