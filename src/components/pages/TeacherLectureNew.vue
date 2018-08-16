@@ -284,12 +284,6 @@ export default {
         .then(async () => {
           try {
             await vm.deleteSc();
-            vm.$notify({
-              title: '삭제됨',
-              message: '강의가 삭제됨',
-              type: 'success',
-              duration: 3000,
-            });
             vm.$router.push('/a/teacher/class');
           } catch (error) {
             vm.$notify({

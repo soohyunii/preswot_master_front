@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import LandingPage from '../components/pages/LandingPage';
 import Login from '../components/pages/Login';
 import FindingPasswordPage from '../components/pages/FindingPasswordPage';
+import Tos from '../components/pages/Tos';
 import Register from '../components/pages/Register';
 import DownloadPage from '../components/pages/DownloadPage';
 import PolicyPage from '../components/pages/PolicyPage';
@@ -12,6 +13,8 @@ import ClassIndex from '../components/pages/ClassIndex';
 import ClassDetail from '../components/pages/ClassDetail';
 // import Test from '../components/TestComponent';
 import authRoutes from './authRoutes';
+import Profile from '../components/pages/Profile';
+import ProfileEdit from '../components/pages/ProfileEdit';
 
 Vue.use(Router);
 
@@ -32,6 +35,21 @@ export default new Router({
       path: '/forgot-password/:rand/:userId',
       name: 'FindingPasswordPage',
       component: FindingPasswordPage,
+    },
+    {
+      path: '/profile',
+      name: 'Profile',
+      component: Profile,
+    },
+    {
+      path: '/profileEdit',
+      name: ProfileEdit,
+      component: ProfileEdit,
+    },
+    {
+      path: '/tos',
+      name: 'Tos',
+      component: Tos,
     },
     {
       path: '/register',

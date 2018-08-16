@@ -19,7 +19,7 @@ export default {
       const res = await lectureService.getLecturePlist({
         lectureId,
       });
-      console.log('res', res.data); // eslint-disable-line
+      // console.log('res', res.data); // eslint-disable-line
       commit('updateProgramList', {
         programList: res.data.plist_all,
       });

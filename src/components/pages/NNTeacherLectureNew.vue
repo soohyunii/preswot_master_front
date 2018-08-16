@@ -96,11 +96,6 @@ export default {
               startTime: vm.input.lcStartDate,
               endTime: vm.input.lcEndDate,
             });
-            vm.$notify({
-              title: '강의 수정 성공',
-              message: '성공적으로 강의가 수정됨',
-              type: 'success',
-            });
             vm.$router.go(-1);
           } catch (error) {
             vm.$notify({
@@ -118,11 +113,6 @@ export default {
               name: vm.input.title,
               start_time: vm.input.lcStartDate,
               end_time: vm.input.lcEndDate,
-            });
-            vm.$notify({
-              title: '강의 추가 성공',
-              message: '성공적으로 강의가 추가됨',
-              type: 'success',
             });
             vm.$router.go(-1);
           } catch (error) {

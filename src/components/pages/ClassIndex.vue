@@ -112,11 +112,6 @@ export default {
               await vm.postClassUser({
                 classId: arg.class_id,
               });
-              vm.$notify({
-                title: '수강 신청 요청 성공',
-                message: '수강 신청 완료',
-                type: 'success',
-              });
 
               try {
                 await vm.getMyClassLists();
