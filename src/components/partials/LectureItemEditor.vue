@@ -39,7 +39,6 @@
 
       <el-form-item label="결과 공개 여부" prop="lcItemResult">
         <el-switch v-model="resultVisible" @change="onChange"/>
-          <el-input v-model="inputHead.lcItemName" placeholder="내용을 입력해주세요."></el-input>
       </el-form-item>
 
       <div v-show="!inputHead.lcItemType">
