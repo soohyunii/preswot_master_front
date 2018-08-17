@@ -54,7 +54,7 @@ export default {
     client.setValue('#address1 input', '셀레니움을 주깁시다');
 
     client.setValue('#address2 input', '513동 102호');
-    client.setValue('#phoneNumber input', '010-9955-1693');
+    client.setValue('#phone input', '010-9955-1693');
 
     client.setValue('#major input', '컴퓨터과학과');
     client.setValue('#belong input', '연세대');
