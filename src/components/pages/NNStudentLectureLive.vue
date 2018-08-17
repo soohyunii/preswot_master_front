@@ -86,6 +86,7 @@ import lectureService from '../../services/lectureService';
 import LectureLiveItem from '../partials/LectureLiveItem';
 import LectureLiveMaterial from '../partials/LectureLiveMaterial';
 import utils from '../../utils';
+import { EventBus } from '../../event-bus';
 
 export default {
   name: 'StudentLectureLive',
@@ -166,12 +167,16 @@ export default {
           vm.lectureItem.forEach((item, index) => {
             switch (item.type) {
               case 0: { // 문항
-                studentService.submitQuestion({
+                const res = studentService.submitQuestion({
                   questionId: item.questions[0].question_id,
                   answers: vm.answers[index],
                   interval: 0,
                   codeLanguage: item.questions[0].accept_language[0],
                 });
+                console.log(res);
+                if (item.questions[0].type === 2) {
+                  EventBus.$emit('submit', 5400); // TODO: submitQuestion의 response로 온 student_answer_log_id를 송신. backend 수정요구.
+                }
                 break;
               }
               case 1: { // 설문
