@@ -84,6 +84,12 @@
                 <span>배점 : {{ data.questions[0].score }}</span>
               </p>
               <p>
+                <span>예시 파일</span>
+              </p>
+              <div style="margin: 10px 0px 10px 20px;">
+                <a :href="`http://13.125.249.159:8020` + data.questions[0].files[0].client_path" target="_blank">{{ data.questions[0].files[0].name }}</a>
+              </div>
+              <p>
                 <span>모범 답안 : </span>
                 <span v-for="(answer, index) in data.questions[0].answer" class="item" :key="index">
                   <span>{{ answer }} . {{ data.questions[0].choice[answer - 1] }}</span>
