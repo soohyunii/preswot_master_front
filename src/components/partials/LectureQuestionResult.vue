@@ -1,19 +1,19 @@
 <template>
   <div>
-    <div v-if="questionResult">
+    <div v-if="studentQuestionResult">
       <el-row v-if="resultType === '실시간'">
         <el-col :span="5"><strong>현재 수강 인원</strong></el-col>
         <!-- <el-col :span="8"> 실시간 수강 인원  / {{ numberOfStudentInClass }} </el-col> -->
       </el-row>
       <el-row>
         <el-col :span="3"><strong>학생 답변</strong></el-col>
-        <el-col :span="7">총 {{ questionResult.numberOfStudent }}건</el-col>
+        <el-col :span="7">총 {{ studentQuestionResult.numberOfStudent }}건</el-col>
         <el-button v-if="resultType === '실시간'" style="float:right" type="primary" size="small" icon="el-icon-refresh" @click="refresh()">새로고침</el-button>
       </el-row>
       <el-row>
         <el-col :span="12">
-          <span v-if="questionResult.type === '객관'" class="table-caption">단위 : 명</span>
-          <el-table v-if="questionResult.type === '객관'"
+          <span v-if="studentQuestionResult.type === '객관'" class="table-caption">단위 : 명</span>
+          <el-table v-if="studentQuestionResult.type === '객관'"
                     :data="questionResultSummary"
                     :header-cell-style="changeHead"
                     style="margin-bottom: 20px;">
@@ -35,10 +35,10 @@
           </el-table>
         </el-col>
       </el-row>
-      <el-table :data="questionResult.answers"
+      <el-table :data="studentQuestionResult.answers"
                 :header-cell-style="changeHead"
-                :default-sort="{prop: 'score', order: 'ascending'}"
-                height="500">
+                :default-sort="{prop: 'score', order: 'ascending'}">
+                <!-- height="500"> -->
         <el-table-column
           label="학생 아이디"
           align="center"
@@ -58,7 +58,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="questionResult.type === 'SW'"
+          v-if="studentQuestionResult.type === 'SW'"
           label="결과"
           align="center">
           <template slot-scope="scope">
@@ -74,7 +74,7 @@
           width="150px"
           align="center">
             <template slot-scope="scope">
-              <div v-if="questionResult.type !== '서술'">
+              <div v-if="studentQuestionResult.type !== '서술'">
                 <p v-if="scope.row.score === null">-</p>
                 <p v-else>{{ scope.row.score }}</p>
               </div>
@@ -83,12 +83,12 @@
                         v-model="scope.row.score"
                         type="number"
                         min="0"
-                        :max="questionResult.score" />
+                        :max="studentQuestionResult.score" />
               </div>
             </template>
         </el-table-column>
         <el-table-column
-          v-if="questionResult.type === '서술'"
+          v-if="studentQuestionResult.type === '서술'"
           label=""
           width="100px"
           align="center">
@@ -142,6 +142,7 @@
           numPartialAnswer: null,
           numTotal: null,
         }],
+        studentQuestionResult: undefined,
       };
     },
     computed: {
@@ -165,7 +166,8 @@
       vm.getQuestionResult({
         itemId: vm.itemId,
       });
-      const questionId = vm.questionResult.questionId;
+      vm.studentQuestionResult = vm.questionResult;
+      const questionId = vm.studentQuestionResult.questionId;
       const res = await questionService.getQuestionResult({
         questionId,
       });
@@ -193,7 +195,8 @@
         vm.getQuestionResult({
           itemId: vm.itemId,
         });
-        const questionId = vm.questionResult.questionId;
+        vm.studentQuestionResult = vm.questionResult;
+        const questionId = vm.studentQuestionResult.questionId;
         const res = await questionService.getQuestionResult({
           questionId,
         });
@@ -209,7 +212,7 @@
       },
       async scoreSubmit(score, id) { // eslint-disable-line
         const vm = this;
-        if (score < 0 || score > vm.questionResult.score) {
+        if (score < 0 || score > vm.studentQuestionResult.score) {
           vm.$notify({
             title: '점수 범위를 확인하세요',
             message: '',

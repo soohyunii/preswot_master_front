@@ -8,7 +8,6 @@
       <!-- <p>현재: {{ data.name }}</p> -->
     </div>
     <div v-for="(lectureItem, index) in data" :key="lectureItem.lecture_item_id">
-      <!-- {{ lectureItem }} -->
       <lecture-live-item
         :dataIndex="index"
         :data="lectureItem"
