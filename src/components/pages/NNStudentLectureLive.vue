@@ -167,16 +167,17 @@ export default {
           vm.lectureItem.forEach((item, index) => {
             switch (item.type) {
               case 0: { // 문항
-                const res = studentService.submitQuestion({
+                EventBus.$emit('submitStart');
+                studentService.submitQuestion({
                   questionId: item.questions[0].question_id,
                   answers: vm.answers[index],
                   interval: 0,
                   codeLanguage: item.questions[0].accept_language[0],
+                }).then((res) => {
+                  if (item.questions[0].type === 2) {
+                    EventBus.$emit('submitFile', res.data.student_answer_log_id);
+                  }
                 });
-                console.log(res);
-                if (item.questions[0].type === 2) {
-                  EventBus.$emit('submit', 5400); // TODO: submitQuestion의 response로 온 student_answer_log_id를 송신. backend 수정요구.
-                }
                 break;
               }
               case 1: { // 설문

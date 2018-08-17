@@ -256,11 +256,13 @@ import { baseUrl } from '../../services/config';
 import utils from '../../utils';
 import studentService from '../../services/studentService';
 
+
 export default {
   props: ['data', 'onClick', 'answers', 'dataIndex'],
   data() {
     return {
       answer: [],
+      answerFile: [],
     };
   },
   mounted() {
@@ -268,9 +270,8 @@ export default {
     EventBus.$on('clearAnswer', vm.clearAnswer);
     if (vm.data.type === 0) {
       if (vm.data.questions[0].type === 2) {
-        if (vm.$refs.answerUpload.uploadFiles !== undefined) {
-          EventBus.$on('submit', this.fileSubmit);
-        }
+        EventBus.$on('submitStart', this.fileCopy);
+        EventBus.$on('submitFile', this.fileSubmit);
       }
     }
   },
@@ -323,11 +324,13 @@ export default {
         '파일 1개만 업로드 할 수 있습니다.',
       );
     },
+    fileCopy() {
+      this.answerFile = this.$refs.answerUpload.uploadFiles;
+    },
     fileSubmit(logId) {
-      console.log(logId);
       studentService.postAnswerLogFile({
         studentAnswerLogId: logId,
-        file: this.$refs.answerUpload.uploadFiles[0].raw,
+        file: this.answerFile[0].raw,
       });
     },
   },
