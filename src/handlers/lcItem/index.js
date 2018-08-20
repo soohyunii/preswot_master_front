@@ -15,6 +15,9 @@ export default class LcItemHandler {
       name: inputHead.lcItemName,
       sequence: inputHead.lcItemSequence,
       result: inputHead.lcItemResult,
+      // TODO: DB수정 후 변경
+      startTime: inputHead.lcItemStart,
+      endTime: inputHead.lcItemDuration,
     });
     await this.postChildLectureItem({
       lcItemId: lectureItemId,
@@ -34,6 +37,9 @@ export default class LcItemHandler {
       name: inputHead.lcItemName,
       order: inputHead.lcItemOrder,
       result: inputHead.lcItemResult,
+      // TODO: DB수정 후 변경
+      startTime: inputHead.lcItemStart,
+      endTime: inputHead.lcItemDuration,
     });
 
     await this.putChildLectureItem({

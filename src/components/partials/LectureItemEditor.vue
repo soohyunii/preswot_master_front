@@ -41,6 +41,11 @@
         <el-switch v-model="resultVisible" @change="onChange"/>
       </el-form-item>
 
+      <el-form-item label="활성화 시간" v-if="lecture.type !== 0">
+        <el-input v-model="inputHead.lcItemStart" style="width: 100px; text-align: center;" placeholder="활성화 시각"></el-input>
+        <el-input v-model="inputHead.lcItemDuration" style="width: 100px; text-align: center;" placeholder="지속 시간"></el-input>
+      </el-form-item>
+
       <div v-show="!inputHead.lcItemType">
         <el-alert
           title="아이템 유형을 선택해주세요"
@@ -110,6 +115,7 @@ export default {
   props: ['numOfLectureItem'],
   async mounted() {
     const vm = this;
+
     if (!vm.isNewItem) {
       await vm.getLcItem();
       const item = vm.lectureItem;
@@ -119,7 +125,10 @@ export default {
       vm.inputHead.lcItemName = item.name;
       vm.inputHead.lcItemResult = item.result;
       vm.resultVisible = !!item.result;
+      vm.inputHead.lcItemStart = item.start_time;
+      vm.inputHead.lcItemDuration = item.end_time;
 
+      console.log(item);
       // * Init inputBody, tail
       switch (vm.inputHead.lcItemType) {
         case 'question': {
@@ -156,6 +165,8 @@ export default {
       lcItemType: null,
       lcItemSequence: vm.numOfLectureItem + 1,
       lcItemResult: false,
+      lcItemStart: 0,
+      lcItemDuration: 30,
     };
     return {
       initialInputHead,
@@ -181,6 +192,9 @@ export default {
     };
   },
   computed: {
+    ...mapState('lc', [
+      'lecture',
+    ]),
     ...mapState('lcItem', [
       'lectureItem',
     ]),
@@ -236,6 +250,11 @@ export default {
     async onSubmit() {
       const vm = this;
 
+      if (vm.lecture.type === 0) {
+        vm.inputHead.lcItemStart = null;
+        vm.inputHead.lcItemDuration = null;
+      }
+
       if (vm.isNewItem) {
         try {
           await vm.postLcItem({
@@ -246,7 +265,7 @@ export default {
 
           vm.reset();
 
-          await vm.getLecture({ lectureId: vm.lectureId }); // lecture item list 업데이트item list 업데이트
+          await vm.getLecture({ lectureId: vm.lectureId }); // lecture item list 업데이트
         } catch (error) {
           vm.$notify({
             title: '생성 실패',

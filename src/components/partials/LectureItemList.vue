@@ -1,5 +1,4 @@
 <template functional>
-
   <div id="lecture_item_list_wrapper">
     <div v-if="props.list.length === 0">
       강의 아이템 목록이 비었습니다.
@@ -30,14 +29,22 @@
           align="center"
         ></el-table-column>
 
+        <!--TODO: 변수명 변경-->
         <el-table-column
-          prop="activeTime"
-          label="활성화 시간"
-          width="500"
+          prop="start_time"
+          label="활성화 시각"
+          width="200"
           align="center"
-        >
-          // TODO:
-        </el-table-column>
+          v-if="props.lectureType !== 0"
+        ></el-table-column>
+
+        <el-table-column
+          prop="end_time"
+          label="지속 시간"
+          width="200"
+          align="center"
+          v-if="props.lectureType !== 0"
+        ></el-table-column>
 
         <el-table-column
           label="-"
@@ -119,6 +126,10 @@ export default {
         }
         return true;
       },
+    },
+    lectureType: {
+      type: Number,
+      required: true,
     },
   },
 };

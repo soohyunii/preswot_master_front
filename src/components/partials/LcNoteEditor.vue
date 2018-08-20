@@ -18,7 +18,7 @@
           :limit=1
           :on-exceed="handleExceed"
           list-type="picture"
-          ref=noteUpload>
+          ref="noteUpload">
           <el-button slot="trigger" type="primary">파일 추가</el-button>
         </el-upload>
       </el-form-item>
@@ -33,7 +33,7 @@
           :limit=1
           :on-exceed="handleExceed"
           list-type="picture"
-          ref=noteUpload>
+          ref="noteUpload">
           <el-button slot="trigger" type="primary">파일 추가</el-button>
         </el-upload>
       </el-form-item>
