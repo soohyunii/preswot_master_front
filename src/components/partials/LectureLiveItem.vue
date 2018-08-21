@@ -37,7 +37,7 @@
           <template v-else>
             <p>문항 - 객관</p>
             <pre>{{ data.questions[0].question }}</pre>
-            <el-checkbox-group v-model="answers[dataIndex]" style="width: 100%;">
+            <el-checkbox-group v-model="answer" style="width: 100%;">
               <div v-for="(choice,index) in data.questions[0].choice" :key="index" class="radio-one">
                 <el-checkbox :label="(index + 1).toString()">{{ index + 1 }} . {{ choice }}</el-checkbox>
               </div>
@@ -69,7 +69,7 @@
           <template v-else>
             <p>문항 - 단답</p>
             <pre>{{ data.questions[0].question }}</pre>
-            <el-input placeholder="내용을 입력해주세요." v-model="answers[dataIndex][0]"></el-input>
+            <el-input placeholder="내용을 입력해주세요." v-model="answer[0]"></el-input>
           </template>
         </div>
         <div v-if="data.questions[0].type === 2">
@@ -97,7 +97,7 @@
           <template v-else>
             <p>문항 - 서술</p>
             <pre>{{ data.questions[0].question }}</pre>
-            <el-input class="margin-text" placeholder="내용을 입력해주세요." v-model="answers[dataIndex][0]" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
+            <el-input class="margin-text" placeholder="내용을 입력해주세요." v-model="answer[0]" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
             <!-- TODO: 개수제한 해제 -->
             <el-upload
               action="#"
@@ -140,7 +140,7 @@
             </div>
             <pre>메모리 제한(MB) : {{ data.questions[0].memory_limit }}</pre>
             <pre>시간 제한(초) : {{ data.questions[0].time_limit }}</pre>
-            <el-input class="margin-text" placeholder="내용을 입력해주세요." v-model="answers[dataIndex][0]" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
+            <el-input class="margin-text" placeholder="내용을 입력해주세요." v-model="answer[0]" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
           </template>
         </div>
         <div v-if="data.questions[0].type === 4">
@@ -168,7 +168,7 @@
           <template v-else>
             <p>문항 - SQL</p>
             <pre>{{ data.questions[0].question }}</pre>
-            <el-input placeholder="내용을 입력해주세요." v-model="answers[dataIndex][0]" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
+            <el-input placeholder="내용을 입력해주세요." v-model="answer[0]" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
           </template>
         </div>
         <!-- <el-button v-if="data.questions[0].student_answer_logs.length === 0" style="float:right" type="primary" @click="preOnClick('SUBMIT', [data.type, data.questions[0].question_id, [answer], data.questions[0].accept_language[0]])">제출</el-button> -->
@@ -199,7 +199,7 @@
           <template v-else>
             <p>설문 - 객관</p>
             <pre>{{ data.surveys[0].comment }}</pre>
-            <el-radio-group v-model="answers[dataIndex][0]" style="width: 100%;">
+            <el-radio-group v-model="answer[0]" style="width: 100%;">
               <div v-for="(choice,index) in data.surveys[0].choice" :key="index">
                 <el-radio :label="index">{{ index }} . {{ choice }}</el-radio>
               </div>
@@ -213,7 +213,7 @@
           <template v-else>
             <p>설문 - 주관</p>
             <pre>{{ data.surveys[0].comment }}</pre>
-            <el-input placeholder="내용을 입력해주세요." v-model="answers[dataIndex][0]"></el-input>
+            <el-input placeholder="내용을 입력해주세요." v-model="answer[0]"></el-input>
           </template>
         </div>
         <!-- <el-button v-if="data.surveys[0].student_surveys.length === 0"  style="float:right" type="primary" @click="preOnClick('SUBMIT', [data.type, data.surveys[0].survey_id, data.surveys[0].type, answer])">제출</el-button> -->
@@ -258,7 +258,7 @@ import studentService from '../../services/studentService';
 
 
 export default {
-  props: ['data', 'onClick', 'answers', 'dataIndex'],
+  props: ['data', 'onClick'],
   data() {
     return {
       answer: [],
@@ -268,12 +268,7 @@ export default {
   mounted() {
     const vm = this;
     EventBus.$on('clearAnswer', vm.clearAnswer);
-    if (vm.data.type === 0) {
-      if (vm.data.questions[0].type === 2) {
-        EventBus.$on('submitStart', this.fileCopy);
-        EventBus.$on('submitFile', this.fileSubmit);
-      }
-    }
+    EventBus.$on('submit', vm.submit);
   },
   computed: {
     Url() {
@@ -324,14 +319,40 @@ export default {
         '파일 1개만 업로드 할 수 있습니다.',
       );
     },
-    fileCopy() {
-      this.answerFile = this.$refs.answerUpload.uploadFiles;
-    },
-    fileSubmit(logId) {
-      studentService.postAnswerLogFile({
-        studentAnswerLogId: logId,
-        file: this.answerFile[0].raw,
-      });
+    submit() {
+      const vm = this;
+
+      switch (vm.data.type) {
+        case 0: // 문항(Question)
+          if (vm.data.questions[0].type === 2 &&
+              vm.$refs.answerUpload.uploadFiles.length !== 0) {
+            vm.answerFile = vm.$refs.answerUpload.uploadFiles;
+          }
+          studentService.submitQuestion({
+            questionId: vm.data.questions[0].question_id,
+            answers: vm.answer,
+            interval: 0,
+            codeLanguage: vm.data.questions[0].accept_language[0],
+          }).then((res) => {
+            if (vm.data.questions[0].type === 2) {
+              if (vm.answerFile.length !== 0) {
+                studentService.postAnswerLogFile({
+                  studentAnswerLogId: res.data.student_answer_log_id,
+                  file: vm.answerFile[0].raw,
+                });
+              }
+            }
+          });
+          break;
+        case 1: // 설문(Survey)
+          studentService.submitSurvey({
+            surveyId: vm.data.surveys[0].survey_id,
+            answer: vm.answer,
+          });
+          break;
+        default:
+          break;
+      }
     },
   },
   components: {

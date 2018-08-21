@@ -46,9 +46,7 @@
               <div else>
                 <div v-for="(item, index) in lectureItem" :key="index">
                   <lecture-live-item
-                    :dataIndex="index"
                     :data="item"
-                    :answers="answers"
                     :lectureItemId="item.lecture_item_id"
                     :onClick="onClick"/>
                 </div>
@@ -80,7 +78,6 @@
 
 <script>
 import { getIdFromURL } from 'vue-youtube-embed';
-import studentService from '../../services/studentService';
 import classService from '../../services/classService';
 import lectureService from '../../services/lectureService';
 import LectureLiveItem from '../partials/LectureLiveItem';
@@ -145,7 +142,6 @@ export default {
       lectureItem: [], // 현재 표시중인 강의 아이템
       materialList: undefined, // 강의자료 목록
       additionalList: undefined, // 참고자료 목록
-      answers: [],
     };
   },
   computed: {
@@ -164,34 +160,7 @@ export default {
       const vm = this;
       switch (type) {
         case 'SUBMIT': {
-          vm.lectureItem.forEach((item, index) => {
-            switch (item.type) {
-              case 0: { // 문항
-                EventBus.$emit('submitStart');
-                studentService.submitQuestion({
-                  questionId: item.questions[0].question_id,
-                  answers: vm.answers[index],
-                  interval: 0,
-                  codeLanguage: item.questions[0].accept_language[0],
-                }).then((res) => {
-                  if (item.questions[0].type === 2) {
-                    EventBus.$emit('submitFile', res.data.student_answer_log_id);
-                  }
-                });
-                break;
-              }
-              case 1: { // 설문
-                studentService.submitSurvey({
-                  surveyId: item.surveys[0].survey_id,
-                  answer: vm.answers[index],
-                });
-                break;
-              }
-              default: {
-                throw new Error(`not defined type ${type}`);
-              }
-            }
-          });
+          EventBus.$emit('submit');
           vm.$notify({
             title: '알림',
             message: '제출하였습니다.',
@@ -222,14 +191,8 @@ export default {
       setTimeout(async () => {
         // TODO: 강의 아이템이 여러개인 경우, 빠른 속도로 조작 시 같은 아이템이 중복하여 들어가는 버그 발생
         const res3 = await lectureService.getOpenedLectureItem({ lectureId: vm.lectureId });
-        vm.answers = [];
         if (res3.data.length !== 0) {
           vm.lectureItem = res3.data;
-          vm.lectureItem.forEach(() => {
-            // if (item.questions.length !== 0) {
-            vm.answers.push([]);
-            // }
-          });
         } else {
           vm.lectureItem = [];
         }

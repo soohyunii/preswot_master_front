@@ -15,8 +15,6 @@ export default class QuestionHandler extends LcItemHandler {
     const item = vm.lectureItem;
     const q = item.questions[0];
 
-    console.log(q);
-
     // FIXME: 아래 메소드가 일부 클라이언트에서 알 수 없는 이유로 동적 매핑이 안되는 현상이 있습니다. 임시로 vm.$set 을 사용합니다.
     // vm.inputTail.question = q.question;
     vm.$set(vm.inputTail, 'question', q.question);
