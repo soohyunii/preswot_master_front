@@ -95,7 +95,6 @@
       await vm.getClassTotalResult({
         classId: vm.classId,
       });
-      console.log(vm.itemId);
       vm.getSurveyResult({
         itemId: vm.itemId,
       });

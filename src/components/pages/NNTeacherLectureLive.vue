@@ -142,7 +142,11 @@ export default {
     if (res3.data.length !== 0) {
       res3.data.forEach((item) => {
         vm.currentLectureItemId.push(item.lecture_item_id);
-        vm.tableItemIndex.push(vm.tableItemList.findIndex(tableItem => tableItem.lecture_item_id === item.lecture_item_id));
+        vm.tableItemIndex.push(
+          vm.tableItemList.findIndex(tableItem =>
+            tableItem.lecture_item_id === item.lecture_item_id,
+          ),
+        );
       });
     }
     // TODO: 실시간 제출 현황 기획 후 주석 풀고 수정
@@ -194,7 +198,7 @@ export default {
     LectureSurveyResult,
   },
   methods: {
-    onClick(type, data, index) {
+    onClick(type, data) {
       const vm = this;
       switch (type) {
         case 'SHOWALL': {
@@ -209,7 +213,10 @@ export default {
           vm.currentLectureItemId = data;
           const params = [];
           vm.currentLectureItemId.forEach((item) => {
-            vm.tableItemIndex.push(vm.tableItemList.findIndex(tableItem => tableItem.lecture_item_id === item));
+            vm.tableItemIndex.push(
+              vm.tableItemList.findIndex(tableItem =>
+                tableItem.lecture_item_id === item),
+            );
             const param = {
               lecture_id: Number.parseInt(vm.lectureId, 10),
               opened: 1,
@@ -232,7 +239,10 @@ export default {
           vm.currentLectureItemId.push(data);
           const params = [];
           vm.currentLectureItemId.forEach((item) => {
-            vm.tableItemIndex.push(vm.tableItemList.findIndex(tableItem => tableItem.lecture_item_id === item));
+            vm.tableItemIndex.push(
+              vm.tableItemList.findIndex(tableItem =>
+                tableItem.lecture_item_id === item),
+            );
             const param = {
               lecture_id: Number.parseInt(vm.lectureId, 10),
               opened: 1,

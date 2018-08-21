@@ -104,6 +104,16 @@
             <p>문항 - 서술</p>
             <pre>{{ data.questions[0].question }}</pre>
             <el-input class="margin-text" placeholder="내용을 입력해주세요." v-model="answers[dataIndex][0]" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
+            <!-- TODO: 개수제한 해제 -->
+            <el-upload
+              action="#"
+              :auto-upload="false"
+              :file-list="[]"
+              :limit=1
+              :on-exceed="handleExceed"
+              ref="answerUpload">
+              <el-button slot="trigger" type="primary">파일 추가</el-button>
+            </el-upload>
           </template>
         </div>
         <div v-if="data.questions[0].type === 3">
@@ -250,17 +260,26 @@ import Discussion from './NNDiscussion';
 import { EventBus } from '../../event-bus';
 import { baseUrl } from '../../services/config';
 import utils from '../../utils';
+import studentService from '../../services/studentService';
+
 
 export default {
   props: ['data', 'onClick', 'answers', 'dataIndex'],
   data() {
     return {
       answer: [],
+      answerFile: [],
     };
   },
   mounted() {
     const vm = this;
     EventBus.$on('clearAnswer', vm.clearAnswer);
+    if (vm.data.type === 0) {
+      if (vm.data.questions[0].type === 2) {
+        EventBus.$on('submitStart', this.fileCopy);
+        EventBus.$on('submitFile', this.fileSubmit);
+      }
+    }
   },
   computed: {
     Url() {
@@ -305,6 +324,20 @@ export default {
     clearAnswer() {
       const vm = this;
       vm.answer = [];
+    },
+    handleExceed() {
+      this.$message.warning(
+        '파일 1개만 업로드 할 수 있습니다.',
+      );
+    },
+    fileCopy() {
+      this.answerFile = this.$refs.answerUpload.uploadFiles;
+    },
+    fileSubmit(logId) {
+      studentService.postAnswerLogFile({
+        studentAnswerLogId: logId,
+        file: this.answerFile[0].raw,
+      });
     },
   },
   components: {

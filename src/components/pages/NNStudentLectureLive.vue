@@ -86,6 +86,7 @@ import lectureService from '../../services/lectureService';
 import LectureLiveItem from '../partials/LectureLiveItem';
 import LectureLiveMaterial from '../partials/LectureLiveMaterial';
 import utils from '../../utils';
+import { EventBus } from '../../event-bus';
 
 export default {
   name: 'StudentLectureLive',
@@ -166,11 +167,16 @@ export default {
           vm.lectureItem.forEach((item, index) => {
             switch (item.type) {
               case 0: { // 문항
+                EventBus.$emit('submitStart');
                 studentService.submitQuestion({
                   questionId: item.questions[0].question_id,
                   answers: vm.answers[index],
                   interval: 0,
                   codeLanguage: item.questions[0].accept_language[0],
+                }).then((res) => {
+                  if (item.questions[0].type === 2) {
+                    EventBus.$emit('submitFile', res.data.student_answer_log_id);
+                  }
                 });
                 break;
               }
