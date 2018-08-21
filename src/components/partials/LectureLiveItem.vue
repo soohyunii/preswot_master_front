@@ -7,7 +7,7 @@
     <div v-else class="lecture-item">
       <div v-if="data.type === 0" class="question-box"> <!-- 질문 -->
         <div v-if="data.questions[0].type === 0">
-          <template v-if="data.questions[0].student_answer_logs.length > 0"> <!-- 이미 제출한 경우 -->
+          <template v-if="data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT'"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -45,7 +45,7 @@
           </template>
         </div>
         <div v-if="data.questions[0].type === 1">
-          <template v-if="data.questions[0].student_answer_logs.length > 0"> <!-- 이미 제출한 경우 -->
+          <template v-if="data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT'"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -73,7 +73,7 @@
           </template>
         </div>
         <div v-if="data.questions[0].type === 2">
-          <template v-if="data.questions[0].student_answer_logs.length > 0"> <!-- 이미 제출한 경우 -->
+          <template v-if="data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT'"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -117,7 +117,7 @@
           </template>
         </div>
         <div v-if="data.questions[0].type === 3">
-          <template v-if="data.questions[0].student_answer_logs.length > 0"> <!-- 이미 제출한 경우 -->
+          <template v-if="data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT'"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -150,7 +150,7 @@
           </template>
         </div>
         <div v-if="data.questions[0].type === 4">
-          <template v-if="data.questions[0].student_answer_logs.length > 0"> <!-- 이미 제출한 경우 -->
+          <template v-if="data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT'"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -177,11 +177,17 @@
             <el-input placeholder="내용을 입력해주세요." v-model="answer[0]" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
           </template>
         </div>
-        <!-- <el-button v-if="data.questions[0].student_answer_logs.length === 0" style="float:right" type="primary" @click="preOnClick('SUBMIT', [data.type, data.questions[0].question_id, [answer], data.questions[0].accept_language[0]])">제출</el-button> -->
+        <el-button
+          v-if="data.questions[0].student_answer_logs.length === 0 && type === 'STUDENT'"
+          style="float:right"
+          type="primary"
+          @click="preOnClick('SUBMIT', [data.type, data.questions[0].question_id, [answer], data.questions[0].accept_language[0]])">
+          제출
+        </el-button>
       </div>
       <div v-if="data.type === 1">
         <div v-if="data.surveys[0].type === 0">
-          <template v-if="data.surveys[0].student_surveys.length > 0"> <!-- 이미 제출한 경우 -->
+          <template v-if="data.surveys[0].student_surveys.length > 0 && type === 'STUDENT'"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -213,7 +219,7 @@
           </template>
         </div>
         <div v-if="data.surveys[0].type === 1">
-          <template v-if="data.surveys[0].student_surveys.length > 0"> <!-- 이미 제출한 경우 -->
+          <template v-if="data.surveys[0].student_surveys.length > 0 && type === 'STUDENT'"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
           </template>
           <template v-else>
@@ -222,7 +228,13 @@
             <el-input placeholder="내용을 입력해주세요." v-model="answer[0]"></el-input>
           </template>
         </div>
-        <!-- <el-button v-if="data.surveys[0].student_surveys.length === 0"  style="float:right" type="primary" @click="preOnClick('SUBMIT', [data.type, data.surveys[0].survey_id, data.surveys[0].type, answer])">제출</el-button> -->
+        <el-button
+          v-if="data.surveys[0].student_surveys.length === 0 && type === 'STUDENT'"
+          style="float:right"
+          type="primary"
+          @click="preOnClick('SUBMIT', [data.type, data.surveys[0].survey_id, data.surveys[0].type, answer])">
+          제출
+        </el-button>
       </div>
       <div v-if="data.type === 2" class="practice">
         <p>실습</p>
@@ -260,11 +272,9 @@ import Discussion from './NNDiscussion';
 import { EventBus } from '../../event-bus';
 import { baseUrl } from '../../services/config';
 import utils from '../../utils';
-import studentService from '../../services/studentService';
-
 
 export default {
-  props: ['data', 'onClick'],
+  props: ['data', 'onClick', 'type'],
   data() {
     return {
       answer: [],
@@ -274,7 +284,6 @@ export default {
   mounted() {
     const vm = this;
     EventBus.$on('clearAnswer', vm.clearAnswer);
-    EventBus.$on('submit', vm.submit);
   },
   computed: {
     Url() {
@@ -324,41 +333,6 @@ export default {
       this.$message.warning(
         '파일 1개만 업로드 할 수 있습니다.',
       );
-    },
-    submit() {
-      const vm = this;
-
-      switch (vm.data.type) {
-        case 0: // 문항(Question)
-          if (vm.data.questions[0].type === 2 &&
-              vm.$refs.answerUpload.uploadFiles.length !== 0) {
-            vm.answerFile = vm.$refs.answerUpload.uploadFiles;
-          }
-          studentService.submitQuestion({
-            questionId: vm.data.questions[0].question_id,
-            answers: vm.answer,
-            interval: 0,
-            codeLanguage: vm.data.questions[0].accept_language[0],
-          }).then((res) => {
-            if (vm.data.questions[0].type === 2) {
-              if (vm.answerFile.length !== 0) {
-                studentService.postAnswerLogFile({
-                  studentAnswerLogId: res.data.student_answer_log_id,
-                  file: vm.answerFile[0].raw,
-                });
-              }
-            }
-          });
-          break;
-        case 1: // 설문(Survey)
-          studentService.submitSurvey({
-            surveyId: vm.data.surveys[0].survey_id,
-            answer: vm.answer,
-          });
-          break;
-        default:
-          break;
-      }
     },
   },
   components: {

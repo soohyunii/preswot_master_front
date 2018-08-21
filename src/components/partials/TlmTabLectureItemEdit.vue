@@ -21,12 +21,9 @@
         center
         width="30%">
         <lecture-live-item
-          dataIndex=0
           :data="lectureItem"
-          :answers="answers"
-          :lectureItemId="lectureId"
-          :onClick="onClick"/>
-        <el-button v-if="!isSubmitted" style="float:right" type="primary" size="small" @click="onClick('SUBMIT')">제출</el-button>
+          :onClick="onClick"
+          type="STUDENT"/>
         <br />
         <br />
         <span slot="footer" class="dialog-footer">
