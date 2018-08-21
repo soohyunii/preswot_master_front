@@ -1,6 +1,7 @@
 <template>
   <div>
     <div v-if="studentQuestionResult">
+      {{ studentQuestionResult }}
       <el-row v-if="resultType === '실시간'">
         <el-col :span="5"><strong>현재 수강 인원</strong></el-col>
         <!-- <el-col :span="8"> 실시간 수강 인원  / {{ numberOfStudentInClass }} </el-col> -->
@@ -45,6 +46,18 @@
           width="250px">
           <template slot-scope="scope">
             <p>{{ scope.row.user.email_id }}</p>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="studentQuestionResult.type === '서술'"
+          label="첨부 파일"
+          align="center">
+          <template slot-scope="scope">
+            <div v-for="(file, index) in scope.row.files" :key="file.file_guid">
+              <el-button type="text" @click="handleVisible(file.file_type)">{{ file.name }}</el-button>
+              <!-- <div v-if="file.file_type === '.mp4'">
+              </div> -->
+            </div>
           </template>
         </el-table-column>
         <el-table-column
@@ -102,6 +115,19 @@
           </template>
         </el-table-column>
       </el-table>
+
+      <el-dialog
+        :visible.sync="fileVisible"
+        :before-close="handleClose"
+        custom-class="dialog">
+        <div v-if="fileType === `.mp4`">
+          <vue-plyr ref="player">
+            <video>
+              <source :src="`http://13.125.249.159:8020/materials/cacecf0e-5eab-23ab-ca55-59a5ab417fa1/The_Power_of_Teamwork_-_Funny_Animation.mp4`" type="video/mp4">
+            </video>
+          </vue-plyr>
+        </div>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -125,6 +151,8 @@
     float: right;
   }
 </style>
+<style src="vue-plyr/dist/vue-plyr.css">
+</style>
 
 
 <script>
@@ -143,6 +171,9 @@
           numTotal: null,
         }],
         studentQuestionResult: undefined,
+        fileVisible: false,
+        fileType: null,
+        player: null,
       };
     },
     computed: {
@@ -177,6 +208,8 @@
       vm.questionResultSummary[0].numAnswer = numAnswer;
       vm.questionResultSummary[0].numPartialAnswer = numPartialAnswer;
       vm.questionResultSummary[0].numWrongAnswer = numTotal - numAnswer - numPartialAnswer;
+    },
+    mounted() {
     },
     methods: {
       ...mapActions('grading', [
@@ -220,6 +253,17 @@
             duration: 2000,
           });
         }
+      },
+      handleVisible(type) {
+        const vm = this;
+        vm.fileType = type;
+        vm.fileVisible = true;
+      },
+      handleClose() {
+        const vm = this;
+        vm.player = vm.$refs.player.player;
+        vm.player.stop();
+        vm.fileVisible = false;
       },
     },
   };
