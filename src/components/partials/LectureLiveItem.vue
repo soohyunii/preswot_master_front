@@ -103,8 +103,6 @@
               action="#"
               :auto-upload="false"
               :file-list="[]"
-              :limit=1
-              :on-exceed="handleExceed"
               ref="answerUpload">
               <el-button slot="trigger" type="primary">파일 추가</el-button>
             </el-upload>
@@ -314,19 +312,15 @@ export default {
       const vm = this;
       vm.answer = [];
     },
-    handleExceed() {
-      this.$message.warning(
-        '파일 1개만 업로드 할 수 있습니다.',
-      );
-    },
     submit() {
       const vm = this;
 
       switch (vm.data.type) {
         case 0: // 문항(Question)
-          if (vm.data.questions[0].type === 2 &&
-              vm.$refs.answerUpload.uploadFiles.length !== 0) {
-            vm.answerFile = vm.$refs.answerUpload.uploadFiles;
+          if (vm.data.questions[0].type === 2) {
+            if (vm.$refs.answerUpload.uploadFiles.length !== undefined) {
+              vm.answerFile = vm.$refs.answerUpload.uploadFiles;
+            }
           }
           studentService.submitQuestion({
             questionId: vm.data.questions[0].question_id,
@@ -336,10 +330,12 @@ export default {
           }).then((res) => {
             if (vm.data.questions[0].type === 2) {
               if (vm.answerFile.length !== 0) {
-                studentService.postAnswerLogFile({
-                  studentAnswerLogId: res.data.student_answer_log_id,
-                  file: vm.answerFile[0].raw,
-                });
+                for (let i = 0; i < vm.answerFile.length; i += 1) {
+                  studentService.postAnswerLogFile({
+                    studentAnswerLogId: res.data.student_answer_log_id,
+                    file: vm.answerFile[i].raw,
+                  });
+                }
               }
             }
           });
