@@ -52,11 +52,16 @@
           label="첨부 파일"
           align="center">
           <template slot-scope="scope">
-            <div v-for="(file, index) in scope.row.files" :key="file.file_guid">
-              <el-button type="text" @click="handleVisible(file.file_type, file.client_path, file.name)">{{ file.name }}</el-button>
-              <!-- <div v-if="file.file_type === '.mp4'">
-              </div> -->
-            </div>
+            <el-dropdown @command="handleVisible" placement="bottom-start" trigger="click">
+              <span class="el-dropdown-link">
+                제출 파일 목록<i class="el-icon-arrow-down el-icon--right"></i>
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <div v-for="(file) in scope.row.files" :key="file.file_guid">
+                  <el-dropdown-item type="text" :command="file">{{ file.name }}</el-dropdown-item>
+                </div>
+              </el-dropdown-menu>
+            </el-dropdown>
           </template>
         </el-table-column>
         <el-table-column
@@ -130,7 +135,7 @@
           <img :src="url" width="100%">
         </div>
         <div v-else>
-          <a :href="url" download>{{ fileName }}</a>
+          <a :href="url" target="_blank" download>{{ fileName }}</a>
         </div>
       </el-dialog>
     </div>
@@ -155,6 +160,13 @@
   .table-caption {
     float: right;
   }
+  .el-dropdown-link {
+    cursor: pointer;
+    color: #409EFF;
+  }
+  .el-icon-arrow-down {
+    font-size: 12px;
+  }
 </style>
 <style src="vue-plyr/dist/vue-plyr.css">
 </style>
@@ -164,6 +176,7 @@
   import { mapActions, mapState, mapGetters } from 'vuex';
   import questionService from '../../services/questionService';
   import { baseUrl } from '../../services/config';
+  import utils from '../../utils';
 
   export default {
     name: 'LectureQuestionResult',
@@ -195,6 +208,10 @@
       ...mapGetters('class', [
         'numberOfStudentInClass',
       ]),
+      url() {
+        const vm = this;
+        return baseUrl + vm.filePath;
+      },
     },
     async created() {
       const vm = this;
@@ -262,24 +279,24 @@
           });
         }
       },
-      handleVisible(type, path, name) {
+      handleVisible(file) {
         const vm = this;
-        vm.fileName = name;
-        vm.fileType = type;
-        vm.filePath = path;
-        vm.fileVisible = true;
+        vm.fileName = file.name;
+        vm.fileType = file.file_type;
+        vm.filePath = file.client_path;
+        if (['.mp4', '.jpg', '.png', '.gif'].includes(vm.fileType)) {
+          vm.fileVisible = true;
+        } else {
+          utils.downloadFile(vm.url, vm.fileName);
+        }
       },
       handleClose() {
         const vm = this;
+        vm.fileVisible = false;
         if (vm.fileType === '.mp4') {
           vm.player = vm.$refs.player.player;
           vm.player.stop();
         }
-        vm.fileVisible = false;
-      },
-      url() {
-        const vm = this;
-        return baseUrl + vm.filePath;
       },
     },
   };
