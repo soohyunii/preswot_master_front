@@ -1,19 +1,20 @@
 <template>
   <div>
-    <div v-if="questionResult">
+    <div v-if="studentQuestionResult">
+      {{ studentQuestionResult }}
       <el-row v-if="resultType === '실시간'">
         <el-col :span="5"><strong>현재 수강 인원</strong></el-col>
         <!-- <el-col :span="8"> 실시간 수강 인원  / {{ numberOfStudentInClass }} </el-col> -->
       </el-row>
       <el-row>
         <el-col :span="3"><strong>학생 답변</strong></el-col>
-        <el-col :span="7">총 {{ questionResult.numberOfStudent }}건</el-col>
+        <el-col :span="7">총 {{ studentQuestionResult.numberOfStudent }}건</el-col>
         <el-button v-if="resultType === '실시간'" style="float:right" type="primary" size="small" icon="el-icon-refresh" @click="refresh()">새로고침</el-button>
       </el-row>
       <el-row>
         <el-col :span="12">
-          <span v-if="questionResult.type === '객관'" class="table-caption">단위 : 명</span>
-          <el-table v-if="questionResult.type === '객관'"
+          <span v-if="studentQuestionResult.type === '객관'" class="table-caption">단위 : 명</span>
+          <el-table v-if="studentQuestionResult.type === '객관'"
                     :data="questionResultSummary"
                     :header-cell-style="changeHead"
                     style="margin-bottom: 20px;">
@@ -35,16 +36,28 @@
           </el-table>
         </el-col>
       </el-row>
-      <el-table :data="questionResult.answers"
+      <el-table :data="studentQuestionResult.answers"
                 :header-cell-style="changeHead"
-                :default-sort="{prop: 'score', order: 'ascending'}"
-                height="500">
+                :default-sort="{prop: 'score', order: 'ascending'}">
+                <!-- height="500"> -->
         <el-table-column
           label="학생 아이디"
           align="center"
           width="250px">
           <template slot-scope="scope">
             <p>{{ scope.row.user.email_id }}</p>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="studentQuestionResult.type === '서술'"
+          label="첨부 파일"
+          align="center">
+          <template slot-scope="scope">
+            <div v-for="(file, index) in scope.row.files" :key="file.file_guid">
+              <el-button type="text" @click="handleVisible(file.file_type)">{{ file.name }}</el-button>
+              <!-- <div v-if="file.file_type === '.mp4'">
+              </div> -->
+            </div>
           </template>
         </el-table-column>
         <el-table-column
@@ -58,7 +71,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="questionResult.type === 'SW'"
+          v-if="studentQuestionResult.type === 'SW'"
           label="결과"
           align="center">
           <template slot-scope="scope">
@@ -74,7 +87,7 @@
           width="150px"
           align="center">
             <template slot-scope="scope">
-              <div v-if="questionResult.type !== '서술'">
+              <div v-if="studentQuestionResult.type !== '서술'">
                 <p v-if="scope.row.score === null">-</p>
                 <p v-else>{{ scope.row.score }}</p>
               </div>
@@ -83,12 +96,12 @@
                         v-model="scope.row.score"
                         type="number"
                         min="0"
-                        :max="questionResult.score" />
+                        :max="studentQuestionResult.score" />
               </div>
             </template>
         </el-table-column>
         <el-table-column
-          v-if="questionResult.type === '서술'"
+          v-if="studentQuestionResult.type === '서술'"
           label=""
           width="100px"
           align="center">
@@ -102,6 +115,19 @@
           </template>
         </el-table-column>
       </el-table>
+
+      <el-dialog
+        :visible.sync="fileVisible"
+        :before-close="handleClose"
+        custom-class="dialog">
+        <div v-if="fileType === `.mp4`">
+          <vue-plyr ref="player">
+            <video>
+              <source :src="`http://13.125.249.159:8020/materials/cacecf0e-5eab-23ab-ca55-59a5ab417fa1/The_Power_of_Teamwork_-_Funny_Animation.mp4`" type="video/mp4">
+            </video>
+          </vue-plyr>
+        </div>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -125,6 +151,8 @@
     float: right;
   }
 </style>
+<style src="vue-plyr/dist/vue-plyr.css">
+</style>
 
 
 <script>
@@ -142,6 +170,10 @@
           numPartialAnswer: null,
           numTotal: null,
         }],
+        studentQuestionResult: undefined,
+        fileVisible: false,
+        fileType: null,
+        player: null,
       };
     },
     computed: {
@@ -165,7 +197,8 @@
       vm.getQuestionResult({
         itemId: vm.itemId,
       });
-      const questionId = vm.questionResult.questionId;
+      vm.studentQuestionResult = vm.questionResult;
+      const questionId = vm.studentQuestionResult.questionId;
       const res = await questionService.getQuestionResult({
         questionId,
       });
@@ -175,6 +208,8 @@
       vm.questionResultSummary[0].numAnswer = numAnswer;
       vm.questionResultSummary[0].numPartialAnswer = numPartialAnswer;
       vm.questionResultSummary[0].numWrongAnswer = numTotal - numAnswer - numPartialAnswer;
+    },
+    mounted() {
     },
     methods: {
       ...mapActions('grading', [
@@ -193,7 +228,8 @@
         vm.getQuestionResult({
           itemId: vm.itemId,
         });
-        const questionId = vm.questionResult.questionId;
+        vm.studentQuestionResult = vm.questionResult;
+        const questionId = vm.studentQuestionResult.questionId;
         const res = await questionService.getQuestionResult({
           questionId,
         });
@@ -209,7 +245,7 @@
       },
       async scoreSubmit(score, id) { // eslint-disable-line
         const vm = this;
-        if (score < 0 || score > vm.questionResult.score) {
+        if (score < 0 || score > vm.studentQuestionResult.score) {
           vm.$notify({
             title: '점수 범위를 확인하세요',
             message: '',
@@ -217,6 +253,17 @@
             duration: 2000,
           });
         }
+      },
+      handleVisible(type) {
+        const vm = this;
+        vm.fileType = type;
+        vm.fileVisible = true;
+      },
+      handleClose() {
+        const vm = this;
+        vm.player = vm.$refs.player.player;
+        vm.player.stop();
+        vm.fileVisible = false;
       },
     },
   };

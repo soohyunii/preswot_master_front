@@ -18,8 +18,6 @@
         />
     </template>
     <template v-if="!$isPhone">
-      <!-- {{ currentLectureItemId }} -->
-      <!-- {{ questionItemIdList }} -->
       <h2>{{ path }}</h2><br/>
         <el-row :gutter="20">
           <el-col :span="12">
@@ -54,19 +52,20 @@
           </el-col>
         </el-row>
         <br />
-        <!-- TODO: 실시간 제출 현황 부분 아이템 여러개인 경우 어떻게 보여야 할지 기획 정해지면 주석 풀고 수정하여 적용 -->
-        <!-- <el-row>
-          <lecture-question-result
-            v-if="currentLectureItemId.length === 1 && tableItemList[tableItemIndex] && tableItemList[tableItemIndex].type === 0"
-            :classId="classId"
-            :itemId="currentLectureItemId[0]"
-            resultType="실시간"/>
-          <lecture-survey-result
-            v-if="currentLectureItemId === 1 && tableItemList[tableItemIndex] && tableItemList[tableItemIndex].type === 1"
-            :classId="classId"
-            :itemId="currentLectureItemId[0]"
-            resultType="실시간"/>
-        </el-row> -->
+        <div v-for="(itemId, index) in currentLectureItemId" :key="itemId">
+          <el-row>
+            <lecture-question-result
+              v-if="currentLectureItemId.length > 0 && tableItemList[tableItemIndex[index]] && tableItemList[tableItemIndex[index]].type === 0"
+              :classId="classId"
+              :itemId="itemId"
+              resultType="실시간"/>
+            <lecture-survey-result
+              v-if="currentLectureItemId.length > 0 && tableItemList[tableItemIndex[index]] && tableItemList[tableItemIndex[index]].type === 1"
+              :classId="classId"
+              :itemId="itemId"
+              resultType="실시간"/>
+          </el-row>
+        </div>
 
         <!--
         <el-row :gutter="20">
@@ -143,6 +142,11 @@ export default {
     if (res3.data.length !== 0) {
       res3.data.forEach((item) => {
         vm.currentLectureItemId.push(item.lecture_item_id);
+        vm.tableItemIndex.push(
+          vm.tableItemList.findIndex(tableItem =>
+            tableItem.lecture_item_id === item.lecture_item_id,
+          ),
+        );
       });
     }
     // TODO: 실시간 제출 현황 기획 후 주석 풀고 수정
@@ -152,7 +156,7 @@ export default {
   data() {
     return {
       tableItemList: [],
-      tableItemIndex: -1,
+      tableItemIndex: [],
       currentLectureItemId: [],
       path: '',
       isAuto: false,
@@ -194,7 +198,7 @@ export default {
     LectureSurveyResult,
   },
   methods: {
-    onClick(type, data, index) {
+    onClick(type, data) {
       const vm = this;
       switch (type) {
         case 'SHOWALL': {
@@ -209,6 +213,10 @@ export default {
           vm.currentLectureItemId = data;
           const params = [];
           vm.currentLectureItemId.forEach((item) => {
+            vm.tableItemIndex.push(
+              vm.tableItemList.findIndex(tableItem =>
+                tableItem.lecture_item_id === item),
+            );
             const param = {
               lecture_id: Number.parseInt(vm.lectureId, 10),
               opened: 1,
@@ -220,7 +228,6 @@ export default {
           break;
         }
         case 'SHOW': {
-          vm.tableItemIndex = index;
           if (vm.currentLectureItemId.length !== 0) {
             vm.$notify({
               title: '알림',
@@ -232,6 +239,10 @@ export default {
           vm.currentLectureItemId.push(data);
           const params = [];
           vm.currentLectureItemId.forEach((item) => {
+            vm.tableItemIndex.push(
+              vm.tableItemList.findIndex(tableItem =>
+                tableItem.lecture_item_id === item),
+            );
             const param = {
               lecture_id: Number.parseInt(vm.lectureId, 10),
               opened: 1,
@@ -254,6 +265,7 @@ export default {
           });
           vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify(params));
           vm.currentLectureItemId = [];
+          vm.tableItemIndex = [];
           break;
         }
         case 'SUBMIT': {

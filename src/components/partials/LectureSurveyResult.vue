@@ -1,20 +1,20 @@
 <template>
   <div>
-    <div v-if="surveyResult">
+    <div v-if="studentSurveyResult">
       <el-row v-if="resultType === '실시간'">
         <el-col :span="5"><strong>현재 수강 인원</strong></el-col>
         <!-- <el-col :span="8"> 실시간 수강 인원  / {{ numberOfStudentInClass }} </el-col> -->
       </el-row>
       <el-row>
         <el-col :span="3"><strong>학생 답변</strong></el-col>
-        <el-col :span="3">총 {{ surveyResult.numberOfStudent }}건</el-col>
+        <el-col :span="3">총 {{ studentSurveyResult.numberOfStudent }}건</el-col>
         <el-button v-if="resultType === '실시간'" style="float:right" type="primary" size="small" icon="el-icon-refresh" @click="refresh()">새로고침</el-button>
       </el-row>
       <br />
-      <el-table v-show="surveyResult.type === '서술'"
-                :data="surveyResult.answers"
-                :header-cell-style="changeHead"
-                height="500">
+      <el-table v-show="studentSurveyResult.type === '서술'"
+                :data="studentSurveyResult.answers"
+                :header-cell-style="changeHead">
+                <!-- height="500"> -->
         <el-table-column
           label="학생 아이디"
           align="center"
@@ -31,8 +31,8 @@
       </el-table>
       <el-row>
         <el-col :span="12">
-          <el-table v-show="surveyResult.type === '객관'"
-                    :data="surveyResult.answers"
+          <el-table v-show="studentSurveyResult.type === '객관'"
+                    :data="studentSurveyResult.answers"
                     :header-cell-style="changeHead">
             <el-table-column
               prop="choice"
@@ -75,6 +75,7 @@
     data() {
       return {
         activeTab: 'survey',
+        studentSurveyResult: undefined,
       };
     },
     computed: {
@@ -97,6 +98,7 @@
       vm.getSurveyResult({
         itemId: vm.itemId,
       });
+      vm.studentSurveyResult = vm.surveyResult;
     },
     methods: {
       ...mapActions('grading', [
@@ -115,6 +117,7 @@
         vm.getSurveyResult({
           itemId: vm.itemId,
         });
+        vm.studentSurveyResult = vm.surveyResult;
       },
       changeHead() {
         return { backgroundColor: '#EAEAEA' };

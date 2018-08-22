@@ -47,11 +47,11 @@
                 <div v-for="(item, index) in lectureItem" :key="index">
                   <lecture-live-item
                     :data="item"
-                    :lectureItemId="item.lecture_item_id"
-                    :onClick="onClick"/>
+                    :onClick="onClick"
+                    type="STUDENT"/>
                 </div>
               </div>
-              <el-button style="float:right" type="primary" size="small" @click="onClick('SUBMIT')">제출</el-button>
+              <!-- <el-button style="float:right" type="primary" size="small" @click="onClick('SUBMIT')">제출</el-button> -->
               <!-- <lecture-live-item
                 :data="lectureItem"
                 :onClick="onClick"/> -->
@@ -80,10 +80,10 @@
 import { getIdFromURL } from 'vue-youtube-embed';
 import classService from '../../services/classService';
 import lectureService from '../../services/lectureService';
+import studentService from '../../services/studentService';
 import LectureLiveItem from '../partials/LectureLiveItem';
 import LectureLiveMaterial from '../partials/LectureLiveMaterial';
 import utils from '../../utils';
-import { EventBus } from '../../event-bus';
 
 export default {
   name: 'StudentLectureLive',
@@ -156,23 +156,55 @@ export default {
     LectureLiveMaterial,
   },
   methods: {
-    async onClick(type) {
+    async onClick(type, data) {
       const vm = this;
       switch (type) {
         case 'SUBMIT': {
-          EventBus.$emit('submit');
-          vm.$notify({
-            title: '알림',
-            message: '제출하였습니다.',
-            type: 'success',
-          });
-          const params = {
-            lecture_item_id: Number.parseInt(vm.lectureItem[0].lecture_item_id, 10),
-            user_id: utils.getUserIdFromJwt(),
-          };
-          vm.$socket.emit('DOING_LECTURE_ITEM', JSON.stringify(params));
-          vm.lectureItem = [];
-          vm.refreshLectureItem(false);
+          switch (data[0]) {
+            case 0: { // 문항
+              studentService.submitQuestion({
+                questionId: data[1],
+                answers: data[2][0],
+                interval: 0,
+                codeLanguage: data[3],
+              });
+              vm.$notify({
+                title: '알림',
+                message: '제출하였습니다.',
+                type: 'success',
+              });
+              const params = {
+                lecture_item_id: Number.parseInt(vm.lectureItem.lecture_item_id, 10),
+                user_id: utils.getUserIdFromJwt(),
+              };
+              vm.$socket.emit('DOING_LECTURE_ITEM', JSON.stringify(params));
+              vm.lectureItem = undefined;
+              vm.refreshLectureItem(false);
+              break;
+            }
+            case 1: { // 설문
+              studentService.submitSurvey({
+                surveyId: data[1],
+                answer: [data[3]],
+              });
+              vm.$notify({
+                title: '알림',
+                message: '제출하였습니다.',
+                type: 'success',
+              });
+              const params = {
+                lecture_item_id: Number.parseInt(vm.lectureItem.lecture_item_id, 10),
+                user_id: utils.getUserIdFromJwt(),
+              };
+              vm.$socket.emit('DOING_LECTURE_ITEM', JSON.stringify(params));
+              vm.lectureItem = undefined;
+              vm.refreshLectureItem(false);
+              break;
+            }
+            default: {
+              throw new Error(`not defined type ${type}`);
+            }
+          }
           break;
         }
         /*

@@ -7,15 +7,12 @@
       </p>
       <!-- <p>현재: {{ data.name }}</p> -->
     </div>
-    <div v-for="(lectureItem, index) in data" :key="lectureItem.lecture_item_id">
+    <div v-for="(lectureItem) in data" :key="lectureItem.lecture_item_id">
       <lecture-live-item
-        :dataIndex="index"
         :data="lectureItem"
-        :answers="answers"
-        :lectureItemId="lectureItem.lecture_item_id"
-        :onClick="onClick"/>
+        :onClick="onClick"
+        type="TEACHER"/>
     </div>
-    <el-button style="float:right" type="primary" size="small" @click="preOnClick('SUBMIT')">제출</el-button>
   </div>
 </template>
 
