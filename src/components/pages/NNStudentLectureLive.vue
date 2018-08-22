@@ -89,7 +89,7 @@ export default {
       id: res.data.class_id,
     });
     vm.path = res2.data.name.concat(' > ', res.data.name);
-    const res3 = await lectureService.getLectureMaterialAdditional({
+    const res3 = await lectureService.getLectureMaterial({
       lectureId: vm.lectureId,
     });
     vm.materialList = res3.data.material;
