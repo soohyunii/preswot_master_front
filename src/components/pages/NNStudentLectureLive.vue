@@ -26,6 +26,7 @@
     </template> -->
     <template v-if="!$isPhone">
       <h2>{{ path }}</h2>
+      {{ lectureItem }}
       <el-row :gutter="20">
         <el-col :span="12">
           <youtube
@@ -78,12 +79,14 @@
 
 <script>
 import { getIdFromURL } from 'vue-youtube-embed';
+import { setTimeout } from 'timers';
 import classService from '../../services/classService';
 import lectureService from '../../services/lectureService';
 import studentService from '../../services/studentService';
 import LectureLiveItem from '../partials/LectureLiveItem';
 import LectureLiveMaterial from '../partials/LectureLiveMaterial';
 import utils from '../../utils';
+import automaticLectureService from '../../services/automaticLectureService';
 
 export default {
   name: 'StudentLectureLive',
@@ -134,6 +137,17 @@ export default {
         alert("교육 데이터 수집 프로그램을 실행하셔야 강의에 입장하실 수 있습니다.");
         window.location.href = '/download';
       }
+    });
+    const res4 = await automaticLectureService.onlineJoin({
+      lectureId: vm.lectureId,
+      lectureType: 0,
+    });
+    res4.data.items.forEach((item) => {
+      setTimeout(() => {
+        console.log(item.offset * 1000);
+        vm.lectureItem = [];
+        vm.lectureItem.push(item);
+      }, item.offset * 100);
     });
   },
   data() {
@@ -240,6 +254,7 @@ export default {
   },
   beforeDestroy() {
     this.$socket.close();
+    console.log('destroyed!!');
   },
 };
 </script>
