@@ -179,7 +179,7 @@
           v-if="data.questions[0].student_answer_logs.length === 0 && type === 'STUDENT'"
           style="float:right"
           type="primary"
-          @click="preOnClick('SUBMIT', [data.type, data.questions[0].question_id, [answer], data.questions[0].accept_language[0]])">
+          @click="preOnClick()">
           제출
         </el-button>
       </div>
@@ -230,7 +230,7 @@
           v-if="data.surveys[0].student_surveys.length === 0 && type === 'STUDENT'"
           style="float:right"
           type="primary"
-          @click="preOnClick('SUBMIT', [data.type, data.surveys[0].survey_id, data.surveys[0].type, answer])">
+          @click="preOnClick()">
           제출
         </el-button>
       </div>
@@ -314,9 +314,38 @@ export default {
     },
   },
   methods: {
-    preOnClick(...args) {
+    preOnClick() {
       const vm = this;
-      vm.onClick(...args);
+      let arg = {};
+      switch (vm.data.type) {
+        case 0: // 문항
+          arg = {
+            type: 0,
+            questionId: vm.data.questions[0].question_id,
+            questionType: vm.data.questions[0].type,
+            language: vm.data.questions[0].accept_language,
+            answer: vm.answer,
+          };
+          if (vm.data.questions[0].type === 2) {
+            if (vm.$refs.answerUpload.uploadFiles !== undefined) {
+              vm.answerFile = vm.$refs.answerUpload.uploadFiles;
+              arg.answerFile = vm.answerFile;
+            }
+          }
+          break;
+        case 1: // 설문
+          arg = {
+            type: 1,
+            surveyId: vm.data.surveys[0].survey_id,
+            surveyType: vm.data.surveys[0].type,
+            answer: vm.answer,
+          };
+          break;
+        default:
+          break;
+      }
+      console.log(arg);
+      vm.onClick('SUBMIT', arg);
       vm.clearAnswer();
     },
     onChange(data) { // 문항 - 객관값 보정 (0 1 2 3 4를 1 2 3 4 5로) 을 위한 함수
@@ -326,44 +355,6 @@ export default {
     clearAnswer() {
       const vm = this;
       vm.answer = [];
-    },
-    submit() {
-      const vm = this;
-
-      switch (vm.data.type) {
-        case 0: // 문항(Question)
-          if (vm.data.questions[0].type === 2) {
-            if (vm.$refs.answerUpload.uploadFiles.length !== undefined) {
-              vm.answerFile = vm.$refs.answerUpload.uploadFiles;
-            }
-          }
-          studentService.submitQuestion({
-            questionId: vm.data.questions[0].question_id,
-            answers: vm.answer,
-            interval: 0,
-            codeLanguage: vm.data.questions[0].accept_language[0],
-          }).then((res) => {
-            if (vm.data.questions[0].type === 2) {
-              if (vm.answerFile.length !== 0) {
-                for (let i = 0; i < vm.answerFile.length; i += 1) {
-                  studentService.postAnswerLogFile({
-                    studentAnswerLogId: res.data.student_answer_log_id,
-                    file: vm.answerFile[i].raw,
-                  });
-                }
-              }
-            }
-          });
-          break;
-        case 1: // 설문(Survey)
-          studentService.submitSurvey({
-            surveyId: vm.data.surveys[0].survey_id,
-            answer: vm.answer,
-          });
-          break;
-        default:
-          break;
-      }
     },
   },
   components: {

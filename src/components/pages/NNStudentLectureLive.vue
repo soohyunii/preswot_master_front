@@ -160,13 +160,24 @@ export default {
       const vm = this;
       switch (type) {
         case 'SUBMIT': {
-          switch (data[0]) {
+          switch (data.type) {
             case 0: { // 문항
               studentService.submitQuestion({
-                questionId: data[1],
-                answers: data[2][0],
+                questionId: data.questionId,
+                answers: data.answer,
                 interval: 0,
-                codeLanguage: data[3],
+                codeLanguage: data.language,
+              }).then((res) => {
+                if (data.questionType === 2) {
+                  if (data.answerFile !== undefined && data.answerFile.length !== 0) {
+                    for (let i = 0; i < data.answerFile.length; i += 1) {
+                      studentService.postAnswerLogFile({
+                        studentAnswerLogId: res.data.student_answer_log_id,
+                        file: data.answerFile[i].raw,
+                      });
+                    }
+                  }
+                }
               });
               vm.$notify({
                 title: '알림',
@@ -184,8 +195,8 @@ export default {
             }
             case 1: { // 설문
               studentService.submitSurvey({
-                surveyId: data[1],
-                answer: [data[3]],
+                surveyId: data.surveyId,
+                answer: data.answer,
               });
               vm.$notify({
                 title: '알림',
