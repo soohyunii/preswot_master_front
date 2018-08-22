@@ -1,6 +1,5 @@
 <template>
   <div class="lecture-live-item-wrapper" style="background: #e5e9f2">
-    <!-- {{ data }} -->
     <div v-if="data === undefined"> <!-- 입력값 없음 -->
       강사님의 신호를 기다리는 중입니다.
     </div>
@@ -95,7 +94,7 @@
                   <span>{{ answer }} . {{ data.questions[0].choice[answer - 1] }}</span>
                 </span>
               </p>
-              <p>
+              <p v-if="!!data.questions[0].student_answer_logs[studentAnswerLogIndex].score">
                 <span>점수 : {{ data.questions[0].student_answer_logs[studentAnswerLogIndex].score }}</span>
               </p>
             </el-card>
