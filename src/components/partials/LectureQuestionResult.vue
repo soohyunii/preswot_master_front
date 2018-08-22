@@ -1,7 +1,6 @@
 <template>
   <div>
     <div v-if="studentQuestionResult">
-      {{ studentQuestionResult }}
       <el-row v-if="resultType === '실시간'">
         <el-col :span="5"><strong>현재 수강 인원</strong></el-col>
         <!-- <el-col :span="8"> 실시간 수강 인원  / {{ numberOfStudentInClass }} </el-col> -->
@@ -54,7 +53,7 @@
           align="center">
           <template slot-scope="scope">
             <div v-for="(file, index) in scope.row.files" :key="file.file_guid">
-              <el-button type="text" @click="handleVisible(file.file_type)">{{ file.name }}</el-button>
+              <el-button type="text" @click="handleVisible(file.file_type, file.client_path, file.name)">{{ file.name }}</el-button>
               <!-- <div v-if="file.file_type === '.mp4'">
               </div> -->
             </div>
@@ -123,9 +122,15 @@
         <div v-if="fileType === `.mp4`">
           <vue-plyr ref="player">
             <video>
-              <source :src="`http://13.125.249.159:8020/materials/cacecf0e-5eab-23ab-ca55-59a5ab417fa1/The_Power_of_Teamwork_-_Funny_Animation.mp4`" type="video/mp4">
+              <source :src="url" type="video/mp4">
             </video>
           </vue-plyr>
+        </div>
+        <div v-else-if="['.jpg','.png','.gif'].includes(fileType)">
+          <img :src="url" width="100%">
+        </div>
+        <div v-else>
+          <a :href="url" download>{{ fileName }}</a>
         </div>
       </el-dialog>
     </div>
@@ -158,6 +163,7 @@
 <script>
   import { mapActions, mapState, mapGetters } from 'vuex';
   import questionService from '../../services/questionService';
+  import { baseUrl } from '../../services/config';
 
   export default {
     name: 'LectureQuestionResult',
@@ -172,7 +178,9 @@
         }],
         studentQuestionResult: undefined,
         fileVisible: false,
+        fileName: null,
         fileType: null,
+        filePath: null,
         player: null,
       };
     },
@@ -254,16 +262,24 @@
           });
         }
       },
-      handleVisible(type) {
+      handleVisible(type, path, name) {
         const vm = this;
+        vm.fileName = name;
         vm.fileType = type;
+        vm.filePath = path;
         vm.fileVisible = true;
       },
       handleClose() {
         const vm = this;
-        vm.player = vm.$refs.player.player;
-        vm.player.stop();
+        if (vm.fileType === '.mp4') {
+          vm.player = vm.$refs.player.player;
+          vm.player.stop();
+        }
         vm.fileVisible = false;
+      },
+      url() {
+        const vm = this;
+        return baseUrl + vm.filePath;
       },
     },
   };
