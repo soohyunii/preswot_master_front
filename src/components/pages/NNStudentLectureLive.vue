@@ -281,23 +281,21 @@ export default {
   },
   beforeDestroy() {
     const vm = this;
-    console.log(vm.lectureId);
-    let lectureItemId;
-    if (vm.lectureItem.length === 0) {
-      lectureItemId = undefined;
-    } else {
-      lectureItemId = vm.lectureItem[0].lecture_item_id;
-    }
     vm.$socket.close();
-    console.log(lectureItemId);
-    const res = automaticLectureService.onlineLeave({
-      lectureId: vm.lectureId,
-      lectureItemId,
-      offset: vm.participationTime,
-    });
-    clearTimeout(vm.timer);
-    console.log(res);
-    console.log('destroyed!!');
+    if (vm.lectureType === 2) {
+      let lectureItemId;
+      if (vm.lectureItem.length === 0) {
+        lectureItemId = undefined;
+      } else {
+        lectureItemId = vm.lectureItem[0].lecture_item_id;
+      }
+      automaticLectureService.onlineLeave({
+        lectureId: vm.lectureId,
+        lectureItemId,
+        offset: vm.participationTime,
+      });
+      clearTimeout(vm.timer);
+    }
   },
 };
 </script>

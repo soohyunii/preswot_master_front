@@ -18,6 +18,7 @@
         />
     </template>
     <template v-if="!$isPhone">
+      {{ currentLectureItemId }}
       <h2>{{ path }}</h2><br/>
         <el-row :gutter="20">
           <el-col :span="12">
@@ -43,12 +44,13 @@
             />
           </el-col>
           <el-col :span="12">
-            <teacher-lecture-live-item
-            v-if="currentLectureItemId.length !== 0"
-            :lectureItemId="currentLectureItemId"
-            :onClick="onClick"
-            :isAuto="isAuto"
-            />
+            <div v-for="id in currentLectureItemId" :key="id">
+              <teacher-lecture-live-item
+              :lectureItemId="id"
+              :onClick="onClick"
+              :isAuto="isAuto"
+              />
+            </div>
           </el-col>
         </el-row>
         <br />
@@ -228,29 +230,31 @@ export default {
           break;
         }
         case 'SHOW': {
-          if (vm.currentLectureItemId.length !== 0) {
-            vm.$notify({
-              title: '알림',
-              message: '다른 아이템을 보이려면 기존 아이템을 내려주세요.',
-              type: 'warning',
+          // if (vm.currentLectureItemId.length !== 0) {
+          //   vm.$notify({
+          //     title: '알림',
+          //     message: '다른 아이템을 보이려면 기존 아이템을 내려주세요.',
+          //     type: 'warning',
+          //   });
+          //   break;
+          // }
+          if (!vm.currentLectureItemId.includes(data)) {
+            vm.currentLectureItemId.push(data);
+            const params = [];
+            vm.currentLectureItemId.forEach((item) => {
+              vm.tableItemIndex.push(
+                vm.tableItemList.findIndex(tableItem =>
+                  tableItem.lecture_item_id === item),
+              );
+              const param = {
+                lecture_id: Number.parseInt(vm.lectureId, 10),
+                opened: 1,
+                lecture_item_id: item,
+              };
+              params.push(param);
             });
-            break;
+            vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify(params));
           }
-          vm.currentLectureItemId.push(data);
-          const params = [];
-          vm.currentLectureItemId.forEach((item) => {
-            vm.tableItemIndex.push(
-              vm.tableItemList.findIndex(tableItem =>
-                tableItem.lecture_item_id === item),
-            );
-            const param = {
-              lecture_id: Number.parseInt(vm.lectureId, 10),
-              opened: 1,
-              lecture_item_id: item,
-            };
-            params.push(param);
-          });
-          vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify(params));
           break;
         }
         case 'HIDE': {

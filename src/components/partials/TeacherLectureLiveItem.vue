@@ -7,12 +7,10 @@
       </p>
       <!-- <p>현재: {{ data.name }}</p> -->
     </div>
-    <div v-for="(lectureItem) in data" :key="lectureItem.lecture_item_id">
       <lecture-live-item
-        :data="lectureItem"
+        :data="data"
         :onClick="onClick"
         type="TEACHER"/>
-    </div>
   </div>
 </template>
 
@@ -27,13 +25,10 @@ import { EventBus } from '../../event-bus';
 export default {
   async created() {
     const vm = this;
-    vm.lectureItemId.forEach(async (item) => {
-      const res = await lectureItemService.getLectureItem({
-        lectureItemId: item,
-      });
-      vm.data.push(res.data);
-      vm.answers.push([]);
+    const res = await lectureItemService.getLectureItem({
+      lectureItemId: vm.lectureItemId,
     });
+    vm.data = res.data;
   },
   mounted() {
     const vm = this;
@@ -42,8 +37,7 @@ export default {
   props: ['onClick', 'lectureItemId', 'classId'],
   data() {
     return {
-      data: [],
-      answers: [],
+      data: undefined,
     };
   },
   components: {
