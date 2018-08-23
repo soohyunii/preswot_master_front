@@ -79,7 +79,7 @@
 
 <script>
 import { getIdFromURL } from 'vue-youtube-embed';
-import { setTimeout } from 'timers';
+import { setTimeout, clearTimeout } from 'timers';
 import classService from '../../services/classService';
 import lectureService from '../../services/lectureService';
 import studentService from '../../services/studentService';
@@ -92,13 +92,17 @@ export default {
   name: 'StudentLectureLive',
   async created() {
     const vm = this;
-    // 화면 갱신
-    vm.refreshLectureItem(false);
-
+    vm.joinTime = Date.now();
+    vm.lectureId = vm.$route.params.lectureId;
     // 강의 아이템 목록, 첨부파일 목록, 과목, 강의명 가져오기
     const res = await lectureService.getLecture({
       lectureId: vm.lectureId,
     });
+    vm.lectureType = res.data.type;
+    if (vm.lectureType === 0) {
+      // 화면 갱신
+      vm.refreshLectureItem(false);
+    }
     vm.tableItemList = res.data.lecture_items;
     const res2 = await classService.getClass({
       id: res.data.class_id,
@@ -123,12 +127,14 @@ export default {
       };
       vm.$socket.emit('HEART_BEAT', JSON.stringify(params2));
     }, 3000);
-    vm.$socket.on('RELOAD_LECTURE_ITEMS', (msg) => {
-      const jsonMSG = JSON.parse(msg);
-      if (jsonMSG.reload === true) {
-        vm.refreshLectureItem();
-      }
-    });
+    if (vm.lectureType === 0) {
+      vm.$socket.on('RELOAD_LECTURE_ITEMS', (msg) => {
+        const jsonMSG = JSON.parse(msg);
+        if (jsonMSG.reload === true) {
+          vm.refreshLectureItem();
+        }
+      });
+    }
     vm.$socket.on('GET_REALTIME_STAT', (msg) => {
       const jsonMSG = (JSON.parse(msg))[0];
       const result = utils.checkBrowser();
@@ -138,32 +144,42 @@ export default {
         window.location.href = '/download';
       }
     });
-    const res4 = await automaticLectureService.onlineJoin({
-      lectureId: vm.lectureId,
-      lectureType: 0,
-    });
-    res4.data.items.forEach((item) => {
-      setTimeout(() => {
-        console.log(item.offset * 1000);
-        vm.lectureItem = [];
-        vm.lectureItem.push(item);
-      }, item.offset * 100);
-    });
+    if (vm.lectureType === 2) {
+      const res4 = await automaticLectureService.onlineJoin({
+        lectureId: vm.lectureId,
+        lectureType: 0,
+      });
+      res4.data.items.forEach((item) => {
+        vm.timer = setTimeout(() => {
+          vm.lectureItem = [];
+          vm.lectureItem.push(item);
+        }, item.offset * 1000);
+      });
+    }
   },
   data() {
     return {
       path: '', // 과목 , 강의 제목 이름
+      lectureId: undefined,
       lectureItem: [], // 현재 표시중인 강의 아이템
+      lectureType: undefined,
       materialList: undefined, // 강의자료 목록
       additionalList: undefined, // 참고자료 목록
+      joinTime: undefined,
+      quitTime: undefined,
+      timer: undefined,
     };
   },
   computed: {
-    lectureId() {
-      const vm = this;
-      return vm.$route.params.lectureId;
-    },
+    // lectureId() {
+    //   const vm = this;
+    //   return vm.$route.params.lectureId;
+    // },
     youtubeId: () => (getIdFromURL('https://www.youtube.com/watch?v=actDWRiD9RI&list=UUEgIN0yG3PeVF4JfJ-ZG0UQ')),
+    participationTime() {
+      const vm = this;
+      return Math.floor((Date.now() - vm.joinTime) / 1000);
+    },
   },
   components: {
     LectureLiveItem,
@@ -203,7 +219,7 @@ export default {
                 user_id: utils.getUserIdFromJwt(),
               };
               vm.$socket.emit('DOING_LECTURE_ITEM', JSON.stringify(params));
-              vm.lectureItem = undefined;
+              vm.lectureItem = [];
               vm.refreshLectureItem(false);
               break;
             }
@@ -222,7 +238,7 @@ export default {
                 user_id: utils.getUserIdFromJwt(),
               };
               vm.$socket.emit('DOING_LECTURE_ITEM', JSON.stringify(params));
-              vm.lectureItem = undefined;
+              vm.lectureItem = [];
               vm.refreshLectureItem(false);
               break;
             }
@@ -264,7 +280,23 @@ export default {
     },
   },
   beforeDestroy() {
-    this.$socket.close();
+    const vm = this;
+    console.log(vm.lectureId);
+    let lectureItemId;
+    if (vm.lectureItem.length === 0) {
+      lectureItemId = undefined;
+    } else {
+      lectureItemId = vm.lectureItem[0].lecture_item_id;
+    }
+    vm.$socket.close();
+    console.log(lectureItemId);
+    const res = automaticLectureService.onlineLeave({
+      lectureId: vm.lectureId,
+      lectureItemId,
+      offset: vm.participationTime,
+    });
+    clearTimeout(vm.timer);
+    console.log(res);
     console.log('destroyed!!');
   },
 };

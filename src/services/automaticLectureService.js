@@ -21,20 +21,18 @@ export default {
   },
   onlineJoin({ // 입장 flag 전송
     lectureId,
-    lectureType,
   }) {
-    return http.post('/automatic_lectures/online/join', {
-      lecture_id: lectureId,
-      lecture_type: lectureType,
-    });
+    return http.get(`/automatic_lectures/online/join/${lectureId}`);
   },
   onlineLeave({ // 퇴장 flag 업로드
     lectureId,
-    lectureType,
+    lectureItemId,
+    offset,
   }) {
     return http.post('/automatic_lectures/online/leave', {
       lecture_id: lectureId,
-      lecture_type: lectureType,
+      lecture_item_id: lectureItemId,
+      offset,
     });
   },
 };
