@@ -91,11 +91,7 @@
           width="150px"
           align="center">
             <template slot-scope="scope">
-              <div v-if="studentQuestionResult.type !== '서술'">
-                <p v-if="scope.row.score === null">-</p>
-                <p v-else>{{ scope.row.score }}</p>
-              </div>
-              <div v-else>
+              <div>
                 <el-input placeholder="Please input"
                         v-model="scope.row.score"
                         type="number"
@@ -105,7 +101,6 @@
             </template>
         </el-table-column>
         <el-table-column
-          v-if="studentQuestionResult.type === '서술'"
           label=""
           width="100px"
           align="center">
@@ -276,6 +271,16 @@
             message: '',
             type: 'error',
             duration: 2000,
+          });
+          return;
+        }
+        const res = await vm.putScore({ id, score });
+        if (res && res.status === 200) {
+          vm.$notify({
+            title: '점수 수정이 완료되었습니다.',
+            message: '',
+            type: 'success',
+            duration: 1000,
           });
         }
       },
