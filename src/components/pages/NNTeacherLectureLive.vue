@@ -239,11 +239,20 @@ export default {
           //   break;
           // }
           if (!vm.currentLectureItemId.includes(data)) {
-            vm.currentLectureItemId.push(data);
-            vm.tableItemIndex.push(
-              vm.tableItemList.findIndex(tableItem =>
-                tableItem.lecture_item_id === data),
-            );
+            const itemIndex = vm.tableItemList.findIndex(tableItem =>
+                tableItem.lecture_item_id === data);
+            let putIndex = 0;
+            for (let i = 0; i < vm.tableItemIndex.length; i += 1) {
+              if (itemIndex < vm.tableItemIndex[i]) {
+                putIndex = i;
+                break;
+              }
+              if (i + 1 === vm.tableItemIndex.length) {
+                putIndex = i + 1;
+              }
+            }
+            vm.currentLectureItemId.splice(putIndex, 0, data);
+            vm.tableItemIndex.splice(putIndex, 0, itemIndex);
             const param = {
               lecture_id: Number.parseInt(vm.lectureId, 10),
               opened: 1,

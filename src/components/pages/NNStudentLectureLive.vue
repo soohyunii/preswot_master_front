@@ -26,8 +26,6 @@
     </template> -->
     <template v-if="!$isPhone">
       <h2>{{ path }}</h2>
-      {{ lectureType }}
-      {{ lectureItem }}
       <el-row :gutter="20">
         <el-col :span="12">
           <youtube
@@ -149,7 +147,6 @@ export default {
       const res4 = await automaticLectureService.offlineJoin({
         lectureId: vm.lectureId,
       });
-      console.log(res4);
       res4.data.items.forEach((item) => {
         vm.timer = setTimeout(() => {
           vm.lectureItem = [];
@@ -160,7 +157,6 @@ export default {
       const res4 = await automaticLectureService.onlineJoin({
         lectureId: vm.lectureId,
       });
-      console.log(res4);
       res4.data.items.forEach((item) => {
         vm.timer = setTimeout(() => {
           vm.lectureItem = [];
@@ -278,6 +274,12 @@ export default {
         const res3 = await lectureService.getOpenedLectureItem({ lectureId: vm.lectureId });
         if (res3.data.length !== 0) {
           vm.lectureItem = res3.data;
+          // sequence 순서대로 강의 아이템 정렬
+          vm.lectureItem.sort((a, b) => {
+            const aItemSequence = Number(a.sequence);
+            const bItemSequence = Number(b.sequence);
+            return aItemSequence - bItemSequence;
+          });
         } else {
           vm.lectureItem = [];
         }
