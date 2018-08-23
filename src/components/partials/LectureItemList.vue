@@ -25,26 +25,20 @@
         <el-table-column
           prop="name"
           label="강의 아이템 이름"
-          width="225"
           align="center"
         ></el-table-column>
 
-        <!--TODO: 변수명 변경-->
         <el-table-column
-          prop="start_time"
+          prop="offset"
           label="활성화 시각"
           width="200"
           align="center"
           v-if="props.lectureType !== 0"
-        ></el-table-column>
-
-        <el-table-column
-          prop="end_time"
-          label="지속 시간"
-          width="200"
-          align="center"
-          v-if="props.lectureType !== 0"
-        ></el-table-column>
+        >
+          <template slot-scope="scope">
+          {{ parseInt(scope.row.offset/3600) + ':' + parseInt((scope.row.offset%3600)/60) + ':' + (scope.row.offset%60) }}
+          </template>
+        </el-table-column>
 
         <el-table-column
           label="-"

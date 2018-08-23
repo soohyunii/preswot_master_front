@@ -35,7 +35,6 @@ export default {
     utils.assignIfNotNil(param, { name });
     utils.assignIfNotNil(param, { description });
     // null이면 null 들어가야함.
-    // TODO: 변수명 교체.
     Object.assign(param, { start_time: startTime });
     Object.assign(param, { end_time: endTime });
     utils.assignIfNotNil(param, { order });
