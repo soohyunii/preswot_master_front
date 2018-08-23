@@ -18,7 +18,6 @@
         />
     </template>
     <template v-if="!$isPhone">
-      {{ currentLectureItemId }}
       <h2>{{ path }}</h2><br/>
         <el-row :gutter="20">
           <el-col :span="12">
@@ -93,6 +92,7 @@
 // FIXME : Failed to execute 'postMessage' on 'DOMWindow': The target origin provided ('<URL>')
 //   does not match the recipient window's origin ('<URL>'). 에러 해결
 import { getIdFromURL } from 'vue-youtube-embed';
+import deepCopy from 'deep-copy';
 import lectureService from '../../services/lectureService';
 import classService from '../../services/classService';
 import TeacherLectureLiveItemList from '../partials/TeacherLectureLiveItemList';
@@ -118,6 +118,12 @@ export default {
       const bItemSequence = Number(b.sequence);
       return aItemSequence - bItemSequence;
     });
+    vm.questionItemIdList = vm.tableItemList.filter(
+      item => item.type === 0).map(item => item.lecture_item_id,
+    );
+    vm.surveyItemIdList = vm.tableItemList.filter(
+      item => item.type === 1).map(item => item.lecture_item_id,
+    );
     const res2 = await classService.getClass({
       id: res.data.class_id,
     });
@@ -140,17 +146,17 @@ export default {
     }, 3000);
 
     // opened 상태인 아이템이 이미 있다면 보이기
-    const res3 = await lectureService.getOpenedLectureItem({ lectureId: vm.lectureId });
-    if (res3.data.length !== 0) {
-      res3.data.forEach((item) => {
-        vm.currentLectureItemId.push(item.lecture_item_id);
-        vm.tableItemIndex.push(
-          vm.tableItemList.findIndex(tableItem =>
-            tableItem.lecture_item_id === item.lecture_item_id,
-          ),
-        );
-      });
-    }
+    // const res3 = await lectureService.getOpenedLectureItem({ lectureId: vm.lectureId });
+    // if (res3.data.length !== 0) {
+    //   res3.data.forEach((item) => {
+    //     vm.currentLectureItemId.push(item.lecture_item_id);
+    //     vm.tableItemIndex.push(
+    //       vm.tableItemList.findIndex(tableItem =>
+    //         tableItem.lecture_item_id === item.lecture_item_id,
+    //       ),
+    //     );
+    //   });
+    // }
     // TODO: 실시간 제출 현황 기획 후 주석 풀고 수정
     // eslint-disable-next-line
     // vm.tableItemIndex = vm.tableItemList.findIndex(item => item.lecture_item_id === vm.currentLectureItemId); 
@@ -160,6 +166,8 @@ export default {
       tableItemList: [],
       tableItemIndex: [],
       currentLectureItemId: [],
+      questionItemIdList: [],
+      surveyItemIdList: [],
       path: '',
       isAuto: false,
       isInfoVisible: false,
@@ -181,14 +189,6 @@ export default {
         return false;
       }
       return true;
-    },
-    questionItemIdList() {
-      const vm = this;
-      return vm.tableItemList.filter(item => item.type === 0).map(item => item.lecture_item_id);
-    },
-    surveyItemIdList() {
-      const vm = this;
-      return vm.tableItemList.filter(item => item.type === 1).map(item => item.lecture_item_id);
     },
   },
   components: {
@@ -212,7 +212,7 @@ export default {
             });
             break;
           }
-          vm.currentLectureItemId = data;
+          vm.currentLectureItemId = deepCopy(data);
           const params = [];
           vm.currentLectureItemId.forEach((item) => {
             vm.tableItemIndex.push(
@@ -240,36 +240,29 @@ export default {
           // }
           if (!vm.currentLectureItemId.includes(data)) {
             vm.currentLectureItemId.push(data);
-            const params = [];
-            vm.currentLectureItemId.forEach((item) => {
-              vm.tableItemIndex.push(
-                vm.tableItemList.findIndex(tableItem =>
-                  tableItem.lecture_item_id === item),
-              );
-              const param = {
-                lecture_id: Number.parseInt(vm.lectureId, 10),
-                opened: 1,
-                lecture_item_id: item,
-              };
-              params.push(param);
-            });
-            vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify(params));
+            vm.tableItemIndex.push(
+              vm.tableItemList.findIndex(tableItem =>
+                tableItem.lecture_item_id === data),
+            );
+            const param = {
+              lecture_id: Number.parseInt(vm.lectureId, 10),
+              opened: 1,
+              lecture_item_id: data,
+            };
+            vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify([param]));
           }
           break;
         }
         case 'HIDE': {
-          const params = [];
-          vm.currentLectureItemId.forEach((item) => {
-            const param = {
-              lecture_id: Number.parseInt(vm.lectureId, 10),
-              opened: 0,
-              lecture_item_id: item,
-            };
-            params.push(param);
-          });
-          vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify(params));
-          vm.currentLectureItemId = [];
-          vm.tableItemIndex = [];
+          const param = {
+            lecture_id: Number.parseInt(vm.lectureId, 10),
+            opened: 0,
+            lecture_item_id: data,
+          };
+          vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify([param]));
+          const itemIndex = vm.currentLectureItemId.findIndex(id => id === data);
+          vm.currentLectureItemId.splice(itemIndex, 1);
+          vm.tableItemIndex.splice(itemIndex, 1);
           break;
         }
         case 'SUBMIT': {
