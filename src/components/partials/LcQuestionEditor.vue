@@ -59,8 +59,6 @@
         <el-upload
           action="#"
           :auto-upload="false"
-          :limit=1
-          :on-exceed="handleExceed"
           :file-list="initFileList"
           ref=answerUpload>
           <el-button slot="trigger" type="primary">파일 추가</el-button>

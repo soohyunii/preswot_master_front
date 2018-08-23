@@ -42,18 +42,17 @@ export default class QuestionHandler extends LcItemHandler {
       }
       case 2: { // 서술
         vm.inputBody.questionType = 'DESCRIPTION';
-        vm.$set(vm.inputTail, 'answer', q.answer[0]);
+        vm.$set(vm.inputTail, 'answer', q.answer);
         vm.$nextTick(() => {
           vm.$set(vm.inputTail, 'answerFile', vm.$refs.questionEditor.$refs.answerUpload.uploadFiles);
-          if (q.files[0] !== undefined) {
-            vm.$refs.questionEditor.$refs.answerUpload.uploadFiles.push({
-              name: q.files[0].name,
-              file_guid: q.files[0].file_guid,
-            });
-            vm.$set(vm.inputTail, 'oldfile', {
-              name: q.files[0].name,
-              file_guid: q.files[0].file_guid,
-            });
+          if (q.files.length !== 0) {
+            for (let i = 0; i < q.files.length; i += 1) {
+              vm.$refs.questionEditor.$refs.answerUpload.uploadFiles.push({
+                name: q.files[i].name,
+                file_guid: q.files[i].file_guid,
+              });
+            }
+            vm.$set(vm.inputTail, 'oldfile', q.files);
           }
         });
         break;
@@ -140,33 +139,60 @@ export default class QuestionHandler extends LcItemHandler {
 
     // 서술형인 경우
     if (inputBody.questionType === 'DESCRIPTION') {
-      // 기존 파일이 존재
+      // 기존 파일 목록이 존재
       if (inputTail.oldfile !== undefined) {
-        // 새 파일 없으면 수정 전 파일 삭제
-        if (inputTail.answerFile[0] === undefined) {
+        // 기존 파일 중 수정 파일 목록에 존재하지 않는 것을 삭제
+        const deleteList = [];
+        for (let i = 0; i < inputTail.oldfile.length; i += 1) {
+          let existance = false;
+          for (let j = 0; j < inputTail.answerFile.length; j += 1) {
+            if (inputTail.oldfile[i].name === inputTail.answerFile[j].name) {
+              existance = true;
+              break;
+            }
+          }
+          if (!existance) {
+            deleteList.push({ file_guid: inputTail.oldfile[i].file_guid });
+          }
+        }
+        for (let i = 0; i < deleteList.length; i += 1) {
           fileService.deleteFile({
-            fileGuid: inputTail.oldfile.file_guid,
+            fileGuid: deleteList[i].file_guid,
           });
         }
-        // 수정 후 파일 존재할 경우 기존 파일 삭제 및 새 파일 추가
-        if (inputTail.answerFile[0] !== undefined && inputTail.answerFile[0].raw !== undefined) {
-          fileService.deleteFile({
-            fileGuid: inputTail.oldfile.file_guid,
-          });
+
+        // 수정 파일 중 기존 파일 목록에 존재하지 않는 것을 추가
+        const newList = [];
+        for (let i = 0; i < inputTail.answerFile.length; i += 1) {
+          let existance = false;
+          for (let j = 0; j < inputTail.oldfile.length; j += 1) {
+            if (inputTail.answerFile[i].name === inputTail.oldfile[j].name) {
+              existance = true;
+              break;
+            }
+          }
+          if (!existance) {
+            newList.push({ file: inputTail.answerFile[i].raw });
+          }
+        }
+        for (let i = 0; i < newList.length; i += 1) {
           questionService.postQuestionFile({
             questionId,
-            file: inputTail.answerFile[0].raw,
+            file: newList[i].file,
           });
         }
       }
-      // 수정 전 파일이 존재하지 않음
+
+      // 기존 파일 목록이 존재하지 않음
       if (inputTail.oldfile === undefined) {
-        // 수정 후 파일 존재할 경우 파일 추가
-        if (inputTail.answerFile[0] !== undefined && inputTail.answerFile[0].raw !== undefined) {
-          questionService.postQuestionFile({
-            questionId,
-            file: inputTail.answerFile[0].raw,
-          });
+        // 추가할 파일이 존재할 경우 파일 추가
+        if (inputTail.answerFile.length !== 0) {
+          for (let i = 0; i < inputTail.answerFile.length; i += 1) {
+            questionService.postQuestionFile({
+              questionId,
+              file: inputTail.answerFile[i].raw,
+            });
+          }
         }
       }
     }
