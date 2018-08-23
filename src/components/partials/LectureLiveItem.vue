@@ -242,7 +242,6 @@
         <p>토론</p>
         <discussion :lectureItemId="data.lecture_item_id"/>
       </div>
-      <!-- TODO: 자료 -->
       <div v-if="data.type === 4" class="note">
         <p>자료</p>
         <br>
@@ -256,7 +255,7 @@
           <a :href="Url" target="_blank">{{data.notes[0].url}}</a>
         </div>
         <div v-if="data.notes[0].note_type === 3">
-          <iframe width="500" height="315" frameborder="0" :src="Url"></iframe>
+          <iframe width="500" height="315" allow="autoplay" frameborder="0" :src="Url"></iframe>
         </div>
       </div>
     </div>
@@ -301,7 +300,7 @@ export default {
         if (vm.data.notes[0].note_type === 3) {
           const id = getIdFromURL(vm.data.notes[0].url);
           const interval = vm.data.notes[0].youtube_interval.split('<?>');
-          return `https://www.youtube.com/embed/${id}?start=${interval[0]}&end=${interval[1]}`;
+          return `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&start=${interval[0]}&end=${interval[1]}`;
         }
       }
       return '';
@@ -343,7 +342,6 @@ export default {
         default:
           break;
       }
-      console.log(arg);
       vm.onClick('SUBMIT', arg);
       vm.clearAnswer();
     },
