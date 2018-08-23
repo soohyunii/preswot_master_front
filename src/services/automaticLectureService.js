@@ -3,20 +3,16 @@ import http from './http';
 export default {
   offlineJoin({ // 입장 flag 전송
     lectureId,
-    lectureType,
   }) {
-    return http.post('/automatic_lectures/offline/join', {
+    return http.get(`/automatic_lectures/offline/join/${lectureId}`, {
       lecture_id: lectureId,
-      lecture_type: lectureType,
     });
   },
   offlineLeave({ // 퇴장 flag 업로드
     lectureId,
-    lectureType,
   }) {
-    return http.post('/automatic_lectures/offline/leave', {
+    return http.get(`/automatic_lectures/offline/leave/${lectureId}`, {
       lecture_id: lectureId,
-      lecture_type: lectureType,
     });
   },
   onlineJoin({ // 입장 flag 전송

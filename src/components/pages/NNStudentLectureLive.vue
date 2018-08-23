@@ -26,6 +26,7 @@
     </template> -->
     <template v-if="!$isPhone">
       <h2>{{ path }}</h2>
+      {{ lectureType }}
       {{ lectureItem }}
       <el-row :gutter="20">
         <el-col :span="12">
@@ -144,11 +145,22 @@ export default {
         window.location.href = '/download';
       }
     });
-    if (vm.lectureType === 2) {
+    if (vm.lectureType === 1) {
+      const res4 = await automaticLectureService.offlineJoin({
+        lectureId: vm.lectureId,
+      });
+      console.log(res4);
+      res4.data.items.forEach((item) => {
+        vm.timer = setTimeout(() => {
+          vm.lectureItem = [];
+          vm.lectureItem.push(item);
+        }, item.offset * 1000);
+      });
+    } else if (vm.lectureType === 2) {
       const res4 = await automaticLectureService.onlineJoin({
         lectureId: vm.lectureId,
-        lectureType: 0,
       });
+      console.log(res4);
       res4.data.items.forEach((item) => {
         vm.timer = setTimeout(() => {
           vm.lectureItem = [];
