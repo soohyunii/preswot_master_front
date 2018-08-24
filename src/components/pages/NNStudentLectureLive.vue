@@ -288,6 +288,7 @@ export default {
           } else {
             vm.focusFlag = true;
           }
+          break;
         }
         default: {
           throw new Error(`not defined type ${type}`);
