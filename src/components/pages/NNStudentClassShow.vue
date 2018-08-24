@@ -9,6 +9,7 @@
     </div>
     <lecture-list
       @row-click="onClickLecture"
+      @join="onClickJoin"
       type="STUDENT"
       :list="lectureList"
     />
@@ -19,7 +20,6 @@
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex';
 import LectureList from '../partials/LectureList';
-import utils from '../../utils';
 
 export default {
   name: 'StudentClassShow',
@@ -57,9 +57,7 @@ export default {
       const currentClass = vm.currentStudyingClass(vm.classId);
       if (currentClass && currentClass.lectures) {
         return currentClass.lectures.map((item) => {
-          const type = utils.convertLcItemTypeKor(item.type);
           // eslint-disable-next-line no-param-reassign
-          item.type = type;
           // eslint-disable-next-line no-param-reassign
           item.heard = (item.heartbeat_counts.length > 0) ? '수강완료' : '수강미완료';
           return item;
@@ -101,6 +99,34 @@ export default {
     },
     onClickLecture() {
       // 없으면 LectureList.vue 에러나는데 TeacherClassShow와 같이 쓰고있어서 빈 메소드를 넣어둠.
+    },
+    onClickJoin(index) {
+      const vm = this;
+      const lectureId = vm.lectureList[index].lecture_id;
+      const lectureType = vm.lectureList[index].type;
+      const lectureStartTime = Date.parse(vm.lectureList[index].start_time);
+      const lectureEndTime = Date.parse(vm.lectureList[index].end_time);
+      const currentTime = Date.now();
+      // console.log(vm.lectureList[index]);
+      // 강의 활성화 시간 이전에 강의보기를 클릭한 경우
+      if (lectureType === 1 && currentTime < lectureStartTime) {
+        vm.$notify({
+          title: 'Info',
+          message: '해당 강의가 활성화되지 않았습니다.',
+          type: 'info',
+          duration: 2000,
+        });
+      // 강의 활성화 시간 이후에 강의보기를 클릭한 경우
+      } else if (lectureType === 1 && currentTime > lectureEndTime) {
+        vm.$notify({
+          title: 'Info',
+          message: '해당 강의가 종료되었습니다.',
+          type: 'info',
+          duration: 2000,
+        });
+      } else {
+        vm.$router.push(`/a/student/NNlecture/${lectureId}/live`);
+      }
     },
   },
 };

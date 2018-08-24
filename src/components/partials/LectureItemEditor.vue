@@ -148,7 +148,6 @@ export default {
       offset.setSeconds(item.offset);
       vm.inputHead.lcItemOffset = offset;
 
-      console.log(item);
       // * Init inputBody, tail
       switch (vm.inputHead.lcItemType) {
         case 'question': {

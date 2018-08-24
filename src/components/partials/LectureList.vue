@@ -141,9 +141,7 @@
             align="center"
           >
             <template slot-scope="scope">
-              <router-link :to="`/a/student/NNlecture/${scope.row.lecture_id}/live`">
-                <el-button>강의보기</el-button>
-              </router-link>
+              <el-button @click="listeners['join'](scope.$index)">강의보기</el-button>
             </template>
           </el-table-column>
         </template>
