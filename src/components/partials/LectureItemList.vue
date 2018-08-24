@@ -36,7 +36,7 @@
           v-if="props.lectureType !== 0"
         >
           <template slot-scope="scope">
-            {{ parseInt(scope.row.offset/3600) + ':' + parseInt((scope.row.offset%3600)/60) + ':' + (scope.row.offset%60) }}
+            {{ scope.row.offset }}
           </template>
         </el-table-column>
 

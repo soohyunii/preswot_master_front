@@ -135,6 +135,7 @@ export default {
       if (lecture && Array.isArray(lecture.lecture_items)) {
         const lectureItemList = lecture.lecture_items.map((x) => {
           x.type = utils.convertLcItemTypeKor(x.type); // eslint-disable-line no-param-reassign
+          x.offset = utils.convertSecondTohhmmss(x.offset); // eslint-disable-line no-param-reassign
           return x;
         });
         // * sequence 순서대로 강의 아이템 정렬
