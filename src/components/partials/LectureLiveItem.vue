@@ -82,11 +82,19 @@
               <p>
                 <span>배점 : {{ data.questions[0].score }}</span>
               </p>
-              <p>
-                <span>예시 파일</span>
-              </p>
-              <div style="margin: 10px 0px 10px 20px;">
-                <a :href="`http://13.125.249.159:8020` + data.questions[0].files[0].client_path" target="_blank">{{ data.questions[0].files[0].name }}</a>
+              <div v-if="data.questions[0].files.length !== 0">
+                <p>
+                  <el-dropdown @command="handleVisible" placement="bottom-start" trigger="click">
+                    <span class="el-dropdown-link">
+                      제출 파일 목록<i class="el-icon-arrow-down el-icon--right"></i>
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                      <div v-for="(file) in data.questions[0].files" :key="file.file_guid">
+                        <el-dropdown-item type="text" :command="file">{{ file.name }}</el-dropdown-item>
+                      </div>
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                </p>
               </div>
               <p>
                 <span>모범 답안 : </span>
@@ -259,6 +267,24 @@
         </div>
       </div>
     </div>
+    <el-dialog
+      :visible.sync="fileVisible"
+      :before-close="handleClose"
+      custom-class="dialog">
+      <div v-if="fileType === `.mp4`">
+        <vue-plyr ref="player">
+          <video>
+            <source :src="exampleFileUrl" type="video/mp4">
+          </video>
+        </vue-plyr>
+      </div>
+      <div v-else-if="['.jpg','.png','.gif'].includes(fileType)">
+        <img :src="exampleFileUrl" width="100%">
+      </div>
+      <div v-else>
+        <a :href="exampleFileUrl" target="_blank" download>{{ fileName }}</a>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -275,6 +301,11 @@ export default {
     return {
       answer: [],
       answerFile: [],
+      fileVisible: false,
+      fileName: null,
+      fileType: null,
+      filePath: null,
+      player: null,
     };
   },
   mounted() {
@@ -304,6 +335,10 @@ export default {
         }
       }
       return '';
+    },
+    exampleFileUrl() {
+      const vm = this;
+      return baseUrl + vm.filePath;
     },
     studentAnswerLogIndex() {
       const vm = this;
@@ -352,6 +387,25 @@ export default {
     clearAnswer() {
       const vm = this;
       vm.answer = [];
+    },
+    handleVisible(file) {
+      const vm = this;
+      vm.fileName = file.name;
+      vm.fileType = file.file_type;
+      vm.filePath = file.client_path;
+      if (['.mp4', '.jpg', '.png', '.gif'].includes(vm.fileType)) {
+        vm.fileVisible = true;
+      } else {
+        utils.downloadFile(vm.url, vm.fileName);
+      }
+    },
+    handleClose() {
+      const vm = this;
+      vm.fileVisible = false;
+      if (vm.fileType === '.mp4') {
+        vm.player = vm.$refs.player.player;
+        vm.player.stop();
+      }
     },
   },
   components: {
