@@ -24,7 +24,8 @@
         <lecture-live-item
           :data="lectureItem"
           :onClick="onClick"
-          type="STUDENT"/>
+          :answerSubmitted="isSubmitted"
+          type="TEACHER"/>
         <br />
         <br />
         <span slot="footer" class="dialog-footer">
@@ -194,10 +195,10 @@ export default {
           switch (this.lectureItem.type) {
             case 0: { // 문항
               studentService.submitQuestion({
-                questionId: this.lectureItem.questions[0].question_id,
-                answers: this.lectureItem.questions[0].answer,
+                questionId: data.questionId,
+                answers: data.answer,
                 interval: 0,
-                codeLanguage: this.lectureItem.questions[0].accept_language[0],
+                codeLanguage: data.language,
               });
               this.$notify({
                 title: '알림',
@@ -210,8 +211,8 @@ export default {
             }
             case 1: { // 설문
               studentService.submitSurvey({
-                surveyId: data[1],
-                answer: [data[3]],
+                surveyId: data.surveyId,
+                answer: data.answer,
               });
               this.lectureItem = undefined;
               this.refreshLectureItem(this.currentLectureItemId);

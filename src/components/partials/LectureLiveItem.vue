@@ -6,7 +6,7 @@
     <div v-else class="lecture-item">
       <div v-if="data.type === 0" class="question-box"> <!-- 질문 -->
         <div v-if="data.questions[0].type === 0">
-          <template v-if="data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT'"> <!-- 이미 제출한 경우 -->
+          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT') || answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -44,7 +44,7 @@
           </template>
         </div>
         <div v-if="data.questions[0].type === 1">
-          <template v-if="data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT'"> <!-- 이미 제출한 경우 -->
+          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT') || answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -72,7 +72,7 @@
           </template>
         </div>
         <div v-if="data.questions[0].type === 2">
-          <template v-if="data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT'"> <!-- 이미 제출한 경우 -->
+          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT') || answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -86,7 +86,7 @@
                 <p>
                   <el-dropdown @command="handleVisible" placement="bottom-start" trigger="click">
                     <span class="el-dropdown-link">
-                      제출 파일 목록<i class="el-icon-arrow-down el-icon--right"></i>
+                      예시 파일 목록<i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
                       <div v-for="(file) in data.questions[0].files" :key="file.file_guid">
@@ -122,7 +122,7 @@
           </template>
         </div>
         <div v-if="data.questions[0].type === 3">
-          <template v-if="data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT'"> <!-- 이미 제출한 경우 -->
+          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT') || answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -155,7 +155,7 @@
           </template>
         </div>
         <div v-if="data.questions[0].type === 4">
-          <template v-if="data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT'"> <!-- 이미 제출한 경우 -->
+          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT') || answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -183,7 +183,7 @@
           </template>
         </div>
         <el-button
-          v-if="data.questions[0].student_answer_logs.length === 0 && type === 'STUDENT'"
+          v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT') || !answerSubmitted"
           style="float:right"
           type="primary"
           @click="preOnClick()">
@@ -192,26 +192,8 @@
       </div>
       <div v-if="data.type === 1">
         <div v-if="data.surveys[0].type === 0">
-          <template v-if="data.surveys[0].student_surveys.length > 0 && type === 'STUDENT'"> <!-- 이미 제출한 경우 -->
+          <template v-if="(data.surveys[0].student_surveys.length > 0 && type === 'STUDENT') || answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
-            <br />
-            <el-card v-if="data.result === 1">
-              <p>
-                <span>문제 : {{ data.questions[0].question }}</span>
-              </p>
-              <p>
-                <span>배점 : {{ data.questions[0].score }}</span>
-              </p>
-              <p>
-                <span>정답 : </span>
-                <span v-for="(answer, index) in data.questions[0].answer" class="item" :key="index">
-                  <span>{{ answer }}</span>
-                </span>
-              </p>
-              <p>
-                <span>점수 : {{ data.questions[0].student_answer_logs[studentAnswerLogIndex].score }}</span>
-              </p>
-            </el-card>
           </template>
           <template v-else>
             <p>설문 - 객관</p>
@@ -224,7 +206,7 @@
           </template>
         </div>
         <div v-if="data.surveys[0].type === 1">
-          <template v-if="data.surveys[0].student_surveys.length > 0 && type === 'STUDENT'"> <!-- 이미 제출한 경우 -->
+          <template v-if="(data.surveys[0].student_surveys.length > 0 && type === 'STUDENT') || answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
           </template>
           <template v-else>
@@ -234,7 +216,7 @@
           </template>
         </div>
         <el-button
-          v-if="data.surveys[0].student_surveys.length === 0 && type === 'STUDENT'"
+          v-if="(data.surveys[0].student_surveys.length > 0 && type === 'STUDENT') || !answerSubmitted"
           style="float:right"
           type="primary"
           @click="preOnClick()">
@@ -295,7 +277,7 @@ import { baseUrl } from '../../services/config';
 import utils from '../../utils';
 
 export default {
-  props: ['data', 'onClick', 'type'],
+  props: ['data', 'onClick', 'type', 'answerSubmitted'],
   data() {
     return {
       answer: [],
