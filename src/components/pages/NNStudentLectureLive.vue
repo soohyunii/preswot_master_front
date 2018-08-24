@@ -43,7 +43,7 @@
               <div v-if="lectureItem.length === 0">
                 강사님의 신호를 기다리는 중입니다.
               </div>
-              <div else>
+              <div v-else>
                 <div v-for="(item, index) in lectureItem" :key="index">
                   <lecture-live-item
                     :data="item"
@@ -92,11 +92,13 @@ export default {
   async created() {
     const vm = this;
     vm.joinTime = Date.now();
-    vm.lectureId = vm.$route.params.lectureId;
     // 강의 아이템 목록, 첨부파일 목록, 과목, 강의명 가져오기
     const res = await lectureService.getLecture({
       lectureId: vm.lectureId,
     });
+    /*
+     *  lectureType : 0 (유인 강의), 1(무인 단체 강의), 2(무인 개인 강의)
+     */
     vm.lectureType = res.data.type;
     if (vm.lectureType === 0) {
       // 화면 갱신
@@ -157,7 +159,6 @@ export default {
       const res4 = await automaticLectureService.onlineJoin({
         lectureId: vm.lectureId,
       });
-      vm.lectureItems = res4.data.items;
       vm.pastLectureItem.lectureItemId = res4.data.items[0].lecture_item_id;
       vm.pastLectureItem.offset = res4.data.offset;
       res4.data.items.forEach((item) => {
@@ -172,14 +173,11 @@ export default {
   data() {
     return {
       path: '', // 과목 , 강의 제목 이름
-      lectureId: undefined,
       lectureItem: [], // 현재 표시중인 강의 아이템
-      lectureItems: [],
       lectureType: undefined,
       materialList: undefined, // 강의자료 목록
       additionalList: undefined, // 참고자료 목록
-      joinTime: undefined,
-      quitTime: undefined,
+      joinTime: undefined, // 학생이 강의에 입장한 시간
       timer: undefined,
       pastLectureItem: {
         lectureItemId: undefined,
@@ -188,10 +186,10 @@ export default {
     };
   },
   computed: {
-    // lectureId() {
-    //   const vm = this;
-    //   return vm.$route.params.lectureId;
-    // },
+    lectureId() {
+      const vm = this;
+      return vm.$route.params.lectureId;
+    },
     youtubeId: () => (getIdFromURL('https://www.youtube.com/watch?v=actDWRiD9RI&list=UUEgIN0yG3PeVF4JfJ-ZG0UQ')),
     participationTime() {
       const vm = this;
@@ -304,6 +302,10 @@ export default {
   },
   beforeDestroy() {
     const vm = this;
+    /*
+     *  무인 강의에서 학생이 강의에서 나갈 경우, 강의 수강 시간을 알기 위해
+     *  최근에 듣던 강의 아이템과 해당 강의 아이템 시작으로부터의 경과 시간을 보냄
+     */
     let offset = vm.participationTime;
     if (vm.lectureItem[0].lecture_item_id === vm.pastLectureItem.lectureItemId) {
       offset += vm.pastLectureItem.offset;

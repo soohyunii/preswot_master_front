@@ -268,21 +268,21 @@
       </div>
     </div>
     <el-dialog
-      :visible.sync="fileVisible"
+      :visible.sync="currentFile.visible"
       :before-close="handleClose"
       custom-class="dialog">
-      <div v-if="fileType === `.mp4`">
+      <div v-if="currentFile.type === `.mp4`">
         <vue-plyr ref="player">
           <video>
             <source :src="exampleFileUrl" type="video/mp4">
           </video>
         </vue-plyr>
       </div>
-      <div v-else-if="['.jpg','.png','.gif'].includes(fileType)">
+      <div v-else-if="['.jpg','.png','.gif'].includes(currentFile.type)">
         <img :src="exampleFileUrl" width="100%">
       </div>
       <div v-else>
-        <a :href="exampleFileUrl" target="_blank" download>{{ fileName }}</a>
+        <a :href="exampleFileUrl" target="_blank" download>{{ currentFile.name }}</a>
       </div>
     </el-dialog>
   </div>
@@ -291,7 +291,6 @@
 <script>
 import { getIdFromURL } from 'vue-youtube-embed';
 import Discussion from './NNDiscussion';
-import { EventBus } from '../../event-bus';
 import { baseUrl } from '../../services/config';
 import utils from '../../utils';
 
@@ -301,16 +300,14 @@ export default {
     return {
       answer: [],
       answerFile: [],
-      fileVisible: false,
-      fileName: null,
-      fileType: null,
-      filePath: null,
-      player: null,
+      currentFile: {
+        visible: false,
+        name: undefined,
+        type: undefined,
+        path: undefined,
+        player: undefined,
+      },
     };
-  },
-  mounted() {
-    const vm = this;
-    EventBus.$on('clearAnswer', vm.clearAnswer);
   },
   computed: {
     Url() {
@@ -338,7 +335,7 @@ export default {
     },
     exampleFileUrl() {
       const vm = this;
-      return baseUrl + vm.filePath;
+      return baseUrl + vm.currentFile.path;
     },
     studentAnswerLogIndex() {
       const vm = this;
@@ -390,21 +387,21 @@ export default {
     },
     handleVisible(file) {
       const vm = this;
-      vm.fileName = file.name;
-      vm.fileType = file.file_type;
-      vm.filePath = file.client_path;
-      if (['.mp4', '.jpg', '.png', '.gif'].includes(vm.fileType)) {
-        vm.fileVisible = true;
+      vm.currentFile.name = file.name;
+      vm.currentFile.type = file.file_type;
+      vm.currentFile.path = file.client_path;
+      if (['.mp4', '.jpg', '.png', '.gif'].includes(vm.currentFile.type)) {
+        vm.currentFile.visible = true;
       } else {
-        utils.downloadFile(vm.url, vm.fileName);
+        utils.downloadFile(vm.url, vm.currentFile.name);
       }
     },
     handleClose() {
       const vm = this;
-      vm.fileVisible = false;
-      if (vm.fileType === '.mp4') {
-        vm.player = vm.$refs.player.player;
-        vm.player.stop();
+      vm.currentFile.visible = false;
+      if (vm.currentFile.type === '.mp4') {
+        vm.currentFile.player = vm.$refs.player.player;
+        vm.currentFile.player.stop();
       }
     },
   },

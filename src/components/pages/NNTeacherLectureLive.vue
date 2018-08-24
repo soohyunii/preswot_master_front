@@ -118,12 +118,6 @@ export default {
       const bItemSequence = Number(b.sequence);
       return aItemSequence - bItemSequence;
     });
-    vm.questionItemIdList = vm.tableItemList.filter(
-      item => item.type === 0).map(item => item.lecture_item_id,
-    );
-    vm.surveyItemIdList = vm.tableItemList.filter(
-      item => item.type === 1).map(item => item.lecture_item_id,
-    );
     const res2 = await classService.getClass({
       id: res.data.class_id,
     });
@@ -157,17 +151,12 @@ export default {
     //     );
     //   });
     // }
-    // TODO: 실시간 제출 현황 기획 후 주석 풀고 수정
-    // eslint-disable-next-line
-    // vm.tableItemIndex = vm.tableItemList.findIndex(item => item.lecture_item_id === vm.currentLectureItemId); 
   },
   data() {
     return {
       tableItemList: [],
       tableItemIndex: [],
       currentLectureItemId: [],
-      questionItemIdList: [],
-      surveyItemIdList: [],
       path: '',
       isAuto: false,
       isInfoVisible: false,
@@ -189,6 +178,14 @@ export default {
         return false;
       }
       return true;
+    },
+    questionItemIdList() {
+      const vm = this;
+      return vm.tableItemList.filter(item => item.type === 0).map(item => item.lecture_item_id);
+    },
+    surveyItemIdList() {
+      const vm = this;
+      return vm.tableItemList.filter(item => item.type === 1).map(item => item.lecture_item_id);
     },
   },
   components: {
@@ -230,18 +227,13 @@ export default {
           break;
         }
         case 'SHOW': {
-          // if (vm.currentLectureItemId.length !== 0) {
-          //   vm.$notify({
-          //     title: '알림',
-          //     message: '다른 아이템을 보이려면 기존 아이템을 내려주세요.',
-          //     type: 'warning',
-          //   });
-          //   break;
-          // }
           if (!vm.currentLectureItemId.includes(data)) {
             const itemIndex = vm.tableItemList.findIndex(tableItem =>
                 tableItem.lecture_item_id === data);
             let putIndex = 0;
+            /*
+             *  여러 강의 아이템을 'SHOW' 하는 경우, 미리 설정된 sequence를 기준으로 정렬
+             */
             for (let i = 0; i < vm.tableItemIndex.length; i += 1) {
               if (itemIndex < vm.tableItemIndex[i]) {
                 putIndex = i;

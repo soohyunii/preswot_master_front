@@ -20,7 +20,6 @@ import lectureItemService from '../../services/lectureItemService';
 import LectureLiveItem from './LectureLiveItem';
 import LectureQuestionResult from './LectureQuestionResult';
 import LectureSurveyResult from './LectureSurveyResult';
-import { EventBus } from '../../event-bus';
 
 export default {
   async created() {
@@ -29,10 +28,6 @@ export default {
       lectureItemId: vm.lectureItemId,
     });
     vm.data = res.data;
-  },
-  mounted() {
-    const vm = this;
-    EventBus.$on('clearAnswer', vm.clearAnswer);
   },
   props: ['onClick', 'lectureItemId', 'classId'],
   data() {
@@ -64,16 +59,6 @@ export default {
     preOnClick(type) {
       const vm = this;
       vm.onClick(type);
-      vm.clearAnswer();
-    },
-    clearAnswer() {
-      const vm = this;
-      vm.answers = [];
-      vm.data.forEach(async (item) => {
-        if (item.questions.length !== 0) {
-          vm.answers.push([]);
-        }
-      });
     },
   },
 };
