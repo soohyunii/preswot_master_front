@@ -72,7 +72,6 @@ export default {
     ...mapActions('NNclass', [
       'getClass',
       'getMyClassLists',
-      'deleteScenario',
     ]),
     onClick(type) {
       const vm = this;

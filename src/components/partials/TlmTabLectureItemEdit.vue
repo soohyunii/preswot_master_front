@@ -12,6 +12,7 @@
         type="TEACHER"
         :list="lectureItemList"
         :sortableOptions="sortableOptions"
+        :lectureType="lectureType"
       />
 
       <el-dialog
@@ -51,7 +52,7 @@
 <script>
 import Sortable from 'sortablejs';
 
-import { mapGetters, mapMutations, mapActions } from 'vuex';
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 import LectureItemList from '../partials/LectureItemList';
 import utils from '../../utils';
 import lectureItemService from '../../services/lectureItemService';
@@ -120,10 +121,13 @@ export default {
       lectureItem: undefined,
       currentLectureItemId: -1,
       isSubmitted: false,
-      answers: [[]],
+      lectureType: 0,
     };
   },
   computed: {
+    ...mapState('lc', [
+      'lecture',
+    ]),
     ...mapGetters('lcItem', [
       'isEditing',
     ]),
@@ -325,6 +329,10 @@ export default {
       const vm = this;
       vm.answers = [[]];
     },
+  },
+  async mounted() {
+    await this.getLecture({ lectureId: this.lectureId });
+    this.lectureType = this.lecture.type;
   },
 };
 </script>
