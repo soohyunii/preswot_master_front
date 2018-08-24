@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- <template v-if="$isPhone">
+    <template v-if="$isPhone">
       <h2>{{ path }}</h2>
       <youtube
         id="video"
@@ -23,7 +23,7 @@
             />
         </el-tab-pane>
       </el-tabs>
-    </template> -->
+    </template>
     <template v-if="!$isPhone">
       <h2>{{ path }}</h2>
       <el-row :gutter="20">
@@ -157,8 +157,12 @@ export default {
       const res4 = await automaticLectureService.onlineJoin({
         lectureId: vm.lectureId,
       });
+      vm.lectureItems = res4.data.items;
+      vm.pastLectureItem.lectureItemId = res4.data.items[0].lecture_item_id;
+      vm.pastLectureItem.offset = res4.data.offset;
       res4.data.items.forEach((item) => {
         vm.timer = setTimeout(() => {
+          vm.joinTime = Date.now();
           vm.lectureItem = [];
           vm.lectureItem.push(item);
         }, item.offset * 1000);
@@ -170,12 +174,17 @@ export default {
       path: '', // 과목 , 강의 제목 이름
       lectureId: undefined,
       lectureItem: [], // 현재 표시중인 강의 아이템
+      lectureItems: [],
       lectureType: undefined,
       materialList: undefined, // 강의자료 목록
       additionalList: undefined, // 참고자료 목록
       joinTime: undefined,
       quitTime: undefined,
       timer: undefined,
+      pastLectureItem: {
+        lectureItemId: undefined,
+        offset: undefined,
+      },
     };
   },
   computed: {
@@ -295,8 +304,16 @@ export default {
   },
   beforeDestroy() {
     const vm = this;
+    let offset = vm.participationTime;
+    if (vm.lectureItem[0].lecture_item_id === vm.pastLectureItem.lectureItemId) {
+      offset += vm.pastLectureItem.offset;
+    }
     vm.$socket.close();
-    if (vm.lectureType === 2) {
+    if (vm.lectureType === 1) {
+      automaticLectureService.offlineLeave({
+        lectureId: vm.lectureId,
+      });
+    } else if (vm.lectureType === 2) {
       let lectureItemId;
       if (vm.lectureItem.length === 0) {
         lectureItemId = undefined;
@@ -306,7 +323,7 @@ export default {
       automaticLectureService.onlineLeave({
         lectureId: vm.lectureId,
         lectureItemId,
-        offset: vm.participationTime,
+        offset,
       });
       clearTimeout(vm.timer);
     }
