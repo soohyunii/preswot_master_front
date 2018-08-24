@@ -71,11 +71,24 @@
         </el-card>
       </div>
       <br />
+      <div style="text-align: right">
+        <el-button
+          v-if="questionResult.type === '서술'"
+          type="primary"
+          @click="onClick('AUTO_GRADE')"
+          >
+          자동채점
+        </el-button>
+      </div>
       <br />
       <lecture-question-result
+        v-if="isGrading === false"
         :classId="classId"
         :itemId="itemId"
         resultType="결과보기"
+      />
+      <lecture-question-auto-grading
+        v-if="isGrading === true"
       />
     </div>
   </div>
@@ -99,14 +112,17 @@
 <script>
   import { mapActions, mapState, mapGetters } from 'vuex';
   import LectureQuestionResult from '../partials/LectureQuestionResult';
+  import LectureQuestionAutoGrading from '../partials/LectureQuestionAutoGrading';
 
   export default {
     name: 'TeacherClassGradingQuestion',
     components: {
       LectureQuestionResult,
+      LectureQuestionAutoGrading,
     },
     data() {
       return {
+        isGrading: false,
         activeTab: 'question',
       };
     },
@@ -162,6 +178,17 @@
         if (res && res.status === 200) {
         }
         */
+      },
+      onClick(type) {
+        const vm = this;
+        switch (type) {
+          case 'AUTO_GRADE':
+            vm.isGrading = true;
+            break;
+          default: {
+            throw new Error(`not defined type ${type}`);
+          }
+        }
       },
     },
   };
