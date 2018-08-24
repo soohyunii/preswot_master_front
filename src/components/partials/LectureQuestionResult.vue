@@ -52,16 +52,21 @@
           label="첨부 파일"
           align="center">
           <template slot-scope="scope">
-            <el-dropdown @command="handleVisible" placement="bottom-start" trigger="click">
-              <span class="el-dropdown-link">
-                제출 파일 목록<i class="el-icon-arrow-down el-icon--right"></i>
-              </span>
-              <el-dropdown-menu slot="dropdown">
-                <div v-for="(file) in scope.row.files" :key="file.file_guid">
-                  <el-dropdown-item type="text" :command="file">{{ file.name }}</el-dropdown-item>
-                </div>
-              </el-dropdown-menu>
-            </el-dropdown>
+            <div v-if="scope.row.files.length !== 0">
+              <el-dropdown @command="handleVisible" placement="bottom-start" trigger="click">
+                <span class="el-dropdown-link">
+                  제출 파일 목록<i class="el-icon-arrow-down el-icon--right"></i>
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                  <div v-for="(file) in scope.row.files" :key="file.file_guid">
+                    <el-dropdown-item type="text" :command="file">{{ file.name }}</el-dropdown-item>
+                  </div>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </div>
+            <div v-else>
+              <span>-</span>
+            </div>
           </template>
         </el-table-column>
         <el-table-column
@@ -70,7 +75,13 @@
           align="center">
           <template slot-scope="scope">
             <span v-for="(answer, index) in scope.row.answer" class="item" :key="index">
-              <span>{{ answer }}</span>
+              <el-popover
+                placement="right"
+                trigger="click"
+                width="500"
+                :content="answer">
+                <span class="description-cursor" slot="reference">{{ answer.length > 10 ? answer.substring(0,10)+"..." : answer }}</span>
+              </el-popover>
             </span>
           </template>
         </el-table-column>
@@ -161,6 +172,9 @@
   }
   .el-icon-arrow-down {
     font-size: 12px;
+  }
+  .description-cursor {
+    cursor: pointer;
   }
 </style>
 <style src="vue-plyr/dist/vue-plyr.css">
