@@ -3,6 +3,7 @@
     <template v-if="$isPhone">
       <h2>{{ path }}</h2>
       <youtube
+        v-show="focusFlag"
         id="video"
         :video-id="youtubeId"
         player-width="100%"
@@ -10,11 +11,16 @@
         :player-vars="{ autoplay: 1 }"
         :mute="true">
       </youtube>
+      <div style="float: right">
+        <el-button v-show="focusFlag" type="primary" @click="onClick('FOCUS')">강의영상 숨기기</el-button>
+        <el-button v-show="!focusFlag" type="primary" @click="onClick('FOCUS')">강의영상 보이기</el-button>
+      </div>
       <el-tabs type="card">
         <el-tab-pane label="강의아이템">
           <lecture-live-item
             :data="lectureItem"
-            :onClick="onClick"/>
+            :onClick="onClick"
+            type="STUDENT"/>
         </el-tab-pane>
         <el-tab-pane label="강의자료">
           <lecture-live-material
@@ -29,6 +35,7 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <youtube
+            v-show="focusFlag"
             id="video"
             :video-id="youtubeId"
             player-width="100%"
@@ -36,6 +43,10 @@
             :player-vars="{ autoplay: 1 }"
             :mute="true">
           </youtube>
+          <div style="float: right">
+            <el-button v-show="focusFlag" type="primary" @click="onClick('FOCUS')">강의영상 숨기기</el-button>
+            <el-button v-show="!focusFlag" type="primary" @click="onClick('FOCUS')">강의영상 보이기</el-button>
+          </div>
         </el-col>
         <el-col :span="24">
           <el-tabs type="card">
@@ -185,6 +196,7 @@ export default {
         lectureItemId: undefined,
         offset: undefined,
       },
+      focusFlag: true,
     };
   },
   computed: {
@@ -270,6 +282,13 @@ export default {
           break;
         }
         */
+        case 'FOCUS': {
+          if (vm.focusFlag) {
+            vm.focusFlag = false;
+          } else {
+            vm.focusFlag = true;
+          }
+        }
         default: {
           throw new Error(`not defined type ${type}`);
         }
