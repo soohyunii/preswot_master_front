@@ -70,7 +70,13 @@
           align="center">
           <template slot-scope="scope">
             <span v-for="(answer, index) in scope.row.answer" class="item" :key="index">
-              <span>{{ answer }}</span>
+              <el-popover
+                placement="right"
+                trigger="click"
+                width="500"
+                :content="answer">
+                <span class="description-cursor" slot="reference">{{ answer.substring(0,10)+"..." }}</span>
+              </el-popover>
             </span>
           </template>
         </el-table-column>
@@ -161,6 +167,9 @@
   }
   .el-icon-arrow-down {
     font-size: 12px;
+  }
+  .description-cursor {
+    cursor: pointer;
   }
 </style>
 <style src="vue-plyr/dist/vue-plyr.css">
