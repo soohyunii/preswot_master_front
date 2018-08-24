@@ -114,17 +114,23 @@
             align="center"
           ></el-table-column>
           <el-table-column
-            label="기간"
+            label="활성화 시간"
             width="300"
             align="center"
           >
-          <template slot-scope="scope">
-            <!-- {{ scope.row.intended_start ? new Date(scope.row.intended_start).toLocaleDateString('ko-KR') : '미정' }} // Legacy : 필요없다면 지워주세요.-->
-            {{ scope.row.start_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') : '미정' }}
-            ~
-            <!-- {{ scope.row.intended_end ? new Date(scope.row.intended_end).toLocaleDateString('ko-KR') : '미정' }} // Legacy : 필요없다면 지워주세요. -->
-            {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString('ko-KR') : '미정' }}
-          </template>
+            <template slot-scope="scope">
+              <div v-if="scope.row.type !== '[유인]'">
+                <div v-if="scope.row.type === '[무인]단체'">
+                  {{ scope.row.start_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') + ' / ' +
+                    new Date(scope.row.start_time).toLocaleTimeString('ko-KR') : '미정' }}
+                </div>
+                <div v-if="scope.row.type === '[무인]개인'">
+                  {{ scope.row.end_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') : '미정' }}
+                  ~
+                  {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString('ko-KR') : '미정' }}
+                </div>
+              </div>
+            </template>
           </el-table-column>
           <el-table-column
             label="수강여부"
