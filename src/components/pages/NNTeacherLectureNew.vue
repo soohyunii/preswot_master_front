@@ -18,11 +18,11 @@
         <el-popover
           style="position: relative; left: 30px; top: 3px;"
           placement="top-start"
-          width="500"
+          width="400"
           trigger="hover">
           <el-table :data="notice">
             <el-table-column width="100" prop="title" label="유형"></el-table-column>
-            <el-table-column width="400" prop="content" label="내용"></el-table-column>
+            <el-table-column width="290" prop="content" label="내용"></el-table-column>
           </el-table>
           <i class="el-icon-question fa-lg" slot="reference"></i>
         </el-popover>
@@ -51,6 +51,14 @@
         ></el-date-picker>
       </el-form-item>
 
+      <!-- 무인-단체 강의의 강의 종료시간을 설정하기 위해 추가. 강의정보로써 활용하려면 DB 추가해야됨. -->
+      <el-form-item label="강의 길이" v-if="input.type === 1">
+        <el-time-picker
+          v-model="input.lcDuration"
+          type="datetime"
+        ></el-time-picker>
+      </el-form-item>
+
       <el-form-item>
         <el-button
           type="primary"
@@ -76,6 +84,7 @@ export default {
       title: '',
       type: 0,
       lcStartDate: new Date(),
+      lcDuration: new Date(2018, 8, 15, 2, 0, 0),
       lcEndDate: new Date(),
     };
     return {
@@ -86,7 +95,7 @@ export default {
         content: '강의 아이템 활성화 여부를 강사가 조정합니다.',
       }, {
         title: '[무인]단체',
-        content: '지정된 시각에 강의가 자동으로 시작됩니다. \n강의 아이템 활성화 시간 설정이 필요합니다.',
+        content: '지정된 시각부터 강의가 자동으로 시작됩니다. \n강의 아이템 활성화 시간 설정이 필요합니다.',
       }, {
         title: '[무인]개인',
         content: '활성화 기간동안 자유롭게 수강이 가능합니다. \n강의 아이템 활성화 시간 설정이 필요합니다.',
@@ -113,8 +122,16 @@ export default {
       vm.$refs.elForm.validate(async (/* valid, fields */) => {
         // TODO: if valid === true 로 감싸기
         // TODO: valid === false 인 경우 notify
-        // TODO: isManage === true 인 경우 post하지 말고...
         const classId = vm.$route.query.classId;
+        if (vm.input.type === 1) {
+          vm.input.lcEndDate = new Date(vm.input.lcStartDate);
+          const newHours = vm.input.lcEndDate.getHours() + vm.input.lcDuration.getHours();
+          vm.input.lcEndDate.setHours(newHours);
+          const newMinues = vm.input.lcEndDate.getMinutes() + vm.input.lcDuration.getMinutes();
+          vm.input.lcEndDate.setMinutes(newMinues);
+          const newSeconds = vm.input.lcEndDate.getSeconds() + vm.input.lcDuration.getSeconds();
+          vm.input.lcEndDate.setSeconds(newSeconds);
+        }
         if (vm.isManage) {
           try {
             await lectureService.putLecture({

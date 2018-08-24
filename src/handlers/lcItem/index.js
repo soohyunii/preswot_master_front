@@ -9,8 +9,11 @@ export default class LcItemHandler {
       lectureItemType: utils.convertLcItemType(inputHead.lcItemType),
     });
 
-    const lcItemOffset = (3600 * inputHead.lcItemOffset.getHours()) +
-      (60 * inputHead.lcItemOffset.getMinutes()) + inputHead.lcItemOffset.getSeconds();
+    let lcItemOffset = 0;
+    if (inputHead.lcItemOffset !== null) {
+      lcItemOffset = (3600 * inputHead.lcItemOffset.getHours()) +
+        (60 * inputHead.lcItemOffset.getMinutes()) + inputHead.lcItemOffset.getSeconds();
+    }
 
     const lectureItemId = res1.data.lecture_item_id;
     await lectureItemService.putLectureItem({
@@ -33,8 +36,11 @@ export default class LcItemHandler {
   }
 
   static async putLcItem({ lectureItemId, inputHead, ...others }) {
-    const lcItemOffset = (3600 * inputHead.lcItemOffset.getHours()) +
-      (60 * inputHead.lcItemOffset.getMinutes()) + inputHead.lcItemOffset.getSeconds();
+    let lcItemOffset = 0;
+    if (inputHead.lcItemOffset !== null) {
+      lcItemOffset = (3600 * inputHead.lcItemOffset.getHours()) +
+        (60 * inputHead.lcItemOffset.getMinutes()) + inputHead.lcItemOffset.getSeconds();
+    }
 
     await lectureItemService.putLectureItem({
       lectureItemId,
