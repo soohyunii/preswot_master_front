@@ -23,7 +23,8 @@
         width="30%">
         <lecture-live-item
           :data="lectureItem"
-          :onClick="onClick"/>
+          :onClick="onClick"
+          type="STUDENT"/>
         <br />
         <br />
         <span slot="footer" class="dialog-footer">
@@ -190,13 +191,13 @@ export default {
         }
         case 'SUBMIT': {
           this.isSubmitted = true;
-          switch (data[0]) {
+          switch (this.lectureItem.type) {
             case 0: { // 문항
               studentService.submitQuestion({
-                questionId: data[1],
-                answers: data[2][0],
+                questionId: this.lectureItem.questions[0].question_id,
+                answers: this.answers[0],
                 interval: 0,
-                codeLanguage: data[3],
+                codeLanguage: this.lectureItem.questions[0].accept_language[0],
               });
               this.$notify({
                 title: '알림',
@@ -220,6 +221,7 @@ export default {
               throw new Error(`not defined type ${type}`);
             }
           }
+          this.clearAnswer();
           break;
         }
         default: {
@@ -320,6 +322,12 @@ export default {
         lectureItemId: vm.lectureItem.lecture_item_id,
         opened: 0,
       });
+      vm.isSubmitted = false;
+      vm.clearAnswer();
+    },
+    clearAnswer() {
+      const vm = this;
+      vm.answers = [[]];
     },
   },
   async mounted() {

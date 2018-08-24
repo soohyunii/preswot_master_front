@@ -42,7 +42,19 @@ export default class QuestionHandler extends LcItemHandler {
       }
       case 2: { // 서술
         vm.inputBody.questionType = 'DESCRIPTION';
-        vm.$set(vm.inputTail, 'answer', q.answer[0]);
+        vm.$set(vm.inputTail, 'answer', q.answer);
+        vm.$nextTick(() => {
+          vm.$set(vm.inputTail, 'answerFile', vm.$refs.questionEditor.$refs.answerUpload.uploadFiles);
+          if (q.files.length !== 0) {
+            for (let i = 0; i < q.files.length; i += 1) {
+              vm.$refs.questionEditor.$refs.answerUpload.uploadFiles.push({
+                name: q.files[i].name,
+                file_guid: q.files[i].file_guid,
+              });
+            }
+            vm.$set(vm.inputTail, 'oldfile', q.files);
+          }
+        });
         break;
       }
       case 3: { // SW
@@ -124,6 +136,66 @@ export default class QuestionHandler extends LcItemHandler {
       questionId,
       data: inputTail.assignedKeywordList,
     });
+
+    // 서술형인 경우
+    if (inputBody.questionType === 'DESCRIPTION') {
+      // 기존 파일 목록이 존재
+      if (inputTail.oldfile !== undefined) {
+        // 기존 파일 중 수정 파일 목록에 존재하지 않는 것을 삭제
+        const deleteList = [];
+        for (let i = 0; i < inputTail.oldfile.length; i += 1) {
+          let existance = false;
+          for (let j = 0; j < inputTail.answerFile.length; j += 1) {
+            if (inputTail.oldfile[i].name === inputTail.answerFile[j].name) {
+              existance = true;
+              break;
+            }
+          }
+          if (!existance) {
+            deleteList.push({ file_guid: inputTail.oldfile[i].file_guid });
+          }
+        }
+        for (let i = 0; i < deleteList.length; i += 1) {
+          fileService.deleteFile({
+            fileGuid: deleteList[i].file_guid,
+          });
+        }
+
+        // 수정 파일 중 기존 파일 목록에 존재하지 않는 것을 추가
+        const newList = [];
+        for (let i = 0; i < inputTail.answerFile.length; i += 1) {
+          let existance = false;
+          for (let j = 0; j < inputTail.oldfile.length; j += 1) {
+            if (inputTail.answerFile[i].name === inputTail.oldfile[j].name) {
+              existance = true;
+              break;
+            }
+          }
+          if (!existance) {
+            newList.push({ file: inputTail.answerFile[i].raw });
+          }
+        }
+        for (let i = 0; i < newList.length; i += 1) {
+          questionService.postQuestionFile({
+            questionId,
+            file: newList[i].file,
+          });
+        }
+      }
+
+      // 기존 파일 목록이 존재하지 않음
+      if (inputTail.oldfile === undefined) {
+        // 추가할 파일이 존재할 경우 파일 추가
+        if (inputTail.answerFile.length !== 0) {
+          for (let i = 0; i < inputTail.answerFile.length; i += 1) {
+            questionService.postQuestionFile({
+              questionId,
+              file: inputTail.answerFile[i].raw,
+            });
+          }
+        }
+      }
+    }
 
     // SW인 경우
     if (inputBody.questionType === 'SW') {
