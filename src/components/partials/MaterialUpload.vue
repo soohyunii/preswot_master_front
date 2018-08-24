@@ -15,7 +15,7 @@
     </el-upload>
     <!-- 강의자료 & 키워드 목록 -->
     <div style="height: 100px;" />
-    <h3>강의 자료-키워드 연결</h3>
+    <h3>자료 키워드 연결</h3>
     <el-table
       ref="multipleTable"
       :data="fileNameKeywordList"
@@ -28,7 +28,7 @@
       <el-table-column label="파일명" width="450px">
         <template slot-scope="scope">{{ scope.row.data.file.name }}</template>
       </el-table-column>
-      <el-table-column label="키워드">
+      <el-table-column label="자료 키워드">
         <template slot-scope="scope">
           <!--<el-tag v-for="k in scope.row.keywordList" :key="k" closable @close="onClick('DELETE_KEYWORD', scope.row.data, k)">{{ k.keyword }} / {{ k.score }}</el-tag>-->
           <el-tag v-for="(k, index) in scope.row.keywordList" :key="index" closable @close="deleteMKeyword(scope.row.data, k)">{{ k.keyword }} / {{ k.score }}</el-tag>
@@ -38,13 +38,13 @@
     <div style="height: 50px;" />
     <!-- 선택된 강의자료들에 대해 키워드 등록 -->
     <el-form>
-      <el-form-item label="키워드" id="keyword">
+      <el-form-item label="강의 키워드" id="keyword">
         <el-autocomplete
           class="input-new-tag"
           v-model="input.keywordName"
           :fetch-suggestions="querySearch"
           ref="saveTagInput"
-          placeholder="키워드"
+          placeholder="강의 키워드"
         />
       <div style="display: inline-block; width: 100px;">
         <el-input id="input_keyword_point" v-model="input.keywordValue" placeholder="배점"></el-input>
