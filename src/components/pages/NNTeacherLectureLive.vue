@@ -10,6 +10,10 @@
           :player-vars="{ autoplay: 1 }"
           :mute="true">
         </youtube>
+        <div style="float: right">
+          <el-button v-show="focusFlag" type="primary" @click="onClick('FOCUS')">강의영상 숨기기</el-button>
+          <el-button v-show="!focusFlag" type="primary" @click="onClick('FOCUS')">강의영상 보이기</el-button>
+        </div>
         <teacher-lecture-live-item-list
           v-if="isTableItemListLoaded"
           :dataList="tableItemList"
@@ -22,6 +26,7 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <youtube
+              v-show="focusFlag"
               id="video"
               :video-id="youtubeId"
               player-width="100%"
@@ -29,6 +34,10 @@
               :player-vars="{ autoplay: 1 }"
               :mute="true">
             </youtube>
+            <div style="float: right">
+              <el-button v-show="focusFlag" type="primary" size="small" @click="onClick('FOCUS')">강의영상 숨기기</el-button>
+              <el-button v-show="!focusFlag" type="primary" size="small" @click="onClick('FOCUS')">강의영상 보이기</el-button>
+            </div>
           <el-button type="primary" size="small" @click="onClick('SHOWALL', questionItemIdList)">
             문항 모두 보이기
           </el-button>
@@ -160,6 +169,7 @@ export default {
       path: '',
       isAuto: false,
       isInfoVisible: false,
+      focusFlag: true,
     };
   },
   computed: {
@@ -276,6 +286,14 @@ export default {
         }
         case 'TOGGLE_STATUS_INFO': {
           vm.isInfoVisible = !vm.isInfoVisible;
+          break;
+        }
+        case 'FOCUS': {
+          if (vm.focusFlag) {
+            vm.focusFlag = false;
+          } else {
+            vm.focusFlag = true;
+          }
           break;
         }
         default: {
