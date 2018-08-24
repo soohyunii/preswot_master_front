@@ -285,7 +285,19 @@ export default {
     },
   },
   beforeDestroy() {
-    this.$socket.close();
+    const vm = this;
+    // 강사가 강의 화면에서 나가는 경우, 열려있는 아이템을 모두 닫는 동작
+    const params = [];
+    vm.currentLectureItemId.forEach((item) => {
+      const param = {
+        lecture_id: Number.parseInt(vm.lectureId, 10),
+        opened: 0,
+        lecture_item_id: item,
+      };
+      params.push(param);
+    });
+    vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify(params));
+    vm.$socket.close();
   },
 };
 </script>
