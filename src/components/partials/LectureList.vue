@@ -4,13 +4,10 @@
       생성된 강의가 없습니다.
     </div>
     <div v-else>
-       <!-- {{ props.list }}<br /> -->
-
-      <!-- 번호(1), 타입(숙제), 강의(근대사 1강), 기간, 수강한 학생수, 수강생 이해도(평균), 강의, 관리, 삭제 -->
       <el-table :data="props.list" @row-click="listeners['row-click']" class="elTable-label">
         <el-table-column
           prop="index"
-          label="강의 번호"
+          label="번호"
           width="90"
           align="left"
         >
@@ -21,7 +18,7 @@
 
         <el-table-column
           prop="type"
-          label="타입"
+          label="유형"
           width="90"
           align="left"
         ></el-table-column>
@@ -34,13 +31,21 @@
             ></el-table-column>
             <el-table-column
             label="기간"
-            width="210"
+            width="230"
             align="left"
           >
             <template slot-scope="scope">
-              {{ scope.row.start_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') : '미정' }}
-              ~
-              {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString('ko-KR') : '미정' }}
+              <div v-if="scope.row.type !== '[유인]'">
+                <div v-if="scope.row.type === '[무인]단체'">
+                  {{ scope.row.start_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') + ' / ' +
+                    new Date(scope.row.start_time).toLocaleTimeString('ko-KR') : '미정' }}
+                </div>
+                <div v-if="scope.row.type === '[무인]개인'">
+                  {{ scope.row.end_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') : '미정' }}
+                  ~
+                  {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString('ko-KR') : '미정' }}
+                </div>
+              </div>
             </template>
           </el-table-column>
 
@@ -136,9 +141,7 @@
             align="center"
           >
             <template slot-scope="scope">
-              <router-link :to="`/a/student/NNlecture/${scope.row.lecture_id}/live`">
-                <el-button>강의보기</el-button>
-              </router-link>
+              <el-button @click="listeners['join'](scope.$index)">강의보기</el-button>
             </template>
           </el-table-column>
         </template>

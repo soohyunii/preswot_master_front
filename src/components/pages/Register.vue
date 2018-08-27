@@ -59,8 +59,8 @@
 
             <!-- TODO: 핸드폰 번호 -->
             <!-- 핸드폰 번호 인증 어떻게?? -->
-            <el-form-item :label="$t('REG.PHONE_NUMBER_LABEL')" prop="phoneNumber" id="phoneNumber">
-              <el-input :placeholder="$t('REG.PHONE_NUMBER_PH')" v-model="input.phoneNumber" v-mask="['###-####-####', '###-###-####']" type="tel"></el-input>
+            <el-form-item :label="$t('REG.PHONE_NUMBER_LABEL')" prop="phone" id="phone">
+              <el-input :placeholder="$t('REG.PHONE_NUMBER_PH')" v-model="input.phone" v-mask="['###-####-####', '###-###-####']" type="tel"></el-input>
               <!-- <el-button type="primary" @click="dummy()">{{$t('REG.PHONE_NUMBER_VERIFY_BUTTON')}}</el-button> -->
             </el-form-item>
 
@@ -112,7 +112,7 @@ export default {
         postcode: '',
         address1: '', // 지역 주소
         address2: '', // 상세 주소
-        phoneNumber: '',
+        phone: '',
         major: '',
         belong: '',
         sex: '0',
@@ -204,7 +204,7 @@ export default {
         'sex',
         'address1',
         'address2',
-        'phoneNumber',
+        'phone',
         'major',
         'belong',
       ];

@@ -1,7 +1,5 @@
 <template>
   <div id="lc_question_editor_wrapper">
-    <!-- 디버깅 용도
-    {{ inputTail }} -->
     <el-form-item label="문항 유형" id="question_type">
       <el-radio-group @change="onChangeBody" v-model="inputBody.questionType">
         <el-radio-button label="SHORT_ANSWER">단답</el-radio-button>
@@ -57,6 +55,14 @@
     <template v-if="inputBody.questionType === 'DESCRIPTION'">
       <el-form-item label="모범답안" id="textarea_short_answer">
         <el-input v-model="inputTail.answer[0]" placeholder="내용을 입력해주세요." type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
+        <br>
+        <el-upload
+          action="#"
+          :auto-upload="false"
+          :file-list="initFileList"
+          ref=answerUpload>
+          <el-button slot="trigger" type="primary">파일 추가</el-button>
+        </el-upload>
       </el-form-item>
     </template>
 
@@ -223,6 +229,9 @@ export default {
       vm.inputTail = Object.assign({}, vm.initialInputTail);
       if (vm.inputBody.questionType === 'MULTIPLE_CHOICE') {
         vm.$set(vm.inputTail, 'questionList', []);
+      }
+      if (vm.inputBody.questionType === 'DESCRIPTION') {
+        vm.$set(vm.inputTail, 'answerFile', vm.$refs.answerUpload.uploadFiles);
       }
       if (vm.inputBody.questionType === 'SQL') {
         vm.$set(vm.inputTail, 'sqlFile', vm.$refs.sqlUpload.uploadFiles);
