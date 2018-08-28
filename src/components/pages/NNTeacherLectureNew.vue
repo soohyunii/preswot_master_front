@@ -28,14 +28,22 @@
         </el-popover>
       </el-form-item>
 
-      <el-form-item label="강의 시작 시간" v-if="input.type === 1">
+      <el-form-item label="강의 날짜 " v-if="input.type === 1">
         <el-date-picker
           v-model="input.lcStartDate"
           type="datetime"  class="lecture-startDate"
         ></el-date-picker>
+      </el-form-item>
+
+      <el-form-item label="강의 시간" v-if="input.type === 1">
         <el-time-picker
           v-model="input.lcStartDate"
           type="datetime"  class="lecture-startDate"
+        ></el-time-picker>
+         ~
+        <el-time-picker
+          v-model="input.lcEndDate"
+          type="datetime"  class="lecture-endDate"
         ></el-time-picker>
       </el-form-item>
 
@@ -49,14 +57,6 @@
           v-model="input.lcEndDate"
           type="datetime" class="lecture-endDate"
         ></el-date-picker>
-      </el-form-item>
-
-      <!-- 무인-단체 강의의 강의 종료시간을 설정하기 위해 추가. 강의정보로써 활용하려면 DB 추가해야됨. -->
-      <el-form-item label="강의 길이" v-if="input.type === 1">
-        <el-time-picker
-          v-model="input.lcDuration"
-          type="datetime"
-        ></el-time-picker>
       </el-form-item>
 
       <el-form-item>
@@ -84,7 +84,6 @@ export default {
       title: '',
       type: 0,
       lcStartDate: new Date(),
-      lcDuration: new Date(2018, 8, 15, 2, 0, 0),
       lcEndDate: new Date(),
     };
     return {
@@ -109,8 +108,8 @@ export default {
       await vm.getLecture({ lectureId: vm.lectureId });
       vm.input.title = vm.lecture.name || vm.initialInput.title;
       vm.input.type = vm.lecture.type || vm.initialInput.type;
-      vm.input.lcStartDate = vm.lecture.start_time || vm.initialInput.lcStartDate;
-      vm.input.lcEndDate = vm.lecture.end_time || vm.initialInput.lcEndDate;
+      vm.input.lcStartDate = new Date(vm.lecture.start_time) || vm.initialInput.lcStartDate;
+      vm.input.lcEndDate = new Date(vm.lecture.end_time) || vm.initialInput.lcEndDate;
     }
   },
   methods: {
@@ -123,15 +122,13 @@ export default {
         // TODO: if valid === true 로 감싸기
         // TODO: valid === false 인 경우 notify
         const classId = vm.$route.query.classId;
-        if (vm.input.type === 1) {
-          vm.input.lcEndDate = new Date(vm.input.lcStartDate);
-          const newHours = vm.input.lcEndDate.getHours() + vm.input.lcDuration.getHours();
-          vm.input.lcEndDate.setHours(newHours);
-          const newMinues = vm.input.lcEndDate.getMinutes() + vm.input.lcDuration.getMinutes();
-          vm.input.lcEndDate.setMinutes(newMinues);
-          const newSeconds = vm.input.lcEndDate.getSeconds() + vm.input.lcDuration.getSeconds();
-          vm.input.lcEndDate.setSeconds(newSeconds);
+
+        if (vm.lecture.type === 1) {
+          vm.input.lcEndDate.setFullYear(vm.input.lcStartDate.getFullYear());
+          vm.input.lcEndDate.setMonth(vm.input.lcStartDate.getMonth());
+          vm.input.lcEndDate.setDate(vm.input.lcStartDate.getDate());
         }
+
         if (vm.isManage) {
           try {
             await lectureService.putLecture({

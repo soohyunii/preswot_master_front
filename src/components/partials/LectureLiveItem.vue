@@ -117,7 +117,7 @@
               :auto-upload="false"
               :file-list="[]"
               ref="answerUpload">
-              <el-button slot="trigger" type="primary">파일 추가</el-button>
+              <el-button v-if="type === 'STUDENT'" slot="trigger" type="primary">파일 추가</el-button>
             </el-upload>
           </template>
         </div>

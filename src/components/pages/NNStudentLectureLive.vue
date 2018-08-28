@@ -34,18 +34,23 @@
       <h2>{{ path }}</h2>
       <el-row :gutter="20">
         <el-col :span="12">
-          <youtube
-            v-show="focusFlag"
-            id="video"
-            :video-id="youtubeId"
-            player-width="100%"
-            player-height="500px"
-            :player-vars="{ autoplay: 1 }"
-            :mute="true">
-          </youtube>
-          <div style="float: right">
-            <el-button v-show="focusFlag" type="primary" @click="onClick('FOCUS')">강의영상 숨기기</el-button>
-            <el-button v-show="!focusFlag" type="primary" @click="onClick('FOCUS')">강의영상 보이기</el-button>
+          <div v-if="videolink === ''">
+            등록된 영상이 없습니다.
+          </div>
+          <div v-else>
+            <youtube
+              v-show="focusFlag"
+              id="video"
+              :video-id="youtubeId"
+              player-width="100%"
+              player-height="500px"
+              :player-vars="{ autoplay: 1 }"
+              :mute="true">
+            </youtube>
+            <div style="float: right">
+              <el-button v-show="focusFlag" type="primary" @click="onClick('FOCUS')">강의영상 숨기기</el-button>
+              <el-button v-show="!focusFlag" type="primary" @click="onClick('FOCUS')">강의영상 보이기</el-button>
+            </div>
           </div>
         </el-col>
         <el-col :span="24">
@@ -111,6 +116,9 @@ export default {
      *  lectureType : 0 (유인 강의), 1(무인 단체 강의), 2(무인 개인 강의)
      */
     vm.lectureType = res.data.type;
+    if (res.data.video_link !== null) {
+      vm.videolink = res.data.video_link;
+    }
     if (vm.lectureType === 0) {
       // 화면 갱신
       vm.refreshLectureItem(false);
@@ -195,6 +203,7 @@ export default {
         offset: undefined,
       },
       focusFlag: true,
+      videolink: '',
     };
   },
   computed: {
@@ -202,7 +211,9 @@ export default {
       const vm = this;
       return vm.$route.params.lectureId;
     },
-    youtubeId: () => (getIdFromURL('https://www.youtube.com/watch?v=actDWRiD9RI&list=UUEgIN0yG3PeVF4JfJ-ZG0UQ')),
+    youtubeId() {
+      return getIdFromURL(this.videolink);
+    },
     participationTime() {
       const vm = this;
       return Math.floor((Date.now() - vm.joinTime) / 1000);
