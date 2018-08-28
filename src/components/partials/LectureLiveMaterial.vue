@@ -1,18 +1,25 @@
 <template>
   <div>
     <div v-if="(materialList !== undefined) && (materialList.length > 0)">
-      <el-checkbox v-model="checkAllMaterials" @change="handleAllMaterialsChange">강의자료</el-checkbox>
-      <el-checkbox-group v-model="checkedMaterials">
+      <el-checkbox
+        v-model="checkAll"
+        @change="handleCheckAllChange">
+        강의자료
+      </el-checkbox>
+      <el-checkbox-group
+        v-model="checkedMaterials"
+        @change="handleCheckedMaterialChange">
         <el-checkbox
           style="display: block; margin-left: 30px"
           v-for="material in materialList"
-          :key="material.client_path"
-          :label="material.client_path"
-          @change="handleSingleMaterialChange">
-          {{ material.name }}
+          :key="material.file.file_guid"
+          :label="material.file"
+          >
+          {{ material.file.name }}
         </el-checkbox>
-      </el-checkbox-group>  
+      </el-checkbox-group>
     </div>
+    <br>
     <el-button type="primary" @click="onClick('DOWNLOAD')">다운로드</el-button>
   </div>
 </template>
@@ -23,30 +30,31 @@ import utils from '../../utils';
 import { baseUrl } from '../../services/config';
 
 export default {
-  props: ['materialList', 'additionalList'],
+  props: ['materialList'],
   data() {
     return {
-      checkAllMaterials: false,
+      checkAll: false,
       checkedMaterials: [],
     };
   },
   methods: {
-    handleAllMaterialsChange(val) {
+    handleCheckAllChange(val) {
       const vm = this;
-      vm.checkedMaterials = val ? vm.materialList.map(element => element.client_path) : [];
+      vm.checkedMaterials = val ? vm.materialList.map(element => element.file) : [];
     },
-    handleSingleMaterialChange() {
+    handleCheckedMaterialChange(value) {
       const vm = this;
-      const checkedCount = vm.checkedMaterials.length;
-      vm.checkAllMaterials = checkedCount === vm.materialList.length;
+      const checkedCount = value.length;
+      vm.checkAll = (checkedCount === vm.materialList.length);
     },
     onClick(type) {
       const vm = this;
       switch (type) {
         case 'DOWNLOAD': {
-          vm.checkedMaterials.forEach((element) => {
-            utils.downloadFile(baseUrl + element, 'TODOgetFilename.txt');
-          });
+          // vm.checkedMaterials.forEach((element) => {
+          //   utils.downloadFile(baseUrl + element.client_path, element.name);
+          // });
+          utils.downloadFiles(baseUrl, vm.checkedMaterials);
           break;
         }
         default: {

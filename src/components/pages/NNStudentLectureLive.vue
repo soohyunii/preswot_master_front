@@ -75,8 +75,7 @@
             <el-tab-pane label="강의자료">
               <lecture-live-material
                 :materialList="materialList"
-                :additionalList="additionalList"
-                />
+              />
             </el-tab-pane>
             <!-- // TODO : 실시간 질문
             <el-tab-pane label="실시간 질문">
@@ -128,11 +127,11 @@ export default {
       id: res.data.class_id,
     });
     vm.path = res2.data.name.concat(' > ', res.data.name);
-    // const res3 = await lectureService.getLectureMaterial({
-    //   lectureId: vm.lectureId,
-    // });
-    // vm.materialList = res3.data.material;
-    // vm.additionalList = res3.data.additional;
+
+    const res3 = await lectureService.getLectureMaterial({
+      lectureId: vm.lectureId,
+    });
+    vm.materialList = res3.data;
 
     // 소켓 연결 및 주기적으로 보내는 신호, 리스너 등록
     vm.$socket.connect();
