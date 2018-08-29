@@ -273,6 +273,27 @@ export default {
       document.body.removeChild(link);
     }, 1000);
   },
+  downloadFiles(baseUrl, filelist) {
+    function downloadNext(i) {
+      if (i >= filelist.length) {
+        return;
+      }
+
+      const link = document.createElement('a');
+      link.href = baseUrl + filelist[i].client_path;
+      link.download = filelist[i].name;
+      link.target = '_blank';
+
+      document.body.appendChild(link);
+      link.click();
+
+      window.setTimeout(() => {
+        document.body.removeChild(link);
+        downloadNext(i + 1);
+      }, 500);
+    }
+    downloadNext(0);
+  },
   getWindowSize() {
     return {
       width: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),

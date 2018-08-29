@@ -1,18 +1,31 @@
 <template>
   <div id="material_upload_wrapper">
-    <!-- 강의 자료 업로드 -->
-    <h3>강의 자료 업로드</h3>
-    <br />
-    <el-upload
-      action="#"
-      multiple
-      :http-request="doUpload"
-      :on-remove="handleRemove"
-      :file-list="fileList"
-      ref="materialUpload"
-    >
-      <el-button slot="trigger" type="primary">강의 자료 추가</el-button>
-    </el-upload>
+    <!-- 강의 자료 및 영상 업로드 -->
+    <el-row>
+      <el-col :span="12">
+        <h3>강의 자료 업로드</h3>
+        <br />
+        <el-upload
+          action="#"
+          multiple
+          :http-request="doUpload"
+          :on-remove="handleRemove"
+          :file-list="fileList"
+          ref="materialUpload"
+        >
+          <el-button slot="trigger" type="primary">강의 자료 추가</el-button>
+        </el-upload>
+      </el-col>
+      <el-col :span="12">
+        <h3>강의 영상 등록</h3>
+        <el-input v-model="modifiedLink" style="width: 400px" placeholder="유튜브 공유URL을 입력해주세요.">
+          <el-button v-if="videolink === ''" slot="append" @click="onClick('LINKUPLOAD')">추가</el-button>
+          <el-button v-if="videolink !== ''" slot="append" @click="onClick('LINKUPLOAD')">수정</el-button>
+        </el-input>
+        <br><br>
+        <iframe v-if="videolink !== ''" width="420" height="315" :src="combinedUrl" frameborder="0"></iframe>
+      </el-col>
+    </el-row>
     <!-- 강의자료 & 키워드 목록 -->
     <div style="height: 100px;" />
     <h3>자료 키워드 연결</h3>
@@ -62,12 +75,15 @@
 
 <script>
 import { mapState } from 'vuex';
+import { getIdFromURL } from 'vue-youtube-embed';
 import lectureService from '../../services/lectureService';
 
 export default {
   name: 'MaterialUpload',
   data() {
     return {
+      videolink: '',
+      modifiedLink: '',
       fileNameKeywordList: [],
       fileList: [],
       input: {},
@@ -81,7 +97,6 @@ export default {
     const res = await lectureService.getLectureMaterial({
       lectureId: vm.$route.params.lectureId,
     });
-    // data.forEach(x => { result.push(x + 3) });
     res.data.forEach((x) => {
       vm.fileList.push(x.file);
     });
@@ -94,6 +109,14 @@ export default {
       dictMaterial.keywordList = materialKeywords.data;
       vm.fileNameKeywordList.push(dictMaterial);
     }
+
+    const res2 = await lectureService.getLecture({
+      lectureId: vm.$route.params.lectureId,
+    });
+    if (res2.data.video_link !== null) {
+      vm.videolink = res2.data.video_link;
+      vm.modifiedLink = res2.data.video_link;
+    }
   },
   computed: {
     ...mapState('keyword', [
@@ -102,6 +125,11 @@ export default {
     modifiedKeywordList() {
       const vm = this;
       return vm.keywordList.map(x => ({ value: x.keyword }));
+    },
+    combinedUrl() {
+      const vm = this;
+      const id = getIdFromURL(vm.videolink);
+      return `https://www.youtube.com/embed/${id}`;
     },
   },
   methods: {
@@ -254,6 +282,14 @@ export default {
           lectureService.deleteMaterialKeyword({
             id: materialId,
             key: keywordName,
+          });
+          break;
+        }
+        case 'LINKUPLOAD': {
+          vm.videolink = vm.modifiedLink;
+          lectureService.putLecture({
+            lectureId: vm.$route.params.lectureId,
+            videoLink: vm.videolink,
           });
           break;
         }

@@ -25,6 +25,11 @@
       <h2>{{ path }}</h2><br/>
         <el-row :gutter="20">
           <el-col :span="12">
+            <div v-if="videolink === ''">
+            등록된 영상이 없습니다.
+            <br><br>
+          </div>
+          <div v-else>
             <youtube
               v-show="focusFlag"
               id="video"
@@ -35,9 +40,10 @@
               :mute="true">
             </youtube>
             <div style="float: right">
-              <el-button v-show="focusFlag" type="primary" size="small" @click="onClick('FOCUS')">강의영상 숨기기</el-button>
-              <el-button v-show="!focusFlag" type="primary" size="small" @click="onClick('FOCUS')">강의영상 보이기</el-button>
+              <el-button v-show="focusFlag" size="small" type="primary" @click="onClick('FOCUS')">강의영상 숨기기</el-button>
+              <el-button v-show="!focusFlag" size="small" type="primary" @click="onClick('FOCUS')">강의영상 보이기</el-button>
             </div>
+          </div>
           <el-button type="primary" size="small" @click="onClick('SHOWALL', questionItemIdList)">
             문항 모두 보이기
           </el-button>
@@ -120,6 +126,9 @@ export default {
     const res = await lectureService.getLecture({
       lectureId: vm.lectureId,
     });
+    if (res.data.video_link !== null) {
+      vm.videolink = res.data.video_link;
+    }
     vm.tableItemList = res.data.lecture_items;
     // sequence 순서대로 강의 아이템 정렬
     vm.tableItemList.sort((a, b) => {
@@ -170,6 +179,7 @@ export default {
       isAuto: false,
       isInfoVisible: false,
       focusFlag: true,
+      videolink: '',
     };
   },
   computed: {
@@ -177,7 +187,9 @@ export default {
       const vm = this;
       return vm.$route.params.lectureId;
     },
-    youtubeId: () => (getIdFromURL('https://www.youtube.com/watch?v=actDWRiD9RI&list=UUEgIN0yG3PeVF4JfJ-ZG0UQ')),
+    youtubeId() {
+      return getIdFromURL(this.videolink);
+    },
     classId() {
       const vm = this;
       return Number.parseInt(vm.$route.query.classId, 10);
