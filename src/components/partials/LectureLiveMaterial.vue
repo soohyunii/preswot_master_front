@@ -16,6 +16,8 @@
           :label="material.file"
           >
           {{ material.file.name }}
+          <i v-if="material.file.file_type === '.pptx'"
+            class="el-icon-view" @click="onClick('VIEW', material.file)"></i>
         </el-checkbox>
       </el-checkbox-group>
     </div>
@@ -30,7 +32,7 @@ import utils from '../../utils';
 import { baseUrl } from '../../services/config';
 
 export default {
-  props: ['materialList'],
+  props: ['materialList', 'presentMaterial'],
   data() {
     return {
       checkAll: false,
@@ -47,14 +49,16 @@ export default {
       const checkedCount = value.length;
       vm.checkAll = (checkedCount === vm.materialList.length);
     },
-    onClick(type) {
+    onClick(type, data) {
       const vm = this;
       switch (type) {
         case 'DOWNLOAD': {
-          // vm.checkedMaterials.forEach((element) => {
-          //   utils.downloadFile(baseUrl + element.client_path, element.name);
-          // });
           utils.downloadFiles(baseUrl, vm.checkedMaterials);
+          break;
+        }
+        case 'VIEW': {
+          const url = baseUrl + data.client_path;
+          vm.presentMaterial(url);
           break;
         }
         default: {

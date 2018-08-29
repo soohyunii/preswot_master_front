@@ -319,7 +319,6 @@ export default {
         }
         if (vm.data.notes[0].note_type === 1) {
           const url = baseUrl + vm.data.notes[0].files[0].client_path;
-          // return `https://view.officeapps.live.com/op/embed.aspx?src=${url}`;
           return `http://docs.google.com/gview?url=${url}&embedded=true`;
         }
         if (vm.data.notes[0].note_type === 2) {

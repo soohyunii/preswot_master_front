@@ -123,7 +123,7 @@ export default {
         // TODO: valid === false 인 경우 notify
         const classId = vm.$route.query.classId;
 
-        if (vm.lecture.type === 1) {
+        if (vm.lecture && vm.lecture.type === 1) {
           vm.input.lcEndDate.setFullYear(vm.input.lcStartDate.getFullYear());
           vm.input.lcEndDate.setMonth(vm.input.lcStartDate.getMonth());
           vm.input.lcEndDate.setDate(vm.input.lcStartDate.getDate());
