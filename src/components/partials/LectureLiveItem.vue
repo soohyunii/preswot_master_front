@@ -6,7 +6,7 @@
     <div v-else class="lecture-item">
       <div v-if="data.type === 0" class="question-box"> <!-- 질문 -->
         <div v-if="data.questions[0].type === 0">
-          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT') || answerSubmitted"> <!-- 이미 제출한 경우 -->
+          <template v-if="answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -44,7 +44,7 @@
           </template>
         </div>
         <div v-if="data.questions[0].type === 1">
-          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT') || answerSubmitted"> <!-- 이미 제출한 경우 -->
+          <template v-if="answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -72,7 +72,7 @@
           </template>
         </div>
         <div v-if="data.questions[0].type === 2">
-          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT') || answerSubmitted"> <!-- 이미 제출한 경우 -->
+          <template v-if="answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -122,7 +122,7 @@
           </template>
         </div>
         <div v-if="data.questions[0].type === 3">
-          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT') || answerSubmitted"> <!-- 이미 제출한 경우 -->
+          <template v-if="answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -155,7 +155,7 @@
           </template>
         </div>
         <div v-if="data.questions[0].type === 4">
-          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT') || answerSubmitted"> <!-- 이미 제출한 경우 -->
+          <template v-if="answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -182,17 +182,18 @@
             <el-input placeholder="내용을 입력해주세요." v-model="answer[0]" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
           </template>
         </div>
-        <el-button
-          v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT') || !answerSubmitted"
-          style="float:right"
-          type="primary"
-          @click="preOnClick()">
-          제출
-        </el-button>
+        <el-row type="flex" justify="center">
+          <el-button
+            v-if="!answerSubmitted"
+            type="primary"
+            @click="preOnClick()">
+            제출
+          </el-button>
+        </el-row>
       </div>
       <div v-if="data.type === 1">
         <div v-if="data.surveys[0].type === 0">
-          <template v-if="(data.surveys[0].student_surveys.length > 0 && type === 'STUDENT') || answerSubmitted"> <!-- 이미 제출한 경우 -->
+          <template v-if="answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
           </template>
           <template v-else>
@@ -206,7 +207,7 @@
           </template>
         </div>
         <div v-if="data.surveys[0].type === 1">
-          <template v-if="(data.surveys[0].student_surveys.length > 0 && type === 'STUDENT') || answerSubmitted"> <!-- 이미 제출한 경우 -->
+          <template v-if="answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
           </template>
           <template v-else>
@@ -215,13 +216,14 @@
             <el-input placeholder="내용을 입력해주세요." v-model="answer[0]"></el-input>
           </template>
         </div>
-        <el-button
-          v-if="(data.surveys[0].student_surveys.length > 0 && type === 'STUDENT') || !answerSubmitted"
-          style="float:right"
-          type="primary"
-          @click="preOnClick()">
-          제출
-        </el-button>
+        <el-row type="flex" justify="center">
+          <el-button
+            v-if="!answerSubmitted"
+            type="primary"
+            @click="preOnClick()">
+            제출
+          </el-button>
+        </el-row>
       </div>
       <div v-if="data.type === 2" class="practice">
         <p>실습</p>
@@ -238,14 +240,14 @@
         <div v-if="data.notes[0].note_type === 0">
           <img :src="Url">
         </div>
-        <div v-if="data.notes[0].note_type === 1">
-          <iframe width="500" height="470" frameborder="0" :src="Url"></iframe>
+        <div v-if="data.notes[0].note_type === 1" class="noteWrap">
+          <iframe width="100%" frameborder="0" :src="Url"></iframe>
         </div>
         <div v-if="data.notes[0].note_type === 2">
           <a :href="Url" target="_blank">{{data.notes[0].url}}</a>
         </div>
-        <div v-if="data.notes[0].note_type === 3">
-          <iframe width="500" height="315" allow="autoplay" frameborder="0" :src="Url"></iframe>
+        <div v-if="data.notes[0].note_type === 3" class="noteWrap">
+          <iframe width="100%" allow="autoplay" frameborder="0" :src="Url" allowfullscreen></iframe>
         </div>
       </div>
     </div>
@@ -333,6 +335,7 @@ export default {
         case 0: // 문항
           arg = {
             type: 0,
+            lectureItemId: vm.data.lecture_item_id,
             questionId: vm.data.questions[0].question_id,
             questionType: vm.data.questions[0].type,
             language: vm.data.questions[0].accept_language,
@@ -348,6 +351,7 @@ export default {
         case 1: // 설문
           arg = {
             type: 1,
+            lectureItemId: vm.data.lecture_item_id,
             surveyId: vm.data.surveys[0].survey_id,
             surveyType: vm.data.surveys[0].type,
             answer: vm.answer,
@@ -463,7 +467,16 @@ export default {
   .lecture-item .note{
     padding:10px;
     margin:10px;
-    height:530px;
+    // height:530px;
+  }.noteWrap {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+  }
+  .noteWrap iframe {
+    position: absolute;
+    width: 100%;
+    height: 100%;
   }
 }
 </style>

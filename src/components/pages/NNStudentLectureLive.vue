@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bt-container">
     <template v-if="$isPhone">
       <h2>{{ path }}</h2>
       <youtube
@@ -20,6 +20,7 @@
           <lecture-live-item
             :data="lectureItem"
             :onClick="onClick"
+            :answerSubmitted="submitFlag.get(item.lecture_item_id)"
             type="STUDENT"/>
         </el-tab-pane>
         <el-tab-pane label="강의자료">
@@ -55,11 +56,15 @@
                 강사님의 신호를 기다리는 중입니다.
               </div>
               <div v-else>
+                <el-button v-show="!pauseFlag && lectureType === 2" type="primary" @click="onClick('PAUSE')">일시정지</el-button>
+                <el-button v-show="pauseFlag && lectureType === 2" type="primary" @click="onClick('RESTART')">재시작</el-button>
+                <br>
                 <div v-for="(item, index) in lectureItem" :key="index">
-                  <lecture-live-item
-                    :data="item"
-                    :onClick="onClick"
-                    type="STUDENT"/>
+                    <lecture-live-item
+                      :data="item"
+                      :onClick="onClick"
+                      :answerSubmitted="submitFlag.get(item.lecture_item_id)"
+                      type="STUDENT"/>
                 </div>
               </div>
               <!-- <el-button style="float:right" type="primary" size="small" @click="onClick('SUBMIT')">제출</el-button> -->
@@ -84,6 +89,19 @@
         </el-col>
       </el-row>
     </template>
+    <el-dialog
+      title="Info"
+      :visible.sync="continueDialogVisible"
+      :close-on-click-modal="false"
+      :show-close="false"
+      width="220px">
+      <!-- :before-close="handleClose"> -->
+      <span>강의를 이어서 보시겠습니까?</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="continueLecture(true)">예</el-button>
+        <el-button type="primary" @click="continueLecture(false)">아니오</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -99,13 +117,17 @@ import utils from '../../utils';
 import automaticLectureService from '../../services/automaticLectureService';
 
 export default {
-  name: 'StudentLectureLive',
+  name: 'NNStudentLectureLive',
   async created() {
     const vm = this;
     vm.joinTime = Date.now();
+    vm.lectureId = Number.parseInt(vm.$route.params.lectureId, 10);
     // 강의 아이템 목록, 첨부파일 목록, 과목, 강의명 가져오기
     const res = await lectureService.getLecture({
       lectureId: vm.lectureId,
+    });
+    res.data.lecture_items.forEach((item) => {
+      vm.submitFlag.set(item.lecture_item_id, false);
     });
     /*
      *  lectureType : 0 (유인 강의), 1(무인 단체 강의), 2(무인 개인 강의)
@@ -129,12 +151,12 @@ export default {
     // 소켓 연결 및 주기적으로 보내는 신호, 리스너 등록
     vm.$socket.connect();
     const params = {
-      lecture_id: Number.parseInt(vm.lectureId, 10),
+      lecture_id: vm.lectureId,
     };
     vm.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
     vm.sHeartbeatIntervalId = setInterval(() => {
       const params2 = {
-        lecture_id: Number.parseInt(vm.lectureId, 10),
+        lecture_id: vm.lectureId,
         user_id: utils.getUserIdFromJwt(),
       };
       vm.$socket.emit('HEART_BEAT', JSON.stringify(params2));
@@ -157,51 +179,43 @@ export default {
       }
     });
     if (vm.lectureType === 1) {
+      vm.timer = [];
       const res4 = await automaticLectureService.offlineJoin({
         lectureId: vm.lectureId,
       });
       res4.data.items.forEach((item) => {
-        vm.timer = setTimeout(() => {
+        vm.timer.push(setTimeout(() => {
           vm.lectureItem = [];
           vm.lectureItem.push(item);
-        }, item.offset * 1000);
+        }, item.offset * 1000));
       });
     } else if (vm.lectureType === 2) {
-      const res4 = await automaticLectureService.onlineJoin({
-        lectureId: vm.lectureId,
-      });
-      vm.pastLectureItem.lectureItemId = res4.data.items[0].lecture_item_id;
-      vm.pastLectureItem.offset = res4.data.offset;
-      res4.data.items.forEach((item) => {
-        vm.timer = setTimeout(() => {
-          vm.joinTime = Date.now();
-          vm.lectureItem = [];
-          vm.lectureItem.push(item);
-        }, item.offset * 1000);
-      });
+      vm.continueDialogVisible = true;
+      vm.pauseFlag = false;
     }
   },
   data() {
     return {
       path: '', // 과목 , 강의 제목 이름
+      lectureId: undefined,
       lectureItem: [], // 현재 표시중인 강의 아이템
       lectureType: undefined,
       materialList: undefined, // 강의자료 목록
       additionalList: undefined, // 참고자료 목록
       joinTime: undefined, // 학생이 강의에 입장한 시간
-      timer: undefined,
+      timer: [],
       pastLectureItem: {
         lectureItemId: undefined,
         offset: undefined,
       },
       focusFlag: true,
+      pauseFlag: true,
+      continueDialogVisible: false,
+      continueFlag: true,
+      submitFlag: new Map(),
     };
   },
   computed: {
-    lectureId() {
-      const vm = this;
-      return vm.$route.params.lectureId;
-    },
     youtubeId: () => (getIdFromURL('https://www.youtube.com/watch?v=actDWRiD9RI&list=UUEgIN0yG3PeVF4JfJ-ZG0UQ')),
     participationTime() {
       const vm = this;
@@ -217,6 +231,7 @@ export default {
       const vm = this;
       switch (type) {
         case 'SUBMIT': {
+          vm.submitFlag.set(data.lectureItemId, true);
           switch (data.type) {
             case 0: { // 문항
               studentService.submitQuestion({
@@ -242,7 +257,7 @@ export default {
                 type: 'success',
               });
               const params = {
-                lecture_item_id: Number.parseInt(vm.lectureItem.lecture_item_id, 10),
+                lecture_item_id: Number.parseInt(data.lectureItemId, 10),
                 user_id: utils.getUserIdFromJwt(),
               };
               vm.$socket.emit('DOING_LECTURE_ITEM', JSON.stringify(params));
@@ -261,7 +276,7 @@ export default {
                 type: 'success',
               });
               const params = {
-                lecture_item_id: Number.parseInt(vm.lectureItem.lecture_item_id, 10),
+                lecture_item_id: Number.parseInt(data.lectureItemId, 10),
                 user_id: utils.getUserIdFromJwt(),
               };
               vm.$socket.emit('DOING_LECTURE_ITEM', JSON.stringify(params));
@@ -286,6 +301,16 @@ export default {
           } else {
             vm.focusFlag = true;
           }
+          break;
+        }
+        case 'PAUSE': {
+          vm.pauseFlag = true;
+          vm.leaveOnlineLecture();
+          break;
+        }
+        case 'RESTART': {
+          vm.pauseFlag = false;
+          vm.continueLecture(true);
           break;
         }
         default: {
@@ -319,23 +344,52 @@ export default {
         }
       }, 1000);
     },
-  },
-  beforeDestroy() {
-    const vm = this;
-    /*
-     *  무인 강의에서 학생이 강의에서 나갈 경우, 강의 수강 시간을 알기 위해
-     *  최근에 듣던 강의 아이템과 해당 강의 아이템 시작으로부터의 경과 시간을 보냄
-     */
-    let offset = vm.participationTime;
-    if (vm.lectureItem[0].lecture_item_id === vm.pastLectureItem.lectureItemId) {
-      offset += vm.pastLectureItem.offset;
-    }
-    vm.$socket.close();
-    if (vm.lectureType === 1) {
-      automaticLectureService.offlineLeave({
+    async getLectureItem() {
+      const vm = this;
+      vm.timer = [];
+      const res4 = await automaticLectureService.onlineJoin({
         lectureId: vm.lectureId,
       });
-    } else if (vm.lectureType === 2) {
+      let lectureItemList;
+      if (vm.continueFlag === true) {
+        lectureItemList = res4.data.items;
+      } else {
+        lectureItemList = res4.data.rawItems;
+      }
+      // console.log(lectureItemList);
+      const result = vm.groupBy(lectureItemList, item => [item.offset]);
+      vm.pastLectureItem.lectureItemId = res4.data.items[0].lecture_item_id;
+      vm.pastLectureItem.offset = res4.data.offset;
+      result.forEach((item) => {
+        vm.timer.push(setTimeout(() => {
+          vm.joinTime = Date.now();
+          vm.lectureItem = [];
+          vm.lectureItem = item;
+        }, item[0].offset * 1000));
+      });
+    },
+    groupBy(array, f) {
+      const groups = {};
+      array.forEach((o) => {
+        const group = JSON.stringify(f(o));
+        groups[group] = groups[group] || [];
+        groups[group].push(o);
+      });
+      return Object.keys(groups).map(group => groups[group]);
+    },
+    continueLecture(flag) {
+      const vm = this;
+      vm.joinTime = Date.now();
+      vm.continueDialogVisible = false;
+      vm.continueFlag = flag;
+      vm.getLectureItem();
+    },
+    leaveOnlineLecture() {
+      const vm = this;
+      let offset = vm.participationTime;
+      if (vm.lectureItem[0].lecture_item_id === vm.pastLectureItem.lectureItemId) {
+        offset += vm.pastLectureItem.offset;
+      }
       let lectureItemId;
       if (vm.lectureItem.length === 0) {
         lectureItemId = undefined;
@@ -347,7 +401,25 @@ export default {
         lectureItemId,
         offset,
       });
-      clearTimeout(vm.timer);
+      vm.timer.forEach((item) => {
+        clearTimeout(item);
+      });
+      // clearTimeout(vm.timer);
+    },
+  },
+  beforeDestroy() {
+    const vm = this;
+    /*
+     *  무인 강의에서 학생이 강의에서 나갈 경우, 강의 수강 시간을 알기 위해
+     *  최근에 듣던 강의 아이템과 해당 강의 아이템 시작으로부터의 경과 시간을 보냄
+     */
+    vm.$socket.close();
+    if (vm.lectureType === 1) {
+      automaticLectureService.offlineLeave({
+        lectureId: vm.lectureId,
+      });
+    } else if (vm.lectureType === 2) {
+      vm.leaveOnlineLecture();
     }
   },
 };
