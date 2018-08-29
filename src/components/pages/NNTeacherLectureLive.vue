@@ -78,6 +78,7 @@
             <lecture-survey-result
               v-if="currentLectureItemId.length > 0 && tableItemList[tableItemIndex[index]] && tableItemList[tableItemIndex[index]].type === 1"
               :classId="classId"
+              :lectureId="lectureId"
               :itemId="itemId"
               resultType="실시간"/>
           </el-row>

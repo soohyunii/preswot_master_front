@@ -62,7 +62,6 @@ export default {
           // eslint-disable-next-line no-param-reassign
           item.type = type;
           // eslint-disable-next-line no-param-reassign
-          // eslint-disable-next-line no-param-reassign
           item.heard = (item.heartbeat_counts.length > 0) ? '수강완료' : '수강미완료';
           return item;
         });
