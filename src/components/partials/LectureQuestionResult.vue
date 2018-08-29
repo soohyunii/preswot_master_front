@@ -2,12 +2,12 @@
   <div>
     <div v-if="studentQuestionResult">
       <el-row v-if="resultType === '실시간'">
-        <el-col :span="5"><strong>현재 수강 인원</strong></el-col>
-        <!-- <el-col :span="8"> 실시간 수강 인원  / {{ numberOfStudentInClass }} </el-col> -->
+        <el-col :span="3"><strong>현재 수강 인원</strong></el-col>
+        <el-col :span="7"> {{ onStudentCount - 1 }} 명 </el-col>
       </el-row>
       <el-row>
         <el-col :span="3"><strong>학생 답변</strong></el-col>
-        <el-col :span="7">총 {{ studentQuestionResult.numberOfStudent }}건</el-col>
+        <el-col :span="7">총 {{ studentQuestionResult.numberOfStudent }} 건</el-col>
         <el-button v-if="resultType === '실시간'" style="float:right" type="primary" size="small" icon="el-icon-refresh" @click="refresh()">새로고침</el-button>
       </el-row>
       <el-row>
@@ -184,12 +184,13 @@
 <script>
   import { mapActions, mapState, mapGetters } from 'vuex';
   import questionService from '../../services/questionService';
+  import lectureService from '../../services/lectureService';
   import { baseUrl } from '../../services/config';
   import utils from '../../utils';
 
   export default {
     name: 'LectureQuestionResult',
-    props: ['classId', 'itemId', 'resultType'],
+    props: ['classId', 'lectureId', 'itemId', 'resultType'],
     data() {
       return {
         activeTab: 'question',
@@ -206,6 +207,7 @@
           path: undefined,
           player: undefined,
         },
+        onStudentCount: undefined,
       };
     },
     computed: {
@@ -226,6 +228,12 @@
     },
     async created() {
       const vm = this;
+      if (vm.resultType === '실시간') {
+        const res1 = await lectureService.getOnStudentCount({
+          lectureId: vm.lectureId,
+        });
+        vm.onStudentCount = res1.data.count;
+      }
       // TODO: 부모 component에서 받아 오는 형식으로 수정
       await vm.getClassTotalResult({
         classId: vm.classId,
@@ -245,8 +253,6 @@
       vm.questionResultSummary[0].numPartialAnswer = numPartialAnswer;
       vm.questionResultSummary[0].numWrongAnswer = numTotal - numAnswer - numPartialAnswer;
     },
-    mounted() {
-    },
     methods: {
       ...mapActions('grading', [
         'getClassTotalResult',
@@ -257,6 +263,12 @@
       ]),
       async refresh() {
         const vm = this;
+        if (vm.resultType === '실시간') {
+          const res1 = await lectureService.getOnStudentCount({
+            lectureId: vm.lectureId,
+          });
+          vm.onStudentCount = res1.data.count;
+        }
         await vm.getClassTotalResult({
           classId: vm.classId,
           isStudent: false,

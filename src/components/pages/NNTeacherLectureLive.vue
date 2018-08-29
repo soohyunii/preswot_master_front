@@ -72,6 +72,7 @@
             <lecture-question-result
               v-if="currentLectureItemId.length > 0 && tableItemList[tableItemIndex[index]] && tableItemList[tableItemIndex[index]].type === 0"
               :classId="classId"
+              :lectureId="lectureId"
               :itemId="itemId"
               resultType="실시간"/>
             <lecture-survey-result
@@ -121,6 +122,7 @@ export default {
   name: 'TeacherLectureLive',
   async created() {
     const vm = this;
+    vm.lectureId = Number.parseInt(vm.$route.params.lectureId, 10);
     // 강의 아이템 목록, 과목, 강의명 가져오기
     const res = await lectureService.getLecture({
       lectureId: vm.lectureId,
@@ -142,7 +144,8 @@ export default {
     // 소켓 연결 및 주기적으로 보내는 신호 설정
     vm.$socket.connect();
     const params = {
-      lecture_id: Number.parseInt(vm.lectureId, 10),
+      lecture_id: vm.lectureId,
+      user_id: utils.getUserIdFromJwt(),
     };
     vm.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
     vm.sUpdateTimelineLogIntervalId = setInterval(() => {
@@ -150,7 +153,7 @@ export default {
     }, 18000);
     vm.sHeartbeatIntervalId = setInterval(() => {
       const params2 = {
-        lecture_id: Number.parseInt(vm.lectureId, 10),
+        lecture_id: vm.lectureId,
         user_id: utils.getUserIdFromJwt(),
       };
       vm.$socket.emit('HEART_BEAT', JSON.stringify(params2));
@@ -173,6 +176,7 @@ export default {
     return {
       tableItemList: [],
       tableItemIndex: [],
+      lectureId: undefined,
       currentLectureItemId: [],
       path: '',
       isAuto: false,
@@ -182,10 +186,6 @@ export default {
     };
   },
   computed: {
-    lectureId() {
-      const vm = this;
-      return vm.$route.params.lectureId;
-    },
     youtubeId() {
       return getIdFromURL(this.videolink);
     },
@@ -238,7 +238,7 @@ export default {
                 tableItem.lecture_item_id === item),
             );
             const param = {
-              lecture_id: Number.parseInt(vm.lectureId, 10),
+              lecture_id: vm.lectureId,
               opened: 1,
               lecture_item_id: item,
             };
@@ -267,7 +267,7 @@ export default {
             vm.currentLectureItemId.splice(putIndex, 0, data);
             vm.tableItemIndex.splice(putIndex, 0, itemIndex);
             const param = {
-              lecture_id: Number.parseInt(vm.lectureId, 10),
+              lecture_id: vm.lectureId,
               opened: 1,
               lecture_item_id: data,
             };
@@ -277,7 +277,7 @@ export default {
         }
         case 'HIDE': {
           const param = {
-            lecture_id: Number.parseInt(vm.lectureId, 10),
+            lecture_id: vm.lectureId,
             opened: 0,
             lecture_item_id: data,
           };
@@ -319,13 +319,18 @@ export default {
     const params = [];
     vm.currentLectureItemId.forEach((item) => {
       const param = {
-        lecture_id: Number.parseInt(vm.lectureId, 10),
+        lecture_id: vm.lectureId,
         opened: 0,
         lecture_item_id: item,
       };
       params.push(param);
     });
     vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify(params));
+    const param2 = {
+      lecture_id: vm.lectureId,
+      user_id: utils.getUserIdFromJwt(),
+    };
+    vm.$socket.emit('LEAVE_LECTURE', JSON.stringify(param2));
     vm.$socket.close();
   },
 };

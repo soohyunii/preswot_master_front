@@ -158,6 +158,7 @@ export default {
     vm.$socket.connect();
     const params = {
       lecture_id: vm.lectureId,
+      user_id: utils.getUserIdFromJwt(),
     };
     vm.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
     vm.sHeartbeatIntervalId = setInterval(() => {
@@ -196,7 +197,14 @@ export default {
         }, item.offset * 1000));
       });
     } else if (vm.lectureType === 2) {
-      vm.continueDialogVisible = true;
+      const res5 = await automaticLectureService.onlineJoin({
+        lectureId: vm.lectureId,
+      });
+      if (res5.data.offset === -1) {
+        vm.continueLecture(false);
+      } else {
+        vm.continueDialogVisible = true;
+      }
       vm.pauseFlag = false;
     }
   },
@@ -421,6 +429,11 @@ export default {
   },
   beforeDestroy() {
     const vm = this;
+    const param = {
+      lecture_id: vm.lectureId,
+      user_id: utils.getUserIdFromJwt(),
+    };
+    vm.$socket.emit('LEAVE_LECTURE', JSON.stringify(param));
     /*
      *  무인 강의에서 학생이 강의에서 나갈 경우, 강의 수강 시간을 알기 위해
      *  최근에 듣던 강의 아이템과 해당 강의 아이템 시작으로부터의 경과 시간을 보냄

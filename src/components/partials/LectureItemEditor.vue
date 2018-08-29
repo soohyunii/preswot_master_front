@@ -37,7 +37,7 @@
         </div>
       </el-form-item>
 
-      <el-form-item label="결과 공개 여부" prop="lcItemResult">
+      <el-form-item v-show="['question', 'survey'].includes(inputHead.lcItemType)" label="결과 공개 여부" prop="lcItemResult">
         <el-switch v-model="resultVisible" @change="onChange"/>
         <el-popover
           style="position: relative; left: 30px; top: 3px;"

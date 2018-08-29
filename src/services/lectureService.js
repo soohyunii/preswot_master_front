@@ -145,6 +145,9 @@ export default {
   getMaterialKeywords({ id }) {
     return http.get(`/materials/${id}/keywords`);
   },
+  getOnStudentCount({ lectureId }) {
+    return http.get(`/lectures/${lectureId}/on-student-count`);
+  },
   postMaterialKeyword({ id, keyword, score }) {
     return http.post(`/materials/${id}/keywords`, {
       keyword,
