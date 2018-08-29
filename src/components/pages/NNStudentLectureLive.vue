@@ -44,7 +44,6 @@
               id="video"
               :video-id="youtubeId"
               player-width="100%"
-              player-height="500px"
               :player-vars="{ autoplay: 1 }"
               :mute="true">
             </youtube>
@@ -54,7 +53,7 @@
             </div>
           </div>
         </el-col>
-        <el-col :span="24">
+        <el-col :span="itemSize">
           <el-tabs type="card">
             <el-tab-pane label="강의아이템">
               <div v-if="lectureItem.length === 0">
@@ -221,6 +220,7 @@ export default {
       continueFlag: true,
       submitFlag: new Map(),
       videolink: '',
+      itemSize: 16,
     };
   },
   computed: {
@@ -308,8 +308,10 @@ export default {
         case 'FOCUS': {
           if (vm.focusFlag) {
             vm.focusFlag = false;
+            vm.itemSize = 24;
           } else {
             vm.focusFlag = true;
+            vm.itemSize = 16;
           }
           break;
         }

@@ -241,13 +241,13 @@
           <img :src="Url">
         </div>
         <div v-if="data.notes[0].note_type === 1" class="noteWrap">
-          <iframe width="100%" frameborder="0" :src="Url"></iframe>
+          <iframe frameborder="0" :src="Url"></iframe>
         </div>
         <div v-if="data.notes[0].note_type === 2">
           <a :href="Url" target="_blank">{{data.notes[0].url}}</a>
         </div>
         <div v-if="data.notes[0].note_type === 3" class="noteWrap">
-          <iframe width="100%" allow="autoplay" frameborder="0" :src="Url" allowfullscreen></iframe>
+          <iframe allow="autoplay" frameborder="0" :src="Url" allowfullscreen></iframe>
         </div>
       </div>
     </div>

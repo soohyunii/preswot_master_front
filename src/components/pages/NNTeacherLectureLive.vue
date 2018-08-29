@@ -35,7 +35,6 @@
               id="video"
               :video-id="youtubeId"
               player-width="100%"
-              player-height="500px"
               :player-vars="{ autoplay: 1 }"
               :mute="true">
             </youtube>
