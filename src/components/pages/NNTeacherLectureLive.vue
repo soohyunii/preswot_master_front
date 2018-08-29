@@ -67,6 +67,10 @@
           </el-col>
         </el-row>
         <br />
+        <el-row>
+          <el-col :span="3"><strong>현재 수강 인원</strong></el-col>
+          <el-col :span="7"> {{ onStudentCount - 1 }} 명 </el-col>
+        </el-row>
         <div v-for="(itemId, index) in currentLectureItemId" :key="itemId">
           <el-row>
             <lecture-question-result
@@ -149,6 +153,18 @@ export default {
       user_id: utils.getUserIdFromJwt(),
     };
     vm.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
+    let res1 = await lectureService.getOnStudentCount({
+      lectureId: vm.lectureId,
+    });
+    if (res1.data.count > 1) {
+      vm.onStudentCount = res1.data.count;
+    }
+    vm.sOnStudentCount = setInterval(async () => {
+      res1 = await lectureService.getOnStudentCount({
+        lectureId: vm.lectureId,
+      });
+      vm.onStudentCount = res1.data.count;
+    }, 10000);
     vm.sUpdateTimelineLogIntervalId = setInterval(() => {
       vm.$socket.emit('UPDATE_TIMELINE_LOG', JSON.stringify(params));
     }, 18000);
@@ -173,6 +189,17 @@ export default {
     //   });
     // }
   },
+  mounted() {
+    const vm = this;
+    // eslint-disable-next-line
+    window.onbeforeunload = function () {
+      const param = {
+        lecture_id: vm.lectureId,
+        user_id: utils.getUserIdFromJwt(),
+      };
+      vm.$socket.emit('LEAVE_LECTURE', JSON.stringify(param));
+    };
+  },
   data() {
     return {
       tableItemList: [],
@@ -184,6 +211,8 @@ export default {
       isInfoVisible: false,
       focusFlag: true,
       videolink: '',
+      onStudentCount: 1,
+      sOnStudentCount: undefined,
     };
   },
   computed: {
@@ -333,6 +362,7 @@ export default {
     };
     vm.$socket.emit('LEAVE_LECTURE', JSON.stringify(param2));
     vm.$socket.close();
+    clearInterval(vm.sOnStudentCount);
   },
 };
 </script>

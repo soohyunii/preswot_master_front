@@ -68,6 +68,7 @@
                       :data="item"
                       :onClick="onClick"
                       :answerSubmitted="submitFlag.get(item.lecture_item_id)"
+                      :lectureType="lectureType"
                       type="STUDENT"/>
                 </div>
               </div>
@@ -123,6 +124,9 @@ export default {
   name: 'NNStudentLectureLive',
   async created() {
     const vm = this;
+
+    // 소켓 연결 및 주기적으로 보내는 신호, 리스너 등록
+    vm.$socket.connect();
     vm.joinTime = Date.now();
     vm.lectureId = Number.parseInt(vm.$route.params.lectureId, 10);
     // 강의 아이템 목록, 첨부파일 목록, 과목, 강의명 가져오기
@@ -154,8 +158,6 @@ export default {
     });
     vm.materialList = res3.data;
 
-    // 소켓 연결 및 주기적으로 보내는 신호, 리스너 등록
-    vm.$socket.connect();
     const params = {
       lecture_id: vm.lectureId,
       user_id: utils.getUserIdFromJwt(),
@@ -243,6 +245,17 @@ export default {
   components: {
     LectureLiveItem,
     LectureLiveMaterial,
+  },
+  mounted() {
+    const vm = this;
+    // eslint-disable-next-line
+    window.onbeforeunload = function () {
+      const param = {
+        lecture_id: vm.lectureId,
+        user_id: utils.getUserIdFromJwt(),
+      };
+      vm.$socket.emit('LEAVE_LECTURE', JSON.stringify(param));
+    };
   },
   methods: {
     async onClick(type, data) {
