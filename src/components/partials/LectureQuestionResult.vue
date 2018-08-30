@@ -266,6 +266,11 @@
         const numAnswer = res.data.num_students_answer;
         const numPartialAnswer = res.data.num_students_partial_answer;
         const numTotal = res.data.num_students_total;
+        vm.questionResultSummary = [{
+          numAnswer: null,
+          numPartialAnswer: null,
+          numWrongAnswer: null,
+        }];
         vm.questionResultSummary[0].numAnswer = numAnswer;
         vm.questionResultSummary[0].numPartialAnswer = numPartialAnswer;
         vm.questionResultSummary[0].numWrongAnswer = numTotal - numAnswer - numPartialAnswer;
