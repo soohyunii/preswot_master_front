@@ -124,4 +124,12 @@ export default {
   }) {
     return http.put(`/questions/${questionId}/sqlite/${guid}`);
   },
+  extractAnswer({
+    questionId,
+    ratioStudent,
+  }) {
+    return http.post(`/questions/${questionId}/extract-answer/`, {
+      ratioStudent,
+    });
+  },
 };
