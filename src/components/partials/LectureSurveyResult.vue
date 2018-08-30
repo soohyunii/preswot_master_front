@@ -1,10 +1,6 @@
 <template>
   <div>
     <div v-if="studentSurveyResult">
-      <el-row v-if="resultType === '실시간'">
-        <el-col :span="3"><strong>현재 수강 인원</strong></el-col>
-        <el-col :span="7"> {{ onStudentCount - 1 }} 명 </el-col>
-      </el-row>
       <el-row>
         <el-col :span="3"><strong>학생 답변</strong></el-col>
         <el-col :span="7">총 {{ studentSurveyResult.numberOfStudent }}건</el-col>
@@ -68,7 +64,6 @@
 
 <script>
   import { mapActions, mapState, mapGetters } from 'vuex';
-  import lectureService from '../../services/lectureService';
 
   export default {
     name: 'LectureSurveyResult',
@@ -94,12 +89,6 @@
     },
     async created() {
       const vm = this;
-      if (vm.resultType === '실시간') {
-        const res1 = await lectureService.getOnStudentCount({
-          lectureId: vm.lectureId,
-        });
-        vm.onStudentCount = res1.data.count;
-      }
       await vm.getClassTotalResult({
         classId: vm.classId,
       });
@@ -118,12 +107,6 @@
       ]),
       async refresh() {
         const vm = this;
-        if (vm.resultType === '실시간') {
-          const res1 = await lectureService.getOnStudentCount({
-            lectureId: vm.lectureId,
-          });
-          vm.onStudentCount = res1.data.count;
-        }
         await vm.getClassTotalResult({
           classId: vm.classId,
           isStudent: false,

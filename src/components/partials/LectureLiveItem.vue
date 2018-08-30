@@ -6,7 +6,7 @@
     <div v-else class="lecture-item">
       <div v-if="data.type === 0" class="question-box"> <!-- 질문 -->
         <div v-if="data.questions[0].type === 0">
-          <template v-if="answerSubmitted"> <!-- 이미 제출한 경우 -->
+          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT' && lectureType === 0) || answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -61,7 +61,7 @@
           </template>
         </div>
         <div v-if="data.questions[0].type === 1">
-          <template v-if="answerSubmitted"> <!-- 이미 제출한 경우 -->
+          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT' && lectureType === 0) || answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -106,7 +106,7 @@
           </template>
         </div>
         <div v-if="data.questions[0].type === 2">
-          <template v-if="answerSubmitted"> <!-- 이미 제출한 경우 -->
+          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT' && lectureType === 0) || answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -173,7 +173,7 @@
           </template>
         </div>
         <div v-if="data.questions[0].type === 3">
-          <template v-if="answerSubmitted"> <!-- 이미 제출한 경우 -->
+          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT' && lectureType === 0) || answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -223,7 +223,7 @@
           </template>
         </div>
         <div v-if="data.questions[0].type === 4">
-          <template v-if="answerSubmitted"> <!-- 이미 제출한 경우 -->
+          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT' && lectureType === 0) || answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -278,7 +278,7 @@
       </div>
       <div v-if="data.type === 1">
         <div v-if="data.surveys[0].type === 0">
-          <template v-if="answerSubmitted"> <!-- 이미 제출한 경우 -->
+          <template v-if="(data.surveys[0].student_surveys.length > 0 && type === 'STUDENT' && lectureType === 0) || answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
           </template>
           <template v-else>
@@ -292,7 +292,7 @@
           </template>
         </div>
         <div v-if="data.surveys[0].type === 1">
-          <template v-if="answerSubmitted"> <!-- 이미 제출한 경우 -->
+          <template v-if="(data.surveys[0].student_surveys.length > 0 && type === 'STUDENT' && lectureType === 0) || answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
           </template>
           <template v-else>
@@ -364,7 +364,7 @@ import { baseUrl } from '../../services/config';
 import utils from '../../utils';
 
 export default {
-  props: ['data', 'onClick', 'type', 'answerSubmitted'],
+  props: ['lectureType', 'data', 'onClick', 'type', 'answerSubmitted'],
   data() {
     return {
       answer: [],
