@@ -10,7 +10,16 @@
       </el-radio-group>
     </el-form-item>
     <el-form-item label="문제" id="question">
-        <el-input v-model="inputTail.question" placeholder="내용을 입력해주세요." type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
+      <el-input v-model="inputTail.question" placeholder="내용을 입력해주세요." type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
+    </el-form-item>
+    <el-form-item>
+      <el-upload
+        action="#"
+        :auto-upload="false"
+        :file-list="initFileList"
+        ref=questionUpload>
+        <el-button slot="trigger" type="primary">파일 추가</el-button>
+      </el-upload>
     </el-form-item>
 
     <template v-if="inputBody.questionType === 'SHORT_ANSWER'">
@@ -55,7 +64,8 @@
     <template v-if="inputBody.questionType === 'DESCRIPTION'">
       <el-form-item label="모범답안" id="textarea_short_answer">
         <el-input v-model="inputTail.answer[0]" placeholder="내용을 입력해주세요." type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
-        <br>
+      </el-form-item>
+      <el-form-item>
         <el-upload
           action="#"
           :auto-upload="false"
@@ -117,12 +127,12 @@
     <div v-show="inputBody.questionType === 'SQL'">
       <el-form-item label="SQLite">
         <el-upload
-        action="#"
-        :auto-upload="false"
-        :file-list="initFileList"
-        :limit=1
-        :on-exceed="handleExceed"
-        ref="sqlUpload">
+          action="#"
+          :auto-upload="false"
+          :file-list="initFileList"
+          :limit=1
+          :on-exceed="handleExceed"
+          ref="sqlUpload">
           <el-button>파일 추가</el-button>
         </el-upload>
       </el-form-item>
@@ -176,6 +186,7 @@ export default {
       testCaseList: [],
       answer: [],
       difficulty: 3,
+      questionFile: [],
     };
     return {
       initialInputBody,
@@ -227,6 +238,8 @@ export default {
     onChangeBody() {
       const vm = this;
       vm.inputTail = Object.assign({}, vm.initialInputTail);
+      vm.$set(vm.inputTail, 'questionFile', vm.$refs.questionUpload.uploadFiles);
+
       if (vm.inputBody.questionType === 'MULTIPLE_CHOICE') {
         vm.$set(vm.inputTail, 'questionList', []);
       }

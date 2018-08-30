@@ -353,7 +353,6 @@ export default {
       }, 1000);
     },
     presentMaterial(data) {
-      console.log(data);
       const vm = this;
       vm.materialLink = `http://docs.google.com/gview?url=${data}&embedded=true`;
     },

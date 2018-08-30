@@ -16,7 +16,7 @@
           :label="material.file"
           >
           {{ material.file.name }}
-          <i v-if="material.file.file_type === '.pptx'"
+          <i v-if="material.file.file_type === '.pptx' || material.file.file_type === '.pdf'"
             class="el-icon-view" @click="onClick('VIEW', material.file)"></i>
         </el-checkbox>
       </el-checkbox-group>

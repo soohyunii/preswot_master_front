@@ -78,13 +78,25 @@ export default {
   }) {
     return http.delete(`/questions/${questionId}/testcases/${num}`);
   },
-  postQuestionFile({
+  postQuestionAnswerFile({
     questionId,
     file,
   }) {
     const form = new FormData();
     form.append('file', file, file.name);
     return http.post(`/questions/${questionId}/file`, form, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  },
+  postQuestionFile({
+    questionId,
+    file,
+  }) {
+    const form = new FormData();
+    form.append('file', file, file.name);
+    return http.post(`/questions/${questionId}/material-file`, form, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
