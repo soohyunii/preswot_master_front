@@ -6,7 +6,7 @@
     <div v-else class="lecture-item">
       <div v-if="data.type === 0" class="question-box"> <!-- 질문 -->
         <div v-if="data.questions[0].type === 0">
-          <template v-if="data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT'"> <!-- 이미 제출한 경우 -->
+          <template v-if="answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -43,11 +43,13 @@
                   v-if="['.jpg','.png','.gif','.JPG','.PNG','.GIF'].includes(file.file_type)"
                   :src="getUrl(file.client_path)"
                   width="100%">
-                <video
-                  v-if="['.mp4','.MP4'].includes(file.file_type)"
-                  :src="getUrl(file.client_path)"
-                  controls>
-                </video>
+                <div class="questionNoteWrap">
+                  <video
+                    v-if="['.mp4','.MP4'].includes(file.file_type)"
+                    :src="getUrl(file.client_path)"
+                    controls>
+                  </video>
+                </div>
               </div>
             </div>
             <pre>{{ data.questions[0].question }}</pre>
@@ -59,7 +61,7 @@
           </template>
         </div>
         <div v-if="data.questions[0].type === 1">
-          <template v-if="data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT'"> <!-- 이미 제출한 경우 -->
+          <template v-if="answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -90,11 +92,13 @@
                   v-if="['.jpg','.png','.gif','.JPG','.PNG','.GIF'].includes(file.file_type)"
                   :src="getUrl(file.client_path)"
                   width="100%">
-                <video
-                  v-if="['.mp4','.MP4'].includes(file.file_type)"
-                  :src="getUrl(file.client_path)"
-                  controls>
-                </video>
+                <div class="questionNoteWrap">
+                  <video
+                    v-if="['.mp4','.MP4'].includes(file.file_type)"
+                    :src="getUrl(file.client_path)"
+                    controls>
+                  </video>
+                </div>
               </div>
             </div>
             <pre>{{ data.questions[0].question }}</pre>
@@ -102,7 +106,7 @@
           </template>
         </div>
         <div v-if="data.questions[0].type === 2">
-          <template v-if="data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT'"> <!-- 이미 제출한 경우 -->
+          <template v-if="answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -116,7 +120,7 @@
                 <p>
                   <el-dropdown @command="handleVisible" placement="bottom-start" trigger="click">
                     <span class="el-dropdown-link">
-                      제출 파일 목록<i class="el-icon-arrow-down el-icon--right"></i>
+                      예시 파일 목록<i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
                       <div v-for="(file) in data.questions[0].files" :key="file.file_guid">
@@ -147,11 +151,13 @@
                   v-if="['.jpg','.png','.gif','.JPG','.PNG','.GIF'].includes(file.file_type)"
                   :src="getUrl(file.client_path)"
                   width="100%">
-                <video
-                  v-if="['.mp4','.MP4'].includes(file.file_type)"
-                  :src="getUrl(file.client_path)"
-                  controls>
-                </video>
+                <div class="questionNoteWrap">
+                  <video
+                    v-if="['.mp4','.MP4'].includes(file.file_type)"
+                    :src="getUrl(file.client_path)"
+                    controls>
+                  </video>
+                </div>
               </div>
             </div>
             <pre>{{ data.questions[0].question }}</pre>
@@ -167,7 +173,7 @@
           </template>
         </div>
         <div v-if="data.questions[0].type === 3">
-          <template v-if="data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT'"> <!-- 이미 제출한 경우 -->
+          <template v-if="answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -192,11 +198,13 @@
                   v-if="['.jpg','.png','.gif','.JPG','.PNG','.GIF'].includes(file.file_type)"
                   :src="getUrl(file.client_path)"
                   width="100%">
-                <video
-                  v-if="['.mp4','.MP4'].includes(file.file_type)"
-                  :src="getUrl(file.client_path)"
-                  controls>
-                </video>
+                <div class="questionNoteWrap">
+                  <video
+                    v-if="['.mp4','.MP4'].includes(file.file_type)"
+                    :src="getUrl(file.client_path)"
+                    controls>
+                  </video>
+                </div>
               </div>
             </div>
             <pre>{{ data.questions[0].question }}</pre>
@@ -215,7 +223,7 @@
           </template>
         </div>
         <div v-if="data.questions[0].type === 4">
-          <template v-if="data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT'"> <!-- 이미 제출한 경우 -->
+          <template v-if="answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -246,47 +254,32 @@
                   v-if="['.jpg','.png','.gif','.JPG','.PNG','.GIF'].includes(file.file_type)"
                   :src="getUrl(file.client_path)"
                   width="100%">
-                <video
-                  v-if="['.mp4','.MP4'].includes(file.file_type)"
-                  :src="getUrl(file.client_path)"
-                  controls>
-                </video>
+                <div class="questionNoteWrap">
+                  <video
+                    v-if="['.mp4','.MP4'].includes(file.file_type)"
+                    :src="getUrl(file.client_path)"
+                    controls>
+                  </video>
+                </div>
               </div>
             </div>
             <pre>{{ data.questions[0].question }}</pre>
             <el-input placeholder="내용을 입력해주세요." v-model="answer[0]" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
           </template>
         </div>
-        <el-button
-          v-if="data.questions[0].student_answer_logs.length === 0 && type === 'STUDENT'"
-          style="float:right"
-          type="primary"
-          @click="preOnClick()">
-          제출
-        </el-button>
+        <el-row type="flex" justify="center">
+          <el-button
+            v-if="!answerSubmitted"
+            type="primary"
+            @click="preOnClick()">
+            제출
+          </el-button>
+        </el-row>
       </div>
       <div v-if="data.type === 1">
         <div v-if="data.surveys[0].type === 0">
-          <template v-if="data.surveys[0].student_surveys.length > 0 && type === 'STUDENT'"> <!-- 이미 제출한 경우 -->
+          <template v-if="answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
-            <br />
-            <el-card v-if="data.result === 1">
-              <p>
-                <span>문제 : {{ data.questions[0].question }}</span>
-              </p>
-              <p>
-                <span>배점 : {{ data.questions[0].score }}</span>
-              </p>
-              <p>
-                <span>정답 : </span>
-                <span v-for="(answer, index) in data.questions[0].answer" class="item" :key="index">
-                  <span>{{ answer }}</span>
-                </span>
-              </p>
-              <p>
-                <span>점수 : {{ data.questions[0].student_answer_logs[studentAnswerLogIndex].score }}</span>
-              </p>
-            </el-card>
           </template>
           <template v-else>
             <p>설문 - 객관</p>
@@ -299,7 +292,7 @@
           </template>
         </div>
         <div v-if="data.surveys[0].type === 1">
-          <template v-if="data.surveys[0].student_surveys.length > 0 && type === 'STUDENT'"> <!-- 이미 제출한 경우 -->
+          <template v-if="answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
           </template>
           <template v-else>
@@ -308,13 +301,14 @@
             <el-input placeholder="내용을 입력해주세요." v-model="answer[0]"></el-input>
           </template>
         </div>
-        <el-button
-          v-if="data.surveys[0].student_surveys.length === 0 && type === 'STUDENT'"
-          style="float:right"
-          type="primary"
-          @click="preOnClick()">
-          제출
-        </el-button>
+        <el-row type="flex" justify="center">
+          <el-button
+            v-if="!answerSubmitted"
+            type="primary"
+            @click="preOnClick()">
+            제출
+          </el-button>
+        </el-row>
       </div>
       <div v-if="data.type === 2" class="practice">
         <p>실습</p>
@@ -331,14 +325,14 @@
         <div v-if="data.notes[0].note_type === 0">
           <img :src="Url">
         </div>
-        <div v-if="data.notes[0].note_type === 1">
-          <iframe width="100%" height="470" frameborder="0" :src="Url"></iframe>
+        <div v-if="data.notes[0].note_type === 1" class="noteWrap">
+          <iframe frameborder="0" :src="Url"></iframe>
         </div>
         <div v-if="data.notes[0].note_type === 2">
           <a :href="Url" target="_blank">{{data.notes[0].url}}</a>
         </div>
-        <div v-if="data.notes[0].note_type === 3">
-          <iframe width="100%" height="470" allow="autoplay" frameborder="0" :src="Url"></iframe>
+        <div v-if="data.notes[0].note_type === 3" class="noteWrap">
+          <iframe allow="autoplay" frameborder="0" :src="Url" allowfullscreen></iframe>
         </div>
       </div>
     </div>
@@ -370,7 +364,7 @@ import { baseUrl } from '../../services/config';
 import utils from '../../utils';
 
 export default {
-  props: ['data', 'onClick', 'type'],
+  props: ['data', 'onClick', 'type', 'answerSubmitted'],
   data() {
     return {
       answer: [],
@@ -426,6 +420,7 @@ export default {
         case 0: // 문항
           arg = {
             type: 0,
+            lectureItemId: vm.data.lecture_item_id,
             questionId: vm.data.questions[0].question_id,
             questionType: vm.data.questions[0].type,
             language: vm.data.questions[0].accept_language,
@@ -441,6 +436,7 @@ export default {
         case 1: // 설문
           arg = {
             type: 1,
+            lectureItemId: vm.data.lecture_item_id,
             surveyId: vm.data.surveys[0].survey_id,
             surveyType: vm.data.surveys[0].type,
             answer: vm.answer,
@@ -559,7 +555,25 @@ export default {
   .lecture-item .note{
     padding:10px;
     margin:10px;
-    height:530px;
+    // height:530px;
+  }.noteWrap {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+  }
+  .noteWrap iframe {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+  .questionNoteWrap {
+    position: relative;
+    width: 100%;
+  }
+  .questionNoteWrap video {
+    // position: absolute;
+    width: 100%;
+    height: 100%;
   }
   .lecture-item .questionFile{
     padding:10px 10px 10px 10px;
