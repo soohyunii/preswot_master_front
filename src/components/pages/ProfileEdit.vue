@@ -7,10 +7,44 @@
         <el-row>
           <el-col style="max-width: 700px;">
             <el-form :model="input" :rules="rules" ref="elForm" :label-width="getLabelWidth()">
+              <el-form-item>
+                <h2>개인정보활용동의서</h2>
+              </el-form-item>
+              <!-- TODO: terms of use / privacy policy text 주루루룩 -->
+              <el-form-item prop="checkTou" id="checkTou">
+                <el-card class="box-card" style="height: 300px; overflow: scroll;">
+                  <div class="tos">
+                    <p>
+                      이용 약관(영어: Terms of service terms of use이나
+                      terms and conditions으로도 알려짐,
+                      줄여서 ToS 또는 TOS라고 부르기도 함)은 서비스를
+                      이용하기 위해 동의해야만 하는 규칙이다.
+                    </p>
+                    <p>
+                      스크롤 기능을 위해 그냥 길게 막쓴 내용
+                      스크롤 기능을 위해 그냥 길게 막쓴 내용
+                      스크롤 기능을 위해 그냥 길게 막쓴 내용
+                      스크롤 기능을 위해 그냥 길게 막쓴 내용
+                      스크롤 기능을 위해 그냥 길게 막쓴 내용
+                      스크롤 기능을 위해 그냥 길게 막쓴 내용
+                      스크롤 기능을 위해 그냥 길게 막쓴 내용
+                      스크롤 기능을 위해 그냥 길게 막쓴 내용
+                    <p>
+                      돈데기리기리 돈데기리기리 돈데돈데돈데 돈데크만
+                      카피카피 룸룸 카피카피 룸룸
+                      카피카피 룸룸 카피카피 룸룸
+                    </p>
+                  </div>
+                </el-card>
+                <el-checkbox v-model="checkTou" id="user_tou_input">{{ $t('REG.TOU_LABEL') }}</el-checkbox>
+              </el-form-item>
 
-            <el-form-item label="비밀번호 변경" prop="changepw" id="changepw">
+            <div style="height: 50px;" />
+
+            <!-- 여기도 임시로
+              <el-form-item label="비밀번호 변경" prop="changepw" id="changepw">
               <el-checkbox v-model="changepw"></el-checkbox>
-            </el-form-item>
+            </el-form-item> -->
 
             <el-form-item label="비밀번호" prop="password" id="password">
               <el-input v-model="input.password" type="password" :disabled="!changepw"></el-input>
@@ -23,7 +57,7 @@
 
             <br />
             <br />
-
+            <!-- 임시로 막아놓음
             <el-form-item label="이름" prop="name" id="name">
               <el-input v-model="input.name" type="string"></el-input>
             </el-form-item>
@@ -54,14 +88,12 @@
               </el-input>
             </el-form-item>
 
-            <!--<el-form-item>
-              {{ address }}
-            </el-form-item>-->
 
             <el-form-item label="핸드폰 번호" prop="phone" id="phone">
-              <el-input v-model="input.phone" v-mask="['###-####-####', '###-###-####']" type="tel"></el-input>
+              <el-input v-model="input.phone" v-mask="['###-####-####', '###-###-####']" type="tel"></el-input> -->
               <!--인증 부분 아직-->
               <!--<el-button type="primary" @click="dummy()">{{$t('REG.PHONE_NUMBER_VERIFY_BUTTON')}}</el-button>-->
+            <!-- 여기서부터 또 막음
             </el-form-item>
 
             <br />
@@ -76,11 +108,11 @@
             </el-form-item>
 
             <br />
-            <br />
+            <br /> -->
 
             <el-form-item>
               <el-button id="btn_submit_register" type="primary" @click="submitForm('elForm')">변경 완료</el-button>
-              <el-button @click="reset()">되돌리기</el-button>
+              <!-- <el-button @click="reset()">되돌리기</el-button> -->
             </el-form-item>
             <br />
 
@@ -106,7 +138,8 @@ export default {
     const vm = this;
     return {
       focused: false,
-      changepw: false,
+      changepw: true,
+      checkTou: false,
       input: {
         email_id: '',
         password: '',
@@ -150,7 +183,7 @@ export default {
         vm.input.birth = result.data.userInfo.birth;
         vm.input.sex = result.data.userInfo.sex;
         vm.input.phone = result.data.userInfo.phone;
-        vm.input.initialaddress = result.data.userInfo.address;
+        vm.input.address = result.data.userInfo.address;
         vm.input.major = result.data.userInfo.major;
         vm.input.belong = result.data.userInfo.belong;
       });
@@ -242,6 +275,14 @@ export default {
     },
     async submitForm(formName) {
       const vm = this;
+      if (vm.checkTou === false) {
+        vm.$notify({
+          title: '알림',
+          message: '이용약관에 동의해주세요.',
+          type: 'warning',
+        });
+        return;
+      }
 
       if (vm.$isProd) {
         vm.$notify({
@@ -252,14 +293,13 @@ export default {
       const fieldList = [
         'password',
         'password2',
-        'name',
+        /* 'name',
         'birth',
         'sex',
-        'address1',
-        'address2',
+        'address',
         'phone',
         'major',
-        'belong',
+        'belong', */
       ];
 
       let allValid = true;
@@ -279,7 +319,7 @@ export default {
         await authService.editUser({
           userID: userID,  // eslint-disable-line
           input: {
-            ...vm.input, address: vm.address,
+            ...vm.input,
           },
         });
         vm.$router.push({ // LandingPage로 redirect

@@ -21,7 +21,7 @@
           <span :class="$attachReactablePostfix('common')">수강중인 과목</span>
         </div>
       </router-link>
-      <!--<router-link to="/a/student/NNclass" v-if="authType === 1" v-show="isJwtValid">
+      <!--<router-link to="/bank" v-if="authType === 1" v-show="isJwtValid">
         <div :class="$attachReactablePostfix('div3')">
           <span :class="$attachReactablePostfix('common')">강의 은행</span>
         </div>
@@ -32,11 +32,12 @@
         <i class="el-icon-search" @click="onClick('asdfsadf')"></i>
       </div>
       -->
+      <!-- 회원가입 막아놓기
       <router-link to="/tos" v-show="!isJwtValid">
         <div :class="$attachReactablePostfix('div4')">
           <span :class="$attachReactablePostfix('common')">회원가입</span>
         </div>
-      </router-link>
+      </router-link>-->
       <router-link to="/login" v-show="!isJwtValid">
         <div :class="$attachReactablePostfix('div5')">
           <span :class="$attachReactablePostfix('common')">로그인</span>
