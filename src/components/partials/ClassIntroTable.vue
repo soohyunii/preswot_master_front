@@ -20,7 +20,9 @@
       </el-table-column>
       <el-table-column label="-" header-align="left" align="right" width="220">
         <template slot-scope="scope">
+        <!--
         <el-button type="success" @click="onClick('DETAIL', scope.row)">살펴보기</el-button>
+        -->
         <span v-if="isApplied(scope.row)">
           <el-button type="danger" @click="onClick('CANCEL', scope.row)">수강취소</el-button>
         </span>

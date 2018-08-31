@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-card class="box-card" style="width: 1200px; margin: 0 auto;">
+    <el-card class="box-card" :style="$isPhone?'width: 100%':'width: 1200px'" style="margin: 0 auto;">
       <h1>회원정보 변경</h1>
       <br>
       <el-container>
@@ -13,6 +13,7 @@
               <!-- TODO: terms of use / privacy policy text 주루루룩 -->
               <el-form-item prop="checkTou" id="checkTou">
                 <el-card class="box-card" style="height: 300px; overflow: scroll;">
+                  <!-- TODO : 이용 약관
                   <div class="tos">
                     <p>
                       이용 약관(영어: Terms of service terms of use이나
@@ -35,6 +36,8 @@
                       카피카피 룸룸 카피카피 룸룸
                     </p>
                   </div>
+                  -->
+                  <policy-page />
                 </el-card>
                 <el-checkbox v-model="checkTou" id="user_tou_input">{{ $t('REG.TOU_LABEL') }}</el-checkbox>
               </el-form-item>
@@ -129,6 +132,7 @@ import { mapState, mapActions } from 'vuex';
 import editRules from '../../validations/profileEditValidation';
 import authService from '../../services/authService';
 import utils from '../../utils';
+import policyPage from './PolicyPage';
 // id(string), password(string), name(string),
 // birth(1991-07-16 형식string), address(string), phone(string), major(string), belong(string소속)
 export default {
@@ -157,6 +161,9 @@ export default {
       },
       rules: editRules(vm),
     };
+  },
+  components: {
+    policyPage,
   },
   computed: {
     ...mapState('auth', ['locale']),
