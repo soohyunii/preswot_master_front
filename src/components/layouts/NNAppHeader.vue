@@ -8,7 +8,7 @@
       </router-link>
       <!-- FIXME: 건호씨 요구사항에 따라 라우터 링크 주석 씌움 -->
       <!-- <router-link to="/classes" v-if="authType !== 1" > -->
-        <div :class="$attachReactablePostfix('div2')">
+        <div :class="$attachReactablePostfix('div2')" v-if="authType !== 1">
           <span :class="$attachReactablePostfix('common')">과목목록</span>
         </div>
       <!-- </router-link> -->
