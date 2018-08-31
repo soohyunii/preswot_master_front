@@ -1,12 +1,12 @@
 <template>
   <div>
-    <el-card class="box-card" style="width: 600px; margin: 0 auto;">
+    <el-card class="box-card" :style="$isPhone?'width: 100%':'width: 600px'" style="width: 600px; margin: 0 auto;">
       <h1>회원정보 수정</h1>
       <br>
 
       <div>
         <h3>비밀번호를 한번 더 입력해 주세요.</h3>
-        <el-form :model="input" :label-position="left" label-width="100px">
+        <el-form :model="input" label-position="left" label-width="100px">
           <el-form-item label="Password " prop="pw">
             <el-input type="password" v-model="input.pw" clearable auto-complete="false"></el-input>
           </el-form-item>
