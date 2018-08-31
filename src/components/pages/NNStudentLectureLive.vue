@@ -242,7 +242,7 @@ export default {
       continueDialogVisible: false,
       continueFlag: true,
       submitFlag: new Map(),
-      videolink: '',
+      videoLink: '',
       itemSize: 16,
       materialLink: '',
       focusMaterialFlag: true,
@@ -423,7 +423,6 @@ export default {
       } else {
         lectureItemList = res4.data.rawItems;
       }
-      // console.log(lectureItemList);
       const result = vm.groupBy(lectureItemList, item => [item.offset]);
       vm.pastLectureItem.lectureItemId = res4.data.items[0].lecture_item_id;
       vm.pastLectureItem.offset = res4.data.offset;
