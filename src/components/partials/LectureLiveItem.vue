@@ -84,7 +84,7 @@
           </template>
           <template v-else>
             <p>문항 - 단답</p>
-            <div v-show="data.questions[0].question_material.length > 0">
+            <div v-show="data.questions[0].question_material && data.questions[0].question_material.length > 0">
               <div class="questionFile"
                 v-for="file in data.questions[0].question_material"
                 :key="file.file_guid">
