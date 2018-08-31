@@ -250,7 +250,7 @@ export default {
       },
       pauseFlag: true,
       continueDialogVisible: false,
-      continueFlag: true,
+      continueFlag: false,
       submitFlag: new Map(),
       videoLink: '',
       itemSize: 16,
