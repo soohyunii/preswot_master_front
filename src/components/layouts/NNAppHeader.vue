@@ -6,11 +6,12 @@
           <span :class="$attachReactablePostfix('title')">PRESWOT</span>
         </div>
       </router-link>
-      <router-link to="/classes" v-if="authType !== 1" >
-        <div :class="$attachReactablePostfix('div2')">
+      <!-- FIXME: 건호씨 요구사항에 따라 라우터 링크 주석 씌움 -->
+      <!-- <router-link to="/classes" v-if="authType !== 1" > -->
+        <div :class="$attachReactablePostfix('div2')" v-if="authType !== 1">
           <span :class="$attachReactablePostfix('common')">과목목록</span>
         </div>
-      </router-link>
+      <!-- </router-link> -->
       <router-link to="/a/teacher/NNclass" v-if="authType === 1" v-show="isJwtValid">
         <div :class="$attachReactablePostfix('div2_1')">
           <span :class="$attachReactablePostfix('common')">강의중인 과목</span>
