@@ -1,14 +1,16 @@
 <template>
   <div>
     <div>
-      <p>강의도구 화면</p>
-      <el-button style="float:right" type="primary" size="small" @click="onClick('HIDE',lectureItemId)">내리기</el-button>
-      <p>현재: {{ data.name }}</p>
+      <p>
+        강의도구 화면
+        <el-button style="float:right" type="primary" @click="onClick('HIDE',lectureItemId)">내리기</el-button>
+      </p>
+      <!-- <p>현재: {{ data.name }}</p> -->
     </div>
-    <lecture-live-item
-      :data="data"
-      :lectureItemId="lectureItemId"
-      :onClick="onClick"/>
+      <lecture-live-item
+        :data="data"
+        :onClick="onClick"
+        type="TEACHER"/>
   </div>
 </template>
 
@@ -30,7 +32,7 @@ export default {
   props: ['onClick', 'lectureItemId', 'classId'],
   data() {
     return {
-      data: {},
+      data: undefined,
     };
   },
   components: {
@@ -54,6 +56,10 @@ export default {
       'getQuestionResult',
       'getSurveyResult',
     ]),
+    preOnClick(type) {
+      const vm = this;
+      vm.onClick(type);
+    },
   },
 };
 </script>

@@ -9,7 +9,7 @@
         <b>{{ props.title }}</b>
         <h5 v-for="teacher in props.teacherList" :key="teacher">{{ teacher }}</h5>
         <p style="font-size: 9px;" v-if="props.startDateStr != undefined">{{ props.startDateStr }} ~ {{ props.endDateStr }}</p>
-        <p>{{ props.description }}</p>      
+        <p>{{ props.description }}</p>
     </div>
   </div>
 
