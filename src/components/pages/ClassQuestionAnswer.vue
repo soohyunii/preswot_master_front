@@ -2,7 +2,10 @@
   <div id="class_board_wrapper" class="bt-container">
     <h3>게시판</h3>
     <el-table :data="postList" @cell-click="onDetail" style="width: 100%">
-      <el-table-column prop="board_id" label="번호" width="130">
+      <el-table-column prop="index" label="번호" width="130">
+        <template slot-scope="scope">
+          {{ postList.length - scope.$index }}
+        </template>
       </el-table-column>
       <el-table-column prop="name" label="제목">
       </el-table-column>

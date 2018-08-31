@@ -35,6 +35,23 @@
           </template>
           <template v-else>
             <p>문항 - 객관</p>
+            <div v-show="data.questions[0].question_material.length > 0">
+              <div class="questionFile"
+                v-for="file in data.questions[0].question_material"
+                :key="file.file_guid">
+                <img
+                  v-if="['.jpg','.png','.gif','.JPG','.PNG','.GIF'].includes(file.file_type)"
+                  :src="getUrl(file.client_path)"
+                  width="100%">
+                <div class="questionNoteWrap">
+                  <video
+                    v-if="['.mp4','.MP4'].includes(file.file_type)"
+                    :src="getUrl(file.client_path)"
+                    controls>
+                  </video>
+                </div>
+              </div>
+            </div>
             <pre>{{ data.questions[0].question }}</pre>
             <el-checkbox-group v-model="answer" style="width: 100%;">
               <div v-for="(choice,index) in data.questions[0].choice" :key="index" class="radio-one">
@@ -67,6 +84,23 @@
           </template>
           <template v-else>
             <p>문항 - 단답</p>
+            <div v-show="data.questions[0].question_material.length > 0">
+              <div class="questionFile"
+                v-for="file in data.questions[0].question_material"
+                :key="file.file_guid">
+                <img
+                  v-if="['.jpg','.png','.gif','.JPG','.PNG','.GIF'].includes(file.file_type)"
+                  :src="getUrl(file.client_path)"
+                  width="100%">
+                <div class="questionNoteWrap">
+                  <video
+                    v-if="['.mp4','.MP4'].includes(file.file_type)"
+                    :src="getUrl(file.client_path)"
+                    controls>
+                  </video>
+                </div>
+              </div>
+            </div>
             <pre>{{ data.questions[0].question }}</pre>
             <el-input placeholder="내용을 입력해주세요." v-model="answer[0]"></el-input>
           </template>
@@ -109,6 +143,23 @@
           </template>
           <template v-else>
             <p>문항 - 서술</p>
+            <div v-show="data.questions[0].question_material.length > 0">
+              <div class="questionFile"
+                v-for="file in data.questions[0].question_material"
+                :key="file.file_guid">
+                <img
+                  v-if="['.jpg','.png','.gif','.JPG','.PNG','.GIF'].includes(file.file_type)"
+                  :src="getUrl(file.client_path)"
+                  width="100%">
+                <div class="questionNoteWrap">
+                  <video
+                    v-if="['.mp4','.MP4'].includes(file.file_type)"
+                    :src="getUrl(file.client_path)"
+                    controls>
+                  </video>
+                </div>
+              </div>
+            </div>
             <pre>{{ data.questions[0].question }}</pre>
             <el-input class="margin-text" placeholder="내용을 입력해주세요." v-model="answer[0]" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
             <!-- TODO: 개수제한 해제 -->
@@ -139,6 +190,23 @@
           </template>
           <template v-else>
             <p>문항 - SW</p>
+            <div v-show="data.questions[0].question_material.length > 0">
+              <div class="questionFile"
+                v-for="file in data.questions[0].question_material"
+                :key="file.file_guid">
+                <img
+                  v-if="['.jpg','.png','.gif','.JPG','.PNG','.GIF'].includes(file.file_type)"
+                  :src="getUrl(file.client_path)"
+                  width="100%">
+                <div class="questionNoteWrap">
+                  <video
+                    v-if="['.mp4','.MP4'].includes(file.file_type)"
+                    :src="getUrl(file.client_path)"
+                    controls>
+                  </video>
+                </div>
+              </div>
+            </div>
             <pre>{{ data.questions[0].question }}</pre>
             <pre>언어 : {{ data.questions[0].accept_language[0] }}</pre>
             <pre>입력 설명 : {{ data.questions[0].input_description }}</pre>
@@ -178,6 +246,23 @@
           </template>
           <template v-else>
             <p>문항 - SQL</p>
+            <div v-show="data.questions[0].question_material.length > 0">
+              <div class="questionFile"
+                v-for="file in data.questions[0].question_material"
+                :key="file.file_guid">
+                <img
+                  v-if="['.jpg','.png','.gif','.JPG','.PNG','.GIF'].includes(file.file_type)"
+                  :src="getUrl(file.client_path)"
+                  width="100%">
+                <div class="questionNoteWrap">
+                  <video
+                    v-if="['.mp4','.MP4'].includes(file.file_type)"
+                    :src="getUrl(file.client_path)"
+                    controls>
+                  </video>
+                </div>
+              </div>
+            </div>
             <pre>{{ data.questions[0].question }}</pre>
             <el-input placeholder="내용을 입력해주세요." v-model="answer[0]" type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
           </template>
@@ -296,6 +381,7 @@ export default {
   computed: {
     Url() {
       const vm = this;
+
       if (vm.data.type === 4) {
         if (vm.data.notes[0].note_type === 0) {
           const url = baseUrl + vm.data.notes[0].files[0].client_path;
@@ -303,7 +389,6 @@ export default {
         }
         if (vm.data.notes[0].note_type === 1) {
           const url = baseUrl + vm.data.notes[0].files[0].client_path;
-          // return `https://view.officeapps.live.com/op/embed.aspx?src=${url}`;
           return `http://docs.google.com/gview?url=${url}&embedded=true`;
         }
         if (vm.data.notes[0].note_type === 2) {
@@ -389,6 +474,9 @@ export default {
         vm.currentFile.player = vm.$refs.player.player;
         vm.currentFile.player.stop();
       }
+    },
+    getUrl(arg) {
+      return baseUrl + arg;
     },
   },
   components: {
@@ -477,6 +565,19 @@ export default {
     position: absolute;
     width: 100%;
     height: 100%;
+  }
+  .questionNoteWrap {
+    position: relative;
+    width: 100%;
+  }
+  .questionNoteWrap video {
+    // position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+  .lecture-item .questionFile{
+    padding:10px 10px 10px 10px;
+    margin:10px 10px 10px 10px;
   }
 }
 </style>

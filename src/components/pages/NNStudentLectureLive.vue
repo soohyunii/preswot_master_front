@@ -35,21 +35,34 @@
       <h2>{{ path }}</h2>
       <el-row :gutter="20">
         <el-col :span="12">
-          <div v-if="videolink === ''">
+          <div v-if="videoLink === ''">
             등록된 영상이 없습니다.
           </div>
           <div v-else>
             <youtube
-              v-show="focusFlag"
+              v-show="focusVideoFlag"
               id="video"
               :video-id="youtubeId"
               player-width="100%"
+              player-height="400px"
               :player-vars="{ autoplay: 1 }"
               :mute="true">
             </youtube>
             <div style="float: right">
-              <el-button v-show="focusFlag" type="primary" @click="onClick('FOCUS')">강의영상 숨기기</el-button>
-              <el-button v-show="!focusFlag" type="primary" @click="onClick('FOCUS')">강의영상 보이기</el-button>
+              <el-button v-show="focusVideoFlag" type="primary" @click="onClick('FOCUSVIDEO')">강의영상 숨기기</el-button>
+              <el-button v-show="!focusVideoFlag" type="primary" @click="onClick('FOCUSVIDEO')">강의영상 보이기</el-button>
+            </div>
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <div v-if="materialLink === ''">
+            선택된 자료가 없습니다. [강의자료] 탭에서 <i class="el-icon-view"/> 아이콘을 눌러주세요.
+          </div>
+          <div v-else>
+            <iframe v-show="focusMaterialFlag" frameborder="0" :src="materialLink" width="100%" height="400"></iframe>
+            <div style="float: right">
+              <el-button v-show="focusMaterialFlag" type="primary" @click="onClick('FOCUSMATERIAL')">강의자료 숨기기</el-button>
+              <el-button v-show="!focusMaterialFlag" type="primary" @click="onClick('FOCUSMATERIAL')">강의자료 보이기</el-button>
             </div>
           </div>
         </el-col>
@@ -80,6 +93,7 @@
             <el-tab-pane label="강의자료">
               <lecture-live-material
                 :materialList="materialList"
+                :presentMaterial="presentMaterial"
               />
             </el-tab-pane>
             <!-- // TODO : 실시간 질문
@@ -141,7 +155,7 @@ export default {
      */
     vm.lectureType = res.data.type;
     if (res.data.video_link !== null) {
-      vm.videolink = res.data.video_link;
+      vm.videoLink = res.data.video_link;
     }
     if (vm.lectureType === 0) {
       // 화면 갱신
@@ -224,18 +238,20 @@ export default {
         lectureItemId: undefined,
         offset: undefined,
       },
-      focusFlag: true,
       pauseFlag: true,
       continueDialogVisible: false,
       continueFlag: true,
       submitFlag: new Map(),
-      videolink: '',
+      videoLink: '',
       itemSize: 16,
+      materialLink: '',
+      focusMaterialFlag: true,
+      focusVideoFlag: true,
     };
   },
   computed: {
     youtubeId() {
-      return getIdFromURL(this.videolink);
+      return getIdFromURL(this.videoLink);
     },
     participationTime() {
       const vm = this;
@@ -326,12 +342,26 @@ export default {
           break;
         }
         */
-        case 'FOCUS': {
-          if (vm.focusFlag) {
-            vm.focusFlag = false;
-            vm.itemSize = 24;
+        case 'FOCUSVIDEO': {
+          if (vm.focusVideoFlag) {
+            vm.focusVideoFlag = false;
+            if (!vm.focusMaterialFlag) {
+              vm.itemSize = 24;
+            }
           } else {
-            vm.focusFlag = true;
+            vm.focusVideoFlag = true;
+            vm.itemSize = 16;
+          }
+          break;
+        }
+        case 'FOCUSMATERIAL': {
+          if (vm.focusMaterialFlag) {
+            vm.focusMaterialFlag = false;
+            if (!vm.focusVideoFlag) {
+              vm.itemSize = 24;
+            }
+          } else {
+            vm.focusMaterialFlag = true;
             vm.itemSize = 16;
           }
           break;
@@ -377,6 +407,10 @@ export default {
         }
       }, 1000);
     },
+    presentMaterial(data) {
+      const vm = this;
+      vm.materialLink = `http://docs.google.com/gview?url=${data}&embedded=true`;
+    },
     async getLectureItem() {
       const vm = this;
       vm.timer = [];
@@ -389,7 +423,6 @@ export default {
       } else {
         lectureItemList = res4.data.rawItems;
       }
-      // console.log(lectureItemList);
       const result = vm.groupBy(lectureItemList, item => [item.offset]);
       vm.pastLectureItem.lectureItemId = res4.data.items[0].lecture_item_id;
       vm.pastLectureItem.offset = res4.data.offset;
