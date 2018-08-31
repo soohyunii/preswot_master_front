@@ -43,7 +43,7 @@
           <span :class="$attachReactablePostfix('common')">로그인</span>
         </div>
       </router-link>
-      <router-link to="/profile" v-show="isJwtValid">
+      <router-link to="/profileEdit" v-show="isJwtValid">
         <div :class="$attachReactablePostfix('div4')">
           <span :class="$attachReactablePostfix('common')">프로필</span>
         </div>
