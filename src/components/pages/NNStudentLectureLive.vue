@@ -240,7 +240,7 @@ export default {
       },
       pauseFlag: true,
       continueDialogVisible: false,
-      continueFlag: true,
+      continueFlag: false,
       submitFlag: new Map(),
       videoLink: '',
       itemSize: 16,
@@ -453,7 +453,8 @@ export default {
     leaveOnlineLecture() {
       const vm = this;
       let offset = vm.participationTime;
-      if (vm.lectureItem[0].lecture_item_id === vm.pastLectureItem.lectureItemId) {
+      if (vm.lectureItem[0].lecture_item_id === vm.pastLectureItem.lectureItemId
+        && vm.continueFlag) {
         offset += vm.pastLectureItem.offset;
       }
       let lectureItemId;
