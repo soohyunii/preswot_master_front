@@ -3,30 +3,41 @@
     <template v-if="$isPhone">
       <h2>{{ path }}</h2>
       <youtube
-        v-show="focusFlag"
+        v-show="focusVideoFlag"
         id="video"
         :video-id="youtubeId"
         player-width="100%"
         player-height="300px"
         :player-vars="{ autoplay: 1 }"
-        :mute="true">
-      </youtube>
-      <div style="float: right">
-        <el-button v-show="focusFlag" type="primary" @click="onClick('FOCUS')">강의영상 숨기기</el-button>
-        <el-button v-show="!focusFlag" type="primary" @click="onClick('FOCUS')">강의영상 보이기</el-button>
+        :mute="true"/>
+      <div v-if="materialLink === ''">
+        선택된 자료가 없습니다. [강의자료] 탭에서 <i class="el-icon-view"/> 아이콘을 눌러주세요.
       </div>
+      <div v-else>
+        <iframe v-show="focusMaterialFlag" frameborder="0" :src="materialLink" width="100%" height="400"></iframe>
+      </div>
+      <div>
+        <el-button v-show="focusVideoFlag" type="primary" size="small" @click="onClick('FOCUSVIDEO')">강의영상 숨기기</el-button>
+        <el-button v-show="!focusVideoFlag" type="primary" size="small" @click="onClick('FOCUSVIDEO')">강의영상 보이기</el-button>
+        <el-button v-show="focusMaterialFlag" type="primary" size="small" @click="onClick('FOCUSMATERIAL')">강의자료 숨기기</el-button>
+        <el-button v-show="!focusMaterialFlag" type="primary" size="small" @click="onClick('FOCUSMATERIAL')">강의자료 보이기</el-button>
+      </div>
+      <br/>
       <el-tabs type="card">
         <el-tab-pane label="강의아이템">
-          <lecture-live-item
-            :data="lectureItem"
-            :onClick="onClick"
-            :answerSubmitted="submitFlag.get(item.lecture_item_id)"
-            type="STUDENT"/>
+          <div v-for="(item, index) in lectureItem" :key="index">
+              <lecture-live-item
+                :data="item"
+                :onClick="onClick"
+                :answerSubmitted="submitFlag.get(item.lecture_item_id)"
+                :lectureType="lectureType"
+                type="STUDENT"/>
+          </div>
         </el-tab-pane>
         <el-tab-pane label="강의자료">
           <lecture-live-material
             :materialList="materialList"
-            :additionalList="additionalList"
+            :presentMaterial="presentMaterial"
             />
         </el-tab-pane>
       </el-tabs>
@@ -138,7 +149,6 @@ export default {
   name: 'NNStudentLectureLive',
   async created() {
     const vm = this;
-
     // 소켓 연결 및 주기적으로 보내는 신호, 리스너 등록
     vm.$socket.connect();
     vm.joinTime = Date.now();
@@ -453,7 +463,8 @@ export default {
     leaveOnlineLecture() {
       const vm = this;
       let offset = vm.participationTime;
-      if (vm.lectureItem[0].lecture_item_id === vm.pastLectureItem.lectureItemId
+      if (vm.lectureItem[0]
+        && vm.lectureItem[0].lecture_item_id === vm.pastLectureItem.lectureItemId
         && vm.continueFlag) {
         offset += vm.pastLectureItem.offset;
       }
