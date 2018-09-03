@@ -29,7 +29,7 @@
               <lecture-live-item
                 :data="item"
                 :onClick="onClick"
-                :answerSubmitted="submitFlag.get(item.lecture_item_id)"
+                :answerSubmitted="submitFlag[item.lecture_item_id]"
                 :lectureType="lectureType"
                 type="STUDENT"/>
           </div>
@@ -91,7 +91,7 @@
                     <lecture-live-item
                       :data="item"
                       :onClick="onClick"
-                      :answerSubmitted="submitFlag.get(item.lecture_item_id)"
+                      :answerSubmitted="submitFlag[item.lecture_item_id]"
                       :lectureType="lectureType"
                       type="STUDENT"/>
                 </div>
@@ -156,9 +156,6 @@ export default {
     // 강의 아이템 목록, 첨부파일 목록, 과목, 강의명 가져오기
     const res = await lectureService.getLecture({
       lectureId: vm.lectureId,
-    });
-    res.data.lecture_items.forEach((item) => {
-      vm.submitFlag.set(item.lecture_item_id, false);
     });
     /*
      *  lectureType : 0 (유인 강의), 1(무인 단체 강의), 2(무인 개인 강의)
@@ -251,7 +248,7 @@ export default {
       pauseFlag: true,
       continueDialogVisible: false,
       continueFlag: false,
-      submitFlag: new Map(),
+      submitFlag: {},
       videoLink: '',
       itemSize: 16,
       materialLink: '',
@@ -288,7 +285,7 @@ export default {
       const vm = this;
       switch (type) {
         case 'SUBMIT': {
-          vm.submitFlag.set(data.lectureItemId, true);
+          vm.$set(vm.submitFlag, data.lectureItemId, true);
           switch (data.type) {
             case 0: { // 문항
               studentService.submitQuestion({
@@ -318,7 +315,6 @@ export default {
                 user_id: utils.getUserIdFromJwt(),
               };
               vm.$socket.emit('DOING_LECTURE_ITEM', JSON.stringify(params));
-              vm.lectureItem = [];
               vm.refreshLectureItem(false);
               break;
             }
@@ -337,7 +333,6 @@ export default {
                 user_id: utils.getUserIdFromJwt(),
               };
               vm.$socket.emit('DOING_LECTURE_ITEM', JSON.stringify(params));
-              vm.lectureItem = [];
               vm.refreshLectureItem(false);
               break;
             }
@@ -405,7 +400,7 @@ export default {
             const bItemSequence = Number(b.sequence);
             return aItemSequence - bItemSequence;
           });
-        } else {
+        } else if (vm.lectureType === 0) {
           vm.lectureItem = [];
         }
         if (notify !== false) {
