@@ -46,6 +46,7 @@ import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'KnowledgeMapEdgeEditor',
+  props: ['drawNetwork'],
   data() {
     return {
       inputFlag: [],
@@ -73,6 +74,7 @@ export default {
         case 'delete': {
           vm.deleteLectureKeywordRelation({ index, lectureId: vm.$route.params.lectureId });
           vm.inputFlag.splice(index, 1);
+          vm.drawNetwork();
           break;
         }
         default: {
