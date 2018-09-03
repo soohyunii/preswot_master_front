@@ -6,12 +6,11 @@
           <span :class="$attachReactablePostfix('title')">PRESWOT</span>
         </div>
       </router-link>
-      <!-- FIXME: 건호씨 요구사항에 따라 라우터 링크 주석 씌움 -->
-      <!-- <router-link to="/classes" v-if="authType !== 1" > -->
-        <div :class="$attachReactablePostfix('div2')" v-if="authType !== 1">
+      <router-link to="/classes" v-if="authType !== 1" >
+        <div :class="$attachReactablePostfix('div2')">
           <span :class="$attachReactablePostfix('common')">과목목록</span>
         </div>
-      <!-- </router-link> -->
+      </router-link>
       <router-link to="/a/teacher/NNclass" v-if="authType === 1" v-show="isJwtValid">
         <div :class="$attachReactablePostfix('div2_1')">
           <span :class="$attachReactablePostfix('common')">강의중인 과목</span>
@@ -22,7 +21,7 @@
           <span :class="$attachReactablePostfix('common')">수강중인 과목</span>
         </div>
       </router-link>
-      <!--<router-link to="/a/student/NNclass" v-if="authType === 1" v-show="isJwtValid">
+      <!--<router-link to="/bank" v-if="authType === 1" v-show="isJwtValid">
         <div :class="$attachReactablePostfix('div3')">
           <span :class="$attachReactablePostfix('common')">강의 은행</span>
         </div>
@@ -33,17 +32,18 @@
         <i class="el-icon-search" @click="onClick('asdfsadf')"></i>
       </div>
       -->
+      <!-- 회원가입 막아놓기
       <router-link to="/tos" v-show="!isJwtValid">
         <div :class="$attachReactablePostfix('div4')">
           <span :class="$attachReactablePostfix('common')">회원가입</span>
         </div>
-      </router-link>
+      </router-link>-->
       <router-link to="/login" v-show="!isJwtValid">
         <div :class="$attachReactablePostfix('div5')">
           <span :class="$attachReactablePostfix('common')">로그인</span>
         </div>
       </router-link>
-      <router-link to="/profile" v-show="isJwtValid">
+      <router-link to="/profileEdit" v-show="isJwtValid">
         <div :class="$attachReactablePostfix('div4')">
           <span :class="$attachReactablePostfix('common')">프로필</span>
         </div>
