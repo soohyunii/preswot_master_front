@@ -290,13 +290,14 @@ export default {
         });
         return;
       }
-
+      /*
       if (vm.$isProd) {
         vm.$notify({
           message: 'ㅎㅎ! 막아놨음',
         });
         return;
       }
+      */
       const fieldList = [
         'password',
         'password2',
