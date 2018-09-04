@@ -1,7 +1,7 @@
 <template>
   <div>
-    <el-card class="box-card" :style="$isPhone?'width: 100%':'width: 1200px'" style="margin: 0 auto;">
-      <h1>회원정보 변경</h1>
+    <el-card class="box-card" style="width: 1200px; margin: 0 auto;">
+      <h1>회원정보 수정</h1>
       <br>
       <el-container>
         <el-row>
@@ -49,12 +49,12 @@
               <el-checkbox v-model="changepw"></el-checkbox>
             </el-form-item> -->
 
-            <el-form-item label="비밀번호" prop="password" id="password">
+            <el-form-item label="비밀번호" prop="password" id="password" v-if="checkTou">
               <el-input v-model="input.password" type="password" :disabled="!changepw"></el-input>
               <br />* 문자, 숫자, 특수문자를 포함한 8글자 이상의 비밀번호
             </el-form-item>
 
-            <el-form-item label="비밀번호 확인" prop="password2" id="password2">
+            <el-form-item label="비밀번호 확인" prop="password2" id="password2" v-if="checkTou">
               <el-input v-model="input.password2" type="password" :disabled="!changepw"></el-input>
             </el-form-item>
 
@@ -113,7 +113,7 @@
             <br />
             <br /> -->
 
-            <el-form-item>
+            <el-form-item v-if="checkTou">
               <el-button id="btn_submit_register" type="primary" @click="submitForm('elForm')">변경 완료</el-button>
               <!-- <el-button @click="reset()">되돌리기</el-button> -->
             </el-form-item>
@@ -290,13 +290,14 @@ export default {
         });
         return;
       }
-
+      /*
       if (vm.$isProd) {
         vm.$notify({
           message: 'ㅎㅎ! 막아놨음',
         });
         return;
       }
+      */
       const fieldList = [
         'password',
         'password2',
