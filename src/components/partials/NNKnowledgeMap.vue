@@ -110,7 +110,6 @@
                 index,
                 lectureId: vm.$route.params.lectureId,
               });
-              vm.edges.splice(index, 1);
             },
             addEdge(data, callback) {
               // * from, to가 서로 같은 경우, 이미 존재하는 에지를 추가하는 경우는 vm.edges에 대한 정보를 업데이트 하지 않음
