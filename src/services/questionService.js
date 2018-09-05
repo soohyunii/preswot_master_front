@@ -132,4 +132,14 @@ export default {
       ratioStudent,
     });
   },
+  autoGradeDescription({
+    questionId,
+    teacherSideList,
+    studentSideList,
+  }) {
+    return http.post(`/questions/${questionId}/auto-grade-description`, {
+      teacherSideList,
+      studentSideList,
+    });
+  },
 };

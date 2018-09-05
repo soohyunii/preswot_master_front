@@ -65,7 +65,7 @@
         </el-col>
 
         <el-col :span="12">
-          <h5>강사 답안 기준 자동채점</h5>
+          <h5>학생 답안 기준 자동채점</h5>
           <el-table :data="studentSideList">
             <el-table-column label="단어">
               <template slot-scope="scope">
@@ -215,12 +215,20 @@ export default {
         }
         case 'GRADE': {
           vm.page = 4;
+          const res = await questionService.autoGradeDescription({
+            questionId: vm.$route.params.itemId,
+            teacherSideList: vm.teacherSideList,
+            studentSideList: vm.studentSideList,
+          });
+          console.log('questionService.autoGradeDescription res =  ', res);
+          /*
           setTimeout(() => {
             this.$emit('returnResult', [
               { student_id: 'chy~', student_answer: 'e=0.03', gradeByTeacher: '0.2', gradeByStudent: '0.6' },
               { student_id: 'chy2~', student_answer: 'e=0.05', gradeByTeacher: '0.5', gradeByStudent: '0.7' },
             ]);
           }, 500);
+          */
           break;
         }
         case 'addTeacherSideWordAndScore': {
