@@ -20,15 +20,17 @@
       </el-table-column>
       <el-table-column label="-" header-align="left" align="right" width="220">
         <template slot-scope="scope">
+        <!--
         <el-button type="success" @click="onClick('DETAIL', scope.row)">살펴보기</el-button>
+        -->
         <span v-if="isApplied(scope.row)">
-            <el-button type="danger" @click="onClick('CANCEL', scope.row)">수강취소</el-button>
+          <el-button type="danger" @click="onClick('CANCEL', scope.row)">수강취소</el-button>
         </span>
         <span v-else-if="scope.row.opened===2">
-            <el-button type="info" disabled width="200px">신청마감</el-button>
+          <el-button type="info" disabled width="200px">신청마감</el-button>
         </span>
         <span v-else>
-            <el-button type="primary" @click="onClick('APPLY', scope.row)">수강하기</el-button>
+          <el-button type="primary" @click="onClick('APPLY', scope.row)">수강하기</el-button>
         </span>
         </template>
       </el-table-column>
@@ -48,10 +50,10 @@
       <div style="display: block; text-align: center;">
         <el-select v-model="searchQuery.searchType" style="display: inline-block; width: 100px">
         <el-option
-            v-for="option in selectOptionList"
-            :key="option.value"
-            :label="option.label"
-            :value="option.value">
+          v-for="option in selectOptionList"
+          :key="option.value"
+          :label="option.label"
+          :value="option.value">
         </el-option>
         </el-select>
         <el-input style="display: inline-block; width: 300px" placeholder="검색어를 입력하세요."

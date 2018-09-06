@@ -58,7 +58,7 @@
       </el-form-item>
 
       <el-form-item label="강사 소개">
-        <el-input type="textarea" :rows="3" v-model="input.teacherDescription" class="teacher-description"></el-input>
+        <el-input type="textarea" :rows="3" v-model="input.lecturerDescription" class="teacher-description"></el-input>
       </el-form-item>
 
       <el-form-item label="과목 상세 소개">
@@ -99,7 +99,7 @@ export default {
       capacity: 0, // 0은 무제한
       capacityCheck: false,
       // TODO: teacherImage는 따로 api를 뺴야할 듯? 나중에 ㄱㄱ
-      teacherDescription: '',
+      lecturerDescription: '',
       description: '',
     };
     return {
@@ -129,7 +129,7 @@ export default {
       vm.input.activeEndDate = res.data.end_time || vm.initialInput.activeEndDate;
       vm.input.capacity = res.data.capacity || vm.initialInput.capacity; // 0은 무제한
       vm.input.capacityCheck = vm.input.capacity === 0;
-      vm.input.teacherDescription = res.data.teacher_description;
+      vm.input.lecturerDescription = res.data.lecturer_description;
       vm.input.description = res.data.description;
     }
   },

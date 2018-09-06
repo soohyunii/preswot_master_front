@@ -16,10 +16,12 @@
           :auto-upload="false"
           :file-list="initialFileList"
           :limit=1
+          :on-change="handleChange"
           :on-exceed="handleExceed"
           list-type="picture"
-          ref=noteUpload>
+          ref="noteUpload">
           <el-button slot="trigger" type="primary">파일 추가</el-button>
+          <span slot="tip" class="el-upload__tip"> 사진(jpg, png, gif) 파일만 가능합니다.</span>
         </el-upload>
       </el-form-item>
     </template>
@@ -31,10 +33,11 @@
           :auto-upload="false"
           :file-list="initialFileList"
           :limit=1
+          :on-change="handleChange"
           :on-exceed="handleExceed"
-          list-type="picture"
-          ref=noteUpload>
+          ref="noteUpload">
           <el-button slot="trigger" type="primary">파일 추가</el-button>
+          <span slot="tip" class="el-upload__tip"> 문서(pdf, docx), PPT(pptx) 파일만 가능합니다.</span>
         </el-upload>
       </el-form-item>
     </template>
@@ -157,6 +160,25 @@ export default {
       this.$message.warning(
         '강의 아이템당 파일 1개만 업로드 할 수 있습니다.',
       );
+    },
+    handleChange(file, filelist) {
+      const vm = this;
+      if (vm.inputBody.noteType === 'IMAGE') {
+        if (!(['image/gif', 'image/png', 'image/jpeg'].includes(file.raw.type))) {
+          vm.$message.warning('업로드 가능한 파일 형식이 아닙니다.');
+          vm.initialFileList = filelist.slice(0, -1);
+          vm.inputTail.file = filelist.slice(0, -1);
+        }
+      }
+      if (vm.inputBody.noteType === 'DOCS') {
+        if (!(['application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+          'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+          'application/pdf'].includes(file.raw.type))) {
+          vm.$message.warning('업로드 가능한 파일 형식이 아닙니다.');
+          vm.initialFileList = filelist.slice(0, -1);
+          vm.inputTail.file = filelist.slice(0, -1);
+        }
+      }
     },
   },
 };

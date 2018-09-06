@@ -1,29 +1,58 @@
 <template>
-  <div id="teacher_lecture_new_wrapper" class="bt-container"> 
+  <div id="teacher_lecture_new_wrapper" class="bt-container">
     <h2 v-if="isManage === false" class="page-title">
       강의 추가
     </h2>
     <el-form :model="input" ref="elForm" label-width="125px" style="max-width: 800px;">
-      <!-- 20180629 강의 타입 제거
-      <el-form-item label="타입">
-        <el-radio-group v-model.number="input.type">
-          <el-radio-button :label="0">본강</el-radio-button>
-          <el-radio-button :label="1">숙제</el-radio-button>
-          <el-radio-button :label="2">시험</el-radio-button>
-        </el-radio-group>
-      </el-form-item>
-      -->
 
       <el-form-item label="강의 타이틀">
         <el-input v-model="input.title"  class="lecture-title"></el-input>
       </el-form-item>
 
-      <el-form-item label="강의 활성화 시간">
+      <el-form-item label="강의 유형">
+        <el-radio-group v-model.number="input.type">
+          <el-radio :label="0">[유인]</el-radio>
+          <el-radio :label="1">[무인]단체</el-radio>
+          <el-radio :label="2">[무인]개인</el-radio>
+        </el-radio-group>
+        <el-popover
+          style="position: relative; left: 30px; top: 3px;"
+          placement="top-start"
+          width="400"
+          trigger="hover">
+          <el-table :data="notice">
+            <el-table-column width="100" prop="title" label="유형"></el-table-column>
+            <el-table-column width="290" prop="content" label="내용"></el-table-column>
+          </el-table>
+          <i class="el-icon-question fa-lg" slot="reference"></i>
+        </el-popover>
+      </el-form-item>
+
+      <el-form-item label="강의 날짜 " v-if="input.type === 1">
         <el-date-picker
           v-model="input.lcStartDate"
           type="datetime"  class="lecture-startDate"
         ></el-date-picker>
-         ~ 
+      </el-form-item>
+
+      <el-form-item label="강의 시간" v-if="input.type === 1">
+        <el-time-picker
+          v-model="input.lcStartDate"
+          type="datetime"  class="lecture-startDate"
+        ></el-time-picker>
+         ~
+        <el-time-picker
+          v-model="input.lcEndDate"
+          type="datetime"  class="lecture-endDate"
+        ></el-time-picker>
+      </el-form-item>
+
+      <el-form-item label="강의 활성 기간" v-if="input.type === 2">
+        <el-date-picker
+          v-model="input.lcStartDate"
+          type="datetime"  class="lecture-startDate"
+        ></el-date-picker>
+         ~
         <el-date-picker
           v-model="input.lcEndDate"
           type="datetime" class="lecture-endDate"
@@ -60,20 +89,27 @@ export default {
     return {
       initialInput,
       input: Object.assign({}, initialInput), // 복사해서 넣음
+      notice: [{
+        title: '[유인]',
+        content: '강의 아이템 활성화 여부를 강사가 조정합니다.',
+      }, {
+        title: '[무인]단체',
+        content: '지정된 시각부터 강의가 자동으로 시작됩니다. \n강의 아이템 활성화 시간 설정이 필요합니다.',
+      }, {
+        title: '[무인]개인',
+        content: '활성화 기간동안 자유롭게 수강이 가능합니다. \n강의 아이템 활성화 시간 설정이 필요합니다.',
+      }],
     };
   },
   async mounted() {
     const vm = this;
     if (vm.isManage) {
-      // TODO: getLecture({ lectureId: }) 그 액션으로 가져오기
       // TODO: 그리고 onSubmit 마지막에 updateLecture null 조져주기
       await vm.getLecture({ lectureId: vm.lectureId });
       vm.input.title = vm.lecture.name || vm.initialInput.title;
       vm.input.type = vm.lecture.type || vm.initialInput.type;
-      vm.input.lcStartDate = vm.lecture.start_time || vm.initialInput.lcStartDate;
-      vm.input.lcEndDate = vm.lecture.end_time || vm.initialInput.lcEndDate;
-    } else {
-      vm.input.type = 0; // 20180629 강의 타입 제거
+      vm.input.lcStartDate = new Date(vm.lecture.start_time) || vm.initialInput.lcStartDate;
+      vm.input.lcEndDate = new Date(vm.lecture.end_time) || vm.initialInput.lcEndDate;
     }
   },
   methods: {
@@ -85,8 +121,14 @@ export default {
       vm.$refs.elForm.validate(async (/* valid, fields */) => {
         // TODO: if valid === true 로 감싸기
         // TODO: valid === false 인 경우 notify
-        // TODO: isManage === true 인 경우 post하지 말고...
         const classId = vm.$route.query.classId;
+
+        if (vm.lecture && vm.lecture.type === 1) {
+          vm.input.lcEndDate.setFullYear(vm.input.lcStartDate.getFullYear());
+          vm.input.lcEndDate.setMonth(vm.input.lcStartDate.getMonth());
+          vm.input.lcEndDate.setDate(vm.input.lcStartDate.getDate());
+        }
+
         if (vm.isManage) {
           try {
             await lectureService.putLecture({
@@ -95,6 +137,11 @@ export default {
               name: vm.input.title,
               startTime: vm.input.lcStartDate,
               endTime: vm.input.lcEndDate,
+            });
+            vm.$notify({
+              title: '강의 수정 성공',
+              message: '성공적으로 강의가 수정됨',
+              type: 'success',
             });
             vm.$router.go(-1);
           } catch (error) {
@@ -113,6 +160,11 @@ export default {
               name: vm.input.title,
               start_time: vm.input.lcStartDate,
               end_time: vm.input.lcEndDate,
+            });
+            vm.$notify({
+              title: '강의 추가 성공',
+              message: '성공적으로 강의가 추가됨',
+              type: 'success',
             });
             vm.$router.go(-1);
           } catch (error) {
@@ -154,13 +206,13 @@ export default {
     margin-top : 40px;
     margin-left : 12px;
     margin-bottom : 25px;
- } 
+ }
 
 .page-title{
     float:left;
     width:1000px;
     height: 24px;
-      
+
     font-family: SpoqaHanSans;
     font-size: 25px;
     font-weight: bold;
@@ -169,7 +221,7 @@ export default {
     line-height: 1.2;
     letter-spacing: normal;
     color: #000000;
- 
+
     margin-top : 40px;
     margin-left : 12px;
     margin-bottom : 25px;

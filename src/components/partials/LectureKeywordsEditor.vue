@@ -2,7 +2,7 @@
   <div id="lecture_keywords_editor_wrapper">
     <el-row>
       <el-col :span="12">
-        <h3>키워드 등록</h3>
+        <h3>강의 키워드 등록</h3>
           <!-- {{ keywordList }} -->
         <!--<draggable element="div" v-model="keywordList" :options="dragOptions">
           <transition-group type="transition">
@@ -10,7 +10,7 @@
           </transition-group>
         </draggable>-->
         <el-form @submit.native.prevent :model="input" :rules="rules" ref="elForm" label-width="125px" style="max-width: 400px;">
-          <el-form-item label="키워드 입력" prop="keyword">
+          <el-form-item label="강의 키워드 입력" prop="keyword">
             <el-input v-model="input.keyword" @keydown.enter.native="onClick('ADD')"></el-input>
           </el-form-item>
           <el-form-item label="중요도 입력" prop="weight">
@@ -25,7 +25,7 @@
           <table id="table_design" :data="keywordList">
             <thead>
               <tr>
-                <td>키워드</td>
+                <td>강의 키워드</td>
                 <td>중요도</td>
                 <td></td>
               </tr>

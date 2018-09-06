@@ -28,18 +28,20 @@ export default {
     result, // TODO: get from user
     opened, // TODO: get from user? 이건 좀 애매한데
     sequence,
+    offset,
   }) {
     const param = {};
 
     utils.assignIfNotNil(param, { name });
     utils.assignIfNotNil(param, { description });
-    utils.assignIfNotNil(param, { startTime }, 'start_time');
-    // utils.assignIfNotNil(param, { endTime }, 'end_time');
-    Object.assign(param, { end_time: endTime }); // 얘는 null이면 null 들어가야함
+    // null이면 null 들어가야함.
+    Object.assign(param, { start_time: startTime });
+    Object.assign(param, { end_time: endTime });
     utils.assignIfNotNil(param, { order });
     utils.assignIfNotNil(param, { result });
     utils.assignIfNotNil(param, { opened });
     utils.assignIfNotNil(param, { sequence });
+    utils.assignIfNotNil(param, { offset });
     // TODO: rename prepare_lesson_review
     // Object.assign(param, {
     //   opened: 3, // TODO: 동일이형이랑 얘기하고 지우려면 지우자

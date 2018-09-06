@@ -18,11 +18,14 @@
         {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString('ko-KR') : '미정' }}
         </template>
       </el-table-column>
-      <el-table-column label="-" header-align="left" align="right" width="345">
+      <el-table-column label="" header-align="left" align="right" width="345">
         <template slot-scope="scope">
+          <!--
           <el-button type="success" @click="onClick('DETAIL', scope.row)">살펴보기</el-button>
+          -->
           <el-button type="primary" @click="onClick('LISTEN', scope.row)">강의듣기</el-button>
-          <el-button type="danger" @click="onClick('CANCEL', scope.row, (pageNum - 1) * 10 + (scope.$index))">수강취소</el-button>
+          <!-- FIXME: 건호씨 요구사항에 따라 수강취소 버튼 주석 씌움 -->
+          <!-- <el-button type="danger" @click="onClick('CANCEL', scope.row, (pageNum - 1) * 10 + (scope.$index))">수강취소</el-button> -->
         </template>
       </el-table-column>
       </el-table>

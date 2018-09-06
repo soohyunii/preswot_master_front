@@ -80,7 +80,7 @@ export default {
       const currentClass = vm.currentTeachingClass(vm.classId);
       if (currentClass && currentClass.lectures) {
         return currentClass.lectures.map((item) => {
-          const type = utils.convertScType(item.type);
+          const type = utils.convertLcType(item.type);
           // eslint-disable-next-line no-param-reassign
           item.type = type;
           // eslint-disable-next-line no-param-reassign
@@ -99,7 +99,7 @@ export default {
     ...mapActions('NNclass', [
       'getClass',
       'getMyClassLists',
-      'deleteScenario',
+      'deleteLectureFromClass',
     ]),
     onClick(type) {
       const vm = this;
@@ -149,9 +149,15 @@ export default {
             const currentClass = vm.teachingClassList.find(item => item.class_id === vm.classId);
             const targetLecture = currentClass.lectures[index];
             await lectureService.deleteLecture({ lectureId: targetLecture.lecture_id });
-            vm.deleteScenario({
+            vm.$notify({
+              title: '삭제됨',
+              message: '강의가 삭제됨',
+              type: 'success',
+              duration: 3000,
+            });
+            await vm.getClass({
+              type: 'TEACHER',
               classId: vm.classId,
-              lectureId: targetLecture.lecture_id,
             });
           } catch (error) {
             vm.$notify({
@@ -177,11 +183,11 @@ export default {
 
 <style lang="scss" scoped>
 #teacher_lecture_index_wrapper {
-  
+
   .page-title{
     float:left;
     width:400px;
-    
+
     font-family: SpoqaHanSans;
     font-size: 25px;
     font-weight: bold;
@@ -190,21 +196,21 @@ export default {
     line-height: 1.2;
     letter-spacing: normal;
     color: #000000;
-  
+
     margin-top : 40px;
     margin-left : 12px;
     margin-bottom : 25px;
   }
- 
+
  .right-align-margin-bottom-15 {
     display:inline-block;
-    text-align: center;  
+    text-align: center;
     margin-top : 40px;
     margin-bottom : 25px;
   }
 
   .right-align {
-    text-align: right;    
+    text-align: right;
   }
   .right-align-btn {
     width: 100%;
@@ -227,14 +233,14 @@ export default {
     margin-left: auto;
     margin-right: auto;
 }
- 
+
   .el-btn{
     width: 140px;
     height: 40px;
     border-radius: 3px;
     background-color: #ffffff;
     border: solid 1px #1989fa;
-      
+
     font-family: SpoqaHanSans;
     font-size: 12px;
     font-weight: bold;
@@ -244,9 +250,9 @@ export default {
     letter-spacing: normal;
     text-align: center;
     color: #1989fa;
-  
+
   }
- 
+
   .el-btn:hover{
     width: 140px;
     height: 40px;

@@ -12,6 +12,7 @@
         type="TEACHER"
         :list="lectureItemList"
         :sortableOptions="sortableOptions"
+        :lectureType="lectureType"
       />
 
       <el-dialog
@@ -22,7 +23,9 @@
         width="30%">
         <lecture-live-item
           :data="lectureItem"
-          :onClick="onClick"/>
+          :onClick="onClick"
+          :answerSubmitted="isSubmitted"
+          type="TEACHER"/>
         <br />
         <br />
         <span slot="footer" class="dialog-footer">
@@ -50,14 +53,13 @@
 <script>
 import Sortable from 'sortablejs';
 
-import { mapGetters, mapMutations, mapActions } from 'vuex';
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 import LectureItemList from '../partials/LectureItemList';
 import utils from '../../utils';
 import lectureItemService from '../../services/lectureItemService';
 import LectureItemEditor from '../partials/LectureItemEditor';
 import LectureLiveItem from '../partials/LectureLiveItem';
 import studentService from '../../services/studentService';
-import { EventBus } from '../../event-bus';
 
 // * 드래그 앤 드롭으로 테이블 행 순서 변경
 // * https://buefy.github.io/#/extensions/sortablejs
@@ -119,9 +121,13 @@ export default {
       lectureItem: undefined,
       currentLectureItemId: -1,
       isSubmitted: false,
+      lectureType: 0,
     };
   },
   computed: {
+    ...mapState('lc', [
+      'lecture',
+    ]),
     ...mapGetters('lcItem', [
       'isEditing',
     ]),
@@ -130,6 +136,7 @@ export default {
       if (lecture && Array.isArray(lecture.lecture_items)) {
         const lectureItemList = lecture.lecture_items.map((x) => {
           x.type = utils.convertLcItemTypeKor(x.type); // eslint-disable-line no-param-reassign
+          x.offset = utils.convertSecondTohhmmss(x.offset); // eslint-disable-line no-param-reassign
           return x;
         });
         // * sequence 순서대로 강의 아이템 정렬
@@ -185,13 +192,13 @@ export default {
         }
         case 'SUBMIT': {
           this.isSubmitted = true;
-          switch (data[0]) {
+          switch (this.lectureItem.type) {
             case 0: { // 문항
               studentService.submitQuestion({
-                questionId: data[1],
-                answers: data[2][0],
+                questionId: data.questionId,
+                answers: data.answer,
                 interval: 0,
-                codeLanguage: data[3],
+                codeLanguage: data.language,
               });
               this.$notify({
                 title: '알림',
@@ -204,8 +211,8 @@ export default {
             }
             case 1: { // 설문
               studentService.submitSurvey({
-                surveyId: data[1],
-                answer: [data[3]],
+                surveyId: data.surveyId,
+                answer: data.answer,
               });
               this.lectureItem = undefined;
               this.refreshLectureItem(this.currentLectureItemId);
@@ -223,7 +230,6 @@ export default {
       }
     },
     onClickEditLectureItem(lectureItemId) {
-      console.log('lectureItemId', lectureItemId); // eslint-disable-line
       this.updateCurrentEditingLectureItemId({
         currentEditingLectureItemId: lectureItemId,
       });
@@ -238,7 +244,6 @@ export default {
         lectureItemId,
         opened: 1,
       });
-      EventBus.$emit('clearAnswer');
       vm.currentLectureItemId = lectureItemId;
       vm.dialogVisible = true;
       vm.lectureItem = res.data;
@@ -316,7 +321,12 @@ export default {
         lectureItemId: vm.lectureItem.lecture_item_id,
         opened: 0,
       });
+      vm.isSubmitted = false;
     },
+  },
+  async mounted() {
+    await this.getLecture({ lectureId: this.lectureId });
+    this.lectureType = this.lecture.type;
   },
 };
 </script>

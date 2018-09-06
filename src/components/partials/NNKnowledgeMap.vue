@@ -27,7 +27,8 @@
             :updateNodeData="updateNodeData"/>
         </el-col>
         <el-col :span="12">
-          <knowledge-map-edge-editor/>
+          <knowledge-map-edge-editor
+            :drawNetwork="drawNetwork"/>
         </el-col>
       </el-row>
   </div>

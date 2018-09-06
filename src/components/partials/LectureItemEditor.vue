@@ -37,9 +37,31 @@
         </div>
       </el-form-item>
 
-      <el-form-item label="결과 공개 여부" prop="lcItemResult">
+      <el-form-item v-show="['question', 'survey'].includes(inputHead.lcItemType)" label="결과 공개 여부" prop="lcItemResult">
         <el-switch v-model="resultVisible" @change="onChange"/>
-          <el-input v-model="inputHead.lcItemName" placeholder="내용을 입력해주세요."></el-input>
+        <el-popover
+          style="position: relative; left: 30px; top: 3px;"
+          placement="top-start"
+          width="500"
+          trigger="hover"
+          content="학생이 답안을 제출했을 때, 그 결과를 바로 볼 수 있게 할지의 여부를 정합니다.">
+          <i class="el-icon-question fa-lg" slot="reference"></i>
+        </el-popover>
+      </el-form-item>
+
+      <el-form-item label="활성화 시각" v-if="lecture.type !== 0">
+        <el-time-picker
+          v-model="inputHead.lcItemOffset"
+          placeholder="활성화 시각">
+        </el-time-picker>
+        <el-popover
+          style="position: relative; left: 30px; top: 3px;"
+          placement="top-start"
+          width="500"
+          trigger="hover"
+          content="강의 시작 시간을 기준으로 강의 아이템이 활성화되는 시각을 정합니다.">
+          <i class="el-icon-question fa-lg" slot="reference"></i>
+        </el-popover>
       </el-form-item>
 
       <div v-show="!inputHead.lcItemType">
@@ -111,6 +133,7 @@ export default {
   props: ['numOfLectureItem'],
   async mounted() {
     const vm = this;
+
     if (!vm.isNewItem) {
       await vm.getLcItem();
       const item = vm.lectureItem;
@@ -120,6 +143,10 @@ export default {
       vm.inputHead.lcItemName = item.name;
       vm.inputHead.lcItemResult = item.result;
       vm.resultVisible = !!item.result;
+
+      const offset = new Date(2018, 8, 15, 0, 0, 0);
+      offset.setSeconds(item.offset);
+      vm.inputHead.lcItemOffset = offset;
 
       // * Init inputBody, tail
       switch (vm.inputHead.lcItemType) {
@@ -152,11 +179,12 @@ export default {
   data() {
     const vm = this;
     const initialInputHead = {
-      lcItemOrder: null,
+      lcItemOrder: 1,
       lcItemName: null,
       lcItemType: null,
       lcItemSequence: vm.numOfLectureItem + 1,
       lcItemResult: false,
+      lcItemOffset: new Date(2018, 8, 15, 0, 0, 0),
     };
     return {
       initialInputHead,
@@ -182,6 +210,9 @@ export default {
     };
   },
   computed: {
+    ...mapState('lc', [
+      'lecture',
+    ]),
     ...mapState('lcItem', [
       'lectureItem',
     ]),
@@ -236,6 +267,22 @@ export default {
     },
     async onSubmit() {
       const vm = this;
+      // 문항이며, 키워드가 없다면 알람을 띄우고 막음
+      if (vm.inputHead.lcItemType === 'question') {
+        if (vm.inputTail.assignedKeywordList === undefined ||
+          vm.inputTail.assignedKeywordList.length === 0) {
+          vm.$notify({
+            title: '생성 실패',
+            message: '문항은 최소 1쌍의 키워드를 필요로 합니다.',
+            type: 'error',
+            duration: 0,
+          });
+          return;
+        }
+      }
+      if (vm.lecture.type === 0) {
+        vm.inputHead.lcItemOffset = null;
+      }
 
       if (vm.isNewItem) {
         try {
@@ -247,7 +294,7 @@ export default {
 
           vm.reset();
 
-          await vm.getLecture({ lectureId: vm.lectureId }); // lecture item list 업데이트item list 업데이트
+          await vm.getLecture({ lectureId: vm.lectureId }); // lecture item list 업데이트
         } catch (error) {
           vm.$notify({
             title: '생성 실패',
