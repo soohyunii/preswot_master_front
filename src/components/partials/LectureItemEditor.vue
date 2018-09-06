@@ -267,7 +267,19 @@ export default {
     },
     async onSubmit() {
       const vm = this;
-
+      // 문항이며, 키워드가 없다면 알람을 띄우고 막음
+      if (vm.inputHead.lcItemType === 'question') {
+        if (vm.inputTail.assignedKeywordList === undefined ||
+          vm.inputTail.assignedKeywordList.length === 0) {
+          vm.$notify({
+            title: '생성 실패',
+            message: '문항은 최소 1쌍의 키워드를 필요로 합니다.',
+            type: 'error',
+            duration: 0,
+          });
+          return;
+        }
+      }
       if (vm.lecture.type === 0) {
         vm.inputHead.lcItemOffset = null;
       }
