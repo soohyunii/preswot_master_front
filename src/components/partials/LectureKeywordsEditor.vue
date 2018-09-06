@@ -33,8 +33,7 @@
             <tbody>
               <tr v-for="(k, index) in keywordList" :key="index">
                 <td>
-                  <el-input v-model="k.keyword" v-show="k.edit"></el-input>
-                  <span v-show="!k.edit">{{ k.keyword }}</span>
+                  <span>{{ k.keyword }}</span>
                 </td>
                 <td>
                   <el-input v-model="k.weight" type="number" min=1 max=100 v-show="k.edit"></el-input>
@@ -133,6 +132,7 @@ export default {
       'deleteKeyword',
       'postLectureKeywords',
       'deleteLectureKeywords',
+      'editLectureKeywords',
     ]),
     onClick(type, payload) {
       const vm = this;
@@ -204,7 +204,6 @@ export default {
             }
           }
           payload.edit = !payload.edit; // eslint-disable-line
-          this.postLectureKeywords();
           break;
         }
         default: {

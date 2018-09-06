@@ -20,9 +20,14 @@
 
     <div class="right-align">
       <router-link :to="`/a/teacher/NNlecture/new?classId=${classId}`">
-        <el-button type="primary" :class="$attachReactablePostfix('right-align-btn')">
+        <el-button type="primary" :class="$attachReactablePostfix('right-align-btn')" style="width: 49%">
           <div class="right-align-btn-layer">강의 추가</div>
-          </el-button>
+        </el-button>
+      </router-link>
+      <router-link :to="`/a/teacher/NNlecture/newfrombank?classId=${classId}`">
+        <el-button type="primary" :class="$attachReactablePostfix('right-align-btn')" style="width: 49%">
+          <div class="right-align-btn-layer">강의은행에서 가져오기</div>
+        </el-button>
       </router-link>
     </div>
   </div>
@@ -186,7 +191,7 @@ export default {
     letter-spacing: normal;
     color: #000000;
   
-     margin-top : 40px;
+    margin-top : 40px;
     margin-left : 12px;
     margin-bottom : 25px;
   }
@@ -194,8 +199,8 @@ export default {
  .right-align-margin-bottom-15 {
     display:inline-block;
     text-align: center;  
-     margin-top : 40px;
-       margin-bottom : 25px;
+    margin-top : 40px;
+    margin-bottom : 25px;
   }
 
   .right-align {

@@ -14,8 +14,13 @@
 
     <div class="right-align">
       <router-link to="/a/teacher/NNclass/new">
-        <el-button  type="primary" :class="$attachReactablePostfix('right-align-btn')">
+        <el-button  type="primary" :class="$attachReactablePostfix('right-align-btn')" style="width: 49%">
           <div class="right-align-btn-layer">과목 개설</div>
+        </el-button>
+      </router-link>
+      <router-link :to="`/a/teacher/NNclass/newfrombank`">
+        <el-button type="primary" :class="$attachReactablePostfix('right-align-btn')" style="width: 49%">
+          <div class="right-align-btn-layer">과목은행에서 가져오기</div>
         </el-button>
       </router-link>
     </div>
