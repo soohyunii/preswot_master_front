@@ -67,7 +67,8 @@
         </el-col>
         <el-col :span="12">
           <div v-if="materialLink === ''">
-            선택된 자료가 없습니다. [강의자료] 탭에서 <i class="el-icon-view"/> 아이콘을 눌러주세요.
+            선택된 자료가 없습니다.<br>
+            [강의자료] 탭에서 <i class="el-icon-view"/> 아이콘을 눌러주세요.
           </div>
           <div v-else>
             <iframe v-show="focusMaterialFlag" frameborder="0" :src="materialLink" width="100%" height="400"></iframe>
@@ -77,6 +78,8 @@
             </div>
           </div>
         </el-col>
+      </el-row>
+      <el-row :gutter="20">
         <el-col :span="itemSize">
           <el-tabs type="card">
             <el-tab-pane label="강의아이템">
