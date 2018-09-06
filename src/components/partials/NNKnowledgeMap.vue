@@ -1,8 +1,8 @@
 <template>
   <div class="wrapper" ref="wrapper">
-      <!-- 디버그 용도
-      <p>{{ nodes }}</p>
-      <p>{{ edges }}</p> -->
+      <!-- 디버그 용도 -->
+      <!-- <p>{{ nodes }}</p> -->
+      <!-- <p>{{ edges }}</p> -->
 
       <!-- TODO 키워드 추출 부분 수정 후 작성할 것
       <div v-if="false">
@@ -28,7 +28,8 @@
         </el-col>
         <el-col :span="12">
           <knowledge-map-edge-editor
-            :drawNetwork="drawNetwork"/>
+            :drawNetwork="drawNetwork"
+            :edgeData="edgeData"/>
         </el-col>
       </el-row>
   </div>
@@ -116,14 +117,17 @@
               if (data.from !== data.to &&
                   vm.edges.findIndex(item => item.from === data.from && item.to === data.to) === -1) {
                 callback(data);
-                // after each adding you will be back to addEdge mode
-                vm.network.addEdgeMode();
+                const id = data.from.concat(data.to);
                 vm.edges.push({
+                  id,
                   from: data.from,
                   to: data.to,
-                  id: data.from.concat(data.to),
                   weight: 20,
                 });
+                vm.edgeData.remove(data.id);
+                vm.edgeData.add({ id, from: data.from, to: data.to, weight: 20 });
+                // after each adding you will be back to addEdge mode
+                vm.network.addEdgeMode();
               }
             },
           },
