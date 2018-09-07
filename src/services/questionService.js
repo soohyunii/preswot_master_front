@@ -124,4 +124,22 @@ export default {
   }) {
     return http.put(`/questions/${questionId}/sqlite/${guid}`);
   },
+  extractAnswer({
+    questionId,
+    ratioStudent,
+  }) {
+    return http.post(`/questions/${questionId}/extract-answer/`, {
+      ratioStudent,
+    });
+  },
+  autoGradeDescription({
+    questionId,
+    teacherSideList,
+    studentSideList,
+  }) {
+    return http.post(`/questions/${questionId}/auto-grade-description`, {
+      teacherSideList,
+      studentSideList,
+    });
+  },
 };
