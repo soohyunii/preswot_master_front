@@ -459,7 +459,8 @@ export default {
       const vm = this;
       let offset = vm.participationTime;
       if (vm.lectureItem[0]
-        && vm.lectureItem[0].lecture_item_id === vm.pastLectureItem.lectureItemId) {
+        && vm.lectureItem[0].lecture_item_id === vm.pastLectureItem.lectureItemId
+        && vm.continueFlag) {
         offset += vm.pastLectureItem.offset;
       }
       let lectureItemId;
