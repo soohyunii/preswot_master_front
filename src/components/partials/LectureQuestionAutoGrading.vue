@@ -179,7 +179,7 @@ export default {
           }
           vm.page = 1;
           const res = await questionService.extractAnswer({
-            questionId: vm.$route.params.itemId,
+            lectureItemId: vm.$route.params.itemId,
             ratioStudent: vm.ratioStudent,
           });
           vm.teacherSideList = res.data.lecturer;
@@ -191,7 +191,7 @@ export default {
         case 'GRADE': {
           vm.page = 4;
           const res = await questionService.autoGradeDescription({
-            questionId: vm.$route.params.itemId,
+            lectureItemId: vm.$route.params.itemId,
             teacherSideList: vm.teacherSideList,
             studentSideList: vm.studentSideList,
           });

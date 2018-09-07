@@ -125,19 +125,19 @@ export default {
     return http.put(`/questions/${questionId}/sqlite/${guid}`);
   },
   extractAnswer({
-    questionId,
+    lectureItemId,
     ratioStudent,
   }) {
-    return http.post(`/questions/${questionId}/extract-answer/`, {
+    return http.post(`/questions/${lectureItemId}/extract-answer/`, {
       ratioStudent,
     });
   },
   autoGradeDescription({
-    questionId,
+    lectureItemId,
     teacherSideList,
     studentSideList,
   }) {
-    return http.post(`/questions/${questionId}/auto-grade-description`, {
+    return http.post(`/questions/${lectureItemId}/auto-grade-description`, {
       teacherSideList,
       studentSideList,
     });
