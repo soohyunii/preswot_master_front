@@ -66,7 +66,8 @@ export default {
       "QUESTION": "Question",
       "SURVEY": "Survey",
       "HOMEWORK": "Homework",
-      "MATERIAL": "Material"
+      "MATERIAL": "Material",
+      "NOTE": "Note",
     },
     "ADDER": {
       "ITEM_ADDER": "Item Adder"
@@ -89,8 +90,11 @@ export default {
       "PASSWORD_PH": "********",
       "ERR_PASSWORD_MATCH": "비밀번호가 일치하지 않습니다.",
       "LOGIN_BUTTON": "로그인",
-      "FORGOT_PASSWORD_BUTTON": "비밀번호를 잊어버리셨나요?",
+      "FORGOT_PASSWORD_BUTTON": "비밀번호 찾기",
       "LOGIN_REQUIRED": "로그인이 필요합니다."
+    },
+    "TOS": {
+      "TOS_TITLE": "이용약관"
     },
     "REG": {
       "REG_TITLE": "회원가입",
@@ -138,7 +142,8 @@ export default {
       "QUESTION": "문항",
       "SURVEY": "설문",
       "HOMEWORK": "숙제",
-      "MATERIAL": "강의자료"
+      "MATERIAL": "강의자료",
+      "NOTE": "자료"
     },
     "ADDER": {
       "ITEM_ADDER": "아이템 추가 도구\n"

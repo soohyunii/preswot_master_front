@@ -68,11 +68,6 @@ export default {
     deleteTeachingClass(state, { teachingClassIndex }) {
       state.teachingClassList.splice(teachingClassIndex, 1);
     },
-    deleteScenario(state, { classId, lectureId }) {
-      const currentClass = state.teachingClassList.find(item => item.class_id === classId);
-      const tIndex = currentClass.lectures.findIndex(item => item.lecture_id === lectureId);
-      currentClass.lectures.splice(tIndex, 1);
-    },
     updatePopularClassList(state, { popularClassList }) {
       state.popularClassList = popularClassList;
     },
@@ -100,18 +95,14 @@ export default {
       const res = await classService.getMyClassList();
 
       const sc = res.data.studyingClasses;
-      if (sc && sc.length !== 0) {
-        commit('updateStudyingClassList', {
-          studyingClassList: sc,
-        });
-      }
+      commit('updateStudyingClassList', {
+        studyingClassList: sc,
+      });
 
       const tc = res.data.teachingClasses;
-      if (tc && tc.length !== 0) {
-        commit('updateTeachingClassList', {
-          teachingClassList: tc,
-        });
-      }
+      commit('updateTeachingClassList', {
+        teachingClassList: tc,
+      });
     },
     async getClass({ state, commit }, { type, classId }) {
       const res = await classService.getClass({
@@ -133,12 +124,6 @@ export default {
         });
       }
     },
-    async deleteScenario({ commit }, { classId, lectureId }) {
-      commit('deleteScenario', {
-        classId,
-        lectureId,
-      });
-    },
     async getPopularClassList({ commit }) {
       const res = await classService.getMainClassLists();
       const mainClass = res.data.main_classes;
@@ -158,6 +143,12 @@ export default {
     async postClassUser(_, { classId }) {
       await classService.postClassUser({
         id: classId,
+      });
+    },
+    async deleteClassUser(_, { classId, userId }) {
+      await classService.deleteClassUser({
+        classId,
+        userId,
       });
     },
   },

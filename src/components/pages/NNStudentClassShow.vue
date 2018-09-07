@@ -4,11 +4,12 @@
     <div class="right-align margin-bottom-15">
       <!-- <el-button @click="onClick('KNOWLEDGEMAP')">과목지식맵</el-button> -->
       <!-- <el-button @click="onClick('ANALYSIS')">과목저널링</el-button> -->
-      <el-button @click="onClick('Q&A')">게시판</el-button>
-      <el-button @click="onClick('GRADE')">결과보기</el-button>
+      <el-button :class="$attachReactablePostfix('btn-board')" @click="onClick('Q&A')">게시판</el-button>
+      <el-button :class="$attachReactablePostfix('btn-show-result')" @click="onClick('GRADE')">결과보기</el-button>
     </div>
     <lecture-list
       @row-click="onClickLecture"
+      @join="onClickJoin"
       type="STUDENT"
       :list="lectureList"
     />
@@ -57,7 +58,7 @@ export default {
       const currentClass = vm.currentStudyingClass(vm.classId);
       if (currentClass && currentClass.lectures) {
         return currentClass.lectures.map((item) => {
-          const type = utils.convertLcItemTypeKor(item.type);
+          const type = utils.convertLcType(item.type);
           // eslint-disable-next-line no-param-reassign
           item.type = type;
           // eslint-disable-next-line no-param-reassign
@@ -72,7 +73,6 @@ export default {
     ...mapActions('NNclass', [
       'getClass',
       'getMyClassLists',
-      'deleteScenario',
     ]),
     onClick(type) {
       const vm = this;
@@ -103,6 +103,38 @@ export default {
     onClickLecture() {
       // 없으면 LectureList.vue 에러나는데 TeacherClassShow와 같이 쓰고있어서 빈 메소드를 넣어둠.
     },
+    onClickJoin(index) {
+      const vm = this;
+      const lectureId = vm.lectureList[index].lecture_id;
+      const lectureType = vm.lectureList[index].type;
+      const lectureStartTime = Date.parse(vm.lectureList[index].start_time);
+      const lectureEndTime = Date.parse(vm.lectureList[index].end_time);
+      const currentTime = Date.now();
+
+      if (lectureType !== '[유인]') {
+        // 강의 활성화 시간 이전에 강의보기를 클릭한 경우
+        if (currentTime < lectureStartTime) {
+          vm.$notify({
+            title: 'Info',
+            message: '해당 강의가 활성화되지 않았습니다.',
+            type: 'info',
+            duration: 2000,
+          });
+        // 강의 활성화 시간 이후에 강의보기를 클릭한 경우
+        } else if (currentTime > lectureEndTime) {
+          vm.$notify({
+            title: 'Info',
+            message: '해당 강의가 종료되었습니다.',
+            type: 'info',
+            duration: 2000,
+          });
+        } else {
+          vm.$router.push(`/a/student/NNlecture/${lectureId}/live`);
+        }
+      } else {
+        vm.$router.push(`/a/student/NNlecture/${lectureId}/live`);
+      }
+    },
   },
 };
 </script>
@@ -115,5 +147,11 @@ export default {
   .margin-bottom-15 {
     margin-bottom: 15px;
   }
+}
+.btn-board-phone {
+  display: none;
+}
+.btn-show-result-phone {
+  display: none;
 }
 </style>

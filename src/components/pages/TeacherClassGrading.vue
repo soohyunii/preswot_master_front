@@ -3,7 +3,7 @@
     <h2>{{ currentTeachingClass(classId) ? currentTeachingClass(classId).name : '' }} > 결과보기</h2>
     <el-tabs v-model="activeTab">
       <el-tab-pane label="문항 결과" name="question">
-        <div class="one-lecture-wrapper" v-for="lecture in questionList">
+        <div class="one-lecture-wrapper" v-for="lecture in questionList" :key="lecture.lectureId">
           <h3>{{ lecture.name }}</h3>
           <el-table :data="lecture.questions">
             <el-table-column
@@ -33,7 +33,7 @@
             <el-table-column
               label="">
               <template slot-scope="scope">
-                <el-button @click="onClickResult('QUESTION', scope.row.itemId)">결과보기</el-button>
+                <el-button size="small" @click="onClickResult('QUESTION', scope.row.itemId)">상세보기</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -41,7 +41,7 @@
       </el-tab-pane>
 
       <el-tab-pane label="설문 결과" name="survey">
-        <div class="one-lecture-wrapper" v-for="lecture in surveyList">
+        <div class="one-lecture-wrapper" v-for="lecture in surveyList" :key="lecture.lectureId">
           <h3>{{ lecture.name }}</h3>
           <el-table :data="lecture.surveys">
             <el-table-column
@@ -63,7 +63,7 @@
             <el-table-column
               label="">
               <template slot-scope="scope">
-                <el-button @click="onClickResult('SURVEY', scope.row.itemId)">결과보기</el-button>
+                <el-button size="small" @click="onClickResult('SURVEY', scope.row.itemId)">결과보기</el-button>
               </template>
             </el-table-column>
           </el-table>

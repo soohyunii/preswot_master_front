@@ -114,14 +114,14 @@ export default {
     }
     return `${hr}:${min}:${sec}`;
   },
-  convertScType(scType) {
-    const mapping = ['강의', '숙제', '퀴즈', '시험'];
-    if (typeof scType === 'number') {
-      return mapping[scType];
-    } else if (typeof scType === 'string') {
-      return mapping.indexOf(scType);
+  convertLcType(type) {
+    const mapping = ['[유인]', '[무인]단체', '[무인]개인'];
+    if (typeof type === 'number') {
+      return mapping[type];
+    } else if (typeof type === 'string') {
+      return mapping.indexOf(type);
     }
-    return new Error(`not defined scType ${scType}`);
+    return new Error(`not defined scType ${type}`);
   },
   convertScItemType(scItemType) {
     const mapping = ['문항', '설문', '강의자료', '숙제', '실습', '토론'];
@@ -133,7 +133,7 @@ export default {
     return new Error(`not defined scItemType ${scItemType}`);
   },
   convertLcItemType(lcItemType) {
-    const mapping = ['question', 'survey', 'practice', 'discussion'];
+    const mapping = ['question', 'survey', 'practice', 'discussion', 'note'];
     if (typeof lcItemType === 'number') {
       return mapping[lcItemType];
     } else if (typeof lcItemType === 'string') {
@@ -142,7 +142,7 @@ export default {
     return new Error(`not defined lcItemType ${lcItemType}`);
   },
   convertLcItemTypeKor(lcItemType) {
-    return ['문항', '설문', '실습', '토론'][lcItemType];
+    return ['문항', '설문', '실습', '토론', '자료'][lcItemType];
   },
   // 시즌2용 유틸함수
   convertQuestionType2(questionType) {
@@ -173,6 +173,20 @@ export default {
     }
     return new Error(`not defined surveyType ${surveyType}`);
   },
+  convertNoteType(noteType) {
+    const mapping = [
+      'IMAGE',
+      'DOCS',
+      'LINK',
+      'YOUTUBE',
+    ];
+    if (typeof noteType === 'number') {
+      return mapping[noteType];
+    } else if (typeof noteType === 'string') {
+      return mapping.indexOf(noteType);
+    }
+    return new Error(`not defined noteType ${noteType}`);
+  },
   convertQuestionType(questionType) {
     const mapping = ['객관', '단답', '서술', 'SW', 'SQL'];
     if (typeof questionType === 'number') {
@@ -198,6 +212,15 @@ export default {
       return b === 1;
     }
     return new Error(`not defined b ${b}`);
+  },
+  convertSecondTohhmmss(second) {
+    let hours = Math.floor(second / 3600);
+    let minutes = Math.floor((second - (hours * 3600)) / 60);
+    let seconds = second - (hours * 3600) - (minutes * 60);
+    if (hours < 10) hours = `0${hours}`;
+    if (minutes < 10) minutes = `0${minutes}`;
+    if (seconds < 10) seconds = `0${seconds}`;
+    return `${hours}:${minutes}:${seconds}`;
   },
   isValidEmail(emailString) {
     return re.test(emailString);
@@ -241,13 +264,35 @@ export default {
   downloadFile(url, filename) {
     console.log('downloadFile', url); // eslint-disable-line
     const link = document.createElement('a');
-    link.href = url;
+    link.setAttribute('href', url);
     link.setAttribute('download', filename);
+    link.setAttribute('target', '_blank');
     document.body.appendChild(link);
     link.click();
     window.setTimeout(() => {
       document.body.removeChild(link);
     }, 1000);
+  },
+  downloadFiles(baseUrl, filelist) {
+    function downloadNext(i) {
+      if (i >= filelist.length) {
+        return;
+      }
+
+      const link = document.createElement('a');
+      link.href = baseUrl + filelist[i].client_path;
+      link.download = filelist[i].name;
+      link.target = '_blank';
+
+      document.body.appendChild(link);
+      link.click();
+
+      window.setTimeout(() => {
+        document.body.removeChild(link);
+        downloadNext(i + 1);
+      }, 500);
+    }
+    downloadNext(0);
   },
   getWindowSize() {
     return {

@@ -1,5 +1,6 @@
 // import Test from '../components/TestComponent';
 import Profile from '../components/pages/Profile';
+import ProfileEdit from '../components/pages/ProfileEdit';
 import TeacherClassIndex from '../components/pages/TeacherClassIndex';
 import NNTeacherClassIndex from '../components/pages/NNTeacherClassIndex';
 import NNTeacherClassNew from '../components/pages/NNTeacherClassNew';
@@ -12,7 +13,6 @@ import NNStudentClassIndex from '../components/pages/NNStudentClassIndex';
 import NNStudentClassShow from '../components/pages/NNStudentClassShow';
 import TeacherLectureNew from '../components/pages/TeacherLectureNew';
 import TeacherLectureLive from '../components/pages/TeacherLectureLive';
-import StudentClassIndex from '../components/pages/StudentClassIndex';
 import NNStudentLectureLive from '../components/pages/NNStudentLectureLive';
 import TeacherClassNew from '../components/pages/TeacherClassNew';
 import TeacherClassEdit from '../components/pages/TeacherClassEdit';
@@ -33,6 +33,10 @@ import TeacherClassGrading from '../components/pages/TeacherClassGrading';
 import TeacherClassGradingQuestion from '../components/pages/TeacherClassGradingQuestion';
 import TeacherClassGradingSurvey from '../components/pages/TeacherClassGradingSurvey';
 import StudentClassGrade from '../components/pages/StudentClassGrade';
+import Bank from '../components/pages/Bank';
+import NClassFromBank from '../components/pages/NClassFromBank';
+import NLectureFromBank from '../components/pages/NLectureFromBank';
+import NLectureItemFromBank from '../components/pages/NLectureItemFromBank';
 
 export default function authRoutes(root) {
   return [
@@ -58,6 +62,14 @@ export default function authRoutes(root) {
       component: Profile,
       meta: {
         title: 'Profile', // TODO: import from i18n
+      },
+    },
+    {
+      path: '/profileEdit',
+      name: 'ProfileEdit',
+      component: ProfileEdit,
+      meta: {
+        title: 'ProfileEdit',
       },
     },
     {
@@ -99,6 +111,30 @@ export default function authRoutes(root) {
       component: NNTeacherLectureNewOri,
       meta: {
         title: 'Teacher Lecture Add Origin',
+      },
+    },
+    {
+      path: '/teacher/NNclass/newfrombank',
+      name: 'NClassFromBank',
+      component: NClassFromBank,
+      meta: {
+        title: 'New Class From Bank',
+      },
+    },
+    {
+      path: '/teacher/NNlecture/newfrombank',
+      name: 'NLectureFromBank',
+      component: NLectureFromBank,
+      meta: {
+        title: 'New Lecture From Bank',
+      },
+    },
+    {
+      path: '/teacher/NNlecture/newitemfrombank',
+      name: 'NLectureItemFromBank',
+      component: NLectureItemFromBank,
+      meta: {
+        title: 'New Lecture Item From Bank',
       },
     },
     {
@@ -230,19 +266,11 @@ export default function authRoutes(root) {
       },
     },
     {
-      path: '/student/class/',
-      name: 'StudentClass',
-      component: StudentClassIndex,
-      meta: {
-        title: 'Student Class Index', // TODO: import from i18n
-      },
-    },
-    {
       path: '/student/NNclass/',
-      name: 'NNStudentClass',
+      name: 'NNStudentClassIndex',
       component: NNStudentClassIndex,
       meta: {
-        title: 'NN Student Class Index', // TODO: import from i18n
+        title: 'Student Class Index 2', // TODO: import from i18n
       },
     },
     {
@@ -317,6 +345,14 @@ export default function authRoutes(root) {
       component: TeacherClassReport,
       meta: {
         title: '강사 강의 보고서 페이지',
+      },
+    },
+    {
+      path: '/bank',
+      name: 'Bank',
+      component: Bank,
+      meta: {
+        title: '강의 은행',
       },
     },
   ].map((route) => {

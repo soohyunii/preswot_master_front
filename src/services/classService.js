@@ -55,7 +55,7 @@ export default {
     activeStartDate,
     activeEndDate,
     capacity,
-    teacherDescription,
+    lecturerDescription,
     description,
   }) {
     return http.post('/classes', {
@@ -65,7 +65,7 @@ export default {
       start_time: activeStartDate,
       end_time: activeEndDate,
       capacity,
-      teacherDescription,
+      lecturer_description: lecturerDescription,
       description,
       teachers: [], // 현재 프론트에서는 공동 강사 입력 없음 23 May 2018
     });
@@ -96,7 +96,7 @@ export default {
     activeStartDate,
     activeEndDate,
     capacity,
-    teacherDescription,
+    lecturerDescription,
     description,
   }) {
     return http.put(`/classes/${id}`, {
@@ -106,7 +106,7 @@ export default {
       start_time: activeStartDate,
       end_time: activeEndDate,
       capacity,
-      teacherDescription,
+      lecturer_description: lecturerDescription,
       description,
     });
   },
@@ -141,5 +141,11 @@ export default {
     id,
   }) {
     return http.post(`/classes/${id}/user`);
+  },
+  deleteClassUser({
+    classId,
+    userId,
+  }) {
+    return http.delete(`/classes/${classId}/user/${userId}`);
   },
 };

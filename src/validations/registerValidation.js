@@ -118,7 +118,7 @@ export default function generateRule(vm) {
         trigger: 'change,blur',
       },
     ],
-    phoneNumber: [
+    phone: [
       {
         required: true,
         message: vm.$t('FORM.ERR_REQUIRED'),

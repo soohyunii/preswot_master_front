@@ -4,18 +4,16 @@
       강의 아이템 목록이 비었습니다.
     </div>
     <div v-else>
-      <!-- {{ props.list }} -->
-      <el-table :data="props.list" stripe>
+      <el-table :data="props.list"
+                row-key="sequence"
+                sortable
+                v-sortable="data.attrs.sortableOptions">
         <el-table-column
-          prop="index"
+          type="index"
           label="번호"
           width="100"
           align="center"
-        >
-          <template slot-scope="scope">
-            {{ scope.$index + 1 }}
-          </template>
-        </el-table-column>
+        ></el-table-column>
 
         <el-table-column
           prop="type"
@@ -27,26 +25,18 @@
         <el-table-column
           prop="name"
           label="강의 아이템 이름"
-          width="225"
           align="center"
         ></el-table-column>
 
         <el-table-column
-          prop="activeTime"
-          label="활성화 시간"
-          width="500"
+          prop="offset"
+          label="활성화 시각"
+          width="200"
           align="center"
-        >
-          // TODO:
-        </el-table-column>
-
-        <el-table-column
-          label="-"
-          width="80"
-          align="center"
+          v-if="props.lectureType !== 0"
         >
           <template slot-scope="scope">
-            <el-button @click="listeners['edit'](scope.row.lecture_item_id)">수정</el-button>
+            {{ scope.row.offset }}
           </template>
         </el-table-column>
 
@@ -56,7 +46,27 @@
           align="center"
         >
           <template slot-scope="scope">
-            <el-button type="danger" @click="listeners['delete'](scope.$index)">삭제</el-button>
+            <el-button size="small" @click="listeners['edit'](scope.row.lecture_item_id)">수정</el-button>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          label="-"
+          width="100"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <el-button size="small" @click="listeners['simulate'](scope.row.lecture_item_id)">미리보기</el-button>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          label="-"
+          width="80"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <el-button size="small" type="danger" @click="listeners['delete'](scope.$index)">삭제</el-button>
           </template>
         </el-table-column>
 
@@ -110,6 +120,10 @@ export default {
         }
         return true;
       },
+    },
+    lectureType: {
+      type: Number,
+      required: true,
     },
   },
 };

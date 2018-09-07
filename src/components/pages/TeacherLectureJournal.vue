@@ -5,66 +5,40 @@
     <el-tabs v-model="activeTab">
       <el-tab-pane label="강의 흐름" name="basic">
         <el-row>
-        <time-line :chartData = "analysisData.result2"/>
-        <el-table
-          :data="tableData"
-          style="width: 100%">
-          <el-table-column
-            prop="index"
-            label="강의 명"
-            sortable
-            width="120">
-            <template slot-scope="scope">
-              {{ scope.row.row_name }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="index"
-            label="이해도"
-            sortable
-            style="width: 10%">
-            <template slot-scope="scope">
-            <el-slider v-model="defaultValue"   :step="25" disabled show-stops></el-slider>
-            <div class = "slider_label">
-              <el-tooltip class="item" effect="dark" :content="scope.row.min_understanding_score" placement="top">
-                <div class= "slider_label_qq q1"></div>
-              </el-tooltip>
-              <el-tooltip class="item" effect="dark" :content="scope.row.q1_understanding_score" placement="top">
-                <div class= "slider_label_qq q2"></div>
-              </el-tooltip>
-              <el-tooltip class="item" effect="dark" :content="scope.row.q2_understanding_score" placement="top">
-                <div class= "slider_label_qq q3"></div>
-              </el-tooltip>
-              <el-tooltip class="item" effect="dark" :content="scope.row.q3_understanding_score" placement="top">
-                <div class= "slider_label_qq q4"></div>
-              </el-tooltip>
-              <el-tooltip class="item" effect="dark" :content="scope.row.max_understanding_score" placement="top">
-                <div class= "slider_label_qq q5"></div>
-              </el-tooltip>
-           </div>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="index"
-            label="집중도"
-            sortable
-            style="width: 10%">
-            <template slot-scope="scope">
+          <time-line :chartData = "analysisData.result2"/>
+          <el-table
+            :data="tableData"
+            style="width: 100%">
+            <el-table-column
+              prop="index"
+              label="강의 명"
+              sortable
+              width="120">
+              <template slot-scope="scope">
+                {{ scope.row.row_name }}
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="index"
+              label="이해도"
+              sortable
+              style="width: 10%">
+              <template slot-scope="scope">
               <el-slider v-model="defaultValue"   :step="25" disabled show-stops></el-slider>
               <div class = "slider_label">
-                <el-tooltip class="item" effect="dark" :content="scope.row.min_concentration_score" placement="top">
+                <el-tooltip class="item" effect="dark" :content="scope.row.min_understanding_score" placement="top">
                   <div class= "slider_label_qq q1"></div>
                 </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="scope.row.q1_concentration_score" placement="top">
+                <el-tooltip class="item" effect="dark" :content="scope.row.q1_understanding_score" placement="top">
                   <div class= "slider_label_qq q2"></div>
                 </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="scope.row.q2_concentration_score" placement="top">
+                <el-tooltip class="item" effect="dark" :content="scope.row.q2_understanding_score" placement="top">
                   <div class= "slider_label_qq q3"></div>
                 </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="scope.row.q3_concentration_score" placement="top">
+                <el-tooltip class="item" effect="dark" :content="scope.row.q3_understanding_score" placement="top">
                   <div class= "slider_label_qq q4"></div>
                 </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="scope.row.max_concentration_score" placement="top">
+                <el-tooltip class="item" effect="dark" :content="scope.row.max_understanding_score" placement="top">
                   <div class= "slider_label_qq q5"></div>
                 </el-tooltip>
              </div>
@@ -97,7 +71,6 @@
             </template>
           </el-table-column>
         </el-table>
-          </el-col>
         </el-row>
       </el-tab-pane>
       <el-tab-pane label="키워드 저널링" name="keyword">

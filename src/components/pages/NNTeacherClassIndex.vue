@@ -1,23 +1,32 @@
 <template>
   <div id="teacher_class_index_wrapper" class="bt-container">
-    <h2>강의 중인 과목 목록</h2>
-
+    <h2 class="page-title">강의중인 과목 목록</h2>
     <class-list
       @row-click="onClickClass"
       @delete="onClickDelete"
       type="TEACHER"
       :list="teachingClassList || []"
+      class="elTable-font"
+      :isPhone="$isPhone"
     />
 
     <br />
 
     <div class="right-align">
       <router-link to="/a/teacher/NNclass/new">
-        <el-button type="primary">과목 개설</el-button>
+        <el-button  type="primary" :class="$attachReactablePostfix('right-align-btn')" style="width: 49%">
+          <div class="right-align-btn-layer">과목 개설</div>
+        </el-button>
+      </router-link>
+      <router-link :to="`/a/teacher/NNclass/newfrombank`">
+        <el-button type="primary" :class="$attachReactablePostfix('right-align-btn')" style="width: 49%">
+          <div class="right-align-btn-layer">과목은행에서 가져오기</div>
+        </el-button>
       </router-link>
     </div>
   </div>
 </template>
+
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex';
@@ -71,12 +80,6 @@ export default {
             vm.deleteTeachingClass({
               teachingClassIndex: index,
             });
-            vm.$notify({
-              title: '삭제됨',
-              message: '과목이 삭제됨',
-              type: 'success',
-              duration: 3000,
-            });
           } catch (error) {
             console.error(error); // eslint-disable-line no-console
             vm.$notify({
@@ -101,9 +104,77 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 #teacher_class_index_wrapper {
-  .right-align {
-    text-align: right;
+  .page-title{
+    float:left;
+    width:1000px;
+    height: 24px;
+      
+    font-family: SpoqaHanSans;
+    font-size: 25px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.2;
+    letter-spacing: normal;
+    color: #000000;
+  
+    margin-top : 40px;
+    margin-left : 12px;
+    margin-bottom : 25px;
   }
+  .right-align {
+      text-align: right;
+  }
+  
+  .right-align-btn {
+    width: 100%;
+    height: 40px;
+    border-radius: 3px;
+    border: solid 1px #1989fa;
+  }
+
+  .right-align-btn-layer {
+    width: 94px;
+    height: 12px;
+    font-family: SpoqaHanSans;
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: center;
+    color: #ffffff;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .el-table th{
+    font-family: SpoqaHanSans;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    color: #909399;
+  }
+
+  .el-table td{
+    font-family: SpoqaHanSans;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    color: #1989fa;
+  }
+}
+
+.right-align-btn-phone {
+  display: none;
 }
 </style>

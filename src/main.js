@@ -11,7 +11,11 @@ import Vlf from 'vlf';
 import VueScrollTo from 'vue-scrollto';
 import VueYoutubeEmbed from 'vue-youtube-embed';
 import VueSocketio from 'vue-socket.io';
+<<<<<<< HEAD
 import AsyncComputed from 'vue-async-computed';
+=======
+import VuePlyr from 'vue-plyr';
+>>>>>>> 779b362defa45fc20b95a4c825b400672233ba52
 
 import authPlugin from './utils/authPlugin';
 import App from './App';
@@ -21,7 +25,6 @@ import messages from './messages';
 import utils from './utils';
 import { websocketUrl } from './services/config';
 import appPlugin from './utils/appPlugin';
-
 
 Vue.use(appPlugin);
 Vue.config.productionTip = false;
@@ -39,7 +42,11 @@ Vue.use(Vlf);
 Vue.use(VueScrollTo);
 Vue.use(VueYoutubeEmbed);
 Vue.use(VueSocketio, websocketUrl, store);
+<<<<<<< HEAD
 Vue.use(AsyncComputed);
+=======
+Vue.use(VuePlyr);
+>>>>>>> 779b362defa45fc20b95a4c825b400672233ba52
 
 const defaultLocale = utils.getDefaultLocale();
 

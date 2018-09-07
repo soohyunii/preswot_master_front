@@ -15,8 +15,6 @@ export default class QuestionHandler extends LcItemHandler {
     const item = vm.lectureItem;
     const q = item.questions[0];
 
-    // FIXME: 아래 메소드가 일부 클라이언트에서 알 수 없는 이유로 동적 매핑이 안되는 현상이 있습니다. 임시로 vm.$set 을 사용합니다.
-    // vm.inputTail.question = q.question;
     vm.$set(vm.inputTail, 'question', q.question);
 
     vm.inputTail.difficulty = q.difficulty;
@@ -31,18 +29,31 @@ export default class QuestionHandler extends LcItemHandler {
     switch (q.type) {
       case 1: { // 단답
         vm.inputBody.questionType = 'SHORT_ANSWER';
-        vm.$set(vm.inputTail, 'answer', q.answer[0]);
+        vm.$set(vm.inputTail, 'answer', q.answer);
         break;
       }
       case 0: { // 객관
         vm.inputBody.questionType = 'MULTIPLE_CHOICE';
         vm.$set(vm.inputTail, 'questionList', q.choice);
-        vm.$set(vm.inputTail, 'answer', Number(q.answer[0]));
+        vm.$set(vm.inputTail, 'answer', q.answer);
         break;
       }
       case 2: { // 서술
         vm.inputBody.questionType = 'DESCRIPTION';
-        vm.$set(vm.inputTail, 'answer', q.answer[0]);
+        vm.$set(vm.inputTail, 'answer', q.answer);
+        vm.$nextTick(() => {
+          vm.$set(vm.inputTail, 'answerFile', vm.$refs.questionEditor.$refs.answerUpload.uploadFiles);
+          if (q.files.length !== 0) {
+            for (let i = 0; i < q.files.length; i += 1) {
+              vm.$refs.questionEditor.$refs.answerUpload.uploadFiles.push({
+                name: q.files[i].name,
+                file_guid: q.files[i].file_guid,
+              });
+            }
+            // 문항 유형 변경시에도 기존 파일 목록 유지하기 위해 inputBody에 삽입.
+            vm.$set(vm.inputBody, 'oldAnswerFile', q.files);
+          }
+        });
         break;
       }
       case 3: { // SW
@@ -60,7 +71,7 @@ export default class QuestionHandler extends LcItemHandler {
       }
       case 4: { // SQL
         vm.inputBody.questionType = 'SQL';
-        vm.$set(vm.inputTail, 'answer', q.answer[0]);
+        vm.$set(vm.inputTail, 'answer', q.answer);
         vm.$nextTick(() => {
           vm.$set(vm.inputTail, 'sqlFile', vm.$refs.questionEditor.$refs.sqlUpload.uploadFiles);
           if (q.sql_lite_file[0] !== undefined) {
@@ -68,7 +79,8 @@ export default class QuestionHandler extends LcItemHandler {
               name: q.sql_lite_file[0].name,
               file_guid: q.sql_lite_file[0].file_guid,
             });
-            vm.$set(vm.inputTail, 'sqlFileOld', {
+            // 문항 유형 변경시에도 기존 파일 목록 유지하기 위해 inputBody에 삽입.
+            vm.$set(vm.inputBody, 'sqlFileOld', {
               name: q.sql_lite_file[0].name,
               file_guid: q.sql_lite_file[0].file_guid,
             });
@@ -80,6 +92,20 @@ export default class QuestionHandler extends LcItemHandler {
         throw new Error(`not defined question type ${q.type}`);
       }
     }
+
+    vm.$nextTick(() => {
+      vm.$set(vm.inputTail, 'questionFile', vm.$refs.questionEditor.$refs.questionUpload.uploadFiles);
+      if (q.question_material.length !== 0) {
+        for (let i = 0; i < q.question_material.length; i += 1) {
+          vm.$refs.questionEditor.$refs.questionUpload.uploadFiles.push({
+            name: q.question_material[i].name,
+            file_guid: q.question_material[i].file_guid,
+          });
+        }
+        // 문항 유형 변경시에도 기존 파일 목록 유지하기 위해 inputBody에 삽입.
+        vm.$set(vm.inputBody, 'oldQuestionFile', q.question_material);
+      }
+    });
   }
   /* eslint-enable no-param-reassign */
 
@@ -101,7 +127,7 @@ export default class QuestionHandler extends LcItemHandler {
 
     const answer = Array.isArray(inputTail.answer) ?
       inputTail.answer : [inputTail.answer];
-    // TODO: add params such as choice, ... etc.
+
     await questionService.putQuestion({
       questionId,
       question: inputTail.question,
@@ -117,6 +143,63 @@ export default class QuestionHandler extends LcItemHandler {
       memoryLimit: inputTail.memoryLimit,
     });
 
+    // 기존 파일 목록이 존재
+    if (inputBody.oldQuestionFile !== undefined) {
+      // 기존 파일 중 수정 파일 목록에 존재하지 않는 것을 삭제
+      const deleteList = [];
+      for (let i = 0; i < inputBody.oldQuestionFile.length; i += 1) {
+        let existance = false;
+        for (let j = 0; j < inputTail.questionFile.length; j += 1) {
+          if (inputBody.oldQuestionFile[i].name === inputTail.questionFile[j].name) {
+            existance = true;
+            break;
+          }
+        }
+        if (!existance) {
+          deleteList.push({ file_guid: inputBody.oldQuestionFile[i].file_guid });
+        }
+      }
+      for (let i = 0; i < deleteList.length; i += 1) {
+        fileService.deleteFile({
+          fileGuid: deleteList[i].file_guid,
+        });
+      }
+
+      // 수정 파일 중 기존 파일 목록에 존재하지 않는 것을 추가
+      const newList = [];
+      for (let i = 0; i < inputTail.questionFile.length; i += 1) {
+        let existance = false;
+        for (let j = 0; j < inputBody.oldQuestionFile.length; j += 1) {
+          if (inputTail.questionFile[i].name === inputBody.oldQuestionFile[j].name) {
+            existance = true;
+            break;
+          }
+        }
+        if (!existance) {
+          newList.push({ file: inputTail.questionFile[i].raw });
+        }
+      }
+      for (let i = 0; i < newList.length; i += 1) {
+        questionService.postQuestionFile({
+          questionId,
+          file: newList[i].file,
+        });
+      }
+    }
+
+    // 기존 파일 목록이 존재하지 않음
+    if (inputBody.oldQuestionFile === undefined) {
+      // 추가할 파일이 존재할 경우 파일 추가
+      if (inputTail.questionFile.length !== 0) {
+        for (let i = 0; i < inputTail.questionFile.length; i += 1) {
+          questionService.postQuestionFile({
+            questionId,
+            file: inputTail.questionFile[i].raw,
+          });
+        }
+      }
+    }
+
     await lectureItemService.deleteQuestionKeywords({
       questionId,
     });
@@ -124,6 +207,73 @@ export default class QuestionHandler extends LcItemHandler {
       questionId,
       data: inputTail.assignedKeywordList,
     });
+
+    // 서술형인 경우
+    if (inputBody.questionType === 'DESCRIPTION') {
+      // 기존 파일 목록이 존재
+      if (inputBody.oldAnswerFile !== undefined) {
+        // 기존 파일 중 수정 파일 목록에 존재하지 않는 것을 삭제
+        const deleteList = [];
+        for (let i = 0; i < inputBody.oldAnswerFile.length; i += 1) {
+          let existance = false;
+          for (let j = 0; j < inputTail.answerFile.length; j += 1) {
+            if (inputBody.oldAnswerFile[i].name === inputTail.answerFile[j].name) {
+              existance = true;
+              break;
+            }
+          }
+          if (!existance) {
+            deleteList.push({ file_guid: inputBody.oldAnswerFile[i].file_guid });
+          }
+        }
+
+        for (let i = 0; i < deleteList.length; i += 1) {
+          fileService.deleteFile({
+            fileGuid: deleteList[i].file_guid,
+          });
+        }
+
+        // 수정 파일 중 기존 파일 목록에 존재하지 않는 것을 추가
+        const newList = [];
+        for (let i = 0; i < inputTail.answerFile.length; i += 1) {
+          let existance = false;
+          for (let j = 0; j < inputBody.oldAnswerFile.length; j += 1) {
+            if (inputTail.answerFile[i].name === inputBody.oldAnswerFile[j].name) {
+              existance = true;
+              break;
+            }
+          }
+          if (!existance) {
+            newList.push({ file: inputTail.answerFile[i].raw });
+          }
+        }
+        for (let i = 0; i < newList.length; i += 1) {
+          questionService.postQuestionAnswerFile({
+            questionId,
+            file: newList[i].file,
+          });
+        }
+      }
+
+      // 기존 파일 목록이 존재하지 않음
+      if (inputBody.oldAnswerFile === undefined) {
+        // 추가할 파일이 존재할 경우 파일 추가
+        if (inputTail.answerFile.length !== 0) {
+          for (let i = 0; i < inputTail.answerFile.length; i += 1) {
+            questionService.postQuestionAnswerFile({
+              questionId,
+              file: inputTail.answerFile[i].raw,
+            });
+          }
+        }
+      }
+    } else if (inputBody.oldAnswerFile !== undefined) {
+      for (let i = 0; i < inputBody.oldAnswerFile.length; i += 1) {
+        fileService.deleteFile({
+          fileGuid: inputBody.oldAnswerFile[i].file_guid,
+        });
+      }
+    }
 
     // SW인 경우
     if (inputBody.questionType === 'SW') {
@@ -146,12 +296,12 @@ export default class QuestionHandler extends LcItemHandler {
     // SQL인 경우
     if (inputBody.questionType === 'SQL') {
       // 기존 파일 있었다.
-      if (inputTail.sqlFileOld !== undefined) {
+      if (inputBody.sqlFileOld !== undefined) {
         // 현재 파일 없다.
         if (inputTail.sqlFile[0] === undefined) {
           // 기존파일 삭제
           fileService.deleteFileSqlite({
-            fileGuid: inputTail.sqlFileOld.file_guid,
+            fileGuid: inputBody.sqlFileOld.file_guid,
             questionId,
           });
         }
@@ -161,7 +311,7 @@ export default class QuestionHandler extends LcItemHandler {
           && inputTail.sqlFile[0].raw !== undefined) {
           // 기존파일 삭제
           await fileService.deleteFileSqlite({
-            fileGuid: inputTail.sqlFileOld.file_guid,
+            fileGuid: inputBody.sqlFileOld.file_guid,
             questionId,
           });
           // 현재 파일 등록
@@ -174,7 +324,7 @@ export default class QuestionHandler extends LcItemHandler {
           // 할일 없음
       }
       // 기존 파일 없었다.
-      if (inputTail.sqlFileOld === undefined) {
+      if (inputBody.sqlFileOld === undefined) {
         // 현재 파일 새로올렸다.
         if (inputTail.sqlFile !== undefined
           && inputTail.sqlFile[0] !== undefined
@@ -188,6 +338,11 @@ export default class QuestionHandler extends LcItemHandler {
         // 현재 파일 없다.
           // 할일 없음
       }
+    } else if (inputBody.sqlFileOld !== undefined) {
+      fileService.deleteFile({
+        fileGuid: inputBody.sqlFileOld.file_guid,
+        questionId,
+      });
     }
   }
 }

@@ -16,6 +16,7 @@ import lectureItemService from '../services/lectureItemService';
 import SurveyHandler from '../handlers/lcItem/survey';
 import DiscussionHandler from '../handlers/lcItem/discussion';
 import PracticeHandler from '../handlers/lcItem/practice';
+import NoteHandler from '../handlers/lcItem/note';
 
 export default {
   namespaced: true,
@@ -96,6 +97,15 @@ export default {
           });
           break;
         }
+        case 4: { // * 자료
+          await NoteHandler.postLcItem({
+            lectureId: rootState.lc.lecture.lecture_id,
+            inputHead,
+            inputBody,
+            inputTail,
+          });
+          break;
+        }
         default: {
           throw new Error(`not defined lcItemType ${lcItemType}`);
         }
@@ -137,6 +147,16 @@ export default {
         case 3: { // 토론
           await DiscussionHandler.putLcItem({
             lectureItemId: state.currentEditingLectureItemId,
+            inputHead,
+            inputBody,
+            inputTail,
+          });
+          break;
+        }
+        case 4: { // 자료
+          await NoteHandler.putLcItem({
+            lectureItemId: state.currentEditingLectureItemId,
+            noteId: state.lectureItem.notes[0].note_id,
             inputHead,
             inputBody,
             inputTail,

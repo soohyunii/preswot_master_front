@@ -124,19 +124,22 @@ export default {
   },
   postLectureMaterial({ lectureId, file }) {
     const form = new FormData();
+    form.append('lecture_Id', lectureId);
+    form.append('material_type', 0);
     form.append('file', file, file.name);
-    return http.post(`/lectures/${lectureId}/material`, form, {
+    return http.post('/materials', form, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
   },
-  getLectureMaterialAdditional({ lectureId }) {
-    return http.get(`/lectures/${lectureId}/materials`);
+  getLectureMaterial({ lectureId }) {
+    return http.get(`/materials/${lectureId}`);
   },
   getOpenedLectureItem({ lectureId }) {
     return http.get(`/lectures/${lectureId}/opened-item`);
   },
+<<<<<<< HEAD
   postLectureFromOrigin({
     classId, lectureInfoArray
   }) {
@@ -144,4 +147,26 @@ export default {
       classId, lectureInfoArray
     });
   }
+=======
+  deleteMaterial({ id }) {
+    return http.delete(`/materials/${id}`);
+  },
+  getMaterialKeywords({ id }) {
+    return http.get(`/materials/${id}/keywords`);
+  },
+  getOnStudentCount({ lectureId }) {
+    return http.get(`/lectures/${lectureId}/on-student-count`);
+  },
+  postMaterialKeyword({ id, keyword, score }) {
+    return http.post(`/materials/${id}/keywords`, {
+      keyword,
+      score,
+    });
+  },
+  deleteMaterialKeyword({ id, keyword }) {
+    return http.delete(`/materials/${id}/keywords`, {
+      keyword: keyword, // eslint-disable-line
+    });
+  },
+>>>>>>> 779b362defa45fc20b95a4c825b400672233ba52
 };

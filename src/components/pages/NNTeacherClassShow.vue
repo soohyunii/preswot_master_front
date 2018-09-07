@@ -1,28 +1,41 @@
 <template>
   <div id="teacher_lecture_index_wrapper" class="bt-container">
-    <h2>{{ currentTeachingClass(classId) ? currentTeachingClass(classId).name : '' }}</h2>
-    <div class="right-align margin-bottom-15">
-      <el-button @click="onClick('EVALUATION')">과목진단</el-button>
-      <el-button @click="onClick('ANALYSIS')">과목저널링</el-button>
-      <el-button @click="onClick('Report')">성적표</el-button>
-      <el-button @click="onClick('Q&A')">게시판</el-button>
-      <el-button @click="onClick('GRADING')">결과보기</el-button>
+      <h2 class="page-title">{{ currentTeachingClass(classId) ? currentTeachingClass(classId).name : '' }}</h2>
+    <div class="right-align-margin-bottom-15">
+      <el-button @click="onClick('EVALUATION')" :class="$attachReactablePostfix('el-btn')">과목진단</el-button>
+      <el-button @click="onClick('ANALYSIS')" :class="$attachReactablePostfix('el-btn')">과목저널링</el-button>
+      <el-button @click="onClick('Report')" :class="$attachReactablePostfix('el-btn')">성적표</el-button>
+      <el-button @click="onClick('Q&A')" :class="$attachReactablePostfix('el-btn')">게시판</el-button>
+      <el-button @click="onClick('GRADING')" :class="$attachReactablePostfix('el-btn')">채점관리</el-button>
     </div>
     <lecture-list
       @row-click="onClickLecture"
       @delete="onClickDelete"
       type="TEACHER"
       :list="lectureList"
+      :isPhone="$isPhone"
     />
 
     <br />
 
     <div class="right-align">
+<<<<<<< HEAD
       <router-link :to="`/a/teacher/NNlecture/add/new?classId=${classId}`">
         <el-button type="primary">새로운 강의 추가</el-button>
       </router-link>
       <router-link :to="`/a/teacher/NNlecture/add/ori?classId=${classId}`">
         <el-button type="primary">기존 강의에서 추가</el-button>
+=======
+      <router-link :to="`/a/teacher/NNlecture/new?classId=${classId}`">
+        <el-button type="primary" :class="$attachReactablePostfix('right-align-btn')" style="width: 49%">
+          <div class="right-align-btn-layer">강의 추가</div>
+        </el-button>
+      </router-link>
+      <router-link :to="`/a/teacher/NNlecture/newfrombank?classId=${classId}`">
+        <el-button type="primary" :class="$attachReactablePostfix('right-align-btn')" style="width: 49%">
+          <div class="right-align-btn-layer">강의은행에서 가져오기</div>
+        </el-button>
+>>>>>>> 779b362defa45fc20b95a4c825b400672233ba52
       </router-link>
     </div>
   </div>
@@ -75,7 +88,7 @@ export default {
       const currentClass = vm.currentTeachingClass(vm.classId);
       if (currentClass && currentClass.lectures) {
         return currentClass.lectures.map((item) => {
-          const type = utils.convertScType(item.type);
+          const type = utils.convertLcType(item.type);
           // eslint-disable-next-line no-param-reassign
           item.type = type;
           // eslint-disable-next-line no-param-reassign
@@ -94,7 +107,7 @@ export default {
     ...mapActions('NNclass', [
       'getClass',
       'getMyClassLists',
-      'deleteScenario',
+      'deleteLectureFromClass',
     ]),
     onClick(type) {
       const vm = this;
@@ -150,9 +163,9 @@ export default {
               type: 'success',
               duration: 3000,
             });
-            vm.deleteScenario({
+            await vm.getClass({
+              type: 'TEACHER',
               classId: vm.classId,
-              lectureId: targetLecture.lecture_id,
             });
           } catch (error) {
             vm.$notify({
@@ -178,11 +191,101 @@ export default {
 
 <style lang="scss" scoped>
 #teacher_lecture_index_wrapper {
+
+  .page-title{
+    float:left;
+    width:400px;
+
+    font-family: SpoqaHanSans;
+    font-size: 25px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.2;
+    letter-spacing: normal;
+    color: #000000;
+
+    margin-top : 40px;
+    margin-left : 12px;
+    margin-bottom : 25px;
+  }
+
+ .right-align-margin-bottom-15 {
+    display:inline-block;
+    text-align: center;
+    margin-top : 40px;
+    margin-bottom : 25px;
+  }
+
   .right-align {
     text-align: right;
   }
-  .margin-bottom-15 {
-    margin-bottom: 15px;
+  .right-align-btn {
+    width: 100%;
+    height: 40px;
+    border-radius: 3px;
+    border: solid 1px #1989fa;
+}
+.right-align-btn-layer {
+    width: 94px;
+    height: 12px;
+    font-family: SpoqaHanSans;
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: center;
+    color: #ffffff;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+  .el-btn{
+    width: 140px;
+    height: 40px;
+    border-radius: 3px;
+    background-color: #ffffff;
+    border: solid 1px #1989fa;
+
+    font-family: SpoqaHanSans;
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: center;
+    color: #1989fa;
+
+  }
+
+  .el-btn:hover{
+    width: 140px;
+    height: 40px;
+    border-radius: 3px;
+    background-color: #1989fa;
+    border: solid 1px #1989fa;
+
+    font-family: SpoqaHanSans;
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: center;
+    color: #ffffff;
+  }
+
+  .el-btn-phone{
+    display: none;
+  }
+
+  .right-align-btn-phone{
+    display: none;
   }
 }
+
 </style>

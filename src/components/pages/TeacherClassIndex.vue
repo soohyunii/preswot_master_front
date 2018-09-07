@@ -145,12 +145,6 @@ export default {
                 vm.deleteTeachingClass({
                   teachingClassIndex: index,
                 });
-                vm.$notify({
-                  title: '삭제됨',
-                  message: '과목이 삭제됨',
-                  type: 'success',
-                  duration: 3000,
-                });
               } catch (error) {
                 vm.$notify({
                   title: '과목 삭제 실패',

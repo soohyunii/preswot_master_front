@@ -10,7 +10,7 @@
       <h1>수강생 목록</h1>
     </el-row>
     <el-row :gutter="20">
-      <el-col :span="3" v-for="item in forLoopData" :key="item">
+      <el-col :span="3" v-for="(item, index) in forLoopData" :key="index">
         <div class="one_user" v-on:click="select($event, item.user_id)">
           <div class="user_info">
             <!-- TODO : 사진 넣기 -->

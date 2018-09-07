@@ -4,15 +4,12 @@
       생성된 강의가 없습니다.
     </div>
     <div v-else>
-       <!-- {{ props.list }}<br /> -->
-
-      <!-- 번호(1), 타입(숙제), 강의(근대사 1강), 기간, 수강한 학생수, 수강생 이해도(평균), 강의, 관리, 삭제 -->
-      <el-table :data="props.list" stripe @row-click="listeners['row-click']">
+      <el-table :data="props.list" @row-click="listeners['row-click']" class="elTable-label">
         <el-table-column
           prop="index"
-          label="강의 번호"
-          width="80"
-          align="center"
+          label="번호"
+          width="90"
+          align="left"
         >
           <template slot-scope="scope">
             {{ scope.$index + 1 }}
@@ -21,33 +18,42 @@
 
         <el-table-column
           prop="type"
-          label="타입"
+          label="유형"
           width="90"
-          align="center"
+          align="left"
         ></el-table-column>
 
         <template v-if="props.type === 'TEACHER'">
             <el-table-column
               prop="name"
-              label="강의"
-              width="200"
-              align="center"
+              label="강의명"
+              align="left"
             ></el-table-column>
             <el-table-column
             label="기간"
-            width="275"
-            align="center"
+            width="230"
+            align="left"
           >
             <template slot-scope="scope">
-              {{ scope.row.start_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') : '미정' }}
-              ~
-              {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString('ko-KR') : '미정' }}
+              <div v-if="scope.row.type !== '[유인]'">
+                <div v-if="scope.row.type === '[무인]단체'">
+                  {{ scope.row.start_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') + ' / ' +
+                    new Date(scope.row.start_time).toLocaleTimeString('ko-KR') : '미정' }}
+                </div>
+                <div v-if="scope.row.type === '[무인]개인'">
+                  {{ scope.row.end_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') : '미정' }}
+                  ~
+                  {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString('ko-KR') : '미정' }}
+                </div>
+              </div>
             </template>
           </el-table-column>
 
+          <!-- TODO
           <el-table-column
-            label="수강한 학생 수"
-            width="110"
+            label="수강 학생 수"
+            width="135"
+             align="left"
           >
             <template slot-scope="scope">
               몇명 / {{ scope.row.capacity }}
@@ -55,42 +61,45 @@
           </el-table-column>
 
           <el-table-column
-            label="수강생 이해도"
-            width="110"
+            label="수강 이해도(평균)"
+            width="135"
+             align="left"
           >
             <template slot-scope="scope">
               몇%
             </template>
           </el-table-column>
+          -->
 
           <el-table-column
             label="-"
-            width="105"
-            align="center"
+            width="115"
+            align="left"
           >
             <template slot-scope="scope">
-              <router-link :to="`/a/teacher/NNlecture/${scope.row.lecture_id}/live`">
+              <router-link :to="`/a/teacher/NNlecture/${scope.row.lecture_id}/live?classId=${scope.row.class_id}`">
                 <el-button>강의하기</el-button>
               </router-link>
             </template>
           </el-table-column>
 
           <el-table-column
+            v-if="!props.isPhone"
             label="-"
-            width="105"
-            align="center"
+            width="90"
+            align="left"
           >
             <template slot-scope="scope">
               <router-link :to="`/a/teacher/NNlecture/${scope.row.lecture_id}/manage?classId=${scope.row.class_id}`">
-                <el-button>강의 관리</el-button>
+                <el-button class="edit-btn">수정</el-button>
               </router-link>
             </template>
           </el-table-column>
 
           <el-table-column
             label="-"
-            width="80"
-            align="center"
+            width="90"
+            align="left"
           >
             <template slot-scope="scope">
               <el-button type="danger" @click="listeners['delete'](scope.$index)">삭제</el-button>
@@ -105,17 +114,23 @@
             align="center"
           ></el-table-column>
           <el-table-column
-            label="기간"
+            label="활성화 시간"
             width="300"
             align="center"
           >
-          <template slot-scope="scope">
-            <!-- {{ scope.row.intended_start ? new Date(scope.row.intended_start).toLocaleDateString('ko-KR') : '미정' }} // Legacy : 필요없다면 지워주세요.-->
-            {{ scope.row.start_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') : '미정' }}
-            ~
-            <!-- {{ scope.row.intended_end ? new Date(scope.row.intended_end).toLocaleDateString('ko-KR') : '미정' }} // Legacy : 필요없다면 지워주세요. -->
-            {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString('ko-KR') : '미정' }}
-          </template>
+            <template slot-scope="scope">
+              <div v-if="scope.row.type !== '[유인]'">
+                <div v-if="scope.row.type === '[무인]단체'">
+                  {{ scope.row.start_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') + ' / ' +
+                    new Date(scope.row.start_time).toLocaleTimeString('ko-KR') : '미정' }}
+                </div>
+                <div v-if="scope.row.type === '[무인]개인'">
+                  {{ scope.row.end_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') : '미정' }}
+                  ~
+                  {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString('ko-KR') : '미정' }}
+                </div>
+              </div>
+            </template>
           </el-table-column>
           <el-table-column
             label="수강여부"
@@ -132,9 +147,7 @@
             align="center"
           >
             <template slot-scope="scope">
-              <router-link :to="`/a/student/NNlecture/${scope.row.lecture_id}/live`">
-                <el-button>강의보기</el-button>
-              </router-link>
+              <el-button @click="listeners['join'](scope.$index)">강의보기</el-button>
             </template>
           </el-table-column>
         </template>
@@ -192,7 +205,56 @@ export default {
         return true;
       },
     },
+    isPhone: {
+      type: null,
+    },
   },
 };
 </script>
 
+<style lang="scss" scoped>
+#lecture_list_wrapper {
+  .elTable-label {
+  font-family: SpoqaHanSans;
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  color: #909399;
+  text-align: center;
+  }
+.elTable-label th {
+  font-family: SpoqaHanSans;
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  color: #909399;
+}
+.elTable-label td {
+  font-family: SpoqaHanSans;
+  font-size: 20px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  color: #606266;
+
+}
+.edit-btn {
+  font-family: SpoqaHanSans;
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  color: #1989fa;
+}
+}
+</style>
