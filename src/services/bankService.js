@@ -40,8 +40,6 @@ export default {
     });
   },
   bankToLecture({ lecture_id, target_class_id }) {
-    console.log(lecture_id);
-    console.log(target_class_id);
     return http.post('/bank/to/lecture', {
       lecture_id: lecture_id,
       target_class_id: target_class_id,
@@ -49,7 +47,8 @@ export default {
   },
   bankToLectureItem({ lecture_item_id, target_lecture_id }) {
     return http.post('/bank/to/lecture-item', {
-      lecture_item_id, target_lecture_id,
+      lecture_item_id: lecture_item_id,
+      target_lecture_id: target_lecture_id,
     });
   },
   getBankClass() {
@@ -76,6 +75,7 @@ export default {
     return http.get(`/bank/class/search?keywords=${key}`);
   },
   getBankLectureByName({ name }) {
+    console.log(name);
     return http.get(`/bank/lecture/search?name=${name}`);
   },
   getBankLectureByGroup({ id }) {
@@ -88,5 +88,19 @@ export default {
     });
     let key = str.substr(0, str.length - 1);
     return http.get(`/bank/lecture/search?keywords=${key}`);
+  },
+  getBankLectureItemByName({ type, name }) {
+    return http.get(`/bank/lecture-item/search?name=${name}&type=${type}`);
+  },
+  getBankLectureItemByGroup({ type, id }) {
+    return http.get(`/bank/lecture-item/search?groupId=${id}&type=${type}`);
+  },
+  getBankLectureItemByKeyword({ type, keyArray }) {
+    let str = '';
+    keyArray.forEach((x) => {
+      str = str.concat(x, ',');
+    });
+    let key = str.substr(0, str.length - 1);
+    return http.get(`/bank/lecture-item/search?keywords=${key}&type=${type}`);
   },
 };

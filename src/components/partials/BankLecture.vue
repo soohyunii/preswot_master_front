@@ -4,7 +4,8 @@
       <h3>강의 은행</h3>
       <el-table
         ref="multipleTable"
-        :data="bankLectureList">
+        :data="bankLectureList"
+        max-height="400">
         <el-table-column label="강의명">
           <template slot-scope="scope">{{ scope.row.name }}</template>
         </el-table-column>
@@ -47,7 +48,7 @@
         </el-tab-pane>
       </el-tabs>
       <div style="height: 50px;" />
-      <el-table ref="multipleTable" :data="resultLectureList" style="width: 100%" @selection-change="handleSelectionChange">
+      <el-table ref="multipleTable" :data="resultLectureList" style="width: 100%" @selection-change="handleSelectionChange" max-height="400">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column label="강의명">
           <template slot-scope="scope">{{ scope.row.name }}</template>

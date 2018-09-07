@@ -41,6 +41,11 @@
         <el-button id="btn_add_new_lc_item" @click="onClick('ADD_NEW_LC_ITEM')" type="primary">
           강의 아이템 추가
         </el-button>
+        <router-link :to="`/a/teacher/NNlecture/newitemfrombank?lectureId=${lectureId}`">
+          <el-button type="primary" :class="$attachReactablePostfix('right-align-btn')">
+            <div class="right-align-btn-layer">아이템은행에서 가져오기</div>
+          </el-button>
+        </router-link>
       </div>
     </div>
     <div v-if="isEditing">

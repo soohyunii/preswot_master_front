@@ -26,7 +26,7 @@
       </el-tab-pane>
     </el-tabs>
     <div style="height: 50px;" />
-    <el-table ref="multipleTable" :data="resultLectureList" style="width: 100%" @selection-change="handleSelectionChange">
+    <el-table ref="multipleTable" :data="resultLectureList" style="width: 100%" @selection-change="handleSelectionChange" max-height="400">
       <el-table-column
         type="selection"
         width="55">
@@ -160,7 +160,6 @@ export default {
             break;
           }
           vm.resultLectureList = [];
-          console.log(vm.selectGroup);
           const res = bankService.getBankLectureByGroup({
             id: vm.selectGroup,
           });

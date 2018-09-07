@@ -121,7 +121,7 @@ export default function authRoutes(root) {
       },
     },
     {
-      path: '/teacher/NNlecture/:lectureId/newitemfrombank',
+      path: '/teacher/NNlecture/newitemfrombank',
       name: 'NLectureItemFromBank',
       component: NLectureItemFromBank,
       meta: {

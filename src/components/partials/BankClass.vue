@@ -4,7 +4,8 @@
       <h3>과목 은행</h3>
       <el-table
         ref="multipleTable"
-        :data="bankClassList">
+        :data="bankClassList"
+        max-height="400">
         <el-table-column label="과목명">
           <template slot-scope="scope">{{ scope.row.name }}</template>
         </el-table-column>
@@ -45,7 +46,7 @@
         </el-tab-pane>
       </el-tabs>
       <div style="height: 50px;" />
-      <el-table ref="multipleTable" :data="resultClassList" style="width: 100%" @selection-change="handleSelectionChange">
+      <el-table ref="multipleTable" :data="resultClassList" style="width: 100%" @selection-change="handleSelectionChange" max-height="400">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column label="과목명">
           <template slot-scope="scope">{{ scope.row.name }}</template>
@@ -59,9 +60,9 @@
         <el-table-column label="최종 수정일" width="160px">
           <template slot-scope="scope">{{ scope.row.updateTime }}</template>
         </el-table-column>
-        <el-table-column width="120px">
+        <!--<el-table-column width="120px">
           <el-button slot-scope="scope" @click="classDetail(scope.row)">과목 상세</el-button>
-        </el-table-column>
+        </el-table-column>-->
       </el-table>
       <div style="height: 10px;" />
       <el-select v-model="selectGroup" placeholder="그룹 선택">
