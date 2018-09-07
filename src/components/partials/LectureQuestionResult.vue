@@ -81,6 +81,29 @@
             </span>
           </template>
         </el-table-column>
+
+        <el-table-column
+          v-if="questionResult.type === '서술' && autoGradeTeacherScoreList.length > 0"
+           label="강사 자동채점 결과"
+          align="center">
+          <template slot-scope="scope">
+            <span v-for="(answer, index) in scope.row.answer" class="item" :key="index">
+              <span>{{ autoGradeTeacherScoreList[index] }}</span>
+            </span>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          v-if="questionResult.type === '서술' && autoGradeStudentScoreList.length > 0"
+           label="학생 자동채점 결과"
+          align="center">
+          <template slot-scope="scope">
+            <span v-for="(answer, index) in scope.row.answer" class="item" :key="index">
+              <span>{{ autoGradeTeacherScoreList[index] }}</span>
+            </span>
+          </template>
+        </el-table-column>
+
         <el-table-column
           v-if="studentQuestionResult.type === 'SW'"
           label="결과"
@@ -182,12 +205,15 @@
   import questionService from '../../services/questionService';
   import { baseUrl } from '../../services/config';
   import utils from '../../utils';
+  import { EventBus } from '../../event-bus';
 
   export default {
     name: 'LectureQuestionResult',
     props: ['classId', 'lectureId', 'itemId', 'resultType'],
     data() {
       return {
+        autoGradeStudentScoreList: [],
+        autoGradeTeacherScoreList: [],
         activeTab: 'question',
         questionResultSummary: [{
           numAnswer: null,
@@ -240,6 +266,8 @@
       vm.questionResultSummary[0].numAnswer = numAnswer;
       vm.questionResultSummary[0].numPartialAnswer = numPartialAnswer;
       vm.questionResultSummary[0].numWrongAnswer = numTotal - numAnswer - numPartialAnswer;
+
+      EventBus.$on('autoGradingComplete', vm.autoGradingComplete);
     },
     methods: {
       ...mapActions('grading', [
@@ -249,6 +277,19 @@
       ...mapActions('NNclass', [
         'putScore',
       ]),
+      autoGradingComplete(data) {
+        const vm = this;
+
+        vm.autoGradeStudentScoreList.length = 0;
+        data.student.forEach((element) => {
+          vm.autoGradeStudentScoreList.push(element.score);
+        });
+
+        vm.autoGradeTeacherScoreList.length = 0;
+        data.lecturer.forEach((element) => {
+          vm.autoGradeTeacherScoreList.push(element.score);
+        });
+      },
       async refresh() {
         const vm = this;
         await vm.getClassTotalResult({

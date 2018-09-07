@@ -114,29 +114,6 @@
           </div>
           <el-button size="mini" type="primary" @click="onClick('addStudentSideWordAndScore')">추가</el-button>
         </el-col>
-
-        <!--
-        <el-col :span="12">
-          <h5>학생 답안 기준 자동채점</h5>
-          <el-table :data="test2">
-            <el-table-column label="단어" prop="word">
-            </el-table-column>
-            <el-table-column label="중요도" prop="score">
-            </el-table-column>
-            <el-table-column label="-">
-              <template slot-scope="scope">
-                <el-button size="mini" type="danger" @click="onClick('', scope.$index)">삭제</el-button>
-              </template>
-            </el-table-column>
-            TODO 불용어 추가 : 어디서 관리(삭제, 열람)할지?
-            <el-table-column label="">
-              <template slot-scope="scope">
-                <el-button type="danger">불용어 추가</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-col>
-        -->
       </el-row>
       
       <br/>
@@ -150,6 +127,7 @@
 </template>
 <script>
 import questionService from '../../services/questionService';
+import { EventBus } from '../../event-bus';
 
 export default {
   name: 'LectureQuestionAutoGrading',
@@ -204,9 +182,6 @@ export default {
             questionId: vm.$route.params.itemId,
             ratioStudent: vm.ratioStudent,
           });
-          // mock
-          // vm.teacherSideList = [{ word: 'ㅎㅇ', score: 3 }, { word: 'ㅎㅇㅇ', score: 4 }];
-          // vm.studentSideList = [{ word: 'ㅋㅎ', score: 31 }, { word: 'ㅋㅋㅎ', score: 41 }];
           vm.teacherSideList = res.data.lecturer;
           vm.studentSideList = res.data.student;
           vm.page = 2;
@@ -220,15 +195,8 @@ export default {
             teacherSideList: vm.teacherSideList,
             studentSideList: vm.studentSideList,
           });
-          console.log('questionService.autoGradeDescription res =  ', res);
-          /*
-          setTimeout(() => {
-            this.$emit('returnResult', [
-              { student_id: 'chy~', student_answer: 'e=0.03', gradeByTeacher: '0.2', gradeByStudent: '0.6' },
-              { student_id: 'chy2~', student_answer: 'e=0.05', gradeByTeacher: '0.5', gradeByStudent: '0.7' },
-            ]);
-          }, 500);
-          */
+          console.log('questionService.autoGradeDescription res.data =  ', res.data);
+          EventBus.$emit('autoGradingComplete', res.data);
           break;
         }
         case 'addTeacherSideWordAndScore': {

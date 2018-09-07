@@ -82,7 +82,7 @@
       </div>
       <br />
       <lecture-question-result
-        v-if="isGrading === false"
+        v-show="isGrading === false"
         :classId="classId"
         :itemId="itemId"
         resultType="결과보기"
@@ -113,6 +113,7 @@
   import { mapActions, mapState, mapGetters } from 'vuex';
   import LectureQuestionResult from '../partials/LectureQuestionResult';
   import LectureQuestionAutoGrading from '../partials/LectureQuestionAutoGrading';
+  import { EventBus } from '../../event-bus';
 
   export default {
     name: 'TeacherClassGradingQuestion',
@@ -154,6 +155,8 @@
       vm.getQuestionResult({
         itemId: vm.itemId,
       });
+  
+      EventBus.$on('autoGradingComplete', vm.autoGradingComplete);
     },
     methods: {
       ...mapActions('grading', [
@@ -178,6 +181,9 @@
         if (res && res.status === 200) {
         }
         */
+      },
+      autoGradingComplete() {
+        this.isGrading = false;
       },
       onClick(type) {
         const vm = this;
