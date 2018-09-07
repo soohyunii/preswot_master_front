@@ -84,7 +84,7 @@
           </template>
           <template v-else>
             <p>문항 - 단답</p>
-            <div v-show="data.questions[0].question_material.length > 0">
+            <div v-show="data.questions[0].question_material && data.questions[0].question_material.length > 0">
               <div class="questionFile"
                 v-for="file in data.questions[0].question_material"
                 :key="file.file_guid">
@@ -269,7 +269,7 @@
         </div>
         <el-row type="flex" justify="center">
           <el-button
-            v-if="!answerSubmitted"
+            v-if="!((data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT' && lectureType === 0) || answerSubmitted)"
             type="primary"
             @click="preOnClick()">
             제출
@@ -303,7 +303,7 @@
         </div>
         <el-row type="flex" justify="center">
           <el-button
-            v-if="!answerSubmitted"
+            v-if="!((data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT' && lectureType === 0) || answerSubmitted)"
             type="primary"
             @click="preOnClick()">
             제출
