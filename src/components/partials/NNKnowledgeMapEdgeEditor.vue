@@ -32,7 +32,7 @@
       </el-table-column>
       <el-table-column label="Operation" align="center">
         <template slot-scope="scope">
-          <el-button size="mini" type="danger" @click="onClick('delete', scope.$index)">
+          <el-button size="mini" type="danger" @click="onClick('delete', scope.row.from, scope.row.to)">
             delete
           </el-button>
         </template>
@@ -46,7 +46,7 @@ import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'KnowledgeMapEdgeEditor',
-  props: ['drawNetwork'],
+  props: ['drawNetwork', 'edgeData'],
   data() {
     return {
       inputFlag: [],
@@ -59,22 +59,23 @@ export default {
     ...mapActions('kMap', [
       'deleteLectureKeywordRelation',
     ]),
-    onClick(type, index) {
+    async onClick(type, data1, data2) {
       const vm = this;
       switch (type) {
         case 'changeEdgeWeight': {
-          vm.checkAndCreateInputFlag(index);
-          vm.inputFlag[index] = true;
+          vm.checkAndCreateInputFlag(data1);
+          vm.inputFlag[data1] = true;
           break;
         }
         case 'saveEdgeWeight': {
-          vm.inputFlag.splice(index, 1, false);
+          vm.inputFlag.splice(data1, 1, false);
           break;
         }
         case 'delete': {
-          vm.deleteLectureKeywordRelation({ index, lectureId: vm.$route.params.lectureId });
-          vm.inputFlag.splice(index, 1);
-          vm.drawNetwork();
+          const index = vm.edges.findIndex(item => item.from === data1 && item.to === data2);
+          vm.edgeData.remove(vm.edges[index].id);
+          await vm.deleteLectureKeywordRelation({ index, lectureId: vm.$route.params.lectureId });
+          vm.inputFlag.splice(data1, 1);
           break;
         }
         default: {

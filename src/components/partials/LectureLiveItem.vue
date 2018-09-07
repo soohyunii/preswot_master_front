@@ -269,7 +269,7 @@
         </div>
         <el-row type="flex" justify="center">
           <el-button
-            v-if="!answerSubmitted"
+            v-if="!((data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT' && lectureType === 0) || answerSubmitted)"
             type="primary"
             @click="preOnClick()">
             제출
@@ -303,7 +303,7 @@
         </div>
         <el-row type="flex" justify="center">
           <el-button
-            v-if="!answerSubmitted"
+            v-if="!((data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT' && lectureType === 0) || answerSubmitted)"
             type="primary"
             @click="preOnClick()">
             제출
