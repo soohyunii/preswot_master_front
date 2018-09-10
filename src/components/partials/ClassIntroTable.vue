@@ -24,8 +24,10 @@
         <el-button type="success" @click="onClick('DETAIL', scope.row)">살펴보기</el-button>
         -->
         <span v-if="isApplied(scope.row)">
-          <el-button type="danger" @click="onClick('CANCEL', scope.row)">수강취소</el-button>
+          <!-- FIXME: 건호씨 요구사항에 따라 수강취소 버튼 주석 씌움 -->
+          <!--<el-button type="danger" @click="onClick('CANCEL', scope.row)">수강취소</el-button>-->
         </span>
+        
         <span v-else-if="scope.row.opened===2">
           <el-button type="info" disabled width="200px">신청마감</el-button>
         </span>

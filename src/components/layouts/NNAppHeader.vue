@@ -6,11 +6,14 @@
           <span :class="$attachReactablePostfix('title')">PRESWOT</span>
         </div>
       </router-link>
+
+      <!-- 비활성화 : 0910 건호씨 요구사항
       <router-link to="/classes" v-if="authType !== 1" >
         <div :class="$attachReactablePostfix('div2')">
           <span :class="$attachReactablePostfix('common')">과목목록</span>
         </div>
       </router-link>
+      -->
       <router-link to="/a/teacher/NNclass" v-if="authType === 1" v-show="isJwtValid">
         <div :class="$attachReactablePostfix('div2_1')">
           <span :class="$attachReactablePostfix('common')">강의중인 과목</span>
