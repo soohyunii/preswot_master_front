@@ -11,11 +11,13 @@
             <span :class="$attachReactablePostfix('common')">Policy</span>
           </div>
         </router-link>
+        <!-- FIXME : 건호씨 요구사항 download 비활성화
         <router-link to="/download">
           <div :class="$attachReactablePostfix('div3')">
             <span :class="$attachReactablePostfix('common')">Download</span>
           </div>
         </router-link>
+        -->
       </div>
     </div>
   </div>
