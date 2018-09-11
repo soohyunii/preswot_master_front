@@ -83,7 +83,6 @@
 
 <script>
 import bankService from '../../services/bankService';
-import lectureService from '../../services/lectureService';
 
 export default {
   name: 'BankLectureItem',
@@ -102,7 +101,6 @@ export default {
       bankLectureItemList: [],
     };
   },
-  
   async mounted() {
     const vm = this;
     vm.isAdd = false;
@@ -188,11 +186,11 @@ export default {
       });
       cInfo.then(function(result) {  // eslint-disable-line
         result.data.lectures.forEach((y) => {
-          const lecture_id = y.lecture_id;
+          const lectureId = y.lecture_id;
           const resitem = bankService.getLectureInfo({
-            id: lecture_id,
+            id: lectureId,
           });
-          resitem.then(function(rr) {
+          resitem.then(function(rr) {  // eslint-disable-line
             rr.data.lecture_items.forEach((z) => {
               const itemInfo = {};
               itemInfo.name = z.name;
@@ -222,7 +220,7 @@ export default {
                 id: z.lecture_item_id,
               });
               // console.log(itemKey);
-              itemKey.then(function(itemresult) {
+              itemKey.then(function(itemresult) {  // eslint-disable-line
                 // console.log(itemresult);
                 itemresult.data.forEach((gz) => {
                   itemInfo.key.push(gz.keyword);

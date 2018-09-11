@@ -13,7 +13,7 @@
       </el-tab-pane>
       <el-tab-pane label="소속 그룹으로 검색">
         <el-select v-model="selectType" placeholder="타입 선택">
-          <el-option v-for="item in typelist" :key="item"></el-option>
+          <el-option v-for="item in typelist" :key="item" :label="item" :value="item"></el-option>
         </el-select>
         <el-select v-model="selectGroup" placeholder="그룹 선택">
           <el-option v-for="item in group" :key="item.group_id" :label="item.name" :value="item.group_id"></el-option>
@@ -27,7 +27,7 @@
         <br />
         <div style="height: 10px;" />
         <el-select v-model="selectType" placeholder="타입 선택">
-          <el-option v-for="item in typelist" :key="item"></el-option>
+          <el-option v-for="item in typelist" :key="item" :label="item" :value="item"></el-option>
         </el-select>
         <el-tag v-for="(value, index) in searchKeywordList" :key="value" closable @close="deleteKeyword(index)" style="margin-right: 5px;">{{ value }}</el-tag>
         <el-button type="primary" @click="onClick('SEARCH_BY_KEYWORD')">검색</el-button>
@@ -67,7 +67,6 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
 import bankService from '../../services/bankService';
 
 export default {
@@ -99,7 +98,6 @@ export default {
     const res = await bankService.getBankLectureItem({
       type: 'question',
     });
-    console.log(res);
     res.data.lectureItemList.forEach((x) => {
       const lectureItemInfo = {};
       lectureItemInfo.name = x.name;
@@ -196,7 +194,7 @@ export default {
         case 'TAB_CHANGE': {
           vm.searchName = '';
           vm.searchKey = '';
-          vm.searchGroup = '';
+          vm.selectGroup = '';
           vm.selectType = '';
           vm.searchKeywordList = [];
           vm.$refs.multipleTable.clearSelection();
@@ -222,81 +220,176 @@ export default {
           }
           vm.resultLectureItemList = [];
           if (vm.selectType === '전체') {
-            vm.resultLectureItemList = vm.bankLectureItemList;
+            vm.resultLectureItemList = [];
+            const res = bankService.getBankLectureItemByName({
+              type: 'question',
+              name: vm.searchName,
+            });
+            res.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '문항';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
+            });
+            const res1 = bankService.getBankLectureItemByName({
+              type: 'codepractice',
+              name: vm.searchName,
+            });
+            res1.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '실습';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
+            });
+            const res2 = bankService.getBankLectureItemByName({
+              type: 'survey',
+              name: vm.searchName,
+            });
+            res2.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '설문';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
+            });
+            const res3 = bankService.getBankLectureItemByName({
+              type: 'discussion',
+              name: vm.searchName,
+            });
+            res3.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '토론';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
+            });
+            const res4 = bankService.getBankLectureItemByName({
+              type: 'note',
+              name: vm.searchName,
+            });
+            res4.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '자료';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
+            });
           } else if (vm.selectType === '문항') {
             const res = bankService.getBankLectureItemByName({
               type: 'question',
               name: vm.searchName,
             });
-            res.data.lectureItemList.forEach((x) => {
-              const lectureItemInfo = {};
-              lectureItemInfo.name = x.name;
-              lectureItemInfo.type = x.type;
-              lectureItemInfo.typename = '문항';
-              lectureItemInfo.id = x.lecture_item_id;
-              lectureItemInfo.groupId = x.bank_group.group_id;
-              lectureItemInfo.groupName = x.bank_group.name;
-              vm.bankLectureItemList.push(lectureItemInfo);
+            vm.resultLectureItemList = [];
+            res.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '문항';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
             });
           } else if (vm.selectType === '실습') {
             const res = bankService.getBankLectureItemByName({
               type: 'codepractice',
               name: vm.searchName,
             });
-            res.data.lectureItemList.forEach((x) => {
-              const lectureItemInfo = {};
-              lectureItemInfo.name = x.name;
-              lectureItemInfo.type = x.type;
-              lectureItemInfo.typename = '실습';
-              lectureItemInfo.id = x.lecture_item_id;
-              lectureItemInfo.groupId = x.bank_group.group_id;
-              lectureItemInfo.groupName = x.bank_group.name;
-              vm.bankLectureItemList.push(lectureItemInfo);
+            vm.resultLectureItemList = [];
+            res.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '실습';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
             });
           } else if (vm.selectType === '설문') {
             const res = bankService.getBankLectureItemByName({
               type: 'survey',
               name: vm.searchName,
             });
-            res.data.lectureItemList.forEach((x) => {
-              const lectureItemInfo = {};
-              lectureItemInfo.name = x.name;
-              lectureItemInfo.type = x.type;
-              lectureItemInfo.typename = '설문';
-              lectureItemInfo.id = x.lecture_item_id;
-              lectureItemInfo.groupId = x.bank_group.group_id;
-              lectureItemInfo.groupName = x.bank_group.name;
-              vm.bankLectureItemList.push(lectureItemInfo);
+            vm.resultLectureItemList = [];
+            res.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '설문';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
             });
           } else if (vm.selectType === '토론') {
             const res = bankService.getBankLectureItemByName({
               type: 'discussion',
               name: vm.searchName,
             });
-            res.data.lectureItemList.forEach((x) => {
-              const lectureItemInfo = {};
-              lectureItemInfo.name = x.name;
-              lectureItemInfo.type = x.type;
-              lectureItemInfo.typename = '토론';
-              lectureItemInfo.id = x.lecture_item_id;
-              lectureItemInfo.groupId = x.bank_group.group_id;
-              lectureItemInfo.groupName = x.bank_group.name;
-              vm.bankLectureItemList.push(lectureItemInfo);
+            vm.resultLectureItemList = [];
+            res.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '토론';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
             });
           } else if (vm.selectType === '자료') {
             const res = bankService.getBankLectureItemByName({
               type: 'note',
               name: vm.searchName,
             });
-            res.data.lectureItemList.forEach((x) => {
-              const lectureItemInfo = {};
-              lectureItemInfo.name = x.name;
-              lectureItemInfo.type = x.type;
-              lectureItemInfo.typename = '자료';
-              lectureItemInfo.id = x.lecture_item_id;
-              lectureItemInfo.groupId = x.bank_group.group_id;
-              lectureItemInfo.groupName = x.bank_group.name;
-              vm.bankLectureItemList.push(lectureItemInfo);
+            vm.resultLectureItemList = [];
+            res.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '자료';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
             });
           }
           break;
@@ -321,81 +414,176 @@ export default {
           }
           vm.resultLectureItemList = [];
           if (vm.selectType === '전체') {
-            vm.resultLectureItemList = vm.bankLectureItemList;
+            vm.resultLectureItemList = [];
+            const res = bankService.getBankLectureItemByGroup({
+              type: 'question',
+              id: vm.selectGroup,
+            });
+            res.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '문항';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
+            });
+            const res1 = bankService.getBankLectureItemByGroup({
+              type: 'codepractice',
+              id: vm.selectGroup,
+            });
+            res1.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '실습';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
+            });
+            const res2 = bankService.getBankLectureItemByGroup({
+              type: 'survey',
+              id: vm.selectGroup,
+            });
+            res2.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '설문';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
+            });
+            const res3 = bankService.getBankLectureItemByGroup({
+              type: 'discussion',
+              id: vm.selectGroup,
+            });
+            res3.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '토론';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
+            });
+            const res4 = bankService.getBankLectureItemByGroup({
+              type: 'note',
+              id: vm.selectGroup,
+            });
+            res4.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '자료';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
+            });
           } else if (vm.selectType === '문항') {
             const res = bankService.getBankLectureItemByGroup({
               type: 'question',
               id: vm.selectGroup,
             });
-            res.data.lectureItemList.forEach((x) => {
-              const lectureItemInfo = {};
-              lectureItemInfo.name = x.name;
-              lectureItemInfo.type = x.type;
-              lectureItemInfo.typename = '문항';
-              lectureItemInfo.id = x.lecture_item_id;
-              lectureItemInfo.groupId = x.bank_group.group_id;
-              lectureItemInfo.groupName = x.bank_group.name;
-              vm.bankLectureItemList.push(lectureItemInfo);
+            vm.resultLectureItemList = [];
+            res.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '문항';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
             });
           } else if (vm.selectType === '실습') {
             const res = bankService.getBankLectureItemByGroup({
               type: 'codepractice',
               id: vm.selectGroup,
             });
-            res.data.lectureItemList.forEach((x) => {
-              const lectureItemInfo = {};
-              lectureItemInfo.name = x.name;
-              lectureItemInfo.type = x.type;
-              lectureItemInfo.typename = '실습';
-              lectureItemInfo.id = x.lecture_item_id;
-              lectureItemInfo.groupId = x.bank_group.group_id;
-              lectureItemInfo.groupName = x.bank_group.name;
-              vm.bankLectureItemList.push(lectureItemInfo);
+            vm.resultLectureItemList = [];
+            res.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '실습';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
             });
           } else if (vm.selectType === '설문') {
             const res = bankService.getBankLectureItemByGroup({
               type: 'survey',
               id: vm.selectGroup,
             });
-            res.data.lectureItemList.forEach((x) => {
-              const lectureItemInfo = {};
-              lectureItemInfo.name = x.name;
-              lectureItemInfo.type = x.type;
-              lectureItemInfo.typename = '설문';
-              lectureItemInfo.id = x.lecture_item_id;
-              lectureItemInfo.groupId = x.bank_group.group_id;
-              lectureItemInfo.groupName = x.bank_group.name;
-              vm.bankLectureItemList.push(lectureItemInfo);
+            vm.resultLectureItemList = [];
+            res.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '설문';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
             });
           } else if (vm.selectType === '토론') {
             const res = bankService.getBankLectureItemByGroup({
               type: 'discussion',
               id: vm.selectGroup,
             });
-            res.data.lectureItemList.forEach((x) => {
-              const lectureItemInfo = {};
-              lectureItemInfo.name = x.name;
-              lectureItemInfo.type = x.type;
-              lectureItemInfo.typename = '토론';
-              lectureItemInfo.id = x.lecture_item_id;
-              lectureItemInfo.groupId = x.bank_group.group_id;
-              lectureItemInfo.groupName = x.bank_group.name;
-              vm.bankLectureItemList.push(lectureItemInfo);
+            vm.resultLectureItemList = [];
+            res.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '토론';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
             });
           } else if (vm.selectType === '자료') {
             const res = bankService.getBankLectureItemByGroup({
               type: 'note',
               id: vm.selectGroup,
             });
-            res.data.lectureItemList.forEach((x) => {
-              const lectureItemInfo = {};
-              lectureItemInfo.name = x.name;
-              lectureItemInfo.type = x.type;
-              lectureItemInfo.typename = '자료';
-              lectureItemInfo.id = x.lecture_item_id;
-              lectureItemInfo.groupId = x.bank_group.group_id;
-              lectureItemInfo.groupName = x.bank_group.name;
-              vm.bankLectureItemList.push(lectureItemInfo);
+            vm.resultLectureItemList = [];
+            res.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '자료';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
             });
           }
           break;
@@ -446,81 +634,170 @@ export default {
           }
           vm.resultLectureItemList = [];
           if (vm.selectType === '전체') {
-            vm.resultLectureItemList = vm.bankLectureItemList;
+            const res = bankService.getBankLectureItemByKeyword({
+              type: 'question',
+              keyArray: vm.searchKeywordList,
+            });
+            res.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '문항';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
+            });
+            const res1 = bankService.getBankLectureItemByKeyword({
+              type: 'codepractice',
+              keyArray: vm.searchKeywordList,
+            });
+            res1.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '실습';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
+            });
+            const res2 = bankService.getBankLectureItemByKeyword({
+              type: 'survey',
+              keyArray: vm.searchKeywordList,
+            });
+            res2.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '설문';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
+            });
+            const res3 = bankService.getBankLectureItemByKeyword({
+              type: 'discussion',
+              keyArray: vm.searchKeywordList,
+            });
+            res3.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '토론';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
+            });
+            const res4 = bankService.getBankLectureItemByKeyword({
+              type: 'note',
+              keyArray: vm.searchKeywordList,
+            });
+            res4.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '자료';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
+            });
           } else if (vm.selectType === '문항') {
             const res = bankService.getBankLectureItemByKeyword({
               type: 'question',
               keyArray: vm.searchKeywordList,
             });
-            res.data.lectureItemList.forEach((x) => {
-              const lectureItemInfo = {};
-              lectureItemInfo.name = x.name;
-              lectureItemInfo.type = x.type;
-              lectureItemInfo.typename = '문항';
-              lectureItemInfo.id = x.lecture_item_id;
-              lectureItemInfo.groupId = x.bank_group.group_id;
-              lectureItemInfo.groupName = x.bank_group.name;
-              vm.bankLectureItemList.push(lectureItemInfo);
+            res.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '문항';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
             });
           } else if (vm.selectType === '실습') {
             const res = bankService.getBankLectureItemByKeyword({
               type: 'codepractice',
               keyArray: vm.searchKeywordList,
             });
-            res.data.lectureItemList.forEach((x) => {
-              const lectureItemInfo = {};
-              lectureItemInfo.name = x.name;
-              lectureItemInfo.type = x.type;
-              lectureItemInfo.typename = '실습';
-              lectureItemInfo.id = x.lecture_item_id;
-              lectureItemInfo.groupId = x.bank_group.group_id;
-              lectureItemInfo.groupName = x.bank_group.name;
-              vm.bankLectureItemList.push(lectureItemInfo);
+            res.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '실습';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
             });
           } else if (vm.selectType === '설문') {
             const res = bankService.getBankLectureItemByKeyword({
               type: 'survey',
               keyArray: vm.searchKeywordList,
             });
-            res.data.lectureItemList.forEach((x) => {
-              const lectureItemInfo = {};
-              lectureItemInfo.name = x.name;
-              lectureItemInfo.type = x.type;
-              lectureItemInfo.typename = '설문';
-              lectureItemInfo.id = x.lecture_item_id;
-              lectureItemInfo.groupId = x.bank_group.group_id;
-              lectureItemInfo.groupName = x.bank_group.name;
-              vm.bankLectureItemList.push(lectureItemInfo);
+            res.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '설문';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
             });
           } else if (vm.selectType === '토론') {
             const res = bankService.getBankLectureItemByKeyword({
               type: 'discussion',
               keyArray: vm.searchKeywordList,
             });
-            res.data.lectureItemList.forEach((x) => {
-              const lectureItemInfo = {};
-              lectureItemInfo.name = x.name;
-              lectureItemInfo.type = x.type;
-              lectureItemInfo.typename = '토론';
-              lectureItemInfo.id = x.lecture_item_id;
-              lectureItemInfo.groupId = x.bank_group.group_id;
-              lectureItemInfo.groupName = x.bank_group.name;
-              vm.bankLectureItemList.push(lectureItemInfo);
+            res.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '토론';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
             });
           } else if (vm.selectType === '자료') {
             const res = bankService.getBankLectureItemByKeyword({
               type: 'note',
               keyArray: vm.searchKeywordList,
             });
-            res.data.lectureItemList.forEach((x) => {
-              const lectureItemInfo = {};
-              lectureItemInfo.name = x.name;
-              lectureItemInfo.type = x.type;
-              lectureItemInfo.typename = '자료';
-              lectureItemInfo.id = x.lecture_item_id;
-              lectureItemInfo.groupId = x.bank_group.group_id;
-              lectureItemInfo.groupName = x.bank_group.name;
-              vm.bankLectureItemList.push(lectureItemInfo);
+            res.then(function(sre) {  // eslint-disable-line
+              sre.data.lectureItemList.forEach((x) => {
+                const lectureItemInfo = {};
+                lectureItemInfo.name = x.name;
+                lectureItemInfo.type = x.type;
+                lectureItemInfo.typename = '자료';
+                lectureItemInfo.id = x.lecture_item_id;
+                lectureItemInfo.groupId = x.bank_group.group_id;
+                lectureItemInfo.groupName = x.bank_group.name;
+                vm.resultLectureItemList.push(lectureItemInfo);
+              });
             });
           }
           break;

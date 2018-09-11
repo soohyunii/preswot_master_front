@@ -55,7 +55,6 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
 import bankService from '../../services/bankService';
 
 export default {
@@ -83,7 +82,6 @@ export default {
     const vm = this;
     vm.isAdd = false;
     const res = await bankService.getBankLecture();
-    console.log(res);
     res.data.lectureList.forEach((x) => {
       const lectureInfo = {};
       lectureInfo.name = x.name;
@@ -133,19 +131,21 @@ export default {
           const res = bankService.getBankLectureByName({
             name: vm.searchName,
           });
-          res.data.lectureList.forEach((x) => {
-            const lectureInfo = {};
-            lectureInfo.name = x.name;
-            lectureInfo.classId = x.class_id;
-            const cr1 = x.created_at.substr(0, 10);
-            const cr2 = x.created_at.substr(11, 8);
-            lectureInfo.createTime = cr1.concat(' ', cr2);
-            const up1 = x.updated_at.substr(0, 10);
-            const up2 = x.updated_at.substr(11, 8);
-            lectureInfo.updateTime = up1.concat(' ', up2);
-            lectureInfo.groupId = x.bank_group.group_id;
-            lectureInfo.groupName = x.bank_group.name;
-            vm.resultLectureList.push(lectureInfo);
+          res.then(function(sre) {  // eslint-disable-line
+            sre.data.lectureList.forEach((x) => {
+              const lectureInfo = {};
+              lectureInfo.name = x.name;
+              lectureInfo.lectureId = x.lecture_id;
+              /* const cr1 = x.created_at.substr(0, 10);
+              const cr2 = x.created_at.substr(11, 8);
+              lectureInfo.createTime = cr1.concat(' ', cr2);
+              const up1 = x.updated_at.substr(0, 10);
+              const up2 = x.updated_at.substr(11, 8);
+              lectureInfo.updateTime = up1.concat(' ', up2); */
+              lectureInfo.groupId = x.bank_group.group_id;
+              lectureInfo.groupName = x.bank_group.name;
+              vm.resultLectureList.push(lectureInfo);
+            });
           });
           break;
         }
@@ -163,19 +163,21 @@ export default {
           const res = bankService.getBankLectureByGroup({
             id: vm.selectGroup,
           });
-          res.data.lectureList.forEach((x) => {
-            const lectureInfo = {};
-            lectureInfo.name = x.name;
-            lectureInfo.classId = x.class_id;
-            const cr1 = x.created_at.substr(0, 10);
-            const cr2 = x.created_at.substr(11, 8);
-            lectureInfo.createTime = cr1.concat(' ', cr2);
-            const up1 = x.updated_at.substr(0, 10);
-            const up2 = x.updated_at.substr(11, 8);
-            lectureInfo.updateTime = up1.concat(' ', up2);
-            lectureInfo.groupId = x.bank_group.group_id;
-            lectureInfo.groupName = x.bank_group.name;
-            vm.resultLectureList.push(lectureInfo);
+          res.then(function(sre) {  // eslint-disable-line
+            sre.data.lectureList.forEach((x) => {
+              const lectureInfo = {};
+              lectureInfo.name = x.name;
+              lectureInfo.lectureId = x.lecture_id;
+              /* const cr1 = x.created_at.substr(0, 10);
+              const cr2 = x.created_at.substr(11, 8);
+              lectureInfo.createTime = cr1.concat(' ', cr2);
+              const up1 = x.updated_at.substr(0, 10);
+              const up2 = x.updated_at.substr(11, 8);
+              lectureInfo.updateTime = up1.concat(' ', up2); */
+              lectureInfo.groupId = x.bank_group.group_id;
+              lectureInfo.groupName = x.bank_group.name;
+              vm.resultLectureList.push(lectureInfo);
+            });
           });
           break;
         }
@@ -219,19 +221,21 @@ export default {
           const res = bankService.getBankLectureByKeyword({
             keyArray: vm.searchKeywordList,
           });
-          res.data.lectureList.forEach((x) => {
-            const lectureInfo = {};
-            lectureInfo.name = x.name;
-            lectureInfo.classId = x.class_id;
-            const cr1 = x.created_at.substr(0, 10);
-            const cr2 = x.created_at.substr(11, 8);
-            lectureInfo.createTime = cr1.concat(' ', cr2);
-            const up1 = x.updated_at.substr(0, 10);
-            const up2 = x.updated_at.substr(11, 8);
-            lectureInfo.updateTime = up1.concat(' ', up2);
-            lectureInfo.groupId = x.bank_group.group_id;
-            lectureInfo.groupName = x.bank_group.name;
-            vm.resultLectureList.push(lectureInfo);
+          res.then(function(sre) {  // eslint-disable-line
+            sre.data.lectureList.forEach((x) => {
+              const lectureInfo = {};
+              lectureInfo.name = x.name;
+              lectureInfo.lectureId = x.lecture_id;
+              /* const cr1 = x.created_at.substr(0, 10);
+              const cr2 = x.created_at.substr(11, 8);
+              lectureInfo.createTime = cr1.concat(' ', cr2);
+              const up1 = x.updated_at.substr(0, 10);
+              const up2 = x.updated_at.substr(11, 8);
+              lectureInfo.updateTime = up1.concat(' ', up2); */
+              lectureInfo.groupId = x.bank_group.group_id;
+              lectureInfo.groupName = x.bank_group.name;
+              vm.resultLectureList.push(lectureInfo);
+            });
           });
           break;
         }

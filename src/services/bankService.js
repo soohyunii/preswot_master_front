@@ -18,20 +18,20 @@ export default {
   },
   saveClass({ class_id, group_id }) {
     return http.post('/bank/class', {
-      class_id: class_id,
-      group_id: group_id,
+      class_id: class_id,  // eslint-disable-line
+      group_id: group_id,  // eslint-disable-line
     });
   },
   saveLecture({ lecture_id, group_id }) {
     return http.post('/bank/lecture', {
-      lecture_id: lecture_id,
-      group_id: group_id,
+      lecture_id: lecture_id,  // eslint-disable-line
+      group_id: group_id,  // eslint-disable-line
     });
   },
   saveLectureItem({ lecture_item_id, group_id }) {
     return http.post('/bank/lecture-item', {
-      lecture_item_id: lecture_item_id,
-      group_id: group_id,
+      lecture_item_id: lecture_item_id,  // eslint-disable-line
+      group_id: group_id,  // eslint-disable-line
     });
   },
   bankToClass({ class_id }) {
@@ -41,14 +41,14 @@ export default {
   },
   bankToLecture({ lecture_id, target_class_id }) {
     return http.post('/bank/to/lecture', {
-      lecture_id: lecture_id,
-      target_class_id: target_class_id,
+      lecture_id: lecture_id,  // eslint-disable-line
+      target_class_id: target_class_id,  // eslint-disable-line
     });
   },
   bankToLectureItem({ lecture_item_id, target_lecture_id }) {
     return http.post('/bank/to/lecture-item', {
-      lecture_item_id: lecture_item_id,
-      target_lecture_id: target_lecture_id,
+      lecture_item_id: lecture_item_id,  // eslint-disable-line
+      target_lecture_id: target_lecture_id,  // eslint-disable-line
     });
   },
   getBankClass() {
@@ -71,11 +71,10 @@ export default {
     keyArray.forEach((x) => {
       str = str.concat(x, ',');
     });
-    let key = str.substr(0, str.length - 1);
+    const key = str.substr(0, str.length - 1);
     return http.get(`/bank/class/search?keywords=${key}`);
   },
   getBankLectureByName({ name }) {
-    console.log(name);
     return http.get(`/bank/lecture/search?name=${name}`);
   },
   getBankLectureByGroup({ id }) {
@@ -86,7 +85,7 @@ export default {
     keyArray.forEach((x) => {
       str = str.concat(x, ',');
     });
-    let key = str.substr(0, str.length - 1);
+    const key = str.substr(0, str.length - 1);
     return http.get(`/bank/lecture/search?keywords=${key}`);
   },
   getBankLectureItemByName({ type, name }) {
@@ -100,7 +99,7 @@ export default {
     keyArray.forEach((x) => {
       str = str.concat(x, ',');
     });
-    let key = str.substr(0, str.length - 1);
+    const key = str.substr(0, str.length - 1);
     return http.get(`/bank/lecture-item/search?keywords=${key}&type=${type}`);
   },
 };

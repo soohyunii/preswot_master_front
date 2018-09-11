@@ -142,20 +142,22 @@ export default {
           const res = bankService.getBankClassByName({
             name: vm.searchName,
           });
-          res.data.classList.forEach((x) => {
-            const classInfo = {};
-            classInfo.name = x.name;
-            classInfo.desc = x.description;
-            classInfo.classId = x.class_id;
-            const cr1 = x.created_at.substr(0, 10);
-            const cr2 = x.created_at.substr(11, 8);
-            classInfo.createTime = cr1.concat(' ', cr2);
-            const up1 = x.updated_at.substr(0, 10);
-            const up2 = x.updated_at.substr(11, 8);
-            classInfo.updateTime = up1.concat(' ', up2);
-            classInfo.groupId = x.bank_group.group_id;
-            classInfo.groupName = x.bank_group.name;
-            vm.resultClassList.push(classInfo);
+          res.then(function(sre) {  // eslint-disable-line
+            sre.data.classList.forEach((x) => {
+              const classInfo = {};
+              classInfo.name = x.name;
+              classInfo.desc = x.description;
+              classInfo.classId = x.class_id;
+              const cr1 = x.created_at.substr(0, 10);
+              const cr2 = x.created_at.substr(11, 8);
+              classInfo.createTime = cr1.concat(' ', cr2);
+              const up1 = x.updated_at.substr(0, 10);
+              const up2 = x.updated_at.substr(11, 8);
+              classInfo.updateTime = up1.concat(' ', up2);
+              classInfo.groupId = x.bank_group.group_id;
+              classInfo.groupName = x.bank_group.name;
+              vm.resultClassList.push(classInfo);
+            });
           });
           break;
         }
@@ -170,24 +172,25 @@ export default {
             break;
           }
           vm.resultClassList = [];
-          console.log(vm.selectGroup);
           const res = bankService.getBankClassByGroup({
             id: vm.selectGroup,
           });
-          res.data.classList.forEach((x) => {
-            const classInfo = {};
-            classInfo.name = x.name;
-            classInfo.desc = x.description;
-            classInfo.classId = x.class_id;
-            const cr1 = x.created_at.substr(0, 10);
-            const cr2 = x.created_at.substr(11, 8);
-            classInfo.createTime = cr1.concat(' ', cr2);
-            const up1 = x.updated_at.substr(0, 10);
-            const up2 = x.updated_at.substr(11, 8);
-            classInfo.updateTime = up1.concat(' ', up2);
-            classInfo.groupId = x.bank_group.group_id;
-            classInfo.groupName = x.bank_group.name;
-            vm.resultClassList.push(classInfo);
+          res.then(function(sre) {  // eslint-disable-line
+            sre.data.classList.forEach((x) => {
+              const classInfo = {};
+              classInfo.name = x.name;
+              classInfo.desc = x.description;
+              classInfo.classId = x.class_id;
+              const cr1 = x.created_at.substr(0, 10);
+              const cr2 = x.created_at.substr(11, 8);
+              classInfo.createTime = cr1.concat(' ', cr2);
+              const up1 = x.updated_at.substr(0, 10);
+              const up2 = x.updated_at.substr(11, 8);
+              classInfo.updateTime = up1.concat(' ', up2);
+              classInfo.groupId = x.bank_group.group_id;
+              classInfo.groupName = x.bank_group.name;
+              vm.resultClassList.push(classInfo);
+            });
           });
           break;
         }
@@ -231,20 +234,22 @@ export default {
           const res = bankService.getBankClassByKeyword({
             keyArray: vm.searchKeywordList,
           });
-          res.data.classList.forEach((x) => {
-            const classInfo = {};
-            classInfo.name = x.name;
-            classInfo.desc = x.description;
-            classInfo.classId = x.class_id;
-            const cr1 = x.created_at.substr(0, 10);
-            const cr2 = x.created_at.substr(11, 8);
-            classInfo.createTime = cr1.concat(' ', cr2);
-            const up1 = x.updated_at.substr(0, 10);
-            const up2 = x.updated_at.substr(11, 8);
-            classInfo.updateTime = up1.concat(' ', up2);
-            classInfo.groupId = x.bank_group.group_id;
-            classInfo.groupName = x.bank_group.name;
-            vm.resultClassList.push(classInfo);
+          res.then(function(sre) {  // eslint-disable-line
+            sre.data.classList.forEach((x) => {
+              const classInfo = {};
+              classInfo.name = x.name;
+              classInfo.desc = x.description;
+              classInfo.classId = x.class_id;
+              const cr1 = x.created_at.substr(0, 10);
+              const cr2 = x.created_at.substr(11, 8);
+              classInfo.createTime = cr1.concat(' ', cr2);
+              const up1 = x.updated_at.substr(0, 10);
+              const up2 = x.updated_at.substr(11, 8);
+              classInfo.updateTime = up1.concat(' ', up2);
+              classInfo.groupId = x.bank_group.group_id;
+              classInfo.groupName = x.bank_group.name;
+              vm.resultClassList.push(classInfo);
+            });
           });
           break;
         }
