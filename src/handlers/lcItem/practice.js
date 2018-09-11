@@ -5,9 +5,18 @@ import practiceService from '../../services/practiceService';
 export default class PracticeHandler extends LcItemHandler {
 
   /* eslint-disable no-param-reassign */
-  static initViewModel(vm) {
+  static async initViewModel(vm) {
     const item = vm.lectureItem;
     const p = item.lecture_code_practices[0];
+
+    const keywordList = await practiceService.getPracticeKeywords({
+      practiceId: p.practice_id,
+    });
+    keywordList.data.forEach((element) => {
+      element.score = element.score_portion;
+    });
+    vm.inputTail.assignedKeywordList = keywordList.data;
+
     vm.inputTail.code = p.code;
   }
   /* eslint-enable no-param-reassign */
@@ -30,6 +39,13 @@ export default class PracticeHandler extends LcItemHandler {
     await practiceService.putPractice({
       practiceId,
       code: inputTail.code,
+    });
+    await practiceService.deletePracticeKeywords({
+      practiceId,
+    });
+    await practiceService.postPracticeKeywords({
+      practiceId,
+      data: inputTail.assignedKeywordList,
     });
   }
 }

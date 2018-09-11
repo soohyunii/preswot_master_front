@@ -8,7 +8,9 @@
         강의 아이템 수정
       </div>
     </h2>
-
+    <p> inputHead : {{ inputHead }} </p>
+    <p> inputBody : {{ inputBody }} </p>
+    <p> inputTail : {{ inputTail }} </p>
     <el-form :model="inputHead" label-width="125px" style="max-width: 800px;">
       <el-form-item label="타입" prop="order" id="lc_item_order">
         <el-radio-group v-model.number="inputHead.lcItemOrder">
@@ -95,7 +97,25 @@
         ref="noteEditor"
         v-show="inputHead.lcItemType === 'note'"
       />
-
+      <template v-if="inputHead.lcItemType !== null">
+        <el-form-item label="키워드" id="keyword">
+          <el-autocomplete
+            class="input-new-tag"
+            v-model="inputTail.keywordName"
+            :fetch-suggestions="querySearch"
+            ref="saveTagInput"
+            placeholder="키워드"
+          />
+          <div style="display: inline-block; width: 100px;">
+            <el-input id="input_keyword_point" v-model="inputTail.keywordPoint" placeholder="배점"></el-input>
+          </div>
+          <el-button @click="onClick('ADD_KEYWORD')">추가</el-button><br>
+          <div v-for="(item,index) in inputTail.assignedKeywordList" :key="item.keyword" style="display: inline-block;">
+            <el-button>{{ item.keyword }} :: {{ item.score }}점</el-button>
+            <el-button @click="onClick('DELETE_KEYWORD',index)" type="danger" style="margin: 0px 10px 0px 0px">X</el-button>
+          </div>
+        </el-form-item>
+      </template>
     </el-form>
 
     <div class="ps-align-right" id="lecture_item_editor_submit_button_wrapper">
@@ -219,6 +239,9 @@ export default {
     ...mapGetters('lcItem', [
       'isNewItem',
     ]),
+    ...mapState('keyword', [
+      'keywordList',
+    ]),
     inputBody() {
       const vm = this;
       const lcItemType = vm.inputHead.lcItemType;
@@ -238,6 +261,10 @@ export default {
     lectureId() {
       const vm = this;
       return Number.parseInt(vm.$route.params.lectureId, 10);
+    },
+    modifiedKeywordList() {
+      const vm = this;
+      return vm.keywordList.map(x => ({ value: x.keyword }));
     },
   },
   methods: {
@@ -265,17 +292,85 @@ export default {
       vm.$refs[`${lcItemType}Editor`].reset();
       vm.inputHead = Object.assign({}, vm.initialInputHead);
     },
+    querySearch(queryString, cb) {
+      const vm = this;
+      const results = queryString ?
+        vm.modifiedKeywordList.filter(vm.createFilter(queryString)) : vm.modifiedKeywordList;
+      // call callback function to return suggestions
+      cb(results);
+    },
+    onClick(type, arg) {
+      const vm = this;
+
+      switch (type) {
+        case 'ADD_KEYWORD': {
+          let isEnroll = false;
+          vm.keywordList.forEach((element) => {
+            if (element.keyword === vm.inputTail.keywordName) {
+              isEnroll = true;
+            }
+          });
+          if (isEnroll === false) {
+            vm.$notify({
+              title: '알림',
+              message: '키워드 등록 탭에 등록되지 않은 키워드는 등록할 수 없습니다.',
+              type: 'warning',
+            });
+            vm.inputTail.keywordName = null;
+            vm.inputTail.keywordPoint = null;
+            break;
+          }
+          if (vm.inputTail.assignedKeywordList.map(x => x.keyword).indexOf(vm.inputTail.keywordName) !== -1) { // eslint-disable-line
+            vm.$notify({
+              title: '알림',
+              message: '이미 등록한 키워드는 등록할 수 없습니다.',
+              type: 'warning',
+            });
+            vm.inputTail.keywordName = null;
+            vm.inputTail.keywordPoint = null;
+            break;
+          }
+          vm.inputTail.assignedKeywordList.push({
+            keyword: vm.inputTail.keywordName,
+            score: vm.inputTail.keywordPoint,
+          });
+          vm.inputTail.keywordName = null;
+          vm.inputTail.keywordPoint = null;
+          break;
+        }
+        case 'DELETE_KEYWORD': {
+          vm.inputTail.assignedKeywordList.splice(arg, 1);
+          break;
+        }
+        case 'ADD_TEST_CASE': {
+          vm.inputTail.testCaseList.push({
+            input: '',
+            output: '',
+          });
+          break;
+        }
+        case 'DELETE_TEST_CASE': {
+          vm.inputTail.testCaseList.splice(arg, 1);
+          break;
+        }
+        default : {
+          break;
+        }
+      }
+    },
     async onSubmit() {
       const vm = this;
-      // 문항이며, 키워드가 없다면 알람을 띄우고 막음
-      if (vm.inputHead.lcItemType === 'question') {
+      // 자료,문항,실습은 키워드가 없다면 알람을 띄우고 막음
+      if (vm.inputHead.lcItemType === 'question' ||
+          vm.inputHead.lcItemType === 'note' ||
+          vm.inputHead.lcItemType === 'practice') {
         if (vm.inputTail.assignedKeywordList === undefined ||
           vm.inputTail.assignedKeywordList.length === 0) {
           vm.$notify({
             title: '생성 실패',
-            message: '문항은 최소 1쌍의 키워드를 필요로 합니다.',
+            message: '자료, 문항, 실습 아이템은 최소한 1쌍의 키워드를 반드시 필요로 합니다.',
             type: 'error',
-            duration: 0,
+            duration: 5000,
           });
           return;
         }

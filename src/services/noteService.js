@@ -36,4 +36,23 @@ export default {
     });
   },
   // deleteFile은 FileService에 있는거 사용
+
+  getNoteKeywords({
+    noteId,
+  }) {
+    return http.get(`/notes/${noteId}/keywords`);
+  },
+  postNoteKeywords({
+    noteId,
+    data,
+  }) {
+    return http.post(`/notes/${noteId}/keywords`, {
+      data,
+    });
+  },
+  deleteNoteKeywords({
+    noteId,
+  }) {
+    return http.delete(`/notes/${noteId}/keywords`);
+  },
 };

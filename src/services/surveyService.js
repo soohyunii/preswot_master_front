@@ -40,4 +40,23 @@ export default {
   }) {
     return http.get(`/surveys/${surveyId}/result`);
   },
+
+  getSurveyKeywords({
+    surveyId,
+  }) {
+    return http.get(`/surveys/${surveyId}/keywords`);
+  },
+  postSurveyKeywords({
+    surveyId,
+    data,
+  }) {
+    return http.post(`/surveys/${surveyId}/keywords`, {
+      data,
+    });
+  },
+  deleteSurveyKeywords({
+    surveyId,
+  }) {
+    return http.delete(`/surveys/${surveyId}/keywords`);
+  },
 };

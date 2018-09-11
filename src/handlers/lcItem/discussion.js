@@ -6,6 +6,16 @@ export default class SurveyHandler extends LcItemHandler {
   static initViewModel(vm) {
     const item = vm.lectureItem;
     const d = item.discussion_info;
+
+    /*
+    const keywordList = await practiceService.getPracticeKeywords({
+      practiceId: p.practice_id,
+    });
+    keywordList.data.forEach((element) => {
+      element.score = element.score_portion;
+    });
+    vm.inputTail.assignedKeywordList = keywordList.data;
+    */
     vm.$set(vm.inputTail, 'content', d.topic);
   }
 
@@ -19,5 +29,14 @@ export default class SurveyHandler extends LcItemHandler {
       share: true, // TODO share 값 입력 필요하다면 구현할 것
       topic: inputTail.content,
     });
+    /*
+    await discussionService.deletePracticeKeywords({
+      practiceId,
+    });
+    await practiceService.postPracticeKeywords({
+      practiceId,
+      data: inputTail.assignedKeywordList,
+    });
+    */
   }
 }

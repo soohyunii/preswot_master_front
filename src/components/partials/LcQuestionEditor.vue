@@ -144,24 +144,6 @@
         </el-form-item>
       </div>
       
-
-      <el-form-item label="키워드" id="keyword">
-        <el-autocomplete
-          class="input-new-tag"
-          v-model="inputTail.keywordName"
-          :fetch-suggestions="querySearch"
-          ref="saveTagInput"
-          placeholder="키워드"
-        />
-        <div style="display: inline-block; width: 100px;">
-          <el-input id="input_keyword_point" v-model="inputTail.keywordPoint" placeholder="배점"></el-input>
-        </div>
-        <el-button @click="onClick('ADD_KEYWORD')">추가</el-button><br>
-        <div v-for="(item,index) in inputTail.assignedKeywordList" :key="item.keyword" style="display: inline-block; width: 200px;">
-          <el-button>{{ item.keyword }} / {{ item.score }}</el-button>
-          <el-button @click="onClick('DELETE_KEYWORD',index)" type="danger" style="margin: 0px">X</el-button>
-        </div>
-      </el-form-item>
       <el-form-item label="난이도" id="difficulty">
         <el-select v-model.number="inputTail.difficulty">
           <el-option
