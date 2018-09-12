@@ -20,12 +20,29 @@ export default class SurveyHandler extends LcItemHandler {
       choice: (inputTail.surveyItemList === undefined) ? undefined :
         inputTail.surveyItemList.map(item => item.value),
     });
+
+    await surveyService.deleteSurveyKeywords({
+      surveyId,
+    });
+    await surveyService.postSurveyKeywords({
+      surveyId,
+      data: inputTail.assignedKeywordList,
+    });
   }
 
   /* eslint-disable no-param-reassign */
   static async initViewModel(vm) {
     const item = vm.lectureItem;
     const s = item.surveys[0];
+
+    const keywordList = await surveyService.getSurveyKeywords({
+      surveyId: s.survey_id,
+    });
+    keywordList.data.forEach((element) => {
+      element.score = element.score_portion;
+    });
+    vm.inputTail.assignedKeywordList = keywordList.data;
+
     switch (s.type) {
       case 0: { // 객관
         vm.inputBody.surveyType = 'MULTIPLE_CHOICE';

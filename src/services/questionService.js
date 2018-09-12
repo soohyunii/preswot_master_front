@@ -142,4 +142,23 @@ export default {
       studentSideList,
     });
   },
+
+  getQuestionKeywords({
+    questionId,
+  }) {
+    return http.get(`/questions/${questionId}/keywords`);
+  },
+  postQuestionKeywords({
+    questionId,
+    data,
+  }) {
+    return http.post(`/questions/${questionId}/keywords`, {
+      data,
+    });
+  },
+  deleteQuestionKeywords({
+    questionId,
+  }) {
+    return http.delete(`/questions/${questionId}/keywords`);
+  },
 };

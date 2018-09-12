@@ -13,6 +13,7 @@ export default {
     const initialInputBody = {
     };
     const initialInputTail = {
+      assignedKeywordList: [],
     };
     return {
       initialInputBody,
