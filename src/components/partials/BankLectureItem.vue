@@ -15,12 +15,12 @@
         <el-table-column label="소속 그룹" width="150px">
           <template slot-scope="scope">{{ scope.row.group_name }}</template>
         </el-table-column>
-        <el-table-column label="저작일" width="120px">
+        <!--<el-table-column label="저작일" width="120px">
           <template slot-scope="scope">{{ scope.row.createTime }}</template>
         </el-table-column>
         <el-table-column label="저장일" width="120px">
           <template slot-scope="scope">{{ scope.row.storeTime }}</template>
-        </el-table-column>
+        </el-table-column>-->
       </el-table>
       <div style="height: 10px;" />
       <el-button type="primary" @click="onClick('ADD_NEW_LECTURE_ITEM')">강의 아이템 저장</el-button>

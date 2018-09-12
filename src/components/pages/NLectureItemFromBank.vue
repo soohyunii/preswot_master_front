@@ -49,12 +49,12 @@
       <el-table-column label="소속 그룹">
         <template slot-scope="scope">{{ scope.row.groupName }}</template>
       </el-table-column>
-      <el-table-column label="저작일">
+      <!--<el-table-column label="저작일">
         <template slot-scope="scope">{{ scope.row.createTime }}</template>
       </el-table-column>
       <el-table-column label="최종 수정일">
         <template slot-scope="scope">{{ scope.row.updateTime }}</template>
-      </el-table-column>
+      </el-table-column>-->
     </el-table>
     <div style="height: 10px;" />
     <div style="text-align: right;">

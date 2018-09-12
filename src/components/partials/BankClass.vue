@@ -18,9 +18,9 @@
         <el-table-column label="저작일" width="120px">
           <template slot-scope="scope">{{ scope.row.createTime }}</template>
         </el-table-column>
-        <el-table-column label="저장일" width="120px">
-          <template slot-scope="scope">{{ scope.row.storeTime }}</template>
-        </el-table-column>
+        <!--<el-table-column label="최종 수정일" width="120px">
+          <template slot-scope="scope">{{ scope.row.updateTime }}</template>
+        </el-table-column>-->
       </el-table>
       <div style="height: 10px;" />
       <el-button type="primary" @click="onClick('ADD_NEW_CLASS')">과목 저장</el-button>
@@ -104,6 +104,12 @@ export default {
       bankClass.desc = xx.description;
       bankClass.group_id = xx.bank_group.group_id;
       bankClass.group_name = xx.bank_group.name;
+      const cr1 = xx.created_at.substr(0, 10);
+      const cr2 = xx.created_at.substr(11, 8);
+      bankClass.createTime = cr1.concat(' ', cr2);
+      const up1 = xx.updated_at.substr(0, 10);
+      const up2 = xx.updated_at.substr(11, 8);
+      bankClass.updateTime = up1.concat(' ', up2);
       vm.bankClassList.push(bankClass);
     });
     // 내 과목들 받아오기
