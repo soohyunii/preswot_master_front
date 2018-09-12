@@ -2,6 +2,7 @@
   <div class="bt-container">
     <template v-if="$isPhone">
       <h2>{{ path }}</h2>
+      <!--
       <youtube
         v-show="focusVideoFlag"
         id="video"
@@ -22,6 +23,7 @@
         <el-button v-show="focusMaterialFlag" type="primary" size="small" @click="onClick('FOCUSMATERIAL')">강의자료 숨기기</el-button>
         <el-button v-show="!focusMaterialFlag" type="primary" size="small" @click="onClick('FOCUSMATERIAL')">강의자료 보이기</el-button>
       </div>
+      -->
       <br/>
       <el-tabs type="card">
         <el-tab-pane label="강의아이템">
@@ -34,12 +36,14 @@
                 type="STUDENT"/>
           </div>
         </el-tab-pane>
+        <!--
         <el-tab-pane label="강의자료">
           <lecture-live-material
             :materialList="materialList"
             :presentMaterial="presentMaterial"
             />
         </el-tab-pane>
+        -->
       </el-tabs>
     </template>
     <template v-if="!$isPhone">
