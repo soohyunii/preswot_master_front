@@ -10,13 +10,12 @@ export default class PracticeHandler extends LcItemHandler {
     const p = item.lecture_code_practices[0];
 
     const keywordList = await practiceService.getPracticeKeywords({
-      practiceId: p.practice_id,
+      practiceId: p.lecture_code_practice_id,
     });
     keywordList.data.forEach((element) => {
       element.score = element.score_portion;
     });
     vm.inputTail.assignedKeywordList = keywordList.data;
-
     vm.inputTail.code = p.code;
   }
   /* eslint-enable no-param-reassign */

@@ -37,6 +37,7 @@ export default {
     };
     const multiInitialInputTail = {
       surveyItemList: [{ value: '매우 그렇지 않다.' }, { value: '그렇지 않다.' }, { value: '보통이다.' }, { value: '그렇다.' }, { value: '매우 그렇다.' }],
+      assignedKeywordList: [],
     };
     return {
       initialInputBody,

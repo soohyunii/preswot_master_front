@@ -8,9 +8,11 @@
         강의 아이템 수정
       </div>
     </h2>
+    <!--
     <p> inputHead : {{ inputHead }} </p>
     <p> inputBody : {{ inputBody }} </p>
     <p> inputTail : {{ inputTail }} </p>
+    -->
     <el-form :model="inputHead" label-width="125px" style="max-width: 800px;">
       <el-form-item label="타입" prop="order" id="lc_item_order">
         <el-radio-group v-model.number="inputHead.lcItemOrder">
@@ -97,7 +99,8 @@
         ref="noteEditor"
         v-show="inputHead.lcItemType === 'note'"
       />
-      <template v-if="inputHead.lcItemType !== null">
+      <!-- TODO : '토론' 에도 키워드를 붙일때 조건 변경 -->
+      <template v-if="inputHead.lcItemType !== null && inputHead.lcItemType !== 'discussion'">
         <el-form-item label="키워드" id="keyword">
           <el-autocomplete
             class="input-new-tag"
@@ -298,6 +301,11 @@ export default {
         vm.modifiedKeywordList.filter(vm.createFilter(queryString)) : vm.modifiedKeywordList;
       // call callback function to return suggestions
       cb(results);
+    },
+    createFilter(queryString) { // eslint-disable-next-line
+      return (link) => {
+        return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+      };
     },
     onClick(type, arg) {
       const vm = this;

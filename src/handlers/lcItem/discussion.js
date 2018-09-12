@@ -7,6 +7,7 @@ export default class SurveyHandler extends LcItemHandler {
     const item = vm.lectureItem;
     const d = item.discussion_info;
 
+    // TODO : '토론' 이 필요하다면 추후에 개방
     /*
     const keywordList = await practiceService.getPracticeKeywords({
       practiceId: p.practice_id,
