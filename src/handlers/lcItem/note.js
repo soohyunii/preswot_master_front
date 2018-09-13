@@ -10,6 +10,14 @@ export default class NoteHandler extends LcItemHandler {
     const item = vm.lectureItem;
     const n = item.notes[0];
 
+    const keywordList = await noteService.getNoteKeywords({
+      noteId: n.note_id,
+    });
+    keywordList.data.forEach((element) => {
+      element.score = element.score_portion;
+    });
+    vm.inputTail.assignedKeywordList = keywordList.data;
+
     switch (n.note_type) {
       case 0: {
         vm.inputBody.noteType = 'IMAGE';
@@ -97,6 +105,7 @@ export default class NoteHandler extends LcItemHandler {
       youtube_interval: interval,
     });
 
+
     if (inputBody.noteType === 'IMAGE' || inputBody.noteType === 'DOCS') {
       // 기존 파일이 존재
       if (inputTail.oldfile !== undefined) {
@@ -136,5 +145,13 @@ export default class NoteHandler extends LcItemHandler {
         });
       }
     }
+
+    await noteService.deleteNoteKeywords({
+      noteId,
+    });
+    await noteService.postNoteKeywords({
+      noteId,
+      data: inputTail.assignedKeywordList,
+    });
   }
 }

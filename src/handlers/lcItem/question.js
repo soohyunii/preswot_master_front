@@ -1,7 +1,6 @@
 import deepCopy from 'deep-copy';
 import LcItemHandler from './index';
 import questionService from '../../services/questionService';
-import lectureItemService from '../../services/lectureItemService';
 import fileService from '../../services/fileService';
 import utils from '../../utils';
 
@@ -18,7 +17,7 @@ export default class QuestionHandler extends LcItemHandler {
     vm.$set(vm.inputTail, 'question', q.question);
 
     vm.inputTail.difficulty = q.difficulty;
-    const keywordList = await lectureItemService.getQuestionKeywords({
+    const keywordList = await questionService.getQuestionKeywords({
       questionId: q.question_id,
     });
     keywordList.data.forEach((element) => {
@@ -200,10 +199,10 @@ export default class QuestionHandler extends LcItemHandler {
       }
     }
 
-    await lectureItemService.deleteQuestionKeywords({
+    await questionService.deleteQuestionKeywords({
       questionId,
     });
-    await lectureItemService.postQuestionKeywords({
+    await questionService.postQuestionKeywords({
       questionId,
       data: inputTail.assignedKeywordList,
     });

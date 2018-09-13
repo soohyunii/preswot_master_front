@@ -16,4 +16,22 @@ export default {
       code,
     });
   },
+  getPracticeKeywords({
+    practiceId,
+  }) {
+    return http.get(`/lecture_code_practices/${practiceId}/keywords`);
+  },
+  postPracticeKeywords({
+    practiceId,
+    data,
+  }) {
+    return http.post(`/lecture_code_practices/${practiceId}/keywords`, {
+      data,
+    });
+  },
+  deletePracticeKeywords({
+    practiceId,
+  }) {
+    return http.delete(`/lecture_code_practices/${practiceId}/keywords`);
+  },
 };

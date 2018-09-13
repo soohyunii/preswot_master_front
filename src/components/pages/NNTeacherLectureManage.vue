@@ -134,6 +134,9 @@ export default {
           if (vm.activeTab === 'kmap') {
             EventBus.$emit('drawNetwork');
           }
+          if (vm.activeTab === 'keyword') {
+            EventBus.$emit('clearKeywordTab');
+          }
           break;
         }
         default: {

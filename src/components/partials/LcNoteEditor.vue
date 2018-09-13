@@ -95,6 +95,7 @@ export default {
       noteType: null,
     };
     const initialInputTail = {
+      assignedKeywordList: [],
     };
 
     return {
