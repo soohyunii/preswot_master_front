@@ -145,9 +145,6 @@ export default {
   getMaterialKeywords({ id }) {
     return http.get(`/materials/${id}/keywords`);
   },
-  getOnStudentCount({ lectureId }) {
-    return http.get(`/lectures/${lectureId}/on-student-count`);
-  },
   postMaterialKeyword({ id, keyword, score }) {
     return http.post(`/materials/${id}/keywords`, {
       keyword,
@@ -157,6 +154,23 @@ export default {
   deleteMaterialKeyword({ id, keyword }) {
     return http.delete(`/materials/${id}/keywords`, {
       keyword: keyword, // eslint-disable-line
+    });
+  },
+  getAllFilesUnderLecture({
+    lectureId,
+  }) {
+    return http.get(`/lectures/${lectureId}/files`);
+  },
+  autoExtractKeyword({
+    lectureId,
+    guidList,
+    w1,
+    w2,
+  }) {
+    return http.post(`/lectures/${lectureId}/extract-keywords`, {
+      guidList,
+      w1,
+      w2,
     });
   },
 };
