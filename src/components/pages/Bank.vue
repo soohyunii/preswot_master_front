@@ -1,7 +1,7 @@
 <template>
   <div id="bank" class="bt-container" style="margin: 0 auto;">
     <h1>강의 은행</h1>
-    <el-tabs v-model="activeTab" @tab-click="onClick('TAB_CLICK')">
+    <el-tabs v-model="activeTab">
       <el-tab-pane label="과목 저장소" name="class">
         <bank-class />
       </el-tab-pane>
