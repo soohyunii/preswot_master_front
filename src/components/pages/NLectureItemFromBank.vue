@@ -830,6 +830,11 @@ export default {
               target_lecture_id: vm.lectureId,
             });
           });
+          vm.$notify({
+            title: '알림',
+            message: '성공적으로 강의 아이템을 가져왔습니다.',
+            type: 'success',
+          });
           break;
         }
         // 뒤로 가기

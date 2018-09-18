@@ -266,6 +266,11 @@ export default {
               target_class_id: vm.classId,
             });
           });
+          vm.$notify({
+            title: '알림',
+            message: '성공적으로 강의를 가져왔습니다.',
+            type: 'success',
+          });
           break;
         }
         // 뒤로 가기

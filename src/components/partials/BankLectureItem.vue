@@ -252,6 +252,7 @@ export default {
         // 아이템 은행 목록으로 돌아가기
         case 'BACK': {
           vm.isAdd = false;
+          location.reload(true);
           break;
         }
         // 탭 변경
@@ -384,6 +385,11 @@ export default {
           lecture_item_id: x.id,
           group_id: vm.selectGroup,
         });
+      });
+      vm.$notify({
+        title: '알림',
+        message: '성공적으로 저장되었습니다.',
+        type: 'success',
       });
     },
   },
