@@ -71,13 +71,15 @@
           align="center">
           <template slot-scope="scope">
             <span v-for="(answer, index) in scope.row.answer" class="item" :key="index">
+                <span @click="setDialogVisible(answer)" class="description-cursor" slot="reference">{{ answer.length > 10 ? answer.substring(0,10)+"..." : answer }}</span>
+              <!--
               <el-popover
                 placement="right"
                 trigger="click"
                 width="500"
                 :content="answer">
-                <span class="description-cursor" slot="reference">{{ answer.length > 10 ? answer.substring(0,10)+"..." : answer }}</span>
               </el-popover>
+              -->
             </span>
           </template>
         </el-table-column>
@@ -163,6 +165,17 @@
           <a :href="url" target="_blank" download>{{ currentFile.name }}</a>
         </div>
       </el-dialog>
+
+      <el-dialog
+        title="답변 자세히보기"
+        :visible.sync="dialogVisible"
+        center
+        width="75%">
+        <pre style="white-space:pre-wrap;"> {{ dialogContents }} </pre>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">닫기</el-button>
+        </span>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -212,6 +225,8 @@
     props: ['classId', 'lectureId', 'itemId', 'resultType'],
     data() {
       return {
+        dialogVisible: false,
+        dialogContents: '',
         autoGradeStudentScoreList: [],
         autoGradeTeacherScoreList: [],
         activeTab: 'question',
@@ -277,6 +292,11 @@
       ...mapActions('NNclass', [
         'putScore',
       ]),
+      setDialogVisible(contents) {
+        const vm = this;
+        vm.dialogContents = contents;
+        vm.dialogVisible = true;
+      },
       autoGradingComplete(data) {
         const vm = this;
 
