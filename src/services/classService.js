@@ -148,4 +148,9 @@ export default {
   }) {
     return http.delete(`/classes/${classId}/user/${userId}`);
   },
+  regradeQuestion({
+    questionId,
+  }) {
+    return http.post(`/student_lecture_logs/re/${questionId}`);
+  },
 };

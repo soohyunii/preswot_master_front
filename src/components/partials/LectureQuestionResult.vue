@@ -4,6 +4,7 @@
       <el-row>
         <el-col :span="3"><strong>학생 답변</strong></el-col>
         <el-col :span="7">총 {{ studentQuestionResult.numberOfStudent }} 건</el-col>
+        <el-button v-if="resultType !== '실시간'" type="primary" size="small" @click="regrade()">재체점하기</el-button>
         <el-button v-if="resultType === '실시간'" style="float:right" type="primary" size="small" icon="el-icon-refresh" @click="refresh()">새로고침</el-button>
       </el-row>
       <el-row>
@@ -230,6 +231,7 @@
         autoGradeStudentScoreList: [],
         autoGradeTeacherScoreList: [],
         activeTab: 'question',
+        questionId: '',
         questionResultSummary: [{
           numAnswer: null,
           numPartialAnswer: null,
@@ -271,9 +273,9 @@
         itemId: vm.itemId,
       });
       vm.studentQuestionResult = vm.questionResult;
-      const questionId = vm.studentQuestionResult.questionId;
+      vm.questionId = vm.studentQuestionResult.questionId; // 재사용을 위해 저장함
       const res = await questionService.getQuestionResult({
-        questionId,
+        questionId: vm.questionId,
       });
       const numAnswer = res.data.num_students_answer;
       const numPartialAnswer = res.data.num_students_partial_answer;
@@ -288,6 +290,7 @@
       ...mapActions('grading', [
         'getClassTotalResult',
         'getQuestionResult',
+        'regradeQuestion',
       ]),
       ...mapActions('NNclass', [
         'putScore',
@@ -308,6 +311,12 @@
         vm.autoGradeTeacherScoreList.length = 0;
         data.lecturer.forEach((element) => {
           vm.autoGradeTeacherScoreList.push(element.score);
+        });
+      },
+      async regrade() {
+        const vm = this;
+        await vm.regradeQuestion({
+          questionId: vm.questionId,
         });
       },
       async refresh() {

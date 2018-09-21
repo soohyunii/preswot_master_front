@@ -134,6 +134,11 @@ export default {
         question: questions,
       });
     },
+    regradeQuestion({ _ }, { questionId }) {
+      classService.regradeQuestion({
+        questionId,
+      });
+    },
     getQuestionResult({ state, commit }, { itemId }) {
       const questionResult = {};
       let theQuestion = null;
