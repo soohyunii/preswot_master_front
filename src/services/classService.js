@@ -151,6 +151,6 @@ export default {
   regradeQuestion({
     questionId,
   }) {
-    return http.post(`/student_lecture_logs/re/${questionId}`);
+    return http.get(`/student_lecture_logs/re/${questionId}`);
   },
 };
