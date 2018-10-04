@@ -5,7 +5,7 @@
         <h2>{{ currentTeachingClass.name }}</h2><hr>
 
         <div v-if="needScoring && !inner">
-          <h3>체점이 필요한 문항</h3>
+          <h3>채점이 필요한 문항</h3>
           <el-table
             :data="needScoring.items"
             border>
@@ -27,7 +27,7 @@
                 <el-button
                   @click="handleClick(scope.row)"
                   type="text" size="small">
-                  체점
+                  채점
                 </el-button>
                 <i v-if="scope.row.scoring_finish === 1"
                    class="el-icon-success"
@@ -39,7 +39,7 @@
 
         <div v-if="inner">
           <el-button @click="backClick('BACK')" type="primary" >다른 항목 보기</el-button>
-          <el-button @click="backClick('FINISH')" type="primary" >체점 완료</el-button>
+          <el-button @click="backClick('FINISH')" type="primary" >채점 완료</el-button>
 
           <div v-if="inner.type === 'long'">
             <el-row class="description">

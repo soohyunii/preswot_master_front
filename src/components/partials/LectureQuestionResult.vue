@@ -4,7 +4,7 @@
       <el-row>
         <el-col :span="3"><strong>학생 답변</strong></el-col>
         <el-col :span="7">총 {{ studentQuestionResult.numberOfStudent }} 건</el-col>
-        <el-button v-if="resultType !== '실시간'" type="primary" size="small" @click="regrade()">재체점하기</el-button>
+        <el-button v-if="resultType !== '실시간'" type="primary" size="small" @click="regrade()">재채점하기</el-button>
         <el-button v-if="resultType === '실시간'" style="float:right" type="primary" size="small" icon="el-icon-refresh" @click="refresh()">새로고침</el-button>
       </el-row>
       <el-row>

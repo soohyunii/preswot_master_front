@@ -1,7 +1,10 @@
 <template>
-  <el-card class="box-card" style="max-width:480px;">
+<div>
+  <p> {{ discussionName }} </p>
+  <p> {{ discussionTopic }} </p>
+  <el-card class="box-card" style="max-width:480px;">  
     <el-row style="padding:0;">
-      <el-col id="chat-wrap" style="height: 300px; overflow-y: scroll">
+      <el-col id="chat-wrap" style="height: 270px; overflow-y: scroll">
         <el-card v-for="(d, index) in discuss" :key="index" class="chat">
           <div class="chat-head">
             <span>{{d.user.name}}</span>
@@ -32,14 +35,14 @@
       </el-col>
     </el-row>
   </el-card>
-
+</div>
 </template>
 
 
 <style scoped>
   .box-card {
     /*height: 330px;*/
-    height: 450px;
+    height: 400px;
     margin:20px 35px 0 35px;
 
   }
@@ -65,17 +68,24 @@
   import { mapGetters, mapMutations } from 'vuex';
   import utils from '../../utils';
   import discussionService from '../../services/discussionService';
+  import lectureItemService from '../../services/lectureItemService';
 
   export default {
     components: {
 
     },
     name: 'discussion',
-    created() {
+    async created() {
       const vm = this;
       const params = {
         lecture_item_id: vm.lectureItemId,
       };
+      const res = await lectureItemService.getLectureItem({
+        lectureItemId: vm.lectureItemId,
+      });
+      console.log('@disc ', res.data.discussion_info.topic);
+      vm.discussionName = res.data.name;
+      vm.discussionTopic = res.data.discussion_info.topic;
       vm.$socket.emit('JOIN_DISCUSSION', JSON.stringify(params));
     },
     async mounted() {
@@ -102,7 +112,6 @@
           vm.$forceUpdate();
         }
       });
-
       const res = await discussionService.getDiscussion({ id: vm.lectureItemId });
       const discuss = JSON.parse(JSON.stringify(res.data.discussion));
       const dLength = discuss.length;
@@ -138,6 +147,8 @@
         updating: false,
         pre: -1,
         discuss: [],
+        discussionName: '',
+        discussionTopic: '',
       };
     },
     computed: {

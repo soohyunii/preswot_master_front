@@ -19,7 +19,7 @@
               label="강의 도구 이름">
             </el-table-column>
             <el-table-column
-              label="체점한 수강생 수">
+              label="채점한 수강생 수">
               <template slot-scope="scope">
                 {{ scope.row.numberOfScored }} / {{scope.row.numberOfStudent}}
               </template>

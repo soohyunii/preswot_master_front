@@ -1,7 +1,12 @@
 <template>
   <div id="teacher_lecture_live_wrapper" class="bt-container">
     <template v-if="$isPhone">
-      <h2>{{ path }}</h2><br/>
+      <!-- <h2>{{ path }}</h2><br/> -->
+      <el-breadcrumb style="font-size: 24px; margin-top: 16px; margin-bottom: 32px;" separator=">">
+        <el-breadcrumb-item :to="{ path: '/a/teacher/NNclass/'+classId }">{{ className }}</el-breadcrumb-item>
+        <el-breadcrumb-item>{{ lectureName }}</el-breadcrumb-item>
+      </el-breadcrumb>
+      <br/>
         <youtube
           id="video"
           :video-id="youtubeId"
@@ -22,7 +27,12 @@
         />
     </template>
     <template v-if="!$isPhone">
-      <h2>{{ path }}</h2><br/>
+      <!--<h2>{{ path }}</h2><br/>-->
+      <el-breadcrumb style="font-size: 24px; margin-top: 16px; margin-bottom: 32px;" separator=">">
+        <el-breadcrumb-item :to="{ path: '/a/teacher/NNclass/'+classId }">{{ className }}</el-breadcrumb-item>
+        <el-breadcrumb-item>{{ lectureName }}</el-breadcrumb-item>
+      </el-breadcrumb>
+      <br/>
         <el-row :gutter="20">
           <el-col :span="12">
             <div v-if="videolink === ''">
@@ -68,7 +78,7 @@
         </el-row>
         <br />
         <el-row>
-          <el-col :span="3"><strong>현재 수강 인원</strong></el-col>
+          <el-col :span="3"><strong>현재 강의를 듣고있는 인원</strong></el-col>
           <el-col :span="7"> {{ onStudentCount - 1 }} 명 </el-col>
         </el-row>
         <div v-for="(itemId, index) in currentLectureItemId" :key="itemId">
@@ -127,7 +137,6 @@ export default {
   name: 'TeacherLectureLive',
   async created() {
     const vm = this;
-    vm.lectureId = Number.parseInt(vm.$route.params.lectureId, 10);
     // 강의 아이템 목록, 과목, 강의명 가져오기
     const res = await lectureService.getLecture({
       lectureId: vm.lectureId,
@@ -145,7 +154,9 @@ export default {
     const res2 = await classService.getClass({
       id: res.data.class_id,
     });
-    vm.path = res2.data.name.concat(' > ', res.data.name);
+    // vm.path = res2.data.name.concat(' > ', res.data.name);
+    vm.className = res2.data.name;
+    vm.lectureName = res.data.name;
     // 소켓 연결 및 주기적으로 보내는 신호 설정
     vm.$socket.connect();
     const params = {
@@ -204,7 +215,6 @@ export default {
     return {
       tableItemList: [],
       tableItemIndex: [],
-      lectureId: undefined,
       currentLectureItemId: [],
       path: '',
       isAuto: false,
@@ -213,6 +223,8 @@ export default {
       videolink: '',
       onStudentCount: 1,
       sOnStudentCount: undefined,
+      className: '',
+      lectureName: '',
     };
   },
   computed: {
@@ -222,6 +234,10 @@ export default {
     classId() {
       const vm = this;
       return Number.parseInt(vm.$route.query.classId, 10);
+    },
+    lectureId() {
+      const vm = this;
+      return Number.parseInt(vm.$route.params.lectureId, 10);
     },
     isTableItemListLoaded() {
       const vm = this;

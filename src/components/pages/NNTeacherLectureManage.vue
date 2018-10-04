@@ -1,6 +1,10 @@
 <template>
   <div id="teacher_lecture_manage_wrapper" class="bt-container">
-    <h2>{{ currentTeachingClass(classId) ? currentTeachingClass(classId).name : '' }} > {{ lecture ? lecture.name : '' }}</h2>
+    <el-breadcrumb style="font-size: 24px; margin-top: 16px; margin-bottom: 32px;" separator=">">
+      <el-breadcrumb-item :to="{ path: '/a/teacher/NNclass/'+classId }">{{ currentTeachingClass(classId) ? currentTeachingClass(classId).name : '' }}</el-breadcrumb-item>
+      <el-breadcrumb-item>{{ lecture ? lecture.name : '' }}</el-breadcrumb-item>
+    </el-breadcrumb>
+    <!-- <h2>{{ currentTeachingClass(classId) ? currentTeachingClass(classId).name : '' }} > {{ lecture ? lecture.name : '' }}</h2> -->
     <!-- lecture id: {{ lectureId }} {{ lecture }}<br /> <br /> -->
     <!-- ddd {{ currentTeachingClass(classId) }}<br /> -->
 
@@ -9,7 +13,9 @@
         <teacher-lecture-new />
       </el-tab-pane>
       <el-tab-pane label="강의 키워드 관리" name="keyword">
-        <tlm-tab-material-and-keyword-edit :onClick="onClick"/>
+        <tlm-tab-material-and-keyword-edit
+        v-if="activeTab=='keyword'"
+        :onClick="onClick"/>
       </el-tab-pane>
       <el-tab-pane label="강의 자료 업로드" name="material">
         <tlm-tab-material-edit />

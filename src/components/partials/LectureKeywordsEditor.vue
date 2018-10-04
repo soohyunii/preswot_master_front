@@ -15,12 +15,22 @@
               <el-input v-model="input.keyword" @keydown.enter.native="onClick('ADD')"></el-input>
             </el-form-item>
             <el-form-item label="중요도 입력" prop="weight">
-              <el-input v-model="input.weight" type="number" min=1 max=100 @keydown.enter.native="onClick('ADD')">
-                <el-button type="success" slot="append" icon="el-icon-plus" @click="onClick('ADD')"></el-button>
-              </el-input>
+              <el-input v-model="input.weight" type="number" min=1 max=100 @keydown.enter.native="onClick('ADD')"></el-input>
             </el-form-item>
           </el-form>
+          <el-button style="position: relative; left: 125px" type="primary" @click="onClick('ADD')">키워드 등록</el-button>
           <el-button style="position: relative; left: 125px" type="primary" @click="onClick('KEYWORD_EXTRACT_STEP_1')">자동 추출</el-button>
+          <el-popover
+            style="position: relative; left: 125px"
+            placement="top-start"
+            width="400"
+            trigger="hover">
+            <el-table :data="notice">
+              <el-table-column width="100" prop="title" label="유형"></el-table-column>
+              <el-table-column width="290" prop="content" label="내용"></el-table-column>
+            </el-table>
+            <i class="el-icon-question fa-lg" slot="reference"></i>
+        </el-popover>
         </el-col>
         <el-col :span="12">
           <div id="lecture_keywords_table_wrapper">
@@ -163,6 +173,13 @@ export default {
         group: 'description',
         disable: false,
       },
+      notice: [{
+        title: '키워드 등록',
+        content: '입력한 강의 키워드 - 중요도쌍을 등록합니다.',
+      }, {
+        title: '자동 추출',
+        content: '미리 등록된 강의 자료로 부터 키워드-중요도쌍을 추천합니다. 이 기능을 사용하려면, 먼저 강의자료를 등록해야 합니다.',
+      }],
     };
   },
   computed: {
@@ -204,6 +221,7 @@ export default {
       'deleteKeyword',
       'postLectureKeywords',
       'deleteLectureKeywords',
+      'getKeywords',
     ]),
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -212,6 +230,7 @@ export default {
       const vm = this;
       vm.multipleSelection.length = 0; // 파일목록 체크박스 배열 초기화
       vm.extractMode = 0; // 추출 모드 화면 번호 초기화
+      vm.getKeywords();
     },
     async onClick(type, payload) {
       const vm = this;

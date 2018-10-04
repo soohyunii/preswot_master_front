@@ -1,7 +1,11 @@
 <template>
   <div class="bt-container">
     <template v-if="$isPhone">
-      <h2>{{ path }}</h2>
+      <!--<h2>{{ path }}</h2>-->
+      <el-breadcrumb style="font-size: 24px; margin-top: 16px; margin-bottom: 32px;" separator=">">
+        <el-breadcrumb-item :to="{ path: '/a/student/NNclass/'+classId }">{{ className }}</el-breadcrumb-item>
+        <el-breadcrumb-item>{{ lectureName }}</el-breadcrumb-item>
+      </el-breadcrumb>
       <youtube
         v-show="focusVideoFlag"
         id="video"
@@ -43,7 +47,11 @@
       </el-tabs>
     </template>
     <template v-if="!$isPhone">
-      <h2>{{ path }}</h2>
+      <!--<h2>{{ path }}</h2>-->
+      <el-breadcrumb style="font-size: 24px; margin-top: 16px; margin-bottom: 32px;" separator=">">
+        <el-breadcrumb-item :to="{ path: '/a/student/NNclass/'+classId }">{{ className }}</el-breadcrumb-item>
+        <el-breadcrumb-item>{{ lectureName }}</el-breadcrumb-item>
+      </el-breadcrumb>
       <el-row :gutter="20">
         <el-col :span="12">
           <div v-if="videoLink === ''">
@@ -152,7 +160,7 @@ export default {
     // 소켓 연결 및 주기적으로 보내는 신호, 리스너 등록
     vm.$socket.connect();
     vm.joinTime = Date.now();
-    vm.lectureId = Number.parseInt(vm.$route.params.lectureId, 10);
+
     // 강의 아이템 목록, 첨부파일 목록, 과목, 강의명 가져오기
     const res = await lectureService.getLecture({
       lectureId: vm.lectureId,
@@ -172,8 +180,10 @@ export default {
     const res2 = await classService.getClass({
       id: res.data.class_id,
     });
-    vm.path = res2.data.name.concat(' > ', res.data.name);
-
+    // vm.path = res2.data.name.concat(' > ', res.data.name);
+    vm.className = res2.data.name;
+    vm.classId = res.data.class_id;
+    vm.lectureName = res.data.name;
     const res3 = await lectureService.getLectureMaterial({
       lectureId: vm.lectureId,
     });
@@ -234,7 +244,6 @@ export default {
   data() {
     return {
       path: '', // 과목 , 강의 제목 이름
-      lectureId: undefined,
       lectureItem: [], // 현재 표시중인 강의 아이템
       lectureType: undefined,
       materialList: undefined, // 강의자료 목록
@@ -254,6 +263,9 @@ export default {
       materialLink: '',
       focusMaterialFlag: true,
       focusVideoFlag: true,
+      classId: '',
+      className: '',
+      lectureName: '',
     };
   },
   computed: {
@@ -263,6 +275,10 @@ export default {
     participationTime() {
       const vm = this;
       return Math.floor((Date.now() - vm.joinTime) / 1000);
+    },
+    lectureId() {
+      const vm = this;
+      return Number.parseInt(vm.$route.params.lectureId, 10);
     },
   },
   components: {

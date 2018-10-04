@@ -15,7 +15,7 @@
           <div class="user_info">
             <!-- TODO : 사진 넣기 -->
             <div class="user_name">이름 : {{item.name}}</div>
-            <div class="user_id">아이디 : {{item.user_id}}</div>
+            <div class="user_id">아이디 : {{item.email_id}}</div>
           </div>
         </div>
       </el-col>

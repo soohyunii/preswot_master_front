@@ -323,7 +323,7 @@
         <p>자료</p>
         <br>
         <div v-if="data.notes[0].note_type === 0">
-          <img :src="Url">
+          <img :src="Url" width="100%">
         </div>
         <div v-if="data.notes[0].note_type === 1" class="noteWrap">
           <iframe frameborder="0" :src="Url"></iframe>
@@ -489,7 +489,7 @@ export default {
 .lecture-live-item-wrapper {
   pre {
     overflow-x: auto; /* Use horizontal scroller if needed; for Firefox 2, not needed in Firefox 3 */
-    white-space: pre-line; /* css-3 */
+    white-space: pre-wrap; /* css-3 */
     white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
     white-space: -pre-wrap; /* Opera 4-6 */
     white-space: -o-pre-wrap; /* Opera 7 */

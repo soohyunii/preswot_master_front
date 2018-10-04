@@ -1,11 +1,12 @@
 <template>
-  <!-- <div id="app_footer_wrapper" v-show="!isLive"> -->
-  <div id="app_footer_wrapper">
+  <div id="app_footer_wrapper" v-show="!isLive">
     <div class="bt-container">
       <div style="position: relative">
-        <div :class="$attachReactablePostfix('div1')">
-          <span :class="$attachReactablePostfix('title')">PRESWOT</span>
-        </div>
+        <router-link to="/">
+          <div :class="$attachReactablePostfix('div1')">
+            <span :class="$attachReactablePostfix('title')">PRESWOT</span>
+          </div>
+        </router-link>
         <router-link to="/policy">
           <div :class="$attachReactablePostfix('div2')">
             <span :class="$attachReactablePostfix('common')">Policy</span>
@@ -23,13 +24,11 @@
 <script>
 export default {
   name: 'AppFooter',
-  /*
   computed: {
     isLive() {
       return this.$route.fullPath.includes('live');
     },
   },
-  */
 };
 </script>
 
