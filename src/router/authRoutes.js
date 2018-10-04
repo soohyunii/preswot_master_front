@@ -32,6 +32,10 @@ import TeacherClassGrading from '../components/pages/TeacherClassGrading';
 import TeacherClassGradingQuestion from '../components/pages/TeacherClassGradingQuestion';
 import TeacherClassGradingSurvey from '../components/pages/TeacherClassGradingSurvey';
 import StudentClassGrade from '../components/pages/StudentClassGrade';
+import Bank from '../components/pages/Bank';
+import NClassFromBank from '../components/pages/NClassFromBank';
+import NLectureFromBank from '../components/pages/NLectureFromBank';
+import NLectureItemFromBank from '../components/pages/NLectureItemFromBank';
 
 export default function authRoutes(root) {
   return [
@@ -98,6 +102,30 @@ export default function authRoutes(root) {
       component: NNTeacherLectureNew,
       meta: {
         title: 'Teacher Lecture New',
+      },
+    },
+    {
+      path: '/teacher/NNclass/newfrombank',
+      name: 'NClassFromBank',
+      component: NClassFromBank,
+      meta: {
+        title: 'New Class From Bank',
+      },
+    },
+    {
+      path: '/teacher/NNlecture/newfrombank',
+      name: 'NLectureFromBank',
+      component: NLectureFromBank,
+      meta: {
+        title: 'New Lecture From Bank',
+      },
+    },
+    {
+      path: '/teacher/NNlecture/newitemfrombank',
+      name: 'NLectureItemFromBank',
+      component: NLectureItemFromBank,
+      meta: {
+        title: 'New Lecture Item From Bank',
       },
     },
     {
@@ -308,6 +336,14 @@ export default function authRoutes(root) {
       component: TeacherClassReport,
       meta: {
         title: '강사 강의 보고서 페이지',
+      },
+    },
+    {
+      path: '/bank',
+      name: 'Bank',
+      component: Bank,
+      meta: {
+        title: '강의 은행',
       },
     },
   ].map((route) => {

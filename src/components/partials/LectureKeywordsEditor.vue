@@ -222,6 +222,7 @@ export default {
       'postLectureKeywords',
       'deleteLectureKeywords',
       'getKeywords',
+      'editLectureKeywords',
     ]),
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -329,7 +330,6 @@ export default {
             }
           }
           payload.edit = !payload.edit; // eslint-disable-line
-          this.postLectureKeywords();
           break;
         }
         case 'KEYWORD_EXTRACT_STEP_1': {

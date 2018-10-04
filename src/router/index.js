@@ -15,6 +15,7 @@ import ClassDetail from '../components/pages/ClassDetail';
 import authRoutes from './authRoutes';
 import Profile from '../components/pages/Profile';
 import ProfileEdit from '../components/pages/ProfileEdit';
+import Bank from '../components/pages/Bank';
 
 Vue.use(Router);
 
@@ -79,6 +80,11 @@ export default new Router({
         title: 'Class Detail',
         auth: true,
       },
+    },
+    {
+      path: '/bank',
+      name: 'Bank',
+      component: Bank,
     },
     ...authRoutes('/a'),
     {

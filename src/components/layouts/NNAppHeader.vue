@@ -21,11 +21,11 @@
           <span :class="$attachReactablePostfix('common')">수강중인 과목</span>
         </div>
       </router-link>
-      <!--<router-link to="/bank" v-if="authType === 1" v-show="isJwtValid">
+      <router-link to="/bank" v-if="authType === 1" v-show="isJwtValid">
         <div :class="$attachReactablePostfix('div3')">
           <span :class="$attachReactablePostfix('common')">강의 은행</span>
         </div>
-      </router-link>-->
+      </router-link>
       <!--
       <div style="display:inline-block; position:absolute; top: 20px; left:632px;">
         <input v-model="testData" type="text" id="headerInput" class="inputtestclass" placeholder="Please input"/>
