@@ -6,7 +6,7 @@
     <div v-else class="lecture-item">
       <div v-if="data.type === 0" class="question-box"> <!-- 질문 -->
         <div v-if="data.questions[0].type === 0">
-          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT' && lectureType === 0) || answerSubmitted"> <!-- 이미 제출한 경우 -->
+          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT') || answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -61,7 +61,7 @@
           </template>
         </div>
         <div v-if="data.questions[0].type === 1">
-          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT' && lectureType === 0) || answerSubmitted"> <!-- 이미 제출한 경우 -->
+          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT') || answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -92,7 +92,7 @@
                   v-if="['.jpg','.png','.gif','.JPG','.PNG','.GIF'].includes(file.file_type)"
                   :src="getUrl(file.client_path)"
                   width="100%">
-                <div class="questionNoteWrap">
+                <div class="questionNoteWrap">`
                   <video
                     v-if="['.mp4','.MP4'].includes(file.file_type)"
                     :src="getUrl(file.client_path)"
@@ -106,7 +106,7 @@
           </template>
         </div>
         <div v-if="data.questions[0].type === 2">
-          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT' && lectureType === 0) || answerSubmitted"> <!-- 이미 제출한 경우 -->
+          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT') || answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -173,7 +173,7 @@
           </template>
         </div>
         <div v-if="data.questions[0].type === 3">
-          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT' && lectureType === 0) || answerSubmitted"> <!-- 이미 제출한 경우 -->
+          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT') || answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -223,7 +223,7 @@
           </template>
         </div>
         <div v-if="data.questions[0].type === 4">
-          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT' && lectureType === 0) || answerSubmitted"> <!-- 이미 제출한 경우 -->
+          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT') || answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
@@ -269,7 +269,7 @@
         </div>
         <el-row type="flex" justify="center">
           <el-button
-            v-if="!((data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT' && lectureType === 0) || answerSubmitted)"
+            v-if="!((data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT') || answerSubmitted)"
             type="primary"
             @click="preOnClick()">
             제출
@@ -278,7 +278,7 @@
       </div>
       <div v-if="data.type === 1">
         <div v-if="data.surveys[0].type === 0">
-          <template v-if="(data.surveys[0].student_surveys.length > 0 && type === 'STUDENT' && lectureType === 0) || answerSubmitted"> <!-- 이미 제출한 경우 -->
+          <template v-if="(data.surveys[0].student_surveys.length > 0 && type === 'STUDENT') || answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
           </template>
           <template v-else>
@@ -292,7 +292,7 @@
           </template>
         </div>
         <div v-if="data.surveys[0].type === 1">
-          <template v-if="(data.surveys[0].student_surveys.length > 0 && type === 'STUDENT' && lectureType === 0) || answerSubmitted"> <!-- 이미 제출한 경우 -->
+          <template v-if="(data.surveys[0].student_surveys.length > 0 && type === 'STUDENT') || answerSubmitted"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
           </template>
           <template v-else>
@@ -303,7 +303,7 @@
         </div>
         <el-row type="flex" justify="center">
           <el-button
-            v-if="!((data.surveys[0].student_surveys.length > 0 && type === 'STUDENT' && lectureType === 0) || answerSubmitted)"
+            v-if="!((data.surveys[0].student_surveys.length > 0 && type === 'STUDENT') || answerSubmitted)"
             type="primary"
             @click="preOnClick()">
             제출
