@@ -33,18 +33,19 @@
             {{ $t('LOGIN.FORGOT_PASSWORD_BUTTON') }}
           </el-button>
           <el-dialog
-            title="비밀번호 초기화"
+            title="비밀번호 변경"
             :visible.sync="isModalVisible"
             :width="$isPhone?'80%':'30%'"
             center
           >
             <!-- TODO: replace 브랜드 로고 -->
-            <el-button type="primary" plain slot="title">Brand Logo</el-button>
-            <h2>비밀번호 변경</h2>
+            <!--<el-button type="primary" plain slot="title">Brand Logo</el-button>-->
+            <!-- <h2>비밀번호 변경</h2> 
             <span>비밀번호를 변경할 이메일을 입력하세요.</span>
             <br/><br/><hr><br/>
+            -->
             <el-form :model="input" label-width="120px" label-position="top">
-              <el-form-item label="이메일">
+              <el-form-item label="비밀번호를 변경할 이메일 주소를 입력하세요.">
                 <el-input v-model="findingPasswordEmail"></el-input>
               </el-form-item>
             </el-form>

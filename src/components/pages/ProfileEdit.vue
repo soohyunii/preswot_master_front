@@ -1,11 +1,11 @@
 <template>
   <div>
-    <el-card class="box-card" style="width: 1200px; margin: 0 auto;">
+    <el-card class="box-card" style="width: 100%; margin: 0 auto;">
       <h1>회원정보 수정</h1>
       <br>
       <el-container>
         <el-row>
-          <el-col style="max-width: 700px;">
+          <el-col>
             <el-form :model="input" :rules="rules" ref="elForm" :label-width="getLabelWidth()">
               <el-form-item>
                 <h2>개인정보활용동의서</h2>
@@ -48,14 +48,19 @@
               <el-form-item label="비밀번호 변경" prop="changepw" id="changepw">
               <el-checkbox v-model="changepw"></el-checkbox>
             </el-form-item> -->
-
+            <el-form-item v-if="checkTou">
+              <p>* 문자, 숫자, 특수문자를 포함해야하며, 8글자 이상 입력해야 합니다.</p>
+            </el-form-item>
             <el-form-item label="비밀번호" prop="password" id="password" v-if="checkTou">
-              <el-input v-model="input.password" type="password" :disabled="!changepw"></el-input>
-              <br />* 문자, 숫자, 특수문자를 포함한 8글자 이상의 비밀번호
+              <div style="width: 300px">
+                <el-input v-model="input.password" type="password" :disabled="!changepw"></el-input>
+              </div>
             </el-form-item>
 
             <el-form-item label="비밀번호 확인" prop="password2" id="password2" v-if="checkTou">
-              <el-input v-model="input.password2" type="password" :disabled="!changepw"></el-input>
+              <div style="width: 300px">
+                <el-input v-model="input.password2" type="password" :disabled="!changepw"></el-input>
+              </div>
             </el-form-item>
 
             <br />
