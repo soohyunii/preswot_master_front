@@ -139,12 +139,13 @@
             </template>
         </el-table-column>
         <el-table-column
-          v-if="editMode == true"
           label=""
           width="100px"
           align="center">
           <template slot-scope="scope">
-            <el-button type="info"
+            <el-button
+                      v-if="editMode == true"
+                      type="info"
                       plain
                       size="small"
                       @click="scoreSubmit(scope.row.score, scope.row.student_answer_log_id)">
