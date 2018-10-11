@@ -4,6 +4,7 @@
       <el-row>
         <el-col :span="3"><strong>학생 답변</strong></el-col>
         <el-col :span="7">총 {{ studentQuestionResult.numberOfStudent }} 건</el-col>
+        <el-button v-if="resultType !== '실시간'" type="primary" size="small" @click="editMode=!editMode">수정모드 on/off</el-button>
         <el-button v-if="resultType !== '실시간'" type="primary" size="small" @click="regrade()">재채점하기</el-button>
         <el-button v-if="resultType === '실시간'" style="float:right" type="primary" size="small" icon="el-icon-refresh" @click="refresh()">새로고침</el-button>
       </el-row>
@@ -38,11 +39,10 @@
                 <!-- height="500"> -->
         <el-table-column
           label="학생 아이디"
+          prop="user.email_id"
           align="center"
-          width="250px">
-          <template slot-scope="scope">
-            <p>{{ scope.row.user.email_id }}</p>
-          </template>
+          width="250px"
+          sortable>
         </el-table-column>
         <el-table-column
           v-if="studentQuestionResult.type === '서술'"
@@ -125,15 +125,21 @@
           align="center">
             <template slot-scope="scope">
               <div>
-                <el-input placeholder="Please input"
-                        v-model="scope.row.score"
-                        type="number"
-                        min="0"
-                        :max="studentQuestionResult.score" />
+                <el-input
+                  v-if="editMode == true"
+                  placeholder="Please input"
+                  v-model="scope.row.score"
+                  type="number"
+                  min="0"
+                  :max="studentQuestionResult.score" />
+                <p v-if="editMode == false">
+                  {{ scope.row.score }}
+                </p>
               </div>
             </template>
         </el-table-column>
         <el-table-column
+          v-if="editMode == true"
           label=""
           width="100px"
           align="center">
@@ -227,6 +233,7 @@
     data() {
       return {
         dialogVisible: false,
+        editMode: true,
         dialogContents: '',
         autoGradeStudentScoreList: [],
         autoGradeTeacherScoreList: [],
