@@ -41,7 +41,14 @@
           label="학생 아이디"
           prop="user.email_id"
           align="center"
-          width="250px"
+          width="200px"
+          sortable>
+        </el-table-column>
+        <el-table-column
+          label="학생 이름"
+          prop="user.name"
+          align="center"
+          width="200px"
           sortable>
         </el-table-column>
         <el-table-column
