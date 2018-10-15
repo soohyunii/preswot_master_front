@@ -37,9 +37,17 @@
                 :default-sort="{prop: 'score', order: 'ascending'}">
                 <!-- height="500"> -->
         <el-table-column
-          label="학생 아이디"
+          label="학생 이름"
           align="center"
           width="250px">
+          <template slot-scope="scope">
+            <p>{{ scope.row.user.name }}</p>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="학생 아이디"
+          align="center"
+          width="250px" sortable>
           <template slot-scope="scope">
             <p>{{ scope.row.user.email_id }}</p>
           </template>

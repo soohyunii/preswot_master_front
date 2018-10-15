@@ -39,9 +39,21 @@ import { mapState, mapActions, mapGetters } from 'vuex';
 import LectureList from '../partials/LectureList';
 import utils from '../../utils';
 import lectureService from '../../services/lectureService';
+import authService from '../../services/authService';
 
 export default {
   name: 'TeacherLectureIndex',
+  async created() {
+    const vm = this;
+    // 학생이 url로 접근하는 경우 방지
+    const accessId = utils.getUserIdFromJwt();
+    const accessCheck = await authService.returnUserInfo({
+      userID: accessId,
+    });
+    if (accessCheck.data.userInfo.type === 0) {
+      vm.$router.push('/');
+    }
+  },
   components: {
     LectureList,
   },

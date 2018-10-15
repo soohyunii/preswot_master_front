@@ -195,7 +195,7 @@ export default {
             teacherSideList: vm.teacherSideList,
             studentSideList: vm.studentSideList,
           });
-          console.log('questionService.autoGradeDescription res.data =  ', res.data);
+          // console.log('questionService.autoGradeDescription res.data =  ', res.data);
           EventBus.$emit('autoGradingComplete', res.data);
           break;
         }

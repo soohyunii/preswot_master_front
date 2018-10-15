@@ -83,7 +83,7 @@
       const res = await lectureItemService.getLectureItem({
         lectureItemId: vm.lectureItemId,
       });
-      console.log('@disc ', res.data.discussion_info.topic);
+      // console.log('@disc ', res.data.discussion_info.topic);
       vm.discussionName = res.data.name;
       vm.discussionTopic = res.data.discussion_info.topic;
       vm.$socket.emit('JOIN_DISCUSSION', JSON.stringify(params));

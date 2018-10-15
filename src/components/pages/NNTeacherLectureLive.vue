@@ -125,6 +125,7 @@ import { getIdFromURL } from 'vue-youtube-embed';
 import deepCopy from 'deep-copy';
 import lectureService from '../../services/lectureService';
 import classService from '../../services/classService';
+import authService from '../../services/authService';
 import TeacherLectureLiveItemList from '../partials/TeacherLectureLiveItemList';
 import TeacherLectureLiveItem from '../partials/TeacherLectureLiveItem';
 import TeacherLectureLiveChat from '../partials/TeacherLectureLiveChat';
@@ -137,7 +138,16 @@ export default {
   name: 'TeacherLectureLive',
   async created() {
     const vm = this;
-    // 강의 아이템 목록, 과목, 강의명 가져오기
+    // 학생이 url로 접근하는 경우 방지
+    const accessId = utils.getUserIdFromJwt();
+    const accessCheck = await authService.returnUserInfo({
+      userID: accessId,
+    });
+    if (accessCheck.data.userInfo.type === 0) {
+      vm.$router.push('/');
+    }
+
+// 강의 아이템 목록, 과목, 강의명 가져오기
     const res = await lectureService.getLecture({
       lectureId: vm.lectureId,
     });
