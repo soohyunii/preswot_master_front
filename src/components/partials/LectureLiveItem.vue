@@ -217,7 +217,7 @@
             <pre>{{ data.questions[0].sample_input }}</pre>
             <p>샘플 출력 :</p>
             <pre>{{ data.questions[0].sample_output }}</pre>
-            <div v-for="testcase in data.questions[0].problem_testcases" :key="testcase.num">
+            <div v-if="authType===1" v-for="testcase in data.questions[0].problem_testcases" :key="testcase.num">
               <p>테스트 케이스 {{ testcase.num }} 입력 :</p>  <pre>{{ testcase.input }} </pre>
               <p>테스트 케이스 {{ testcase.num }} 출력 :</p>  <pre>{{ testcase.output }} </pre>
             </div>
@@ -414,6 +414,11 @@ export default {
       const vm = this;
       const userId = utils.getUserIdFromJwt();
       return vm.data.questions[0].student_answer_logs.findIndex(item => item.student_id === userId);
+    },
+    authType() {
+      const vm = this;
+      const jwt = vm.$store.state.auth.jwt;
+      return utils.getAuthTypeFromJwt(jwt);
     },
   },
   methods: {

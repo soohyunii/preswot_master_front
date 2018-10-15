@@ -305,6 +305,14 @@ export default {
           break;
         }
         case 'DELETE_TEST_CASE': {
+          if (vm.inputTail.testCaseList.length === 1) {
+            vm.$notify({
+              title: '알림',
+              message: '마지막 테스트케이스는 삭제할 수 없습니다.',
+              type: 'warning',
+            });
+            break;
+          }
           vm.inputTail.testCaseList.splice(arg, 1);
           break;
         }
