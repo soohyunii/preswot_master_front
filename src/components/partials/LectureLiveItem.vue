@@ -209,13 +209,17 @@
             </div>
             <pre>{{ data.questions[0].question }}</pre>
             <pre>언어 : {{ data.questions[0].accept_language[0] }}</pre>
-            <pre>입력 설명 : {{ data.questions[0].input_description }}</pre>
-            <pre>출력 설명 : {{ data.questions[0].output_description }}</pre>
-            <pre>샘플 입력 : {{ data.questions[0].sample_input }}</pre>
-            <pre>샘플 출력 : {{ data.questions[0].sample_output }}</pre>
+            <p>입력 설명 :</p>
+            <pre>{{ data.questions[0].input_description }}</pre>
+            <p>출력 설명 :</p>
+            <pre>{{ data.questions[0].output_description }}</pre>
+            <p>샘플 입력 :</p>
+            <pre>{{ data.questions[0].sample_input }}</pre>
+            <p>샘플 출력 :</p>
+            <pre>{{ data.questions[0].sample_output }}</pre>
             <div v-for="testcase in data.questions[0].problem_testcases" :key="testcase.num">
-              <pre>테스트 케이스 {{ testcase.num }} 입력 :  {{ testcase.input }} </pre>
-              <pre>테스트 케이스 {{ testcase.num }} 출력 :  {{ testcase.output }} </pre>
+              <p>테스트 케이스 {{ testcase.num }} 입력 :</p>  <pre>{{ testcase.input }} </pre>
+              <p>테스트 케이스 {{ testcase.num }} 출력 :</p>  <pre>{{ testcase.output }} </pre>
             </div>
             <pre>메모리 제한(MB) : {{ data.questions[0].memory_limit }}</pre>
             <pre>시간 제한(초) : {{ data.questions[0].time_limit }}</pre>

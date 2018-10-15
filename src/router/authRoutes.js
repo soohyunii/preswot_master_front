@@ -13,7 +13,7 @@ import NNStudentClassShow from '../components/pages/NNStudentClassShow';
 import TeacherLectureNew from '../components/pages/TeacherLectureNew';
 import TeacherLectureLive from '../components/pages/TeacherLectureLive';
 import NNStudentLectureLive from '../components/pages/NNStudentLectureLive';
-import TeacherClassNew from '../components/pages/TeacherClassNew';
+// import TeacherClassNew from '../components/pages/TeacherClassNew'; // season 0
 import TeacherClassEdit from '../components/pages/TeacherClassEdit';
 import TeacherClassEvaluation from '../components/pages/TeacherClassEvaluation';
 import TeacherClassScoring from '../components/pages/TeacherClassScoring';
@@ -144,6 +144,7 @@ export default function authRoutes(root) {
         title: 'Teacher Lecture Live',
       },
     },
+    /*  // season 0
     {
       path: '/teacher/class/new',
       name: 'TeacherClassNew',
@@ -152,6 +153,7 @@ export default function authRoutes(root) {
         title: 'Teacher Class New', // TODO: import from i18n
       },
     },
+    */
     {
       path: '/teacher/NNclass/:classId',
       name: 'Teacher Class Show',

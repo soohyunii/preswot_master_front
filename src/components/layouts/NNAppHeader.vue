@@ -90,6 +90,7 @@
     left:83%;
   }
   .div5 {
+    cursor: pointer;
     display:inline-block;
     position:absolute;
     top: 15px;

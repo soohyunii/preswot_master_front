@@ -170,7 +170,10 @@ export default {
     };
     const initialInputTail = {
       assignedKeywordList: [],
-      testCaseList: [],
+      testCaseList: [{
+        input: '',
+        output: '',
+      }],
       answer: [],
       difficulty: 3,
       questionFile: [],

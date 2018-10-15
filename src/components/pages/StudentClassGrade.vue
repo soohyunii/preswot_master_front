@@ -89,10 +89,12 @@
         <p v-if="questionResult.summitted">{{ questionResult.answers[0].answer[0]}}</p>
         <p v-else>( 미제출 )</p>
 
+        <!--
         <div v-if="['객관', '단답', '서술', 'SQL'].includes(questionResult.type)">
           <h3>정답</h3>
           <p>{{ questionResult.answer }}</p>
         </div>
+        -->
         <div v-if="questionResult.type === 'SW' && questionResult.summitted">
           <h3>결과</h3>
           <p>{{ questionResult.answers[0].swResult }}</p>
