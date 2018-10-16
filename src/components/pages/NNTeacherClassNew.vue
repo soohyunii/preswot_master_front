@@ -87,6 +87,7 @@
 <script>
 import classService from '../../services/classService';
 import authService from '../../services/authService';
+import utils from '../../utils';
 
 export default {
   name: 'TeacherClassNew',

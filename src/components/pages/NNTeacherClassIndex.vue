@@ -33,6 +33,7 @@ import { mapState, mapMutations, mapActions } from 'vuex';
 import ClassList from '../partials/ClassList';
 import classService from '../../services/classService';
 import authService from '../../services/authService';
+import utils from '../../utils';
 
 
 export default {

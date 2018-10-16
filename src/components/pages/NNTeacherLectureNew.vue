@@ -77,6 +77,7 @@
 import { mapActions, mapState } from 'vuex';
 import lectureService from '../../services/lectureService';
 import authService from '../../services/authService';
+import utils from '../../utils';
 
 export default {
   name: 'TeacherLectureNew',

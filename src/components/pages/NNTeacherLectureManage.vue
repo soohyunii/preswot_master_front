@@ -47,6 +47,7 @@ import TlmTabMaterialEdit from '../partials/TlmTabMaterialEdit';
 // import LectureKeywordsEditor from '../partials/LectureKeywordsEditor';
 import KnowledgeMap from '../partials/NNKnowledgeMap';
 import { EventBus } from '../../event-bus';
+import utils from '../../utils';
 
 
 export default {
