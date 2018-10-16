@@ -359,6 +359,7 @@ export default {
       if (res === 1 || res === 11) return '컴파일 에러';
       if (res === 3) return '채점중';
       if (res === 4) return '맞음';
+      if (res === 5) return '틀림';
       if (res === 6) return '틀림';
       if (res === 7) return '시간 초과';
       if (res === 8) return '메모리 초과';
