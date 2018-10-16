@@ -35,6 +35,7 @@
 
 <script>
 import { mapState, mapActions, mapGetters, mapMutations } from 'vuex';
+import authService from '../../services/authService';
 import NNTeacherLectureNew from './NNTeacherLectureNew';
 import TlmTabMaterialAndKeywordEdit from '../partials/TlmTabMaterialAndKeywordEdit';
 import TlmTabLectureItemEdit from '../partials/TlmTabLectureItemEdit';
@@ -46,6 +47,7 @@ import TlmTabMaterialEdit from '../partials/TlmTabMaterialEdit';
 // import LectureKeywordsEditor from '../partials/LectureKeywordsEditor';
 import KnowledgeMap from '../partials/NNKnowledgeMap';
 import { EventBus } from '../../event-bus';
+import utils from '../../utils';
 
 
 export default {
@@ -66,6 +68,14 @@ export default {
   async created() {
     const vm = this;
     // FIXME: TeacherClassShow의 그것이랑 동일한 문제 // getMyClassLists를 다른곳에서 불러서 이미 채워져있는경우면 사실 필요없음
+    // 학생이 url로 접근하는 경우 방지
+    const accessId = utils.getUserIdFromJwt();
+    const accessCheck = await authService.returnUserInfo({
+      userID: accessId,
+    });
+    if (accessCheck.data.userInfo.type === 0) {
+      vm.$router.push('/');
+    }
     await vm.getMyClassLists();
     await vm.getClass({
       type: 'TEACHER',

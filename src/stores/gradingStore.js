@@ -192,6 +192,7 @@ export default {
             if (temp === 1 || temp === 11) questionResult.answers[i].swResult = '컴파일 에러';
             if (temp === 3) questionResult.answers[i].swResult = '채점중';
             if (temp === 4) questionResult.answers[i].swResult = '맞음';
+            if (temp === 5) questionResult.answers[i].swResult = '틀림';
             if (temp === 6) questionResult.answers[i].swResult = '틀림';
             if (temp === 7) questionResult.answers[i].swResult = '시간 초과';
             if (temp === 8) questionResult.answers[i].swResult = '메모리 초과';
