@@ -77,10 +77,12 @@
           </el-col>
         </el-row>
         <br />
+        <!--
         <el-row>
           <el-col :span="3"><strong>현재 강의를 듣고있는 인원</strong></el-col>
           <el-col :span="7"> {{ onStudentCount - 1 }} 명 </el-col>
         </el-row>
+        -->
         <div v-for="(itemId, index) in currentLectureItemId" :key="itemId">
           <el-row>
             <lecture-question-result
