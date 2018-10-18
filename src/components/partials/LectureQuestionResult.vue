@@ -35,8 +35,16 @@
       </el-row>
       <el-table :data="studentQuestionResult.answers"
                 :header-cell-style="changeHead"
-                :default-sort="{prop: 'score', order: 'ascending'}">
+                :default-sort="{prop: 'user.order', order: 'descending'}">
                 <!-- height="500"> -->
+        <!-- 미제출 학생 정렬 플래그 -->
+        <el-table-column
+          label=""
+          prop="user.order"
+          align="center"
+          width="1px"
+          >
+        </el-table-column>        
         <el-table-column
           label="학생 아이디"
           prop="user.email_id"
@@ -282,16 +290,36 @@
       const vm = this;
       // TODO: 부모 component에서 받아 오는 형식으로 수정
       await vm.getClassTotalResult({
+        lectureId: vm.lectureId,
         classId: vm.classId,
+        isStudent: false,
       });
       vm.getQuestionResult({
         itemId: vm.itemId,
       });
       vm.studentQuestionResult = vm.questionResult;
       vm.questionId = vm.studentQuestionResult.questionId; // 재사용을 위해 저장함
-      const res = await questionService.getQuestionResult({
+      const res = await questionService.NNgetQuestionResult({
         questionId: vm.questionId,
+        classId: vm.classId,
       });
+
+      // 실시간 - 미제출 학생 표기 모듈
+      if (vm.resultType === '실시간') {
+        // email_id 목록을 추출한다.
+        const emailList = vm.studentQuestionResult.answers.map(x => x.user.email_id);
+
+        res.data.login_students.forEach((element) => {
+          // res.data.login_students.email_id가 추출한 목록에 있는지 보고 없으면 push
+          if (!emailList.includes(element.email_id)) {
+            vm.studentQuestionResult.answers.push({
+              answer: ['미제출'],
+              user: element,
+            });
+          }
+        });
+      }
+
       const numAnswer = res.data.num_students_answer;
       const numPartialAnswer = res.data.num_students_partial_answer;
       const numTotal = res.data.num_students_total;
@@ -337,17 +365,38 @@
       async refresh() {
         const vm = this;
         await vm.getClassTotalResult({
+          lectureId: vm.lectureId,
           classId: vm.classId,
           isStudent: false,
         });
         vm.getQuestionResult({
           itemId: vm.itemId,
         });
+
         vm.studentQuestionResult = vm.questionResult;
         const questionId = vm.studentQuestionResult.questionId;
-        const res = await questionService.getQuestionResult({
+        const res = await questionService.NNgetQuestionResult({
           questionId,
+          classId: vm.classId,
         });
+
+        // 실시간 - 미제출 학생 표기 모듈
+        if (vm.resultType === '실시간') {
+          // email_id 목록을 추출한다.
+          const emailList = vm.studentQuestionResult.answers.map(x => x.user.email_id);
+
+          res.data.login_students.forEach((element) => {
+            // res.data.login_students.email_id가 추출한 목록에 있는지 보고 없으면 push
+            if (!emailList.includes(element.email_id)) {
+              vm.studentQuestionResult.answers.push({
+                order: '0', // 미제출 학생 정렬용 플래그
+                answer: ['미제출'],
+                user: element,
+              });
+            }
+          });
+        }
+
         const numAnswer = res.data.num_students_answer;
         const numPartialAnswer = res.data.num_students_partial_answer;
         const numTotal = res.data.num_students_total;

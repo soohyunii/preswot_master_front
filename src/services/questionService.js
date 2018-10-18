@@ -119,6 +119,12 @@ export default {
   }) {
     return http.get(`/questions/${questionId}/result`);
   },
+  NNgetQuestionResult({
+    questionId,
+    classId,
+  }) {
+    return http.get(`/questions/${questionId}/${classId}/result`);
+  },
   selectPreviousSqlite({
     guid, questionId,
   }) {

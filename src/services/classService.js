@@ -25,6 +25,9 @@ export default {
   getClassTotalResult({ id }) {
     return http.get(`/classes/${id}/total-result`);
   },
+  NNgetClassTotalResult({ id, classId }) {
+    return http.get(`/classes/${id}/${classId}/total-result`);
+  },
   getClassStudentResult({ id }) {
     return http.get(`/classes/${id}/student-result`);
   },
