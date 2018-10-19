@@ -128,7 +128,7 @@
           align="center">
           <template slot-scope="scope">
             <p>{{ scope.row.swResult }}</p>
-            <p>{{ scope.row.oj_solution.time }}ms, {{ scope.row.oj_solution.memory }}KB</p>
+            <p v-if="scope.row.oj_solution !== undefined">{{ scope.row.oj_solution.time }}ms, {{ scope.row.oj_solution.memory }}KB</p>
             <p v-if="scope.row.swResult === '컴파일 에러'">{{ scope.row.oj_compileinfo.error }}</p>
             <p v-if="scope.row.swResult === '런타임 에러'">{{ scope.row.oj_runtimeinfo.error }}</p>
           </template>
