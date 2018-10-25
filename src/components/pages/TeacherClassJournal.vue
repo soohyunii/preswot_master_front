@@ -1,21 +1,37 @@
 <template>
-  <div v-if="analysisData && analysisData[0]" class="bt-container">
-    <div class="classTitle">{{ analysisData[0].class_name }} > 저널링</div>
+  <!--<div v-if="analysisData && analysisData[0]" class="bt-container">
+    <div class="classTitle">{{ analysisData[0].class_name }} > 저널링</div>-->
+  <div class="bt-container">
+    <div class="classTitle"> > 저널링</div>
     <el-tabs v-model="activeTab">
+      
       <el-tab-pane label="강의 흐름" name="basic">
-        <line-chart :chartData = "analysisData" :isStudent = "isStudent"/>
+        <span>대상 : </span>
+        <span style="display: inline-block; width: 100px">
+        <el-select v-model="selectValue" placeholder="Select" @change="onChange()">
+          <el-option
+            v-for="item in selectOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+        </span>
+        <line-chart :chartData = "chartData" :isStudent = "isStudent"/>
+
         <el-table
           :data="analysisData"
-          style="width: 100%">
+          style="width: 100%">w
           <el-table-column
             prop="index"
-            label="강의 명"
+            label="강의명"
             sortable
-            width="120">
+            width="200">
             <template slot-scope="scope">
               {{ scope.row.name }}
             </template>
           </el-table-column>
+          <!--
           <el-table-column
             prop="index"
             label="이해도"
@@ -94,6 +110,8 @@
              </div>
             </template>
           </el-table-column>
+          -->
+
           <el-table-column
             prop="index"
             label="통계 보기"
@@ -117,6 +135,8 @@
             </template>
           </el-table-column>
         </el-table>
+
+        <!--
         <teacher-class-journal-detail :lectureId = "lectureId" v-if = "isActiveInfo"/>
       </el-tab-pane>
       <el-tab-pane label="키워드 저널링" name="keyword">
@@ -148,6 +168,7 @@
             ></word-cloud>
           </el-col>
         </el-row>
+        -->
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -216,11 +237,12 @@
 </style>
 
 <script>
-  import { mapActions, mapState, mapMutations } from 'vuex';
   import utils from '../../utils';
-  import LineChart from '../partials/LineChart';
+  import { mapActions, mapState, mapMutations } from 'vuex';
+  import LineChart from '../partials/NNLineChart';
   import TeacherClassJournalDetail from '../partials/TeacherClassJournalDetail';
   import WordCloud from '../partials/WordCloud';
+  import analysisService from '../../services/analysisService';
 
   export default {
     name: 'TeacherClassJournal',
@@ -234,10 +256,42 @@
         defaultValue: 0,
         isStudent: false,
         activeTab: 'basic',
+        selectOptions: [{
+          value: '전체',
+          label: '전체',
+        }, {
+          value: '예습',
+          label: '예습',
+        }, {
+          value: '본강',
+          label: '본강',
+        }, {
+          value: '복습',
+          label: '복습',
+        }],
+        selectValue: '전체',
+        participationData: '',
+        understandingData: '',
+        chartData: [],
       };
     },
     async beforeMount() {
       const vm = this;
+
+      // 참여도 (>= 이해도)
+      const res = await analysisService.NNgetParticipation({ classId: vm.$route.params.classId });
+      // console.log('@TeacherClassJournal res2.data = ', res.data);
+      vm.participationData = res.data;
+
+      // 이해도
+      const res2 = await analysisService.NNgetUnderstanding({ classId: vm.$route.params.classId });
+      // console.log('@TeacherClassJournal res.data = ', res2.data);
+      vm.understandingData = res2.data;
+
+      // TODO 집중도 - 서버 구현되면 추가될 예정
+
+      vm.onChange();
+      
       vm.updateClassId({
         classId: Number.parseInt(vm.$route.params.classId, 10),
       });
@@ -251,6 +305,7 @@
         analysisOpt: 0,
       });
       await vm.getAnalysisData();
+      // console.log('@TeacherClassJournal analysisData = ', vm.analysisData);
     },
     methods: {
       ...mapMutations('analysis', ['updateClassId', 'updateUserId', 'updateIsStudent', 'updateIsActiveInfo', 'updateLectureId', 'updateAnalysisOpt']),
@@ -286,6 +341,31 @@
             throw new Error('not defined type', type);
           }
         }
+      },
+      onChange() {
+        const vm = this;
+        switch (vm.selectValue) {
+          case '전체':
+            vm.chartData[0] = vm.participationData.average;
+            vm.chartData[1] = vm.understandingData.average;
+            break;
+          case '예습':
+            vm.chartData[0] = vm.participationData.beforeAverage;
+            vm.chartData[1] = vm.understandingData.beforeAverage;
+            break;
+          case '본강':
+            vm.chartData[0] = vm.participationData.curAverage;
+            vm.chartData[1] = vm.understandingData.curAverage;
+            break;
+          case '복습':
+            vm.chartData[0] = vm.participationData.afterAverage;
+            vm.chartData[1] = vm.understandingData.afterAverage;
+            break;
+          default :
+            break;
+        }
+        vm.chartData.push(''); // 자식 컴포넌트에 변화 알릴 목적
+        vm.$emit('onChange');
       },
     },
     computed: {

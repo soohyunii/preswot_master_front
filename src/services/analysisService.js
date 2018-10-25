@@ -5,6 +5,16 @@ import http from './http';
  * service 관련 documentation은 구글 스프레드 시트를 참조하는게 빠름!
  */
 export default {
+  NNgetUnderstanding({
+    classId,
+  }) {
+    return http.get(`/journalings2/understanding/${classId}`);
+  },
+  NNgetParticipation({
+    classId,
+  }) {
+    return http.get(`/journalings2/participation/${classId}`);
+  },
   getClassLogAnalysis({
                          userId, classId, isStudent,
                        }) {

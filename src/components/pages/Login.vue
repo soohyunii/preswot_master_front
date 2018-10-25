@@ -110,9 +110,13 @@ export default {
               vm.$router.push('/');
             }
           } catch (error) {
-            // console.error('login error', error);
-            // TODO: translate
-            vm.openNoti('error', 'Login Failed !!');
+            // console.dir(error);
+            vm.$notify({
+              title: 'Sorry',
+              message: (error.response !== undefined) ? error.response.data.message : error.message,
+              type: 'warning',
+              duration: 5000,
+            });
           }
           break;
         }
