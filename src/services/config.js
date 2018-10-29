@@ -18,9 +18,11 @@ if (isProd) {
   socketPort = 8001;
 }
 
+/*
 // 로컬 서버 테스트용
 serverUrl = 'http://localhost';
 backPort = 8000;
+*/
 
 export const baseUrl = `${serverUrl}:${backPort}`;
 export const websocketUrl = `${serverUrl}:${socketPort}`;

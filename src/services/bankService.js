@@ -16,6 +16,14 @@ export default {
   getLectureItemKeywords({ id }) {
     return http.get(`/lecture-items/${id}/keywords`);
   },
+  getLectureItemByKeyword({ keyArray }) {
+    let str = '';
+    keyArray.forEach((x) => {
+      str = str.concat('keywords=', x, '&');
+    });
+    const key = str.substr(0, str.length - 1);
+    return http.get(`/lecture-items/search?${key}`);
+  },
   saveClass({ class_id, group_id }) {
     return http.post('/bank/class', {
       class_id: class_id,  // eslint-disable-line
