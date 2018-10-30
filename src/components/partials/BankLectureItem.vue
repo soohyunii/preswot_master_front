@@ -214,18 +214,20 @@ export default {
               } else if (z.type === 4) {
                 itemInfo.type = '자료';
               }
-              itemInfo.key = [];
+              // itemInfo.key = [];
               // console.log(z.lecture_item_id);
+              // 아이템마다 키워드를 받아오는 부분 - 서버에서 검색하고 받아오기로
+              /*
               const itemKey = bankService.getLectureItemKeywords({
                 id: z.lecture_item_id,
               });
-              // console.log(itemKey);
               itemKey.then(function(itemresult) {  // eslint-disable-line
                 // console.log(itemresult);
                 itemresult.data.forEach((gz) => {
                   itemInfo.key.push(gz.keyword);
                 });
               });
+              */
               vm.myLectureItemList.push(itemInfo);
             });
           });
@@ -326,7 +328,28 @@ export default {
             });
             break;
           }
+
           vm.resultLectureItemList = [];
+          vm.resultLectureItemIdList = [];
+          const keywordResult = bankService.getLectureItemByKeyword({
+            keyArray: vm.searchKeywordList,
+          });
+          keywordResult.then(function(result) {  // eslint-disable-line
+            result.data.forEach((x) => {
+              // 결과 리스트에 없는 아이템이라면
+              if (vm.resultLectureItemIdList.includes(x.lecture_item_id) === false) {
+                // 결과 리스트에 추가
+                vm.resultLectureItemIdList.push(x.lecture_item_id);
+                vm.myLectureItemList.forEach((y) => {
+                  if (y.id === x.lecture_item_id) {
+                    vm.resultLectureItemList.push(y);
+                  }
+                });
+              }
+            });
+          });
+
+          /*
           vm.myLectureItemList.forEach((x) => {
             let ifContain = true;
             vm.searchKeywordList.forEach((y) => {
@@ -338,6 +361,7 @@ export default {
               vm.resultLectureItemList.push(x);
             }
           });
+          */
           break;
         }
         // 검색 결과 초기화
