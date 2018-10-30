@@ -2,9 +2,11 @@
   <!--<div v-if="analysisData && analysisData[0]" class="bt-container">
     <div class="classTitle">{{ analysisData[0].class_name }} > 저널링</div>-->
   <div class="bt-container">
-    <div class="classTitle"> > 저널링</div>
+    <el-breadcrumb style="font-size: 24px; margin-top: 16px; margin-bottom: 32px;" separator=">">
+      <el-breadcrumb-item :to="{ path: '/a/teacher/NNclass/'+classId }">{{ className }}</el-breadcrumb-item>
+      <el-breadcrumb-item>저널링</el-breadcrumb-item>
+    </el-breadcrumb>
     <el-tabs v-model="activeTab">
-      
       <el-tab-pane label="강의 흐름" name="basic">
         <span>대상 : </span>
         <span style="display: inline-block; width: 100px">
@@ -17,47 +19,42 @@
           </el-option>
         </el-select>
         </span>
-        <line-chart :chartData = "chartData" :isStudent = "isStudent"/>
+        <line-chart :chartCategories = "chartCategories" :chartData = "chartData"/>
 
         <el-table
-          :data="analysisData"
-          style="width: 100%">w
+          :data="allData.average"
+          style="width: 100%">
           <el-table-column
-            prop="index"
             label="강의명"
-            sortable
             width="200">
             <template slot-scope="scope">
               {{ scope.row.name }}
             </template>
           </el-table-column>
-          <!--
+
           <el-table-column
-            prop="index"
-            label="이해도"
-            sortable
+            label="평균 참여도"
             style="width: 10%">
             <template slot-scope="scope">
-            <el-slider v-model="defaultValue"   :step="25" disabled show-stops :show-tooltip="false"></el-slider>
-            <div class = "slider_label">
-              <el-tooltip class="item" effect="dark" :content="nullToZero(scope.row.min_understanding_score)" placement="top">
-                <div class= "slider_label_qq q1"></div>
-              </el-tooltip>
-              <el-tooltip class="item" effect="dark" :content="nullToZero(scope.row.q1_understanding_score)" placement="top">
-                <div class= "slider_label_qq q2"></div>
-              </el-tooltip>
-              <el-tooltip class="item" effect="dark" :content="nullToZero(scope.row.q2_understanding_score)" placement="top">
-                <div class= "slider_label_qq q3"></div>
-              </el-tooltip>
-              <el-tooltip class="item" effect="dark" :content="nullToZero(scope.row.q3_understanding_score)" placement="top">
-                <div class= "slider_label_qq q4"></div>
-              </el-tooltip>
-              <el-tooltip class="item" effect="dark" :content="nullToZero(scope.row.max_understanding_score)" placement="top">
-                <div class= "slider_label_qq q5"></div>
-              </el-tooltip>
-           </div>
+              <span v-if="selectValue === '전체'">{{ (scope.row.participation * 100).toFixed(2) }}</span>
+              <span v-if="selectValue === '예습'">{{ (scope.row.beforeParticipation * 100).toFixed(2) }}</span>
+              <span v-if="selectValue === '본강'">{{ (scope.row.curParticipation * 100).toFixed(2) }}</span>
+              <span v-if="selectValue === '복습'">{{ (scope.row.afterParticipation * 100).toFixed(2) }}</span>
             </template>
           </el-table-column>
+
+          <el-table-column
+            label="평균 이해도"
+            style="width: 10%">
+            <template slot-scope="scope">
+              <span v-if="selectValue === '전체'">{{ (scope.row.understanding * 100).toFixed(2) }}</span>
+              <span v-if="selectValue === '예습'">{{ (scope.row.beforeUnderstanding * 100).toFixed(2) }}</span>
+              <span v-if="selectValue === '본강'">{{ (scope.row.curUnderstanding * 100).toFixed(2) }}</span>
+              <span v-if="selectValue === '복습'">{{ (scope.row.afterUnderstanding * 100).toFixed(2) }}</span>
+            </template>
+          </el-table-column>
+
+          <!--
           <el-table-column
             prop="index"
             label="집중도"
@@ -113,9 +110,7 @@
           -->
 
           <el-table-column
-            prop="index"
             label="통계 보기"
-            sortable
             width="150">
             <template slot-scope="scope">
               <el-button type="primary" size="small" @click="onClick('STUDENT_STAT', scope.row.lecture_id)">
@@ -124,9 +119,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            prop="index"
             label="통계 보기"
-            sortable
             width="150">
             <template slot-scope="scope">
               <el-button type="primary" size="small" @click="onClick('LECTURE_ANALYSIS', scope.row.lecture_id)">
@@ -136,7 +129,7 @@
           </el-table-column>
         </el-table>
 
-        <!--
+        
         <teacher-class-journal-detail :lectureId = "lectureId" v-if = "isActiveInfo"/>
       </el-tab-pane>
       <el-tab-pane label="키워드 저널링" name="keyword">
@@ -168,7 +161,6 @@
             ></word-cloud>
           </el-col>
         </el-row>
-        -->
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -237,12 +229,13 @@
 </style>
 
 <script>
-  import utils from '../../utils';
   import { mapActions, mapState, mapMutations } from 'vuex';
+  import utils from '../../utils';
   import LineChart from '../partials/NNLineChart';
   import TeacherClassJournalDetail from '../partials/TeacherClassJournalDetail';
   import WordCloud from '../partials/WordCloud';
   import analysisService from '../../services/analysisService';
+  import classService from '../../services/classService';
 
   export default {
     name: 'TeacherClassJournal',
@@ -253,6 +246,7 @@
     },
     data() {
       return {
+        className: '',
         defaultValue: 0,
         isStudent: false,
         activeTab: 'basic',
@@ -270,30 +264,34 @@
           label: '복습',
         }],
         selectValue: '전체',
-        participationData: '',
-        understandingData: '',
+        allData: '',
         chartData: [],
+        chartCategories: [],
       };
     },
     async beforeMount() {
       const vm = this;
 
-      // 참여도 (>= 이해도)
-      const res = await analysisService.NNgetParticipation({ classId: vm.$route.params.classId });
-      // console.log('@TeacherClassJournal res2.data = ', res.data);
-      vm.participationData = res.data;
+      const res = await classService.getClass({ id: vm.classId });
+      vm.className = res.data.name;
+      /*
+        // 참여도 (>= 이해도) // deprecated
+        const res = await analysisService.NNgetParticipation({ classId: vm.$route.params.classId });
+        console.log('@TeacherClassJournal res.data = ', res.data);
+        vm.participationData = res.data;
+      */
 
-      // 이해도
-      const res2 = await analysisService.NNgetUnderstanding({ classId: vm.$route.params.classId });
-      // console.log('@TeacherClassJournal res.data = ', res2.data);
-      vm.understandingData = res2.data;
+      // 참여도 + 이해도
+      const res2 = await analysisService.NNgetUnderstanding({ classId: vm.classId });
+      vm.allData = res2.data;
+      // console.log('@TeacherClassJournal res.data = ', res.data);
 
       // TODO 집중도 - 서버 구현되면 추가될 예정
 
       vm.onChange();
-      
+
       vm.updateClassId({
-        classId: Number.parseInt(vm.$route.params.classId, 10),
+        classId: Number.parseInt(vm.classId, 10),
       });
       vm.updateUserId({
         userId: utils.getUserIdFromJwt(),
@@ -346,30 +344,39 @@
         const vm = this;
         switch (vm.selectValue) {
           case '전체':
-            vm.chartData[0] = vm.participationData.average;
-            vm.chartData[1] = vm.understandingData.average;
+            vm.chartData[0] = vm.allData.average.map(x => (x.participation * 100).toFixed(2));
+            vm.chartData[1] = vm.allData.average.map(x => (x.understanding * 100).toFixed(2));
             break;
           case '예습':
-            vm.chartData[0] = vm.participationData.beforeAverage;
-            vm.chartData[1] = vm.understandingData.beforeAverage;
+            vm.chartData[0] = vm.allData.average.map(x => (x.beforeParticipation * 100).toFixed(2));
+            vm.chartData[1] = vm.allData.average.map(x => (x.beforeUnderstanding * 100).toFixed(2));
             break;
           case '본강':
-            vm.chartData[0] = vm.participationData.curAverage;
-            vm.chartData[1] = vm.understandingData.curAverage;
+            vm.chartData[0] = vm.allData.average.map(x => (x.curParticipation * 100).toFixed(2));
+            vm.chartData[1] = vm.allData.average.map(x => (x.curUnderstanding * 100).toFixed(2));
             break;
           case '복습':
-            vm.chartData[0] = vm.participationData.afterAverage;
-            vm.chartData[1] = vm.understandingData.afterAverage;
+            vm.chartData[0] = vm.allData.average.map(x => (x.afterParticipation * 100).toFixed(2));
+            vm.chartData[1] = vm.allData.average.map(x => (x.afterUnderstanding * 100).toFixed(2));
             break;
           default :
             break;
         }
+        vm.chartCategories = vm.allData.average.map(x => x.name);
+        vm.chartData[0].unshift('평균 참여도');
+        vm.chartData[1].unshift('평균 이해도');
+        // console.log('vm.chartCategories = ', vm.chartCategories);
+        // console.log('vm.chartData[0] = ', vm.chartData[0]);
+        // console.log('vm.chartData[1] = ', vm.chartData[1]);
         vm.chartData.push(''); // 자식 컴포넌트에 변화 알릴 목적
         vm.$emit('onChange');
       },
     },
     computed: {
       ...mapState('analysis', ['analysisData', 'isActiveInfo', 'lectureId', 'keyword']),
+      classId() {
+        return this.$route.params.classId;
+      },
     },
   };
 </script>
