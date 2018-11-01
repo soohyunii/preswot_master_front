@@ -11,6 +11,7 @@ import ClassIndex from '../components/pages/ClassIndex';
 import ClassDetail from '../components/pages/ClassDetail';
 // import Test from '../components/TestComponent';
 import authRoutes from './authRoutes';
+import Manager from '../components/pages/Manager';
 
 Vue.use(Router);
 
@@ -59,6 +60,14 @@ export default new Router({
       meta: {
         title: 'Class Detail',
         auth: true,
+      },
+    },
+    {
+      path: '/manager',
+      name: 'Manager',
+      component: Manager,
+      meta: {
+        title: '관리자 메인 페이지',
       },
     },
     ...authRoutes('/a'),

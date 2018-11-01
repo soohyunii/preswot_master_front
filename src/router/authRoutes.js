@@ -32,6 +32,11 @@ import TeacherClassGrading from '../components/pages/TeacherClassGrading';
 import TeacherClassGradingQuestion from '../components/pages/TeacherClassGradingQuestion';
 import TeacherClassGradingSurvey from '../components/pages/TeacherClassGradingSurvey';
 import StudentClassGrade from '../components/pages/StudentClassGrade';
+// 행정 프런트 개발
+import Manager from '../components/pages/Manager';
+// import ViewUni from '../components/pages/ViewUni';
+// import ViewUniUpdate from '../components/pages/ViewUniUpdate';
+
 
 export default function authRoutes(root) {
   return [
@@ -308,6 +313,15 @@ export default function authRoutes(root) {
       component: TeacherClassReport,
       meta: {
         title: '강사 강의 보고서 페이지',
+      },
+    },
+    /* 행정개발 */
+    {
+      path: '/manager',
+      name: 'Manager',
+      component: Manager,
+      meta: {
+        title: '관리자 메인 페이지',
       },
     },
   ].map((route) => {

@@ -1,0 +1,18 @@
+<template>
+	<div id="app">
+		<p v-bind:id="idA">아이디 바인딩</p>
+		<p v-bind:class="classA">클래스 바인딩</p>
+		<p v-bind:style="styleA">스타일 바인딩</p>
+	</div>
+</template>
+
+<script>
+	new Vue({
+		el:'#app',
+		data:{
+			idA:10,
+			classA:'container',
+			styleA:'color:blue'
+		}
+	});
+</script>

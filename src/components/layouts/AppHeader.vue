@@ -56,7 +56,8 @@
               </el-button>
             </router-link>
 
-             <router-link v-if="authType === 1 || !$isProd" to="/a/teacher/NNclass" v-show="isJwtValid" id="btn_teacher_home">
+             <!-- <router-link v-if="authType === 1 || !$isProd" to="/a/teacher/NNclass" v-show="isJwtValid" id="btn_teacher_home"> -->
+              <router-link v-if="authType === 2 || !$isProd" to="/manager" v-show="isJwtValid" id="btn_teacher_home"> <!-- 0:학생, 1:강사, 2:관리자(가정) -->
               <el-button :type="appTheme" plain>
                 <i class="fas fa-edit"></i> <span v-show="!$isProd">2</span>
               </el-button>

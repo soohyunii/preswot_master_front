@@ -22,12 +22,16 @@
           <span class="normal">강의중인 과목</span>
         </div>
       </router-link>
-      <!--
+      <router-link to="/a/teacher/NNclass" v-show="!isJwtValid">
+        <div style="display:inline-block; position:absolute; top: 15px; left:335px;">
+          <span class="normal">관리자 과목</span>
+        </div>
+      </router-link>
       <div style="display:inline-block; position:absolute; top: 20px; left:632px;">
         <input v-model="testData" type="text" id="headerInput" class="inputtestclass" placeholder="Please input"/>
         <i class="el-icon-search" @click="onClick('asdfsadf')"></i>
       </div>
-      -->
+      
       <router-link to="/register" v-show="!isJwtValid">
         <div style="display:inline-block; position:absolute; top: 15px; left:990px;">
           <span class="normal">회원가입</span>
