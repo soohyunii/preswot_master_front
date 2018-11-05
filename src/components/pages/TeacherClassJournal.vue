@@ -113,7 +113,7 @@
             label="통계 보기"
             width="150">
             <template slot-scope="scope">
-              <el-button type="primary" size="small" @click="onClick('STUDENT_STAT', scope.row.lecture_id)">
+              <el-button type="primary" size="small" @click="onClick('STUDENT_STAT', scope.$index)">
                 학생 상세 통계
               </el-button>
             </template>
@@ -128,10 +128,10 @@
             </template>
           </el-table-column>
         </el-table>
-
-        
-        <teacher-class-journal-detail :lectureId = "lectureId" v-if = "isActiveInfo"/>
+        <teacher-class-journal-detail @childs-close-event="closeStatusBar()" :propDataSet = "studentDataSet" v-if = "isActiveInfo"/>
       </el-tab-pane>
+      
+      <!--
       <el-tab-pane label="키워드 저널링" name="keyword">
         <el-row v-if="keyword">
           <el-col :span="12">
@@ -162,6 +162,7 @@
           </el-col>
         </el-row>
       </el-tab-pane>
+      -->
     </el-tabs>
   </div>
 </template>
@@ -229,10 +230,8 @@
 </style>
 
 <script>
-  import { mapActions, mapState, mapMutations } from 'vuex';
-  import utils from '../../utils';
   import LineChart from '../partials/NNLineChart';
-  import TeacherClassJournalDetail from '../partials/TeacherClassJournalDetail';
+  import TeacherClassJournalDetail from '../partials/NNTeacherClassJournalDetail';
   import WordCloud from '../partials/WordCloud';
   import analysisService from '../../services/analysisService';
   import classService from '../../services/classService';
@@ -265,6 +264,8 @@
         }],
         selectValue: '전체',
         allData: '',
+        isActiveInfo: false,
+        studentDataSet: [],
         chartData: [],
         chartCategories: [],
       };
@@ -284,12 +285,13 @@
       // 참여도 + 이해도
       const res2 = await analysisService.NNgetUnderstanding({ classId: vm.classId });
       vm.allData = res2.data;
-      // console.log('@TeacherClassJournal res.data = ', res.data);
+      // console.log('@TeacherClassJournal res2.data = ', res2.data);
 
       // TODO 집중도 - 서버 구현되면 추가될 예정
 
       vm.onChange();
 
+      /*
       vm.updateClassId({
         classId: Number.parseInt(vm.classId, 10),
       });
@@ -304,41 +306,34 @@
       });
       await vm.getAnalysisData();
       // console.log('@TeacherClassJournal analysisData = ', vm.analysisData);
+      */
     },
     methods: {
-      ...mapMutations('analysis', ['updateClassId', 'updateUserId', 'updateIsStudent', 'updateIsActiveInfo', 'updateLectureId', 'updateAnalysisOpt']),
-      ...mapActions('analysis', [
-        'getAnalysisData',
-      ]),
-      nullToZero(s) {
-        if (typeof s === 'undefined' || s === null) {
-          return '0';
-        }
-        return s.toFixed(1).toString();
-      },
-      onClick(type, lectureId) {
+      onClick(type, payload) {
         const vm = this;
         switch (type) {
           case 'STUDENT_STAT': {
-            vm.updateLectureId({
-              lectureId,
-            });
-            vm.updateIsActiveInfo({
-              isActiveInfo: true,
-            });
+            vm.studentDataSet = vm.allData.students[payload];
+            vm.isActiveInfo = true;
             break;
           }
           case 'LECTURE_ANALYSIS': {
+            /*
             vm.updateLectureId({
-              lectureId,
+              lectureId: payload,
             });
-            vm.$router.push(`/a/teacher/lecture/${lectureId}/journal`);
+            */
+            vm.$router.push(`/a/teacher/lecture/${payload}/journal`);
             break;
           }
           default: {
             throw new Error('not defined type', type);
           }
         }
+      },
+      closeStatusBar() {
+        const vm = this;
+        vm.isActiveInfo = false;
       },
       onChange() {
         const vm = this;
@@ -373,7 +368,6 @@
       },
     },
     computed: {
-      ...mapState('analysis', ['analysisData', 'isActiveInfo', 'lectureId', 'keyword']),
       classId() {
         return this.$route.params.classId;
       },
