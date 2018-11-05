@@ -16,9 +16,9 @@
             <div style="display: inline-block; width: 85%;">
               <el-input v-model="survey.value" placeholder="내용을 입력해주세요."></el-input>
             </div>
-          <el-button type="danger" @click="onClick('DELETE_SURVEY_ITEM',index)">X</el-button>
+          <!-- <el-button type="danger" @click="onClick('DELETE_SURVEY_ITEM',index)">X</el-button> -->
         </div>
-        <el-button @click="onClick('ADD_SURVEY_ITEM')" style="width: 100%;">항목 추가</el-button>
+        <!-- <el-button @click="onClick('ADD_SURVEY_ITEM')" style="width: 100%;">항목 추가</el-button> -->
       </el-form-item>
     </template>
   </div>
@@ -74,7 +74,7 @@ export default {
       vm.inputBody = Object.assign({}, vm.initialInputBody);
       vm.inputTail = Object.assign({}, vm.initialInputTail);
     },
-    onClick(type, arg) {
+    onClick(type) {
       const vm = this;
       switch (type) {
         case 'ADD_SURVEY_ITEM': {
@@ -83,10 +83,12 @@ export default {
           });
           break;
         }
+        /*
         case 'DELETE_SURVEY_ITEM': {
           vm.inputTail.surveyItemList.splice(arg, 1);
           break;
         }
+        */
         default : {
           break;
         }
