@@ -287,14 +287,7 @@ export default {
   },
   mounted() {
     const vm = this;
-    // eslint-disable-next-line
-    window.onbeforeunload = function () {
-      const param = {
-        lecture_id: vm.lectureId,
-        user_id: utils.getUserIdFromJwt(),
-      };
-      vm.$socket.emit('LEAVE_LECTURE', JSON.stringify(param));
-    };
+    window.addEventListener('beforeunload', vm.beforeunloadFunc);
   },
   methods: {
     async onClick(type, data) {
@@ -495,9 +488,19 @@ export default {
       });
       // clearTimeout(vm.timer);
     },
+    beforeunloadFunc() {
+      const vm = this;
+      const param = {
+        lecture_id: vm.lectureId,
+        user_id: utils.getUserIdFromJwt(),
+      };
+      vm.$socket.emit('LEAVE_LECTURE', JSON.stringify(param));
+    },
   },
   beforeDestroy() {
     const vm = this;
+    // 화면 떠나기 전 등록한 Listener 해제. 이 코드가 없으면 리스너가 여러개 등록되어 null값이 전송됨
+    window.removeEventListener('beforeunload', vm.beforeunloadFunc);
     const param = {
       lecture_id: vm.lectureId,
       user_id: utils.getUserIdFromJwt(),

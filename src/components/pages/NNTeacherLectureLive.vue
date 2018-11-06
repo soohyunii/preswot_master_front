@@ -214,14 +214,7 @@ export default {
   },
   mounted() {
     const vm = this;
-    // eslint-disable-next-line
-    window.onbeforeunload = function () {
-      const param = {
-        lecture_id: vm.lectureId,
-        user_id: utils.getUserIdFromJwt(),
-      };
-      vm.$socket.emit('LEAVE_LECTURE', JSON.stringify(param));
-    };
+    window.addEventListener('beforeunload', vm.beforeunloadFunc);
   },
   data() {
     return {
@@ -370,9 +363,19 @@ export default {
         }
       }
     },
+    beforeunloadFunc() {
+      const vm = this;
+      const param = {
+        lecture_id: vm.lectureId,
+        user_id: utils.getUserIdFromJwt(),
+      };
+      vm.$socket.emit('LEAVE_LECTURE', JSON.stringify(param));
+    },
   },
   beforeDestroy() {
     const vm = this;
+    // 화면 떠나기 전 등록한 Listener 해제. 이 코드가 없으면 리스너가 여러개 등록되어 null값이 전송됨
+    window.removeEventListener('beforeunload', vm.beforeunloadFunc);
     // 강사가 강의 화면에서 나가는 경우, 열려있는 아이템을 모두 닫는 동작
     const params = [];
     vm.currentLectureItemId.forEach((item) => {

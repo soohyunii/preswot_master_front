@@ -5,7 +5,6 @@
     </div>
     <div v-else>
       <el-table :data="props.list"
-                row-key="sequence"
                 sortable
                 v-sortable="data.attrs.sortableOptions">
         <el-table-column
