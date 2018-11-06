@@ -244,6 +244,7 @@ export default {
   data() {
     return {
       path: '', // 과목 , 강의 제목 이름
+      localLectureId: '', // beforeDestory에서 vm.$route.params.lectureId 를 못읽는 문제가 발생하여 임시 저장
       lectureItem: [], // 현재 표시중인 강의 아이템
       lectureType: undefined,
       materialList: undefined, // 강의자료 목록
@@ -289,7 +290,8 @@ export default {
   },
   mounted() {
     const vm = this;
-    window.addEventListener('beforeunload', vm.beforeunloadFunc);
+    vm.localLectureId = vm.lectureId; // 선언부 주석 참조
+    window.addEventListener('beforeunload', vm.beforeLeave);
   },
   methods: {
     async onClick(type, data) {
@@ -664,24 +666,21 @@ export default {
       });
       // clearTimeout(vm.timer);
     },
-    beforeunloadFunc() {
+    beforeLeave() {
       const vm = this;
       const param = {
-        lecture_id: vm.lectureId,
+        lecture_id: vm.localLectureId,
         user_id: utils.getUserIdFromJwt(),
       };
       vm.$socket.emit('LEAVE_LECTURE', JSON.stringify(param));
+
+      // 화면 떠나기 전 등록한 Listener 해제. 이 코드가 없으면 리스너가 중복 등록되어 버그가 발생함
+      window.removeEventListener('beforeunload', vm.beforeLeave);
     },
   },
   beforeDestroy() {
     const vm = this;
-    // 화면 떠나기 전 등록한 Listener 해제. 이 코드가 없으면 리스너가 여러개 등록되어 null값이 전송됨
-    window.removeEventListener('beforeunload', vm.beforeunloadFunc);
-    const param = {
-      lecture_id: vm.lectureId,
-      user_id: utils.getUserIdFromJwt(),
-    };
-    vm.$socket.emit('LEAVE_LECTURE', JSON.stringify(param));
+    vm.beforeLeave();
     /*
      *  무인 강의에서 학생이 강의에서 나갈 경우, 강의 수강 시간을 알기 위해
      *  최근에 듣던 강의 아이템과 해당 강의 아이템 시작으로부터의 경과 시간을 보냄
