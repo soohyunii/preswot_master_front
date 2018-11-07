@@ -37,6 +37,12 @@ import NClassFromBank from '../components/pages/NClassFromBank';
 import NLectureFromBank from '../components/pages/NLectureFromBank';
 import NLectureItemFromBank from '../components/pages/NLectureItemFromBank';
 
+// 행정 프런트 개발
+import Manager from '../components/pages/Manager';
+import ViewUni from '../components/pages/ViewUni';
+// import ViewUniUpdate from '../components/pages/ViewUniUpdate';
+
+
 export default function authRoutes(root) {
   return [
     // {
@@ -340,12 +346,31 @@ export default function authRoutes(root) {
         title: '강사 강의 보고서 페이지',
       },
     },
+
     {
       path: '/bank',
       name: 'Bank',
       component: Bank,
       meta: {
         title: '강의 은행',
+      },
+    },
+
+    /* 행정개발 */
+    {
+      path: '/manager',
+      name: 'Manager',
+      component: Manager,
+      meta: {
+        title: '관리자 메인 페이지',
+      },
+    },
+    {
+      path: '/view/uni',
+      name: 'ViewUni',
+      component: ViewUni,
+      meta: {
+        title: '조회하기-대학',
       },
     },
   ].map((route) => {
