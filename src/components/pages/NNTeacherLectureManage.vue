@@ -17,6 +17,10 @@
         v-if="activeTab=='keyword'"
         :onClick="onClick"/>
       </el-tab-pane>
+      <el-tab-pane label="강의 영상 등록" name="video">
+        <tlm-tab-main-video-edit
+        v-if="activeTab=='video'"/>
+      </el-tab-pane>
       <el-tab-pane label="강의 자료 업로드" name="material">
         <tlm-tab-material-edit />
       </el-tab-pane>
@@ -41,6 +45,7 @@ import TlmTabMaterialAndKeywordEdit from '../partials/TlmTabMaterialAndKeywordEd
 import TlmTabLectureItemEdit from '../partials/TlmTabLectureItemEdit';
 import TlmTabAllowedProgram from '../partials/TlmTabAllowedProgram';
 import TlmTabMaterialEdit from '../partials/TlmTabMaterialEdit';
+import TlmTabMainVideoEdit from '../partials/TlmTabMainVideoEdit';
 // import utils from '../../utils';
 // import MaterialUpload from '../partials/MaterialUpload';
 // import RecommendKeywords from '../partials/RecommendKeywords';
@@ -56,6 +61,7 @@ export default {
     TeacherLectureNew: NNTeacherLectureNew,
     TlmTabMaterialAndKeywordEdit,
     TlmTabMaterialEdit,
+    TlmTabMainVideoEdit,
     TlmTabLectureItemEdit,
     TlmTabAllowedProgram,
     KnowledgeMap,

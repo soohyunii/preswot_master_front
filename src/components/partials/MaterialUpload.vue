@@ -16,15 +16,6 @@
           <el-button slot="trigger" type="primary">강의 자료 추가</el-button>
         </el-upload>
       </el-col>
-      <el-col :span="12">
-        <h3>강의 영상 등록</h3>
-        <el-input v-model="modifiedLink" style="width: 400px" placeholder="유튜브 공유URL을 입력해주세요.">
-          <el-button v-if="videolink === ''" slot="append" @click="onClick('LINKUPLOAD')">추가</el-button>
-          <el-button v-if="videolink !== ''" slot="append" @click="onClick('LINKUPLOAD')">수정</el-button>
-        </el-input>
-        <br><br>
-        <iframe v-if="videolink !== ''" width="420" height="315" :src="combinedUrl" frameborder="0"></iframe>
-      </el-col>
     </el-row>
     <!-- 강의자료 & 키워드 목록 -->
     <div style="height: 100px;" />
