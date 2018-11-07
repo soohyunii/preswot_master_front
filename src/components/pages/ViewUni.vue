@@ -1,18 +1,31 @@
+<!-- 조회하기 - 대학 화면 -->
 <template>
-	<div id="app">
-		<p v-bind:id="idA">아이디 바인딩</p>
-		<p v-bind:class="classA">클래스 바인딩</p>
-		<p v-bind:style="styleA">스타일 바인딩</p>
+	<div id="landing_page_wrapper" class="bt-container">
+	    <resize-observer @notify="handleResize" />
+	    <landing-search-header/>
+	    조회하기 > 대학
+	    
 	</div>
 </template>
 
 <script>
-	new Vue({
-		el:'#app',
-		data:{
-			idA:10,
-			classA:'container',
-			styleA:'color:blue'
-		}
-	});
+// import deepCopy from 'deep-copy';
+// import { mapState, mapActions } from 'vuex';
+import NNAppHeader from '../layouts/NNAppHeader';
+import NNAppFooter from '../layouts/NNAppFooter';
+// import utils from '../../utils';
+
+export default{
+  name: 'ViewUni',
+  components: {
+    NNAppHeader,
+    NNAppFooter,
+  },
+};
 </script>
+
+<style lang="scss">
+#landing_page_wrapper h3{
+  	margin-top:45px;
+}
+</style>

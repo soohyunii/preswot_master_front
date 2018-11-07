@@ -7,7 +7,7 @@
           <!--<span id="header1" class="class1" :class="{class2: testFlag}">PRESWOT</span>-->
         </div>
       </router-link>
-      <router-link to="/classes">
+      <router-link to="/classes" v-if="authType === 0||authType === 1">
         <div style="display:inline-block; position:absolute; top: 15px; left:230px;">
           <span class="normal">과목목록</span>
         </div>
@@ -22,12 +22,66 @@
           <span class="normal">강의중인 과목</span>
         </div>
       </router-link>
-      <router-link to="/a/teacher/NNclass" v-show="!isJwtValid">
-        <div style="display:inline-block; position:absolute; top: 15px; left:335px;">
-          <span class="normal">관리자 과목</span>
+      
+        <div style="display:inline-block; position:absolute; top: 15px; left:230px;" class="normal_manager">
+          <span>등록하기
+            <ul>
+              <li>
+                <router-link to="/register/uni" v-show="!isJwtValid">대학
+                </router-link>
+              </li>
+              <li>
+                <router-link to="/register/dept" v-show="!isJwtValid">학과
+                </router-link>
+              </li>
+              <li>
+                <router-link to="/register/teacher" v-show="!isJwtValid">강사
+                </router-link>
+              </li>
+              <li>
+                <router-link to="/register/class" v-show="!isJwtValid">과목
+                </router-link>
+              </li>
+              <li>
+                <router-link to="/register/student" v-show="!isJwtValid">학생
+                </router-link>
+              </li>
+              <li>
+                <router-link to="/register/bank" v-show="!isJwtValid">강의은행그룹
+                </router-link>
+              </li>
+            </ul>
+
+          </span>
         </div>
-      </router-link>
-      <div style="display:inline-block; position:absolute; top: 20px; left:632px;">
+      
+      
+        <div style="display:inline-block; position:absolute; top: 15px; left:365px;" class="normal_manager">
+          <span>조회하기
+            <ul>
+              <li>
+                <router-link to="/view/uni" v-show="!isJwtValid">대학</router-link>
+              </li>
+              <li>
+                <router-link to="/view/dept" v-show="!isJwtValid">학과</router-link>
+              </li>
+              <li>
+                <router-link to="/view/teacher" v-show="!isJwtValid">강사</router-link>
+              </li>
+              <li>
+                <router-link to="/view/class" v-show="!isJwtValid">과목및강의</router-link>
+              </li>
+              <li>
+                <router-link to="/view/student" v-show="!isJwtValid">학생</router-link>
+              </li>
+              <li>
+                <router-link to="/view/bank" v-show="!isJwtValid">강의은행그룹</router-link>
+              </li>
+            </ul>
+          </span>
+        </div>
+      
+      <div style="display:inline-block; position:absolute; top: 20px; left:632px;" v-if="authType === 0||authType === 1">
         <input v-model="testData" type="text" id="headerInput" class="inputtestclass" placeholder="Please input"/>
         <i class="el-icon-search" @click="onClick('asdfsadf')"></i>
       </div>
@@ -90,6 +144,52 @@
     font-weight: bold;
     color: #20a0ff;
   }
+  .normal_manager{
+    width: 65px;
+    height: 74px;
+    font-family: SpoqaHanSans;
+    font-size: 13px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.17;
+    letter-spacing: normal;
+    color: #ffffff;
+  }
+  .normal_manager:hover{
+    font-size: 13px;
+    font-weight: bold;
+    color: #20a0ff;
+  }
+
+  .normal_manager ul{
+    list-style:none;
+    padding-left:10px;
+    width:100px;
+    background-color:#233656;
+  }
+
+  .normal_manager ul li{
+    display:none;
+    font-family: SpoqaHanSans;
+    line-height: normal;
+    padding:5px 2px 5px 0;
+    height:25px;
+  }
+
+  .normal_manager:hover ul li{
+    display:block;
+  }
+
+  .normal_manager ul li a{
+    text-decoration:none;
+    color:#ffffff;
+  }
+
+  .normal_manager ul li a:hover{
+    color:#20a0ff;
+  }
+
   #header2:hover {
     background-color:blueviolet;
   }

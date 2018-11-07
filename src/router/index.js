@@ -12,6 +12,7 @@ import ClassDetail from '../components/pages/ClassDetail';
 // import Test from '../components/TestComponent';
 import authRoutes from './authRoutes';
 import Manager from '../components/pages/Manager';
+import ViewUni from '../components/pages/ViewUni';
 
 Vue.use(Router);
 
@@ -68,6 +69,14 @@ export default new Router({
       component: Manager,
       meta: {
         title: '관리자 메인 페이지',
+      },
+    },
+    {
+      path: '/view/uni',
+      name: 'ViewUni',
+      component: ViewUni,
+      meta: {
+        title: '관리자 조회하기-대학',
       },
     },
     ...authRoutes('/a'),

@@ -34,7 +34,7 @@ import TeacherClassGradingSurvey from '../components/pages/TeacherClassGradingSu
 import StudentClassGrade from '../components/pages/StudentClassGrade';
 // 행정 프런트 개발
 import Manager from '../components/pages/Manager';
-// import ViewUni from '../components/pages/ViewUni';
+import ViewUni from '../components/pages/ViewUni';
 // import ViewUniUpdate from '../components/pages/ViewUniUpdate';
 
 
@@ -322,6 +322,14 @@ export default function authRoutes(root) {
       component: Manager,
       meta: {
         title: '관리자 메인 페이지',
+      },
+    },
+    {
+      path: '/view/uni',
+      name: 'ViewUni',
+      component: ViewUni,
+      meta: {
+        title: '조회하기-대학',
       },
     },
   ].map((route) => {
