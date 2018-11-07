@@ -176,4 +176,24 @@ export default {
       w2,
     });
   },
+  postMainVideoKeyword({
+    lectureId,
+    type,
+    data,
+  }) {
+    return http.post(`/lectures/${lectureId}/material-keyword`, {
+      type,
+      data,
+    });
+  },
+  getMainVideoKeyword({
+    lectureId,
+  }) {
+    return http.get(`/lectures/${lectureId}/material-keyword`);
+  },
+  deleteMainVideoKeyword({
+    lectureId,
+  }) {
+    return http.delete(`/lectures/${lectureId}/material-keyword`);
+  },
 };
