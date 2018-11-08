@@ -35,31 +35,31 @@
         </div>
       </router-link>
       
-        <div style="display:inline-block; position:absolute; top: 15px; left:230px;" class="normal_manager">
+        <div style="display:inline-block; position:absolute; top: 15px; left:230px;" class="normal_manager" v-if="authType === 3" v-show="isJwtValid">
           <span>등록하기
             <ul>
               <li>
-                <router-link to="/register/uni" v-show="!isJwtValid">대학
+                <router-link to="/register/uni" v-if="authType === 3" v-show="isJwtValid">대학
                 </router-link>
               </li>
               <li>
-                <router-link to="/register/dept" v-show="!isJwtValid">학과
+                <router-link to="/register/dept" v-if="authType === 3" v-show="isJwtValid">학과
                 </router-link>
               </li>
               <li>
-                <router-link to="/register/teacher" v-show="!isJwtValid">강사
+                <router-link to="/register/teacher" v-if="authType === 3" v-show="isJwtValid">강사
                 </router-link>
               </li>
               <li>
-                <router-link to="/register/class" v-show="!isJwtValid">과목
+                <router-link to="/register/class" v-if="authType === 3" v-show="isJwtValid">과목
                 </router-link>
               </li>
               <li>
-                <router-link to="/register/student" v-show="!isJwtValid">학생
+                <router-link to="/register/student" v-if="authType === 3" v-show="isJwtValid">학생
                 </router-link>
               </li>
               <li>
-                <router-link to="/register/bank" v-show="!isJwtValid">강의은행그룹
+                <router-link to="/register/bank" v-if="authType === 3" v-show="isJwtValid">강의은행그룹
                 </router-link>
               </li>
             </ul>
@@ -68,26 +68,26 @@
         </div>
       
       
-        <div style="display:inline-block; position:absolute; top: 15px; left:365px;" class="normal_manager">
+        <div style="display:inline-block; position:absolute; top: 15px; left:365px;" class="normal_manager" v-if="authType === 3" v-show="isJwtValid">
           <span>조회하기
             <ul>
               <li>
-                <router-link to="/view/uni" v-show="!isJwtValid">대학</router-link>
+                <router-link to="/view/uni" v-if="authType === 3" v-show="isJwtValid">대학</router-link>
               </li>
               <li>
-                <router-link to="/view/dept" v-show="!isJwtValid">학과</router-link>
+                <router-link to="/view/dept" v-if="authType === 3" v-show="isJwtValid">학과</router-link>
               </li>
               <li>
-                <router-link to="/view/teacher" v-show="!isJwtValid">강사</router-link>
+                <router-link to="/view/teacher" v-if="authType === 3" v-show="isJwtValid">강사</router-link>
               </li>
               <li>
-                <router-link to="/view/class" v-show="!isJwtValid">과목및강의</router-link>
+                <router-link to="/view/class" v-if="authType === 3" v-show="isJwtValid">과목및강의</router-link>
               </li>
               <li>
-                <router-link to="/view/student" v-show="!isJwtValid">학생</router-link>
+                <router-link to="/view/student" v-if="authType === 3" v-show="isJwtValid">학생</router-link>
               </li>
               <li>
-                <router-link to="/view/bank" v-show="!isJwtValid">강의은행그룹</router-link>
+                <router-link to="/view/bank" v-if="authType === 3" v-show="isJwtValid">강의은행그룹</router-link>
               </li>
             </ul>
           </span>
