@@ -176,6 +176,7 @@ export default {
       user_id: utils.getUserIdFromJwt(),
     };
     vm.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
+    /*
     let res1 = await lectureService.getOnStudentCount({
       lectureId: vm.lectureId,
     });
@@ -188,6 +189,7 @@ export default {
       });
       vm.onStudentCount = res1.data.count;
     }, 10000);
+    */
     vm.sUpdateTimelineLogIntervalId = setInterval(() => {
       vm.$socket.emit('UPDATE_TIMELINE_LOG', JSON.stringify(params));
     }, 18000);
@@ -228,8 +230,8 @@ export default {
       isInfoVisible: false,
       focusFlag: true,
       videolink: '',
-      onStudentCount: 1,
-      sOnStudentCount: undefined,
+      // onStudentCount: 1,
+      // sOnStudentCount: undefined,
       className: '',
       lectureName: '',
     };
@@ -392,7 +394,7 @@ export default {
     vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify(params));
     vm.beforeLeave();
     vm.$socket.close();
-    clearInterval(vm.sOnStudentCount);
+    // clearInterval(vm.sOnStudentCount);
   },
 };
 </script>
