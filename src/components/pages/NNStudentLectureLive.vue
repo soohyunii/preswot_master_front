@@ -301,7 +301,7 @@ export default {
             case 0: { // 문항
               studentService.submitQuestion({
                 questionId: data.questionId,
-                answers: data.answer,
+                answers: data.answer.length === 0 ? [''] : data.answer, // length === 0 이면 [''] 보내주세요. 서버 요구사항 181112
                 interval: 0,
                 codeLanguage: data.language,
               }).then((res) => {
@@ -332,7 +332,7 @@ export default {
             case 1: { // 설문
               studentService.submitSurvey({
                 surveyId: data.surveyId,
-                answer: data.answer,
+                answer: data.answer.length === 0 ? [''] : data.answer, // length === 0 이면 [''] 보내주세요. 서버 요구사항 181112,
               });
               vm.$notify({
                 title: '알림',
