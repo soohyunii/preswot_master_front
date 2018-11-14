@@ -39,27 +39,27 @@
           <span>등록하기
             <ul>
               <li>
-                <router-link to="/register/uni" v-if="authType === 3" v-show="isJwtValid">대학
+                <router-link to="/a/register/uni" v-if="authType === 3" v-show="isJwtValid">대학
                 </router-link>
               </li>
               <li>
-                <router-link to="/register/dept" v-if="authType === 3" v-show="isJwtValid">학과
+                <router-link to="/a/register/dept" v-if="authType === 3" v-show="isJwtValid">학과
                 </router-link>
               </li>
               <li>
-                <router-link to="/register/teacher" v-if="authType === 3" v-show="isJwtValid">강사
+                <router-link to="/a/register/teacher" v-if="authType === 3" v-show="isJwtValid">강사
                 </router-link>
               </li>
               <li>
-                <router-link to="/register/class" v-if="authType === 3" v-show="isJwtValid">과목
+                <router-link to="/a/register/class" v-if="authType === 3" v-show="isJwtValid">과목
                 </router-link>
               </li>
               <li>
-                <router-link to="/register/student" v-if="authType === 3" v-show="isJwtValid">학생
+                <router-link to="/a/register/student" v-if="authType === 3" v-show="isJwtValid">학생
                 </router-link>
               </li>
               <li>
-                <router-link to="/register/bank" v-if="authType === 3" v-show="isJwtValid">강의은행그룹
+                <router-link to="/a/register/bank" v-if="authType === 3" v-show="isJwtValid">강의은행그룹
                 </router-link>
               </li>
             </ul>
@@ -72,22 +72,22 @@
           <span>조회하기
             <ul>
               <li>
-                <router-link to="/view/uni" v-if="authType === 3" v-show="isJwtValid">대학</router-link>
+                <router-link to="/a/view/uni" v-if="authType === 3" v-show="isJwtValid">대학</router-link>
               </li>
               <li>
-                <router-link to="/view/dept" v-if="authType === 3" v-show="isJwtValid">학과</router-link>
+                <router-link to="/a/view/dept" v-if="authType === 3" v-show="isJwtValid">학과</router-link>
               </li>
               <li>
-                <router-link to="/view/teacher" v-if="authType === 3" v-show="isJwtValid">강사</router-link>
+                <router-link to="/a/view/teacher" v-if="authType === 3" v-show="isJwtValid">강사</router-link>
               </li>
               <li>
-                <router-link to="/view/class" v-if="authType === 3" v-show="isJwtValid">과목및강의</router-link>
+                <router-link to="/a/view/class" v-if="authType === 3" v-show="isJwtValid">과목및강의</router-link>
               </li>
               <li>
-                <router-link to="/view/student" v-if="authType === 3" v-show="isJwtValid">학생</router-link>
+                <router-link to="/a/view/student" v-if="authType === 3" v-show="isJwtValid">학생</router-link>
               </li>
               <li>
-                <router-link to="/view/bank" v-if="authType === 3" v-show="isJwtValid">강의은행그룹</router-link>
+                <router-link to="/a/view/bank" v-if="authType === 3" v-show="isJwtValid">강의은행그룹</router-link>
               </li>
             </ul>
           </span>

@@ -69,6 +69,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
+import utils from '../../utils';
 
 export default {
   name: 'Login',
@@ -95,18 +96,23 @@ export default {
         case 'LOGIN': {
           try {
             // const res = await vm.reqLogin({
+           // console.log('vm.$store.state.auth.jwt111; = ', vm.$store.state.auth.jwt);
             await vm.reqLogin({
               email: vm.input.email,
               password: vm.input.password,
             });
+            // const jwt = vm.$store.state.auth.jwt;
+            // console.log('vm.$store.state.auth.jwt222; = ', vm.$store.state.auth.jwt);
+            // console.log('utils.getAuthTypeFromJwt(jwt) = ', utils.getAuthTypeFromJwt(jwt));
             // console.log('login res', JSON.stringify(res));
             // TODO: translate
 
-            // vm.openNoti('success', 'Login Success !!', 'Success');
+            // vm.openNoti                        ('success', 'Login Success !!', 'Success');
             if (vm.redirectTo) {
               // jwt 업데이트 후 페이지 이동 이루어지도록
               vm.$router.push(vm.redirectTo);
             } else {
+              // if ()
               vm.$router.push('/');
             }
           } catch (error) {

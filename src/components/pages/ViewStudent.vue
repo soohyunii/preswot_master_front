@@ -1,15 +1,15 @@
 <template>
   <div id="class_index_wrapper" class="bt-container">
-    <h2 class="page-title">조회하기 > 대학</h2>
+    <h2 class="page-title">조회하기 > 학생</h2>
     <student-class-table
       :list="list"
       :onClick="onClick"
     />
     <br/>
     <div class="right-align">
-      <router-link to="/a/register/uni">
+      <router-link to="/a/register/student">
         <el-button  type="primary" :class="$attachReactablePostfix('right-align-btn')" style="width: 49%">
-          <div class="right-align-btn-layer">대학 등록하기</div>
+          <div class="right-align-btn-layer">학생 등록하기</div>
         </el-button>
       </router-link>
       <router-link to="/">
@@ -23,12 +23,12 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
-import StudentClassTable from '../partials/MasterUniTable';
+import StudentClassTable from '../partials/StudentClassTable';
 // import classService from '../services/classService';
 import utils from '../../utils';
 
 export default {
-  name: 'ViewDept',
+  name: 'ViewStudent',
   components: {
     StudentClassTable,
   },
@@ -144,7 +144,7 @@ export default {
         }
         */
         case 'SEARCH': {
-          vm.$router.push({ path: '/a/view/uni', query: { type: `${arg.searchType}`, text: `${arg.searchText}` } });
+          vm.$router.push({ path: '/a/view/student', query: { type: `${arg.searchType}`, text: `${arg.searchText}` } });
           break;
         }
         default: {
@@ -155,7 +155,7 @@ export default {
     onClickDelete(index) {
       const vm = this;
       const currentTeachingClass = vm.teachingClassList[index];
-      vm.$confirm('정말로 이 대학을 삭제하시겠습니까?', `${currentTeachingClass.name || ''} 삭제`, {
+      vm.$confirm('정말로 이 학생을 삭제하시겠습니까?', `${currentTeachingClass.name || ''} 삭제`, {
         confirmButtonText: '예, 삭제합니다.',
         cancelButtonText: '아니요, 삭제하지 않습니다.',
         type: 'warning',
@@ -173,7 +173,7 @@ export default {
           } catch (error) {
             console.error(error); // eslint-disable-line no-console
             vm.$notify({
-              title: '대학 삭제 실패',
+              title: '학생 삭제 실패',
               message: error.toString(),
               type: 'error',
               duration: 3000,
@@ -183,7 +183,7 @@ export default {
         .catch(() => {
           vm.$notify({
             title: '취소됨',
-            message: '대학 삭제 취소됨',
+            message: '학생 삭제 취소됨',
             type: 'info',
             duration: 3000,
           });

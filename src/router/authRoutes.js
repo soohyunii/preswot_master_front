@@ -38,9 +38,13 @@ import NLectureFromBank from '../components/pages/NLectureFromBank';
 import NLectureItemFromBank from '../components/pages/NLectureItemFromBank';
 
 // 행정 프런트 개발
-import Manager from '../components/pages/Manager';
 import ViewUni from '../components/pages/ViewUni';
 // import ViewUniUpdate from '../components/pages/ViewUniUpdate';
+import ViewDept from '../components/pages/ViewDept';
+import ViewTeacher from '../components/pages/ViewTeacher';
+import ViewClass from '../components/pages/ViewClass';
+import ViewStudent from '../components/pages/ViewStudent';
+import ViewBank from '../components/pages/ViewBank';
 
 
 export default function authRoutes(root) {
@@ -356,21 +360,53 @@ export default function authRoutes(root) {
       },
     },
 
-    /* 행정개발 */
-    {
-      path: '/manager',
-      name: 'Manager',
-      component: Manager,
-      meta: {
-        title: '관리자 메인 페이지',
-      },
-    },
+    /* 행정개발 */   
     {
       path: '/view/uni',
       name: 'ViewUni',
       component: ViewUni,
       meta: {
         title: '조회하기-대학',
+      },
+    },
+    {
+      path: '/view/dept',
+      name: 'ViewDept',
+      component: ViewDept,
+      meta: {
+        title: '관리자 학과 조회',
+      },
+    },   
+    {
+      path: '/view/teacher',
+      name: 'ViewTeacher',
+      component: ViewTeacher,
+      meta: {
+        title: '관리자 강사 조회',
+      },
+    },
+    {
+      path: '/view/class',
+      name: 'ViewClass',
+      component: ViewClass,
+      meta: {
+        title: '관리자 과목 및 강의 조회',
+      },
+    },
+    {
+      path: '/view/student',
+      name: 'ViewStudent',
+      component: ViewStudent,
+      meta: {
+        title: '관리자 학생 조회',
+      },
+    },
+    {
+      path: '/view/bank',
+      name: 'ViewBank',
+      component: ViewBank,
+      meta: {
+        title: '관리자 강의은행 조회',
       },
     },
   ].map((route) => {
