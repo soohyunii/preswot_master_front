@@ -36,42 +36,48 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <div v-if="videolink === ''">
-            등록된 영상이 없습니다.
-            <br><br>
-          </div>
-          <div v-else>
-            <youtube
-              v-show="focusFlag"
-              id="video"
-              :video-id="youtubeId"
-              player-width="100%"
-              :player-vars="{ autoplay: 1 }"
-              :mute="true">
-            </youtube>
-            <div style="float: right">
-              <el-button v-show="focusFlag" size="small" type="primary" @click="onClick('FOCUS')">강의영상 숨기기</el-button>
-              <el-button v-show="!focusFlag" size="small" type="primary" @click="onClick('FOCUS')">강의영상 보이기</el-button>
+              등록된 영상이 없습니다.
+              <br><br>
             </div>
-          </div>
-          <el-button type="primary" size="small" @click="onClick('SHOWALL', questionItemIdList)">
-            문항 모두 보이기
-          </el-button>
-          <el-button type="primary" size="small" @click="onClick('SHOWALL', surveyItemIdList)">
-            설문 모두 보이기
-          </el-button>
+            <div v-else>
+              <youtube
+                v-show="focusFlag"
+                id="video"
+                :video-id="youtubeId"
+                player-width="100%"
+                :player-vars="{ autoplay: 1 }"
+                :mute="true">
+              </youtube>
+              <div style="float: right">
+                <el-button v-show="focusFlag" size="small" type="primary" @click="onClick('FOCUS')">강의영상 숨기기</el-button>
+                <el-button v-show="!focusFlag" size="small" type="primary" @click="onClick('FOCUS')">강의영상 보이기</el-button>
+              </div>
+            </div>
+            <el-button type="primary" size="small" @click="onClick('SHOWALL', questionItemIdList)">
+              문항 모두 보이기
+            </el-button>
+            <el-button type="primary" size="small" @click="onClick('SHOWALL', surveyItemIdList)">
+              설문 모두 보이기
+            </el-button>
             <teacher-lecture-live-item-list
               v-if="isTableItemListLoaded"
               :dataList="tableItemList"
               :onClick="onClick"
               :isAuto="isAuto"
             />
+            <br>
+            <el-tag v-for="(k, index) in selectItemList" :key="index" closable @close="deleteSelectedItem(index)">{{ k.name }}</el-tag>
+            <el-button type="primary" size="small" @click="onClick('SHOWALL', selectItemIdList)">
+              선택한 아이템 보이기
+            </el-button>
           </el-col>
           <el-col :span="12">
+            <el-button style="float:right" type="primary" @click="onClick('HIDE')">아이템 일괄 내리기</el-button>
             <div v-for="id in currentLectureItemId" :key="id">
               <teacher-lecture-live-item
-              :lectureItemId="id"
-              :onClick="onClick"
-              :isAuto="isAuto"
+                :lectureItemId="id"
+                :onClick="onClick"
+                :isAuto="isAuto"
               />
             </div>
           </el-col>
@@ -133,6 +139,7 @@ import TeacherLectureLiveSummary from '../partials/TeacherLectureLiveSummary';
 import LectureQuestionResult from '../partials/LectureQuestionResult';
 import LectureSurveyResult from '../partials/LectureSurveyResult';
 import utils from '../../utils';
+import lectureItemService from '../../services/lectureItemService';
 
 export default {
   name: 'TeacherLectureLive',
@@ -160,6 +167,29 @@ export default {
       const aItemSequence = Number(a.sequence);
       const bItemSequence = Number(b.sequence);
       return aItemSequence - bItemSequence;
+    });
+    // 연결된 문항인지 속성 추가
+    const tailItemList = [];
+    const seq = await lectureItemService.showConnection({
+      lectureId: vm.lectureId,
+    });
+    seq.data.forEach((x) => {
+      // 여러 하위 항목
+      if (x.linked_list.includes('<$!<>') === true) {
+        const namugiSplit = x.linked_list.split('<$!<>');
+        namugiSplit.forEach((y) => {
+          tailItemList.push(parseInt(y, 10));
+        });
+      } else { // 하위 항목이 하나
+        tailItemList.push(parseInt(x.linked_list, 10));
+      }
+    });
+    vm.tableItemList.forEach((x) => {
+      if (tailItemList.includes(x.lecture_item_id) === true) {
+        x.ifTail = true; // eslint-disable-line
+      } else {
+        x.ifTail = false; // eslint-disable-line
+      }
     });
     const res2 = await classService.getClass({
       id: res.data.class_id,
@@ -197,18 +227,23 @@ export default {
       vm.$socket.emit('HEART_BEAT', JSON.stringify(params2));
     }, 3000);
 
-    // opened 상태인 아이템이 이미 있다면 보이기
-    // const res3 = await lectureService.getOpenedLectureItem({ lectureId: vm.lectureId });
-    // if (res3.data.length !== 0) {
-    //   res3.data.forEach((item) => {
-    //     vm.currentLectureItemId.push(item.lecture_item_id);
-    //     vm.tableItemIndex.push(
-    //       vm.tableItemList.findIndex(tableItem =>
-    //         tableItem.lecture_item_id === item.lecture_item_id,
-    //       ),
-    //     );
-    //   });
-    // }
+    // 딸린 문항 구하기
+    // 대표문항 리스트와 딸린 문항 리스트
+    seq.data.forEach((x) => {
+      vm.mainquestion.push(parseInt(x.item_id, 10));
+      const tmp = [];
+      // 여러 하위 항목
+      if (x.linked_list.includes('<$!<>') === true) {
+        const namugiSplit = x.linked_list.split('<$!<>');
+        namugiSplit.forEach((y) => {
+          tmp.push(parseInt(y, 10));
+        });
+        vm.subquestion.push(tmp);
+      } else { // 하위 항목이 하나
+        tmp.push(parseInt(x.linked_list, 10));
+        vm.subquestion.push(tmp);
+      }
+    });
   },
   mounted() {
     const vm = this;
@@ -235,6 +270,10 @@ export default {
       sOnStudentCount: undefined,
       className: '',
       lectureName: '',
+      selectItemList: [], // 선택된 아이템들
+      selectItemIdList: [], // 선택된 아이템들 id
+      mainquestion: [], // 대표문항 리스트
+      subquestion: [], // 딸린문항 리스트
     };
   },
   computed: {
@@ -277,6 +316,22 @@ export default {
     onClick(type, data) {
       const vm = this;
       switch (type) {
+        // 보일 아이템 선택
+        case 'APPEND': {
+          // 이미 리스트에 존재한다면
+          if (vm.selectItemList.includes(data) === true) {
+            vm.$notify({
+              title: '알림',
+              message: '이미 선택된 아이템입니다.',
+              type: 'warning',
+            });
+            break;
+          }
+          vm.selectItemList.push(data);
+          vm.selectItemIdList.push(data.lecture_item_id);
+          break;
+        }
+        // 모두 보이기 (문항 or 설문) or 선택한 아이템 일괄 보이기
         case 'SHOWALL': {
           if (vm.currentLectureItemId.length !== 0) {
             vm.$notify({
@@ -287,6 +342,14 @@ export default {
             break;
           }
           vm.currentLectureItemId = deepCopy(data);
+          data.forEach((x) => {
+            if (vm.mainquestion.includes(x) === true) {
+              const ind = vm.mainquestion.indexOf(x);
+              vm.subquestion[ind].forEach((y) => {
+                vm.currentLectureItemId.push(y);
+              });
+            }
+          });
           const params = [];
           vm.currentLectureItemId.forEach((item) => {
             vm.tableItemIndex.push(
@@ -301,16 +364,29 @@ export default {
             params.push(param);
           });
           vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify(params));
+          // 선택한 리스트가 있다면 초기화
+          vm.selectItemList = [];
+          vm.selectItemIdList = [];
           break;
         }
+        // 한개씩 보이기
         case 'SHOW': {
-          if (!vm.currentLectureItemId.includes(data)) {
+          if (vm.currentLectureItemId.length !== 0) {
+            vm.$notify({
+              title: '알림',
+              message: '다른 아이템을 보이려면 기존 아이템을 내려주세요.',
+              type: 'warning',
+            });
+            break;
+          }
+          // 딸린 문항이 없다면 하나만 출력
+          if (vm.mainquestion.includes(data) === false) {
             const itemIndex = vm.tableItemList.findIndex(tableItem =>
-                tableItem.lecture_item_id === data);
+              tableItem.lecture_item_id === data);
             let putIndex = 0;
             /*
-             *  여러 강의 아이템을 'SHOW' 하는 경우, 미리 설정된 sequence를 기준으로 정렬
-             */
+            *  여러 강의 아이템을 'SHOW' 하는 경우, 미리 설정된 sequence를 기준으로 정렬
+            */
             for (let i = 0; i < vm.tableItemIndex.length; i += 1) {
               if (itemIndex < vm.tableItemIndex[i]) {
                 putIndex = i;
@@ -328,19 +404,54 @@ export default {
               lecture_item_id: data,
             };
             vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify([param]));
+          } else { // 딸린 문항이 있다면
+            const tmp = [];
+            tmp.push(data);
+            const ind = vm.mainquestion.indexOf(data);
+            vm.subquestion[ind].forEach((x) => {
+              tmp.push(x);
+            });
+            vm.currentLectureItemId = deepCopy(tmp);
+            const paramsi = [];
+            tmp.forEach((item) => {
+              vm.tableItemIndex.push(
+                vm.tableItemList.findIndex(tableItem =>
+                  tableItem.lecture_item_id === item),
+              );
+              const parami = {
+                lecture_id: vm.lectureId,
+                opened: 1,
+                lecture_item_id: item,
+              };
+              paramsi.push(parami);
+            });
+            vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify(paramsi));
           }
           break;
         }
         case 'HIDE': {
-          const param = {
-            lecture_id: vm.lectureId,
-            opened: 0,
-            lecture_item_id: data,
-          };
-          vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify([param]));
-          const itemIndex = vm.currentLectureItemId.findIndex(id => id === data);
-          vm.currentLectureItemId.splice(itemIndex, 1);
-          vm.tableItemIndex.splice(itemIndex, 1);
+          // 아이템 일괄 내리기
+          if (vm.currentLectureItemId.length === 0) {
+            vm.$notify({
+              title: '알림',
+              message: '내릴 아이템이 없습니다.',
+              type: 'warning',
+            });
+            break;
+          }
+          vm.currentLectureItemId.forEach((x) => {
+            const param = {
+              lecture_id: vm.lectureId,
+              opened: 0,
+              lecture_item_id: x,
+            };
+            vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify([param]));
+            // const itemIndex = vm.currentLectureItemId.findIndex(id => id === x);
+            // vm.currentLectureItemId.splice(itemIndex, 1);
+            // vm.tableItemIndex.splice(itemIndex, 1);
+          });
+          vm.currentLectureItemId = [];
+          vm.tableItemIndex = [];
           break;
         }
         case 'SUBMIT': {
@@ -367,6 +478,12 @@ export default {
           throw new Error(`not defined type ${type}`);
         }
       }
+    },
+    // 선택된 아이템 삭제
+    deleteSelectedItem(index) {
+      const vm = this;
+      vm.selectItemList.splice(index, 1);
+      vm.selectItemIdList.splice(index, 1);
     },
   },
   beforeDestroy() {

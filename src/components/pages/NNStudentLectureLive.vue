@@ -85,7 +85,7 @@
             </div>
           </div>
         </el-col>
-        <el-col :span="itemSize">
+        <el-col :span="itemSize+8">
           <el-tabs type="card">
             <el-tab-pane label="강의아이템">
               <div v-if="lectureItem.length === 0">
@@ -95,14 +95,45 @@
                 <el-button v-show="!pauseFlag && lectureType === 2" type="primary" @click="onClick('PAUSE')">일시정지</el-button>
                 <el-button v-show="pauseFlag && lectureType === 2" type="primary" @click="onClick('RESTART')">재시작</el-button>
                 <br>
-                <div v-for="(item, index) in lectureItem" :key="index">
+                <el-col :span="itemSize">
+                  <div v-for="(item, index) in lectureItem" :key="index" v-if="lectureItem.length < 2">
                     <lecture-live-item
                       :data="item"
                       :onClick="onClick"
                       :answerSubmitted="submitFlag[item.lecture_item_id]"
                       :lectureType="lectureType"
                       type="STUDENT"/>
-                </div>
+                  </div>
+                  <div v-for="(item, index) in lectureItems" :key="index" v-if="lectureItem.length > 1">
+                    <lecture-live-item
+                      :data="item"
+                      :onClick="onClick"
+                      :answerSubmitted="submitFlag[item.lecture_item_id]"
+                      :lectureType="lectureType"
+                      type="STUDENT"/>
+                    <el-button type="primary" @click="onClick('PREV')">이전</el-button>
+                    <el-button type="primary" @click="onClick('NEXT')">다음</el-button>
+                  </div>
+                </el-col>
+                <el-col :span="8"><div>
+                  <el-table :data="nowQuestion" v-if="lectureItem.length > 1">
+                    <el-table-column label="번호">
+                      <template slot-scope="scope">
+                        {{ scope.row.num }}
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="제출 여부">
+                      <template slot-scope="scope">
+                        {{ scope.row.soc }}
+                      </template>
+                    </el-table-column>
+                    <el-table-column>
+                      <template slot-scope="scope">
+                        <el-button size="small" @click="onClick('QUE', scope.row.num)">이동</el-button>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </div></el-col>
               </div>
               <!-- <el-button style="float:right" type="primary" size="small" @click="onClick('SUBMIT')">제출</el-button> -->
               <!-- <lecture-live-item
@@ -244,7 +275,8 @@ export default {
   data() {
     return {
       path: '', // 과목 , 강의 제목 이름
-      lectureItem: [], // 현재 표시중인 강의 아이템
+      lectureItem: [], // 현재 표시중인 강의 아이템 - 하나
+      lectureItems: [], // 현재 표시중인 강의 아이템 - 둘 이상
       lectureType: undefined,
       materialList: undefined, // 강의자료 목록
       additionalList: undefined, // 참고자료 목록
@@ -268,6 +300,9 @@ export default {
       lectureName: '',
       questionList: [], // 보기를 섞기 위해
       questionKey: [], // 바뀐 보기들의 순서를 나타내는 key
+      nowQuestion: [], // 실시간 문항에 대한 정보용
+      nowNum: 0, // 현재 보고 있는 아이템의 번호
+      startTime: '', // 학생 로그 제출용
     };
   },
   computed: {
@@ -335,6 +370,17 @@ export default {
                   }
                 }
               });
+              const endTime = new Date();
+              studentService.postLog({
+                id: vm.nowQuestion[vm.nowNum].lecture_item_id,
+                lecture_id: vm.lectureId,
+                item_id: vm.nowQuestion[vm.nowNum].lecture_item_id,
+                type: vm.nowQuestion[vm.nowNum].type,
+                order: vm.nowQuestion[vm.nowNum].order,
+                start_time: vm.startTime,
+                end_time: endTime,
+              });
+              vm.nowQuestion[vm.nowNum].soc = 'O';
               vm.$notify({
                 title: '알림',
                 message: '제출하였습니다.',
@@ -353,6 +399,17 @@ export default {
                 surveyId: data.surveyId,
                 answer: data.answer,
               });
+              const endTime = new Date();
+              studentService.postLog({
+                id: vm.nowQuestion[vm.nowNum].lecture_item_id,
+                lecture_id: vm.lectureId,
+                item_id: vm.nowQuestion[vm.nowNum].lecture_item_id,
+                type: vm.nowQuestion[vm.nowNum].type,
+                order: vm.nowQuestion[vm.nowNum].order,
+                start_time: vm.startTime,
+                end_time: endTime,
+              });
+              vm.nowQuestion[vm.nowNum].soc = 'O';
               vm.$notify({
                 title: '알림',
                 message: '제출하였습니다.',
@@ -411,6 +468,88 @@ export default {
           vm.continueLecture(true);
           break;
         }
+        case 'QUE': {
+          // 만약 지금 보고있던게 자료였다면 로그 제출
+          const endTime = new Date();
+          if (vm.nowQuestion[vm.nowNum].soc === '자료') {
+            studentService.postLog({
+              id: vm.nowQuestion[vm.nowNum].lecture_item_id,
+              lecture_id: vm.lectureId,
+              item_id: vm.nowQuestion[vm.nowNum].lecture_item_id,
+              type: vm.nowQuestion[vm.nowNum].type,
+              order: vm.nowQuestion[vm.nowNum].order,
+              start_time: vm.startTime,
+              end_time: endTime,
+            });
+          }
+          // 문항 이동
+          vm.lectureItems = [];
+          vm.lectureItems.push(vm.lectureItem[data - 1]);
+          vm.nowNum = data - 1;
+          // 시작 시간 갱신
+          vm.startTime = new Date();
+          break;
+        }
+        case 'PREV': {
+          if (vm.nowNum === 0) {
+            vm.$notify({
+              title: '알림',
+              message: '첫번째 아이템입니다.',
+              type: 'warning',
+            });
+            break;
+          }
+          // 만약 지금 보고있던게 자료였다면 로그 제출
+          const endTime = new Date();
+          if (vm.nowQuestion[vm.nowNum].soc === '자료') {
+            studentService.postLog({
+              id: vm.nowQuestion[vm.nowNum].lecture_item_id,
+              lecture_id: vm.lectureId,
+              item_id: vm.nowQuestion[vm.nowNum].lecture_item_id,
+              type: vm.nowQuestion[vm.nowNum].type,
+              order: vm.nowQuestion[vm.nowNum].order,
+              start_time: vm.startTime,
+              end_time: endTime,
+            });
+          }
+          // 이전 문항으로
+          vm.lectureItems = [];
+          vm.lectureItems.push(vm.lectureItem[vm.nowNum - 1]);
+          vm.nowNum -= 1;
+          // 시작 시간 갱신
+          vm.startTime = new Date();
+          break;
+        }
+        case 'NEXT': {
+          if (vm.nowNum === vm.lectureItem.length - 1) {
+            vm.$notify({
+              title: '알림',
+              message: '마지막 아이템입니다.',
+              type: 'warning',
+            });
+            break;
+          }
+          // 만약 지금 보고있던게 자료였다면 로그 제출
+          const endTime = new Date();
+          if (vm.nowQuestion[vm.nowNum].soc === '자료') {
+            studentService.postLog({
+              id: vm.nowQuestion[vm.nowNum].lecture_item_id,
+              lecture_id: vm.lectureId,
+              item_id: vm.nowQuestion[vm.nowNum].lecture_item_id,
+              type: vm.nowQuestion[vm.nowNum].type,
+              order: vm.nowQuestion[vm.nowNum].order,
+              start_time: vm.startTime,
+              end_time: endTime,
+            });
+          }
+          // 다음 문항으로
+          vm.lectureItems = [];
+          vm.lectureItems.push(vm.lectureItem[vm.nowNum + 1]);
+          vm.nowNum += 1;
+          // 시작 시간 갱신
+          vm.startTime = new Date();
+          break;
+        }
         default: {
           throw new Error(`not defined type ${type}`);
         }
@@ -422,6 +561,17 @@ export default {
       setTimeout(async () => {
         // TODO: 강의 아이템이 여러개인 경우, 빠른 속도로 조작 시 같은 아이템이 중복하여 들어가는 버그 발생
         const res3 = await lectureService.getOpenedLectureItem({ lectureId: vm.lectureId });
+
+        // 시작 시간 갱신
+        vm.startTime = new Date();
+        let nowN = 0;
+        if (notify === false) {
+          nowN = vm.nowNum;
+        }
+        vm.nowNum = 0;
+
+        vm.lectureItems = [];
+        vm.nowQuestion = [];
 
         // 새로 들어온 문항의 key 생성
         res3.data.forEach((x) => {
@@ -486,12 +636,51 @@ export default {
         } else if (vm.lectureType === 0) {
           vm.lectureItem = [];
         }
+
+        // 아이템이 여러 개일 경우 처리
+        if (vm.lectureItem.length > 1) {
+          vm.lectureItems.push(vm.lectureItem[0]);
+          vm.lectureItem.forEach((x, index) => {
+            const tmp = {};
+            // 제출 여부
+            if (x.type === 4) {
+              tmp.soc = '자료';
+            } else if (x.type === 0) {
+              if (x.questions[0].student_answer_logs.length > 0) {
+                tmp.soc = 'O';
+              } else {
+                tmp.soc = 'X';
+              }
+            } else if (x.type === 1) {
+              if (x.surveys[0].student_surveys.length > 0) {
+                tmp.soc = 'O';
+              } else {
+                tmp.soc = 'X';
+              }
+            } else if (x.type === 2) {
+              tmp.soc = '실습';
+            } else if (x.type === 3) {
+              tmp.soc = '토론';
+            }
+            tmp.type = x.type;
+            tmp.order = x.order;
+            tmp.lecture_item_id = x.lecture_item_id;
+            tmp.num = index + 1;
+            vm.nowQuestion.push(tmp);
+          });
+        }
         if (notify !== false) {
           vm.$notify({
             title: '알림',
             message: '강의아이템이 변경되었습니다.',
             type: 'warning',
           });
+        }
+        if (notify === false) {
+          // 원래 보고 있던 문항으로
+          vm.nowNum = nowN;
+          vm.lectureItems = [];
+          vm.lectureItems.push(vm.lectureItem[vm.nowNum]);
         }
       }, 1000);
     },

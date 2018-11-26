@@ -78,4 +78,26 @@ export default {
   }) {
     return http.put(`lecture-items/${lectureItemId}`, { scoring_finish: 1 });
   },
+
+  makeConnection({ lectureId, iList }) {
+    const itemList = iList;
+    const item_id = itemList[0]; // eslint-disable-line
+    const list = [];
+    itemList.splice(0, 1);
+    itemList.forEach((x) => {
+      const tmp = {};
+      tmp.item_id = x;
+      list.push(tmp);
+    });
+    return http.post(`/lecture-items/${lectureId}/linked_list`, {
+      item_id: item_id, // eslint-disable-line
+      list: list, // eslint-disable-line
+    });
+  },
+  showConnection({ lectureId }) {
+    return http.get(`/lecture-items/${lectureId}/linked_list`);
+  },
+  deleteConnection({ lectureItemId }) {
+    return http.delete(`/lecture-items/linked_list/${lectureItemId}`);
+  },
 };
