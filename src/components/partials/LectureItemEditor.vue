@@ -115,7 +115,7 @@
           <el-button @click="onClick('ADD_KEYWORD')">추가</el-button><br>
           <div v-for="(item,index) in inputTail.assignedKeywordList" :key="item.keyword" style="display: inline-block;">
             <el-button>{{ item.keyword }} :: {{ item.score }}점</el-button>
-            <el-button @click="onClick('DELETE_KEYWORD',index)" type="danger" style="margin: 0px 10px 0px 0px">X</el-button>
+            <!-- <el-button @click="onClick('DELETE_KEYWORD',index)" type="danger" style="margin: 0px 10px 0px 0px">X</el-button> -->
           </div>
         </el-form-item>
       </template>

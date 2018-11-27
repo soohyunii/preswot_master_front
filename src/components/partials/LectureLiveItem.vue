@@ -102,7 +102,8 @@
               </div>
             </div>
             <pre>{{ data.questions[0].question }}</pre>
-            <el-input placeholder="내용을 입력해주세요." v-model="answer[0]"></el-input>
+            <!-- <el-input placeholder="내용을 입력해주세요." v-model="answer[0]"></el-input> -->
+            <el-input v-for="(ans, index) in answer" :key="index" placeholder="내용을 입력해주세요." v-model="answer[index]"></el-input>
           </template>
         </div>
         <div v-if="data.questions[0].type === 2">
@@ -272,6 +273,11 @@
           </template>
         </div>
         <el-row type="flex" justify="center">
+          <el-button v-if="data.questions[0].type === 1"
+            type="primary"
+            @click="makesMoreAnswerSheet()">
+            항목 추가
+          </el-button>
           <el-button
             v-if="!((data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT') || answerSubmitted)"
             type="primary"
@@ -371,7 +377,7 @@ export default {
   props: ['lectureType', 'data', 'onClick', 'type', 'answerSubmitted'],
   data() {
     return {
-      answer: [],
+      answer: [''],
       answerFile: [],
       currentFile: {
         visible: false,
@@ -422,6 +428,10 @@ export default {
     },
   },
   methods: {
+    makesMoreAnswerSheet() {
+      const vm = this;
+      vm.answer.push('');
+    },
     preOnClick() {
       const vm = this;
       let arg = {};
@@ -463,7 +473,7 @@ export default {
     },
     clearAnswer() {
       const vm = this;
-      vm.answer = [];
+      vm.answer = [''];
     },
     handleVisible(file) {
       const vm = this;

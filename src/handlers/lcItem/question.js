@@ -33,8 +33,16 @@ export default class QuestionHandler extends LcItemHandler {
       }
       case 0: { // 객관
         vm.inputBody.questionType = 'MULTIPLE_CHOICE';
-        vm.$set(vm.inputTail, 'questionList', q.choice);
-        vm.$set(vm.inputTail, 'answer', q.answer);
+        if (q.answer.length === 0) {
+          vm.$set(vm.inputTail, 'answer', []);
+        } else {
+          vm.$set(vm.inputTail, 'answer', q.answer);
+        }
+        if (q.choice.length === 0) {
+          vm.$set(vm.inputTail, 'questionList', []);
+        } else {
+          vm.$set(vm.inputTail, 'questionList', q.choice);
+        }
         break;
       }
       case 2: { // 서술
