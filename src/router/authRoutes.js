@@ -447,6 +447,15 @@ export default function authRoutes(root) {
       },
     },
     {
+      alias: '/register/uni/:code/edit',
+      path: '/register/uni',
+      name: 'RegisterUni',
+      component: RegisterUni,
+      meta: {
+        title: '관리자 대학 수정',
+      },
+    },
+    {
       path: '/register/dept',
       name: 'RegisterDept',
       component: RegisterDept,

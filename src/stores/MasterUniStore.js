@@ -58,6 +58,7 @@ export default {
     },
     updateStudyingUniList(state, { studyingUniList }) {
       state.studyingUniList = studyingUniList;
+      // console.log(state.studyingUniList);
     },
     deleteStudyingUni(state, { studyingUniIndex }) {
       state.studyingUniList.splice(studyingUniIndex, 1);
@@ -83,6 +84,7 @@ export default {
       const res = await MasterService.getUniLists();
 
       const sc = res.data;
+      // console.log(res.data);
       commit('updateStudyingUniList', {
         studyingUniList: sc,
       }); 

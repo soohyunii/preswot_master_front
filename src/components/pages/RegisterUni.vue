@@ -23,15 +23,15 @@
       </el-form-item>
 
       <el-form-item label="담당자">
-        <el-input v-model="input.manager" class="subject-title"></el-input>
+        <el-input v-model="input.manager_name" class="subject-title"></el-input>
       </el-form-item>
 
       <el-form-item label="메일주소">
-        <el-input v-model="input.email" class="subject-title"></el-input>
+        <el-input v-model="input.manager_email" class="subject-title"></el-input>
       </el-form-item>
 
       <el-form-item label="전화번호">
-        <el-input v-model="input.phone" class="subject-title" placeholder="하이픈없이 입력"></el-input>
+        <el-input v-model="input.manager_phone_number" class="subject-title" placeholder="하이픈없이 입력"></el-input>
       </el-form-item>
 
       <el-form-item>
@@ -77,9 +77,9 @@ export default {
       code: '',
       name: '',
       address: '',
-      manager: '',
-      email: '',
-      phone: '',
+      manager_name: '',
+      manager_email: '',
+      manager_phone_number: '',
     };
     return {
       initialInput,
@@ -89,14 +89,14 @@ export default {
   async mounted() {
     const vm = this;
     if (vm.isEdit) {
-      const res = await masterService.getMaster({ id: vm.masterId });
-      // console.log('res', res.data);
+      const res = await masterService.getMasterUni({ id: vm.masterId });
+      //console.log('res', res.data);
       vm.input.code = res.data.code || vm.initialInput.code;
       vm.input.name = res.data.name || vm.initialInput.name;
       vm.input.address = res.data.address || vm.initialInput.address;
-      vm.input.manager = res.data.manager || vm.initialInput.manager;
-      vm.input.email = res.data.email || vm.initialInput.email;
-      vm.input.phone = res.data.phone || vm.initialInput.phone;
+      vm.input.manager_name = res.data.manager_name || vm.initialInput.manager_name;
+      vm.input.manager_email = res.data.manager_email || vm.initialInput.manager_email;
+      vm.input.manager_phone_number = res.data.manager_phone_number || vm.initialInput.manager_phone_number;
       // 대학코드, 대학명 미입력시 '*는 필수입력사항입니다 알람'
     }
   },
@@ -104,10 +104,11 @@ export default {
     isEdit() {
       const vm = this;
       return vm.$route.fullPath.includes('/edit');
+      // console.log(vm.$route.fullPath.includes('/edit'));
     },
-    MasterId() {
+    masterId() {
       const vm = this;
-      return vm.$route.path.split('class/')[1].split('/edit')[0];
+      return vm.$route.path.split('uni/')[1].split('/edit')[0];
     },
   },
   methods: {

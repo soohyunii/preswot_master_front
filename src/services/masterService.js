@@ -4,8 +4,8 @@ import http from './http';
 import utils from '../utils';
 
 export default {
-/*  
-getClassLists() {
+  
+/*getClassLists() {
     return http.get('/classes');
   },
   getMainClassLists() { // TODO : 필요 없다면 삭제할 것.
@@ -13,11 +13,11 @@ getClassLists() {
   },
   getMyClassList() { //
     return http.get('/classes/my');
+  },*/
+  getMasterUni({ university_id }) { //
+    return http.get(`/university/${university_id}`);
   },
-  getClass({ id }) { //
-    return http.get(`/classes/${id}`);
-  },
-  getClassCoverage({ id }) {
+/*  getClassCoverage({ id }) {
     return http.get(`/classes/${id}/coverage`);
   },
   getClassNeedScoring({ id }) {

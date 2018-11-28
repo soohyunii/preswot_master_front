@@ -2,29 +2,21 @@
   <div id="class_index_wrapper">
     <div>
       <el-table class="elTable" :data="page" style="width: 100%">
-      <el-table-column label="대학코드" width="100">
-        <!-- <template slot-scope="scope">
-        {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
-        </template> -->
+      <el-table-column prop="code" label="대학코드" width="100">
       </el-table-column>
-      <el-table-column prop="name" label="대학명" width="150">
+      <el-table-column prop="name" label="대학명" width="180">
       </el-table-column>
-      <el-table-column label="주소" width="260">
+      <el-table-column prop="address" label="주소" width="250">
       </el-table-column>
-      <el-table-column label="담당자" width="100">
-        <!-- <template slot-scope="scope">
-        {{ scope.row.start_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') : '미정' }}
-        ~
-        {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString('ko-KR') : '미정' }}
-        </template> -->
+      <el-table-column prop="manager_name" label="담당자" width="100">
       </el-table-column>
-      <el-table-column label="메일주소" width="180">
+      <el-table-column prop="manager_email" label="메일주소" width="220">
       </el-table-column>
-      <el-table-column label="전화번호" width="100">
+      <el-table-column prop="manager_phone_number" label="전화번호" width="120">
       </el-table-column>
       <el-table-column label="" header-align="left" align="right">
         <template slot-scope="scope">
-            <router-link :to="`/view/dept/${scope.row.class_id}/edit`">
+            <router-link :to="`/a/register/uni/${scope.row.code}/edit`">
               <el-button class="edit-btn">수정</el-button>
             </router-link>
           </template>
@@ -79,12 +71,10 @@ export default {
           value: 'name',
           label: '대학명',
         },
-        /*
         {
-          value: 'teacher',
-          label: '강사',
-        },
-        */
+          value: 'code',
+          label: '대학코드',
+        }, 
       ],
       searchQuery: {
         searchType: 'name',
