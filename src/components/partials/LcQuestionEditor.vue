@@ -27,7 +27,10 @@
 
       <template v-if="inputBody.questionType === 'SHORT_ANSWER'">
         <el-form-item label="답" id="textarea_short_answer">
-          <el-input v-model="inputTail.answer[0]" placeholder="내용을 입력해주세요." type="textarea"></el-input>
+          <!-- el-input v-model="inputTail.answer[0]" placeholder="내용을 입력해주세요." type="textarea"></el-input> -->
+          <el-input v-for="(item, index) in inputTail.answer" :key="index" placeholder="내용을 입력해주세요." v-model="inputTail.answer[index]" type="textarea"></el-input>
+          <el-button type="primary" @click="onClick('ADD_ANSWER')">추가</el-button>
+          <el-button v-if="inputTail.answer.length > 1" type="danger" @click="onClick('DELETE_ANSWER')">제거</el-button>
         </el-form-item>
       </template>
 
@@ -229,7 +232,9 @@ export default {
       const vm = this;
       vm.inputTail = Object.assign({}, vm.initialInputTail);
       vm.$set(vm.inputTail, 'questionFile', vm.$refs.questionUpload.uploadFiles);
-
+      if (vm.inputBody.questionType === 'SHORT_ANSWER') {
+        vm.$set(vm.inputTail, 'answer', ['']);
+      }
       if (vm.inputBody.questionType === 'MULTIPLE_CHOICE') {
         vm.$set(vm.inputTail, 'questionList', []);
       }
@@ -314,6 +319,14 @@ export default {
             break;
           }
           vm.inputTail.testCaseList.splice(arg, 1);
+          break;
+        }
+        case 'ADD_ANSWER': {
+          vm.inputTail.answer.push('');
+          break;
+        }
+        case 'DELETE_ANSWER': {
+          vm.inputTail.answer.pop();
           break;
         }
         default : {
