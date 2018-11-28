@@ -2,27 +2,36 @@
   <div id="class_index_wrapper">
     <div>
       <el-table class="elTable" :data="page" style="width: 100%">
-      <el-table-column label="강사ID" width="100">
+      <el-table-column prop="name" label="강사ID" width="80">
+        <template slot-scope="scope">
+          {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="메일주소" width="180">
         <!-- <template slot-scope="scope">
         {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
         </template> -->
       </el-table-column>
-      <el-table-column label="password" width="100">
-      </el-table-column>
-      <el-table-column prop="name" label="강사명" width="160">
-      </el-table-column>
-      <el-table-column label="전화번호" width="120">
+      <el-table-column label="비밀번호" width="120">
         <!-- <template slot-scope="scope">
         {{ scope.row.start_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') : '미정' }}
         ~
         {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString('ko-KR') : '미정' }}
         </template> -->
       </el-table-column>
-      <el-table-column label="경력" width="100">
+      <el-table-column label="이름" width="100">
       </el-table-column>
-      <el-table-column label="이메일" width="180">
+      <el-table-column label="생년월일" width="100">
       </el-table-column>
-      <el-table-column label="담당자번호" width="130">
+      <el-table-column label="성별" width="50">
+      </el-table-column>
+      <el-table-column label="전화번호" width="150">
+      </el-table-column>
+      <el-table-column label="경력" width="180">
+      </el-table-column>
+      <el-table-column label="계좌은행" width="80">
+      </el-table-column>
+      <el-table-column label="계좌번호" width="150">
       </el-table-column>
       <el-table-column label="" header-align="left" align="right">
         <template slot-scope="scope">
@@ -71,7 +80,7 @@
 import utils from '../../utils';
 
 export default {
-  name: 'MasterDeptTable',
+  name: 'MasterTeacherTable',
   props: ['list', 'onClick'],
   data() {
     return {

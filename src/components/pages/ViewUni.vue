@@ -1,7 +1,7 @@
 <template>
   <div id="class_index_wrapper" class="bt-container">
     <h2 class="page-title">조회하기 > 대학</h2>
-    <student-class-table
+    <master-uni-table
       :list="list"
       :onClick="onClick"
     />
@@ -23,14 +23,14 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
-import StudentClassTable from '../partials/MasterUniTable';
-// import classService from '../services/classService';
+import MasterUniTable from '../partials/MasterUniTable';
+import masterServie from '../../services/masterService';
 import utils from '../../utils';
 
 export default {
   name: 'ViewDept',
   components: {
-    StudentClassTable,
+    MasterUniTable,
   },
   data() {
     return {
@@ -41,42 +41,49 @@ export default {
     };
   },
   computed: {
-    ...mapState('NNclass', ['studyingClassList']),
+    /* ...mapState('MasterUni', ['MasterUni']),
+    */
+    ...mapState('MasterUni', ['studyingUniList']),
   },
   async created() {
     const vm = this;
 
     // 새로고침(Refresh, F5) 해도 목록을 가져올 수 있게 하는 부분.
     // TODO: 속도가 눈에 보이게 느려지므로 다른 방법이 있다면 수정 요구.
-    await vm.getMyClassLists();
+    await vm.getUniLists();
 
     // 검색 기능 : 서버에서 DB 쿼리로 처리하는 게 효율이 나을 것 같으면 나중에 수정.
-    if (vm.studyingClassList !== null) {
+    // console.log("studyingUniList= "+vm.studyingUniList);
+  
+    if (vm.studyingUniList !== null) {
       if (vm.$route.query.type !== undefined) {
         vm.searchType = vm.$route.query.type;
       }
       if (vm.$route.query.text !== undefined) {
         vm.searchText = vm.$route.query.text;
       }
-      for (let i = 0; i < vm.studyingClassList.length; i += 1) {
+      for (let i = 0; i < vm.studyingUniList.length; i += 1) {
         if (vm.searchType === 'name') {
-          if (vm.studyingClassList[i].name.includes(vm.searchText)) {
-            vm.list.push(vm.studyingClassList[i]);
+          if (vm.studyingUniList[i].name.includes(vm.searchText)) {
+            vm.list.push(vm.studyingUniList[i]);
           }
         }
         if (vm.searchType === 'teacher') {
-          if (vm.studyingClassList[i].master.name.includes(vm.searchText)) {
-            vm.list.push(vm.studyingClassList[i]);
+          if (vm.studyingUniList[i].master.name.includes(vm.searchText)) {
+            vm.list.push(vm.studyingUniList[i]);
           }
         }
       }
     }
   },
   methods: {
-    ...mapActions('NNclass', [
+    ...mapActions('MasterUni', [
+      /*
       'getClassLists',
       'getMyClassLists',
-      'deleteClassUser',
+      */
+      /*'deleteClassUser',*/
+      'getUniLists',
     ]),
     formatDate: utils.formatDate,
     async onClick(type, arg, arg2) {
@@ -164,7 +171,7 @@ export default {
           try {
             // const index = vm.currentClassIndex;
             const currentClass = vm.teachingClassList[index];
-            await classService.delete({
+            await masterServie.delete({
               id: currentClass.class_id,
             });
             vm.deleteTeachingClass({

@@ -2,7 +2,7 @@
   <div id="class_index_wrapper">
     <div>
       <el-table class="elTable" :data="page" style="width: 100%">
-      <el-table-column prop="name" label="학과ID" width="100">
+      <el-table-column prop="name" label="학과코드" width="100">
       </el-table-column>
       <el-table-column label="대학" width="100">
         <!-- <template slot-scope="scope">
@@ -20,9 +20,9 @@
       </el-table-column>
       <el-table-column label="학과담당자" width="100">
       </el-table-column>
-      <el-table-column label="이메일" width="180">
+      <el-table-column label="학과 대표 이메일" width="180">
       </el-table-column>
-      <el-table-column label="담당자번호" width="130">
+      <el-table-column label="학과 전화번호" width="130">
       </el-table-column>
       <el-table-column label="" header-align="left" align="right">
         <template slot-scope="scope">

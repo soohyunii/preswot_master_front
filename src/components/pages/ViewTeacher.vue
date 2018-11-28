@@ -1,7 +1,11 @@
 <template>
   <div id="class_index_wrapper" class="bt-container">
     <h2 class="page-title">조회하기 > 강사</h2>
-    <student-class-table
+    <!-- <student-class-table
+      :list="list"
+      :onClick="onClick"
+    /> -->
+    <master-teacher-table
       :list="list"
       :onClick="onClick"
     />
@@ -23,14 +27,14 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
-import StudentClassTable from '../partials/StudentClassTable';
+import MasterTeacherTable from '../partials/MasterTeacherTable';
 // import classService from '../services/classService';
 import utils from '../../utils';
 
 export default {
-  name: 'ViewDept',
+  name: 'ViewTeacher',
   components: {
-    StudentClassTable,
+    MasterTeacherTable,
   },
   data() {
     return {

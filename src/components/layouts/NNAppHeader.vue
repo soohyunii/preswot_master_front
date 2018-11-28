@@ -81,10 +81,10 @@
                 <router-link to="/a/view/teacher" v-if="authType === 3" v-show="isJwtValid">강사</router-link>
               </li>
               <li>
-                <router-link to="/a/view/class" v-if="authType === 3" v-show="isJwtValid">과목및강의</router-link>
+                <router-link to="/a/view/class" v-if="authType === 3" v-show="isJwtValid">과목</router-link>
               </li>
               <li>
-                <router-link to="/a/view/student" v-if="authType === 3" v-show="isJwtValid">학생</router-link>
+                <router-link to="/a/view/student" v-if="authType === 3" v-show="isJwtValid">학생및성적표</router-link>
               </li>
               <li>
                 <router-link to="/a/view/bank" v-if="authType === 3" v-show="isJwtValid">강의은행그룹</router-link>

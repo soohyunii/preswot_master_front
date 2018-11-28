@@ -1,36 +1,41 @@
 <template>
   <div id="class_index_wrapper" class="bt-container">
-    <h2 class="page-title">조회하기 > 학생</h2>
-    <student-class-table
+    <h2 class="page-title">조회하기 > 학생 및 성적표</h2>
+    <master-student-table
       :list="list"
       :onClick="onClick"
     />
     <br/>
     <div class="right-align">
       <router-link to="/a/register/student">
-        <el-button  type="primary" :class="$attachReactablePostfix('right-align-btn')" style="width: 49%">
+        <el-button  type="primary" :class="$attachReactablePostfix('right-align-btn')" style="width: 33%">
           <div class="right-align-btn-layer">학생 등록하기</div>
         </el-button>
       </router-link>
+      <router-link to="/a/view/studentScore">
+        <el-button  type="primary" :class="$attachReactablePostfix('right-align-btn')" style="width: 33%">
+          <div class="right-align-btn-layer">전체 학생 성적표 조회</div>
+        </el-button>
+      </router-link>
       <router-link to="/">
-        <el-button type="primary" :class="$attachReactablePostfix('right-align-btn')" style="width: 49%">
+        <el-button type="primary" :class="$attachReactablePostfix('right-align-btn')" style="width: 33%">
           <div class="right-align-btn-layer">홈으로</div>
         </el-button>
       </router-link>
     </div>
   </div>
-</template>
+</template> 
 
 <script>
 import { mapActions, mapState } from 'vuex';
-import StudentClassTable from '../partials/StudentClassTable';
+import MasterStudentTable from '../partials/MasterStudentTable';
 // import classService from '../services/classService';
 import utils from '../../utils';
 
 export default {
   name: 'ViewStudent',
   components: {
-    StudentClassTable,
+    MasterStudentTable,
   },
   data() {
     return {

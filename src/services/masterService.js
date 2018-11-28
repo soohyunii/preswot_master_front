@@ -4,7 +4,8 @@ import http from './http';
 import utils from '../utils';
 
 export default {
-  getClassLists() {
+/*  
+getClassLists() {
     return http.get('/classes');
   },
   getMainClassLists() { // TODO : 필요 없다면 삭제할 것.
@@ -34,10 +35,11 @@ export default {
   getClassKeywordRelations({ id }) {
     return http.get(`/classes/${id}/keyword-relations`);
   },
-  getMasterUniLists() {
+  */
+  getUniLists() {
     return http.get(`/university/list`);
   },
-  postClass({ //
+  /*postClass({ 
     title,
     description,
     intendedLectureNum,
@@ -158,7 +160,7 @@ export default {
     questionId,
   }) {
     return http.get(`/student_lecture_logs/re/${questionId}`);
-  },
+  },*/
 
 // 행정 관리자 methods
   NNMasterputUni({
@@ -170,7 +172,7 @@ export default {
     email,
     phone,
   }) {
-    return http.put(`/view/uni/${id}`, {
+    return http.put(`/view/uni`, {
       code,
       name,
       address,
@@ -183,24 +185,21 @@ export default {
     code,
     name,
     address,
-    manager,
-    email,
-    phone,
+    manager_name,
+    manager_email,
+    manager_phone_number,
   }) {
-    /*
-    return http.post('/register/uni/success', {
-      code: code,
+    return http.post('/university', {
+      code,
       name,
       address,
-      manager,
-      email,
-      phone,
-     바로 성공 페이지로 돌아가는 거면(목록명시x) 위의 요소들 필요 없는가?
+      manager_name,
+      manager_email,
+      manager_phone_number,
     });
-    */
-    return {
+    /*return {
       success: true,
-    };
+    };*/
   },
   NNMasterputDept({
     choiceUni,
@@ -418,3 +417,4 @@ export default {
 
 
 };
+

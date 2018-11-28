@@ -1,6 +1,6 @@
 <template>
   <div id="class_index_wrapper" class="bt-container">
-    <h2 class="page-title">조회하기 > 과목 및 강의</h2>
+    <h2 class="page-title">조회하기 > 과목</h2>
     <student-class-table
       :list="list"
       :onClick="onClick"
@@ -18,6 +18,18 @@
         </el-button>
       </router-link>
     </div> -->
+    <div class="right-align">
+      <router-link to="/a/register/class">
+        <el-button  type="primary" :class="$attachReactablePostfix('right-align-btn')" style="width: 49%">
+          <div class="right-align-btn-layer">과목 등록하기</div>
+        </el-button>
+      </router-link>
+      <router-link to="/">
+        <el-button type="primary" :class="$attachReactablePostfix('right-align-btn')" style="width: 49%">
+          <div class="right-align-btn-layer">홈으로</div>
+        </el-button>
+      </router-link>
+    </div>
   </div>
 </template>
 

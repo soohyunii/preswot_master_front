@@ -2,40 +2,40 @@
   <div id="class_index_wrapper">
     <div>
       <el-table class="elTable" :data="page" style="width: 100%">
-      <el-table-column label="대학코드" width="100">
+      <el-table-column label="유저ID" width="80">
         <!-- <template slot-scope="scope">
         {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
         </template> -->
       </el-table-column>
-      <el-table-column prop="name" label="대학명" width="150">
+      <el-table-column prop="name" label="메일주소" width="180">
       </el-table-column>
-      <el-table-column label="주소" width="260">
+      <el-table-column prop="master.name" label="비밀번호" width="120">
       </el-table-column>
-      <el-table-column label="담당자" width="100">
+      <el-table-column label="이름" width="100">
         <!-- <template slot-scope="scope">
         {{ scope.row.start_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') : '미정' }}
         ~
         {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString('ko-KR') : '미정' }}
         </template> -->
       </el-table-column>
-      <el-table-column label="메일주소" width="180">
-      </el-table-column>
-      <el-table-column label="전화번호" width="100">
-      </el-table-column>
-      <el-table-column label="" header-align="left" align="right">
+      <el-table-column label="생년월일" width="100"></el-table-column>
+      <el-table-column label="성별" width="50"></el-table-column>
+      <el-table-column label="전화번호" width="150"></el-table-column>
+      <el-table-column label="전공" width="150"></el-table-column>
+      <el-table-column label="소속" width="100"></el-table-column>
+      <el-table-column label="계좌은행" width="80"></el-table-column>
+      <el-table-column label="계좌번호" width="150"></el-table-column>
+      <!-- <el-table-column label="" header-align="left" align="right" width="345"> -->
+        <el-table-column label="" header-align="left" align="right" width="200">
         <template slot-scope="scope">
-            <router-link :to="`/view/dept/${scope.row.class_id}/edit`">
-              <el-button class="edit-btn">수정</el-button>
-            </router-link>
-          </template>
-        </el-table-column>
-
-        <el-table-column>
-          <template slot-scope="scope">
-            <el-button type="danger" @click="listeners['delete'](scope.$index)" class="delete-btn">삭제</el-button>
-          </template>
-        </el-table-column>
-
+          <!--
+          <el-button type="success" @click="onClick('DETAIL', scope.row)">살펴보기</el-button>
+          -->
+          <el-button type="primary" @click="onClick('LISTEN', scope.row)">강의듣기</el-button>
+          <!-- FIXME: 건호씨 요구사항에 따라 수강취소 버튼 주석 씌움 -->
+          <!-- <el-button type="danger" @click="onClick('CANCEL', scope.row, (pageNum - 1) * 10 + (scope.$index))">수강취소</el-button> -->
+        </template>
+      </el-table-column>
       </el-table>
       <br>
     </div>
@@ -69,7 +69,7 @@
 import utils from '../../utils';
 
 export default {
-  name: 'MasterUniTable',
+  name: 'MasterStudentTable',
   props: ['list', 'onClick'],
   data() {
     return {
@@ -77,14 +77,12 @@ export default {
       selectOptionList: [
         {
           value: 'name',
-          label: '대학명',
+          label: '과목',
         },
-        /*
         {
           value: 'teacher',
           label: '강사',
         },
-        */
       ],
       searchQuery: {
         searchType: 'name',

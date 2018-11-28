@@ -217,6 +217,7 @@ export default {
     margin-top : 40px;
     margin-left : 12px;
     margin-bottom : 25px;
+
   }
 }
 </style>
