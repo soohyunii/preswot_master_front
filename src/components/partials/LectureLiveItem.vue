@@ -103,7 +103,6 @@
             </div>
             <pre>{{ data.questions[0].question }}</pre>
             <el-input placeholder="내용을 입력해주세요." v-model="answer[0]"></el-input>
-            <el-input v-for="index in additionalAnswer" :key="index" placeholder="내용을 입력해주세요."  v-model="answer[index]"></el-input>
           </template>
         </div>
         <div v-if="data.questions[0].type === 2">
@@ -273,16 +272,6 @@
           </template>
         </div>
         <el-row type="flex" justify="center">
-          <el-button v-if="data.questions[0].type === 1"
-            type="primary"
-            @click="addAnswerSheet()">
-            항목 추가
-          </el-button>
-          <el-button v-if="(data.questions[0].type === 1) && (additionalAnswer > 0)"
-            type="danger"
-            @click="deleteAnswerSheet()">
-            항목 제거
-          </el-button>
           <el-button
             v-if="!((data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT') || answerSubmitted)"
             type="primary"
@@ -382,7 +371,6 @@ export default {
   props: ['lectureType', 'data', 'onClick', 'type', 'answerSubmitted'],
   data() {
     return {
-      additionalAnswer: 0,
       answer: [],
       answerFile: [],
       currentFile: {
@@ -434,14 +422,6 @@ export default {
     },
   },
   methods: {
-    addAnswerSheet() {
-      const vm = this;
-      vm.additionalAnswer += 1;
-    },
-    deleteAnswerSheet() {
-      const vm = this;
-      vm.additionalAnswer -= 1;
-    },
     preOnClick() {
       const vm = this;
       let arg = {};
