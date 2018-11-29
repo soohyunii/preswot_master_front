@@ -344,12 +344,16 @@ export default {
               const itemId = data.lectureItemId;
               // 랜덤으로 섞이기 전의 실제 보기 - 정답
               const realAnswer = [];
-              // 오리지널 보기로 되돌림
-              data.answer.forEach((x) => {
-                const realN = vm.questionList.indexOf(itemId);
-                const realA = vm.questionKey[realN][x - 1];
-                realAnswer.push(realA + 1);
-              });
+              if (data.questionsType === 0) {
+                // 오리지널 보기로 되돌림
+                data.answer.forEach((x) => {
+                  const realN = vm.questionList.indexOf(itemId);
+                  const realA = vm.questionKey[realN][x - 1];
+                  realAnswer.push(realA + 1);
+                });
+              } else {
+                realAnswer.push(data.answer[0]);
+              }
               // 복수정답일 경우 순서대로 sort
               realAnswer.sort();
               // 학생이 제출했을 때 원래 보기에 맞게 바꿔서 전송
@@ -576,33 +580,36 @@ export default {
         // 새로 들어온 문항의 key 생성
         res3.data.forEach((x) => {
           if (x.type === 0) {
-            // 아직 보기가 안 섞인 문제일 경우
-            if (vm.questionList.includes(x.lecture_item_id) === false) {
-              // 보기의 수
-              const numBogi = x.questions[0].choice.length;
-              // 보기가 바뀔 배열
-              const key = [];
-              const checkRandom = [];
-              // 특정 보기가 key에 들어갔는지 체크하는 배열
-              for (let cr = 0; cr < numBogi; cr += 1) {
-                checkRandom.push(false);
-              }
-              // key 생성과정
-              for (let c = 0; c < numBogi; c += 1) {
-                let suc = true;
-                while (suc) {
-                  const temp = Math.floor(Math.random() * numBogi);
-                  if (checkRandom[temp] === false) {
-                    checkRandom[temp] = true;
-                    key.push(temp);
-                    suc = false;
+            // 객관식만 섞어줌
+            if (x.questions[0].type === 0) {
+              // 아직 보기가 안 섞인 문제일 경우
+              if (vm.questionList.includes(x.lecture_item_id) === false) {
+                // 보기의 수
+                const numBogi = x.questions[0].choice.length;
+                // 보기가 바뀔 배열
+                const key = [];
+                const checkRandom = [];
+                // 특정 보기가 key에 들어갔는지 체크하는 배열
+                for (let cr = 0; cr < numBogi; cr += 1) {
+                  checkRandom.push(false);
+                }
+                // key 생성과정
+                for (let c = 0; c < numBogi; c += 1) {
+                  let suc = true;
+                  while (suc) {
+                    const temp = Math.floor(Math.random() * numBogi);
+                    if (checkRandom[temp] === false) {
+                      checkRandom[temp] = true;
+                      key.push(temp);
+                      suc = false;
+                    }
                   }
                 }
+                // key가 생성된 question의 lecture_item_id와 만들어진 key를 저장
+                // 강사가 문항을 내렸다 다시 올릴 경우 이미 만들어진 key를 이용해 동일하게 섞인 순서의 보기가 출력됨
+                vm.questionList.push(x.lecture_item_id);
+                vm.questionKey.push(key);
               }
-              // key가 생성된 question의 lecture_item_id와 만들어진 key를 저장
-              // 강사가 문항을 내렸다 다시 올릴 경우 이미 만들어진 key를 이용해 동일하게 섞인 순서의 보기가 출력됨
-              vm.questionList.push(x.lecture_item_id);
-              vm.questionKey.push(key);
             }
           }
         });
@@ -610,17 +617,19 @@ export default {
         // key에 맞게 문항 보기 섞어주기
         res3.data.forEach((x) => {
           if (x.type === 0) {
-            const numBogi = x.questions[0].choice.length;
-            const newBogi = [];
-            const newNum = vm.questionList.indexOf(x.lecture_item_id);
-            for (let b = 0; b < numBogi; b += 1) {
-              newBogi.push(-1);
-            }
-            for (let d = 0; d < numBogi; d += 1) {
-              newBogi[d] = x.questions[0].choice[vm.questionKey[newNum][d]];
-            }
-            for (let c = 0; c < numBogi; c += 1) {
-              x.questions[0].choice[c] = newBogi[c]; // eslint-disable-line
+            if (x.questions[0].type === 0) {
+              const numBogi = x.questions[0].choice.length;
+              const newBogi = [];
+              const newNum = vm.questionList.indexOf(x.lecture_item_id);
+              for (let b = 0; b < numBogi; b += 1) {
+                newBogi.push(-1);
+              }
+              for (let d = 0; d < numBogi; d += 1) {
+                newBogi[d] = x.questions[0].choice[vm.questionKey[newNum][d]];
+              }
+              for (let c = 0; c < numBogi; c += 1) {
+                x.questions[0].choice[c] = newBogi[c]; // eslint-disable-line
+              }
             }
           }
         });
@@ -701,33 +710,35 @@ export default {
       // 문항들의 key 생성
       res4.data.items.forEach((x) => {
         if (x.type === 0) {
-          // 아직 보기가 안 섞인 문제일 경우
-          if (vm.questionList.includes(x.lecture_item_id) === false) {
-            // 보기의 수
-            const numBogi = x.questions[0].choice.length;
-            // 보기가 바뀔 배열
-            const key = [];
-            const checkRandom = [];
-            // 특정 보기가 key에 들어갔는지 체크하는 배열
-            for (let cr = 0; cr < numBogi; cr += 1) {
-              checkRandom.push(false);
-            }
-            // key 생성과정
-            for (let c = 0; c < numBogi; c += 1) {
-              let suc = true;
-              while (suc) {
-                const temp = Math.floor(Math.random() * numBogi);
-                if (checkRandom[temp] === false) {
-                  checkRandom[temp] = true;
-                  key.push(temp);
-                  suc = false;
+          if (x.questions[0].type === 0) {
+            // 아직 보기가 안 섞인 문제일 경우
+            if (vm.questionList.includes(x.lecture_item_id) === false) {
+              // 보기의 수
+              const numBogi = x.questions[0].choice.length;
+              // 보기가 바뀔 배열
+              const key = [];
+              const checkRandom = [];
+              // 특정 보기가 key에 들어갔는지 체크하는 배열
+              for (let cr = 0; cr < numBogi; cr += 1) {
+                checkRandom.push(false);
+              }
+              // key 생성과정
+              for (let c = 0; c < numBogi; c += 1) {
+                let suc = true;
+                while (suc) {
+                  const temp = Math.floor(Math.random() * numBogi);
+                  if (checkRandom[temp] === false) {
+                    checkRandom[temp] = true;
+                    key.push(temp);
+                    suc = false;
+                  }
                 }
               }
+              // key가 생성된 question의 lecture_item_id와 만들어진 key를 저장
+              // 강사가 문항을 내렸다 다시 올릴 경우 이미 만들어진 key를 이용해 동일하게 섞인 순서의 보기가 출력됨
+              vm.questionList.push(x.lecture_item_id);
+              vm.questionKey.push(key);
             }
-            // key가 생성된 question의 lecture_item_id와 만들어진 key를 저장
-            // 강사가 문항을 내렸다 다시 올릴 경우 이미 만들어진 key를 이용해 동일하게 섞인 순서의 보기가 출력됨
-            vm.questionList.push(x.lecture_item_id);
-            vm.questionKey.push(key);
           }
         }
       });
@@ -735,69 +746,75 @@ export default {
       // 문항들의 key 생성 - rawItem에 대해
       res4.data.rawItems.forEach((x) => {
         if (x.type === 0) {
-          // 아직 보기가 안 섞인 문제일 경우
-          if (vm.questionList.includes(x.lecture_item_id) === false) {
-            // 보기의 수
-            const numBogi = x.questions[0].choice.length;
-            // 보기가 바뀔 배열
-            const key = [];
-            const checkRandom = [];
-            // 특정 보기가 key에 들어갔는지 체크하는 배열
-            for (let cr = 0; cr < numBogi; cr += 1) {
-              checkRandom.push(false);
-            }
-            // key 생성과정
-            for (let c = 0; c < numBogi; c += 1) {
-              let suc = true;
-              while (suc) {
-                const temp = Math.floor(Math.random() * numBogi);
-                if (checkRandom[temp] === false) {
-                  checkRandom[temp] = true;
-                  key.push(temp);
-                  suc = false;
+          if (x.questions[0].type === 0) {
+            // 아직 보기가 안 섞인 문제일 경우
+            if (vm.questionList.includes(x.lecture_item_id) === false) {
+              // 보기의 수
+              const numBogi = x.questions[0].choice.length;
+              // 보기가 바뀔 배열
+              const key = [];
+              const checkRandom = [];
+              // 특정 보기가 key에 들어갔는지 체크하는 배열
+              for (let cr = 0; cr < numBogi; cr += 1) {
+                checkRandom.push(false);
+              }
+              // key 생성과정
+              for (let c = 0; c < numBogi; c += 1) {
+                let suc = true;
+                while (suc) {
+                  const temp = Math.floor(Math.random() * numBogi);
+                  if (checkRandom[temp] === false) {
+                    checkRandom[temp] = true;
+                    key.push(temp);
+                    suc = false;
+                  }
                 }
               }
+              // key가 생성된 question의 lecture_item_id와 만들어진 key를 저장
+              // 강사가 문항을 내렸다 다시 올릴 경우 이미 만들어진 key를 이용해 동일하게 섞인 순서의 보기가 출력됨
+              vm.questionList.push(x.lecture_item_id);
+              vm.questionKey.push(key);
             }
-            // key가 생성된 question의 lecture_item_id와 만들어진 key를 저장
-            // 강사가 문항을 내렸다 다시 올릴 경우 이미 만들어진 key를 이용해 동일하게 섞인 순서의 보기가 출력됨
-            vm.questionList.push(x.lecture_item_id);
-            vm.questionKey.push(key);
           }
         }
       });
 
       // key에 맞게 문항 보기 섞어주기 - item에 대해
       res4.data.items.forEach((x) => {
-        if (x.type === 0) {
-          const numBogi = x.questions[0].choice.length;
-          const newBogi = [];
-          const newNum = vm.questionList.indexOf(x.lecture_item_id);
-          for (let b = 0; b < numBogi; b += 1) {
-            newBogi.push(-1);
-          }
-          for (let d = 0; d < numBogi; d += 1) {
-            newBogi[d] = x.questions[0].choice[vm.questionKey[newNum][d]];
-          }
-          for (let c = 0; c < numBogi; c += 1) {
-            x.questions[0].choice[c] = newBogi[c]; // eslint-disable-line
+        if (x.questions[0].type === 0) {
+          if (x.type === 0) {
+            const numBogi = x.questions[0].choice.length;
+            const newBogi = [];
+            const newNum = vm.questionList.indexOf(x.lecture_item_id);
+            for (let b = 0; b < numBogi; b += 1) {
+              newBogi.push(-1);
+            }
+            for (let d = 0; d < numBogi; d += 1) {
+              newBogi[d] = x.questions[0].choice[vm.questionKey[newNum][d]];
+            }
+            for (let c = 0; c < numBogi; c += 1) {
+              x.questions[0].choice[c] = newBogi[c]; // eslint-disable-line
+            }
           }
         }
       });
 
       // key에 맞게 문항 보기 섞어주기 - rawItem에 대해
       res4.data.rawItems.forEach((x) => {
-        if (x.type === 0) {
-          const numBogi = x.questions[0].choice.length;
-          const newBogi = [];
-          const newNum = vm.questionList.indexOf(x.lecture_item_id);
-          for (let b = 0; b < numBogi; b += 1) {
-            newBogi.push(-1);
-          }
-          for (let d = 0; d < numBogi; d += 1) {
-            newBogi[d] = x.questions[0].choice[vm.questionKey[newNum][d]];
-          }
-          for (let c = 0; c < numBogi; c += 1) {
-            x.questions[0].choice[c] = newBogi[c]; // eslint-disable-line
+        if (x.questions[0].type === 0) {
+          if (x.type === 0) {
+            const numBogi = x.questions[0].choice.length;
+            const newBogi = [];
+            const newNum = vm.questionList.indexOf(x.lecture_item_id);
+            for (let b = 0; b < numBogi; b += 1) {
+              newBogi.push(-1);
+            }
+            for (let d = 0; d < numBogi; d += 1) {
+              newBogi[d] = x.questions[0].choice[vm.questionKey[newNum][d]];
+            }
+            for (let c = 0; c < numBogi; c += 1) {
+              x.questions[0].choice[c] = newBogi[c]; // eslint-disable-line
+            }
           }
         }
       });
