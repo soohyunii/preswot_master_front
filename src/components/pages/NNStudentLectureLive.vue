@@ -375,16 +375,30 @@ export default {
                 }
               });
               const endTime = new Date();
-              studentService.postLog({
-                id: vm.nowQuestion[vm.nowNum].lecture_item_id,
-                lecture_id: vm.lectureId,
-                item_id: vm.nowQuestion[vm.nowNum].lecture_item_id,
-                type: vm.nowQuestion[vm.nowNum].type,
-                order: vm.nowQuestion[vm.nowNum].order,
-                start_time: vm.startTime,
-                end_time: endTime,
-              });
-              vm.nowQuestion[vm.nowNum].soc = 'O';
+              if (vm.lectureItem.length > 1) {
+                // 여러 아이템 중 하나 제출
+                studentService.postLog({
+                  id: vm.nowQuestion[vm.nowNum].lecture_item_id,
+                  lecture_id: vm.lectureId,
+                  item_id: vm.nowQuestion[vm.nowNum].lecture_item_id,
+                  type: vm.nowQuestion[vm.nowNum].type,
+                  order: vm.nowQuestion[vm.nowNum].order,
+                  start_time: vm.startTime,
+                  end_time: endTime,
+                });
+                vm.nowQuestion[vm.nowNum].soc = 'O';
+              } else {
+                // 한 아이템 하나 제출
+                studentService.postLog({
+                  id: vm.lectureItem[0].lecture_item_id,
+                  lecture_id: vm.lectureId,
+                  item_id: vm.lectureItem[0].lecture_item_id,
+                  type: vm.lectureItem[0].type,
+                  order: vm.lectureItem[0].order,
+                  start_time: vm.startTime,
+                  end_time: endTime,
+                });
+              }
               vm.$notify({
                 title: '알림',
                 message: '제출하였습니다.',
@@ -404,16 +418,30 @@ export default {
                 answer: data.answer,
               });
               const endTime = new Date();
-              studentService.postLog({
-                id: vm.nowQuestion[vm.nowNum].lecture_item_id,
-                lecture_id: vm.lectureId,
-                item_id: vm.nowQuestion[vm.nowNum].lecture_item_id,
-                type: vm.nowQuestion[vm.nowNum].type,
-                order: vm.nowQuestion[vm.nowNum].order,
-                start_time: vm.startTime,
-                end_time: endTime,
-              });
-              vm.nowQuestion[vm.nowNum].soc = 'O';
+              if (vm.lectureItem.length > 1) {
+                // 여러 아이템 중 설문
+                studentService.postLog({
+                  id: vm.nowQuestion[vm.nowNum].lecture_item_id,
+                  lecture_id: vm.lectureId,
+                  item_id: vm.nowQuestion[vm.nowNum].lecture_item_id,
+                  type: vm.nowQuestion[vm.nowNum].type,
+                  order: vm.nowQuestion[vm.nowNum].order,
+                  start_time: vm.startTime,
+                  end_time: endTime,
+                });
+                vm.nowQuestion[vm.nowNum].soc = 'O';
+              } else {
+                // 한 아이템 설문
+                studentService.postLog({
+                  id: vm.lectureItem[0].lecture_item_id,
+                  lecture_id: vm.lectureId,
+                  item_id: vm.lectureItem[0].lecture_item_id,
+                  type: vm.lectureItem[0].type,
+                  order: vm.lectureItem[0].order,
+                  start_time: vm.startTime,
+                  end_time: endTime,
+                });
+              }
               vm.$notify({
                 title: '알림',
                 message: '제출하였습니다.',
