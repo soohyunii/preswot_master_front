@@ -344,7 +344,7 @@ export default {
               const itemId = data.lectureItemId;
               // 랜덤으로 섞이기 전의 실제 보기 - 정답
               const realAnswer = [];
-              if (data.questionsType === 0) {
+              if (data.questionType === 0) {
                 // 오리지널 보기로 되돌림
                 data.answer.forEach((x) => {
                   const realN = vm.questionList.indexOf(itemId);
