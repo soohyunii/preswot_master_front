@@ -2,42 +2,31 @@
   <div id="class_index_wrapper">
     <div>
       <el-table class="elTable" :data="page" style="width: 100%">
-      <el-table-column prop="userId" label="유저ID" width="80">
-        <!-- <template slot-scope="scope">
-        {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
-        </template> -->
+      <el-table-column prop="lecture" label="강의명" width="233px">
       </el-table-column>
-      <el-table-column prop="email" label="메일주소" width="180">
+      <el-table-column prop="attendance" label="출석률" width="233px">
       </el-table-column>
-      <el-table-column prop="passwd" label="비밀번호" width="120">
+      <el-table-column prop="understanding" label="이해도" width="233px">
       </el-table-column>
-      <el-table-column prop="name" label="이름" width="100">
-        <!-- <template slot-scope="scope">
-        {{ scope.row.start_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') : '미정' }}
-        ~
-        {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString('ko-KR') : '미정' }}
-        </template> -->
+      <el-table-column prop="concentrating" label="집중도" width="233px">
       </el-table-column>
-      <el-table-column prop="birth" label="생년월일" width="100"></el-table-column>
-      <el-table-column prop="sex" label="성별" width="50"></el-table-column>
-      <el-table-column prop="phone" label="전화번호" width="150"></el-table-column>
-      <el-table-column prop="major" label="전공" width="150"></el-table-column>
-      <el-table-column prop="group" label="소속" width="100"></el-table-column>
-      <el-table-column prop="bank" label="계좌은행" width="80"></el-table-column>
-      <el-table-column prop="bank-account" label="계좌번호" width="150"></el-table-column>
-      <!-- <el-table-column label="" header-align="left" align="right" width="345"> -->
-      <el-table-column label="" header-align="left" align="right">
+      <el-table-column prop="participation" label="참여도" width="233px">
+      </el-table-column>
+      
+      <!-- <el-table-column label="" header-align="left" align="right">
         <template slot-scope="scope">
-          <router-link :to="`/a/register/student/${scope.row.code}/edit`">
-            <el-button class="edit-btn">수정</el-button>
-          </router-link>
-        </template>
-      </el-table-column>
-      <el-table-column>
+            <router-link :to="`/a/register/uni/${scope.row.code}/edit`">
+              <el-button class="edit-btn">수정</el-button>
+            </router-link>
+          </template>
+        </el-table-column>
+
+        <el-table-column>
           <template slot-scope="scope">
             <el-button type="danger" @click="listeners['delete'](scope.$index)" class="delete-btn">삭제</el-button>
           </template>
-        </el-table-column>
+        </el-table-column> -->
+
       </el-table>
       <br>
     </div>
@@ -51,7 +40,7 @@
         </el-pagination>
       </div>
       <br>
-      <div style="display: block; text-align: center;">
+      <!-- <div style="display: block; text-align: center;">
         <el-select v-model="searchQuery.searchType" style="display: inline-block; width: 100px">
         <el-option
             v-for="option in selectOptionList"
@@ -63,7 +52,7 @@
         <el-input style="display: inline-block; width: 300px" placeholder="검색어를 입력하세요."
           v-model="searchQuery.searchText" @keydown.enter.native="onClick('SEARCH', searchQuery)"></el-input>
         <el-button @click="onClick('SEARCH', searchQuery)" icon="el-icon-search" circle></el-button>
-      </div>
+      </div> -->
   </div>
 </template>
 
@@ -71,25 +60,25 @@
 import utils from '../../utils';
 
 export default {
-  name: 'MasterStudentTable',
+  name: 'MasterStudentAllTable',
   props: ['list', 'onClick'],
   data() {
     return {
       pageNum: 1,
-      selectOptionList: [
+      /*selectOptionList: [
         {
           value: 'name',
-          label: '이름',
+          label: '대학명',
         },
         {
-          value: 'userId',
-          label: '유저ID',
-        },
+          value: 'code',
+          label: '대학코드',
+        }, 
       ],
       searchQuery: {
         searchType: 'name',
         searchText: '',
-      },
+      },*/
     };
   },
   computed: {
@@ -100,15 +89,6 @@ export default {
       const vm = this;
       return vm.list.slice((vm.pageNum - 1) * 10, vm.pageNum * 10);
     },
-  },
-  created() {
-    const vm = this;
-    if (vm.$route.query.type !== undefined) {
-      vm.searchQuery.searchType = vm.$route.query.type;
-    }
-    if (vm.$route.query.text !== undefined) {
-      vm.searchQuery.searchText = vm.$route.query.text;
-    }
   },
   methods: {
     formatDate: utils.formatDate,
@@ -128,6 +108,7 @@ export default {
     line-height: 1;
     letter-spacing: normal;
     color: #909399;
+    text-align: center;
   }
   .elTable-label tr {
     font-family: SpoqaHanSans;
@@ -138,6 +119,7 @@ export default {
     line-height: 1;
     letter-spacing: normal;
     color: #909399;
+    text-align: center;
   }
   .elTable-label td {
     font-family: SpoqaHanSans;
@@ -148,6 +130,7 @@ export default {
     line-height: 1;
     letter-spacing: normal;
     color: #606266;
+    text-align: center;
   }
 }
 </style>

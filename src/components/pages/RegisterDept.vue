@@ -147,18 +147,14 @@ export default {
           try {
             await classService.NNMasterpostDept(vm.input);
             if(vm.input.choiceUni=='' || vm.input.code=='' || vm.input.name=='') {
-              // if(vm.input.code==)
               vm.$notify({
                 title: '학과 등록 실패',
                 message: '필수입력사항(*)을 모두 기재해 주세요',
                 type: 'error',
                 duration: 0, 
               });
-              //  console.log(typeof vm.input.code);
             } else {
-              console.log('s111');
               vm.$router.push('/register/dept/success');
-              console.log('s222');
             }
           } catch (error) {
             vm.$notify({

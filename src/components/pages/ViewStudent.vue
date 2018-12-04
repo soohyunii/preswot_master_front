@@ -69,7 +69,7 @@ export default {
             vm.list.push(vm.studyingClassList[i]);
           }
         }
-        if (vm.searchType === 'teacher') {
+        if (vm.searchType === 'userId') {
           if (vm.studyingClassList[i].master.name.includes(vm.searchText)) {
             vm.list.push(vm.studyingClassList[i]);
           }

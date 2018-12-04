@@ -14,8 +14,8 @@ export default {
   getMyClassList() { //
     return http.get('/classes/my');
   },*/
-  getMasterUni({ university_id }) { //
-    return http.get(`/university/${university_id}`);
+  getMasterUni({ id }) { //
+    return http.get(`/university/${id}`);
   },
 /*  getClassCoverage({ id }) {
     return http.get(`/classes/${id}/coverage`);
@@ -164,7 +164,7 @@ export default {
 
 // 행정 관리자 methods
   NNMasterputUni({
-    id,
+    university_id,
     code,
     name,
     address,
@@ -172,7 +172,7 @@ export default {
     email,
     phone,
   }) {
-    return http.put(`/view/uni`, {
+    return http.put(`/university/${university_id}`, {
       code,
       name,
       address,

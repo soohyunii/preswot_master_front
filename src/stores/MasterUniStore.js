@@ -80,6 +80,9 @@ export default {
       });
       return res;
     },
+    async getMasterUni({}) {
+
+    },
     async getUniLists({ commit }) {
       const res = await MasterService.getUniLists();
 

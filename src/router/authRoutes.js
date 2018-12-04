@@ -44,9 +44,12 @@ import ViewDept from '../components/pages/ViewDept';
 import ViewTeacher from '../components/pages/ViewTeacher';
 // import ViewTeacherAll from '../components/pages/ViewTeacherAll';
 import ViewClass from '../components/pages/ViewClass';
+import ViewClassAll from '../components/pages/ViewClassAll';
 import ViewStudent from '../components/pages/ViewStudent';
+import ViewStudentScore from '../components/pages/ViewStudentScore';
 import ViewBank from '../components/pages/ViewBank';
 import RegisterUni from '../components/pages/RegisterUni';
+// import RegisterUniEdit from '../components/pages/RegisterUni';
 import RegisterUniSuccess from '../components/pages/RegisterUniSuccess';
 import RegisterDept from '../components/pages/RegisterDept';
 import RegisterDeptSuccess from '../components/pages/RegisterDeptSuccess';
@@ -415,11 +418,27 @@ export default function authRoutes(root) {
       },
     },
     {
+      path: '/view/classAll',
+      name: 'ViewClassAll',
+      component: ViewClassAll,
+      meta: {
+        title: '관리자 과목 상세 조회',
+      },
+    },
+    {
       path: '/view/student',
       name: 'ViewStudent',
       component: ViewStudent,
       meta: {
         title: '관리자 학생 조회',
+      },
+    },
+    {
+      path: '/view/studentScore',
+      name: 'ViewStudentScore',
+      component: ViewStudentScore,
+      meta: {
+        title: '관리자 학생성적표 조회',
       },
     },
     {

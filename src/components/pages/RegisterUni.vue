@@ -89,8 +89,9 @@ export default {
   async mounted() {
     const vm = this;
     if (vm.isEdit) {
+      console.log('vm.masterId = ', vm.masterId);
       const res = await masterService.getMasterUni({ id: vm.masterId });
-      //console.log('res', res.data);
+      // console.log(res.data.code);
       vm.input.code = res.data.code || vm.initialInput.code;
       vm.input.name = res.data.name || vm.initialInput.name;
       vm.input.address = res.data.address || vm.initialInput.address;
@@ -109,6 +110,7 @@ export default {
     masterId() {
       const vm = this;
       return vm.$route.path.split('uni/')[1].split('/edit')[0];
+      // console.log(vm.$route.path.split('uni/')[1].split('/edit')[0]);
     },
   },
   methods: {
@@ -121,6 +123,7 @@ export default {
         // TODO: valid === false인 경우에 notify
         if (vm.isEdit) {
           const id = vm.masterId;
+          console.log(id);
           // TODO: wrap with try catch
           try {
             await masterService.NNMasterputUni({
