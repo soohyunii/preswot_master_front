@@ -35,8 +35,6 @@
       </el-dialog>
 
       <div v-if="connectMode">
-        <!--각 element 개별 삭제 불가
-          <el-tag v-for="(k, index) in connectList" :key="index" closable @close="deleteConnectItem(index)">{{ k.name }}</el-tag>-->
         <el-tag v-for="(k, index) in connectList" :key="index">{{ k.name }}</el-tag>
         <el-button type="primary" @click="onClick('CONNECT_LC_ITEM')">
           연결
@@ -49,6 +47,9 @@
 
       <div class="ps-align-right">
         <br />
+        <router-link :to="`/a/teacher/NNlecture/itemconnection?lectureId=${lectureId}`">
+          <el-button type="primary">아이템 연결 관리</el-button>
+        </router-link>
         <el-button @click="connectLcItemList()" type="primary">
           아이템 연결 현황
         </el-button>
