@@ -24,7 +24,7 @@
               sortable
               style="width: 10%">
               <template slot-scope="scope">
-              <el-slider v-model="defaultValue"   :step="25" disabled show-stops></el-slider>
+              <el-slider v-model="defaultValue" :step="25" disabled show-stops></el-slider>
               <div class = "slider_label">
                 <el-tooltip class="item" effect="dark" :content="scope.row.min_understanding_score" placement="top">
                   <div class= "slider_label_qq q1"></div>

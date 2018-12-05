@@ -3,7 +3,7 @@
     <div>
       <p>
         강의도구 화면
-        <el-button style="float:right" type="primary" @click="onClick('HIDE',lectureItemId)">내리기</el-button>
+        <!--<el-button style="float:right" type="primary" @click="onClick('HIDE',lectureItemId)">내리기</el-button>-->
       </p>
       <!-- <p>현재: {{ data.name }}</p> -->
     </div>

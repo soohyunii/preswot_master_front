@@ -45,6 +45,16 @@
           align="center"
         >
           <template slot-scope="scope">
+            <el-button size="small" @click="listeners['connect'](scope.row)">연결</el-button>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          label="-"
+          width="80"
+          align="center"
+        >
+          <template slot-scope="scope">
             <el-button size="small" @click="listeners['edit'](scope.row.lecture_item_id)">수정</el-button>
           </template>
         </el-table-column>

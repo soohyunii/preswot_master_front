@@ -8,7 +8,7 @@
     </el-breadcrumb>
     <el-tabs v-model="activeTab">
       <el-tab-pane label="강의 흐름" name="basic">
-        <span>대상 : </span>
+        <!--<span>대상 : </span>
         <span style="display: inline-block; width: 100px">
         <el-select v-model="selectValue" placeholder="Select" @change="onChange()">
           <el-option
@@ -19,8 +19,21 @@
           </el-option>
         </el-select>
         </span>
-        <line-chart :chartCategories = "chartCategories" :chartData = "chartData"/>
+        <line-chart :chartCategories = "chartCategories" :chartData = "chartData"/>-->
 
+        <div class="journalBlock">
+          <span class="journal">검색 옵션 선택</span>
+          <br/>
+          <br/>
+          <el-cascader :options="journalOption" v-model="selectedOption" expand-trigger="hover"></el-cascader>
+          <el-button @click="newOption()">추가</el-button>
+          <el-tag v-for="(x, index) in nowOption" :key="x" closable @close="delOption(index)">{{ x[0] + " / " + x[1]  + " / " + x[2] }}</el-tag>
+        </div>
+        <div style="float: right;">
+          <el-button type="primary" size="medium" style="margin: right 0;">확인</el-button>
+        </div>
+        <div style="height: 50px;" />
+        <line-chart :chartData = "analysisData" :isStudent = "isStudent"/>
         <el-table
           :data="allData.average"
           style="width: 100%">
@@ -61,7 +74,7 @@
             sortable
             style="width: 10%">
             <template slot-scope="scope">
-              <el-slider v-model="defaultValue"   :step="25" disabled show-stops :show-tooltip="false"></el-slider>
+              <el-slider v-model="defaultValue" :step="25" disabled show-stops :show-tooltip="false"></el-slider>
               <div class = "slider_label">
                 <el-tooltip class="item" effect="dark" :content="nullToZero(scope.row.min_concentration_score)" placement="top">
                   <div class= "slider_label_qq q1"></div>
@@ -183,7 +196,6 @@
     top: 0px;
     height: 100%;
     border-radius: 50%;
-
   }
   .slider_label_q{
     float: left;
@@ -249,25 +261,113 @@
         defaultValue: 0,
         isStudent: false,
         activeTab: 'basic',
-        selectOptions: [{
-          value: '전체',
-          label: '전체',
+        selectedOption: [], // 추가할 옵션
+        nowOption: [], // 추가된 옵션
+        journalOption: [{
+          value: '문항',
+          label: '문항',
+          children: [{
+            value: '참여도',
+            label: '참여도',
+            children: [{
+              value: '전체',
+              label: '전체',
+            }, {
+              value: '예습',
+              label: '예습',
+            }, {
+              value: '본강',
+              label: '본강',
+            }, {
+              value: '복습',
+              label: '복습',
+            }],
+          }, {
+            value: '집중도',
+            label: '집중도',
+            children: [{
+              value: '전체',
+              label: '전체',
+            }, {
+              value: '예습',
+              label: '예습',
+            }, {
+              value: '본강',
+              label: '본강',
+            }, {
+              value: '복습',
+              label: '복습',
+            }],
+          }, {
+            value: '이해도',
+            label: '이해도',
+            children: [{
+              value: '전체',
+              label: '전체',
+            }, {
+              value: '예습',
+              label: '예습',
+            }, {
+              value: '본강',
+              label: '본강',
+            }, {
+              value: '복습',
+              label: '복습',
+            }],
+          }],
         }, {
-          value: '예습',
-          label: '예습',
-        }, {
-          value: '본강',
-          label: '본강',
-        }, {
-          value: '복습',
-          label: '복습',
+          value: '설문',
+          label: '설문',
+          children: [{
+            value: '참여도',
+            label: '참여도',
+            children: [{
+              value: '전체',
+              label: '전체',
+            }, {
+              value: '예습',
+              label: '예습',
+            }, {
+              value: '본강',
+              label: '본강',
+            }, {
+              value: '복습',
+              label: '복습',
+            }],
+          }, {
+            value: '집중도',
+            label: '집중도',
+            children: [{
+              value: '전체',
+              label: '전체',
+            }, {
+              value: '예습',
+              label: '예습',
+            }, {
+              value: '본강',
+              label: '본강',
+            }, {
+              value: '복습',
+              label: '복습',
+            }],
+          }, {
+            value: '이해도',
+            label: '이해도',
+            children: [{
+              value: '전체',
+              label: '전체',
+            }, {
+              value: '예습',
+              label: '예습',
+            }, {
+              value: '본강',
+              label: '본강',
+            }, {
+              value: '복습',
+              label: '복습',
+            }],
+          }],
         }],
-        selectValue: '전체',
-        allData: '',
-        isActiveInfo: false,
-        studentDataSet: [],
-        chartData: [],
-        chartCategories: [],
       };
     },
     async beforeMount() {
@@ -365,6 +465,39 @@
         // console.log('vm.chartData[1] = ', vm.chartData[1]);
         vm.chartData.push(''); // 자식 컴포넌트에 변화 알릴 목적
         vm.$emit('onChange');
+      },
+      // 저널링 옵션 추가
+      newOption() {
+        const vm = this;
+        let check = true;
+        if (vm.selectedOption.length !== 3) {
+          vm.$notify({
+            title: '알림',
+            message: '검색 옵션을 선택해주세요.',
+            type: 'warning',
+          });
+          check = false;
+        }
+        vm.nowOption.forEach((x) => {
+          if (x[0] === vm.selectedOption[0] && x[1] === vm.selectedOption[1] &&
+              x[2] === vm.selectedOption[2]) {
+            vm.$notify({
+              title: '알림',
+              message: '이미 추가된 옵션입니다.',
+              type: 'warning',
+            });
+            vm.selectedOption = [];
+            check = false;
+          }
+        });
+        if (check === true) {
+          vm.nowOption.push(vm.selectedOption);
+          vm.selectedOption = [];
+        }
+      },
+      // 저널링 옵션 삭제
+      delOption(index) {
+        this.nowOption.splice(index, 1);
       },
     },
     computed: {
