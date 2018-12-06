@@ -2,6 +2,7 @@
   <div id="class_index_wrapper" class="bt-container">
     <h2 class="page-title">조회하기 > 대학</h2>
     <master-uni-table
+      @delete="onClickDelete"
       :list="list"
       :onClick="onClick"
     />
@@ -160,9 +161,11 @@ export default {
       }
     },
     onClickDelete(index) {
+      console.log("삭제버튼 인식");
       const vm = this;
-      const currentTeachingClass = vm.teachingClassList[index];
-      vm.$confirm('정말로 이 대학을 삭제하시겠습니까?', `${currentTeachingClass.name || ''} 삭제`, {
+      // const currentTeachingClass = vm.teachingClassList[index];
+      const openedUniClass = vm.openedUniList[index];
+      vm.$confirm('정말로 이 대학을 삭제하시겠습니까?', `${openedUniClass.name || ''} 삭제`, {
         confirmButtonText: '예, 삭제합니다.',
         cancelButtonText: '아니요, 삭제하지 않습니다.',
         type: 'warning',
@@ -170,9 +173,10 @@ export default {
         .then(async () => {
           try {
             // const index = vm.currentClassIndex;
-            const currentClass = vm.teachingClassList[index];
+            const uniClass = vm.openedUniList[index];
             await masterServie.delete({
-              id: currentClass.class_id,
+              // id: uniClass.class_id,
+              name: uniClass.name,
             });
             vm.deleteTeachingClass({
               teachingClassIndex: index,

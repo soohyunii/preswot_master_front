@@ -89,16 +89,16 @@ export default {
   async mounted() {
     const vm = this;
     if (vm.isEdit) {
-      console.log('vm.masterId = ', vm.masterId);
-      const res = await masterService.getMasterUni({ id: vm.masterId });
-      // console.log(res.data.code);
+      // console.log('vm.masterId = ', vm.masterId);
+      console.log('@@@@@@@@@@ uniName = ', vm.uniName);
+      const res = await masterService.getMasterUni({ name: vm.uniName });
+      // const res = await masterService.getMasterUni({ id: vm.masterId });
       vm.input.code = res.data.code || vm.initialInput.code;
       vm.input.name = res.data.name || vm.initialInput.name;
       vm.input.address = res.data.address || vm.initialInput.address;
       vm.input.manager_name = res.data.manager_name || vm.initialInput.manager_name;
       vm.input.manager_email = res.data.manager_email || vm.initialInput.manager_email;
       vm.input.manager_phone_number = res.data.manager_phone_number || vm.initialInput.manager_phone_number;
-      // 대학코드, 대학명 미입력시 '*는 필수입력사항입니다 알람'
     }
   },
   computed: {
@@ -107,10 +107,15 @@ export default {
       return vm.$route.fullPath.includes('/edit');
       // console.log(vm.$route.fullPath.includes('/edit'));
     },
-    masterId() {
+    /*masterId() {
       const vm = this;
       return vm.$route.path.split('uni/')[1].split('/edit')[0];
       // console.log(vm.$route.path.split('uni/')[1].split('/edit')[0]);
+    },*/
+    uniName() {
+      const vm = this;
+      // return vm.$route.query.uniName;
+      return vm.$route.path.split('edit/')[1];
     },
   },
   methods: {
@@ -122,9 +127,8 @@ export default {
         // TODO: if valid === true 로 감싸기
         // TODO: valid === false인 경우에 notify
         if (vm.isEdit) {
-          const id = vm.masterId;
-          console.log(id);
-          // TODO: wrap with try catch
+          const id = vm.uniName;
+          console.log(id); 
           try {
             await masterService.NNMasterputUni({
               id,
@@ -152,12 +156,13 @@ export default {
               });
             } else {
               vm.$router.push('/a/register/uni/success');
+              // console.log(res.data);
             }
           } catch (error) {
             if(error=='Error: Request failed with status code 500') {
               vm.$notify({
               title: '대학등록 실패',
-              message: '대학 코드가 중복되었는지 확인해주세요',
+              message: '대학코드나 대학명이 중복되었는지 확인해주세요',
               type: 'error',
               duration: 0,
               });

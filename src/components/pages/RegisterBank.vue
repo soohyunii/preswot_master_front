@@ -8,10 +8,10 @@
       </template>
     </div>
     <el-form :model="input" ref="elForm" label-position="left" label-width="125px" style="max-width: 800px;" class="elForm-label">
-      <el-form-item label="그룹코드">
+      <!-- <el-form-item label="그룹코드">
         <el-input v-model="input.code" class="subject-title"></el-input>
         &nbsp; <font color="red" size="5em">*</font>
-      </el-form-item>
+      </el-form-item> -->
 
       <el-form-item label="그룹명">
         <el-input v-model="input.name" class="subject-title"></el-input>
@@ -47,7 +47,7 @@
           <tr>
             <th>강사이름</th>
             <th>소속학과</th>
-            <th>경력</th>
+            <th>이메일</th>
             <th><input type="checkbox"/></th> <!-- 모두 선택 체크버튼으로 만들기 -->
           </tr>
           </thead>
@@ -55,19 +55,19 @@
           <tr>
             <td>이름 리스트</td>
             <td>소속학과 리스트</td>
-            <td>경력 리스트</td>
+            <td>이메일 리스트</td>
             <td><input type="checkbox"/></td> <!-- 여기에 DB리스트 틀어감 -->
           </tr>
           <tr>
             <td>이름 리스트</td>
             <td>소속학과 리스트</td>
-            <td>경력 리스트</td>
+            <td>이메일 리스트</td>
             <td><input type="checkbox"/></td>
           </tr>
           <tr>
             <td>이름 리스트</td>
             <td>소속학과 리스트</td>
-            <td>경력 리스트</td>
+            <td>이메일 리스트</td>
             <td><input type="checkbox"/></td>
           </tr>
           </tbody>
@@ -113,11 +113,11 @@ export default {
   },
   data() {
     const initialInput = {
-      code: '',
+      /*code: '',*/
       name: '',
       choiceUni: '',
       choiceDept: '',
-      capacity: '',
+      capacity: 0,
       choiceTeacher: '',
     };
     return {
@@ -130,7 +130,7 @@ export default {
     if (vm.isEdit) {
       const res = await classService.getClass({ id: vm.classId });
       // console.log('res', res.data);
-      vm.input.code = res.data.code || vm.initialInput.code;
+      // vm.input.code = res.data.code || vm.initialInput.code;
       vm.input.name = res.data.name || vm.initialInput.name;
       vm.input.choiceUni = res.data.choiceUni || vm.initialInput.choiceUni;
       vm.input.choiceDept = res.data.choiceDept || vm.initialInput.choiceDept;
@@ -180,10 +180,11 @@ export default {
           // TODO: wrap with try catch
           try {
             await classService.NNMasterpostBank(vm.input);
-            if(vm.input.code==''||vm.input.name==''){
+            // if(vm.input.code==''||vm.input.name==''){
+              if(vm.input.name==''){
               vm.$notify({
                 title: '강의은행그룹 등록 실패',
-                message: '필수입력사항(*)을 모두 기재해 주세요',
+                message: '필수입력사항(*)을 기재해 주세요',
                 type: 'error',
                 duration: 0,
               });
@@ -286,11 +287,11 @@ export default {
 #checkBox tr:hover {
   background-color: #EFEEEF;
 }
-#checkBox thead th:nth-of-type(1), #checkBox thead th:nth-of-type(3)  {
+#checkBox thead th:nth-of-type(1) {
   background-color: #A2A3A5;
   padding: 5px 10px 5px 20px;
   text-align:center;
-  width:80px;
+  width:70px;
 }
 #checkBox thead th:nth-of-type(2) {
   background-color: #A2A3A5;
@@ -298,21 +299,32 @@ export default {
   text-align:center;
   width:200px;
 }
+#checkBox thead th:nth-of-type(3) {
+  background-color: #A2A3A5;
+  padding: 5px 10px 5px 0;
+  text-align:center;
+  width:120px;
+}
 #checkBox thead th:nth-of-type(4) {
   background-color: #A2A3A5;
   padding: 5px 10px 5px 10px;
   text-align:center;
   width:30px;
 }
-#checkBox tbody td:nth-of-type(1), #checkBox tbody td:nth-of-type(3) {
+#checkBox tbody td:nth-of-type(1) {
   padding: 5px 10px 5px 20px;
   text-align:center;
-  width:80px;
+  width:70px;
 }
 #checkBox tbody td:nth-of-type(2) {
   padding: 5px 0 5px 10px;
   text-align:center;
   width:200px;
+}
+#checkBox tbody td:nth-of-type(3) {
+  padding: 5px 10px 5px 0;
+  text-align:center;
+  width:120px;
 }
 #checkBox tbody td:nth-of-type(4) {
   padding: 5px 10px 5px 10px;

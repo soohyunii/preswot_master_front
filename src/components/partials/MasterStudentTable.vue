@@ -2,10 +2,12 @@
   <div id="class_index_wrapper">
     <div>
       <el-table class="elTable" :data="page" style="width: 100%">
-      <el-table-column prop="userId" label="유저ID" width="80">
+      <el-table-column prop="userId" label="유저ID" width="70">
         <!-- <template slot-scope="scope">
         {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
         </template> -->
+      </el-table-column>
+      <el-table-column prop="userType" label="유저타입" width="80">
       </el-table-column>
       <el-table-column prop="email" label="메일주소" width="180">
       </el-table-column>
@@ -26,6 +28,19 @@
       <el-table-column prop="bank" label="계좌은행" width="80"></el-table-column>
       <el-table-column prop="bank-account" label="계좌번호" width="150"></el-table-column>
       <!-- <el-table-column label="" header-align="left" align="right" width="345"> -->
+        <!-- <el-table-column label="" header-align="left" align="right">
+        <template slot-scope="scope">
+          <router-link :to="`/a/register/student/${scope.row.code}/edit`">
+            <el-button class="edit-btn">수정</el-button>
+          </router-link>
+        </template>
+      </el-table-column>
+      <el-table-column>
+          <template slot-scope="scope">
+            <el-button type="danger" @click="listeners['delete'](scope.$index)" class="delete-btn">삭제</el-button>
+          </template>
+        </el-table-column> -->
+      </el-table>
       <el-table-column label="" header-align="left" align="right">
         <template slot-scope="scope">
           <router-link :to="`/a/register/student/${scope.row.code}/edit`">
@@ -38,7 +53,6 @@
             <el-button type="danger" @click="listeners['delete'](scope.$index)" class="delete-btn">삭제</el-button>
           </template>
         </el-table-column>
-      </el-table>
       <br>
     </div>
     <div id="pagination" style="display: block; text-align: center;">

@@ -5,6 +5,9 @@
       <el-table-column prop="code" label="대학코드" width="100">
       </el-table-column>
       <el-table-column prop="name" label="대학명" width="180">
+        <!-- <template slot-scope="scope">
+          {{ scope.$name }}
+        </template> -->
       </el-table-column>
       <el-table-column prop="address" label="주소" width="250">
       </el-table-column>
@@ -16,7 +19,7 @@
       </el-table-column>
       <el-table-column label="" header-align="left" align="right">
         <template slot-scope="scope">
-            <router-link :to="`/a/register/uni/${scope.row.code}/edit`">
+            <router-link :to="`/a/register/uni/edit/${scope.row.name}`">
               <el-button class="edit-btn">수정</el-button>
             </router-link>
           </template>
@@ -24,7 +27,8 @@
 
         <el-table-column>
           <template slot-scope="scope">
-            <el-button type="danger" @click="listeners['delete'](scope.$index)" class="delete-btn">삭제</el-button>
+            <!-- <el-button type="danger" @click="listeners['delete'](scope.$name)" class="delete-btn">삭제</el-button> -->
+            <el-button type="danger" @click="deleteUniversity(scope.row.name)" class="delete-btn">삭제</el-button>
           </template>
         </el-table-column>
 
@@ -59,6 +63,7 @@
 
 <script>
 import utils from '../../utils';
+import masterService from '../../services/masterService';
 
 export default {
   name: 'MasterUniTable',
@@ -101,7 +106,13 @@ export default {
     }
   },
   methods: {
-    formatDate: utils.formatDate,
+    // formatDate: utils.formatDate,
+    async deleteUniversity(uniName) {
+      // console.log('ㅇㅅㅇ');
+      console.log('uniName = ', uniName);
+      await masterService.delete({ name : uniName });
+      window.location.reload(); //페이지 새로고침 
+    }
   },
 };
 </script>

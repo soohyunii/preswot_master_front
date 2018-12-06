@@ -14,8 +14,8 @@ export default {
   getMyClassList() { //
     return http.get('/classes/my');
   },*/
-  getMasterUni({ id }) { //
-    return http.get(`/university/${id}`);
+    getMasterUni({name}) {
+    return http.get(`/university?name=${name}`);
   },
 /*  getClassCoverage({ id }) {
     return http.get(`/classes/${id}/coverage`);
@@ -164,21 +164,21 @@ export default {
 
 // 행정 관리자 methods
   NNMasterputUni({
-    university_id,
     code,
     name,
     address,
-    manager,
-    email,
-    phone,
+    manager_name,
+    manager_email,
+    manager_phone_number,
   }) {
-    return http.put(`/university/${university_id}`, {
+    /*return http.put(`/university/${code}`, {*/
+    return http.put(`/university?name=${name}`, {
       code,
       name,
       address,
-      manager,
-      email,
-      phone,
+      manager_name,
+      manager_email,
+      manager_phone_number,
     });
   },
   NNMasterpostUni({
@@ -197,9 +197,17 @@ export default {
       manager_email,
       manager_phone_number,
     });
-    /*return {
+    return {
       success: true,
-    };*/
+    };
+  },
+  delete({
+    name,
+  }) {
+    console.log('@@@name = ', name);
+    return http.delete(`/university?name=${name}`,{
+    /*return http.delete(`/university`,{*/
+    });
   },
   NNMasterputDept({
     choiceUni,

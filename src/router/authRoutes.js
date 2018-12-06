@@ -466,7 +466,7 @@ export default function authRoutes(root) {
       },
     },
     {
-      alias: '/register/uni/:code/edit',
+      alias: '/register/uni/edit/:code',
       path: '/register/uni',
       name: 'RegisterUni',
       component: RegisterUni,
