@@ -89,6 +89,12 @@ export default {
       tmp.item_id = x;
       list.push(tmp);
     });
+
+    if (list.length === 0) {
+      const tmp = {};
+      tmp.item_id = '';
+      list.push(tmp);
+    }
     return http.post(`/lecture-items/${lectureId}/linked_list`, {
       item_id: item_id, // eslint-disable-line
       list: list, // eslint-disable-line
@@ -99,5 +105,22 @@ export default {
   },
   deleteConnection({ lectureItemId }) {
     return http.delete(`/lecture-items/linked_list/${lectureItemId}`);
+  },
+  makeGroup({ lectureId, iList }) {
+    const itemList = iList;
+    let list = itemList[0];
+    itemList.splice(0, 1);
+    itemList.forEach((x) => {
+      list = list + '<$!<>' + x; // eslint-disable-line
+    });
+    return http.post(`/lecture-items/${lectureId}/group`, {
+      list: list, // eslint-disable-line
+    });
+  },
+  showGroup({ lectureId }) {
+    return http.get(`/lecture-items/${lectureId}/group`);
+  },
+  deleteGroup({ groupId }) {
+    return http.delete(`/lecture-items/group/${groupId}`);
   },
 };

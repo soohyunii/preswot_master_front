@@ -6,7 +6,6 @@
         TODO: 자동 모드 toggle
       </div> -->
       <lecture-item-list
-        @connect="onClickConnectLectureItem"
         @delete="onClickDeleteLectureItem"
         @edit="onClickEditLectureItem"
         @simulate="onClickSimulateLectureItem"
@@ -50,9 +49,6 @@
         <router-link :to="`/a/teacher/NNlecture/itemconnection?lectureId=${lectureId}`">
           <el-button type="primary">아이템 연결 관리</el-button>
         </router-link>
-        <el-button @click="connectLcItemList()" type="primary">
-          아이템 연결 현황
-        </el-button>
         <el-button id="btn_add_new_lc_item" @click="onClick('ADD_LC_ITEM_SEQUENCE')" type="primary">
           강의 아이템 순서 저장
         </el-button>
@@ -484,7 +480,7 @@ export default {
       const vm = this;
       const targetLectureItem = vm.lectureItemList[index];
 
-      // 연결된 아이템이 있을 경우 순서 변경 불가
+      // 연결된 아이템이 있을 경우 삭제 불가
       const res = await lectureItemService.showConnection({
         lectureId: this.$route.params.lectureId,
       });
@@ -492,6 +488,19 @@ export default {
         this.$notify({
           title: '알림',
           message: '연결된 아이템이 있을 경우, 아이템 삭제가 불가능합니다.',
+          type: 'warning',
+        });
+        return;
+      }
+
+      // 그룹화 아이템이 있을 경우 삭제 불가
+      const rest = await lectureItemService.showGroup({
+        lectureId: this.$route.params.lectureId,
+      });
+      if (rest.data.list.length !== 0) {
+        this.$notify({
+          title: '알림',
+          message: '아이템 그룹화가 되어있을 경우, 아이템 삭제가 불가능합니다.',
           type: 'warning',
         });
         return;

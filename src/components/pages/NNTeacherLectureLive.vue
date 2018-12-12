@@ -83,12 +83,10 @@
           </el-col>
         </el-row>
         <br />
-        <!--
         <el-row>
           <el-col :span="3"><strong>현재 강의를 듣고있는 인원</strong></el-col>
           <el-col :span="7"> {{ onStudentCount - 1 }} 명 </el-col>
         </el-row>
-        -->
         <div v-for="(itemId, index) in currentLectureItemId" :key="itemId">
           <el-row>
             <lecture-question-result
@@ -206,7 +204,6 @@ export default {
       user_id: utils.getUserIdFromJwt(),
     };
     vm.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
-    /*
     let res1 = await lectureService.getOnStudentCount({
       lectureId: vm.lectureId,
     });
@@ -219,7 +216,6 @@ export default {
       });
       vm.onStudentCount = res1.data.count;
     }, 10000);
-    */
     vm.sUpdateTimelineLogIntervalId = setInterval(() => {
       vm.$socket.emit('UPDATE_TIMELINE_LOG', JSON.stringify(params));
     }, 18000);
@@ -251,22 +247,27 @@ export default {
   },
   mounted() {
     const vm = this;
-    vm.localLectureId = vm.lectureId; // 선언부 주석 참조
-    window.addEventListener('beforeunload', vm.beforeLeave);
+    // eslint-disable-next-line
+    window.onbeforeunload = function () {
+      const param = {
+        lecture_id: vm.lectureId,
+        user_id: utils.getUserIdFromJwt(),
+      };
+      vm.$socket.emit('LEAVE_LECTURE', JSON.stringify(param));
+    };
   },
   data() {
     return {
       tableItemList: [],
       tableItemIndex: [],
-      localLectureId: '', // beforeDestory에서 vm.$route.params.lectureId 를 못읽는 문제가 발생하여 임시 저장
       currentLectureItemId: [],
       path: '',
       isAuto: false,
       isInfoVisible: false,
       focusFlag: true,
       videolink: '',
-      // onStudentCount: 1,
-      // sOnStudentCount: undefined,
+      onStudentCount: 1,
+      sOnStudentCount: undefined,
       className: '',
       lectureName: '',
       selectItemList: [], // 선택된 아이템들
@@ -438,17 +439,19 @@ export default {
             });
             break;
           }
+          const paramsi = [];
           vm.currentLectureItemId.forEach((x) => {
-            const param = {
+            const parami = {
               lecture_id: vm.lectureId,
               opened: 0,
               lecture_item_id: x,
             };
-            vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify([param]));
+            paramsi.push(parami);
             // const itemIndex = vm.currentLectureItemId.findIndex(id => id === x);
             // vm.currentLectureItemId.splice(itemIndex, 1);
             // vm.tableItemIndex.splice(itemIndex, 1);
           });
+          vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify(paramsi));
           vm.currentLectureItemId = [];
           vm.tableItemIndex = [];
           break;
@@ -478,17 +481,6 @@ export default {
         }
       }
     },
-    beforeLeave() {
-      const vm = this;
-      const param = {
-        lecture_id: vm.localLectureId,
-        user_id: utils.getUserIdFromJwt(),
-      };
-      vm.$socket.emit('LEAVE_LECTURE', JSON.stringify(param));
-
-      // 화면 떠나기 전 등록한 Listener 해제. 이 코드가 없으면 리스너가 중복 등록되어 버그가 발생함
-      window.removeEventListener('beforeunload', vm.beforeLeave);
-    },
     // 선택된 아이템 삭제
     deleteSelectedItem(index) {
       const vm = this;
@@ -509,9 +501,13 @@ export default {
       params.push(param);
     });
     vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify(params));
-    vm.beforeLeave();
+    const param2 = {
+      lecture_id: vm.lectureId,
+      user_id: utils.getUserIdFromJwt(),
+    };
+    vm.$socket.emit('LEAVE_LECTURE', JSON.stringify(param2));
     vm.$socket.close();
-    // clearInterval(vm.sOnStudentCount);
+    clearInterval(vm.sOnStudentCount);
   },
 };
 </script>

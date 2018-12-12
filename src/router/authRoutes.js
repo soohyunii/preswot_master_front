@@ -37,6 +37,7 @@ import NClassFromBank from '../components/pages/NClassFromBank';
 import NLectureFromBank from '../components/pages/NLectureFromBank';
 import NLectureItemFromBank from '../components/pages/NLectureItemFromBank';
 import LectureItemConnect from '../components/pages/LectureItemConnect';
+import LectureItemGroup from '../components/pages/LectureItemGroup';
 
 export default function authRoutes(root) {
   return [
@@ -135,6 +136,14 @@ export default function authRoutes(root) {
       component: LectureItemConnect,
       meta: {
         title: 'Lecture Item Connect',
+      },
+    },
+    {
+      path: '/teacher/NNlecture/itemgroup',
+      name: 'LectureITemGroup',
+      component: LectureItemGroup,
+      meta: {
+        title: 'Lecture Item Grouping',
       },
     },
     {
