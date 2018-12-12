@@ -465,8 +465,17 @@ export default function authRoutes(root) {
         title: '관리자 대학 등록 성공',
       },
     },
-    {
+    /*{
       alias: '/register/uni/edit/:code',
+      path: '/register/uni',
+      name: 'RegisterUni',
+      component: RegisterUni,
+      meta: {
+        title: '관리자 대학 수정',
+      },
+    },*/
+    {
+      alias: '/:code/edit',
       path: '/register/uni',
       name: 'RegisterUni',
       component: RegisterUni,
@@ -488,6 +497,15 @@ export default function authRoutes(root) {
       component: RegisterDeptSuccess,
       meta: {
         title: '관리자 학과 등록 성공',
+      },
+    },
+    {
+      alias: '/:code/dept/:code/edit',
+      path: '/register/dept',
+      name: 'RegisterDept',
+      component: RegisterDept,
+      meta: {
+        title: '관리자 학과 수정',
       },
     },
     {

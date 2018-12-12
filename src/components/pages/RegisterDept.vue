@@ -8,9 +8,11 @@
       </template>
     </div>
     <el-form :model="input" ref="elForm" label-position="left" label-width="125px" style="max-width: 800px;" class="elForm-label">
-      <el-form-item label="대학선택">
-        <select id="uni-choice" v-model="input.choiceUni">
-          <option value=""> 대학리스트</option>  <!-- DB에 있는 대학 리스트 가져오기 --> 
+      <el-form-item label="소속대학 선택">
+        <select id="uni-choice" v-model="input.uniNameList">
+          <!-- <option disabled value="">대학 선택</option> -->
+          <!-- <option v-model="input.uniNameList" v-for="uniNameList in input.uniNameLists" v-bind:selected="input.uniNameLists">{{uniNameList}}</option> -->
+          <option v-for="uniNameList in input.uniNameLists">{{uniNameList}}</option>
         </select> &nbsp; <font color="red" size="5em">*</font>
       </el-form-item>
 
@@ -24,19 +26,19 @@
       </el-form-item>
 
       <el-form-item label="분야">
-        <el-input v-model="input.fields" class="subject-title"></el-input>
+        <el-input v-model="input.part" class="subject-title"></el-input>
       </el-form-item>
 
       <el-form-item label="학과 담당자">
-        <el-input v-model="input.manager" class="subject-title"></el-input>
+        <el-input v-model="input.manager_name" class="subject-title"></el-input>
       </el-form-item>
 
       <el-form-item label="학과 대표 이메일">
-        <el-input v-model="input.email" class="subject-title"></el-input>
+        <el-input v-model="input.manager_email" class="subject-title"></el-input>
       </el-form-item>
 
       <el-form-item label="학과 전화번호">
-        <el-input v-model="input.phone" class="subject-title" placeholder="하이픈없이 입력"></el-input>
+        <el-input v-model="input.manager_phone_number" class="subject-title" placeholder="하이픈없이 입력"></el-input>
       </el-form-item>
 
       <el-form-item>
@@ -60,7 +62,7 @@
 </template>
 
 <script>
-import classService from '../../services/classService';
+import masterService from '../../services/masterService';
 import authService from '../../services/authService';
 import utils from '../../utils';
 
@@ -79,13 +81,14 @@ export default {
   },
   data() {
     const initialInput = {
-      choiceUni: '',
+      // uniNameLists: masterService.getUniNameLists(),
+      uniNameLists: '',
       code: '',
       name: '',
-      fields: '',
-      manager: '',
-      email: '',
-      phone: '',
+      part: '',
+      manager_name: '',
+      manager_email: '',
+      manager_phone_number: '',
     };
     return {
       initialInput,
@@ -94,46 +97,76 @@ export default {
   },
   async mounted() {
     const vm = this;
+    // const uniNameLists = masterService.getUniNameLists();
+    const uniNameLists = await masterService.getUniNameLists();
+    // console.log('getUniNameLists@@@@@@= ',masterService.getUniNameLists());
+    // console.log(vm.initialInput.uniNameList);
+    // console.log('!!!!!!!!!!!!!!!!!!!!!!!',uniNameLists.data);
+    vm.input.uniNameLists = uniNameLists.data.map(element => element.name);
+    console.log('vm.input.uniNameLists = ', vm.input.uniNameLists);
+
     if (vm.isEdit) {
-      const res = await classService.getClass({ id: vm.classId });
-      // console.log('res', res.data);
-      vm.input.choiceUni = res.data.choiceUni || vm.initialInput.choiceUni;
+      const res = await masterService.getMasterDept({ university_name: vm.uniName, name: vm.deptName });
+      console.log('getMasterDept : res======================',res);
+      //vm.input.uniNameList = res.data.uniNameList || vm.initialInput.uniNameList;
+      vm.input.uniNameList = res.data.uniNameList || vm.initialInput.uniNameList;
       vm.input.code = res.data.code || vm.initialInput.code;
       vm.input.name = res.data.name || vm.initialInput.name;
-      vm.input.fields = res.data.fields || vm.initialInput.fields;
-      vm.input.manager = res.data.manager || vm.initialInput.manager;
-      vm.input.email = res.data.email || vm.initialInput.email;
-      vm.input.phone = res.data.phone || vm.initialInput.phone;
+      vm.input.part = res.data.part || vm.initialInput.part;
+      vm.input.manager_name = res.data.manager_name || vm.initialInput.manager_name;
+      vm.input.manager_email = res.data.manager_email || vm.initialInput.manager_email;
+      vm.input.manager_phone_number = res.data.manager_phone_number || vm.initialInput.manager_phone_number;
       // 대학선택, 학과코드, 학과명 미입력시 '*는 필수입력사항입니다 알람'
     }
   },
+  /*data: {
+    uniNameLists : masterService.getUniNameLists()
+  },*/
   computed: {
     isEdit() {
       const vm = this;
       return vm.$route.fullPath.includes('/edit');
     },
-    classId() {
+    /*classId() {
       const vm = this;
       return vm.$route.path.split('class/')[1].split('/edit')[0];
+    },*/
+    uniName() {
+      const vm = this;
+      // return vm.$route.query.uniName;
+      // return vm.$route.path.split('edit/')[1].split('/${scope.row.name}')[0];
+      return vm.$route.path.split('a/')[1].split('/dept')[0];
     },
+    deptName() {
+      const vm = this;
+      // return vm.$route.path.split('${scope.row.university.name}/')[1];
+      return vm.$route.path.split('dept/')[1].split('/edit')[0];
+    },
+    /*uniNameSelected() {
+      const vm = this;
+      return vm.input.uniNameLists.options.selected;
+    }*/
   },
   methods: {
     onSubmit() {
       const vm = this;
-      vm.$refs.elForm.validate(async (/* valid, fields */) => {
+      vm.$refs.elForm.validate(async (/* valid, part */) => {
         // console.log('valid,', valid);
-        // console.log('fields', fields);
+        // console.log('part', part);
         // TODO: if valid === true 로 감싸기
         // TODO: valid === false인 경우에 notify
         if (vm.isEdit) {
-          const id = vm.classId;
+          // const id = vm.classId;
+          const id = vm.deptName;
+          const uniId = vm.uniName;
+          // console.log(id);
           // TODO: wrap with try catch
           try {
-            await classService.NNMasterputDept({
-              id,
+            await masterService.NNMasterputDept({
+              /*id,*/
               ...vm.input,
             });
-            vm.$router.push('/view/dept');
+            vm.$router.push('/a/view/dept');
           } catch (error) {
             vm.$notify({
               title: '학과 수정 실패',
@@ -145,8 +178,8 @@ export default {
         } else {
           // TODO: wrap with try catch
           try {
-            await classService.NNMasterpostDept(vm.input);
-            if(vm.input.choiceUni=='' || vm.input.code=='' || vm.input.name=='') {
+            await masterService.NNMasterpostDept(vm.input);
+            if(vm.input.uniNameLists=='' || vm.input.code=='' || vm.input.name=='') {
               vm.$notify({
                 title: '학과 등록 실패',
                 message: '필수입력사항(*)을 모두 기재해 주세요',
@@ -154,7 +187,15 @@ export default {
                 duration: 0, 
               });
             } else {
-              vm.$router.push('/register/dept/success');
+/*              console.log('$$$$$$$$$$$$$',vm.input.uniNameList);
+              console.log('$$$$$$$$$$$$$',vm.input.code);
+              console.log('$$$$$$$$$$$$$',vm.input.name);
+              console.log('$$$$$$$$$$$$$',vm.input.part);
+              console.log('$$$$$$$$$$$$$',vm.input.manager_name);
+              console.log('$$$$$$$$$$$$$',vm.input.manager_email);
+              console.log('$$$$$$$$$$$$$',vm.input.manager_phone_number);*/
+              vm.$router.push('/a/register/dept/success');
+
             }
           } catch (error) {
             vm.$notify({

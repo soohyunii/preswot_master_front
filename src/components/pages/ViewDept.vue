@@ -1,8 +1,33 @@
 <template>
   <div id="class_index_wrapper" class="bt-container">
     <h2 class="page-title">조회하기 > 학과</h2>
-    <student-class-table
+    <div>
+      <el-form width="300px">
+      <!-- <el-form :model="input" style="max-width: 1000px;" class="elForm"> -->
+        
+        <!-- <select id="uni-choice" v-model="uniName">
+          <option v-for="uniNameList in uniName">{{uniNameList}}</option>
+        </select> -->
+        <span>대학선택: </span>
+        <!--<select id="uni-choice" v-model="uniName">-->
+        <select id="uni-choice" v-model="chosen" @change="onChange(chosen)">
+          <!-- <option disabled value="">대학선택</option> -->
+          <option v-for="uniNameList in uniName">{{uniNameList}}</option>
+        </select>
+
+        <!-- <span> 선택 : {{ chosen }} </span> -->
+
+      
+        <!-- <el-button icon="el-icon-search" circle></el-button> -->
+      </el-form>  
+      </div>
+      <div style="margin-top: 50px;"/>
+    <!-- <master-dept-table
       :list="list"
+      :onClick="onClick"
+    /> -->
+    <master-dept-table
+      :list="deptList"
       :onClick="onClick"
     />
     <br/>
@@ -23,13 +48,14 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
-import StudentClassTable from '../partials/MasterDeptTable';
+import MasterDeptTable from '../partials/MasterDeptTable';
 import utils from '../../utils';
+import masterService from '../../services/masterService';
 
 export default {
   name: 'ViewDept',
   components: {
-    StudentClassTable,
+    MasterDeptTable,
   },
   data() {
     return {
@@ -37,17 +63,26 @@ export default {
       searchType: 'name',
       searchText: '',
       list: [],
+      uniName: '',
+      chosen: '',
+      deptList: [],
     };
   },
+  /*
   computed: {
-    ...mapState('NNclass', ['studyingClassList']),
+    ...mapState('MasterDept', ['studyingClassList']),
   },
+  */
   async created() {
     const vm = this;
 
+/*
     // 새로고침(Refresh, F5) 해도 목록을 가져올 수 있게 하는 부분.
     // TODO: 속도가 눈에 보이게 느려지므로 다른 방법이 있다면 수정 요구.
-    await vm.getMyClassLists();
+    // await vm.getMyClassLists();
+    const name = "관리자";
+    const deptLists = await masterService.getDeptLists({name});
+    console.log('%%%%%%%%%%%%deptLists=======',deptLists);
 
     // 검색 기능 : 서버에서 DB 쿼리로 처리하는 게 효율이 나을 것 같으면 나중에 수정.
     if (vm.studyingClassList !== null) {
@@ -70,14 +105,25 @@ export default {
         }
       }
     }
+    */
+  },
+  async mounted() {
+    const vm=this;
+    const uniNameLists = await masterService.getUniNameLists();
+    console.log('uniNameLists======!!!!!!!',uniNameLists);
+    // vm.input.uniNameLists = uniNameLists.data.map(element => element.name);
+    vm.uniName = await uniNameLists.data.map(element => element.name);
+    console.log('uniName**************==', vm.uniName);
   },
   methods: {
-    ...mapActions('NNclass', [
-      'getClassLists',
+    /*
+    ...mapActions('MasterDept', [
+      'getDeptLists',
       'getMyClassLists',
       'deleteClassUser',
     ]),
-    formatDate: utils.formatDate,
+    */
+    // formatDate: utils.formatDate,
     async onClick(type, arg, arg2) {
       const vm = this;
       switch (type) {
@@ -86,7 +132,7 @@ export default {
           break;
         }
         case 'LISTEN': {
-          vm.$router.push(`/a/student/NNclass/${arg.class_id}`);
+          vm.$router.push(`/a/student/MasterDept/${arg.class_id}`);
           break;
         }
         /*
@@ -190,6 +236,18 @@ export default {
         });
         */
     },
+    async onChange(payload) {
+      const vm = this;
+      console.log('@onChange() payload = ', payload);
+      //
+      const res = await masterService.getDeptLists({name : payload});
+      console.log('11111111111res==',res);
+      //const deptLists = await res.data.map(element=>element.name);
+      vm.deptList = res.data;
+      console.log('vm.deptList#########==',vm.deptList);
+      // const deptLists = res.data;
+      // console.log('deptLists#########==',deptLists);
+    },
   },
 };
 </script>
@@ -215,6 +273,35 @@ export default {
     margin-left : 12px;
     margin-bottom : 25px;
   }
+  .el-form-item__label {
+    font-size: 30px;
+  }
+  .elForm-label el-form-item{
+    text-align : left;
+    font-family: SpoqaHanSans;
+    font-size: 16px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 40px;
+    letter-spacing: normal;
+    color: #000000;
+  }
+  .el-form{
+    // text-align : left;
+    font-family: SpoqaHanSans;
+    font-size: 16px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 40px;
+    letter-spacing: normal;
+    color: #000000;
+    width: 300px;
+    margin: 20px 0 0 10px;
+    // border:1px solid red;
+  }
+
 
 }
 </style>

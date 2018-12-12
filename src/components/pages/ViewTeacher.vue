@@ -28,7 +28,7 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import MasterTeacherTable from '../partials/MasterTeacherTable';
-// import classService from '../services/classService';
+import masterService from '../../services/masterService';
 import utils from '../../utils';
 
 export default {
@@ -168,7 +168,7 @@ export default {
           try {
             // const index = vm.currentClassIndex;
             const currentClass = vm.teachingClassList[index];
-            await classService.delete({
+            await masterService.delete({
               id: currentClass.class_id,
             });
             vm.deleteTeachingClass({

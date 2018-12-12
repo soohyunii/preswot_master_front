@@ -19,7 +19,7 @@
       </el-table-column>
       <el-table-column label="" header-align="left" align="right">
         <template slot-scope="scope">
-            <router-link :to="`/a/register/uni/edit/${scope.row.name}`">
+            <router-link :to="`/a/${scope.row.name}/edit`">
               <el-button class="edit-btn">수정</el-button>
             </router-link>
           </template>

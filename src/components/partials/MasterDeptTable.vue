@@ -1,32 +1,33 @@
 <template>
   <div id="class_index_wrapper">
+    <!-- <p> {{ list }} </p> -->
     <div>
-      <el-table class="elTable" :data="page" style="width: 100%">
-      <el-table-column prop="name" label="학과코드" width="100">
+      <el-table class="elTable" :data="list" style="width: 100%">
+      <el-table-column prop="code" label="학과코드" width="100">
       </el-table-column>
-      <el-table-column label="대학" width="100">
+      <el-table-column prop="university.name" label="대학" width="100">
         <!-- <template slot-scope="scope">
         {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
         </template> -->
       </el-table-column>
-      <el-table-column label="학과명" width="160">
+      <el-table-column prop="name" label="학과명" width="160">
       </el-table-column>
-      <el-table-column label="분야" width="120">
+      <el-table-column prop="part" label="분야" width="120">
         <!-- <template slot-scope="scope">
         {{ scope.row.start_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') : '미정' }}
         ~
         {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString('ko-KR') : '미정' }}
         </template> -->
       </el-table-column>
-      <el-table-column label="학과담당자" width="100">
+      <el-table-column prop="manager_name" label="학과담당자" width="100">
       </el-table-column>
-      <el-table-column label="학과 대표 이메일" width="180">
+      <el-table-column prop="manager_email" label="학과 대표 이메일" width="180">
       </el-table-column>
-      <el-table-column label="학과 전화번호" width="130">
+      <el-table-column prop="manager_phone_number" label="학과 전화번호" width="130">
       </el-table-column>
       <el-table-column label="" header-align="left" align="right">
         <template slot-scope="scope">
-            <router-link :to="`/view/dept/${scope.row.class_id}/edit`">
+            <router-link :to="`/a/${scope.row.university.name}/dept/${scope.row.name}/edit`">
               <el-button class="edit-btn">수정</el-button>
             </router-link>
           </template>
@@ -34,7 +35,7 @@
 
         <el-table-column>
           <template slot-scope="scope">
-            <el-button type="danger" @click="listeners['delete'](scope.$index)" class="delete-btn">삭제</el-button>
+            <el-button type="danger" @click="deptDelete(scope.row.university.name,scope.row.name)" class="delete-btn">삭제</el-button>
           </template>
         </el-table-column>
 
@@ -69,6 +70,7 @@
 
 <script>
 import utils from '../../utils';
+import masterService from '../../services/masterService';
 
 export default {
   name: 'MasterDeptTable',
@@ -96,10 +98,12 @@ export default {
     listCount() {
       return this.list.length;
     },
+    /*
     page() {
       const vm = this;
       return vm.list.slice((vm.pageNum - 1) * 10, vm.pageNum * 10);
     },
+    */
   },
   created() {
     const vm = this;
@@ -111,7 +115,10 @@ export default {
     }
   },
   methods: {
-    formatDate: utils.formatDate,
+    async deptDelete(university_name, name){
+      await masterService.deptDelete({university_name: university_name, name: name});
+      window.location.reload();
+    }
   },
 };
 </script>

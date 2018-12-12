@@ -115,7 +115,7 @@ export default {
     uniName() {
       const vm = this;
       // return vm.$route.query.uniName;
-      return vm.$route.path.split('edit/')[1];
+      return vm.$route.path.split('a/')[1].split('/edit')[0];
     },
   },
   methods: {

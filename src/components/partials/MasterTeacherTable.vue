@@ -78,6 +78,7 @@
 
 <script>
 import utils from '../../utils';
+import masterService from '../../services/masterService';
 
 export default {
   name: 'MasterTeacherTable',

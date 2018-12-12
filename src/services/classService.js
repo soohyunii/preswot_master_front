@@ -230,6 +230,13 @@ export default {
     email,
     phone,
   }) {
+    console.log('choiceUni = ', choiceUni);
+    console.log('choiceUni = ', code);
+    console.log('choiceUni = ', name);
+    console.log('choiceUni = ', fields);
+    console.log('choiceUni = ', manager);
+    console.log('choiceUni = ', email);
+    console.log('choiceUni = ', phone);
     /*
     return http.post(`/register/dept/success`, {
       choiceUni,

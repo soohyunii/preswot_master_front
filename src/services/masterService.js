@@ -14,6 +14,7 @@ export default {
   getMyClassList() { //
     return http.get('/classes/my');
   },*/
+  /*수정할 대학 정보 조회*/
     getMasterUni({name}) {
     return http.get(`/university?name=${name}`);
   },
@@ -36,8 +37,34 @@ export default {
     return http.get(`/classes/${id}/keyword-relations`);
   },
   */
+  /*대학 정보 모두 불러오기*/
   getUniLists() {
     return http.get(`/university/list`);
+  },
+
+  /*학과 등에서 선택하기위한 대학 이름 리스트 불러오기*/
+  getUniNameLists() {
+    return http.get(`/university/namelist`);
+  },
+
+  /*학과 정보 모두 불러오기*/
+  // getDeptLists({name}) {
+  getDeptLists(name) {
+    return http.get(`/department/list?university_name=${name}`)
+  },
+
+  /*수정할 학과 정보 조회*/
+  getMasterDept({university_name , name}) {
+    return http.get(`/department?university_name=${university_name}&name=${name}`, /*{
+      name : uniname,
+      name : name,
+    }*/);
+  },
+
+  /*강사 정보 조회*/
+  getTeacherLists(university_name,department_name) {
+    return http.get(`/admin_user?type=${type}`)
+
   },
   /*postClass({ 
     title,
@@ -210,47 +237,52 @@ export default {
     });
   },
   NNMasterputDept({
-    choiceUni,
+    uniNameList,
     code,
     name,
-    fields,
-    manager,
-    email,
-    phone,
+    part,
+    manager_name,
+    manager_email,
+    manager_phone_number,
   }) {
-    return http.put(`/view/dept`, {
-      choiceUni,
+    return http.put(`/department`, {
+      university_name: uniNameList,
       code,
       name,
-      fields,
-      manager,
-      email,
-      phone,
+      part,
+      manager_name,
+      manager_email,
+      manager_phone_number,
     });
   },
   NNMasterpostDept({
-    choiceUni,
+    uniNameList,
     code,
     name,
-    fields,
+    part,
     manager,
     email,
     phone,
   }) {
-    /*
-    return http.post(`/register/dept/success`, {
-      choiceUni,
+    return http.post(`/department`,{
+      university_name : uniNameList,
       code,
       name,
-      fields,
-      manager,
-      email,
-      phone,
+      part,
+      manager_name: manager,
+      manager_email: email,
+      manager_phone_number: phone,     
     });
-    */
-    return {
-      success: true,
-    };
+  },
+  deptDelete({
+    university_name,
+    name,
+  }) {
+    console.log('##university_name###',university_name);
+    console.log('@@@name = ', name);
+    return http.delete(`/department?name=${name}&university_name=${university_name}`,{
+    /*return http.delete(`/university`,{*/
+    });
   },
   NNMasterputTeacher({
     email,
@@ -284,23 +316,37 @@ export default {
     });
   },
   NNMasterpostTeacher({
-    email,
+    university_name,
+    department_name,
+    email_id,
     password,
-    passwordConfirm,
     name,
-    sex,
-    career,
+    type,
     birth,
-    choiceUni,
-    choiceDept,
+    sex,
     address,
     phone,
-    account,
-    bank,
+    major,
+    career,
+    account_bank,
+    account_number,
   }) {
-    return {
-      success : true,
-    };
+    return http.post(`/admin_user`,{
+      university_name,
+      department_name,
+      email_id,
+      password,
+      name,
+      type,
+      birth,
+      sex,
+      address,
+      phone,
+      major,
+      career,
+      account_bank,
+      account_number,
+    })
   },
   NNMasterputClass({
     choiceUni,
