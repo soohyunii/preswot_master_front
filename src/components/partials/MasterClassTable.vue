@@ -2,48 +2,52 @@
   <div id="class_index_wrapper">
     <div>
       <el-table class="elTable" :data="page" style="width: 100%">
-      <el-table-column prop="name" label="ID" width="50">
+      <!-- <el-table-column prop="name" label="ID" width="50">
         <template slot-scope="scope">
           {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
         </template>
-      </el-table-column>
-      <el-table-column prop="email_id" label="메일주소" width="180">
+      </el-table-column> -->
+      <el-table-column prop="code" label="코드" width="120">
         <!-- <template slot-scope="scope">
         {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
         </template> -->
       </el-table-column>
-      <el-table-column prop="password" label="비밀번호" width="120">
-        <!-- <template slot-scope="scope">
-        {{ scope.row.start_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') : '미정' }}
-        ~
-        {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString('ko-KR') : '미정' }}
-        </template> -->
+      <el-table-column prop="name" label="과목명" width="160">
       </el-table-column>
-      <el-table-column prop="name" label="이름" width="100">
+      <el-table-column prop="isActive" label="실제과목여부" width="110">  <!-- 기본과목(N)/실제과목(Y)/(실제과목 미등록)/ (상세 페이지 화면에서는 좀 더 자세하게:강의,시간,공간 중 무엇을 미등록했는지 알려주는 알림창 필요) -->
       </el-table-column>
-      <el-table-column prop="birth" label="생년월일" width="110">
+      <el-table-column prop="teacher_name" label="강사" width="110">
       </el-table-column>
-      <el-table-column prop="sex" label="성별" width="80">
+      <el-table-column prop="date" label="강의시작일" width="160">
       </el-table-column>
-      <el-table-column prop="phone" label="전화번호" width="120">
-      </el-table-column>
-      <el-table-column prop="address" label="주소" width="200">
-      </el-table-column>
-      <el-table-column prop="major" label="전공" width="120">
-      </el-table-column>
-      <el-table-column prop="career" label="경력" width="80">
-      </el-table-column>
-      <el-table-column prop="account_bank" label="계좌은행" width="80">
-      </el-table-column>
-      <el-table-column prop="account_number" label="계좌번호" width="150">
+      <el-table-column prop="lecture_register" label="강의등록여부" width="160">
+      </el-table-column>  <!-- 등록 / 미등록 -->
+      <el-table-column prop="attend_rate" label="출석률" width="100">
       </el-table-column>
       <el-table-column label="" header-align="left" align="right">
         <template slot-scope="scope">
-            <router-link :to="`/a/teacher/${scope.row.name}/edit`">
+            <router-link :to="`/a/view/${scope.row.name}/detail`">
+              <el-button class="edit-btn">상세보기</el-button>
+            </router-link>
+          </template>
+          <template slot-scope="scope">
+            <router-link :to="`/a/class/${scope.row.name}/edit`">
               <el-button class="edit-btn">수정</el-button>
             </router-link>
           </template>
         </el-table-column>
+        <!-- </el-table-column> -->
+        <!-- <template slot-scope="scope">
+            <router-link :to="`/a/class/${scope.row.name}/detail`">
+              <el-button class="edit-btn">상세보기</el-button>
+            </router-link>
+          </template> -->
+        <!-- <template slot-scope="scope">
+            <router-link :to="`/a/class/${scope.row.name}/edit`">
+              <el-button class="edit-btn">수정</el-button>
+            </router-link>
+          </template>
+        </el-table-column> -->
 
         <el-table-column>
           <template slot-scope="scope">
@@ -52,19 +56,7 @@
         </el-table-column>
 
       </el-table>
-      <!-- <el-table-column label="" header-align="left" align="right">
-        <template slot-scope="scope">
-            <router-link :to="`/view/dept/${scope.row.class_id}/edit`">
-              <el-button class="edit-btn">수정</el-button>
-            </router-link>
-          </template>
-        </el-table-column>
-
-        <el-table-column>
-          <template slot-scope="scope">
-            <el-button type="danger" @click="listeners['delete'](scope.$index)" class="delete-btn">삭제</el-button>
-          </template>
-        </el-table-column> -->
+      
       <br>
     </div>
     <div id="pagination" style="display: block; text-align: center;">
@@ -98,7 +90,7 @@ import utils from '../../utils';
 import masterService from '../../services/masterService';
 
 export default {
-  name: 'MasterTeacherTable',
+  name: 'MasterClassTable',
   props: ['list', 'onClick'],
   data() {
     return {

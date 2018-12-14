@@ -1,7 +1,30 @@
 <template>
   <div id="class_index_wrapper" class="bt-container">
     <h2 class="page-title">조회하기 > 과목</h2>
-    <student-class-table
+    <div id="choicLists">
+      <el-form>
+        <span>대학선택: </span>
+        <select id="uni-choice" v-model="chosen" @change="categoryChange()" style="width:120px;">
+          <option v-for="uniName in uniNameList">{{uniName}}</option>
+        </select>
+      </el-form>
+      <el-form id="dept" style="position: relative; left:220px; top:-60px;">
+        <span>학과선택: </span>
+        <select id="dept-choice" v-model="dept_chosen" @change="categorySemesterChange(type,chosen,dept_chosen)" style="width:120px;">
+          <option value="">선택사항없음</option>
+          <option v-for="deptName in deptNameList">{{deptName}}</option>
+        </select>
+      </el-form>
+      <el-form id="semester" style="position: relative; left:440px; top:-120px;">
+        <span>학기선택: </span>
+        <select id="semester-choice" v-model="semester_chosen" @change="onChange(type,chosen,dept_chosen)" style="width:120px;">
+          <option value="">선택사항없음</option>
+          <option v-for="semesterName in semesterNameList">{{semesterName}}</option>
+        </select>
+      </el-form>
+    </div>
+    <div style="margin-top: -70px;"/>
+    <master-class-table
       :list="list"
       :onClick="onClick"
     />
@@ -35,14 +58,14 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
-import StudentClassTable from '../partials/StudentClassTable';
-// import classService from '../services/classService';
+import MasterClassTable from '../partials/MasterClassTable';
+import masterService from '../../services/masterService';
 import utils from '../../utils';
 
 export default {
   name: 'ViewClass',
   components: {
-    StudentClassTable,
+    MasterClassTable,
   },
   data() {
     return {
@@ -50,6 +73,12 @@ export default {
       searchType: 'name',
       searchText: '',
       list: [],
+      uniNameList:[],
+      deptNameList:[],
+      semesterNameList:[],
+      chosen:'',
+      dept_chosen:'',
+      semester_chosen:'',
     };
   },
   computed: {
@@ -60,10 +89,10 @@ export default {
 
     // 새로고침(Refresh, F5) 해도 목록을 가져올 수 있게 하는 부분.
     // TODO: 속도가 눈에 보이게 느려지므로 다른 방법이 있다면 수정 요구.
-    await vm.getMyClassLists();
+    // await vm.getMyClassLists();
 
     // 검색 기능 : 서버에서 DB 쿼리로 처리하는 게 효율이 나을 것 같으면 나중에 수정.
-    if (vm.studyingClassList !== null) {
+    /*if (vm.studyingClassList !== null) {
       if (vm.$route.query.type !== undefined) {
         vm.searchType = vm.$route.query.type;
       }
@@ -82,7 +111,13 @@ export default {
           }
         }
       }
-    }
+    }*/
+  },
+  async mounted(){
+    const vm=this;
+    const uniNameLists = await masterService.getUniNameLists();
+    vm.uniNameList = uniNameLists.data.map(element=>element.name);
+    // console.log('vm.uniNameList!!!!!!!!===',vm.uniNameList);
   },
   methods: {
     ...mapActions('NNclass', [
@@ -164,6 +199,12 @@ export default {
         }
       }
     },
+    async categoryChange(){
+      const vm=this;
+      const deptNameLists = await masterService.getDeptLists(vm.chosen);
+      vm.deptNameList = deptNameLists.data.map(element=>element.name);
+      // console.log('vm.deptNameList!~!!!!!!!!!!!!!!!!!!!!!',vm.deptNameList);
+    },
     onClickDelete(index) {
       const vm = this;
       const currentTeachingClass = vm.teachingClassList[index];
@@ -176,7 +217,7 @@ export default {
           try {
             // const index = vm.currentClassIndex;
             const currentClass = vm.teachingClassList[index];
-            await classService.delete({
+            await masterService.delete({
               id: currentClass.class_id,
             });
             vm.deleteTeachingClass({
@@ -227,5 +268,26 @@ export default {
     margin-left : 12px;
     margin-bottom : 25px;
   }
+  .el-form{
+    // text-align : left;
+    // position: absolute;
+    font-family: SpoqaHanSans;
+    font-size: 16px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 40px;
+    letter-spacing: normal;
+    color: #000000;
+    width: 300px;
+    margin: 20px 0 0 10px;
+    //border:1px solid red;
+  }
+  /*.el-form #dept{
+    border: 1px solid blue;
+    position: relative;
+    top:-100px;
+    left: 200px;
+  }*/
 }
 </style>

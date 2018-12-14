@@ -44,7 +44,7 @@ import ViewDept from '../components/pages/ViewDept';
 import ViewTeacher from '../components/pages/ViewTeacher';
 // import ViewTeacherAll from '../components/pages/ViewTeacherAll';
 import ViewClass from '../components/pages/ViewClass';
-import ViewClassAll from '../components/pages/ViewClassAll';
+import ViewDetailClass from '../components/pages/ViewClassAll';
 import ViewStudent from '../components/pages/ViewStudent';
 import ViewStudentScore from '../components/pages/ViewStudentScore';
 import ViewBank from '../components/pages/ViewBank';
@@ -417,12 +417,20 @@ export default function authRoutes(root) {
         title: '관리자 과목 및 강의 조회',
       },
     },
-    {
+    /*{
       path: '/view/classAll',
       name: 'ViewClassAll',
       component: ViewClassAll,
       meta: {
         title: '관리자 과목 상세 조회',
+      },
+    },*/
+        {
+      path: '/view/:code/detail',
+      name: 'ViewDetailClass',
+      component: ViewDetailClass,
+      meta: {
+        title: '관리자 과목 상세 보기',
       },
     },
     {
@@ -522,6 +530,15 @@ export default function authRoutes(root) {
       component: RegisterTeacherSuccess,
       meta: {
         title: '관리자 강사 등록 성공',
+      },
+    },
+    {
+      alias: '/teacher/:code/edit',
+      path: '/register/teacher',
+      name: 'RegisterTeacher',
+      component: RegisterTeacher,
+      meta: {
+        title: '관리자 강사 수정',
       },
     },
     {

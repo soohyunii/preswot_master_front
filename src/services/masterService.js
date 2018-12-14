@@ -62,9 +62,8 @@ export default {
   },
 
   /*강사 정보 조회*/
-  getTeacherLists(university_name,department_name) {
-    return http.get(`/admin_user?type=${type}`)
-
+  getTeacherLists(type,university_name,department_name) {
+    return http.get(`/admin_user/list?type=${type}&university_name=${university_name}&department_name=${department_name}`)
   },
   /*postClass({ 
     title,
@@ -349,54 +348,70 @@ export default {
     })
   },
   NNMasterputClass({
-    choiceUni,
-    choiceDept,
-    choiceTeacher,
+    university_name,
+    department_name,
+    teacher_email_id,
     code,
-    frequency,
+    day_of_week,
     name,
-    time,
-    classRoom,
-    activeStartDate,
-    activeEndDate,
+    isActive,
+    start_time,
+    end_time,
+    location,
+    start_date,
+    end_date,
     capacity,
-    lecturerDescription,
     description,
   }) {
-    return http.put(`/view/class`,{
-      choiceUni,
-      choiceDept,
-      choiceTeacher,
+    return http.put(`/admin_class`,{
+      university_name,
+      department_name,
+      teacher_email_id,
       code,
-      frequency,
+      day_of_week,
       name,
-      time,
-      classRoom,
-      activeStartDate,
-      activeEndDate,
+      isActive,
+      start_time,
+      end_time,
+      location,
+      start_date,
+      end_date,
       capacity,
-      lecturerDescription,
       description,
     })
   },
   NNMasterpostClass({
-    choiceUni,
-    choiceDept,
-    choiceTeacher,
+    university_name,
+    department_name,
+    teacher_email_id,
     code,
-    frequency,
+    day_of_week,
     name,
-    time,
-    classRoom,
-    activeStartDate,
-    activeEndDate,
+    isActive,
+    start_time,
+    end_time,
+    location,
+    start_date,
+    end_date,
     capacity,
-    lecturerDescription,
     description,
   }) {
-    return {
-      success:true,
-    };
+    return http.post(`/admin_class`,{
+      university_name,
+      department_name,
+      teacher_email_id,
+      code,
+      day_of_week,
+      name,
+      isActive,
+      start_time,
+      end_time,
+      location,
+      start_date,
+      end_date,
+      capacity,
+      description,
+    });
   },
   NNMasterputStudent({
     email,

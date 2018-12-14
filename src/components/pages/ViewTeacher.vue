@@ -5,6 +5,22 @@
       :list="list"
       :onClick="onClick"
     /> -->
+    <div id="choiceLists">
+    <el-form width="300px">
+      <span>대학선택: </span>
+      <select id="uni-choice" v-model="chosen" @change="categoryChange()">
+        <option v-for="uniName in uniNameList">{{uniName}}</option>
+      </select>
+    </el-form>
+    <el-form id="dept">
+      <span>학과선택: </span>
+      <select id="dept-choice"  style="width:130px;" v-model="dept_chosen" @change="onChange(type,chosen,dept_chosen)">
+        <option v-for="deptName in deptNameList">{{deptName}}</option>
+      </select>
+    </el-form>
+    </div>
+    <!-- <div style="margin-top: 50px;"/> -->
+    <div style="margin-top: -10px;"/>
     <master-teacher-table
       :list="list"
       :onClick="onClick"
@@ -42,6 +58,11 @@ export default {
       searchType: 'name',
       searchText: '',
       list: [],
+      chosen:'',
+      uniNameList:[],
+      deptNameList:[],
+      dept_chosen:'',
+      type:1,
     };
   },
   computed: {
@@ -49,10 +70,11 @@ export default {
   },
   async created() {
     const vm = this;
-
+/*
     // 새로고침(Refresh, F5) 해도 목록을 가져올 수 있게 하는 부분.
     // TODO: 속도가 눈에 보이게 느려지므로 다른 방법이 있다면 수정 요구.
-    await vm.getMyClassLists();
+    const aaa = await vm.masterService.getTeacherLists(1,"연세대학교","물리학과");
+    console.log(aaa);
 
     // 검색 기능 : 서버에서 DB 쿼리로 처리하는 게 효율이 나을 것 같으면 나중에 수정.
     if (vm.studyingClassList !== null) {
@@ -74,7 +96,16 @@ export default {
           }
         }
       }
-    }
+    }*/
+  },
+  async mounted(){
+    const vm=this;
+    const uniNameLists = await masterService.getUniNameLists();
+    console.log('uniNameLists======!!!!!!!',uniNameLists);
+    // vm.input.uniNameLists = uniNameLists.data.map(element => element.name);
+    vm.uniNameList = await uniNameLists.data.map(element => element.name);
+    console.log('uniName**************==', vm.uniNameList);
+    // const teacherLists = await masterService.getTeacherLists(1,);
   },
   methods: {
     ...mapActions('NNclass', [
@@ -156,6 +187,19 @@ export default {
         }
       }
     },
+    async categoryChange(){
+      const vm=this;
+      const deptNameLists = await masterService.getDeptLists(vm.chosen);
+      // console.log(deptNameLists);
+      vm.deptNameList = await deptNameLists.data.map(element=>element.name);
+    },
+    async onChange(type,university_name,department_name){
+      const vm=this;
+      // console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@',type);
+      const res = await masterService.getTeacherLists(type,university_name,department_name);
+      // console.log('######################',res);
+      vm.list = res.data;
+    },
     onClickDelete(index) {
       const vm = this;
       const currentTeachingClass = vm.teachingClassList[index];
@@ -218,6 +262,52 @@ export default {
     margin-top : 40px;
     margin-left : 12px;
     margin-bottom : 25px;
+  }
+  .el-form{
+    // text-align : left;
+    // position: absolute;
+    font-family: SpoqaHanSans;
+    font-size: 16px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 40px;
+    letter-spacing: normal;
+    color: #000000;
+    width: 300px;
+    margin: 20px 0 0 10px;
+    // border:1px solid red;
+  }
+  /*#dept{
+    // text-align : left;
+    //float: left;
+    position: relative;
+    right: 100px;
+    top: -100px;
+    font-family: SpoqaHanSans;
+    font-size: 16px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 40px;
+    letter-spacing: normal;
+    color: #000000;
+    width: 300px;
+    margin: 20px 0 0 10px;
+    border:1px solid red;
+  }*/
+  #choiceLists {
+    //border: 1px solid red;
+  }
+  #choiceLists #dept{
+    // border: 1px solid blue;
+    position: relative;
+    top:-60px;
+    left: 200px;
+    // width: 300px;
+  }
+  master-teacher-table list{
+    border: 1px solid red;
   }
 }
 </style>
