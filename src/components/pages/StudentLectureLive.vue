@@ -111,7 +111,8 @@ export default {
         lecture_id: Number.parseInt(vm.$route.params.scId, 10),
         user_id: utils.getUserIdFromJwt(),
       };
-      this.$socket.emit('HEART_BEAT', JSON.stringify(params2));
+      // 삭제 - 181214
+      // this.$socket.emit('HEART_BEAT', JSON.stringify(params2));
     }, 3000);
   },
   data() {

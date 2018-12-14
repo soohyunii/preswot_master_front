@@ -78,12 +78,13 @@ export default {
         title: '아이템 연결',
         content: '순서를 유지시킬 아이템들을 선택할 수 있습니다. ' +
                   '함께 연결된 아이템들은 셔플되지 않고 그 순서가 유지됩니다. ' +
+                  '아이템을 단독으로라도 연결 목록에 추가해야 그룹화가 가능합니다. ' +
                   '아이템 연결 작업이 모두 끝난 뒤 그룹화를 진행해 주세요.',
       }, {
         title: '아이템 그룹화',
         content: '강사가 "아이템 보이기"를 할 경우 같은 그룹에 속한 아이템들은 순서가 랜덤하게 ' +
                   '섞여 같이 보여집니다. 연결되어 있는 아이템은 순서가 유지됩니다. ' +
-                  '그룹화되지 않은 아이템은 강의 중 보이기가 안되니 단독으로 보여줄 아이템은 단독으로 그룹화해주세요.',
+                  '단독으로 보여줄 아이템은 단독으로 그룹화해주세요.',
       }],
     };
   },
@@ -100,8 +101,9 @@ export default {
     });
     for (let i = 0; i < res.data.length; i += 1) {
       const x = res.data[i];
-      // 대표문항에 대해
+
       const tmpLinkedItem = [];
+      /*
       const cItem = {};
       cItem.id = x.item_id;
       const itemInfo = await lectureItemService.getLectureItem({ // eslint-disable-line
@@ -110,10 +112,10 @@ export default {
       cItem.name = itemInfo.data.name;
       cItem.listId = x.lecture_item_list_id;
       tmpLinkedItem.push(cItem);
+      */
 
-      // 하위문항에 대해
       if (x.linked_list.includes('<$!<>')) {
-        // 하위문항이 여러개
+        // 연결문항이 여러개
         const splicedItem = x.linked_list.split('<$!<>');
         for (let j = 0; j < splicedItem.length; j += 1) {
           const y = splicedItem[j];
@@ -127,7 +129,7 @@ export default {
         }
         vm.connectList.push(tmpLinkedItem);
       } else if (x.linked_list !== '') {
-        // 하위문항이 한개
+        // 연결문항이 한개
         const cItem1 = {};
         const itemInfo1 = await lectureItemService.getLectureItem({ // eslint-disable-line
           lectureItemId: parseInt(x.linked_list, 10),
@@ -135,9 +137,6 @@ export default {
         cItem1.id = parseInt(x.linked_list, 10);
         cItem1.name = itemInfo1.data.name;
         tmpLinkedItem.push(cItem1);
-        vm.connectList.push(tmpLinkedItem);
-      } else if (x.linked_list === '') {
-        // 하위문항이 없는 경우
         vm.connectList.push(tmpLinkedItem);
       }
     }
@@ -180,38 +179,6 @@ export default {
     },
   },
   methods: {
-    /* 새로운 아이템 그룹 생성
-    async newGroup(data) {
-      const vm = this;
-      if (vm.ifConnectMode === true) {
-        // 만약 이미 연결이라면 진행 불가
-        vm.$notify({
-          title: '알림',
-          message: '아이템 연결이 진행중입니다.',
-          type: 'warning',
-        });
-        return;
-      }
-      if (vm.ifGroupMode === false) {
-        // 첫번째 아이템 추가라면
-        vm.ifGroupMode = true;
-        vm.newGroupList.push(data);
-      } else {
-        // 이후 아이템 추가라면
-        const len = vm.newGroupList.length - 1;
-        const lastSeq = vm.newGroupList[len].sequence;
-        if (data.sequence !== lastSeq + 1) {
-          // 기존의 마지막 아이템의 다음 아이템만 추가 가능
-          vm.$notify({
-            title: '알림',
-            message: '연속된 아이템만 그룹화할 수 있습니다.',
-            type: 'warning',
-          });
-          return;
-        }
-        vm.newGroupList.push(data);
-      }
-    }, */
     // 새로운 아이템 연결 생성
     async newConnect(data) {
       const vm = this;
@@ -252,11 +219,11 @@ export default {
       switch (type) {
         // 새로운 연결 추가
         case 'CONNECT_LC_ITEM': {
-          // 연결할 아이템이 없거나 한개일 경우
-          if (vm.newConnectList.length < 2) {
+          // 연결할 아이템이 없는 경우
+          if (vm.newConnectList.length < 1) {
             vm.$notify({
               title: '알림',
-              message: '연결할 아이템을 두개 이상 선택해 주세요.',
+              message: '연결할 아이템을 선택해 주세요.',
               type: 'warning',
             });
             break;
@@ -343,13 +310,6 @@ export default {
           vm.connectList.splice(delFId, 1);
           break;
         }
-        /*
-        // 그룹화 취소
-        case 'CANCEL_GROUP_MODE': {
-          vm.ifGroupMode = false;
-          vm.newGroupList = [];
-          break;
-        } */
         // 연결 취소
         case 'CANCEL_CONNECT_MODE': {
           vm.ifConnectMode = false;

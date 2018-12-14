@@ -81,12 +81,13 @@ export default {
         title: '아이템 연결',
         content: '순서를 유지시킬 아이템들을 선택할 수 있습니다. ' +
                   '함께 연결된 아이템들은 셔플되지 않고 그 순서가 유지됩니다. ' +
+                  '아이템을 단독으로라도 연결 목록에 추가해야 그룹화가 가능합니다. ' +
                   '아이템 연결 작업이 모두 끝난 뒤 그룹화를 진행해 주세요.',
       }, {
         title: '아이템 그룹화',
         content: '강사가 "아이템 보이기"를 할 경우 같은 그룹에 속한 아이템들은 순서가 랜덤하게 ' +
                   '섞여 같이 보여집니다. 연결되어 있는 아이템은 순서가 유지됩니다. ' +
-                  '그룹화되지 않은 아이템은 강의 중 보이기가 안되니 단독으로 보여줄 아이템은 단독으로 그룹화해주세요.',
+                  '단독으로 보여줄 아이템은 단독으로 그룹화해주세요.',
       }],
     };
   },
@@ -106,15 +107,9 @@ export default {
       lectureId: vm.lectureId,
     });
     res.data.forEach((x) => {
-      // 대표 문항에 대해
-      vm.itemList.forEach((y) => {
-        if (y.lecture_item_id === x.item_id) {
-          y.listId = x.lecture_item_list_id; // eslint-disable-line
-        }
-      });
-      // 하위 문항에 대해
+      // 연결 문항에 대해
       if (x.linked_list.includes('<$!<>')) {
-        // 하위 문항이 여러 개
+        // 연결 문항이 여러 개
         const splicedItem = x.linked_list.split('<$!<>');
         splicedItem.forEach((y) => {
           vm.itemList.forEach((z) => {
@@ -124,13 +119,13 @@ export default {
           });
         });
       } else if (x.linked_list !== '') {
-        // 하위 문항이 한 개
+        // 연결 문항이 한 개
         vm.itemList.forEach((y) => {
           if (y.lecture_item_id === parseInt(x.linked_list, 10)) {
             y.listId = x.lecture_item_list_id; // eslint-disable-line
           }
         });
-      } // 하위 문항이 없으면 더 처리할 것 없음
+      }
     });
 
     // 아이템 순서대로 정렬
@@ -154,6 +149,7 @@ export default {
       }
     });
 
+    /* 기능 삭제 - 181214
     // 아이템 리스트 처음부터 보면서 linkId 없으면 생성
     vm.itemList.forEach((x) => {
       if (x.listId === '') {
@@ -165,7 +161,6 @@ export default {
         });
       }
     });
-
     // 새로운 연결 - 연결 안된 단독 아이템들에 linkId 부여
     const ress = await lectureItemService.showConnection({
       lectureId: vm.lectureId,
@@ -177,23 +172,26 @@ export default {
         }
       });
     });
+    */
 
     // 아이템 리스트 만들기
     let lin = [];
     vm.itemList.forEach((x) => {
-      if (vm.lccNum === -1) {
-        // 첫 아이템인 경우
-        lin.push(x);
-        vm.lccNum = x.listId;
-      } else if (vm.lccNum === x.listId) {
-        // 연결되는 아이템
-        lin.push(x);
-      } else if (vm.lccNum !== x.listId) {
-        // 새로운 연결
-        vm.lcConnectionList.push(lin);
-        lin = [];
-        lin.push(x);
-        vm.lccNum = x.listId;
+      if (x.listId !== '') {
+        if (vm.lccNum === -1) {
+          // 첫 아이템인 경우
+          lin.push(x);
+          vm.lccNum = x.listId;
+        } else if (vm.lccNum === x.listId) {
+          // 연결되는 아이템
+          lin.push(x);
+        } else if (vm.lccNum !== x.listId) {
+          // 새로운 연결
+          vm.lcConnectionList.push(lin);
+          lin = [];
+          lin.push(x);
+          vm.lccNum = x.listId;
+        }
       }
     });
     vm.lcConnectionList.push(lin);
@@ -258,6 +256,15 @@ export default {
       switch (type) {
         // 새로운 아이템 그룹화
         case 'GROUP_LC_ITEM': {
+          // 그룹화할 아이템이 없는 경우
+          if (vm.newGroupList.length < 1) {
+            vm.$notify({
+              title: '알림',
+              message: '그룹화할 아이템을 선택해 주세요.',
+              type: 'warning',
+            });
+            break;
+          }
           // 중복 검사
           let dup = false;
           vm.newGroupList.forEach((x) => {

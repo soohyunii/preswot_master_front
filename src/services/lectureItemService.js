@@ -83,13 +83,11 @@ export default {
     const itemList = iList;
     const item_id = itemList[0]; // eslint-disable-line
     const list = [];
-    itemList.splice(0, 1);
     itemList.forEach((x) => {
       const tmp = {};
       tmp.item_id = x;
       list.push(tmp);
     });
-
     if (list.length === 0) {
       const tmp = {};
       tmp.item_id = '';

@@ -225,6 +225,7 @@ export default {
       user_id: utils.getUserIdFromJwt(),
     };
     vm.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
+    /* 삭제 - 181214
     vm.sHeartbeatIntervalId = setInterval(() => {
       const params2 = {
         lecture_id: vm.lectureId,
@@ -232,6 +233,7 @@ export default {
       };
       vm.$socket.emit('HEART_BEAT', JSON.stringify(params2));
     }, 3000);
+    */
     if (vm.lectureType === 0) {
       vm.$socket.on('RELOAD_LECTURE_ITEMS', (msg) => {
         const jsonMSG = JSON.parse(msg);
@@ -372,6 +374,7 @@ export default {
               const endTime = new Date();
               if (vm.lectureItem.length > 1) {
                 // 여러 아이템 중 하나 제출
+                /*
                 studentService.postLog({
                   id: vm.nowQuestion[vm.nowNum].lecture_item_id,
                   lecture_id: vm.lectureId,
@@ -380,10 +383,22 @@ export default {
                   order: vm.nowQuestion[vm.nowNum].order,
                   start_time: vm.startTime,
                   end_time: endTime,
-                });
+                }); */
+                const submitlog = {
+                  lecture_id: vm.lectureId,
+                  user_id: utils.getUserIdFromJwt(),
+                  type: vm.nowQuestion[vm.nowNum].type,
+                  start_time: vm.startTime,
+                  end_time: endTime,
+                  item_id: vm.nowQuestion[vm.nowNum].lecture_item_id,
+                  answer: realAnswer.length === 0 ? [''] : realAnswer,
+                  order: vm.nowQuestion[vm.nowNum].order,
+                };
+                vm.$socket.emit('LECTURE_ITEM_LOG', JSON.stringify(submitlog));
                 vm.nowQuestion[vm.nowNum].soc = 'O';
               } else {
                 // 한 아이템 하나 제출
+                /*
                 studentService.postLog({
                   id: vm.lectureItem[0].lecture_item_id,
                   lecture_id: vm.lectureId,
@@ -392,7 +407,18 @@ export default {
                   order: vm.lectureItem[0].order,
                   start_time: vm.startTime,
                   end_time: endTime,
-                });
+                }); */
+                const submitlog = {
+                  lecture_id: vm.lectureId,
+                  user_id: utils.getUserIdFromJwt(),
+                  type: vm.lectureItem[0].type,
+                  start_time: vm.startTime,
+                  end_time: endTime,
+                  item_id: vm.lectureItem[0].lecture_item_id,
+                  answer: realAnswer.length === 0 ? [''] : realAnswer,
+                  order: vm.lectureItem[0].order,
+                };
+                vm.$socket.emit('LECTURE_ITEM_LOG', JSON.stringify(submitlog));
               }
               vm.$notify({
                 title: '알림',
@@ -415,6 +441,7 @@ export default {
               const endTime = new Date();
               if (vm.lectureItem.length > 1) {
                 // 여러 아이템 중 설문
+                /*
                 studentService.postLog({
                   id: vm.nowQuestion[vm.nowNum].lecture_item_id,
                   lecture_id: vm.lectureId,
@@ -423,10 +450,22 @@ export default {
                   order: vm.nowQuestion[vm.nowNum].order,
                   start_time: vm.startTime,
                   end_time: endTime,
-                });
+                }); */
+                const submitlog = {
+                  lecture_id: vm.lectureId,
+                  user_id: utils.getUserIdFromJwt(),
+                  type: vm.nowQuestion[vm.nowNum].type,
+                  start_time: vm.startTime,
+                  end_time: endTime,
+                  item_id: vm.nowQuestion[vm.nowNum].lecture_item_id,
+                  answer: data.answer.length === 0 ? [''] : data.answer,
+                  order: vm.nowQuestion[vm.nowNum].order,
+                };
+                vm.$socket.emit('LECTURE_ITEM_LOG', JSON.stringify(submitlog));
                 vm.nowQuestion[vm.nowNum].soc = 'O';
               } else {
                 // 한 아이템 설문
+                /*
                 studentService.postLog({
                   id: vm.lectureItem[0].lecture_item_id,
                   lecture_id: vm.lectureId,
@@ -435,7 +474,18 @@ export default {
                   order: vm.lectureItem[0].order,
                   start_time: vm.startTime,
                   end_time: endTime,
-                });
+                }); */
+                const submitlog = {
+                  lecture_id: vm.lectureId,
+                  user_id: utils.getUserIdFromJwt(),
+                  type: vm.lectureItem[0].type,
+                  start_time: vm.startTime,
+                  end_time: endTime,
+                  item_id: vm.lectureItem[0].lecture_item_id,
+                  answer: data.answer.length === 0 ? [''] : data.answer,
+                  order: vm.lectureItem[0].order,
+                };
+                vm.$socket.emit('LECTURE_ITEM_LOG', JSON.stringify(submitlog));
               }
               vm.$notify({
                 title: '알림',
@@ -499,6 +549,7 @@ export default {
           // 만약 지금 보고있던게 자료였다면 로그 제출
           const endTime = new Date();
           if (vm.nowQuestion[vm.nowNum].soc === '자료') {
+            /*
             studentService.postLog({
               id: vm.nowQuestion[vm.nowNum].lecture_item_id,
               lecture_id: vm.lectureId,
@@ -507,7 +558,17 @@ export default {
               order: vm.nowQuestion[vm.nowNum].order,
               start_time: vm.startTime,
               end_time: endTime,
-            });
+            }); */
+            const submitlog = {
+              lecture_id: vm.lectureId,
+              user_id: utils.getUserIdFromJwt(),
+              type: vm.nowQuestion[vm.nowNum].type,
+              start_time: vm.startTime,
+              end_time: endTime,
+              item_id: vm.nowQuestion[vm.nowNum].lecture_item_id,
+              order: vm.nowQuestion[vm.nowNum].order,
+            };
+            vm.$socket.emit('LECTURE_ITEM_LOG', JSON.stringify(submitlog));
           }
           // 문항 이동
           vm.lectureItems = [];
@@ -529,6 +590,7 @@ export default {
           // 만약 지금 보고있던게 자료였다면 로그 제출
           const endTime = new Date();
           if (vm.nowQuestion[vm.nowNum].soc === '자료') {
+            /*
             studentService.postLog({
               id: vm.nowQuestion[vm.nowNum].lecture_item_id,
               lecture_id: vm.lectureId,
@@ -537,7 +599,17 @@ export default {
               order: vm.nowQuestion[vm.nowNum].order,
               start_time: vm.startTime,
               end_time: endTime,
-            });
+            }); */
+            const submitlog = {
+              lecture_id: vm.lectureId,
+              user_id: utils.getUserIdFromJwt(),
+              type: vm.nowQuestion[vm.nowNum].type,
+              start_time: vm.startTime,
+              end_time: endTime,
+              item_id: vm.nowQuestion[vm.nowNum].lecture_item_id,
+              order: vm.nowQuestion[vm.nowNum].order,
+            };
+            vm.$socket.emit('LECTURE_ITEM_LOG', JSON.stringify(submitlog));
           }
           // 이전 문항으로
           vm.lectureItems = [];
@@ -559,6 +631,7 @@ export default {
           // 만약 지금 보고있던게 자료였다면 로그 제출
           const endTime = new Date();
           if (vm.nowQuestion[vm.nowNum].soc === '자료') {
+            /*
             studentService.postLog({
               id: vm.nowQuestion[vm.nowNum].lecture_item_id,
               lecture_id: vm.lectureId,
@@ -567,7 +640,17 @@ export default {
               order: vm.nowQuestion[vm.nowNum].order,
               start_time: vm.startTime,
               end_time: endTime,
-            });
+            }); */
+            const submitlog = {
+              lecture_id: vm.lectureId,
+              user_id: utils.getUserIdFromJwt(),
+              type: vm.nowQuestion[vm.nowNum].type,
+              start_time: vm.startTime,
+              end_time: endTime,
+              item_id: vm.nowQuestion[vm.nowNum].lecture_item_id,
+              order: vm.nowQuestion[vm.nowNum].order,
+            };
+            vm.$socket.emit('LECTURE_ITEM_LOG', JSON.stringify(submitlog));
           }
           // 다음 문항으로
           vm.lectureItems = [];

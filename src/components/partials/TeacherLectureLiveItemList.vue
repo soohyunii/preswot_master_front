@@ -1,12 +1,13 @@
 <template>
   <div>
-    <el-table :data="currentData">
+    <el-table :data="currentData" height="400">
       <el-table-column
-        prop="sequence"
-        label="No."
-        width="100"
+        prop="groupN"
+        label="그룹"
+        width="80"
         sortable >
       </el-table-column>
+      <!--
       <el-table-column
         prop="type"
         label="Type."
@@ -14,28 +15,31 @@
         :formatter="convertLcItemTypeKor"
         sortable >
       </el-table-column>
+      -->
       <el-table-column
         prop="name"
         label="강의도구 이름."
         sortable >
       </el-table-column>
       <el-table-column
+        prop="itemNum"
+        label="아이템 수"
+        width="80">
+      </el-table-column>
+      <el-table-column
         label=""
-        width="160"
+        width="80"
         align="center"
       >
         <template slot-scope="scope">
-          <el-button size="small" @click="onClick('APPEND', scope.row)" v-if="!scope.row.ifTail">
-            추가
-          </el-button>
-          <el-button type="primary" size="small" @click="onClick('SHOW', scope.row.lecture_item_id, scope.row.sequence - 1)" v-if="!scope.row.ifTail">
+          <el-button type="primary" size="small" @click="onClick('SHOW', scope.row)" v-if="scope.row.fir">
             보이기
           </el-button>
         </template>
       </el-table-column>
     </el-table>
     <br />
-    <el-pagination id="lecture_item_pagination" layout="prev, pager, next" :page-size="numPageElement" :total="numData" @current-change="handlePageChange" />
+    <!--<el-pagination id="lecture_item_pagination" layout="prev, pager, next" :page-size="numPageElement" :total="numData" @current-change="handlePageChange" />-->
   </div>
 </template>
 
@@ -55,35 +59,44 @@ export default {
     };
   },
   async created() {
-    // 각 문항이 딸린문항인지 아닌지 판별하기 위해
     const vm = this;
     vm.downList = vm.dataList;
-    // 연결된 문항인지 속성 추가
-    const tailItemList = [];
+    const grp = await lectureItemService.showGroup({
+      lectureId: vm.lectureId,
+    });
     const seq = await lectureItemService.showConnection({
       lectureId: vm.lectureId,
     });
-    seq.data.forEach((x) => {
-      // 여러 하위 항목
-      if (x.linked_list.includes('<$!<>') === true) {
-        const namugiSplit = x.linked_list.split('<$!<>');
-        namugiSplit.forEach((y) => {
-          tailItemList.push(parseInt(y, 10));
+    grp.data.list.forEach((x, index) => {
+      // 그룹별로
+      x.list_ids.forEach((y, bul) => {
+        seq.data.forEach((z) => {
+          // 연결리스트별로
+          if (z.lecture_item_list_id === parseInt(y, 10)) {
+            const newLL = {};
+            let howLL = 1;
+            if (z.linked_list.includes('<$!<>') === true) {
+              // 연결 아이템이 여러개라면
+              howLL = z.linked_list.split('<$!<>').length;
+            }
+            vm.downList.forEach((w) => {
+              if (w.lecture_item_id === z.item_id) {
+                newLL.name = w.name;
+              }
+            });
+            newLL.itemNum = howLL;
+            newLL.groupN = index + 1;
+            newLL.groupId = x.group_id;
+            if (bul === 0) {
+              newLL.fir = true;
+            } else {
+              newLL.fir = false;
+            }
+            vm.currentData.push(newLL);
+          }
         });
-      } else {
-        // 하위 항목이 하나
-        tailItemList.push(parseInt(x.linked_list, 10));
-      }
+      });
     });
-    vm.downList.forEach((x) => {
-      if (tailItemList.includes(x.lecture_item_id) === true) {
-        x.ifTail = true; // eslint-disable-line
-      } else {
-        x.ifTail = false; // eslint-disable-line
-      }
-    });
-    vm.currentData = vm.downList.slice(0, vm.numPageElement);
-    vm.numData = vm.downList.length;
   },
   computed: {
     lectureId() {

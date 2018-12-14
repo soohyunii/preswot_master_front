@@ -53,12 +53,14 @@
                 <el-button v-show="!focusFlag" size="small" type="primary" @click="onClick('FOCUS')">강의영상 보이기</el-button>
               </div>
             </div>
+            <!--
             <el-button type="primary" size="small" @click="onClick('SHOWALL', questionItemIdList)">
               문항 모두 보이기
             </el-button>
             <el-button type="primary" size="small" @click="onClick('SHOWALL', surveyItemIdList)">
               설문 모두 보이기
             </el-button>
+            -->
             <teacher-lecture-live-item-list
               v-if="isTableItemListLoaded"
               :dataList="tableItemList"
@@ -66,10 +68,11 @@
               :isAuto="isAuto"
             />
             <br>
+            <!--
             <el-tag v-for="(k, index) in selectItemList" :key="index" closable @close="deleteSelectedItem(index)">{{ k.name }}</el-tag>
             <el-button type="primary" size="small" @click="onClick('SHOWALL', selectItemIdList)">
               선택한 아이템 보이기
-            </el-button>
+            </el-button>-->
           </el-col>
           <el-col :span="12">
             <el-button style="float:right" type="primary" @click="onClick('HIDE')">아이템 일괄 내리기</el-button>
@@ -168,29 +171,6 @@ export default {
       const bItemSequence = Number(b.sequence);
       return aItemSequence - bItemSequence;
     });
-    // 연결된 문항인지 속성 추가
-    const tailItemList = [];
-    const seq = await lectureItemService.showConnection({
-      lectureId: vm.lectureId,
-    });
-    seq.data.forEach((x) => {
-      // 여러 하위 항목
-      if (x.linked_list.includes('<$!<>') === true) {
-        const namugiSplit = x.linked_list.split('<$!<>');
-        namugiSplit.forEach((y) => {
-          tailItemList.push(parseInt(y, 10));
-        });
-      } else { // 하위 항목이 하나
-        tailItemList.push(parseInt(x.linked_list, 10));
-      }
-    });
-    vm.tableItemList.forEach((x) => {
-      if (tailItemList.includes(x.lecture_item_id) === true) {
-        x.ifTail = true; // eslint-disable-line
-      } else {
-        x.ifTail = false; // eslint-disable-line
-      }
-    });
     const res2 = await classService.getClass({
       id: res.data.class_id,
     });
@@ -204,6 +184,7 @@ export default {
       user_id: utils.getUserIdFromJwt(),
     };
     vm.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
+    /* 삭제 - 181214
     let res1 = await lectureService.getOnStudentCount({
       lectureId: vm.lectureId,
     });
@@ -216,9 +197,11 @@ export default {
       });
       vm.onStudentCount = res1.data.count;
     }, 10000);
+    */
     vm.sUpdateTimelineLogIntervalId = setInterval(() => {
       vm.$socket.emit('UPDATE_TIMELINE_LOG', JSON.stringify(params));
     }, 18000);
+    /* 삭제 - 181214
     vm.sHeartbeatIntervalId = setInterval(() => {
       const params2 = {
         lecture_id: vm.lectureId,
@@ -226,24 +209,7 @@ export default {
       };
       vm.$socket.emit('HEART_BEAT', JSON.stringify(params2));
     }, 3000);
-
-    // 딸린 문항 구하기
-    // 대표문항 리스트와 딸린 문항 리스트
-    seq.data.forEach((x) => {
-      vm.mainquestion.push(parseInt(x.item_id, 10));
-      const tmp = [];
-      // 여러 하위 항목
-      if (x.linked_list.includes('<$!<>') === true) {
-        const namugiSplit = x.linked_list.split('<$!<>');
-        namugiSplit.forEach((y) => {
-          tmp.push(parseInt(y, 10));
-        });
-        vm.subquestion.push(tmp);
-      } else { // 하위 항목이 하나
-        tmp.push(parseInt(x.linked_list, 10));
-        vm.subquestion.push(tmp);
-      }
-    });
+    */
   },
   mounted() {
     const vm = this;
@@ -313,7 +279,7 @@ export default {
     LectureSurveyResult,
   },
   methods: {
-    onClick(type, data) {
+    async onClick(type, data) {
       const vm = this;
       switch (type) {
         // 보일 아이템 선택
@@ -379,14 +345,57 @@ export default {
             });
             break;
           }
+          const groupId = data.groupId;
+          const grp = await lectureItemService.showGroup({
+            lectureId: vm.lectureId,
+          });
+          const seq = await lectureItemService.showConnection({
+            lectureId: vm.lectureId,
+          });
+          const paramsi = [];
+          grp.data.list.forEach((x) => {
+            if (x.group_id === groupId) {
+              x.list_ids.forEach((y) => {
+                seq.data.forEach((z) => {
+                  if (z.lecture_item_list_id === parseInt(y, 10)) {
+                    if (z.linked_list.includes('<$!<>') === true) {
+                      // 연결 아이템이 여러개라면
+                      const splitz = z.linked_list.split('<$!<>');
+                      splitz.forEach((w) => {
+                        const parami = {
+                          lecture_id: vm.lectureId,
+                          opened: 1,
+                          lecture_item_id: w,
+                          group_id: groupId,
+                        };
+                        vm.currentLectureItemId.push(w);
+                        paramsi.push(parami);
+                      });
+                    } else {
+                      const splitz = z.linked_list;
+                      const parami = {
+                        lecture_id: vm.lectureId,
+                        opened: 1,
+                        lecture_item_id: splitz,
+                        group_id: groupId,
+                      };
+                      vm.currentLectureItemId.push(splitz);
+                      paramsi.push(parami);
+                    }
+                  }
+                });
+              });
+            }
+          });
+          vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify(paramsi));
+
+
+          /*
           // 딸린 문항이 없다면 하나만 출력
           if (vm.mainquestion.includes(data) === false) {
             const itemIndex = vm.tableItemList.findIndex(tableItem =>
               tableItem.lecture_item_id === data);
             let putIndex = 0;
-            /*
-            *  여러 강의 아이템을 'SHOW' 하는 경우, 미리 설정된 sequence를 기준으로 정렬
-            */
             for (let i = 0; i < vm.tableItemIndex.length; i += 1) {
               if (itemIndex < vm.tableItemIndex[i]) {
                 putIndex = i;
@@ -426,7 +435,7 @@ export default {
               paramsi.push(parami);
             });
             vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify(paramsi));
-          }
+          } */
           break;
         }
         case 'HIDE': {

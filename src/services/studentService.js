@@ -100,7 +100,7 @@ export default {
       },
     });
   },
-  postLog({ id, lecture_id, item_id, type, order, start_time, end_time }) {
+  postLog({ id, lecture_id, item_id, type, order, start_time, end_time, answer }) {
     return http.post(`/student/response/${id}`, {
       lecture_id: lecture_id, // eslint-disable-line
       item_id: item_id, // eslint-disable-line
@@ -108,6 +108,7 @@ export default {
       order: order, // eslint-disable-line
       start_time: start_time, // eslint-disable-line
       end_time: end_time, // eslint-disable-line
+      answer: answer, // eslint-disable-line
     });
   },
 };
