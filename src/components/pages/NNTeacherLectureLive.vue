@@ -240,6 +240,7 @@ export default {
       selectItemIdList: [], // 선택된 아이템들 id
       mainquestion: [], // 대표문항 리스트
       subquestion: [], // 딸린문항 리스트
+      nowGroup: -1, // 현재 그룹 번호
     };
   },
   computed: {
@@ -352,7 +353,10 @@ export default {
           const seq = await lectureItemService.showConnection({
             lectureId: vm.lectureId,
           });
-          const paramsi = [];
+          const paramsi = {
+            lecture_id: vm.lectureId,
+            group_id: groupId,
+          };
           grp.data.list.forEach((x) => {
             if (x.group_id === groupId) {
               x.list_ids.forEach((y) => {
@@ -362,80 +366,35 @@ export default {
                       // 연결 아이템이 여러개라면
                       const splitz = z.linked_list.split('<$!<>');
                       splitz.forEach((w) => {
-                        const parami = {
+                        /* const parami = {
                           lecture_id: vm.lectureId,
                           opened: 1,
                           lecture_item_id: w,
                           group_id: groupId,
-                        };
+                        }; */
                         vm.currentLectureItemId.push(w);
-                        paramsi.push(parami);
+                        // paramsi.push(parami);
                       });
                     } else {
                       const splitz = z.linked_list;
-                      const parami = {
+                      /* const parami = {
                         lecture_id: vm.lectureId,
                         opened: 1,
                         lecture_item_id: splitz,
                         group_id: groupId,
-                      };
+                      }; */
                       vm.currentLectureItemId.push(splitz);
-                      paramsi.push(parami);
+                      // paramsi.push(parami);
                     }
                   }
                 });
               });
             }
           });
-          vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify(paramsi));
+          vm.nowGroup = groupId;
+          vm.$socket.emit('LECTURE_GROUP_ACTIVATION', JSON.stringify(paramsi));
+          // vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify(paramsi));
 
-
-          /*
-          // 딸린 문항이 없다면 하나만 출력
-          if (vm.mainquestion.includes(data) === false) {
-            const itemIndex = vm.tableItemList.findIndex(tableItem =>
-              tableItem.lecture_item_id === data);
-            let putIndex = 0;
-            for (let i = 0; i < vm.tableItemIndex.length; i += 1) {
-              if (itemIndex < vm.tableItemIndex[i]) {
-                putIndex = i;
-                break;
-              }
-              if (i + 1 === vm.tableItemIndex.length) {
-                putIndex = i + 1;
-              }
-            }
-            vm.currentLectureItemId.splice(putIndex, 0, data);
-            vm.tableItemIndex.splice(putIndex, 0, itemIndex);
-            const param = {
-              lecture_id: vm.lectureId,
-              opened: 1,
-              lecture_item_id: data,
-            };
-            vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify([param]));
-          } else { // 딸린 문항이 있다면
-            const tmp = [];
-            tmp.push(data);
-            const ind = vm.mainquestion.indexOf(data);
-            vm.subquestion[ind].forEach((x) => {
-              tmp.push(x);
-            });
-            vm.currentLectureItemId = deepCopy(tmp);
-            const paramsi = [];
-            tmp.forEach((item) => {
-              vm.tableItemIndex.push(
-                vm.tableItemList.findIndex(tableItem =>
-                  tableItem.lecture_item_id === item),
-              );
-              const parami = {
-                lecture_id: vm.lectureId,
-                opened: 1,
-                lecture_item_id: item,
-              };
-              paramsi.push(parami);
-            });
-            vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify(paramsi));
-          } */
           break;
         }
         case 'HIDE': {
@@ -448,6 +407,7 @@ export default {
             });
             break;
           }
+          /*
           const paramsi = [];
           vm.currentLectureItemId.forEach((x) => {
             const parami = {
@@ -460,7 +420,13 @@ export default {
             // vm.currentLectureItemId.splice(itemIndex, 1);
             // vm.tableItemIndex.splice(itemIndex, 1);
           });
-          vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify(paramsi));
+          */
+          const paramsi = {
+            lecture_id: vm.lectureId,
+            group_id: vm.nowGroup,
+          };
+          vm.$socket.emit('LECTURE_GROUP_DEACTIVATION', JSON.stringify(paramsi));
+          vm.nowGroup = -1;
           vm.currentLectureItemId = [];
           vm.tableItemIndex = [];
           break;

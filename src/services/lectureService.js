@@ -139,6 +139,9 @@ export default {
   getOpenedLectureItem({ lectureId }) {
     return http.get(`/lectures/${lectureId}/opened-item`);
   },
+  getOpenedGroupItem({ lectureId }) {
+    return http.get(`/lectures/group/${lectureId}`);
+  },
   deleteMaterial({ id }) {
     return http.delete(`/materials/${id}`);
   },

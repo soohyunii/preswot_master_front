@@ -6,7 +6,7 @@
     <div v-else class="lecture-item">
       <div v-if="data.type === 0" class="question-box"> <!-- 질문 -->
         <div v-if="data.questions[0].type === 0">
-          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT' && data.result === 1) || answerSubmitted"> <!-- 이미 제출한 경우 -->
+          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT' && data.result === 1)"> <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
             <el-card v-if="data.result === 1">
