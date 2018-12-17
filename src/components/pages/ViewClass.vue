@@ -15,12 +15,18 @@
           <option v-for="deptName in deptNameList">{{deptName}}</option>
         </select>
       </el-form>
-      <el-form id="semester" style="position: relative; left:440px; top:-120px;">
+      <!-- <el-form id="semester" style="position: relative; left:440px; top:-120px;">
         <span>학기선택: </span>
         <select id="semester-choice" v-model="semester_chosen" @change="onChange(type,chosen,dept_chosen)" style="width:120px;">
           <option value="">선택사항없음</option>
           <option v-for="semesterName in semesterNameList">{{semesterName}}</option>
         </select>
+      </el-form> -->
+      <el-form id="semester" style="position: relative; left:440px; top:-120px; width:400px">
+        <span>기준일 선택:  </span>
+        <el-date-picker v-model="end_date_from" type="datetime" style="width:120px"></el-date-picker> 
+        ~
+        <el-date-picker v-model="end_date_to" type="datetime" style="width:120px"></el-date-picker> 
       </el-form>
     </div>
     <div style="margin-top: -70px;"/>
@@ -204,6 +210,11 @@ export default {
       const deptNameLists = await masterService.getDeptLists(vm.chosen);
       vm.deptNameList = deptNameLists.data.map(element=>element.name);
       // console.log('vm.deptNameList!~!!!!!!!!!!!!!!!!!!!!!',vm.deptNameList);
+    },
+    async categorySemesterChange(){
+      const vm=this;
+      /*const semesterNameLists = await masterService.get*/
+
     },
     onClickDelete(index) {
       const vm = this;

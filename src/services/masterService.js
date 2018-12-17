@@ -61,9 +61,19 @@ export default {
     }*/);
   },
 
-  /*강사 정보 조회*/
-  getTeacherLists(type,university_name,department_name) {
+  /*강사,학생 정보 조회*/
+  getUserLists(type,university_name,department_name) {
     return http.get(`/admin_user/list?type=${type}&university_name=${university_name}&department_name=${department_name}`)
+  },
+
+  /*수정할 강사,학생 정보 조회*/
+  getMasterUser({email_id}){
+    return http.get(`/admin_user?email_id=${email_id}`)
+  },
+
+  /*과목 목록 조회*/
+  getClassLists({university_name,department_name,end_date_from,end_date_to}){
+    return http.get(`/admin_class/list?university_name=${university_name}&department_name=${department_name}&end_date_from=${end_date_from}&end_date_to=${end_date_to}`)
   },
   /*postClass({ 
     title,
@@ -284,34 +294,36 @@ export default {
     });
   },
   NNMasterputTeacher({
-    email,
+    university_name,
+    department_name,
+    email_id,
     password,
-    passwordConfirm,
     name,
-    sex,
-    career,
+    type,
     birth,
-    choiceUni,
-    choiceDept,
+    sex,
     address,
     phone,
-    account,
-    bank,
+    major,
+    career,
+    account_bank,
+    account_number,
   }) {
-    return http.put(`view/teacher`,{
-      email,
+    return http.put(`admin_user`,{
+      university_name,
+      department_name,
+      email_id,
       password,
-      passwordConfirm,
       name,
-      sex,
-      career,
+      type,
       birth,
-      choiceUni,
-      choiceDept,
+      sex,
       address,
       phone,
-      account,
-      bank,
+      major,
+      career,
+      account_bank,
+      account_number,
     });
   },
   NNMasterpostTeacher({
@@ -346,6 +358,13 @@ export default {
       account_bank,
       account_number,
     })
+  },
+  deleteUser({
+    email_id,
+  }) {
+    console.log('email_id======',email_id);
+    return http.delete(`/admin_user?email_id=${email_id}`,{
+    });
   },
   NNMasterputClass({
     university_name,
@@ -414,51 +433,60 @@ export default {
     });
   },
   NNMasterputStudent({
-    email,
+    email_id,
     password,
-    passwordConfirm,
     name,
     sex,
     birth,
-    choiceUni,
-    choiceDept,
+    university_name,
+    department_name,
     address,
     phone,
-    account,
-    bank,
+    account_bank,
+    account_number,
   }) {
-    return http.put(`view/student`,{
-      email,
+    return http.put(`/admin_user`,{
+      email_id,
       password,
-      passwordConfirm,
       name,
       sex,
       birth,
-      choiceUni,
-      choiceDept,
+      university_name,
+      department_name,
       address,
       phone,
-      account,
-      bank,
+      account_bank,
+      account_number,
     });
   },
   NNMasterpostStudent({
-    email,
+    university_name,
+    department_name,
+    email_id,
     password,
-    passwordConfirm,
     name,
+    type,
     sex,
     birth,
-    choiceUni,
-    choiceDept,
     address,
     phone,
-    account,
-    bank,
+    account_bank,
+    account_number,
   }) {
-    return {
-      success: true,
-    };
+    return http.post(`/admin_user`,{
+      university_name,
+      department_name,
+      email_id,
+      password,
+      name,
+      type,
+      sex,
+      birth,
+      address,
+      phone,
+      account_bank,
+      account_number,
+    });
   },
   NNMasterputBank({
     code,

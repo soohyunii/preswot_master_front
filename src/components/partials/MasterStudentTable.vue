@@ -2,18 +2,18 @@
   <div id="class_index_wrapper">
     <div>
       <el-table class="elTable" :data="page" style="width: 100%">
-      <el-table-column prop="userId" label="유저ID" width="70">
-        <!-- <template slot-scope="scope">
+      <el-table-column prop="user_id" label="ID" width="50">
+        <template slot-scope="scope">
         {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
-        </template> -->
+        </template>
       </el-table-column>
-      <el-table-column prop="userType" label="유저타입" width="80">
+      <!-- <el-table-column prop="userType" label="유저타입" width="80">
+      </el-table-column> -->
+      <el-table-column prop="email_id" label="메일주소" width="180">
       </el-table-column>
-      <el-table-column prop="email" label="메일주소" width="180">
-      </el-table-column>
-      <el-table-column prop="passwd" label="비밀번호" width="120">
-      </el-table-column>
-      <el-table-column prop="name" label="이름" width="100">
+      <!-- <el-table-column prop="passwd" label="비밀번호" width="120">
+      </el-table-column> -->
+      <el-table-column prop="name" label="이름" width="80">
         <!-- <template slot-scope="scope">
         {{ scope.row.start_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') : '미정' }}
         ~
@@ -21,12 +21,14 @@
         </template> -->
       </el-table-column>
       <el-table-column prop="birth" label="생년월일" width="100"></el-table-column>
-      <el-table-column prop="sex" label="성별" width="50"></el-table-column>
+      <el-table-column prop="sex" id="sex" label="성별" width="50">
+        <!-- <el-table-td v-if="sex==1">남자</el-table-td> -->
+      </el-table-column>
       <el-table-column prop="phone" label="전화번호" width="150"></el-table-column>
-      <el-table-column prop="major" label="전공" width="150"></el-table-column>
-      <el-table-column prop="group" label="소속" width="100"></el-table-column>
-      <el-table-column prop="bank" label="계좌은행" width="80"></el-table-column>
-      <el-table-column prop="bank-account" label="계좌번호" width="150"></el-table-column>
+      <el-table-column prop="department_name" label="전공" width="120"></el-table-column>
+      <!-- <el-table-column prop="group" label="소속" width="100"></el-table-column> -->
+      <el-table-column prop="account_bank" label="계좌은행" width="80"></el-table-column>
+      <el-table-column prop="account_number" label="계좌번호" width="150"></el-table-column>
       <!-- <el-table-column label="" header-align="left" align="right" width="345"> -->
         <!-- <el-table-column label="" header-align="left" align="right">
         <template slot-scope="scope">
@@ -40,19 +42,19 @@
             <el-button type="danger" @click="listeners['delete'](scope.$index)" class="delete-btn">삭제</el-button>
           </template>
         </el-table-column> -->
-      </el-table>
-      <el-table-column label="" header-align="left" align="right">
+        <el-table-column label="" header-align="left" align="right">
         <template slot-scope="scope">
-          <router-link :to="`/a/register/student/${scope.row.code}/edit`">
+          <router-link :to="`/a/student/${scope.row.email_id}/edit`">
             <el-button class="edit-btn">수정</el-button>
           </router-link>
         </template>
       </el-table-column>
       <el-table-column>
           <template slot-scope="scope">
-            <el-button type="danger" @click="listeners['delete'](scope.$index)" class="delete-btn">삭제</el-button>
+            <el-button type="danger" @click="deleteUser(scope.row.email_id)" class="delete-btn">삭제</el-button>
           </template>
         </el-table-column>
+      </el-table>
       <br>
     </div>
     <div id="pagination" style="display: block; text-align: center;">
@@ -83,6 +85,7 @@
 
 <script>
 import utils from '../../utils';
+import masterService from '../../services/masterService';
 
 export default {
   name: 'MasterStudentTable',
@@ -125,7 +128,11 @@ export default {
     }
   },
   methods: {
-    formatDate: utils.formatDate,
+    // formatDate: utils.formatDate,
+    async deleteUser(email_id){
+      await masterService.deleteUser({email_id: email_id});
+      window.location.reload();
+    }
   },
 };
 </script>

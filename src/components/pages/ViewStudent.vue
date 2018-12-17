@@ -1,6 +1,22 @@
 <template>
   <div id="class_index_wrapper" class="bt-container">
     <h2 class="page-title">조회하기 > 학생 및 성적표</h2>
+    <div id="choiceLists">
+    <el-form width="300px">
+      <span>대학선택: </span>
+      <select id="uni-choice" style="width:130px;" v-model="chosen" @change="categoryChange()">
+        <option v-for="university_name in university_list">{{university_name}}</option>
+      </select>
+    </el-form>
+    <el-form id="dept">
+      <span>학과선택: </span>
+      <select id="dept-choice"  style="width:130px;" v-model="dept_chosen" @change="onChange(type,chosen,dept_chosen)">
+        <option>학과선택없음</option>
+        <option v-for="department_name in department_list">{{department_name}}</option>
+      </select>
+    </el-form>
+    <div style="margin-top: -10px;"/>
+    </div>
     <master-student-table
       :list="list"
       :onClick="onClick"
@@ -31,6 +47,7 @@ import { mapActions, mapState } from 'vuex';
 import MasterStudentTable from '../partials/MasterStudentTable';
 // import classService from '../services/classService';
 import utils from '../../utils';
+import masterService from '../../services/masterService';
 
 export default {
   name: 'ViewStudent',
@@ -39,10 +56,18 @@ export default {
   },
   data() {
     return {
-      userId: utils.getUserIdFromJwt(),
+      /*userId: utils.getUserIdFromJwt(),*/
+      /*user_id:'null',*/
       searchType: 'name',
       searchText: '',
       list: [],
+      chosen:'',
+      dept_chosen:'',
+      university_list:[],
+      department_list:[],
+      university_name:'',
+      department_name:'',
+      type:0,  
     };
   },
   computed: {
@@ -50,10 +75,12 @@ export default {
   },
   async created() {
     const vm = this;
-
+    const l = console.log;
+    const uniNameLists = await masterService.getUniNameLists();
+    vm.university_list = await uniNameLists.data.map(element=>element.name);
     // 새로고침(Refresh, F5) 해도 목록을 가져올 수 있게 하는 부분.
     // TODO: 속도가 눈에 보이게 느려지므로 다른 방법이 있다면 수정 요구.
-    await vm.getMyClassLists();
+    // await vm.getMyClassLists();
 
     // 검색 기능 : 서버에서 DB 쿼리로 처리하는 게 효율이 나을 것 같으면 나중에 수정.
     if (vm.studyingClassList !== null) {
@@ -157,6 +184,17 @@ export default {
         }
       }
     },
+    async categoryChange(){
+      const vm=this;
+      const deptNameLists = await masterService.getDeptLists(vm.chosen);
+      vm.department_list = await deptNameLists.data.map(element=>element.name);
+      console.log(vm.department_name);
+    },
+    async onChange(type,university_name,department_name){
+      const vm=this;
+      const res = await masterService.getUserLists(type,university_name,department_name);
+      vm.list=res.data;
+    },
     onClickDelete(index) {
       const vm = this;
       const currentTeachingClass = vm.teachingClassList[index];
@@ -219,6 +257,29 @@ export default {
     margin-top : 40px;
     margin-left : 12px;
     margin-bottom : 25px;
+  }
+  .el-form{
+    // text-align : left;
+    // position: absolute;
+    font-family: SpoqaHanSans;
+    font-size: 16px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 40px;
+    letter-spacing: normal;
+    color: #000000;
+    width: 300px;
+    margin: 20px 0 0 10px;
+    // border:1px solid red;
+  }
+  #choiceLists #dept{
+    // border: 1px solid blue;
+    position: relative;
+    top:-60px;
+    left: 200px;
+    margin-left: 30px;
+    // width: 300px;
   }
 }
 </style>

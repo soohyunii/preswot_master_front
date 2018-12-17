@@ -157,16 +157,17 @@ export default {
     /*const name = vm.input.university_name;*/
 
     if (vm.isEdit) {
-      const res = await masterService.getClass({ id: vm.classId });
-      // console.log('res', res.data);
+      const res = await masterService.getMasterUser({ email_id: vm.classId });
+      console.log('res', res.data);
       vm.input.email_id = res.data.email_id || vm.initialInput.email_id;
       vm.input.password = res.data.password || vm.initialInput.password;
-      vm.input.passwordConfirm = res.data.passwordConfirm || vm.initialInput.passwordConfirm;
+      /*vm.input.passwordConfirm = res.data.passwordConfirm || vm.initialInput.passwordConfirm;*/
       vm.input.name = res.data.name || vm.initialInput.name;
       vm.input.sex = res.data.sex || vm.initialInput.sex;
       vm.input.career = res.data.career || vm.initialInput.career;
       vm.input.birth = res.data.birth || vm.initialInput.birth;
       vm.input.type = 1;
+      vm.input.major = res.data.major || vm.initialInput.major;
       vm.input.university_name = res.data.university_name || vm.initialInput.university_name;
       vm.input.department_name = res.data.department_name || vm.initialInput.department_name;
       vm.input.address = res.data.address || vm.initialInput.address;
@@ -185,7 +186,7 @@ export default {
     },
     classId() {
       const vm = this;
-      return vm.$route.path.split('class/')[1].split('/edit')[0];
+      return vm.$route.path.split('teacher/')[1].split('/edit')[0];
     },
     /*async categoryChange(university_name){
       console.log('hello!!');
@@ -213,7 +214,23 @@ export default {
               id,
               ...vm.input,
             });
-            vm.$router.push('/view/teacher');
+            if(vm.input.email_id==''||vm.input.password==''||vm.input.passwordConfirm==''||vm.input.name=='') {
+              vm.$notify({
+                title: '강사 수정 실패',
+                message: '필수입력사항(*)을 모두 기재해 주세요',
+                type: 'error',
+                duration: 0, 
+              });
+            } else if(vm.input.password!==vm.input.passwordConfirm){
+              vm.$notify({
+                title:'강사 수정 실패',
+                message: '패스워드가 일치하는지 확인해주세요',
+                type: 'error',
+                duration: 0,
+              });
+            } else {
+              vm.$router.push('/a/view/teacher');
+            }
           } catch (error) {
             vm.$notify({
               title: '강사 수정 실패',

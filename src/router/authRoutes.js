@@ -574,6 +574,15 @@ export default function authRoutes(root) {
       },
     },
     {
+      alias: '/student/:code/edit',
+      path:'/register/student',
+      name: 'RegisterStudent',
+      component: RegisterStudent,
+      meta: {
+        title: '관리자 학생 수정',
+      },
+    },
+    {
       path: '/register/bank',
       name: 'RegisterBank',
       component: RegisterBank,

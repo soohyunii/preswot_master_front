@@ -12,13 +12,13 @@
         {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
         </template> -->
       </el-table-column>
-      <el-table-column prop="password" label="비밀번호" width="120">
+      <!-- <el-table-column prop="password" label="비밀번호" width="120"> -->
         <!-- <template slot-scope="scope">
         {{ scope.row.start_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') : '미정' }}
         ~
         {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString('ko-KR') : '미정' }}
         </template> -->
-      </el-table-column>
+      <!-- </el-table-column> -->
       <el-table-column prop="name" label="이름" width="100">
       </el-table-column>
       <el-table-column prop="birth" label="생년월일" width="110">
@@ -39,7 +39,7 @@
       </el-table-column>
       <el-table-column label="" header-align="left" align="right">
         <template slot-scope="scope">
-            <router-link :to="`/a/teacher/${scope.row.name}/edit`">
+            <router-link :to="`/a/teacher/${scope.row.email_id}/edit`">
               <el-button class="edit-btn">수정</el-button>
             </router-link>
           </template>
@@ -47,7 +47,8 @@
 
         <el-table-column>
           <template slot-scope="scope">
-            <el-button type="danger" @click="listeners['delete'](scope.$index)" class="delete-btn">삭제</el-button>
+            <!-- <el-button type="danger" @click="listeners['delete'](scope.$index)" class="delete-btn">삭제</el-button> -->
+            <el-button type="danger" @click="deleteUser(scope.row.email_id)" class="delete-btn">삭제</el-button>
           </template>
         </el-table-column>
 
@@ -138,7 +139,11 @@ export default {
     }
   },
   methods: {
-    formatDate: utils.formatDate,
+    /*formatDate: utils.formatDate,*/
+    async deleteUser(email_id){
+      await masterService.deleteUser({email_id : email_id});
+      window.location.reload();
+    }
   },
 };
 </script>
@@ -157,6 +162,18 @@ export default {
     letter-spacing: normal;
     color: #909399;
   }
+  /*.elTable-label th div{
+    text-align: center;
+    font-family: SpoqaHanSans;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    color: #909399;
+    border: 1px solid red;
+  }*/
   .elTable-label tr {
     text-align: center;
     font-family: SpoqaHanSans;

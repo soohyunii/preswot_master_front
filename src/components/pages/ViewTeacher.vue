@@ -8,13 +8,14 @@
     <div id="choiceLists">
     <el-form width="300px">
       <span>대학선택: </span>
-      <select id="uni-choice" v-model="chosen" @change="categoryChange()">
+      <select id="uni-choice" style="width:130px;" v-model="chosen" @change="categoryChange()">
         <option v-for="uniName in uniNameList">{{uniName}}</option>
       </select>
     </el-form>
     <el-form id="dept">
       <span>학과선택: </span>
       <select id="dept-choice"  style="width:130px;" v-model="dept_chosen" @change="onChange(type,chosen,dept_chosen)">
+        <option>학과선택없음</option>
         <option v-for="deptName in deptNameList">{{deptName}}</option>
       </select>
     </el-form>
@@ -196,7 +197,7 @@ export default {
     async onChange(type,university_name,department_name){
       const vm=this;
       // console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@',type);
-      const res = await masterService.getTeacherLists(type,university_name,department_name);
+      const res = await masterService.getUserLists(type,university_name,department_name);
       // console.log('######################',res);
       vm.list = res.data;
     },
@@ -304,6 +305,7 @@ export default {
     position: relative;
     top:-60px;
     left: 200px;
+    margin-left:30px;
     // width: 300px;
   }
   master-teacher-table list{

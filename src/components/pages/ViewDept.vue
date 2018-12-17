@@ -114,6 +114,8 @@ export default {
     // vm.input.uniNameLists = uniNameLists.data.map(element => element.name);
     vm.uniName = await uniNameLists.data.map(element => element.name);
     console.log('uniName**************==', vm.uniName);
+    /*const deptNameLists = await masterService.getDeptLists();
+    vm.deptList = await deptNameLists.data.map(element=>element.name);*/
   },
   methods: {
     /*
