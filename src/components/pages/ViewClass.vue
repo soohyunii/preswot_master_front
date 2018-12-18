@@ -10,7 +10,8 @@
       </el-form>
       <el-form id="dept" style="position: relative; left:220px; top:-60px;">
         <span>학과선택: </span>
-        <select id="dept-choice" v-model="dept_chosen" @change="categorySemesterChange(type,chosen,dept_chosen)" style="width:120px;">
+        <!-- <select id="dept-choice" v-model="dept_chosen" @change="categorySemesterChange(type,chosen,dept_chosen)" style="width:120px;"> -->
+        <select id="dept-choice" v-model="dept_chosen" @change="showChange()" style="width:120px;">
           <option value="">선택사항없음</option>
           <option v-for="deptName in deptNameList">{{deptName}}</option>
         </select>
@@ -22,11 +23,11 @@
           <option v-for="semesterName in semesterNameList">{{semesterName}}</option>
         </select>
       </el-form> -->
-      <el-form id="semester" style="position: relative; left:440px; top:-120px; width:400px">
-        <span>기준일 선택:  </span>
-        <el-date-picker v-model="end_date_from" type="datetime" style="width:120px"></el-date-picker> 
+      <el-form id="semester" style="position: relative; left:440px; top:-120px; width:500px">
+        <span>기간선택:  </span>
+        <el-date-picker v-model="date_from_chosen" type="datetime" format="yyyy-MM-dd" style="width:140px"></el-date-picker> 
         ~
-        <el-date-picker v-model="end_date_to" type="datetime" style="width:120px"></el-date-picker> 
+        <el-date-picker v-model="date_to_chosen" type="datetime" format="yyyy-MM-dd" style="width:140px" @change="toChange()"></el-date-picker> 
       </el-form>
     </div>
     <div style="margin-top: -70px;"/>
@@ -84,7 +85,9 @@ export default {
       semesterNameList:[],
       chosen:'',
       dept_chosen:'',
-      semester_chosen:'',
+      semester:'',
+      date_from_chosen:new Date(),
+      date_to_chosen:new Date(),
     };
   },
   computed: {
@@ -211,10 +214,29 @@ export default {
       vm.deptNameList = deptNameLists.data.map(element=>element.name);
       // console.log('vm.deptNameList!~!!!!!!!!!!!!!!!!!!!!!',vm.deptNameList);
     },
-    async categorySemesterChange(){
+    /*async onChange(end_date_from,end_date_to){
       const vm=this;
-      /*const semesterNameLists = await masterService.get*/
-
+      const res = await masterService.getClassLists({university_name : vm.uniName,department_name : vm.deptName ,end_date_from : vm.end_date_from ,end_date_to : vm.end_date_to});
+      vm.list = res.data;
+      console.log('vm.list=============',vm.list);
+    },*/
+    async showChange(){
+      const vm=this;
+      const null_date=new Date(NaN);
+      console.log(null_date);
+      const res = await masterService.getClassLists({university_name : vm.chosen,department_name : vm.dept_chosen ,end_date_from : null_date ,end_date_to : null_date});
+      /*console.log('vm.uniName==',vm.chosen,'vm.deptName====',vm.dept_chosen);
+      console.log('vm.date_from_chosen==',vm.date_from_chosen,'vm.date_to_chosen====',vm.date_to_chosen);*/
+      vm.list = res.data;
+      /*console.log('vm.list=============',vm.list);*/
+    },
+    async toChange(){
+      const vm=this;
+      const res = await masterService.getClassLists({university_name : vm.chosen,department_name : vm.dept_chosen ,end_date_from : vm.date_from_chosen ,end_date_to : vm.date_to_chosen});
+      console.log('vm.uniName==',vm.chosen,'vm.deptName====',vm.dept_chosen);
+      console.log('vm.date_from_chosen==',vm.date_from_chosen,'vm.date_to_chosen====',vm.date_to_chosen);
+      vm.list = res.data;
+      console.log('vm.list=============',vm.list);
     },
     onClickDelete(index) {
       const vm = this;

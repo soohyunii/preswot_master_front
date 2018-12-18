@@ -7,18 +7,19 @@
           {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
         </template>
       </el-table-column> -->
-      <el-table-column prop="code" label="코드" width="120">
+      <el-table-column prop="class_id" label="ID" width="50"></el-table-column>
+      <el-table-column prop="code" label="코드" width="90">
         <!-- <template slot-scope="scope">
         {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
         </template> -->
       </el-table-column>
-      <el-table-column prop="name" label="과목명" width="160">
+      <el-table-column prop="name" label="과목명" width="140">
       </el-table-column>
-      <el-table-column prop="isActive" label="실제과목여부" width="110">  <!-- 기본과목(N)/실제과목(Y)/(실제과목 미등록)/ (상세 페이지 화면에서는 좀 더 자세하게:강의,시간,공간 중 무엇을 미등록했는지 알려주는 알림창 필요) -->
+      <el-table-column prop="isActive" label="활성화여부" width="120">  <!-- 기본과목(N)/실제과목(Y)/(실제과목 미등록)/ (상세 페이지 화면에서는 좀 더 자세하게:강의,시간,공간 중 무엇을 미등록했는지 알려주는 알림창 필요) -->
       </el-table-column>
-      <el-table-column prop="teacher_name" label="강사" width="110">
+      <el-table-column prop="user.name" label="강사" width="110">
       </el-table-column>
-      <el-table-column prop="date" label="강의시작일" width="160">
+      <el-table-column prop="start_date" label="강의시작일" width="160">
       </el-table-column>
       <el-table-column prop="lecture_register" label="강의등록여부" width="160">
       </el-table-column>  <!-- 등록 / 미등록 -->
@@ -27,11 +28,18 @@
       <el-table-column label="" header-align="left" align="right">
         <template slot-scope="scope">
             <router-link :to="`/a/view/${scope.row.name}/detail`">
+              <el-button class="edit-btn">상세</el-button>
+            </router-link>
+        </template>
+      </el-table-column>
+      <el-table-column label="" header-align="left" align="right">
+        <!-- <template slot-scope="scope">
+            <router-link :to="`/a/view/${scope.row.name}/detail`">
               <el-button class="edit-btn">상세보기</el-button>
             </router-link>
-          </template>
+          </template> -->
           <template slot-scope="scope">
-            <router-link :to="`/a/class/${scope.row.name}/edit`">
+            <router-link :to="`/a/class/${scope.row.class_id}/edit`">
               <el-button class="edit-btn">수정</el-button>
             </router-link>
           </template>
@@ -51,7 +59,7 @@
 
         <el-table-column>
           <template slot-scope="scope">
-            <el-button type="danger" @click="listeners['delete'](scope.$index)" class="delete-btn">삭제</el-button>
+            <el-button type="danger" @click="classDelete(scope.row.class_id)" class="delete-btn">삭제</el-button>
           </template>
         </el-table-column>
 
@@ -130,7 +138,11 @@ export default {
     }
   },
   methods: {
-    formatDate: utils.formatDate,
+    // formatDate: utils.formatDate,
+    async classDelete(class_id){
+      await masterService.classDelete({class_id: class_id});
+      window.location.reload();
+    }
   },
 };
 </script>
@@ -171,5 +183,10 @@ export default {
     letter-spacing: normal;
     color: #606266;
   }
+  /*.edit-btn-detail {
+    border: 1px solid blue;
+    width:120px;
+    margin-right: 100px;
+  }*/
 }
 </style>

@@ -75,6 +75,11 @@ export default {
   getClassLists({university_name,department_name,end_date_from,end_date_to}){
     return http.get(`/admin_class/list?university_name=${university_name}&department_name=${department_name}&end_date_from=${end_date_from}&end_date_to=${end_date_to}`)
   },
+
+  /*수정할 과목 조회*/
+  getMasterClass({class_id}){
+    return http.get(`/admin_class?class_id=${class_id}`)
+  },
   /*postClass({ 
     title,
     description,
@@ -309,7 +314,7 @@ export default {
     account_bank,
     account_number,
   }) {
-    return http.put(`admin_user`,{
+    return http.put(`/admin_user`,{
       university_name,
       department_name,
       email_id,
@@ -367,36 +372,38 @@ export default {
     });
   },
   NNMasterputClass({
+    class_id,
+    name,
+    isActive,
     university_name,
     department_name,
     teacher_email_id,
     code,
-    day_of_week,
-    name,
-    isActive,
+    description,
+    start_date,
+    end_date,
     start_time,
     end_time,
     location,
-    start_date,
-    end_date,
+    day_of_week,  
     capacity,
-    description,
   }) {
     return http.put(`/admin_class`,{
+      class_id,
+      name,
+      isActive,
       university_name,
       department_name,
       teacher_email_id,
       code,
-      day_of_week,
-      name,
-      isActive,
+      description,
+      start_date,
+      end_date,
       start_time,
       end_time,
       location,
-      start_date,
-      end_date,
+      day_of_week,  
       capacity,
-      description,
     })
   },
   NNMasterpostClass({
@@ -457,6 +464,12 @@ export default {
       phone,
       account_bank,
       account_number,
+    });
+  },
+  classDelete({
+    class_id,
+  }) {
+    return http.delete(`/admin_class?class_id=${class_id}`,{
     });
   },
   NNMasterpostStudent({

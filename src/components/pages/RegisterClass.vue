@@ -134,6 +134,7 @@ export default {
   },
   data() {
     const initialInput = {
+      /*class_id:'',*/
       university_list: '',
       department_list: null,
       teacher_list: '',
@@ -164,11 +165,13 @@ export default {
     vm.input.university_list = uniNameLists.data.map(element => element.name);
     
     if (vm.isEdit) {
-      const res = await masterService.getClass({ id: vm.classId });
+      const res = await masterService.getMasterClass({ class_id: vm.classId });
+      // console.log(class_id);
       // console.log('res', res.data);
       vm.input.university_name = res.data.university_name || vm.initialInput.university_name;
       vm.input.department_name = res.data.department_name || vm.initialInput.department_name;
       vm.input.teacher_email_id = res.data.teacher_email_id || vm.initialInput.teacher_email_id;
+      /*vm.input.teacher_list = res.data.teacher_list || vm.initialInput.teacher_list;*/
       vm.input.code = res.data.code || vm.initialInput.code;
       vm.input.day_of_week = res.data.day_of_week || vm.initialInput.day_of_week;
       vm.input.name = res.data.name || vm.initialInput.name;
@@ -180,6 +183,7 @@ export default {
       vm.input.capacity = res.data.capacity || vm.initialInput.capacity; // 0은 무제한
       // vm.input.capacityCheck = vm.input.capacity === 0;
       // vm.input.lecturerDescription = res.data.lecturer_description;
+      // vm.input.isActive = res.data.isActive || vm.initialInput.isActive;
       vm.input.description = res.data.description;
       // 필수입력요소 미입력시 '*는 필수입력사항입니다 알람'
     }
@@ -191,7 +195,7 @@ export default {
     },
     classId() {
       const vm = this;
-      return vm.$route.path.split('teacher/')[1].split('/edit')[0];
+      return vm.$route.path.split('class/')[1].split('/edit')[0];
     },
   },
   methods: {
@@ -207,7 +211,7 @@ export default {
           // TODO: wrap with try catch
           try {
             await masterService.NNMasterputClass({
-              id,
+              class_id: id,
               ...vm.input,
             });
             vm.$router.push('/a/view/class');
@@ -255,7 +259,7 @@ export default {
     },
     async categoryTeacherChange(){
       const vm=this;
-      const teacherNameLists = await masterService.getTeacherLists(1,vm.input.university_name,vm.input.department_name);
+      const teacherNameLists = await masterService.getUserLists(1,vm.input.university_name,vm.input.department_name);
       console.log(teacherNameLists);
       vm.input.teacher_list = await teacherNameLists.data.map(element=>element.name);
       console.log(vm.input.teacher_list);

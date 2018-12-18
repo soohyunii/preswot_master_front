@@ -19,15 +19,15 @@
       </el-form-item>
 
       <el-form-item label="소속대학 선택">
-        <select id="uni-choice" v-model="input.choiceUni">
-          <option value="">대학리스트</option>  <!-- DB에 있는 대학 리스트 가져오기 -->
+        <select id="uni-choice" v-model="input.university_name" @change="categoryChange(input.university_name)">
+          <option v-for="university_name in input.university_list">{{university_name}}</option>
         </select>
       </el-form-item>
 
       <el-form-item label="소속학과 선택">
-        <select id="dept-choice" v-model="input.choiceDept">
-          <option value="">학과리스트</option>  <!-- DB에 있는 학과 리스트 가져오기 -->
+        <select id="dept-choice" v-model="input.department_name" @change="teacherChange()">
           <option value="">선택사항없음</option>
+          <option v-for="department_name in input.department_list">{{department_name}}</option>
         </select>
       </el-form-item>
 
@@ -48,17 +48,21 @@
             <th>강사이름</th>
             <th>소속학과</th>
             <th>이메일</th>
-            <th><input type="checkbox"/></th> <!-- 모두 선택 체크버튼으로 만들기 -->
+            <!-- <th><input type="checkbox"/></th> -->
           </tr>
           </thead>
           <tbody>
-          <tr>
-            <td>이름 리스트</td>
-            <td>소속학과 리스트</td>
-            <td>이메일 리스트</td>
-            <td><input type="checkbox"/></td> <!-- 여기에 DB리스트 틀어감 -->
+          <tr v-for="teacher_name in input.teacher_list">
+            <td>{{teacher_name}}</td>
+            <!-- <td><input type="checkbox"/></td>  -->
           </tr>
-          <tr>
+          <tr v-for="teacher_dept in input.teacherDept_list">
+            <td>{{teacher_dept}}</td>
+          </tr>
+          <tr v-for="teacher_email in input.teacherEmail_list">
+            <td>{{teacher_email}}</td>
+          </tr>
+          <!-- <tr>
             <td>이름 리스트</td>
             <td>소속학과 리스트</td>
             <td>이메일 리스트</td>
@@ -69,7 +73,7 @@
             <td>소속학과 리스트</td>
             <td>이메일 리스트</td>
             <td><input type="checkbox"/></td>
-          </tr>
+          </tr> -->
           </tbody>
         </table>
       </el-form-item>
@@ -94,7 +98,7 @@
 </template>
 
 <script>
-import classService from '../../services/classService';
+import masterService from '../../services/masterService';
 import authService from '../../services/authService';
 import utils from '../../utils';
 
@@ -115,10 +119,15 @@ export default {
     const initialInput = {
       /*code: '',*/
       name: '',
-      choiceUni: '',
-      choiceDept: '',
+      university_name: '',
+      department_name: '',
       capacity: 0,
+      type:1,
       choiceTeacher: '',
+      university_list:[],
+      department_list:[],
+      teacher_list:[],
+      teacherDept_list:[],
     };
     return {
       initialInput,
@@ -127,13 +136,19 @@ export default {
   },
   async mounted() {
     const vm = this;
+    const uniNameLists = await masterService.getUniLists();
+    console.log('uniNameLists?==============',uniNameLists);
+    vm.input.university_list = uniNameLists.data.map(element=>element.name);
+    console.log('university_list??============',vm.input.university_list);
+    
+    
     if (vm.isEdit) {
-      const res = await classService.getClass({ id: vm.classId });
+      const res = await masterService.getClass({ id: vm.classId });
       // console.log('res', res.data);
       // vm.input.code = res.data.code || vm.initialInput.code;
       vm.input.name = res.data.name || vm.initialInput.name;
-      vm.input.choiceUni = res.data.choiceUni || vm.initialInput.choiceUni;
-      vm.input.choiceDept = res.data.choiceDept || vm.initialInput.choiceDept;
+      vm.input.university_name = res.data.university_name || vm.initialInput.university_name;
+      vm.input.department_name = res.data.department_name || vm.initialInput.department_name;
       vm.input.capacity = res.data.capacity || vm.initialInput.capacity;
       vm.input.choiceTeacher = res.data.choiceTeacher || vm.initialInput.choiceTeacher;
 
@@ -163,7 +178,7 @@ export default {
           const id = vm.classId;
           // TODO: wrap with try catch
           try {
-            await classService.NNMasterputBank({
+            await masterService.NNMasterputBank({
               id,
               ...vm.input,
             });
@@ -179,7 +194,7 @@ export default {
         } else {
           // TODO: wrap with try catch
           try {
-            await classService.NNMasterpostBank(vm.input);
+            await masterService.NNMasterpostBank(vm.input);
             // if(vm.input.code==''||vm.input.name==''){
               if(vm.input.name==''){
               vm.$notify({
@@ -201,6 +216,23 @@ export default {
           }
         }
       });
+    },
+    async categoryChange(university_name){
+      const vm=this;
+      const deptNameLists = await masterService.getDeptLists(vm.input.university_name);
+      /*console.log(deptNameLists);*/
+      vm.input.department_list = await deptNameLists.data.map(element=>element.name);
+    },
+    async teacherChange(){
+      const vm=this;
+      const teacherNameLists = await masterService.getUserLists(1, vm.input.university_name, vm.input.department_name);
+      vm.input.teacher_list = await teacherNameLists.data.map(element=>element.name);
+      vm.input.teacherDept_list = await teacherNameLists.data.map(element=>element.department_name);
+
+
+      console.log('university_name??============',vm.input.university_name);
+      console.log('department_name??============',vm.input.department_name); 
+      console.log('vm.input.teacherDept_list???=================',vm.input.teacherDept_list);   
     },
   },
 };

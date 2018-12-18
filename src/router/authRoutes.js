@@ -550,6 +550,15 @@ export default function authRoutes(root) {
       },
     },
     {
+      alias: '/class/:code/edit',
+      path: '/register/class',
+      name: 'RegisterClass',
+      component: RegisterClass,
+      meta: {
+        title: '관리자 과목 수정',
+      },
+    },
+    {
       path: '/register/class/success',
       name: 'RegisterClassSuccess',
       component: RegisterClassSuccess,
