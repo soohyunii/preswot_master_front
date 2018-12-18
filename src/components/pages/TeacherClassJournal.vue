@@ -8,22 +8,35 @@
     </el-breadcrumb>
     <el-tabs v-model="activeTab">
       <el-tab-pane label="강의 흐름" name="basic">
-        <span>대상 : </span>
+        <span>필터 : </span>
         <span style="display: inline-block; width: 100px">
-        <el-select v-model="selectValue" placeholder="Select" @change="onChange()">
-          <el-option
-            v-for="item in selectOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
+          <el-select v-model="selectRange1">
+            <el-option
+              v-for="item in selectOptions1"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </span>
+        <span style="display: inline-block; width: 100px">
+          <el-select v-model="selectRange2">
+            <el-option
+              v-for="item in selectOptions2"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </span>
+        <el-button type="primary" @click="onClick('SEARCH')">조회하기</el-button>
+
         <line-chart :chartCategories = "chartCategories" :chartData = "chartData"/>
 
         <el-table
           :data="allData.average"
           style="width: 100%">
+          <!--
           <el-table-column
             label="강의명"
             width="200">
@@ -31,7 +44,7 @@
               {{ scope.row.name }}
             </template>
           </el-table-column>
-
+          
           <el-table-column
             label="평균 참여도"
             style="width: 10%">
@@ -53,6 +66,7 @@
               <span v-if="selectValue === '복습'">{{ (scope.row.afterUnderstanding * 100).toFixed(2) }}</span>
             </template>
           </el-table-column>
+          -->
 
           <!--
           <el-table-column
@@ -249,10 +263,7 @@
         defaultValue: 0,
         isStudent: false,
         activeTab: 'basic',
-        selectOptions: [{
-          value: '전체',
-          label: '전체',
-        }, {
+        selectOptions1: [{
           value: '예습',
           label: '예습',
         }, {
@@ -262,7 +273,18 @@
           value: '복습',
           label: '복습',
         }],
-        selectValue: '전체',
+        selectOptions2: [{
+          value: '문항',
+          label: '문항',
+        }, {
+          value: '설문',
+          label: '설문',
+        }, {
+          value: '자료',
+          label: '자료',
+        }],
+        selectRange1: '본강',
+        selectRange2: '문항',
         allData: '',
         isActiveInfo: false,
         studentDataSet: [],
@@ -272,46 +294,40 @@
     },
     async beforeMount() {
       const vm = this;
-
       const res = await classService.getClass({ id: vm.classId });
-      vm.className = res.data.name;
-      /*
-        // 참여도 (>= 이해도) // deprecated
-        const res = await analysisService.NNgetParticipation({ classId: vm.$route.params.classId });
-        console.log('@TeacherClassJournal res.data = ', res.data);
-        vm.participationData = res.data;
-      */
 
-      // 참여도 + 이해도
-      const res2 = await analysisService.NNgetUnderstanding({ classId: vm.classId });
-      vm.allData = res2.data;
-      // console.log('@TeacherClassJournal res2.data = ', res2.data);
+      // 강의 번호 목록
+      console.log('res.data = ', res.data);
 
-      // TODO 집중도 - 서버 구현되면 추가될 예정
+      const lectureIdList = res.data.lectures.map(element => (element.lecture_id));
+      console.log('lectureIdList = ', lectureIdList);
 
-      vm.onChange();
+      for (let index = 0; index < lectureIdList.length; index += 1) {
+        // 참여도 가져오기 / allData에 넣기
+        const res1 = await analysisService.getParticipation({ lectureId: lectureIdList[index] }); // eslint-disable-line
+        console.log('res1 = ', res1);
+        // vm.allData.push...
 
-      /*
-      vm.updateClassId({
-        classId: Number.parseInt(vm.classId, 10),
-      });
-      vm.updateUserId({
-        userId: utils.getUserIdFromJwt(),
-      });
-      vm.updateIsStudent({
-        isStudent: 0,
-      });
-      vm.updateAnalysisOpt({
-        analysisOpt: 0,
-      });
-      await vm.getAnalysisData();
-      // console.log('@TeacherClassJournal analysisData = ', vm.analysisData);
-      */
+        // 이해도 가져오기 / allData에 넣기
+        const res2 = await analysisService.getUnderstanding({ lectureId: lectureIdList[index] }); // eslint-disable-line
+        console.log('res2 = ', res2);
+        // vm.allData.push...
+
+        // 집중도 가져오기 / allData에 넣기
+        const res3 = await analysisService.getConcentration({ lectureId: lectureIdList[index] }); // eslint-disable-line
+        console.log('res3 = ', res3);
+        // vm.allData.push...
+      }
     },
     methods: {
       onClick(type, payload) {
         const vm = this;
         switch (type) {
+          case 'SEARCH': {
+            // vm.allData 필터링해서 vm.chartData에 넣기
+            // vm.allData 필터링해서 vm.tableData에 넣기 (?)
+            break;
+          }
           case 'STUDENT_STAT': {
             vm.studentDataSet = vm.allData.students[payload];
             vm.isActiveInfo = true;
