@@ -464,33 +464,31 @@ export default {
       vm.selectItemList.splice(index, 1);
       vm.selectItemIdList.splice(index, 1);
     },
+    beforeLeave() {
+      const vm = this;
+
+      // 강사가 강의 화면에서 나가는 경우, 열려있는 아이템을 모두 닫는 동작
+      if (vm.nowGroup !== -1) {
+        const paramsi = {
+          lecture_id: vm.lid,
+          group_id: vm.nowGroup,
+        };
+        vm.$socket.emit('LECTURE_GROUP_DEACTIVATION', JSON.stringify(paramsi));
+        vm.nowGroup = -1;
+      }
+      const param = {
+        lecture_id: vm.lid,
+        user_id: utils.getUserIdFromJwt(),
+      };
+      vm.$socket.emit('LEAVE_LECTURE', JSON.stringify(param));
+
+      // 화면 떠나기 전 등록한 Listener 해제. 이 코드가 없으면 리스너가 중복 등록되어 버그가 발생함
+      window.removeEventListener('beforeunload', vm.beforeLeave);
+    },
   },
   beforeDestroy() {
     const vm = this;
-    // 강사가 강의 화면에서 나가는 경우, 열려있는 아이템을 모두 닫는 동작
-    if (vm.nowGroup !== -1) {
-      const paramsi = {
-        lecture_id: vm.lid,
-        group_id: vm.nowGroup,
-      };
-      vm.$socket.emit('LECTURE_GROUP_DEACTIVATION', JSON.stringify(paramsi));
-      vm.nowGroup = -1;
-    }
-    /* const params = [];
-    vm.currentLectureItemId.forEach((item) => {
-      const param = {
-        lecture_id: vm.lectureId,
-        opened: 0,
-        lecture_item_id: item,
-      };
-      params.push(param);
-    });
-    vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify(params)); */
-    const param2 = {
-      lecture_id: vm.lid,
-      user_id: utils.getUserIdFromJwt(),
-    };
-    vm.$socket.emit('LEAVE_LECTURE', JSON.stringify(param2));
+    vm.beforeLeave();
     vm.$socket.close();
     clearInterval(vm.sOnStudentCount);
   },

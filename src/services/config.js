@@ -4,7 +4,7 @@ let serverUrl = 'http://13.125.182.116';
 
 let backPort = 8090;
 let socketPort = 8091;
-
+/*
 const isTest = document.URL.includes('13.124.196.202');
 const isProd = document.URL.includes('preswot');
 
