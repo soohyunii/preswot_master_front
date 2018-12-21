@@ -1,7 +1,22 @@
 <template>
   <div id="class_index_wrapper" class="bt-container">
     <h2 class="page-title">조회하기 > 강의은행</h2>
-    <student-class-table
+    <div id="choiceLists">
+      <el-form>
+        <span> 대학선택: </span>
+        <select id="university_choice" v-model="chosen" @change="categoryChange()" style="width:120px;">
+        <option v-for="universityName in universityNameList">{{universityName}}</option>
+      </select>
+    </el-form>
+    <el-form id="dept" style="position:relative; left:220px; top:-60px;">
+      <span>학과선택: </span>
+      <select id="department_choice" v-model="department_chosen" @change="showChange()" style="width:120px;">
+        <option value="">선택사항없음</option>
+        <option v-for="departmentName in departmentNameList">{{departmentName}}</option>
+      </select>
+    </el-form>
+    </div>
+    <master-bank-class
       :list="list"
       :onClick="onClick"
     />
@@ -23,14 +38,14 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
-import StudentClassTable from '../partials/StudentClassTable';
-// import classService from '../services/classService';
+import MasterBankClass from '../partials/MasterBankClass';
+import masterService from '../../services/masterService';
 import utils from '../../utils';
 
 export default {
   name: 'ViewBank',
   components: {
-    StudentClassTable,
+    MasterBankClass,
   },
   data() {
     return {
@@ -38,6 +53,10 @@ export default {
       searchType: 'name',
       searchText: '',
       list: [],
+      universityNameList:[],
+      departmentNameList:[],
+      chosen:'',
+      department_chosen:'',
     };
   },
   computed: {
@@ -48,9 +67,10 @@ export default {
 
     // 새로고침(Refresh, F5) 해도 목록을 가져올 수 있게 하는 부분.
     // TODO: 속도가 눈에 보이게 느려지므로 다른 방법이 있다면 수정 요구.
-    await vm.getMyClassLists();
+   /* await vm.getBankLists();
 
-    // 검색 기능 : 서버에서 DB 쿼리로 처리하는 게 효율이 나을 것 같으면 나중에 수정.
+
+    
     if (vm.studyingClassList !== null) {
       if (vm.$route.query.type !== undefined) {
         vm.searchType = vm.$route.query.type;
@@ -70,7 +90,12 @@ export default {
           }
         }
       }
-    }
+    }*/
+  },
+  async mounted(){
+    const vm=this;
+    const uniNameLists=await masterService.getUniNameLists();
+    vm.universityNameList = uniNameLists.data.map(element=>element.name);
   },
   methods: {
     ...mapActions('NNclass', [
@@ -164,7 +189,7 @@ export default {
           try {
             // const index = vm.currentClassIndex;
             const currentClass = vm.teachingClassList[index];
-            await classService.delete({
+            await masterService.delete({
               id: currentClass.class_id,
             });
             vm.deleteTeachingClass({
@@ -188,6 +213,17 @@ export default {
             duration: 3000,
           });
         });
+    },
+    async categoryChange(){
+      const vm=this;
+      const deptNameList = await masterService.getDeptLists(vm.chosen);
+      vm.departmentNameList = deptNameList.data.map(element=>element.name);
+    },
+    async showChange(){
+      const vm=this;
+      const res = await masterService.getBankLists({university_name:vm.chosen, department_name:vm.department_chosen});
+      vm.list=res.data;
+      console.log(vm.list);
     },
   },
 };
@@ -218,6 +254,21 @@ export default {
     margin-left : 12px;
     margin-bottom : 25px;
 
+  }
+  .el-form{
+    // text-align : left;
+    // position: absolute;
+    font-family: SpoqaHanSans;
+    font-size: 16px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 40px;
+    letter-spacing: normal;
+    color: #000000;
+    width: 300px;
+    margin: 20px 0 0 10px;
+    //border:1px solid red;
   }
 }
 </style>

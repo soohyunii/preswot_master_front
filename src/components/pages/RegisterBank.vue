@@ -31,51 +31,61 @@
         </select>
       </el-form-item>
 
-      <el-form-item label="최대 구성인원 수">
+      <!-- <el-form-item label="최대 구성인원 수">
         <el-input type="number" v-model.number="input.capacity" class="subject-title"></el-input>
-      </el-form-item>
+      </el-form-item> -->
 
       <el-form-item label="강사선택">
-        <table id="checkBox" v-model="input.choiceTeacher">
-          <colgroup>
-            <col />
-            <col />
-            <col />
-            <col />
-          </colgroup>
-          <thead>
-          <tr>
-            <th>강사이름</th>
-            <th>소속학과</th>
-            <th>이메일</th>
-            <!-- <th><input type="checkbox"/></th> -->
-          </tr>
-          </thead>
-          <tbody>
-          <tr v-for="teacher_name in input.teacher_list">
-            <td>{{teacher_name}}</td>
-            <!-- <td><input type="checkbox"/></td>  -->
-          </tr>
-          <tr v-for="teacher_dept in input.teacherDept_list">
-            <td>{{teacher_dept}}</td>
-          </tr>
-          <tr v-for="teacher_email in input.teacherEmail_list">
-            <td>{{teacher_email}}</td>
-          </tr>
-          <!-- <tr>
-            <td>이름 리스트</td>
-            <td>소속학과 리스트</td>
-            <td>이메일 리스트</td>
-            <td><input type="checkbox"/></td>
-          </tr>
-          <tr>
-            <td>이름 리스트</td>
-            <td>소속학과 리스트</td>
-            <td>이메일 리스트</td>
-            <td><input type="checkbox"/></td>
-          </tr> -->
-          </tbody>
-        </table>
+        
+        <el-table
+          :data="input.items"
+          style="width: 470px">
+          <el-table-column
+            label="강사이름"
+            prop="name"
+            width="100">
+          </el-table-column>
+          <el-table-column
+            label="소속학과"
+            prop="department_name"
+            width="140">
+          </el-table-column>
+          <el-table-column
+            label="이메일"
+            prop="email_id"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            label="선택"
+            width="50">
+            <template slot-scope="scope">
+              <el-button @click="mySelectClick(scope.$index)" type="text">선택</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        
+      
+      </el-form-item>
+
+      <el-form-item class="keywords">
+        <!-- <el-tag
+          :key="index"
+          v-if="selectVisible"
+          v-for="(items, index) in input.items"
+          closable
+          :disable-transitions="false"
+          @close="selectClose(items)">
+            {{items.name}} / {{items.department_name}} / {{items.email_id}} 
+        </el-tag> -->
+        <el-tag
+          :key="index"
+          v-for="(items, index) in input.selected_items"
+          v-model="input.email_id"
+          closable
+          :disable-transitions="false"
+          @close="selectClose(items)">
+            {{items.name}} / {{items.department_name}} / {{items.email_id}} 
+        </el-tag>
       </el-form-item>
     
       <el-form-item>
@@ -126,8 +136,12 @@ export default {
       choiceTeacher: '',
       university_list:[],
       department_list:[],
-      teacher_list:[],
+      /*teacher_list:[],
       teacherDept_list:[],
+      teacherEmail_list:[],*/
+      items:[],
+      selected_items:[],
+      email_id:[],
     };
     return {
       initialInput,
@@ -204,7 +218,7 @@ export default {
                 duration: 0,
               });
             } else {
-              vm.$router.push('/register/bank/success');
+              vm.$router.push('/a/register/bank/success');
             }
           } catch (error) {
             vm.$notify({
@@ -225,14 +239,40 @@ export default {
     },
     async teacherChange(){
       const vm=this;
-      const teacherNameLists = await masterService.getUserLists(1, vm.input.university_name, vm.input.department_name);
+      /*const teacherNameLists = await masterService.getUserLists(1, vm.input.university_name, vm.input.department_name);
       vm.input.teacher_list = await teacherNameLists.data.map(element=>element.name);
       vm.input.teacherDept_list = await teacherNameLists.data.map(element=>element.department_name);
+      vm.input.teacherEmail_list = await teacherNameLists.data.map(element=>element.email_id);*/
+    const itemLists = await masterService.getUserLists(1,vm.input.university_name, vm.input.department_name);
+    console.log('itemLists====',itemLists);
+    vm.input.items = itemLists.data;
+    /*
+    vm.input.items = [itemLists.data.map(element=>element.name), itemLists.data.map(element=>element.department_name), itemLists.data.map(element=>element.email_id)];
+    */
+    console.log('vm.input.items====',vm.input.items);
 
-
+/*
       console.log('university_name??============',vm.input.university_name);
       console.log('department_name??============',vm.input.department_name); 
-      console.log('vm.input.teacherDept_list???=================',vm.input.teacherDept_list);   
+      console.log('vm.input.teacherDept_list???=================',vm.input.teacherDept_list);
+      console.log('vm.input.teacherEmail_list?=============',vm.input.teacherEmail_list);   */
+    },
+    async selectClick(rows){
+      const vm=this;
+      vm.multipleSelection = rows;
+      console.log('click',vm.multipleSelection);
+      // const selectItemLists = await 
+    },
+    async mySelectClick(index){
+      const vm=this;
+      console.log('click');
+      console.log('index = ', index);
+      vm.input.selected_items.push(vm.input.items[index]);
+    },
+    selectClose(items){
+      const vm=this;
+      const itemName=vm.input.selected_items.splice(vm.input.items,1);
+      console.log(itemName);
     },
   },
 };
@@ -301,7 +341,7 @@ export default {
     color: #ffffff;
   }
 }
-#checkBox tbody {
+/*#checkBox tbody {
   width:100%;
   height:300px;
   overflow:auto;
@@ -362,5 +402,13 @@ export default {
   padding: 5px 10px 5px 10px;
   text-align:center;
   width:30px;
+}*/
+.keywords{
+  //border:1px solid red;
+  position: relative;
+  align:right;
+  width: 700px;
+  bottom:200px;
+  left: 550px;
 }
 </style>

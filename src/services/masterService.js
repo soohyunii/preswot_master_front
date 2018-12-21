@@ -80,6 +80,12 @@ export default {
   getMasterClass({class_id}){
     return http.get(`/admin_class?class_id=${class_id}`)
   },
+
+  /*강의은행 목록 조회*/
+  getBankLists({university_name,department_name}){
+    // console.log(university_name,department_name);
+    return http.get(`/admin_bank?university_name=${university_name}&department_name=${department_name}`)
+  },
   /*postClass({ 
     title,
     description,
@@ -515,14 +521,20 @@ export default {
     });
   },
   NNMasterpostBank({
-    code,
+    university_name,
+    department_name,
     name,
+    email_id,
     capacity,
-    choiceTeacher,
   }) {
-    return {
-      success: true,
-    };
+    console.log(university_name,department_name,name,email_id,capacity);
+    return (http.post(`/admin_bank`),{
+      university_name,
+      department_name,
+      name,
+      email_id,
+      capacity,
+    }); 
   },
 
 
