@@ -148,6 +148,7 @@ export default {
   name: 'TeacherLectureLive',
   async created() {
     const vm = this;
+    vm.lid = vm.lectureId;
     // 학생이 url로 접근하는 경우 방지
     const accessId = utils.getUserIdFromJwt();
     const accessCheck = await authService.returnUserInfo({
@@ -241,6 +242,7 @@ export default {
       mainquestion: [], // 대표문항 리스트
       subquestion: [], // 딸린문항 리스트
       nowGroup: -1, // 현재 그룹 번호
+      lid: '', // 강의 종료시 필요한 아이템 아이디
     };
   },
   computed: {
@@ -466,7 +468,15 @@ export default {
   beforeDestroy() {
     const vm = this;
     // 강사가 강의 화면에서 나가는 경우, 열려있는 아이템을 모두 닫는 동작
-    const params = [];
+    if (vm.nowGroup !== -1) {
+      const paramsi = {
+        lecture_id: vm.lid,
+        group_id: vm.nowGroup,
+      };
+      vm.$socket.emit('LECTURE_GROUP_DEACTIVATION', JSON.stringify(paramsi));
+      vm.nowGroup = -1;
+    }
+    /* const params = [];
     vm.currentLectureItemId.forEach((item) => {
       const param = {
         lecture_id: vm.lectureId,
@@ -475,9 +485,9 @@ export default {
       };
       params.push(param);
     });
-    vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify(params));
+    vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify(params)); */
     const param2 = {
-      lecture_id: vm.lectureId,
+      lecture_id: vm.lid,
       user_id: utils.getUserIdFromJwt(),
     };
     vm.$socket.emit('LEAVE_LECTURE', JSON.stringify(param2));
