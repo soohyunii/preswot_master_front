@@ -158,7 +158,7 @@
 // FIXME : Failed to execute 'postMessage' on 'DOMWindow': The target origin provided ('<URL>')
 //   does not match the recipient window's origin ('<URL>'). 에러 해결
 import { getIdFromURL } from 'vue-youtube-embed';
-import deepCopy from 'deep-copy';
+// import deepCopy from 'deep-copy';
 import lectureService from '../../services/lectureService';
 import classService from '../../services/classService';
 import authService from '../../services/authService';
@@ -296,7 +296,7 @@ export default {
       }, {
         title: '8번째',
         icon: 'el-icon-edit',
-      },],
+      }],
     };
   },
   computed: {
@@ -450,9 +450,9 @@ export default {
           vm.nowGroup = groupId;
           vm.$socket.emit('LECTURE_GROUP_ACTIVATION', JSON.stringify(paramsi));
           // vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify(paramsi));
-          for(let i = 0; i < vm.currentLectureItemId.length; i += 1) {
+          for (let i = 0; i < vm.currentLectureItemId.length; i += 1) {
             const x = vm.currentLectureItemId[i];
-            const loadItem = await lectureItemService.getLectureItem({
+            const loadItem = await lectureItemService.getLectureItem({ // eslint-disable-line
               lectureItemId: x,
             });
             const tmp = {};
@@ -535,17 +535,13 @@ export default {
         }
       }
     },
-    // 아이템 제출 현황
+    /* 아이템 제출 현황
     itemCurrentState(data) {
       const vm = this;
       console.log(data);
       // vm.$socket.emit('CHECK_USER_LECTURE');
-      const param = {
-        lecture_id: vm.lectureId,
-        item_id: data.id,
-      };
       // vm.$socket.emit('CHECK_ANSWER_LECTURE')
-    },
+    }, */
     // 선택된 아이템 삭제
     deleteSelectedItem(index) {
       const vm = this;
