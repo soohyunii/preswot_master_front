@@ -237,8 +237,9 @@ export default {
     if (vm.lectureType === 0) {
       vm.$socket.on('RELOAD_LECTURE_ITEMS', (msg) => {
         const jsonMSG = JSON.parse(msg);
+        console.log('reload');
         if (jsonMSG.reload === true) {
-          vm.refreshLectureItem();
+          vm.refreshLectureItem(true, jsonMSG.signal);
         }
       });
     }
@@ -430,7 +431,7 @@ export default {
                 user_id: utils.getUserIdFromJwt(),
               };
               vm.$socket.emit('DOING_LECTURE_ITEM', JSON.stringify(params));
-              vm.refreshLectureItem(false);
+              // vm.refreshLectureItem(false);
               break;
             }
             case 1: { // 설문
@@ -497,7 +498,7 @@ export default {
                 user_id: utils.getUserIdFromJwt(),
               };
               vm.$socket.emit('DOING_LECTURE_ITEM', JSON.stringify(params));
-              vm.refreshLectureItem(false);
+              // vm.refreshLectureItem(false);
               break;
             }
             default: {
@@ -665,8 +666,22 @@ export default {
         }
       }
     },
-    refreshLectureItem(notify) {
+    refreshLectureItem(notify, signal) {
       const vm = this;
+      if (signal === 0) {
+        // 아이템 내릴 경우
+        vm.lectureItems = [];
+        vm.nowQuestion = [];
+        vm.lectureItem = [];
+        // console.log('reload_refresh');
+        vm.$notify({
+          title: '알림',
+          message: '강의아이템이 변경되었습니다.',
+          type: 'warning',
+        });
+        return;
+      }
+      console.log('up');
       // opened 상태인 아이템이 있다면 보이기 : 빠른 속도로 아이템 보임/숨김 조작하는 경우 버그 해결하기위해 1초 지연
       setTimeout(async () => {
         // TODO: 강의 아이템이 여러개인 경우, 빠른 속도로 조작 시 같은 아이템이 중복하여 들어가는 버그 발생

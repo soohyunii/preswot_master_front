@@ -1,12 +1,6 @@
 <template>
   <div>
     <el-table :data="currentData" height="400">
-      <el-table-column
-        prop="groupN"
-        label="그룹"
-        width="80"
-        sortable >
-      </el-table-column>
       <!--
       <el-table-column
         prop="type"
@@ -24,16 +18,16 @@
       <el-table-column
         prop="itemNum"
         label="아이템 수"
-        width="80">
+        width="60">
       </el-table-column>
       <el-table-column
         label=""
-        width="80"
+        width="70"
         align="center"
       >
         <template slot-scope="scope">
           <el-button type="primary" size="small" @click="onClick('SHOW', scope.row)" v-if="scope.row.fir">
-            보이기
+            출제
           </el-button>
         </template>
       </el-table-column>
