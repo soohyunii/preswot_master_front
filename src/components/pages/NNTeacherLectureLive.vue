@@ -86,7 +86,7 @@
           <h2 style="color: white;">출제 목록</h2>
           <el-table :data="nowItemTable" v-if="ifShowItem" max-height="350">
             <el-table-column label="타입" prop="type" width="50" />
-            <el-table-column label="이름" prop="name" />
+            <el-table-column label="아이디" prop="name" />
             <el-table-column label="" width="70" align="center">
               <template slot-scope="scope">
                 <el-button type="primary" size="small" @click="itemCurrentState(scope.row)">
@@ -114,10 +114,10 @@
         </el-col>
       </el-row>
       <br />
-      <el-row>
+      <!--<el-row>
         <el-col :span="3"><strong>현재 강의를 듣고있는 인원</strong></el-col>
         <el-col :span="7"> {{ onStudentCount - 1 }} 명 </el-col>
-      </el-row>
+      </el-row>-->
       <div v-for="(itemId, index) in currentLectureItemId" :key="itemId">
         <el-row>
           <lecture-question-result
@@ -185,10 +185,49 @@ export default {
       vm.$router.push('/');
     }
 
-// 강의 아이템 목록, 과목, 강의명 가져오기
+    // 강의 아이템 목록, 과목, 강의명 가져오기
     const res = await lectureService.getLecture({
       lectureId: vm.lectureId,
     });
+    const grp = await lectureItemService.showGroup({
+      lectureId: vm.lectureId,
+    });
+    const seq = await lectureItemService.showConnection({
+      lectureId: vm.lectureId,
+    });
+    grp.data.list.forEach((x) => {
+      // 한 그룹마다
+      const oneGroup = [];
+      const idList = [];
+      x.list_ids.forEach((y) => {
+        // 그룹에 속하는 여러 연결 리스트
+        seq.data.forEach((z) => {
+          if (parseInt(y, 10) === z.lecture_item_list_id) {
+            // 일치하는 연결 리스트 찾아
+            if (z.linked_list.includes('<$!<>') === true) {
+              // 연결 리스트 존재
+              const tmp = z.linked_list.split('<$!<>');
+              tmp.forEach((v) => {
+                idList.push(v);
+              });
+            } else {
+              // 연결 리스트 없다면
+              idList.push(z.linked_list);
+            }
+          }
+        });
+      });
+      // 그룹 넣어주기
+      idList.forEach((r) => {
+        res.data.lecture_items.forEach((w) => {
+          if (parseInt(r, 10) === w.lecture_item_id) {
+            oneGroup.push(w);
+          }
+        });
+      });
+      vm.itemTable.push(oneGroup);
+    });
+    // console.log(vm.itemTable);
     if (res.data.video_link !== null) {
       vm.videolink = res.data.video_link;
     }
@@ -260,8 +299,6 @@ export default {
       isInfoVisible: false,
       focusFlag: false,
       videolink: '',
-      onStudentCount: 1,
-      sOnStudentCount: undefined,
       className: '',
       lectureName: '',
       selectItemList: [], // 선택된 아이템들
@@ -297,6 +334,10 @@ export default {
         title: '8번째',
         icon: 'el-icon-edit',
       }],
+      totalStudent: '', // 총 수강인원
+      presentStudent: '', // 출석인원
+      nowStudent: '', // 현재 인원
+      itemTable: [], // 아이템 테이블 - 최종
     };
   },
   computed: {
@@ -452,11 +493,14 @@ export default {
           // vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify(paramsi));
           for (let i = 0; i < vm.currentLectureItemId.length; i += 1) {
             const x = vm.currentLectureItemId[i];
+            /*
             const loadItem = await lectureItemService.getLectureItem({ // eslint-disable-line
               lectureItemId: x,
-            });
+            }); */
             const tmp = {};
-            tmp.id = x;
+            // 이거 수정 tmp.id = x;
+            tmp.name = x;
+            /*
             tmp.name = loadItem.data.name;
             if (loadItem.data.type === 0) {
               tmp.type = '문항';
@@ -468,7 +512,7 @@ export default {
               tmp.type = '토론';
             } else if (loadItem.data.type === 4) {
               tmp.type = '자료';
-            }
+            } */
             vm.nowItemTable.push(tmp);
           }
           vm.ifShowItem = true;
@@ -538,9 +582,8 @@ export default {
     /* 아이템 제출 현황
     itemCurrentState(data) {
       const vm = this;
-      console.log(data);
       // vm.$socket.emit('CHECK_USER_LECTURE');
-      // vm.$socket.emit('CHECK_ANSWER_LECTURE')
+      // vm.$socket.emit('CHECK_ANSWER_LECTURE');
     }, */
     // 선택된 아이템 삭제
     deleteSelectedItem(index) {
@@ -574,7 +617,7 @@ export default {
     const vm = this;
     vm.beforeLeave();
     vm.$socket.close();
-    clearInterval(vm.sOnStudentCount);
+    // clearInterval(vm.sOnStudentCount);
   },
 };
 </script>
