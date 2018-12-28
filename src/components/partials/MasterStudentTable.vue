@@ -24,11 +24,11 @@
       <el-table-column prop="sex" id="sex" label="성별" width="50">
         <!-- <el-table-td v-if="sex==1">남자</el-table-td> -->
       </el-table-column>
-      <el-table-column prop="phone" label="전화번호" width="150"></el-table-column>
+      <el-table-column prop="phone" label="전화번호" width="130"></el-table-column>
       <el-table-column prop="department_name" label="전공" width="120"></el-table-column>
       <!-- <el-table-column prop="group" label="소속" width="100"></el-table-column> -->
       <el-table-column prop="account_bank" label="계좌은행" width="80"></el-table-column>
-      <el-table-column prop="account_number" label="계좌번호" width="150"></el-table-column>
+      <el-table-column prop="account_number" label="계좌번호" width="140"></el-table-column>
       <!-- <el-table-column label="" header-align="left" align="right" width="345"> -->
         <!-- <el-table-column label="" header-align="left" align="right">
         <template slot-scope="scope">
@@ -42,6 +42,13 @@
             <el-button type="danger" @click="listeners['delete'](scope.$index)" class="delete-btn">삭제</el-button>
           </template>
         </el-table-column> -->
+        <el-table-column label="" header-align="left" align="right">
+        <template slot-scope="scope">
+          <router-link :to="`/a/student/${scope.row.email_id}/detail`">
+            <el-button class="edit-btn">상세</el-button>
+          </router-link>
+        </template>
+      </el-table-column>
         <el-table-column label="" header-align="left" align="right">
         <template slot-scope="scope">
           <router-link :to="`/a/student/${scope.row.email_id}/edit`">

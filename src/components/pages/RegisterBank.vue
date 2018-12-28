@@ -55,11 +55,18 @@
             prop="email_id"
             width="180">
           </el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             label="선택"
             width="50">
             <template slot-scope="scope">
               <el-button @click="mySelectClick(scope.$index)" type="text">선택</el-button>
+            </template>
+          </el-table-column> -->
+          <el-table-column
+            label="선택"
+            width="50">
+            <template slot-scope="scope">
+              <el-checkbox v-model="input.checkbox" @change="mySelectClick(scope.$index)" type="text"></el-checkbox>
             </template>
           </el-table-column>
         </el-table>
@@ -142,6 +149,7 @@ export default {
       items:[],
       selected_items:[],
       email_id:[],
+      // checkbox:false,
     };
     return {
       initialInput,
@@ -157,7 +165,7 @@ export default {
     
     
     if (vm.isEdit) {
-      const res = await masterService.getClass({ id: vm.classId });
+      const res = await masterService.getMasterBank({ id: vm.group_id });
       // console.log('res', res.data);
       // vm.input.code = res.data.code || vm.initialInput.code;
       vm.input.name = res.data.name || vm.initialInput.name;
@@ -175,9 +183,9 @@ export default {
       const vm = this;
       return vm.$route.fullPath.includes('/edit');
     },
-    classId() {
+    group_id() {
       const vm = this;
-      return vm.$route.path.split('class/')[1].split('/edit')[0];
+      return vm.$route.path.split('bank/')[1].split('/edit')[0];
     },
   },
   methods: {
@@ -189,7 +197,7 @@ export default {
         // TODO: if valid === true 로 감싸기
         // TODO: valid === false인 경우에 notify
         if (vm.isEdit) {
-          const id = vm.classId;
+          const id = vm.group_id;
           // TODO: wrap with try catch
           try {
             await masterService.NNMasterputBank({
@@ -209,6 +217,7 @@ export default {
           // TODO: wrap with try catch
           try {
             await masterService.NNMasterpostBank(vm.input);
+            // await masterService.
             // if(vm.input.code==''||vm.input.name==''){
               if(vm.input.name==''){
               vm.$notify({
@@ -266,7 +275,7 @@ export default {
     async mySelectClick(index){
       const vm=this;
       console.log('click');
-      console.log('index = ', index);
+      console.log('checkbox is true? = ', vm.input.checkbox.checked);
       vm.input.selected_items.push(vm.input.items[index]);
     },
     selectClose(items){

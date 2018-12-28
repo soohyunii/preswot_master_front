@@ -47,8 +47,10 @@ import ViewClass from '../components/pages/ViewClass';
 import ViewDetailClass from '../components/pages/ViewClassAll';
 import ViewStudent from '../components/pages/ViewStudent';
 import ViewStudentScore from '../components/pages/ViewStudentScore';
+import ViewDetailStudent from '../components/pages/ViewDetailStudent';
 import ViewBank from '../components/pages/ViewBank';
 import RegisterUni from '../components/pages/RegisterUni';
+
 // import RegisterUniEdit from '../components/pages/RegisterUni';
 import RegisterUniSuccess from '../components/pages/RegisterUniSuccess';
 import RegisterDept from '../components/pages/RegisterDept';
@@ -425,7 +427,7 @@ export default function authRoutes(root) {
         title: '관리자 과목 상세 조회',
       },
     },*/
-        {
+    {
       path: '/view/:code/detail',
       name: 'ViewDetailClass',
       component: ViewDetailClass,
@@ -447,6 +449,14 @@ export default function authRoutes(root) {
       component: ViewStudentScore,
       meta: {
         title: '관리자 학생성적표 조회',
+      },
+    },
+    {
+      path: '/student/:code/detail',
+      name: 'ViewDetailStudent',
+      component: ViewDetailStudent,
+      meta: {
+        title: '관리자 학생 개인 성적표 조회',
       },
     },
     {
@@ -597,6 +607,15 @@ export default function authRoutes(root) {
       component: RegisterBank,
       meta: {
         title: '관리자 강의은행그룹 등록',
+      },
+    },
+    {
+      alias: '/bank/:code/edit',
+      path: '/register/bank',
+      name: 'RegisterBank',
+      component: RegisterBank,
+      meta: {
+        title: '관리자 강의은행그룹 수정',
       },
     },
     {

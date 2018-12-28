@@ -186,7 +186,7 @@ export default {
     },
     async categoryChange(){
       const vm=this;
-      const deptNameLists = await masterService.getDeptLists(vm.chosen);
+      const deptNameLists = await masterService.getDeptLists({name: vm.chosen});
       vm.department_list = await deptNameLists.data.map(element=>element.name);
       console.log(vm.department_name);
     },

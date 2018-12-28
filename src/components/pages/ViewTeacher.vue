@@ -15,7 +15,8 @@
     <el-form id="dept">
       <span>학과선택: </span>
       <select id="dept-choice"  style="width:130px;" v-model="dept_chosen" @change="onChange(type,chosen,dept_chosen)">
-        <option>학과선택없음</option>
+        <!-- <option @change="categoryAllShow(type,chosen,null)">학과선택없음</option> -->
+        <option :value='nothing'>학과선택없음</option>
         <option v-for="deptName in deptNameList">{{deptName}}</option>
       </select>
     </el-form>
@@ -64,10 +65,11 @@ export default {
       deptNameList:[],
       dept_chosen:'',
       type:1,
+      nothing: undefined,
     };
   },
   computed: {
-    ...mapState('NNclass', ['studyingClassList']),
+    ...mapState('MasterTeacher', ['studyingTeacherList']),
   },
   async created() {
     const vm = this;
@@ -191,14 +193,20 @@ export default {
     async categoryChange(){
       const vm=this;
       const deptNameLists = await masterService.getDeptLists(vm.chosen);
-      // console.log(deptNameLists);
       vm.deptNameList = await deptNameLists.data.map(element=>element.name);
+      console.log('vm.deptNameList = ', vm.deptNameList );
+    },
+    async categoryAllShow(){
+      const vm=this;
+      const deptNameListsAll = await masterService.getUserLists(type,university_name,department_name);
+      vm.list=deptNameListsAll.data;
+      console.log(vm.list);
     },
     async onChange(type,university_name,department_name){
       const vm=this;
-      // console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@',type);
+      console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@',type);
       const res = await masterService.getUserLists(type,university_name,department_name);
-      // console.log('######################',res);
+      console.log('######################',res.data);
       vm.list = res.data;
     },
     onClickDelete(index) {

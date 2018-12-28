@@ -27,7 +27,7 @@
       </el-table-column>
       <el-table-column label="" header-align="left" align="right">
         <template slot-scope="scope">
-            <router-link :to="`/a/view/${scope.row.name}/detail`">
+            <router-link :to="`/a/view/${scope.row.class_id}/detail`">
               <el-button class="edit-btn">상세</el-button>
             </router-link>
         </template>

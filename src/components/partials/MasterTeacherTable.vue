@@ -107,12 +107,12 @@ export default {
       selectOptionList: [
         {
           value: 'name',
-          label: '학과명',
+          label: '강사명',
         },
-        {
+        /*{
           value: 'university',
           label: '대학명',
-        },
+        },*/
       ],
       searchQuery: {
         searchType: 'name',

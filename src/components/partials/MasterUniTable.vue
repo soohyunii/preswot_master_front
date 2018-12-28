@@ -76,15 +76,21 @@ export default {
           value: 'name',
           label: '대학명',
         },
-        {
+        /*{
           value: 'code',
           label: '대학코드',
-        }, 
+        }, */
       ],
-      searchQuery: {
-        searchType: 'name',
-        searchText: '',
-      },
+      searchQuery: [
+        {
+          searchType: 'name',
+          searchText: '',
+        },
+        /*{
+          searchType: 'code',
+          searchText: '',
+        },*/
+      ],
     };
   },
   computed: {

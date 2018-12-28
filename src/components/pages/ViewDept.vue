@@ -8,12 +8,26 @@
         <!-- <select id="uni-choice" v-model="uniName">
           <option v-for="uniNameList in uniName">{{uniNameList}}</option>
         </select> -->
-        <span>대학선택: </span>
+        <!-- <span>대학선택: </span> -->
         <!--<select id="uni-choice" v-model="uniName">-->
-        <select id="uni-choice" v-model="chosen" @change="onChange(chosen)">
+        <!-- <el-select id="uni-choice" v-model="chosen" v-on:click="onChange(chosen)" placeholder="대학선택"> -->
+        <el-select v-model="chosen" placeholder="대학선택" @change="onChange()" style="top:20px;">
           <!-- <option disabled value="">대학선택</option> -->
-          <option v-for="uniNameList in uniName">{{uniNameList}}</option>
-        </select>
+          <!--
+          <el-option 
+            v-for="uniNameList in uniName"
+            :key="uniNameList.chosen"
+            :label="uniNameList.label"
+            :value="uniNameList.chosen">{{uniNameList}}
+          </el-option>
+          -->
+          <el-option 
+            v-for="name in uniName"
+            :key="name.chosen"
+            :label="name"
+            :value="name">
+          </el-option>
+        </el-select>
 
         <!-- <span> 선택 : {{ chosen }} </span> -->
 
@@ -27,7 +41,7 @@
       :onClick="onClick"
     /> -->
     <master-dept-table
-      :list="deptList"
+      :list="list"
       :onClick="onClick"
     />
     <br/>
@@ -65,7 +79,7 @@ export default {
       list: [],
       uniName: '',
       chosen: '',
-      deptList: [],
+      /*deptList: [],*/
     };
   },
   /*
@@ -241,12 +255,13 @@ export default {
     async onChange(payload) {
       const vm = this;
       console.log('@onChange() payload = ', payload);
+      console.log('@onChange() chosen = ', vm.chosen);
       //
-      const res = await masterService.getDeptLists({name : payload});
-      console.log('11111111111res==',res);
+      const res = await masterService.getDeptLists({name : vm.chosen});
+      console.log('11111111111res==',res.data);
       //const deptLists = await res.data.map(element=>element.name);
-      vm.deptList = res.data;
-      console.log('vm.deptList#########==',vm.deptList);
+      vm.list = res.data;
+      console.log('vm.deptList#########==',vm.list);
       // const deptLists = res.data;
       // console.log('deptLists#########==',deptLists);
     },
@@ -303,7 +318,5 @@ export default {
     margin: 20px 0 0 10px;
     // border:1px solid red;
   }
-
-
 }
 </style>

@@ -19,6 +19,7 @@ import grading from './gradingStore';
 
 import MasterUni from './MasterUniStore';
 import MasterDept from './MasterDeptStore';
+import MasterTeacher from './MasterTeacherStore';
 
 Vue.use(Vuex);
 
@@ -41,5 +42,6 @@ export default new Vuex.Store({
     grading,
     MasterUni,
     MasterDept,
+    MasterTeacher,
   },
 });

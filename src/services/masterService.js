@@ -48,8 +48,8 @@ export default {
   },
 
   /*학과 정보 모두 불러오기*/
-  // getDeptLists({name}) {
-  getDeptLists(name) {
+  getDeptLists({name}) {
+//   getDeptLists(name) {
     return http.get(`/department/list?university_name=${name}`)
   },
 
@@ -62,8 +62,18 @@ export default {
   },
 
   /*강사,학생 정보 조회*/
-  getUserLists(type,university_name,department_name) {
+  getUserLists_b(type,university_name,department_name) {
     return http.get(`/admin_user/list?type=${type}&university_name=${university_name}&department_name=${department_name}`)
+  },
+
+  getUserLists(type,university_name,department_name) {
+    return http.get('/admin_user/list', {
+      params: {
+        type,
+        university_name,
+        department_name,
+      },
+    })
   },
 
   /*수정할 강사,학생 정보 조회*/
@@ -83,9 +93,12 @@ export default {
 
   /*강의은행 목록 조회*/
   getBankLists({university_name,department_name}){
-    // console.log(university_name,department_name);
+    // console.log('name==',name,'teacher_groups.email_id==',teacher_groups.email_id);
     return http.get(`/admin_bank?university_name=${university_name}&department_name=${department_name}`)
   },
+/*수정할 강의은행 조회*/
+
+
   /*postClass({ 
     title,
     description,
@@ -525,16 +538,22 @@ export default {
     department_name,
     name,
     email_id,
-    capacity,
+    /*capacity,*/
   }) {
-    console.log(university_name,department_name,name,email_id,capacity);
-    return (http.post(`/admin_bank`),{
+    console.log(university_name,department_name,name);
+    return http.post(`/admin_bank`,{
       university_name,
       department_name,
       name,
       email_id,
-      capacity,
+      /*capacity,*/
     }); 
+  },
+  bankDelete({
+    group_id
+  }){
+    return http.delete(`/admin_bank?group_id=${group_id}`,{     
+    });
   },
 
 

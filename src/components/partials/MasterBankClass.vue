@@ -7,7 +7,7 @@
           {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
         </template>
       </el-table-column> -->
-      <el-table-column prop="class_id" label="ID" width="50"></el-table-column>
+      <el-table-column prop="group_id" label="ID" width="50"></el-table-column>
         <!-- <template slot-scope="scope">
         {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
         </template> -->
@@ -20,11 +20,11 @@
       </el-table-column>
       <el-table-column prop="department_name" label="학과" width="140">
       </el-table-column> -->
-      <el-table-column prop="teacher_name" label="구성 강사" width="140">
+      <el-table-column prop="teacher_groups.user.name" label="구성 강사" width="140">
       </el-table-column>
-      <el-table-column prop="teacher_department" label="소속 학과" width="200">
+      <el-table-column prop="user.department" label="소속 학과" width="200">
       </el-table-column>
-      <el-table-column prop="teacher_email_id" label="이메일 주소" width="250">
+      <el-table-column prop="teacher_groups.email_id" label="이메일 주소" width="250">
       </el-table-column>
       <!-- <el-table-column prop="capacity" label="최대인원" width="110">
       </el-table-column> -->
@@ -42,7 +42,7 @@
             </router-link>
           </template> -->
           <template slot-scope="scope">
-            <router-link :to="`/a/class/${scope.row.class_id}/edit`">
+            <router-link :to="`/a/bank/${scope.row.group_id}/edit`">
               <el-button class="edit-btn">수정</el-button>
             </router-link>
           </template>
@@ -62,7 +62,7 @@
 
         <el-table-column>
           <template slot-scope="scope">
-            <el-button type="danger" @click="classDelete(scope.row.class_id)" class="delete-btn">삭제</el-button>
+            <el-button type="danger" @click="classDelete(scope.row.group_id)" class="delete-btn">삭제</el-button>
           </template>
         </el-table-column>
 
@@ -142,8 +142,9 @@ export default {
   },
   methods: {
     // formatDate: utils.formatDate,
-    async classDelete(class_id){
-      await masterService.classDelete({class_id: class_id});
+    async classDelete(group_id){
+      await masterService.classDelete({group_id: group_id});
+      console.log('group_id===',group_id);
       window.location.reload();
     }
   },
