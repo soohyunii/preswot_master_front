@@ -218,21 +218,29 @@ export default {
     },
     async categoryChange(){
       const vm=this;
-      const deptNameList = await masterService.getDeptLists(vm.chosen);
+      const deptNameList = await masterService.getDeptLists({name : vm.chosen});
       vm.departmentNameList = deptNameList.data.map(element=>element.name);
     },
     async showChange(){
       const vm=this;
       const res = await masterService.getBankLists({university_name:vm.chosen, department_name:vm.department_chosen});
-      vm.list=res.data
-      vm.sublist=vm.list.map(element=>element.teacher_groups.map(element=> element.email_id));
-      console.log(vm.list);
-      console.log('vm.sublist=============',vm.sublist);
+      // vm.sublist=res.data;
+      // vm.sublist=vm.list.map(element=>element.teacher_groups.map(element=> element.email_id));
+      // vm.list=vm.sublist.map(element=>element.bank_group.name);
+
+      vm.list=res.data;
+
+      /*const prop
+      for (prop in list){
+        vm.sublist=vm.list[prop].bank_group.name;
+      }*/
+      console.log('vm.list=============',vm.list);
+      // console.log('vm.sublist=============',vm.sublist);
       // console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!',vm.list.teacher_groups.email_id);
       /*vm.list.teacher_email_id=res.data.map(element=>element.teacher_groups.map(element=> element.email_id));
       console.log(vm.list);
       console.log(vm.list.map(element=>element.name));*/
-      console.log(vm.list.map(element=>element.teacher_groups.map(element=> element.email_id)));
+      // console.log(vm.list.map(element=>element.teacher_groups.map(element=> element.email_id)));
     },
   },
 };

@@ -94,7 +94,7 @@ export default {
   /*강의은행 목록 조회*/
   getBankLists({university_name,department_name}){
     // console.log('name==',name,'teacher_groups.email_id==',teacher_groups.email_id);
-    return http.get(`/admin_bank?university_name=${university_name}&department_name=${department_name}`)
+    return http.get(`/admin_bank/list?university_name=${university_name}&department_name=${department_name}`)
   },
 /*수정할 강의은행 조회*/
 

@@ -68,6 +68,7 @@ export default {
 		/*MasterClassAllTable,
 		MasterStudentAllTable,
 		MasterLectureAllTable,*/
+    MasterStudentScoreDetail,
 	},
 	data(){
 		return {
@@ -115,6 +116,10 @@ export default {
       vm.list.sex="남자"
     } else {
       vm.list.sex="여자"
+    }
+    if(vm.list.birth.indexOf("T")!=-1){
+      console.log(vm.list.birth.indexOf("T"));
+      vm.list.birth=vm.list.birth.split("T")[0];
     }
   },
 	methods: {
@@ -222,7 +227,10 @@ export default {
     margin: 150px 0 0 0;
   }
   .table-name {
+    position:relative;
+    top:100px;
   	margin: 20px 0 0 0;
+    //border:1px solid red;
   }
   .detail_top{
     margin-top: 0px;

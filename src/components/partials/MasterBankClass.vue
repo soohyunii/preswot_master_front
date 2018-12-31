@@ -1,18 +1,15 @@
 <template>
   <div id="class_index_wrapper">
     <div>
-      <el-table class="elTable" :data="page" style="width: 100%">
+      <el-table class="elTable" :data="page" :span-method="objectSpanMethod" style="width: 100%">
       <!-- <el-table-column prop="name" label="ID" width="50">
         <template slot-scope="scope">
           {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
         </template>
       </el-table-column> -->
-      <el-table-column prop="group_id" label="ID" width="50"></el-table-column>
-        <!-- <template slot-scope="scope">
-        {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
-        </template> -->
-      </el-table-column>
-      <el-table-column prop="name" label="그룹명" width="200">
+      <el-table-column prop="bank_group.group_id" label="ID" width="50"></el-table-column>
+      
+      <el-table-column prop="bank_group.name" label="그룹명" width="200">
       </el-table-column>
       <!-- <el-table-column prop="email_id" label="강사" width="200">
       </el-table-column> -->
@@ -20,11 +17,11 @@
       </el-table-column>
       <el-table-column prop="department_name" label="학과" width="140">
       </el-table-column> -->
-      <el-table-column prop="teacher_groups.user.name" label="구성 강사" width="140">
+      <el-table-column prop="user.name" label="구성 강사" width="140">
       </el-table-column>
-      <el-table-column prop="user.department" label="소속 학과" width="200">
+      <el-table-column prop="user.department_name" label="소속 학과" width="200">
       </el-table-column>
-      <el-table-column prop="teacher_groups.email_id" label="이메일 주소" width="250">
+      <el-table-column prop="user.email_id" label="이메일 주소" width="250">
       </el-table-column>
       <!-- <el-table-column prop="capacity" label="최대인원" width="110">
       </el-table-column> -->
@@ -146,7 +143,26 @@ export default {
       await masterService.classDelete({group_id: group_id});
       console.log('group_id===',group_id);
       window.location.reload();
-    }
+    },
+    objectSpanMethod({row,column,rowIndex,columnIndex}){
+      const vm=this;
+      const i=0;
+      if(columnIndex==0){
+        console.log('columnIndex인식',columnIndex);
+        i+=1;
+        for(var j=0; j=<i; j++){
+          var arr=[];
+          arr[j]=row.bank_group.group_id;
+          console.log('arr배열에 row.bank_group.group_id 값 입력 :', arr[j] ,row.bank_group.group_id);
+          /*if(arr[])*/
+
+        }
+      }
+      console.log('what is row.bank_group.group_id?', row.bank_group.group_id);
+      console.log('what is column?', column);
+      console.log('what is columnIndex?', columnIndex);
+      console.log('what is row?', row);
+    },
   },
 };
 </script>
