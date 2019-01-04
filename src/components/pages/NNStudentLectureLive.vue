@@ -117,9 +117,14 @@
                 </el-col>
                 <el-col :span="8"><div>
                   <el-table :data="nowQuestion" v-if="lectureItem.length > 1">
-                    <el-table-column label="번호">
+                    <el-table-column label="번호" width="50px;">
                       <template slot-scope="scope">
                         {{ scope.row.num }}
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="타입" width="70px;">
+                      <template slot-scope="scope">
+                        {{ scope.row.types }}
                       </template>
                     </el-table-column>
                     <el-table-column label="제출 여부">
@@ -237,7 +242,6 @@ export default {
     if (vm.lectureType === 0) {
       vm.$socket.on('RELOAD_LECTURE_ITEMS', (msg) => {
         const jsonMSG = JSON.parse(msg);
-        console.log('reload'); // eslint-disable-line
         if (jsonMSG.reload === true) {
           vm.refreshLectureItem(true, jsonMSG.signal);
         }
@@ -435,10 +439,6 @@ export default {
               break;
             }
             case 1: { // 설문
-              studentService.submitSurvey({
-                surveyId: data.surveyId,
-                answer: data.answer.length === 0 ? [''] : data.answer, // length === 0 이면 [''] 보내주세요. 서버 요구사항 181112,
-              });
               const endTime = new Date();
               if (vm.lectureItem.length > 1) {
                 // 여러 아이템 중 설문
@@ -452,6 +452,14 @@ export default {
                   start_time: vm.startTime,
                   end_time: endTime,
                 }); */
+                studentService.submitSurvey({
+                  surveyId: data.surveyId,
+                  item_id: vm.nowQuestion[vm.nowNum].lecture_item_id,
+                  lecture_id: vm.lectureId,
+                  order: vm.nowQuestion[vm.nowNum].order,
+                  type: vm.nowQuestion[vm.nowNum].surveyType,
+                  answer: data.answer.length === 0 ? [''] : data.answer, // length === 0 이면 [''] 보내주세요. 서버 요구사항 181112,
+                });
                 const submitlog = {
                   lecture_id: vm.lectureId,
                   user_id: utils.getUserIdFromJwt(),
@@ -476,6 +484,14 @@ export default {
                   start_time: vm.startTime,
                   end_time: endTime,
                 }); */
+                studentService.submitSurvey({
+                  surveyId: data.surveyId,
+                  item_id: vm.lectureItem[0].lecture_item_id,
+                  lecture_id: vm.lectureId,
+                  order: vm.lectureItem[0].order,
+                  type: vm.lectureItem[0].surveys[0].type,
+                  answer: data.answer.length === 0 ? [''] : data.answer, // length === 0 이면 [''] 보내주세요. 서버 요구사항 181112,
+                });
                 const submitlog = {
                   lecture_id: vm.lectureId,
                   user_id: utils.getUserIdFromJwt(),
@@ -673,7 +689,6 @@ export default {
         vm.lectureItems = [];
         vm.nowQuestion = [];
         vm.lectureItem = [];
-        // console.log('reload_refresh');
         vm.$notify({
           title: '알림',
           message: '강의아이템이 변경되었습니다.',
@@ -681,7 +696,6 @@ export default {
         });
         return;
       }
-      console.log('up'); // eslint-disable-line
       // opened 상태인 아이템이 있다면 보이기 : 빠른 속도로 아이템 보임/숨김 조작하는 경우 버그 해결하기위해 1초 지연
       setTimeout(async () => {
         // TODO: 강의 아이템이 여러개인 경우, 빠른 속도로 조작 시 같은 아이템이 중복하여 들어가는 버그 발생
@@ -775,23 +789,29 @@ export default {
             const tmp = {};
             // 제출 여부
             if (x.type === 4) {
-              tmp.soc = '자료';
+              tmp.types = '자료';
+              tmp.soc = '';
             } else if (x.type === 0) {
+              tmp.types = '문항';
               if (x.questions[0].student_answer_logs.length > 0) {
                 tmp.soc = 'O';
               } else {
                 tmp.soc = 'X';
               }
             } else if (x.type === 1) {
+              tmp.types = '설문';
+              tmp.surveyType = x.surveys[0].type; // 설문일 경우 객관식or주관식
               if (x.surveys[0].student_surveys.length > 0) {
                 tmp.soc = 'O';
               } else {
                 tmp.soc = 'X';
               }
             } else if (x.type === 2) {
-              tmp.soc = '실습';
+              tmp.types = '실습';
+              tmp.soc = '';
             } else if (x.type === 3) {
-              tmp.soc = '토론';
+              tmp.types = '토론';
+              tmp.soc = '';
             }
             tmp.type = x.type;
             tmp.order = x.order;

@@ -3,10 +3,18 @@ import http from './http';
 export default {
   submitSurvey({
     surveyId,
+    lecture_id,
     answer,
+    item_id,
+    type,
+    order,
   }) {
     return http.post(`/student/survey/${surveyId}`, {
       answer,
+      lecture_id,
+      type,
+      item_id,
+      order,
     });
   },
   submitQuestion({

@@ -55,54 +55,127 @@
           </div>
         </el-col>
       </el-row>
-      <el-steps :active="-1" align-center>
-        <el-step v-for="item in stepData" :title="item.title" :icon="item.icon" :key="item"></el-step>
-      </el-steps>
-      <el-row style="background-color: skyblue; height: 500px;">
-        <el-col :span="7" style="margin: 0;">
-          <!--
-          <el-button type="primary" size="small" @click="onClick('SHOWALL', questionItemIdList)">
-            문항 모두 보이기
-          </el-button>
-          <el-button type="primary" size="small" @click="onClick('SHOWALL', surveyItemIdList)">
-            설문 모두 보이기
-          </el-button>
-          -->
-          <h2 style="color: white;">문제 목록</h2>
-          <teacher-lecture-live-item-list
-            v-if="isTableItemListLoaded"
-            :dataList="tableItemList"
-            :onClick="onClick"
-            :isAuto="isAuto"
-          />
-          <br>
-          <!--
-          <el-tag v-for="(k, index) in selectItemList" :key="index" closable @close="deleteSelectedItem(index)">{{ k.name }}</el-tag>
-          <el-button type="primary" size="small" @click="onClick('SHOWALL', selectItemIdList)">
-            선택한 아이템 보이기
-          </el-button>-->
+      <el-row :gutter="20">
+        <el-col :span="17">
+          저널링 그래프 영역
         </el-col>
-        <el-col :span="6" style="margin-left: 20px;">
-          <h2 style="color: white;">출제 목록</h2>
-          <el-table :data="nowItemTable" v-if="ifShowItem" max-height="350">
-            <el-table-column label="타입" prop="type" width="50" />
-            <el-table-column label="아이디" prop="name" />
-            <el-table-column label="" width="70" align="center">
+        <el-col :span="5">
+          <table id="table_design" style="width: 330px; height: 150px;">
+            <thead>
+              <tr>
+                <td>출석 현황</td>
+                <td></td>
+                <td></td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>총 수강 인원</td>
+                <td>{{ totalStudent }} 명</td>
+              </tr>
+              <tr>
+                <td>출석 인원</td>
+                <td>{{ presentStudent }} 명</td>
+                <td>{{ (presentStudent/totalStudent*100).toFixed(1) }} %</td>
+              </tr>
+              <tr>
+                <td>현재 인원</td>
+                <td>{{ nowStudent }} 명</td>
+                <td>+1 명</td>
+              </tr>
+            </tbody>
+          </table>
+          <table id="table_design" style="width: 330px; height: 100px;">
+            <tbody>
+              <tr>
+                <td>집중도</td>
+                <td>{{ concentration }}</td>
+                <td>{{ concentrationChange }}</td>
+              </tr>
+              <tr>
+                <td>참여도</td>
+                <td>{{ participation }}</td>
+                <td>{{ participationChange }}</td>
+              </tr>
+              <tr>
+                <td>이해도</td>
+                <td>{{ understanding }}</td>
+                <td>{{ understandingChange }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </el-col>
+      </el-row>
+      <!--
+      <table style="width: 100%;">
+        <tbody>
+          <tr>
+            <td style="font-size: 18px;">
+              <i style="font-size: 30px;" class="el-icon-picture"></i>
+              <br/>
+              문서 자료
+            </td>
+            <td>2번</td>
+            <td>3번</td>
+          </tr>
+        </tbody>
+      </table>-->
+      <br />
+
+      <el-steps :active="activeNum" align-center>
+        <el-step v-for="item in stepData" :title="item.title" :icon="item.icon" :description="item.description" :key="item">
+        </el-step>
+      </el-steps>
+      <el-row>
+        <div style="height: 20px;" />
+        <div style="float: right">
+          <el-button size="small" type="primary" @click="onClick('NEXT_ITEM')">다음 아이템 보이기</el-button>
+          <el-button size="small" @click="onClick('HIDE_ITEM')">아이템 내리기</el-button>
+          <el-button size="small" @click="onClick('FULL_ITEM')">전체 아이템 확인</el-button>
+        </div>
+      </el-row>
+      <el-row :gutter="20" style="height: 400px; background-color: #EBEEF5;" v-if="activeNum % 1 === 0">
+        <el-col span="11" style="margin: 0;">
+          <h2>현재 출제 목록</h2>
+          <el-table :data="nowItemTable" height="300px" style="width: 450px;">
+            <el-table-column label="타입" prop="type" width="50px;" />
+            <el-table-column label="이름" prop="name" />
+            <el-table-column label="제출 현황" width="100px;" />
+            <el-table-column label="" width="80px;">
               <template slot-scope="scope">
-                <el-button type="primary" size="small" @click="itemCurrentState(scope.row)">
-                  현황
+                <el-button type="primary" size="small" @click="itemCurrentState(scope.row)"
+                  v-if="scope.row.type === '문항' || scope.row.type === '설문'">
+                  분석
                 </el-button>
               </template>
             </el-table-column>
           </el-table>
-          <el-button style="float:right; margin-top: 10px;" type="primary" @click="onClick('HIDE')">아이템 일괄 내리기</el-button>
+          <!--<teacher-lecture-live-item-list
+            v-if="isTableItemListLoaded"
+            :dataList="tableItemList"
+            :onClick="onClick" 
+            :isAuto="isAuto"
+          />-->
+          <br>
         </el-col>
-        <el-col :span="10" style="margin-left: 20px;">
-          <h4>전체 제출현황</h4>
-          <el-progress :text-inside="true" :stroke-width="18" :percentage="20" color="orange"></el-progress>
-          <h4> 제출현황</h4>
-          <el-progress :text-inside="true" :stroke-width="18" :percentage="60" color="green"></el-progress>
-          <h4>미제출 학생</h4>
+        <el-col span="10" style="margin-left: 20px;">
+          <el-tabs v-model="activeTab" type="border-card" style="margin-top: 20px; height: 345px;" v-if="tabShow">
+            <el-tab-pane label="답안 선택 현황" name="select">
+              <el-table :data="selectStatus" height="280px" style="width: 400px;" :row-class-name="tRCName">
+                <el-table-column label="답안" prop="answer" />
+                <el-table-column label="학생 수" prop="num" width="130px" />
+              </el-table>
+            </el-tab-pane>
+            <el-tab-pane label="미제출자 목록" name="notyet">
+              {{ notyetStatus }}
+            </el-tab-pane>
+            <el-tab-pane label="학생별 제출 횟수" name="submitNum">
+              <el-table :data="submitStatus" height="280px" style="width: 400px;">
+                <el-table-column label="제출 횟수" prop="submit" />
+                <el-table-column label="학생 수" prop="num" width="130px" />
+              </el-table>
+            </el-tab-pane>
+          </el-tabs>
           <!-- 강사 화면에서 학생과 동일하게 아이템이 보여지던 기존 UI
           <div v-for="id in currentLectureItemId" :key="id">
             <teacher-lecture-live-item
@@ -156,7 +229,7 @@
 
 <script>
 // FIXME : Failed to execute 'postMessage' on 'DOMWindow': The target origin provided ('<URL>')
-//   does not match the recipient window's origin ('<URL>'). 에러 해결
+// does not match the recipient window's origin ('<URL>'). 에러 해결
 import { getIdFromURL } from 'vue-youtube-embed';
 // import deepCopy from 'deep-copy';
 import lectureService from '../../services/lectureService';
@@ -199,6 +272,7 @@ export default {
       // 한 그룹마다
       const oneGroup = [];
       const idList = [];
+      vm.groupIdList.push(x.group_id);
       x.list_ids.forEach((y) => {
         // 그룹에 속하는 여러 연결 리스트
         seq.data.forEach((z) => {
@@ -227,17 +301,33 @@ export default {
       });
       vm.itemTable.push(oneGroup);
     });
-    // console.log(vm.itemTable);
+    // 총 아이템 수
+    vm.totalGroupNum = vm.itemTable.length - 1;
+
+    // 문항 프로그레스 바 생성
+    vm.itemTable.forEach((x) => {
+      const itemProg = {};
+      itemProg.title = x[0].name;
+      itemProg.description = `${x.length} 아이템`;
+      if (x[0].type === 0) { // 문항
+        itemProg.icon = 'el-icon-edit';
+      } else if (x[0].type === 1) { // 설문
+        itemProg.icon = 'el-icon-edit-outline';
+      } else if (x[0].type === 2) { // 실습
+        itemProg.icon = 'el-icon-edit-document';
+      } else if (x[0].type === 3) { // 토론
+        itemProg.icon = 'el-icon-service';
+      } else if (x[0].type === 4) { // 자료
+        itemProg.icon = 'el-icon-picture';
+      }
+      vm.stepData.push(itemProg);
+    });
+
     if (res.data.video_link !== null) {
       vm.videolink = res.data.video_link;
     }
     vm.tableItemList = res.data.lecture_items;
     // sequence 순서대로 강의 아이템 정렬
-    vm.tableItemList.sort((a, b) => {
-      const aItemSequence = Number(a.sequence);
-      const bItemSequence = Number(b.sequence);
-      return aItemSequence - bItemSequence;
-    });
     const res2 = await classService.getClass({
       id: res.data.class_id,
     });
@@ -309,35 +399,25 @@ export default {
       lid: '', // 강의 종료시 필요한 아이템 아이디
       nowItemTable: [], // 현재 출제 중인 아이템 테이블
       ifShowItem: false, // 아이템 출제 중인지
-      stepData: [{
-        title: '문항 1',
-        icon: 'el-icon-edit',
-      }, {
-        title: '자료',
-        icon: 'el-icon-picture',
-      }, {
-        title: '문항 2',
-        icon: 'el-icon-edit',
-      }, {
-        title: '설문',
-        icon: 'el-icon-edit-outline',
-      }, {
-        title: '토론',
-        icon: 'el-icon-service',
-      }, {
-        title: '강의 관련 설문',
-        icon: 'el-icon-edit-outline',
-      }, {
-        title: '예시 실습',
-        icon: 'el-icon-document',
-      }, {
-        title: '8번째',
-        icon: 'el-icon-edit',
-      }],
-      totalStudent: '', // 총 수강인원
-      presentStudent: '', // 출석인원
-      nowStudent: '', // 현재 인원
+      stepData: [], // 아이템 프로그레스 바
+      totalStudent: 3, // 총 수강인원
+      presentStudent: 2, // 출석인원
+      nowStudent: 1, // 현재 인원
+      concentration: 50, // 현재 집중도
+      participation: 70, // 현재 참여도
+      understanding: 30, // 현재 이해도
+      concentrationChange: '-15%', // 집중도 변화
+      participationChange: '+20%', // 참여도 변화
+      understandingChange: '-17%', // 이해도 변화
       itemTable: [], // 아이템 테이블 - 최종
+      totalGroupNum: '', // 전체 아이템 수
+      activeNum: -0.5, // 현재 아이템 진행 번호
+      groupIdList: [], // 그룹 id의 리스트
+      tabShow: false, // 아이템 분석을 누를 경우 활성화
+      activeTab: 'select', // 출제 아이템 분석의 탭
+      selectStatus: [], // 특정 아이템 - 학생들의 답안 선택 현황
+      notyetStatus: '', // 특정 아이템 - 미제출 학생들 명단
+      submitStatus: [], // 특정 아이템 - 학생별 제출 횟수 현황
     };
   },
   computed: {
@@ -380,59 +460,77 @@ export default {
     async onClick(type, data) {
       const vm = this;
       switch (type) {
-        // 보일 아이템 선택
-        case 'APPEND': {
-          // 이미 리스트에 존재한다면
-          if (vm.selectItemList.includes(data) === true) {
+        // 다음 아이템 보이기
+        case 'NEXT_ITEM': {
+          if (vm.activeNum % 1 === 0) {
+            // 이미 보이고 있는 아이템이 있음
             vm.$notify({
               title: '알림',
-              message: '이미 선택된 아이템입니다.',
+              message: '다음 아이템을 보이려면 기존 아이템을 내려주세요.',
+              type: 'warning',
+            });
+            break;
+          } else if (vm.activeNum > vm.totalGroupNum) {
+            // 모든 아이템 보인 경우
+            vm.$notify({
+              title: '알림',
+              message: '더 이상 보일 아이템이 없습니다.',
               type: 'warning',
             });
             break;
           }
-          vm.selectItemList.push(data);
-          vm.selectItemIdList.push(data.lecture_item_id);
-          break;
-        }
-        /* 모두 보이기 (문항 or 설문) or 선택한 아이템 일괄 보이기 - 사라진 기능
-        case 'SHOWALL': {
-          if (vm.currentLectureItemId.length !== 0) {
-            vm.$notify({
-              title: '알림',
-              message: '다른 아이템을 보이려면 기존 아이템을 내려주세요.',
-              type: 'warning',
-            });
-            break;
-          }
-          vm.currentLectureItemId = deepCopy(data);
-          data.forEach((x) => {
-            if (vm.mainquestion.includes(x) === true) {
-              const ind = vm.mainquestion.indexOf(x);
-              vm.subquestion[ind].forEach((y) => {
-                vm.currentLectureItemId.push(y);
-              });
+          // 위 두 경우 아닐 경우 아이템 보이기
+          vm.activeNum += 0.5;
+          vm.itemTable[vm.activeNum].forEach((x) => {
+            if (x.type === 0) {
+              x.type = '문항'; // eslint-disable-line
+            } else if (x.type === 1) {
+              x.type = '설문'; // eslint-disable-line
+            } else if (x.type === 2) {
+              x.type = '실습'; // eslint-disable-line
+            } else if (x.type === 3) {
+              x.type = '토론'; // eslint-disable-line
+            } else if (x.type === 4) {
+              x.type = '자료'; // eslint-disable-line
             }
           });
-          const params = [];
-          vm.currentLectureItemId.forEach((item) => {
-            vm.tableItemIndex.push(
-              vm.tableItemList.findIndex(tableItem =>
-                tableItem.lecture_item_id === item),
-            );
-            const param = {
-              lecture_id: vm.lectureId,
-              opened: 1,
-              lecture_item_id: item,
-            };
-            params.push(param);
-          });
-          vm.$socket.emit('LECTURE_ITEMS_ACTIVATION', JSON.stringify(params));
-          // 선택한 리스트가 있다면 초기화
-          vm.selectItemList = [];
-          vm.selectItemIdList = [];
+          vm.nowItemTable = vm.itemTable[vm.activeNum];
+          const paramsi = {
+            lecture_id: vm.lectureId,
+            group_id: vm.groupIdList[vm.activeNum],
+          };
+          vm.$socket.emit('LECTURE_GROUP_ACTIVATION', JSON.stringify(paramsi));
+          vm.nowGroup = vm.groupIdList[vm.activeNum];
           break;
-        } */
+        }
+        // 아이템 내리기
+        case 'HIDE_ITEM': {
+          if (vm.activeNum % 1 === 0.5 || vm.activeNum === -0.5) {
+            // 내릴 아이템이 없음
+            vm.$notify({
+              title: '알림',
+              message: '내릴 아이템이 없습니다.',
+              type: 'warning',
+            });
+            break;
+          }
+          vm.activeNum += 0.5;
+          vm.nowItemTable = [];
+          const paramsi = {
+            lecture_id: vm.lectureId,
+            group_id: vm.nowGroup,
+          };
+          vm.$socket.emit('LECTURE_GROUP_DEACTIVATION', JSON.stringify(paramsi));
+          vm.nowGroup = -1;
+          vm.tabShow = false;
+          vm.activeTab = 'select';
+          break;
+        }
+        // 전체 아이템 - 임시
+        case 'FULL_ITEM': {
+          window.open('itemList');
+          break;
+        }
         // 아이템 보이기
         case 'SHOW': {
           if (vm.currentLectureItemId.length !== 0) {
@@ -579,17 +677,51 @@ export default {
         }
       }
     },
-    /* 아이템 제출 현황
+    // 아이템별 분석
     itemCurrentState(data) {
       const vm = this;
-      // vm.$socket.emit('CHECK_USER_LECTURE');
-      // vm.$socket.emit('CHECK_ANSWER_LECTURE');
-    }, */
-    // 선택된 아이템 삭제
-    deleteSelectedItem(index) {
-      const vm = this;
-      vm.selectItemList.splice(index, 1);
-      vm.selectItemIdList.splice(index, 1);
+      vm.tabShow = true;
+      vm.selectStatus = [];
+      vm.submitStatus = [];
+      vm.notyetStatus = '학생1, 학생2, 학생3, 학생4';
+      vm.selectStatus = [
+        {
+          answer: 'HTTP',
+          num: '17 / 50 (34%)',
+          correct: true,
+        }, {
+          answer: 'SMTP',
+          num: '3 / 50 (6%)',
+          correct: false,
+        }, {
+          answer: 'TCP',
+          num: '21 / 50 (42%)',
+          correct: true,
+        }, {
+          answer: 'UDP',
+          num: '6 / 50 (12%)',
+          correct: false,
+        }, {
+          answer: 'IP',
+          num: '1 / 50 (2%)',
+          correct: false,
+        },
+      ];
+      vm.submitStatus = [
+        {
+          submit: '1회',
+          num: '25 / 50 (50%)',
+        }, {
+          submit: '2회',
+          num: '13 / 50 (26%)',
+        }, {
+          submit: '3회',
+          num: '7 / 50 (14%)',
+        }, {
+          submit: '4회 이상',
+          num: '3 / 50 (6%)',
+        },
+      ];
     },
     beforeLeave() {
       const vm = this;
@@ -611,6 +743,13 @@ export default {
 
       // 화면 떠나기 전 등록한 Listener 해제. 이 코드가 없으면 리스너가 중복 등록되어 버그가 발생함
       window.removeEventListener('beforeunload', vm.beforeLeave);
+    },
+    // 답안 선택 현황에서 정답 보기에 색 표시
+    tRCName({ row }) {
+      if (row.correct === true) {
+        return 'right';
+      }
+      return '';
     },
   },
   beforeDestroy() {
@@ -658,5 +797,30 @@ export default {
 }
 .statusbar.activeInfo{
   max-height: 85%;
+}
+#table_design {
+  border-collapse: collapse;
+  text-align: center;
+  line-height: 1.5;
+  border-top: 1px solid #321;
+  border-bottom: 1px solid #321;
+  border-block-end: 1px solid #321;
+}
+#table_design thead {
+  width: 150px;
+  padding: 10px;
+  vertical-align: top;
+  color: #111;
+  font-size: 14px;
+  background: rgb(160, 213, 250);
+}
+#table_design tbody td {
+  width: 350px;
+  padding: 10px;
+  font-size: 14px;
+  color: #333;
+}
+.el-table .right {
+  background: moccasin;
 }
 </style>

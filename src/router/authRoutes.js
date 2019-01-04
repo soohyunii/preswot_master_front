@@ -38,6 +38,7 @@ import NLectureFromBank from '../components/pages/NLectureFromBank';
 import NLectureItemFromBank from '../components/pages/NLectureItemFromBank';
 import LectureItemConnect from '../components/pages/LectureItemConnect';
 import LectureItemGroup from '../components/pages/LectureItemGroup';
+import TeacherLectureLiveItemShow from '../components/pages/TeacherLectureLiveItemShow';
 
 export default function authRoutes(root) {
   return [
@@ -160,6 +161,14 @@ export default function authRoutes(root) {
       component: NNTeacherLectureLive,
       meta: {
         title: 'Teacher Lecture Live',
+      },
+    },
+    {
+      path: '/teacher/NNlecture/:lectureId/itemList',
+      name: 'TeacherLectureLiveItemShow',
+      component: TeacherLectureLiveItemShow,
+      meta: {
+        title: 'Teacher Lecture Live Item Show',
       },
     },
     /*  // season 0
