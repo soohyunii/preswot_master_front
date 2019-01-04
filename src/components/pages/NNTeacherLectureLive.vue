@@ -678,7 +678,7 @@ export default {
       }
     },
     // 아이템별 분석
-    itemCurrentState(data) {
+    itemCurrentState() {
       const vm = this;
       vm.tabShow = true;
       vm.selectStatus = [];
