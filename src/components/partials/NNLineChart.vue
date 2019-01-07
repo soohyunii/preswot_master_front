@@ -25,9 +25,7 @@
       onRefresh() {
         const vm = this;
         if (vm.chartData.length === 0) return;
-        const formedData = [];
-        formedData[0] = vm.chartData[0];
-        formedData[1] = vm.chartData[1];
+        const formedData = vm.chartData;
         // eslint-disable-next-line
         const chart = bb.generate({
           data: {
