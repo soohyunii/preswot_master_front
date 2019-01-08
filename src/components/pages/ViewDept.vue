@@ -2,7 +2,7 @@
   <div id="class_index_wrapper" class="bt-container">
     <h2 class="page-title">조회하기 > 학과</h2>
     <div>
-      <el-form width="300px">
+      <el-form width="100px">
       <!-- <el-form :model="input" style="max-width: 1000px;" class="elForm"> -->
         
         <!-- <select id="uni-choice" v-model="uniName">
@@ -314,7 +314,7 @@ export default {
     line-height: 40px;
     letter-spacing: normal;
     color: #000000;
-    width: 300px;
+    width: 200px;
     margin: 20px 0 0 10px;
     // border:1px solid red;
   }

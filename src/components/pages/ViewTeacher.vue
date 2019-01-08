@@ -6,19 +6,27 @@
       :onClick="onClick"
     /> -->
     <div id="choiceLists">
-    <el-form width="300px">
-      <span>대학선택: </span>
-      <select id="uni-choice" style="width:130px;" v-model="chosen" @change="categoryChange()">
-        <option v-for="uniName in uniNameList">{{uniName}}</option>
-      </select>
+    <el-form>
+      <!-- <span>대학선택: </span> -->
+      <el-select placeholder="대학선택" style="width:200px; top:20px;" v-model="chosen" @change="categoryChange(type,chosen,dept_chosen)">
+        <el-option 
+          v-for="uniName in uniNameList"
+          :label="uniName"
+          :value="uniName">
+        </el-option>
+      </el-select>
     </el-form>
     <el-form id="dept">
-      <span>학과선택: </span>
-      <select id="dept-choice"  style="width:130px;" v-model="dept_chosen" @change="onChange(type,chosen,dept_chosen)">
+      <!-- <span>학과선택: </span> -->
+      <el-select placeholder="학과선택" style="width:200px; top:20px;" v-model="dept_chosen" @change="onChange(type,chosen,dept_chosen)">
         <!-- <option @change="categoryAllShow(type,chosen,null)">학과선택없음</option> -->
-        <option :value='nothing'>학과선택없음</option>
-        <option v-for="deptName in deptNameList">{{deptName}}</option>
-      </select>
+        <!-- <el-option :value="nothing" :label="학과선택없음">{{학과선택없음}}</el-option> -->
+        <el-option 
+          v-for="deptName in deptNameList"
+          :label="deptName"
+          :value="deptName">
+        </el-option>
+      </el-select>
     </el-form>
     </div>
     <!-- <div style="margin-top: 50px;"/> -->
@@ -30,12 +38,12 @@
     <br/>
     <div class="right-align">
       <router-link to="/a/register/teacher">
-        <el-button  type="primary" :class="$attachReactablePostfix('right-align-btn')" style="width: 49%">
+        <el-button  type="primary" :class="$attachReactablePostfix('right-align-btn')" style="width: 49.5%">
           <div class="right-align-btn-layer">강사 등록하기</div>
         </el-button>
       </router-link>
       <router-link to="/">
-        <el-button type="primary" :class="$attachReactablePostfix('right-align-btn')" style="width: 49%">
+        <el-button type="primary" :class="$attachReactablePostfix('right-align-btn')" style="width: 50%">
           <div class="right-align-btn-layer">홈으로</div>
         </el-button>
       </router-link>
@@ -190,11 +198,20 @@ export default {
         }
       }
     },
-    async categoryChange(){
+    async categoryChange(type,university_name,department_name){
       const vm=this;
-      const deptNameLists = await masterService.getDeptLists(vm.chosen);
+      const deptNameLists = await masterService.getDeptLists({name:vm.chosen});
       vm.deptNameList = await deptNameLists.data.map(element=>element.name);
-      console.log('vm.deptNameList = ', vm.deptNameList );
+      console.log('vm.deptNameList = ', vm.deptNameList);
+      const res = await masterService.getUserLists(type,university_name,null);
+      console.log('res.data[0].birth=== ', res.data[0].birth);
+      for(var i=0;i<res.data.length;i++){
+        if(res.data[i].birth.indexOf("T")!==-1){
+          // console.log('$$$$$$$$$$$$$$$',res.data[i].birth.indexOf("T"));
+          res.data[i].birth=res.data[i].birth.split("T")[0];
+        }
+      }
+      vm.list=res.data;
     },
     async categoryAllShow(){
       const vm=this;
@@ -283,8 +300,8 @@ export default {
     line-height: 40px;
     letter-spacing: normal;
     color: #000000;
-    width: 300px;
-    margin: 20px 0 0 10px;
+    width: 200px;
+    margin: 20px 10px 0 10px;
     // border:1px solid red;
   }
   /*#dept{

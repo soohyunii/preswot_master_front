@@ -3,17 +3,23 @@
     <h2 class="page-title">조회하기 > 강의은행</h2>
     <div id="choiceLists">
       <el-form>
-        <span> 대학선택: </span>
-        <select id="university_choice" v-model="chosen" @change="categoryChange()" style="width:120px;">
-        <option v-for="universityName in universityNameList">{{universityName}}</option>
-      </select>
+        <el-select placeholder="대학선택" v-model="chosen" @change="categoryChange()" style="width:200px; top:20px">
+        <el-option 
+          v-for="universityName in universityNameList"
+          :label="universityName"
+          :value="universityName">
+        </el-option>
+      </el-select>
     </el-form>
     <el-form id="dept" style="position:relative; left:220px; top:-60px;">
-      <span>학과선택: </span>
-      <select id="department_choice" v-model="department_chosen" @change="showChange()" style="width:120px;">
-        <option value="">선택사항없음</option>
-        <option v-for="departmentName in departmentNameList">{{departmentName}}</option>
-      </select>
+      <el-select placeholder="학과선택" v-model="department_chosen" @change="showChange()" style="width:200px; top:20px;">
+        <!-- <option value="">선택사항없음</option> -->
+        <el-option 
+          v-for="departmentName in departmentNameList"
+          :label="departmentName"
+          :value="departmentName">
+        </el-option>
+      </el-select>
     </el-form>
     </div>
     <master-bank-class
@@ -220,6 +226,8 @@ export default {
       const vm=this;
       const deptNameList = await masterService.getDeptLists({name : vm.chosen});
       vm.departmentNameList = deptNameList.data.map(element=>element.name);
+      const res = await masterService.getBankLists({university_name:vm.chosen});
+      vm.list=res.data;
     },
     async showChange(){
       const vm=this;

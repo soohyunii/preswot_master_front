@@ -83,7 +83,15 @@ export default {
 
   /*과목 목록 조회*/
   getClassLists({university_name,department_name,end_date_from,end_date_to}){
-    return http.get(`/admin_class/list?university_name=${university_name}&department_name=${department_name}&end_date_from=${end_date_from}&end_date_to=${end_date_to}`)
+    // return http.get(`/admin_class/list?university_name=${university_name}&department_name=${department_name}&end_date_from=${end_date_from}&end_date_to=${end_date_to}`)
+    return http.get('/admin_class/list', {
+      params: {
+        university_name,
+        department_name,
+        end_date_from,
+        end_date_to,
+      },
+    })
   },
 
   /*수정할 과목 조회*/
@@ -93,8 +101,15 @@ export default {
 
   /*강의은행 목록 조회*/
   getBankLists({university_name,department_name}){
-    // console.log('name==',name,'teacher_groups.email_id==',teacher_groups.email_id);
-    return http.get(`/admin_bank/list?university_name=${university_name}&department_name=${department_name}`)
+    console.log('university_name==',university_name);
+    console.log('department_name==',department_name);
+    // return http.get(`/admin_bank/list?university_name=${university_name}&department_name=${department_name}`)
+    return http.get('/admin_bank/list', {
+      params: {
+        university_name,
+        department_name,
+      },
+    })
   },
 /*수정할 강의은행 조회*/
 
@@ -537,16 +552,14 @@ export default {
     university_name,
     department_name,
     name,
-    email_id,
-    /*capacity,*/
+    email_id_list,
   }) {
-    console.log(university_name,department_name,name);
+    console.log(university_name,department_name,name,email_id_list);
     return http.post(`/admin_bank`,{
       university_name,
       department_name,
       name,
-      email_id,
-      /*capacity,*/
+      email_id_list,
     }); 
   },
   bankDelete({

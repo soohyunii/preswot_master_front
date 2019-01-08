@@ -10,17 +10,26 @@
     <el-form :model="input" ref="elForm" label-position="left" label-width="125px" style="max-width: 800px;" class="elForm-label">
       <br/><br/><br/><br/><br/><br/>
       <el-form-item label="대학선택">
-        <select id="uni-choice" v-model="input.university_name" @change="categoryChange()">
+        <el-select v-model="input.university_name" @change="categoryChange()">
           <!-- <option value="">대학리스트</option> -->  <!-- DB에 있는 대학 리스트 가져오기 --> 
-          <option v-for="university_name in input.university_list">{{university_name}}</option>
-        </select> &nbsp; <font color="red" size="5em">*</font>
+          <el-option 
+            v-for="university_name in input.university_list"
+            :label="university_name"
+            :value="university_name">
+          </el-option>
+        </el-select> &nbsp; <font color="red" size="5em">*</font>
       </el-form-item>
 
       <el-form-item label="학과선택">
-        <select id="dept-choice" v-model="input.department_name" @change="categoryTeacherChange()">
-          <option value=null>선택사항없음</option>  <!-- DB에 있는 학과 리스트 가져오기 --> 
-          <option v-for="department_name in input.department_list">{{department_name}}</option>
-        </select> &nbsp; <font color="red" size="5em">*</font>
+        <el-select v-model="input.department_name" :disabled="input.boolean" @change="categoryTeacherChange()">
+          <el-option 
+            v-for="department_name in input.department_list"
+            :label="department_name"
+            :value="department_name">  
+          </el-option>
+        </el-select>
+        <el-checkbox v-model="input.checked" style="margin-left:20px;" @change="categoryNone()">소속 없음</el-checkbox> 
+        &nbsp; <font color="red" size="5em">*</font>
       </el-form-item>
 
       <el-form-item label="과목코드">
@@ -42,11 +51,13 @@
 
       <br/><br/><br/><br/><br/><br/>
       <el-form-item label="강사선택">
-        <select id="teacher-choice" v-model="input.teacher_email_id" :disabled="input.isActive" style="width:100px;">
-          <!-- <option v-show="input.isActive==true" value="" selected="selected">강사선택없음</option> -->  <!-- DB에 있는 강사 리스트 가져오기 --> 
-          <!-- <option v-else value=null>선택사항없음</option> -->
-          <option v-for="teacher_email_id in input.teacher_list">{{teacher_email_id}}</option>
-        </select>
+        <el-select id="teacher-choice" v-model="input.teacher_email_id" :disabled="input.isActive" style="width:140px;">
+          <el-option 
+            v-for="teacher_email_id in input.teacher_list"
+            :label="teacher_email_id"
+            :value="teacher_email_id">
+          </el-option>
+        </el-select>
       </el-form-item>
 
       <el-form-item label="과목차수">
@@ -254,7 +265,8 @@ export default {
     },
     async categoryChange(){
       const vm=this;
-      const deptNameLists = await masterService.getDeptLists(vm.input.university_name);
+      const deptNameLists = await masterService.getDeptLists({name : vm.input.university_name});
+      console.log('deptNameLists',deptNameLists);
       vm.input.department_list = await deptNameLists.data.map(element=>element.name);
     },
     async categoryTeacherChange(){
@@ -263,8 +275,17 @@ export default {
       console.log(teacherNameLists);
       vm.input.teacher_list = await teacherNameLists.data.map(element=>element.name);
       console.log(vm.input.teacher_list);
-
-    }
+    },
+    async categoryNone(){
+      const vm=this;
+      if(vm.input.checked==true){
+        vm.input.boolean=true;
+      } else {
+        vm.input.boolean=false;
+      }
+      const teacherNameLists = await masterService.getUserLists(1,vm.input.university_name,vm.input.department_name);
+      vm.input.teacher_list = await teacherNameLists.data.map(element=>element.name);
+    },
   },
   watch: {
     // NOTE: 이거 () => {}로 바꾸면 안됨!! vm이 다른 녀석 들어옴

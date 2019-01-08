@@ -7,22 +7,29 @@
           {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
         </template>
       </el-table-column> -->
-      <el-table-column prop="bank_group.group_id" label="ID" width="50"></el-table-column>
-      
-      <el-table-column prop="bank_group.name" label="그룹명" width="200">
+      <!-- <el-table-column prop="bank_group.group_id" label="ID" width="50"></el-table-column> -->
+      <el-table-column prop="bank_group.name" label="그룹명">
       </el-table-column>
+      <!-- <el-table-column prop="bank_group.name" label="그룹명" width="200">
+      </el-table-column> -->
       <!-- <el-table-column prop="email_id" label="강사" width="200">
       </el-table-column> -->
       <!-- <el-table-column prop="university_name" label="대학" width="110">
       </el-table-column>
       <el-table-column prop="department_name" label="학과" width="140">
       </el-table-column> -->
-      <el-table-column prop="user.name" label="구성 강사" width="140">
+      <el-table-column prop="user.name" label="구성 강사">
       </el-table-column>
-      <el-table-column prop="user.department_name" label="소속 학과" width="200">
+      <!-- <el-table-column prop="user.name" label="구성 강사" width="140">
+      </el-table-column> -->
+      <el-table-column prop="user.department_name" label="소속 학과">
       </el-table-column>
-      <el-table-column prop="user.email_id" label="이메일 주소" width="250">
+      <!-- <el-table-column prop="user.department_name" label="소속 학과" width="200">
+      </el-table-column> -->
+      <el-table-column prop="user.email_id" label="이메일 주소">
       </el-table-column>
+      <!-- <el-table-column prop="user.email_id" label="이메일 주소" width="250">
+      </el-table-column> -->
       <!-- <el-table-column prop="capacity" label="최대인원" width="110">
       </el-table-column> -->
       <el-table-column label="" header-align="left" align="right">
@@ -144,24 +151,76 @@ export default {
       console.log('group_id===',group_id);
       window.location.reload();
     },
+
+    // 테이블 데이터 합침 잘 안됨 
     objectSpanMethod({row,column,rowIndex,columnIndex}){
       const vm=this;
-      const i=0;
-      if(columnIndex==0){
-        console.log('columnIndex인식',columnIndex);
-        i+=1;
-        for(var j=0; j=<i; j++){
-          var arr=[];
-          arr[j]=row.bank_group.group_id;
-          console.log('arr배열에 row.bank_group.group_id 값 입력 :', arr[j] ,row.bank_group.group_id);
-          /*if(arr[])*/
-
+      const arr=[];
+      console.log('rowIndex===',rowIndex);
+      console.log('row.bank_group.name===',row.bank_group.name);
+      console.log('row===',row);
+      if(columnIndex===0){
+        for(var j=0;j<rowIndex+1;j++){
+          console.log('j는 ==',j);
+          arr.push(row.bank_group.name);
         }
+        console.log('arr 배열은==',arr);
       }
-      console.log('what is row.bank_group.group_id?', row.bank_group.group_id);
+        /*if (columnIndex === 0) {
+          if (rowIndex % 2 === 0) {
+            return {
+              rowspan: 2,
+              colspan: 1
+            };
+          } else {
+            return {
+              rowspan: 0,
+              colspan: 0
+            };
+          }
+        }*/
+
+        if (columnIndex === 0) {
+          for(var i=0;i<rowIndex.length;i++){
+            if(row[i].bank_group.name==row[i+1].bank_group.name){
+              return{
+                rowspan:i+1,
+                colspan:1
+              };
+            } else {
+              return {
+                rowspan: 0,
+                colspan: 0
+              };
+            }
+          }
+        }
+      /*if(columnIndex===0){
+          console.log('columnIndex인식',columnIndex);
+          for(var i=0; i<=rowIndex; i++){
+              arr[i]=row.bank_group.group_id;
+              console.log('arr배열에 row.bank_group.group_id 값 입력 :', arr[i] ,row.bank_group.group_id);
+              console.log(arr);
+            if(arr[i]===arr[i+1]){
+              console.log('true');
+              return{
+                rowspan: 2,
+                colspan: 1
+              };
+            } else {
+              return{
+                rowspan:2,
+                colspan:1
+              };
+            }
+          }
+      }*/
+
+      /*console.log('what is row.bank_group.group_id?', row.bank_group.group_id);
       console.log('what is column?', column);
       console.log('what is columnIndex?', columnIndex);
       console.log('what is row?', row);
+      console.log('what is rowIndex?', rowIndex);*/
     },
   },
 };

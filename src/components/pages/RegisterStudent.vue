@@ -43,16 +43,24 @@
 
       <br/><br/><br/><br/><br/>
       <el-form-item label="소속대학 선택" style="margin-top:60px;">
-        <select id="uni-choice" v-model="input.university_name" @change="categoryChange(input.university_name)">
-          <option v-for="university_name in input.university_list">{{university_name}}</option>
-        </select>
+        <el-select id="uni-choice" v-model="input.university_name" @change="categoryChange(input.university_name)">
+          <el-option 
+            v-for="university_name in input.university_list"
+            :label="university_name"
+            :value="university_name">
+          </el-option>
+        </el-select>
       </el-form-item>
 
       <el-form-item label="소속학과 선택">
-        <select id="dept-choice" v-model="input.department_name">
-          <option value="">선택사항없음</option>  <!-- DB에 있는 학과 리스트 가져오기 -->
-          <option v-for="department_name in input.department_list">{{department_name}}</option>
-        </select>
+        <el-select id="dept-choice" v-model="input.department_name" :disabled="input.boolean">
+          <el-option 
+            v-for="department_name in input.department_list"
+            :label="department_name"
+            :value="department_name">
+          </el-option>
+        </el-select>
+        <el-checkbox v-model="input.checked" style="margin-left:20px;" @change="input.boolean=input.checked">소속 없음</el-checkbox>
       </el-form-item>
 
       <el-form-item label="주소">
@@ -242,7 +250,7 @@ export default {
     },
     async categoryChange(university_name){
       const vm=this;
-      const deptNameLists = await masterService.getDeptLists(vm.input.university_name);
+      const deptNameLists = await masterService.getDeptLists({name: vm.input.university_name});
       vm.input.department_list = await deptNameLists.data.map(element=>element.name);
       console.log(vm.input.department_list);
     },

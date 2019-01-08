@@ -3,18 +3,23 @@
     <h2 class="page-title">조회하기 > 과목</h2>
     <div id="choicLists">
       <el-form>
-        <span>대학선택: </span>
-        <select id="uni-choice" v-model="chosen" @change="categoryChange()" style="width:120px;">
-          <option v-for="uniName in uniNameList">{{uniName}}</option>
-        </select>
+        <el-select placeholder="대학선택" v-model="chosen" @change="categoryChange()" style="width:200px; top:20px">
+          <el-option 
+            v-for="uniName in uniNameList"
+            :label="uniName"
+            :value="uniName">
+          </el-option>
+        </el-select>
       </el-form>
-      <el-form id="dept" style="position: relative; left:220px; top:-60px;">
-        <span>학과선택: </span>
-        <!-- <select id="dept-choice" v-model="dept_chosen" @change="categorySemesterChange(type,chosen,dept_chosen)" style="width:120px;"> -->
-        <select id="dept-choice" v-model="dept_chosen" @change="showChange()" style="width:120px;">
-          <option value="">선택사항없음</option>
-          <option v-for="deptName in deptNameList">{{deptName}}</option>
-        </select>
+      <el-form style="position: relative; left:220px; top:-60px;">
+        <el-select placeholder="학과선택" v-model="dept_chosen" @change="showChange()" style="width:200px; top:20px">
+          <!-- <option value="">선택사항없음</option> -->
+          <el-option 
+            v-for="deptName in deptNameList"
+            :label="deptName"
+            :value="deptName">
+          </el-option>
+        </el-select>
       </el-form>
       <!-- <el-form id="semester" style="position: relative; left:440px; top:-120px;">
         <span>학기선택: </span>
@@ -24,10 +29,32 @@
         </select>
       </el-form> -->
       <el-form id="semester" style="position: relative; left:440px; top:-120px; width:500px">
-        <span>기간선택:  </span>
-        <el-date-picker v-model="date_from_chosen" type="datetime" format="yyyy-MM-dd" style="width:140px"></el-date-picker> 
-        ~
-        <el-date-picker v-model="date_to_chosen" type="datetime" format="yyyy-MM-dd" style="width:140px" @change="toChange()"></el-date-picker> 
+        <!-- <span>기간선택:  </span> -->
+        <el-date-picker 
+          v-model="date_from_chosen"
+          type="date" 
+          placeholder="시작일 선택"
+          style="width:150px; top:20px;">
+        </el-date-picker>
+        <!-- <span> ~ </span> -->
+        <el-date-picker 
+          v-model="date_to_chosen" 
+          type="date"
+          placeholder="종료일 선택"
+          style="width:150px; top:20px;"
+          @change="toChange()"
+          >
+        </el-date-picker>
+        <!-- <el-date-picker 
+          v-model="date_from_chosen" 
+          type="daterange"
+          align="right"
+          start-placeholder="과목시작일"
+          end-placeholder="과목종료일"  
+          style="width:300px; top:20px;"
+          @change="toChange()">
+        </el-date-picker> --> 
+        <!-- <el-date-picker v-model="date_to_chosen" type="datetime" format="yyyy-MM-dd" style="width:150px; top:20px;" @change="toChange()"></el-date-picker>  -->
       </el-form>
     </div>
     <div style="margin-top: -70px;"/>
@@ -86,8 +113,10 @@ export default {
       chosen:'',
       dept_chosen:'',
       semester:'',
-      date_from_chosen:new Date(),
-      date_to_chosen:new Date(),
+      /*date_from_chosen:new Date(),
+      date_to_chosen:new Date(),*/
+      date_from_chosen:'',
+      date_to_chosen:'',
     };
   },
   computed: {
@@ -212,7 +241,9 @@ export default {
       const vm=this;
       const deptNameLists = await masterService.getDeptLists({name:vm.chosen});
       vm.deptNameList = deptNameLists.data.map(element=>element.name);
-      // console.log('vm.deptNameList!~!!!!!!!!!!!!!!!!!!!!!',vm.deptNameList);
+      const res = await masterService.getClassLists({university_name : vm.chosen});
+      vm.list = res.data;
+      console.log('vm.list',vm.list);
     },
     /*async onChange(end_date_from,end_date_to){
       const vm=this;
@@ -222,13 +253,8 @@ export default {
     },*/
     async showChange(){
       const vm=this;
-      const null_date=new Date(NaN);
-      console.log(null_date);
-      const res = await masterService.getClassLists({university_name : vm.chosen,department_name : vm.dept_chosen ,end_date_from : null_date ,end_date_to : null_date});
-      /*console.log('vm.uniName==',vm.chosen,'vm.deptName====',vm.dept_chosen);
-      console.log('vm.date_from_chosen==',vm.date_from_chosen,'vm.date_to_chosen====',vm.date_to_chosen);*/
+      const res = await masterService.getClassLists({university_name : vm.chosen,department_name : vm.dept_chosen});
       vm.list = res.data;
-      /*console.log('vm.list=============',vm.list);*/
     },
     async toChange(){
       const vm=this;

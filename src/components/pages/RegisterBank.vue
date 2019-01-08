@@ -19,16 +19,24 @@
       </el-form-item>
 
       <el-form-item label="소속대학 선택">
-        <select id="uni-choice" v-model="input.university_name" @change="categoryChange(input.university_name)">
-          <option v-for="university_name in input.university_list">{{university_name}}</option>
-        </select>
+        <el-select id="uni-choice" v-model="input.university_name" @change="categoryChange(input.university_name)">
+          <el-option 
+            v-for="university_name in input.university_list"
+            :label="university_name"
+            :value="university_name">
+          </el-option>
+        </el-select>
       </el-form-item>
 
       <el-form-item label="소속학과 선택">
-        <select id="dept-choice" v-model="input.department_name" @change="teacherChange()">
-          <option value="">선택사항없음</option>
-          <option v-for="department_name in input.department_list">{{department_name}}</option>
-        </select>
+        <el-select id="dept-choice" v-model="input.department_name" :disabled="input.boolean">
+          <el-option 
+            v-for="department_name in input.department_list"
+            :label="department_name"
+            :value="department_name">
+          </el-option>
+        </el-select>
+        <el-checkbox v-model="input.checked" style="margin-left:20px;" @change="input.boolean=input.checked">소속 없음</el-checkbox>
       </el-form-item>
 
       <!-- <el-form-item label="최대 구성인원 수">
@@ -39,7 +47,8 @@
         
         <el-table
           :data="input.items"
-          style="width: 470px">
+          style="width: 470px"
+          @selection-change="handleSelectionChange">
           <el-table-column
             label="강사이름"
             prop="name"
@@ -55,19 +64,9 @@
             prop="email_id"
             width="180">
           </el-table-column>
-          <!-- <el-table-column
-            label="선택"
-            width="50">
-            <template slot-scope="scope">
-              <el-button @click="mySelectClick(scope.$index)" type="text">선택</el-button>
-            </template>
-          </el-table-column> -->
           <el-table-column
-            label="선택"
+            type="selection"
             width="50">
-            <template slot-scope="scope">
-              <el-checkbox v-model="input.checkbox" @change="mySelectClick(scope.$index)" type="text"></el-checkbox>
-            </template>
           </el-table-column>
         </el-table>
         
@@ -82,15 +81,27 @@
           closable
           :disable-transitions="false"
           @close="selectClose(items)">
-            {{items.name}} / {{items.department_name}} / {{items.email_id}} 
+            {{items.name}} / {{items.department_name}} / {{items.email_items}} 
         </el-tag> -->
-        <el-tag
+        <!-- <el-tag
           :key="index"
-          v-for="(items, index) in input.selected_items"
+          v-for="(items, index) in input.email_items"
           v-model="input.email_id"
           closable
           :disable-transitions="false"
           @close="selectClose(items)">
+            {{items.name}} / {{items.department_name}} / {{items.email_id}} 
+        </el-tag> -->
+        <!-- <el-tag
+          :key="index"
+          v-for="(items, index) in input.email_items"
+          v-model="input.email_id"
+          closable
+          @close="selectClose(items)"> -->
+         <el-tag
+          :key="index"
+          v-for="(items, index) in input.email_items"
+          v-model="input.email_id"> 
             {{items.name}} / {{items.department_name}} / {{items.email_id}} 
         </el-tag>
       </el-form-item>
@@ -134,7 +145,6 @@ export default {
   },
   data() {
     const initialInput = {
-      /*code: '',*/
       name: '',
       university_name: '',
       department_name: '',
@@ -143,17 +153,18 @@ export default {
       choiceTeacher: '',
       university_list:[],
       department_list:[],
-      /*teacher_list:[],
-      teacherDept_list:[],
-      teacherEmail_list:[],*/
       items:[],
-      selected_items:[],
+      email_items:[],
       email_id:[],
-      // checkbox:false,
+      email_id_list:[],
+      checkedbox:false,
+      booleantag:false,
     };
     return {
       initialInput,
       input: Object.assign({}, initialInput), // 복사해서 넣음
+      multipleSelection: [],
+      tagSelection:[],
     };
   },
   async mounted() {
@@ -192,10 +203,6 @@ export default {
     onSubmit() {
       const vm = this;
       vm.$refs.elForm.validate(async (/* valid, fields */) => {
-        // console.log('valid,', valid);
-        // console.log('fields', fields);
-        // TODO: if valid === true 로 감싸기
-        // TODO: valid === false인 경우에 notify
         if (vm.isEdit) {
           const id = vm.group_id;
           // TODO: wrap with try catch
@@ -216,9 +223,7 @@ export default {
         } else {
           // TODO: wrap with try catch
           try {
-            await masterService.NNMasterpostBank(vm.input);
-            // await masterService.
-            // if(vm.input.code==''||vm.input.name==''){
+            await masterService.NNMasterpostBank({university_name:vm.input.university_name, department_name:vm.input.department_name, name:vm.input.name, email_id_list:vm.tagSelection});
               if(vm.input.name==''){
               vm.$notify({
                 title: '강의은행그룹 등록 실패',
@@ -242,46 +247,40 @@ export default {
     },
     async categoryChange(university_name){
       const vm=this;
-      const deptNameLists = await masterService.getDeptLists(vm.input.university_name);
-      /*console.log(deptNameLists);*/
+      const deptNameLists = await masterService.getDeptLists({name:vm.input.university_name});
       vm.input.department_list = await deptNameLists.data.map(element=>element.name);
+      vm.input.department_name=null;
+      const itemLists = await masterService.getUserLists(1,vm.input.university_name, vm.input.department_name);
+      for(var i=0;i<itemLists.data.length;i++){
+        if(itemLists.data[i].department_name==null){
+          itemLists.data[i].department_name='소속 없음'
+        }
+      }
+      vm.input.items = itemLists.data;
     },
-    async teacherChange(){
+    /*async teacherChange(){
       const vm=this;
-      /*const teacherNameLists = await masterService.getUserLists(1, vm.input.university_name, vm.input.department_name);
-      vm.input.teacher_list = await teacherNameLists.data.map(element=>element.name);
-      vm.input.teacherDept_list = await teacherNameLists.data.map(element=>element.department_name);
-      vm.input.teacherEmail_list = await teacherNameLists.data.map(element=>element.email_id);*/
-    const itemLists = await masterService.getUserLists(1,vm.input.university_name, vm.input.department_name);
-    console.log('itemLists====',itemLists);
-    vm.input.items = itemLists.data;
-    /*
-    vm.input.items = [itemLists.data.map(element=>element.name), itemLists.data.map(element=>element.department_name), itemLists.data.map(element=>element.email_id)];
-    */
-    console.log('vm.input.items====',vm.input.items);
-
-/*
-      console.log('university_name??============',vm.input.university_name);
-      console.log('department_name??============',vm.input.department_name); 
-      console.log('vm.input.teacherDept_list???=================',vm.input.teacherDept_list);
-      console.log('vm.input.teacherEmail_list?=============',vm.input.teacherEmail_list);   */
-    },
-    async selectClick(rows){
-      const vm=this;
-      vm.multipleSelection = rows;
-      console.log('click',vm.multipleSelection);
-      // const selectItemLists = await 
-    },
-    async mySelectClick(index){
-      const vm=this;
-      console.log('click');
-      console.log('checkbox is true? = ', vm.input.checkbox.checked);
-      vm.input.selected_items.push(vm.input.items[index]);
-    },
+      const itemLists = await masterService.getUserLists(1,vm.input.university_name, vm.input.department_name);
+      console.log('itemLists====',itemLists);
+      vm.input.items = itemLists.data;
+      console.log('vm.input.items====',vm.input.items);
+    },*/
     selectClose(items){
       const vm=this;
-      const itemName=vm.input.selected_items.splice(vm.input.items,1);
+      const itemName=vm.input.email_items.splice(vm.input.items,1);
       console.log(itemName);
+    },
+    handleSelectionChange(val) {
+      const vm = this;
+      console.log('val = ', val);
+      vm.multipleSelection = val;
+      /*console.log('this.multipleSelection = ', this.multipleSelection);*/
+      vm.input.email_items = val;
+      for(var i=0;i<val.length;i++){
+        vm.tagSelection[i] = val[i].email_id;  
+        console.log('vm.tagSelection[i]=',vm.tagSelection[i]);
+      }
+      console.log('vm.tagSelection=',vm.tagSelection);
     },
   },
 };
@@ -335,6 +334,8 @@ export default {
     color: #909399;
   }
   .subject-btn{
+    position: relative;
+    top:65%;
     width: 300px;
     height: 40px;
     border-radius: 3px;
@@ -348,6 +349,7 @@ export default {
     letter-spacing: normal;
     text-align: center;
     color: #ffffff;
+    // border:1px solid black;
   }
 }
 /*#checkBox tbody {
@@ -413,11 +415,11 @@ export default {
   width:30px;
 }*/
 .keywords{
-  //border:1px solid red;
-  position: relative;
+  // border:1px solid red;
+  position: absolute;
   align:right;
   width: 700px;
-  bottom:200px;
-  left: 550px;
+  top:44%;
+  left:48%;
 }
 </style>

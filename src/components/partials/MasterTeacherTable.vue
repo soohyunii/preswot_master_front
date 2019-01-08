@@ -21,13 +21,13 @@
       <!-- </el-table-column> -->
       <el-table-column prop="name" label="이름" width="100">
       </el-table-column>
-      <el-table-column prop="birth" label="생년월일" width="110">
+      <el-table-column prop="birth" v-model="birth" label="생년월일" width="110">
       </el-table-column>
-      <el-table-column prop="sex" label="성별" width="80">
+      <el-table-column prop="sex" label="성별" width="50">
       </el-table-column>
       <el-table-column prop="phone" label="전화번호" width="120">
       </el-table-column>
-      <el-table-column prop="address" label="주소" width="200">
+      <el-table-column prop="address" label="주소" width="250">
       </el-table-column>
       <el-table-column prop="major" label="전공" width="120">
       </el-table-column>
@@ -118,6 +118,7 @@ export default {
         searchType: 'name',
         searchText: '',
       },
+      birth:null,
     };
   },
   computed: {
@@ -137,6 +138,10 @@ export default {
     if (vm.$route.query.text !== undefined) {
       vm.searchQuery.searchText = vm.$route.query.text;
     }
+  },
+  async mounted(){
+    /*const vm=this;
+    console.log('vm.birth==',vm.birth);*/
   },
   methods: {
     /*formatDate: utils.formatDate,*/

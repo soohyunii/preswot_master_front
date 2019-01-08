@@ -2,18 +2,23 @@
   <div id="class_index_wrapper" class="bt-container">
     <h2 class="page-title">조회하기 > 학생 및 성적표</h2>
     <div id="choiceLists">
-    <el-form width="300px">
-      <span>대학선택: </span>
-      <select id="uni-choice" style="width:130px;" v-model="chosen" @change="categoryChange()">
-        <option v-for="university_name in university_list">{{university_name}}</option>
-      </select>
+    <el-form>
+      <el-select placeholder="대학선택" v-model="chosen" @change="categoryChange(type,chosen)" style="width:200px; top:20px">
+        <el-option 
+          v-for="university_name in university_list"
+          :label="university_name"
+          :value="university_name">
+        </el-option>
+      </el-select>
     </el-form>
     <el-form id="dept">
-      <span>학과선택: </span>
-      <select id="dept-choice"  style="width:130px;" v-model="dept_chosen" @change="onChange(type,chosen,dept_chosen)">
-        <option>학과선택없음</option>
-        <option v-for="department_name in department_list">{{department_name}}</option>
-      </select>
+      <el-select placeholder="학과선택" v-model="dept_chosen" @change="onChange(type,chosen,dept_chosen)" style="width:200px; top:20px">
+        <el-option 
+          v-for="department_name in department_list"
+          :label="department_name"
+          :value="department_name">
+        </el-option>
+      </el-select>
     </el-form>
     <div style="margin-top: -10px;"/>
     </div>
@@ -66,7 +71,7 @@ export default {
       university_list:[],
       department_list:[],
       university_name:'',
-      department_name:'',
+      department_name:null,
       type:0,  
     };
   },
@@ -184,16 +189,21 @@ export default {
         }
       }
     },
-    async categoryChange(){
+    async categoryChange(type,university_name){
       const vm=this;
       const deptNameLists = await masterService.getDeptLists({name: vm.chosen});
       vm.department_list = await deptNameLists.data.map(element=>element.name);
-      console.log(vm.department_name);
+      const res = await masterService.getUserLists(type,university_name);
+      vm.list=res.data;
     },
     async onChange(type,university_name,department_name){
       const vm=this;
+      console.log('type = ',type);
+      console.log('university_name = ',university_name);
+      console.log('department_name = ',department_name);
       const res = await masterService.getUserLists(type,university_name,department_name);
       vm.list=res.data;
+      console.log(vm.list);
     },
     onClickDelete(index) {
       const vm = this;

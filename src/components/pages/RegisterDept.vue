@@ -9,11 +9,15 @@
     </div>
     <el-form :model="input" ref="elForm" label-position="left" label-width="125px" style="max-width: 800px;" class="elForm-label">
       <el-form-item label="소속대학 선택">
-        <select id="uni-choice" v-model="input.uniNameList">
+        <el-select v-model="input.uniNameList" style="width:200px;">
           <!-- <option disabled value="">대학 선택</option> -->
           <!-- <option v-model="input.uniNameList" v-for="uniNameList in input.uniNameLists" v-bind:selected="input.uniNameLists">{{uniNameList}}</option> -->
-          <option v-for="uniNameList in input.uniNameLists">{{uniNameList}}</option>
-        </select> &nbsp; <font color="red" size="5em">*</font>
+          <el-option 
+            v-for="uniNameList in input.uniNameLists"
+            :label="uniNameList"
+            :value="uniNameList">
+          </el-option>
+        </el-select> &nbsp; <font color="red" size="5em">*</font>
       </el-form-item>
 
       <el-form-item label="학과코드">
