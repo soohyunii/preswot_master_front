@@ -2,76 +2,29 @@
   <div id="class_index_wrapper">
     <div>
       <el-table class="elTable" :data="page" :span-method="objectSpanMethod" style="width: 100%">
-      <!-- <el-table-column prop="name" label="ID" width="50">
-        <template slot-scope="scope">
-          {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
-        </template>
+      <!-- <el-table-column prop="bank_group.group_id" label="그룹명" width="200px">
       </el-table-column> -->
-      <!-- <el-table-column prop="bank_group.group_id" label="ID" width="50"></el-table-column> -->
-      <el-table-column prop="bank_group.name" label="그룹명">
+      <el-table-column prop="bank_group.name" label="그룹명" width="200px">
       </el-table-column>
-      <!-- <el-table-column prop="bank_group.name" label="그룹명" width="200">
-      </el-table-column> -->
-      <!-- <el-table-column prop="email_id" label="강사" width="200">
-      </el-table-column> -->
-      <!-- <el-table-column prop="university_name" label="대학" width="110">
-      </el-table-column>
-      <el-table-column prop="department_name" label="학과" width="140">
-      </el-table-column> -->
       <el-table-column prop="user.name" label="구성 강사">
       </el-table-column>
-      <!-- <el-table-column prop="user.name" label="구성 강사" width="140">
-      </el-table-column> -->
       <el-table-column prop="user.department_name" label="소속 학과">
       </el-table-column>
-      <!-- <el-table-column prop="user.department_name" label="소속 학과" width="200">
-      </el-table-column> -->
       <el-table-column prop="user.email_id" label="이메일 주소">
       </el-table-column>
-      <!-- <el-table-column prop="user.email_id" label="이메일 주소" width="250">
-      </el-table-column> -->
-      <!-- <el-table-column prop="capacity" label="최대인원" width="110">
-      </el-table-column> -->
-      <el-table-column label="" header-align="left" align="right">
-        <!-- <template slot-scope="scope">
-            <router-link :to="`/a/view/${scope.row.name}/detail`">
-              <el-button class="edit-btn">상세</el-button>
-            </router-link>
-        </template> -->
-      </el-table-column>
-      <el-table-column label="" header-align="left" align="right">
-        <!-- <template slot-scope="scope">
-            <router-link :to="`/a/view/${scope.row.name}/detail`">
-              <el-button class="edit-btn">상세보기</el-button>
-            </router-link>
-          </template> -->
+      <el-table-column label="" header-align="left" align="right" width="200px">
           <template slot-scope="scope">
             <router-link :to="`/a/bank/${scope.row.group_id}/edit`">
               <el-button class="edit-btn">수정</el-button>
             </router-link>
           </template>
         </el-table-column>
-        <!-- </el-table-column> -->
-        <!-- <template slot-scope="scope">
-            <router-link :to="`/a/class/${scope.row.name}/detail`">
-              <el-button class="edit-btn">상세보기</el-button>
-            </router-link>
-          </template> -->
-        <!-- <template slot-scope="scope">
-            <router-link :to="`/a/class/${scope.row.name}/edit`">
-              <el-button class="edit-btn">수정</el-button>
-            </router-link>
-          </template>
-        </el-table-column> -->
-
         <el-table-column>
           <template slot-scope="scope">
             <el-button type="danger" @click="classDelete(scope.row.group_id)" class="delete-btn">삭제</el-button>
           </template>
         </el-table-column>
-
-      </el-table>
-      
+      </el-table>     
       <br>
     </div>
     <div id="pagination" style="display: block; text-align: center;">
@@ -109,6 +62,7 @@ export default {
   props: ['list', 'onClick'],
   data() {
     return {
+      onceFlag: true,
       pageNum: 1,
       selectOptionList: [
         {
@@ -124,6 +78,33 @@ export default {
         searchType: 'name',
         searchText: '',
       },
+      groupNameArray: [],
+      spanArray: [],
+      /*tempArray: [{
+        rowspan: 2,
+        colspan: 1,
+      }, {
+        rowspan: 0,
+        colspan: 0,
+      }, {
+        rowspan: 2,
+        colspan: 1,
+      }, {
+        rowspan: 0,
+        colspan: 0,
+      }, {
+        rowspan: 4,
+        colspan: 1,
+      }, {
+        rowspan: 0,
+        colspan: 0,
+      }, {
+        rowspan: 0,
+        colspan: 0,
+      } ,{
+        rowspan: 0,
+        colspan: 0,
+      }],*/
     };
   },
   computed: {
@@ -143,6 +124,9 @@ export default {
     if (vm.$route.query.text !== undefined) {
       vm.searchQuery.searchText = vm.$route.query.text;
     }
+    
+    // 연산
+    // vm.tempArray = [];
   },
   methods: {
     // formatDate: utils.formatDate,
@@ -154,73 +138,54 @@ export default {
 
     // 테이블 데이터 합침 잘 안됨 
     objectSpanMethod({row,column,rowIndex,columnIndex}){
-      const vm=this;
-      const arr=[];
-      console.log('rowIndex===',rowIndex);
-      console.log('row.bank_group.name===',row.bank_group.name);
-      console.log('row===',row);
-      if(columnIndex===0){
-        for(var j=0;j<rowIndex+1;j++){
-          console.log('j는 ==',j);
-          arr.push(row.bank_group.name);
-        }
-        console.log('arr 배열은==',arr);
-      }
-        /*if (columnIndex === 0) {
-          if (rowIndex % 2 === 0) {
-            return {
-              rowspan: 2,
-              colspan: 1
-            };
+      const vm = this;
+      if ( vm.onceFlag === true ) {
+        console.log('@@@@@@@@@@@@@');
+        console.log('row = ', row);
+        console.log('column = ', column);
+        console.log('rowIndex = ', rowIndex);
+        console.log('columnIndex = ', columnIndex);
+
+        vm.groupNameArray = vm.page.map(x => x.bank_group.name);
+
+        let pre_value = '';
+        let sameValue = 0;
+        let sameValueArray = [];
+        vm.groupNameArray.forEach((element,index) => {
+
+          // 이전 값과 현재 값 비교하기
+          if (pre_value === element || sameValue === 0) {
+            sameValue++;
           } else {
-            return {
+            sameValueArray.push(sameValue);
+            sameValue = 1;
+          }
+          // 이전 값 기억하기
+          pre_value = element;
+        });
+        sameValueArray.push(sameValue);
+        console.log('sameValueArray = ', sameValueArray);
+
+        console.log('@vm.spanArray = ', vm.spanArray);
+        sameValueArray.forEach((element,index)=>{
+          console.log('element = ', element);
+          vm.spanArray.push({
+            rowspan: element,
+            colspan: 1,
+          });
+          for (let i = 0 ; i < element-1 ; i++ ) {
+            vm.spanArray.push({
               rowspan: 0,
-              colspan: 0
-            };
+              colspan: 0,
+            });
           }
-        }*/
-
-        if (columnIndex === 0) {
-          for(var i=0;i<rowIndex.length;i++){
-            if(row[i].bank_group.name==row[i+1].bank_group.name){
-              return{
-                rowspan:i+1,
-                colspan:1
-              };
-            } else {
-              return {
-                rowspan: 0,
-                colspan: 0
-              };
-            }
-          }
-        }
-      /*if(columnIndex===0){
-          console.log('columnIndex인식',columnIndex);
-          for(var i=0; i<=rowIndex; i++){
-              arr[i]=row.bank_group.group_id;
-              console.log('arr배열에 row.bank_group.group_id 값 입력 :', arr[i] ,row.bank_group.group_id);
-              console.log(arr);
-            if(arr[i]===arr[i+1]){
-              console.log('true');
-              return{
-                rowspan: 2,
-                colspan: 1
-              };
-            } else {
-              return{
-                rowspan:2,
-                colspan:1
-              };
-            }
-          }
-      }*/
-
-      /*console.log('what is row.bank_group.group_id?', row.bank_group.group_id);
-      console.log('what is column?', column);
-      console.log('what is columnIndex?', columnIndex);
-      console.log('what is row?', row);
-      console.log('what is rowIndex?', rowIndex);*/
+        });
+        console.log('vm.spanArray = ', vm.spanArray);
+        vm.onceFlag = false; 
+      }
+      if(columnIndex===0 || columnIndex===4 || columnIndex===5){
+          return vm.spanArray[rowIndex];
+      }
     },
   },
 };

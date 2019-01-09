@@ -235,7 +235,6 @@ export default {
       // vm.sublist=res.data;
       // vm.sublist=vm.list.map(element=>element.teacher_groups.map(element=> element.email_id));
       // vm.list=vm.sublist.map(element=>element.bank_group.name);
-
       vm.list=res.data;
 
       /*const prop

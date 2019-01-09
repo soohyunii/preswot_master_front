@@ -112,6 +112,9 @@ export default {
     })
   },
 /*수정할 강의은행 조회*/
+  getMasterBank({group_id}){
+    return http.get(`/admin_bank?group_id=${group_id}`)
+  },
 
 
   /*postClass({ 
@@ -536,16 +539,16 @@ export default {
     });
   },
   NNMasterputBank({
-    code,
+    university_name,
+    department_name,
     name,
-    capacity,
-    choiceTeacher,
+    email_id_list,
   }) {
-    return (http.put(`view/bank`), {
-      code,
+    return (http.put(`/admin_bank`), {
+      university_name,
+      department_name,
       name,
-      capacity,
-      choiceTeacher,
+      email_id_list,
     });
   },
   NNMasterpostBank({

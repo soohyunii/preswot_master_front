@@ -176,14 +176,14 @@ export default {
     
     
     if (vm.isEdit) {
-      const res = await masterService.getMasterBank({ id: vm.group_id });
+      const res = await masterService.getMasterBank({ group_id: vm.groupId });
       // console.log('res', res.data);
       // vm.input.code = res.data.code || vm.initialInput.code;
-      vm.input.name = res.data.name || vm.initialInput.name;
+      /*vm.input.name = res.data.name || vm.initialInput.name;
       vm.input.university_name = res.data.university_name || vm.initialInput.university_name;
       vm.input.department_name = res.data.department_name || vm.initialInput.department_name;
       vm.input.capacity = res.data.capacity || vm.initialInput.capacity;
-      vm.input.choiceTeacher = res.data.choiceTeacher || vm.initialInput.choiceTeacher;
+      vm.input.choiceTeacher = res.data.choiceTeacher || vm.initialInput.choiceTeacher;*/
 
       // 필수입력사항(강사코드,PW,이름,이메일) 미입력시 '*는 필수입력사항입니다 알람'
       // 패스워드와 패스워드 확인이 일치하지 않을 시 '패스워드가 일치하지 않습니다'경고알람 
@@ -194,8 +194,9 @@ export default {
       const vm = this;
       return vm.$route.fullPath.includes('/edit');
     },
-    group_id() {
+    groupId() {
       const vm = this;
+      // console.log('******************',vm.$route.path.split('bank/')[1].split('/edit')[0]);
       return vm.$route.path.split('bank/')[1].split('/edit')[0];
     },
   },
@@ -204,7 +205,7 @@ export default {
       const vm = this;
       vm.$refs.elForm.validate(async (/* valid, fields */) => {
         if (vm.isEdit) {
-          const id = vm.group_id;
+          const id = vm.groupId;
           // TODO: wrap with try catch
           try {
             await masterService.NNMasterputBank({
