@@ -539,15 +539,18 @@ export default {
     });
   },
   NNMasterputBank({
+    group_id,
     university_name,
     department_name,
-    name,
+    new_name,
     email_id_list,
   }) {
-    return (http.put(`/admin_bank`), {
+    console.log(group_id,university_name,department_name,new_name,email_id_list);
+    return http.put(`/admin_bank`, {
+      group_id,
       university_name,
       department_name,
-      name,
+      new_name,
       email_id_list,
     });
   },

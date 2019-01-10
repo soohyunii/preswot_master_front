@@ -1,10 +1,11 @@
 <template>
   <div id="class_index_wrapper">
     <div>
-      <el-table class="elTable" :data="page" :span-method="objectSpanMethod" style="width: 100%">
+      <el-table class="elTable" v-model="setSpanMethod" :data="page" :span-method="objectSpanMethod" style="width: 100%">
       <!-- <el-table-column prop="bank_group.group_id" label="그룹명" width="200px">
       </el-table-column> -->
       <el-table-column prop="bank_group.name" label="그룹명" width="200px">
+      </el-table-column>
       </el-table-column>
       <el-table-column prop="user.name" label="구성 강사">
       </el-table-column>
@@ -14,7 +15,7 @@
       </el-table-column>
       <el-table-column label="" header-align="left" align="right" width="200px">
           <template slot-scope="scope">
-            <router-link :to="`/a/bank/${scope.row.group_id}/edit`">
+            <router-link :to="`/a/bank/${scope.row.bank_group.group_id}/edit`">
               <el-button class="edit-btn">수정</el-button>
             </router-link>
           </template>
@@ -62,7 +63,8 @@ export default {
   props: ['list', 'onClick'],
   data() {
     return {
-      onceFlag: true,
+      // onceFlag: true,
+      setSpanMethod:[], 
       pageNum: 1,
       selectOptionList: [
         {
@@ -128,6 +130,65 @@ export default {
     // 연산
     // vm.tempArray = [];
   },
+  watch:{
+    /*setSpanMethod: function(val,oldVal){
+      const vm=this;
+      console.log('watch속성');
+      vm.objectSpanMethod()
+    }*/ 
+    page: function(val, oldVal){
+      const vm=this;
+      // vm.spanArray.length = 0;
+      vm.spanArray = [];
+      console.log('watch속성');
+      console.log('val==',val);
+      console.log('oldVal==',oldVal);
+      // vm.objectSpanMethod()
+      vm.groupNameArray = vm.page.map(x => x.bank_group.name);
+      console.log('vm.groupNameArray==',vm.groupNameArray);
+
+      let pre_value = '';
+      let sameValue = 0;
+      let sameValueArray = [];
+      // let spanArrayTemp=[];
+      vm.groupNameArray.forEach((element,index) => {
+
+        // 이전 값과 현재 값 비교하기
+      if (pre_value === element || sameValue === 0) {
+          sameValue++;
+          } else {
+            sameValueArray.push(sameValue);
+            sameValue = 1;
+          }
+          // 이전 값 기억하기
+          pre_value = element;
+        });
+      sameValueArray.push(sameValue);
+      console.log('sameValueArray = ', sameValueArray);
+
+      // let spanArrayTemp=new Array();
+      // console.log('@vm.spanArray = ', vm.spanArray);
+        sameValueArray.forEach((element,index)=>{
+          vm.spanArray.push({
+            rowspan: element,
+            colspan: 1,
+          });
+          for (let i = 0 ; i < element-1 ; i++ ) {
+            vm.spanArray.push({
+              rowspan: 0,
+              colspan: 0,
+            });
+          }
+        });
+        console.log('vm.spanArray = ', vm.spanArray);
+        // console.log('vm.spanArrayTemp = ', vm.spanArrayTemp);
+    },
+    /*objectSpanMethod:function(val, oldVal){
+      const vm=this;
+      console.log('watch속성');
+      vm.objectSpanMethod()
+    },*/ 
+  },
   methods: {
     // formatDate: utils.formatDate,
     async classDelete(group_id){
@@ -139,7 +200,7 @@ export default {
     // 테이블 데이터 합침 잘 안됨 
     objectSpanMethod({row,column,rowIndex,columnIndex}){
       const vm = this;
-      if ( vm.onceFlag === true ) {
+      /*if ( vm.onceFlag === true ) {
         console.log('@@@@@@@@@@@@@');
         console.log('row = ', row);
         console.log('column = ', column);
@@ -182,7 +243,7 @@ export default {
         });
         console.log('vm.spanArray = ', vm.spanArray);
         vm.onceFlag = false; 
-      }
+      }*/
       if(columnIndex===0 || columnIndex===4 || columnIndex===5){
           return vm.spanArray[rowIndex];
       }
