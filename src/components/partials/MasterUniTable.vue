@@ -112,12 +112,32 @@ export default {
     }
   },
   methods: {
-    // formatDate: utils.formatDate,
     async deleteUniversity(uniName) {
-      // console.log('ㅇㅅㅇ');
-      console.log('uniName = ', uniName);
-      await masterService.delete({ name : uniName });
-      window.location.reload(); //페이지 새로고침 
+      const vm=this;
+      vm.$confirm('정말로 이 대학을 삭제하시겠습니까?',{
+        confirmButtonText:'예, 삭제합니다',
+        cancelButtonText:'아니오, 삭제하지 않습니다',
+        type:'warning',
+      })
+      .then(async()=> {
+        try{
+          await masterService.delete({ name : uniName });
+          await location.reload(true);  
+          /*await vm.$notify({
+            title:'대학 삭제 성공',
+            message:'대학 삭제',
+            type:'success',
+            duration:3000,
+          });*/
+        } catch(error){
+          vm.$notify({
+            title:'대학 삭제 실패',
+            message:error.toString(),
+            type:'error',
+            duration:3000,
+          }); 
+        }
+      })
     }
   },
 };

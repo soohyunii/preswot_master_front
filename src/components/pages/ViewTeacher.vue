@@ -207,7 +207,6 @@ export default {
       console.log('res.data[0].birth=== ', res.data[0].birth);
       for(var i=0;i<res.data.length;i++){
         if(res.data[i].birth.indexOf("T")!==-1){
-          // console.log('$$$$$$$$$$$$$$$',res.data[i].birth.indexOf("T"));
           res.data[i].birth=res.data[i].birth.split("T")[0];
         }
       }

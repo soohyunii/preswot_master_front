@@ -5,7 +5,7 @@
       <el-table class="elTable" :data="list" style="width: 100%">
       <el-table-column prop="code" label="학과코드" width="100">
       </el-table-column>
-      <el-table-column prop="university.name" label="대학" width="100">
+      <el-table-column prop="university.name" label="학과" width="100">
         <!-- <template slot-scope="scope">
         {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
         </template> -->
@@ -85,7 +85,7 @@ export default {
         },
         {
           value: 'university',
-          label: '대학명',
+          label: '학과명',
         },
       ],
       searchQuery: {
@@ -116,8 +116,33 @@ export default {
   },
   methods: {
     async deptDelete(university_name, name){
-      await masterService.deptDelete({university_name: university_name, name: name});
-      window.location.reload();
+      const vm=this;
+      vm.$confirm('정말로 이 학과를 삭제하시겠습니까?',{
+        confirmButtonText:'예, 삭제합니다',
+        cancelButtonText:'아니오, 삭제하지 않습니다',
+        type:'warning',
+      })
+      .then(async()=> {
+        try{
+          await masterService.deptDelete({university_name: university_name, name: name});
+          await location.reload(true); 
+          //새로고침 후 select box가 이전화면과 동일해야 함 
+          // await history.go(0); 
+          /*await vm.$notify({
+            title:'학과 삭제 성공',
+            message:'학과 삭제',
+            type:'success',
+            duration:3000,
+          });*/
+        } catch(error){
+          vm.$notify({
+            title:'학과 삭제 실패',
+            message:error.toString(),
+            type:'error',
+            duration:3000,
+          }); 
+        }
+      })
     }
   },
 };

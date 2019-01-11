@@ -242,6 +242,13 @@ export default {
       const deptNameLists = await masterService.getDeptLists({name:vm.chosen});
       vm.deptNameList = deptNameLists.data.map(element=>element.name);
       const res = await masterService.getClassLists({university_name : vm.chosen});
+      console.log('res.data[0].start_date=== ', res.data[0].start_date);
+      // console.log('res.data[0].end_date=== ', res.data[0].end_date);
+      for(var i=0;i<res.data.length;i++){
+        if(res.data[i].start_date.indexOf("T")!==-1){
+          res.data[i].start_date=res.data[i].start_date.split("T")[0];
+        }
+      }
       vm.list = res.data;
       console.log('vm.list',vm.list);
     },

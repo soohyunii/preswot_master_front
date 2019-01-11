@@ -22,7 +22,8 @@
         </el-table-column>
         <el-table-column>
           <template slot-scope="scope">
-            <el-button type="danger" @click="classDelete(scope.row.group_id)" class="delete-btn">삭제</el-button>
+            <el-button type="danger" @click="bankDelete(scope.row.bank_group.group_id)"
+            class="delete-btn">삭제</el-button>
           </template>
         </el-table-column>
       </el-table>     
@@ -117,6 +118,7 @@ export default {
       const vm = this;
       return vm.list.slice((vm.pageNum - 1) * 10, vm.pageNum * 10);
     },
+    
   },
   created() {
     const vm = this;
@@ -190,60 +192,38 @@ export default {
     },*/ 
   },
   methods: {
-    // formatDate: utils.formatDate,
-    async classDelete(group_id){
-      await masterService.classDelete({group_id: group_id});
-      console.log('group_id===',group_id);
-      window.location.reload();
+    async bankDelete(group_id){
+      const vm=this;
+      vm.$confirm('정말로 이 강의은행을 삭제하시겠습니까?',{
+        confirmButtonText:'예, 삭제합니다',
+        cancelButtonText:'아니오, 삭제하지 않습니다',
+        type:'warning',
+      })
+      .then(async()=> {
+        try{
+          // window.location.reload();
+          await masterService.bankDelete({group_id:group_id});
+          /*await vm.$notify({
+            title:'강의은행 삭제 성공',
+            message:'강의은행 삭제',
+            type:'success',
+            duration:3000,
+          });*/
+          await location.reload(true);  
+        } catch(error){
+          vm.$notify({
+            title:'강의은행 삭제 실패',
+            message:error.toString(),
+            type:'error',
+            duration:3000,
+          }); 
+        }
+      })
     },
 
     // 테이블 데이터 합침 잘 안됨 
     objectSpanMethod({row,column,rowIndex,columnIndex}){
       const vm = this;
-      /*if ( vm.onceFlag === true ) {
-        console.log('@@@@@@@@@@@@@');
-        console.log('row = ', row);
-        console.log('column = ', column);
-        console.log('rowIndex = ', rowIndex);
-        console.log('columnIndex = ', columnIndex);
-
-        vm.groupNameArray = vm.page.map(x => x.bank_group.name);
-
-        let pre_value = '';
-        let sameValue = 0;
-        let sameValueArray = [];
-        vm.groupNameArray.forEach((element,index) => {
-
-          // 이전 값과 현재 값 비교하기
-          if (pre_value === element || sameValue === 0) {
-            sameValue++;
-          } else {
-            sameValueArray.push(sameValue);
-            sameValue = 1;
-          }
-          // 이전 값 기억하기
-          pre_value = element;
-        });
-        sameValueArray.push(sameValue);
-        console.log('sameValueArray = ', sameValueArray);
-
-        console.log('@vm.spanArray = ', vm.spanArray);
-        sameValueArray.forEach((element,index)=>{
-          console.log('element = ', element);
-          vm.spanArray.push({
-            rowspan: element,
-            colspan: 1,
-          });
-          for (let i = 0 ; i < element-1 ; i++ ) {
-            vm.spanArray.push({
-              rowspan: 0,
-              colspan: 0,
-            });
-          }
-        });
-        console.log('vm.spanArray = ', vm.spanArray);
-        vm.onceFlag = false; 
-      }*/
       if(columnIndex===0 || columnIndex===4 || columnIndex===5){
           return vm.spanArray[rowIndex];
       }

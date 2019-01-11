@@ -196,7 +196,6 @@ export default {
     },
     groupId() {
       const vm = this;
-      // console.log('******************',vm.$route.path.split('bank/')[1].split('/edit')[0]);
       return vm.$route.path.split('bank/')[1].split('/edit')[0];
     },
   },

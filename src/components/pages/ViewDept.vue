@@ -254,16 +254,8 @@ export default {
     },
     async onChange(payload) {
       const vm = this;
-      console.log('@onChange() payload = ', payload);
-      console.log('@onChange() chosen = ', vm.chosen);
-      //
       const res = await masterService.getDeptLists({name : vm.chosen});
-      console.log('11111111111res==',res.data);
-      //const deptLists = await res.data.map(element=>element.name);
       vm.list = res.data;
-      console.log('vm.deptList#########==',vm.list);
-      // const deptLists = res.data;
-      // console.log('deptLists#########==',deptLists);
     },
   },
 };

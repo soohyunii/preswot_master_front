@@ -311,18 +311,18 @@ export default {
     code,
     name,
     part,
-    manager,
-    email,
-    phone,
+    manager_name,
+    manager_email,
+    manager_phone_number,
   }) {
     return http.post(`/department`,{
       university_name : uniNameList,
       code,
       name,
       part,
-      manager_name: manager,
-      manager_email: email,
-      manager_phone_number: phone,     
+      manager_name,
+      manager_email,
+      manager_phone_number,     
     });
   },
   deptDelete({

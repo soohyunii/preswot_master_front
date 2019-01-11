@@ -113,7 +113,7 @@ export default {
       const res = await masterService.getMasterDept({ university_name: vm.uniName, name: vm.deptName });
       console.log('getMasterDept : res======================',res);
       //vm.input.uniNameList = res.data.uniNameList || vm.initialInput.uniNameList;
-      vm.input.uniNameList = res.data.uniNameList || vm.initialInput.uniNameList;
+      // vm.input.uniNameList = res.data.university.name || vm.initialInput.uniNameList;
       vm.input.code = res.data.code || vm.initialInput.code;
       vm.input.name = res.data.name || vm.initialInput.name;
       vm.input.part = res.data.part || vm.initialInput.part;
@@ -160,14 +160,10 @@ export default {
         // TODO: if valid === true 로 감싸기
         // TODO: valid === false인 경우에 notify
         if (vm.isEdit) {
-          // const id = vm.classId;
-          const id = vm.deptName;
-          const uniId = vm.uniName;
-          // console.log(id);
+          console.log('vm.input.uniNameList',vm.input.uniNameList);
           // TODO: wrap with try catch
           try {
             await masterService.NNMasterputDept({
-              /*id,*/
               ...vm.input,
             });
             vm.$router.push('/a/view/dept');

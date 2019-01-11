@@ -123,9 +123,9 @@ export default {
           vm.$router.push(`/a/student/NNclass/${arg.class_id}`);
           break;
         }
-        /*
+        
         case 'CANCEL': {
-          vm.$confirm('정말로 이 학과를 삭제하시겠습니까?', `${arg.name || ''} 수강 취소`, {
+          vm.$confirm('정말로 이 강의은행을 삭제하시겠습니까?', `${''} 강의은행 취소`, {
             confirmButtonText: '예, 삭제합니다.',
             cancelButtonText: '아니요, 삭제하지 않습니다.',
             type: 'warning',
@@ -175,7 +175,7 @@ export default {
 
           break;
         }
-        */
+        
         case 'SEARCH': {
           vm.$router.push({ path: '/a/view/bank', query: { type: `${arg.searchType}`, text: `${arg.searchText}` } });
           break;
