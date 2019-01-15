@@ -1,16 +1,18 @@
 <template>
   <div class="bt-container">
+    <el-button style="float: right" v-if="!isInDepthAnalize" type="primary" @click="isInDepthAnalize = true">심화 분석</el-button>
     <el-breadcrumb style="font-size: 24px; margin-top: 16px; margin-bottom: 32px;" separator=">">
       <el-breadcrumb-item :to="{ path: '/a/teacher/NNclass/'+classId }">{{ className }}</el-breadcrumb-item>
       <el-breadcrumb-item><a @click="onClick('CLASS_ANALYSIS')">{{ className }} 저널링</a></el-breadcrumb-item>
-      <el-breadcrumb-item v-if="mode !== '과목 저널링' && mode !== '학생 분석'">{{ lectureName }} {{ mode }}</el-breadcrumb-item>
-      <el-breadcrumb-item v-if="mode === '학생 분석'">'{{ selectedStudentEmail }}' {{ mode }}</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="mode !== '과목 저널링' && mode !== '학생별 분석'  && mode !== '학생 선택'">{{ lectureName }} {{ mode }}</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="mode === '학생 선택'">{{ mode }}</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="mode === '학생별 분석'">'{{ selectedStudentEmail }}' {{ mode }}</el-breadcrumb-item>
     </el-breadcrumb>
 
     <teacher-class-journal-keyword :lectureId="lectureId" v-if="mode === '키워드 상세 통계'" />
 
-    <!-- <teacher-class-journal-student :classId="classId" v-if="mode === '학생 분석'" /> -->
-    <el-select v-if="mode === '학생 선택' || mode === '학생 분석'" v-model="selectedStudentId" placeholder="학생을 선택하세요." @change="onClick('SELECT_STUDENT')">
+    <!-- <teacher-class-journal-student :classId="classId" v-if="mode === '학생별 분석'" /> -->
+    <el-select v-if="mode === '학생 선택' || mode === '학생별 분석'" v-model="selectedStudentId" placeholder="학생을 선택하세요." @change="onClick('SELECT_STUDENT')">
       <el-option
         v-for="(item, index) in classStudentList"
         :key="index"
@@ -19,9 +21,7 @@
       </el-option>
     </el-select>
 
-    <template v-if="mode === '과목 저널링' || mode === '강의 상세 통계' || mode === '학생 분석'">
-      <!-- <el-button v-if="!isInDepthAnalize" type="primary" @click="isInDepthAnalize = true">심화분석</el-button> -->
-      <el-button v-if="mode !== '학생 선택' && mode !== '학생 분석'" type="primary" @click="onClick('STUDENT_ANALYSIS')">학생분석</el-button>
+    <template v-if="mode === '과목 저널링' || mode === '강의 상세 통계' || mode === '학생별 분석' || mode === '학생 상세 통계'">
       <template v-if="isInDepthAnalize">
         <el-cascader
           placeholder="선택하세요."
@@ -34,7 +34,7 @@
         <el-tag v-for="(x, index) in nowOption" :key="index" closable @close="delOption(index)">{{ x[0] + " / " + x[1]  + " / " + x[2] }}</el-tag>
       </template>
 
-      <line-chart v-if="dataIsPrepared" :chartCategories = "chartCategories" :chartData = "chartData"/>
+      <line-chart v-if="dataIsPrepared && mode === '과목 저널링'" :chartCategories = "chartCategories" :chartData = "chartData"/>
 
       <!--
       <el-button v-if="mode !== '과목 저널링'" type="primary" size="small" @click="onClick('CLASS_ANALYSIS')">
@@ -42,63 +42,76 @@
       </el-button>
       -->
 
-          <el-table
-            :data="tableData"
-            style="width: 100%">
-            
-            <el-table-column
-              :label="category"
-              width="150"
-              prop="name"
-              align="center">
-            </el-table-column>
+      <el-table
+        :data="tableData"
+        style="width: 100%">
+        
+        <el-table-column
+          :label="category"
+          width="150"
+          prop="name"
+          align="center">
+        </el-table-column>
 
-            <template v-for="(x, index) in copyedNowOption">
-              <el-table-column
-                v-if="dataIsPrepared"
-                :key="(index * 2) + 1"
-                :label="compOptionName(x[0], x[1], x[2])"
-                align="center">
-                <template slot-scope="scope">
-                  {{ scope.row.value[index] }}
-                </template>
-              </el-table-column>
-              <!-- <el-table-column
-                v-if="dataIsPrepared"
-                :key="index * 2"
-                :label="compOptionName(x[0], x[1], x[2]) + ' 편차'"
-                align="center">
-                <template slot-scope="scope">
-                  {{ scope.row.deviation[index] }}
-                </template>
-              </el-table-column> -->
+        <template v-for="(x, index) in copyedNowOption">
+          <el-table-column
+            v-if="dataIsPrepared"
+            :key="(index * 2) + 1"
+            :label="compOptionName(x[0], x[1], x[2])"
+            align="center">
+            <template slot-scope="scope">
+              {{ scope.row.value[index] }}
             </template>
-
-            <el-table-column
-              v-if="mode==='과목 저널링'"
-              label="-"
-              width="150"
+          </el-table-column>
+            <!-- <el-table-column
+              v-if="dataIsPrepared"
+              :key="index * 2"
+              :label="compOptionName(x[0], x[1], x[2]) + ' 편차'"
               align="center">
               <template slot-scope="scope">
-                <el-button type="primary" size="small" @click="onClick('KEYWORD_ANALYSIS', scope.row.lectureId, scope.row.name)">
-                  키워드 상세 통계
-                </el-button>
+                {{ scope.row.deviation[index] }}
               </template>
-            </el-table-column>
+            </el-table-column> -->
+          </template>
 
-            <el-table-column
-              v-if="mode==='과목 저널링'"
-              label="-"
-              width="150"
-              align="center">
-              <template slot-scope="scope">
-                <el-button type="primary" size="small" @click="onClick('LECTURE_ANALYSIS', scope.row.lectureId, scope.row.name)">
-                  강의 상세 통계
-                </el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-          <teacher-class-journal-detail @childs-close-event="closeStatusBar()" :propDataSet = "studentDataSet" v-if = "isActiveInfo"/>
+        <el-table-column
+          v-if="mode==='과목 저널링'"
+          label="-"
+          width="140"
+          align="center">
+          <template slot-scope="scope">
+            <el-button type="primary" size="small" @click="onClick('KEYWORD_DETAILED_ANALYSIS', scope.row.lectureId, scope.row.name)">
+              키워드 상세 통계
+            </el-button>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          v-if="mode==='과목 저널링'"
+          label="-"
+          width="140"
+          align="center">
+          <template slot-scope="scope">
+            <el-button type="primary" size="small" @click="onClick('LECTURE_DETAILED_ANALYSIS', scope.row.lectureId, scope.row.name)">
+              강의 상세 통계
+            </el-button>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          v-if="mode==='과목 저널링'"
+          label="-"
+          width="140"
+          align="center">
+          <template slot-scope="scope">
+            <el-button type="primary" size="small" @click="onClick('STUDENT_DETAILED_ANALYSIS', scope.row.lectureId, scope.row.name)">
+              학생 상세 통계
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+        <el-button style="float: left" v-if="mode === '과목 저널링'" type="primary" @click="onClick('STUDENT_ANALYSIS')">학생별 분석</el-button>
+        <teacher-class-journal-detail @childs-close-event="closeStatusBar()" :propDataSet = "studentDataSet" v-if = "isActiveInfo"/>
     </template>
   </div>
 </template>
@@ -202,12 +215,11 @@
         isInDepthAnalize: false,
         mode: '과목 저널링', // 과목 저널링, 강의 상세 통계, 키워드 상세 통계
         category: '강의명',
-        classStudentList: '', // 학생 분석시, 학생 목록 저장 배열
-        selectedStudentId: '', // 학생 분석시, 선택된 학생 id 저장
-        selectedStudentEmail: '', // 학생 분석시, 선택된 학생 email 저장
+        classStudentList: '', // 학생별 분석시, 학생 목록 저장 배열
+        selectedStudentId: '', // 학생별 분석시, 선택된 학생 id 저장
+        selectedStudentEmail: '', // 학생별 분석시, 선택된 학생 email 저장
 
-        // nowOption: [['전체', '전체', '집중도'], ['전체', '전체', '이해도'], ['전체', '전체', '참여도']], // 추가된 옵션
-        nowOption: [['전체', '전체', '집중도'], ['전체', '전체', '참여도']], // 추가된 옵션
+        nowOption: [['전체', '전체', '이해도'], ['전체', '전체', '참여도'], ['전체', '전체', '집중도']], // 추가된 옵션
         selectedOption: [], // 추가할 옵션
         journalOption: [{
           value: '전체',
@@ -511,7 +523,7 @@
               for (let index2 = 0; index2 < vm.nowOption.length; index2 += 1) {
                 // 우선, '문항 / 전체 / '에 대해서만 계산
                 if (vm.nowOption[index2][2] === '집중도') {
-                  // 아이템별 집중력을 저장할 2차원 배열
+                  // 강의별 집중력을 저장할 2차원 배열
                   const concentrations = [];
                   const concentrationAverages = [];
                   const spendedTimeArr = []; // 디버깅용 - 개발후 삭제
@@ -542,7 +554,27 @@
                   const concentrationAverage = sum / concentrationAverages.length;
                   result[index].push((concentrationAverage * 100).toFixed(2));
                 } else if (vm.nowOption[index2][2] === '이해도') {
-                  result[index].push(5);
+                  let lectureUnderstanding = 0;
+                  let lectureUnderstandingSum = 0;
+                  const itemUnderstanding = [];
+                  const itemUnderstandingSum = [];
+
+                  // items 객체 순회
+                  const keys = Object.keys(vm.allData.understanding[index].lession.question.items);
+                  const itemsObjectLength = keys.length;
+                  for (let index3 = 0; index3 < itemsObjectLength; index3 += 1) {
+                    itemUnderstandingSum[index3] = 0;
+                    vm.allData.understanding[index].lession.question.items[keys[index3]].forEach((element) => {
+                      itemUnderstandingSum[index3] += element.ratio;
+                    });
+                    const itemLength = vm.allData.understanding[index].lession.question.items[keys[index3]].length;
+                    itemUnderstanding[index3] = itemLength !== 0 ? (itemUnderstandingSum[index3] / itemLength) : 0;
+                  }
+                  itemUnderstanding.forEach((element) => {
+                    lectureUnderstandingSum += element;
+                  });
+                  lectureUnderstanding = lectureUnderstandingSum / itemsObjectLength;
+                  result[index].push((lectureUnderstanding * 100).toFixed(2));
                 } else if (vm.nowOption[index2][2] === '참여도') {
                   // lecture에 question이 몇개 포함되어 있는가
                   const questionCnt = Object.keys(vm.allData.participation[index].lession.question.items).length;
@@ -591,7 +623,7 @@
             vm.dataIsPrepared = true;
             break;
           }
-          case 'LECTURE_ANALYSIS': {
+          case 'LECTURE_DETAILED_ANALYSIS': {
             vm.mode = '강의 상세 통계';
             vm.dataIsPrepared = false;
             vm.category = '아이템 이름';
@@ -639,13 +671,19 @@
                   const concentrationAverage = sum / studentCnt;
                   result[index].push((concentrationAverage * 100).toFixed(2));
                 } else if (vm.nowOption[index2][2] === '이해도') {
-                  result[index].push(5);
+                  let understandingSum = 0;
+                  filteredUnderstanding.lession.question.items[keys[index]].forEach((element) => {
+                    understandingSum += element.ratio;
+                  });
+                  const singleItemLength = filteredUnderstanding.lession.question.items[keys[index]].length;
+                  const understanding = understandingSum / singleItemLength;
+                  result[index].push((understanding * 100).toFixed(2));
                 } else if (vm.nowOption[index2][2] === '참여도') {
                   // 문항별 제출 수
                   const submitCnt = filteredParticipation.lession.question.items[keys[index]].length;
                   // 문항별 제출자의 수 / 학생의 수
                   const participationAverage = submitCnt / studentCnt;
-                  result[index].push((participationAverage * 100)).toFixed(2);
+                  result[index].push((participationAverage * 100).toFixed(2));
                 } else if (vm.nowOption[index2][2] === '전체') {
                   result[index].push(5);
                 }
@@ -671,23 +709,139 @@
             vm.dataIsPrepared = true;
             break;
           }
-          case 'KEYWORD_ANALYSIS' : {
-            vm.mode = '키워드 상세 통계';
+          case 'KEYWORD_DETAILED_ANALYSIS' : {
             vm.lectureId = payload;
             vm.lectureName = payload2;
+            vm.mode = '키워드 상세 통계';
+            break;
+          }
+          case 'STUDENT_DETAILED_ANALYSIS' : {
+            vm.mode = '학생 상세 통계';
+            vm.dataIsPrepared = false;
+            vm.category = '학생 이름';
+            vm.lectureId = payload;
+            vm.lectureName = payload2;
+
+            const res = await analysisService.getLectureStudents({ classId: vm.classId });
+            vm.classStudentList = res.data;
+            console.log('vm.classStudentList = ', vm.classStudentList);
+
+            const res2 = await lectureService.getLecture({ lectureId: payload });
+            while (vm.chartData.length > 0)vm.chartData.pop(); // 초기화
+            while (vm.chartCategories.length > 0)vm.chartCategories.pop(); // 초기화
+            vm.tableData = [];
+
+            // 값 연산 - 자료는 서버 수정중이라 우선 문항에 대해서만
+            const filteredParticipation = vm.allData.participation.filter(x => x.lectureId === payload)[0];
+            const filteredConcentration = vm.allData.concentration.filter(x => x.lectureId === payload)[0];
+            const filteredUnderstanding = vm.allData.understanding.filter(x => x.lectureId === payload)[0];
+            const result = [];
+
+            // 아이템 키 정보 (일부 아이템 id를 키로 가지고 배열로 넘어오기 때문)
+            const keys = Object.keys(filteredParticipation.lession.question.items);
+
+            // 학생 순회
+            for (let index = 0; index < vm.classStudentList.length; index += 1) {
+              result[index] = [];
+              for (let index2 = 0; index2 < vm.nowOption.length; index2 += 1) {
+                // 우선, '문항 / 전체 / '에 대해서만 계산
+                if (vm.nowOption[index2][2] === '집중도') {
+                  // 한 학생의 아이템별 집중도를 저장할 배열
+                  const singleStudentConcentrationArray = [];
+                  // 한 학생의 아이템별 집중도를 모두 합한 값을 저장할 변수
+                  let SingleStudentConcentrationSum = 0;
+
+                  // 아이템 순회 - 아이템을 돌며, 한 학생의 아이템별 집중도를 구해서 singleStudentConcentrationArray 배열에 저장
+                  for (let index3 = 0; index3 < keys.length; index3 += 1) {
+                    const targetItemSubmitLogs = filteredConcentration.lession.question.items[index3];
+                    const targetItemTargetLog = targetItemSubmitLogs.list.filter(x => x.student_id === vm.classStudentList[index].user_id)[0];
+                    if (targetItemTargetLog === undefined) {
+                      singleStudentConcentrationArray.push(0);
+                    } else {
+                      const fixedStartTime = new Date(targetItemTargetLog.start_time);
+                      const fixedEndTime = new Date(targetItemTargetLog.end_time);
+                      const spendedTimes = ((fixedEndTime - fixedStartTime) / 1000);
+                      const standard = targetItemSubmitLogs.response_time;
+                      singleStudentConcentrationArray.push((standard / spendedTimes) < 1 ? standard / spendedTimes : 1); // 1보다 크면 1 처리 : 서버 요구사항
+                    }
+                  }
+                  // 저장된 값을 모두 더함
+                  singleStudentConcentrationArray.forEach((element) => {
+                    SingleStudentConcentrationSum += element;
+                  });
+                  // 더한 값을 item 길이로 나눠서 평균을 구함
+                  const concentration = SingleStudentConcentrationSum / keys.length;
+                  result[index].push((concentration * 100).toFixed(2));
+                } else if (vm.nowOption[index2][2] === '이해도') {
+                  // 한 학생의 아이템별 이해도를 저장할 배열
+                  const singleStudentUnderstandingArray = [];
+                  // 한 학생의 아이템별 이해도를 모두 합한 값을 저장할 변수
+                  let SingleStudentUnderstandingSum = 0;
+
+                  // 아이템 순회 - 아이템을 돌며, 한 학생의 아이템별 이해도를 구해서 singleStudentUnderstandingArray 배열에 저장
+                  for (let index3 = 0; index3 < keys.length; index3 += 1) {
+                    const targetItemSubmitLogs = filteredUnderstanding.lession.question.items[keys[index3]];
+                    const targetItemTargetLog = targetItemSubmitLogs.filter(x => x.student_id === vm.classStudentList[index].user_id)[0];
+                    if (targetItemTargetLog === undefined) {
+                      singleStudentUnderstandingArray.push(0);
+                    } else {
+                      singleStudentUnderstandingArray.push(targetItemTargetLog.ratio);
+                    }
+                  }
+                  // 저장된 값을 모두 더함
+                  singleStudentUnderstandingArray.forEach((element) => {
+                    SingleStudentUnderstandingSum += element;
+                  });
+                  // 더한 값을 item 길이로 나눠서 평균을 구함
+                  const understanding = SingleStudentUnderstandingSum / keys.length;
+                  result[index].push((understanding * 100).toFixed(2));
+                } else if (vm.nowOption[index2][2] === '참여도') {
+                  // 한 학생의 아이템별 이해도를 저장할 배열
+                  const singleStudentParticipationArray = [];
+                  // 한 학생의 아이템별 이해도를 모두 합한 값을 저장할 변수
+                  let SingleStudenttParticipationSum = 0;
+
+                  // 아이템 순회 - 아이템을 돌며, 한 학생의 아이템별 이해도를 구해서 singleStudentUnderstandingArray 배열에 저장
+                  for (let index3 = 0; index3 < keys.length; index3 += 1) {
+                    const targetItemSubmitLogs = filteredUnderstanding.lession.question.items[keys[index3]];
+                    const targetItemTargetLog = targetItemSubmitLogs.filter(x => x.student_id === vm.classStudentList[index].user_id)[0];
+                    if (targetItemTargetLog === undefined) {
+                      singleStudentParticipationArray.push(0);
+                    } else {
+                      singleStudentParticipationArray.push(1);
+                    }
+                  }
+                  // 저장된 값을 모두 더함
+                  singleStudentParticipationArray.forEach((element) => {
+                    SingleStudenttParticipationSum += element;
+                  });
+                  // 더한 값을 item 길이로 나눠서 평균을 구함
+                  const participation = SingleStudenttParticipationSum / keys.length;
+                  result[index].push((participation * 100).toFixed(2));
+                } else if (vm.nowOption[index2][2] === '전체') {
+                  result[index].push(5);
+                }
+              }
+            }
+            vm.tableData = vm.classStudentList.map((x, index) => ({
+              name: x.name,
+              value: result[index],
+            }));
+
+            vm.dataIsPrepared = true;
             break;
           }
           case 'STUDENT_ANALYSIS' : {
             const res = await analysisService.getLectureStudents({ classId: vm.classId });
             vm.classStudentList = res.data;
             vm.selectedStudentId = '';
-            // console.log('@STUDENT_ANALYSIS, res.data = ', res.data);
+            console.log('@STUDENT_ANALYSIS, res.data = ', res.data);
             vm.mode = '학생 선택';
             break;
           }
           case 'SELECT_STUDENT' : {
             vm.category = '강의 이름';
-            vm.mode = '학생 분석';
+            vm.mode = '학생별 분석';
             // console.log('vm.selectedStudentId = ', vm.selectedStudentId);
             vm.selectedStudentEmail = vm.classStudentList.filter(x => x.user_id === vm.selectedStudentId)[0].email_id;
 
@@ -707,7 +861,6 @@
                 // 우선, '문항 / 전체 / '에 대해서만 계산
                 if (vm.nowOption[index2][2] === '집중도') {
                   // 아이템별 집중력을 저장할 2차원 배열
-                  // console.log('index = ', index);
                   const concentrations = [];
                   for (let index3 = 0; index3 < vm.allData.concentration[index].lession.question.items.length; index3 += 1) {
                     vm.allData.concentration[index].lession.question.items[index3].list.forEach((element) => {
@@ -722,7 +875,6 @@
                       }
                     });
                   }
-                  // console.log('concentrations = ', concentrations);
                   let sum = 0.0;
                   concentrations.forEach((element) => {
                     sum += element;
@@ -731,7 +883,27 @@
                   const concentrationAverages = (sum / vm.allData.concentration[index].lession.question.items.length);
                   result[index].push((concentrationAverages * 100).toFixed(2));
                 } else if (vm.nowOption[index2][2] === '이해도') {
-                  result[index].push(5);
+                  // 단일 학생의 강의 아이템별 이해도를 저장할 배열
+                  const singleStudentUnderstandingForItemsArray = [];
+                  // 단일 학생의 강의 아이템별 이해도의 합계를 저장할 변수
+                  let singleStudentUnderstandingForItemsSum = 0;
+
+                  const keys = Object.keys(vm.allData.understanding[index].lession.question.items);
+                  for (let index3 = 0; index3 < keys.length; index3 += 1) {
+                    const targetItemLog = vm.allData.understanding[index].lession.question.items[keys[index3]].filter(element => element.student_id === vm.selectedStudentId)[0];
+                    if (targetItemLog === undefined) {
+                      singleStudentUnderstandingForItemsArray.push(0);
+                    } else {
+                      singleStudentUnderstandingForItemsArray.push(targetItemLog.ratio);
+                    }
+                  }
+                  // 이해도 합을 구함
+                  singleStudentUnderstandingForItemsArray.forEach((element) => {
+                    singleStudentUnderstandingForItemsSum += element;
+                  });
+                  // 이해도 평균을 구함
+                  const understanding = singleStudentUnderstandingForItemsSum / keys.length;
+                  result[index].push((understanding * 100).toFixed(2));
                 } else if (vm.nowOption[index2][2] === '참여도') {
                   // 강의에 아이템이 몇개 있는가 (우선 문항만)
                   const keys = Object.keys(vm.allData.participation[index].lession.question.items);

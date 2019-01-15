@@ -8,29 +8,69 @@
         :value="index">
       </el-option>
     </el-select>
-    <template v-if="selectedIndex !== ''">
-      <h1>키워드가 사용된 아이템 목록</h1>
-      <h3 v-if="selectedData.note !== undefined">자료</h3>
-      <p v-for="item in selectedData.note" :key="item.lecture_item_id"> - {{ item.name }}</p>
-      <h3 v-if="selectedData.question !== undefined">문항</h3>
-      <p v-for="item in selectedData.question" :key="item.lecture_item_id"> - {{ item.name }}</p>
-      <h3 v-if="selectedData.survey !== undefined">설문</h3>
-      <p v-for="item in selectedData.survey" :key="item.lecture_item_id"> - {{ item.name }}</p>
-      <el-table
-        :data="selectedData.students">
-        <el-table-column
-          prop="name"
-          label="학생 이름"
-          width="180">
-        </el-table-column>
-        <el-table-column
-          label="키워드 이해도">
-          <template slot-scope="scope">
-            {{ (scope.row.res * 100).toFixed(2) }}
+     <el-tabs>
+      <el-tab-pane label="사용된 아이템 목록">
+        <template v-if="selectedIndex !== ''">
+          <template v-if="selectedData.note !== undefined">
+            <h3>자료</h3>
+            <el-table
+              :data="selectedData.note">
+              <el-table-column
+                prop="name"
+                width="200px"
+                label="이름">
+              </el-table-column>
+            </el-table>
           </template>
-        </el-table-column>
-      </el-table>
-    </template>
+          <template v-if="selectedData.question !== undefined">
+            <h3>문항</h3>
+            <el-table
+              :data="selectedData.question">
+              <el-table-column
+                prop="name"
+                label="이름"
+                width="200px">
+              </el-table-column>
+              <el-table-column
+                prop="content"
+                label="내용">
+              </el-table-column>
+            </el-table>
+          </template>
+          <template v-if="selectedData.survey !== undefined">
+            <h3>설문</h3>
+            <el-table
+              :data="selectedData.survey">
+              <el-table-column
+                prop="name"
+                label="이름"
+                width="200px">
+              </el-table-column>
+              <el-table-column
+                prop="content"
+                label="내용">
+              </el-table-column>
+            </el-table>
+          </template>
+        </template>
+      </el-tab-pane>
+      <el-tab-pane label="학생별 키워드 이해도">
+        <el-table
+        :data="selectedData.students">
+          <el-table-column
+            prop="name"
+            label="학생 이름"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            label="키워드 이해도">
+            <template slot-scope="scope">
+              {{ (scope.row.res * 100).toFixed(2) }}
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
@@ -44,6 +84,7 @@ export default {
     const vm = this;
     const res = await analysisService.getKeywordItems({ lectureId: vm.lectureId });
     vm.allData = res.data.result;
+    console.log('res.data.result = ', res.data.result);
   },
   data() {
     return {
