@@ -25,15 +25,7 @@
       onRefresh() {
         const vm = this;
         if (vm.chartData.length === 0) return;
-        const formedData = [];
-        // 데이터의 column이 2개로 고정X -> column
-        vm.chartData.forEach((x) => {
-          formedData.push(x);
-        });
-        /*
-        formedData[0] = vm.chartData[0];
-        formedData[1] = vm.chartData[1];
-        */
+        const formedData = vm.chartData;
         // eslint-disable-next-line
         const chart = bb.generate({
           data: {
