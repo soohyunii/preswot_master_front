@@ -1,6 +1,7 @@
 <template>
   <div class="bt-container">
     <el-button style="float: right" v-if="!isInDepthAnalize" type="primary" @click="isInDepthAnalize = true">심화 분석</el-button>
+    <el-button style="float: right" v-if="isInDepthAnalize" @click="turnOffInDepthAnalize()" plain>기초 분석</el-button>
     <el-breadcrumb style="font-size: 24px; margin-top: 16px; margin-bottom: 32px;" separator=">">
       <el-breadcrumb-item :to="{ path: '/a/teacher/NNclass/'+classId }">{{ className }}</el-breadcrumb-item>
       <el-breadcrumb-item><a @click="onClick('CLASS_ANALYSIS')">{{ className }} 저널링</a></el-breadcrumb-item>
@@ -110,7 +111,7 @@
           </template>
         </el-table-column>
       </el-table>
-        <el-button style="float: left" v-if="mode === '과목 저널링'" type="primary" @click="onClick('STUDENT_ANALYSIS')">학생별 분석</el-button>
+        <el-button style="float: right" v-if="mode === '과목 저널링'" type="primary" @click="onClick('STUDENT_ANALYSIS')">학생별 분석</el-button>
         <teacher-class-journal-detail @childs-close-event="closeStatusBar()" :propDataSet = "studentDataSet" v-if = "isActiveInfo"/>
     </template>
   </div>
@@ -439,14 +440,14 @@
       const res = await classService.getClass({ id: vm.classId });
       vm.className = res.data.name;
 
-      // 테스트 서버 값 오류 대응 (시작)
-      res.data.lectures = res.data.lectures.filter((value) => {
-        if (value.lecture_id === 1 || value.lecture_id === 6) {
-          return true;
-        }
-        return false;
-      });
-      // 테스트 서버 값 오류 대응 (끝)
+      // // 테스트 서버 값 오류 대응 (시작)
+      // res.data.lectures = res.data.lectures.filter((value) => {
+      //   if (value.lecture_id === 1 || value.lecture_id === 6) {
+      //     return true;
+      //   }
+      //   return false;
+      // });
+      // // 테스트 서버 값 오류 대응 (끝)
 
       vm.allData.classInfo = res.data;
       console.log('@teacherClassJournal/getClass res.data = ', res.data);
@@ -983,6 +984,11 @@
       // 저널링 옵션 삭제
       delOption(index) {
         this.nowOption.splice(index, 1);
+      },
+      turnOffInDepthAnalize() {
+        this.nowOption = [['전체', '전체', '이해도'], ['전체', '전체', '참여도'], ['전체', '전체', '집중도']];
+        this.isInDepthAnalize = false;
+        this.onClick('SEARCH');
       },
       compOptionName(type1, type2, type3) {
         let result = '';
