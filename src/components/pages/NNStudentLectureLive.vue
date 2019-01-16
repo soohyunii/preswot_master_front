@@ -96,23 +96,27 @@
                 <el-button v-show="pauseFlag && lectureType === 2" type="primary" @click="onClick('RESTART')">재시작</el-button>
                 <br>
                 <el-col :span="itemSize">
-                  <div v-for="(item, index) in lectureItem" :key="index" v-if="lectureItem.length < 2">
-                    <lecture-live-item
-                      :data="item"
-                      :onClick="onClick"
-                      :answerSubmitted="submitFlag[item.lecture_item_id]"
-                      :lectureType="lectureType"
-                      type="STUDENT"/>
+                  <div v-if="lectureItem.length < 2">
+                    <div v-for="(item, index) in lectureItem" :key="index">
+                      <lecture-live-item
+                        :data="item"
+                        :onClick="onClick"
+                        :answerSubmitted="submitFlag[item.lecture_item_id]"
+                        :lectureType="lectureType"
+                        type="STUDENT"/>
+                    </div>
                   </div>
-                  <div v-for="(item, index) in lectureItems" :key="index" v-if="lectureItem.length > 1">
-                    <lecture-live-item
-                      :data="item"
-                      :onClick="onClick"
-                      :answerSubmitted="submitFlag[item.lecture_item_id]"
-                      :lectureType="lectureType"
-                      type="STUDENT"/>
-                    <el-button type="primary" @click="onClick('PREV')">이전</el-button>
-                    <el-button type="primary" @click="onClick('NEXT')">다음</el-button>
+                  <div v-if="lectureItem.length > 1">
+                    <div v-for="(item, index) in lectureItems" :key="index">
+                      <lecture-live-item
+                        :data="item"
+                        :onClick="onClick"
+                        :answerSubmitted="submitFlag[item.lecture_item_id]"
+                        :lectureType="lectureType"
+                        type="STUDENT"/>
+                      <el-button type="primary" @click="onClick('PREV')">이전</el-button>
+                      <el-button type="primary" @click="onClick('NEXT')">다음</el-button>
+                    </div>
                   </div>
                 </el-col>
                 <el-col :span="8"><div>
