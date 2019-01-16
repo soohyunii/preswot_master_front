@@ -35,4 +35,29 @@ export default {
                     }) {
     return http.get(`/journalings/student_lecture_keyword/${userId}/${lectureId}/${isStudent}`);
   },
+  getParticipation({
+    lectureId,
+  }) {
+    return http.get(`/journalings2/participation/${lectureId}`);
+  },
+  getUnderstanding({
+    lectureId,
+  }) {
+    return http.get(`/journalings2/understanding/${lectureId}`);
+  },
+  getConcentration({
+    lectureId,
+  }) {
+    return http.get(`/journalings2/concentration/${lectureId}`);
+  },
+  getKeywordItems({
+    lectureId,
+  }) {
+    return http.get(`/journalings2/keyword-items/${lectureId}`);
+  },
+  getLectureStudents({
+    classId,
+  }) {
+    return http.get(`/journalings2/students/${classId}`);
+  },
 };
