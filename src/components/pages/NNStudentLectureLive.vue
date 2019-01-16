@@ -96,27 +96,23 @@
                 <el-button v-show="pauseFlag && lectureType === 2" type="primary" @click="onClick('RESTART')">재시작</el-button>
                 <br>
                 <el-col :span="itemSize">
-                  <div v-if="lectureItem.length < 2">
-                    <div v-for="(item, index) in lectureItem" :key="index">
-                      <lecture-live-item
-                        :data="item"
-                        :onClick="onClick"
-                        :answerSubmitted="submitFlag[item.lecture_item_id]"
-                        :lectureType="lectureType"
-                        type="STUDENT"/>
-                    </div>
+                  <div v-for="(item, index) in lectureItem" :key="index" v-if="lectureItem.length < 2">
+                    <lecture-live-item
+                      :data="item"
+                      :onClick="onClick"
+                      :answerSubmitted="submitFlag[item.lecture_item_id]"
+                      :lectureType="lectureType"
+                      type="STUDENT"/>
                   </div>
-                  <div v-if="lectureItem.length > 1">
-                    <div v-for="(item, index) in lectureItems" :key="index">
-                      <lecture-live-item
-                        :data="item"
-                        :onClick="onClick"
-                        :answerSubmitted="submitFlag[item.lecture_item_id]"
-                        :lectureType="lectureType"
-                        type="STUDENT"/>
-                      <el-button type="primary" @click="onClick('PREV')">이전</el-button>
-                      <el-button type="primary" @click="onClick('NEXT')">다음</el-button>
-                    </div>
+                  <div v-for="(item, index) in lectureItems" :key="index" v-if="lectureItem.length > 1">
+                    <lecture-live-item
+                      :data="item"
+                      :onClick="onClick"
+                      :answerSubmitted="submitFlag[item.lecture_item_id]"
+                      :lectureType="lectureType"
+                      type="STUDENT"/>
+                    <el-button type="primary" @click="onClick('PREV')">이전</el-button>
+                    <el-button type="primary" @click="onClick('NEXT')">다음</el-button>
                   </div>
                 </el-col>
                 <el-col :span="8"><div>
@@ -1038,14 +1034,11 @@ export default {
   beforeDestroy() {
     const vm = this;
     vm.beforeLeave();
-    // 소켓 닫기 전에 callback 함수들 해제해줘야 함
-    // 해제하지 않으면 재접속시 callback함수가 또 만들어져 중복으로 돌아감
-    vm.$socket._callbacks = null; // eslint-disable-line
-    vm.$socket.close();
     /*
-     * 무인 강의에서 학생이 강의에서 나갈 경우, 강의 수강 시간을 알기 위해
-     * 최근에 듣던 강의 아이템과 해당 강의 아이템 시작으로부터의 경과 시간을 보냄
+     *  무인 강의에서 학생이 강의에서 나갈 경우, 강의 수강 시간을 알기 위해
+     *  최근에 듣던 강의 아이템과 해당 강의 아이템 시작으로부터의 경과 시간을 보냄
      */
+    vm.$socket.close();
     if (vm.lectureType === 1) {
       automaticLectureService.offlineLeave({
         lectureId: vm.lectureId,

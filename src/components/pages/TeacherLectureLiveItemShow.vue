@@ -17,7 +17,7 @@
           </el-table-column>
         </el-table>
       </el-col>
-      <el-col span="12" style="margin-left: 20px;">
+      <el-col span="10" style="margin-left: 20px;">
         <div v-for="id in currentLectureItemId" :key="id">
           <teacher-lecture-live-item
             :lectureItemId="id"
@@ -180,9 +180,9 @@ export default {
 
 <style>
 .el-table .odd {
-  background: beige;
+  background: moccasin;
 }
 .el-table .even {
-  background: paleturquoise;
+  background: powderblue;
 }
 </style>

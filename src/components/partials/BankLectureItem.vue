@@ -56,7 +56,7 @@
         <el-table-column label="아이템명">
           <template slot-scope="scope">{{ scope.row.name }}</template>
         </el-table-column>
-        <el-table-column label="타입" width="80px">
+        <el-table-column label="타입">
           <template slot-scope="scope">{{ scope.row.type }}</template>
         </el-table-column>
         <el-table-column label="소속 과목">
@@ -65,24 +65,11 @@
         <el-table-column label="소속 강의">
           <template slot-scope="scope">{{ scope.row.lecture }}</template>
         </el-table-column>
-        <el-table-column label="저작일" width="180px">
+        <el-table-column label="저작일" width="200px">
           <template slot-scope="scope">{{ scope.row.createTime }}</template>
         </el-table-column>
-        <el-table-column label="최종 수정일" width="180px">
+        <el-table-column label="최종 수정일" width="200px">
           <template slot-scope="scope">{{ scope.row.updateTime }}</template>
-        </el-table-column>
-        <el-table-column width="110px">
-          <template slot-scope="scope">
-            <el-popover :title="scope.row.name" trigger="click" width="500px">
-              <teacher-lecture-live-item
-                :lectureItemId="scope.row.id"
-                :onClick="onClick"
-                style="width: 500px;"
-                v-if="ifShow"
-              />
-              <el-button size="small" slot="reference" @click="onClick('SHOW')">미리 보기</el-button>
-            </el-popover>
-          </template>
         </el-table-column>
       </el-table>
       <div style="height: 10px;" />
@@ -96,7 +83,6 @@
 
 <script>
 import bankService from '../../services/bankService';
-import TeacherLectureLiveItem from '../partials/TeacherLectureLiveItem';
 
 export default {
   name: 'BankLectureItem',
@@ -113,7 +99,6 @@ export default {
       group: [],
       multipleSelection: [],
       bankLectureItemList: [],
-      ifShow: true,
     };
   },
   async mounted() {
@@ -254,14 +239,11 @@ export default {
     const myg = await bankService.getMyGroup();
     vm.group = myg.data.groupList;
   },
-  components: {
-    TeacherLectureLiveItem,
-  },
   methods: {
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
-    async onClick(type) {
+    onClick(type) {
       const vm = this;
       switch (type) {
         // 아이템을 은행에 새로 저장하는 화면으로
@@ -317,7 +299,6 @@ export default {
               vm.resultLectureItemList.push(x);
             }
           });
-          vm.ifShow = false;
           break;
         }
         // 검색할 키워드 추가
@@ -334,7 +315,6 @@ export default {
           // 중복이 아닐 경우 검색 목록에 추가
           vm.searchKeywordList.push(vm.searchKey);
           vm.searchKey = '';
-          vm.ifShow = false;
           break;
         }
         // 입력한 키워드들로 검색
@@ -368,7 +348,20 @@ export default {
               }
             });
           });
-          vm.ifShow = false;
+
+          /*
+          vm.myLectureItemList.forEach((x) => {
+            let ifContain = true;
+            vm.searchKeywordList.forEach((y) => {
+              if (x.key.includes(y) === false) {
+                ifContain = false;
+              }
+            });
+            if (ifContain === true) {
+              vm.resultLectureItemList.push(x);
+            }
+          });
+          */
           break;
         }
         // 검색 결과 초기화
@@ -378,19 +371,6 @@ export default {
           vm.searchClass = '';
           vm.searchKeywordList = [];
           vm.resultLectureItemList = vm.myLectureItemList;
-          break;
-        }
-        // 강의 아이템 미리보기에서 제출버튼 방지
-        case 'SUBMIT': {
-          vm.$notify({
-            title: '알림',
-            message: '이 버튼은 현재 수강중인 학생만 이용할 수 있습니다.',
-            type: 'warning',
-          });
-          break;
-        }
-        case 'SHOW': {
-          vm.ifShow = true;
           break;
         }
         default: {
