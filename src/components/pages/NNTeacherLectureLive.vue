@@ -61,12 +61,14 @@
               설문 모두 보이기
             </el-button>
             -->
-            <teacher-lecture-live-item-list
-              v-if="isTableItemListLoaded"
-              :dataList="tableItemList"
-              :onClick="onClick"
-              :isAuto="isAuto"
-            />
+            <div style="background: #DCDFE6; padding: 10px;">
+              <teacher-lecture-live-item-list
+                v-if="isTableItemListLoaded"
+                :dataList="tableItemList"
+                :onClick="onClick"
+                :isAuto="isAuto"
+              />
+            </div>
             <br>
             <!--
             <el-tag v-for="(k, index) in selectItemList" :key="index" closable @close="deleteSelectedItem(index)">{{ k.name }}</el-tag>
@@ -86,10 +88,11 @@
           </el-col>
         </el-row>
         <br />
+        <!--
         <el-row>
           <el-col :span="3"><strong>현재 강의를 듣고있는 인원</strong></el-col>
           <el-col :span="7"> {{ onStudentCount - 1 }} 명 </el-col>
-        </el-row>
+        </el-row>-->
         <div v-for="(itemId, index) in currentLectureItemId" :key="itemId">
           <el-row>
             <lecture-question-result
