@@ -4,6 +4,11 @@
       <el-table class="elTable" v-model="setSpanMethod" :data="page" :span-method="objectSpanMethod" style="width: 100%">
       <!-- <el-table-column prop="bank_group.group_id" label="그룹명" width="200px">
       </el-table-column> -->
+      <!-- <el-table-column prop="bank_id" label="ID" width="50">
+        <template slot-scope="scope">
+          {{ (pageNum - 1) * 10 + (scope.$page + 1) }}
+        </template>
+      </el-table-column> -->
       <el-table-column prop="bank_group.name" label="그룹명" width="200px">
       </el-table-column>
       </el-table-column>

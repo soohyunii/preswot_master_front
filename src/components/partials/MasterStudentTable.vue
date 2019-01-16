@@ -137,8 +137,33 @@ export default {
   methods: {
     // formatDate: utils.formatDate,
     async deleteUser(email_id){
-      await masterService.deleteUser({email_id: email_id});
-      window.location.reload();
+      const vm=this;
+      vm.$confirm('정말로 이 학생을 삭제하시겠습니까?',{
+        confirmButtonText:'예, 삭제합니다',
+        cancelButtonText:'아니오, 삭제하지 않습니다',
+        type:'warning',
+      })
+      .then(async()=> {
+        try{
+          await masterService.deleteUser({email_id : email_id});
+          await location.reload(true); 
+          //새로고침 후 select box가 이전화면과 동일해야 함 
+          // await history.go(0); 
+          /*await vm.$notify({
+            title:'학과 삭제 성공',
+            message:'학과 삭제',
+            type:'success',
+            duration:3000,
+          });*/
+        } catch(error){
+          vm.$notify({
+            title:'학생 삭제 실패',
+            message:error.toString(),
+            type:'error',
+            duration:3000,
+          }); 
+        }
+      })
     }
   },
 };

@@ -128,10 +128,14 @@ export default {
         // TODO: valid === false인 경우에 notify
         if (vm.isEdit) {
           const id = vm.uniName;
+          const res = await masterService.getMasterUni({ name: vm.uniName });
+          const old_name = res.data.name;
           console.log(id); 
+          console.log('res.data.name==(old_name)==',old_name); 
           try {
             await masterService.NNMasterputUni({
               id,
+              old_name,
               ...vm.input,
             });
             vm.$router.push('/a/view/uni');

@@ -51,11 +51,12 @@
 
       <br/><br/><br/><br/><br/><br/>
       <el-form-item label="강사선택">
-        <el-select id="teacher-choice" v-model="input.teacher_email_id" :disabled="input.isActive" style="width:140px;">
+        <!-- <el-select id="teacher-choice" v-model="input.teacher_email_id" :disabled="input.isActive" style="width:140px;" @change="showLabel()"> -->
+        <el-select id="teacher-choice" v-model="input.teacher_email_id" :disabled="input.isActive" style="width:140px;">  
           <el-option 
-            v-for="teacher_email_id in input.teacher_list"
-            :label="teacher_email_id"
-            :value="teacher_email_id">
+            v-for="element in input.teacher_list"
+            :label="element.name"
+            :value="element.email_id">
           </el-option>
         </el-select>
       </el-form-item>
@@ -172,16 +173,23 @@ export default {
   async mounted() {
     const vm = this;
     const uniNameLists = await masterService.getUniNameLists();
-    // console.log('20181211 unniNameLists?????????????==',uniNameLists);
     vm.input.university_list = uniNameLists.data.map(element => element.name);
     
     if (vm.isEdit) {
       const res = await masterService.getMasterClass({ class_id: vm.classId });
-      // console.log(class_id);
-      // console.log('res', res.data);
+      const readDepartmentList = await masterService.getDeptLists({name:res.data.university_name});
+      vm.input.department_list=readDepartmentList.data.map(element=>element.name);
+      const readTeacherList = await masterService.getUserLists(1, res.data.university_name,res.data.department_name);
+      vm.input.teacher_list = readTeacherList.data;
+
       vm.input.university_name = res.data.university_name || vm.initialInput.university_name;
       vm.input.department_name = res.data.department_name || vm.initialInput.department_name;
-      vm.input.teacher_email_id = res.data.teacher_email_id || vm.initialInput.teacher_email_id;
+/*      vm.input.teacher_email_id = res.data.teacher_email_id || vm.initialInput.teacher_email_id;*/
+      vm.$set(vm.input, 'teacher_email_id', res.data.teacher_email_id || vm.initialInput.teacher_email_id);
+      /*vm.input.teacher_list.name = vm.initialInput.teacher_list.name;
+      console.log('vm.input.teacher_list?',vm.input.teacher_list);*/
+      /*vm.element = readTeacherList.data.name;
+      console.log('res.data==',res.data);*/
       /*vm.input.teacher_list = res.data.teacher_list || vm.initialInput.teacher_list;*/
       vm.input.code = res.data.code || vm.initialInput.code;
       vm.input.day_of_week = res.data.day_of_week || vm.initialInput.day_of_week;
@@ -272,9 +280,8 @@ export default {
     async categoryTeacherChange(){
       const vm=this;
       const teacherNameLists = await masterService.getUserLists(1,vm.input.university_name,vm.input.department_name);
-      console.log(teacherNameLists);
-      vm.input.teacher_list = await teacherNameLists.data.map(element=>element.name);
-      console.log(vm.input.teacher_list);
+      // vm.input.teacher_list = await teacherNameLists.data.map(element=>element.name);
+      vm.input.teacher_list = await teacherNameLists.data;
     },
     async categoryNone(){
       const vm=this;
@@ -284,7 +291,17 @@ export default {
         vm.input.boolean=false;
       }
       const teacherNameLists = await masterService.getUserLists(1,vm.input.university_name,vm.input.department_name);
-      vm.input.teacher_list = await teacherNameLists.data.map(element=>element.name);
+      console.log('teacherNameLists = ' , teacherNameLists);
+      // vm.input.teacher_list = await teacherNameLists.data.map(element=>element.name);
+      vm.input.teacher_list = teacherNameLists.data;
+      console.log('vm.input.teacher_list = ', vm.input.teacher_list);
+    },
+    async showLabel(){
+  /*    const vm=this;
+      console.log('change!',vm.input.teacher_email_id);
+      console.log('change!',vm.input.teacher_list.index())
+      console.log('change!',vm.input.teacher_list[0].name);
+*/
     },
   },
   watch: {

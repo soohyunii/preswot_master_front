@@ -1,37 +1,45 @@
 <template>
   <div id="class_index_wrapper" class="bt-container">
-  	<div h2 class="page-title"> 조회하기 > 과목및강의 > 상세보기</div>
+  	<div h2 class="page-title"> 조회하기 > <router-link :to="`/a/view/class`">과목</router-link> > 상세보기</div>
   	<div class="profile">
   	  <img src="../../assets/profi.png">
   	  <div class="class_detail">
-  	  	<div class="detail_top" v-model="class_name" :list="list"> 과목명 : {{list.name}} </div> 
+  	  	<div class="detail_top" v-model="class_name" :list="list"> 과목명 : {{list.name}} </div>
+        <div class="detail_isActive" v-if="isActive==true"> 현재 비활성화 과목입니다 </div>
   	  	<!-- <br/><br/> -->
-  	  	<div class="detail" v-model="teacher_name" :list="list"> 강사명 : {{list.teacher_email_id}} </div>
+  	  	<div class="detail" v-if="isActive==false" v-model="teacher_name" :list="list"> 강사명 : {{list.teacher_email_id}} </div>
   	  	<!-- <br/><br/> -->
-  	  	<div class="detail" v-model="capacity" :list="list"> 정원 : {{list.capacity}} 명</div>
+  	  	<div class="detail" v-if="isActive==false" v-model="capacity" :list="list"> 정원 : {{list.capacity}} 명</div>
   	  	<!-- <br/><br/> -->
-        <div class="detail_horizon" v-model="start_date" :list="list">강의날짜 : {{list.start_date}}  ~ </div> <div class="detail_horizon2" v-model="end_date" :list="list"> {{list.end_date}} </div>
+        <div class="detail_horizon" v-if="isActive==false" v-model="start_date" :list="list">강의날짜 : {{list.start_date}}  ~ </div> <div class="detail_horizon2" v-model="end_date" :list="list"> {{list.end_date}} </div>
   	  	<!-- <br/><br/> -->
-  	  	<div class="detail_horizon3" v-model="start_time" :list="list">강의시간: {{list.start_time}}  ~ </div> <div class="detail_horizon4" v-model="end_time" :list="list">
+  	  	<div class="detail_horizon3" v-if="isActive==false" v-model="start_time" :list="list">강의시간: {{list.start_time}}  ~ </div> <div class="detail_horizon4" v-model="end_time" :list="list">
         {{list.end_time}}</div>
-        <div class="detail_bottom" v-model="location" :list="list"> 공간 : {{list.location}} </div>
+        <div class="detail_bottom" v-if="isActive==false" v-model="location" :list="list"> 공간 : {{list.location}} </div>
   	  </div>
   	</div>
   	<div class="right-align">
-        <el-button  type="primary" v-on:click="classOnChange" style="width: 32%">
-        <!-- <el-button  type="primary" @click="classOnChange()" style="width: 32%"> -->
+        <el-button v-if="isActive==false" type="primary" v-on:click="classOnChange" style="width: 32%">
           <div class="right-align-btn-layer">과목 이해도/집중도/참여도</div>
         </el-button>
-        <!-- <el-button type="primary" @click="lectureOnChange()" style="width: 32%"> -->
-        <el-button type="primary" v-on:click="lectureOnChange" style="width: 32%">
+        <el-button v-if="isActive==false" type="primary" v-on:click="lectureOnChange" style="width: 32%">
           <div class="right-align-btn-layer">강의별 이해도/집중도/참여도</div>
         </el-button>
-        <!-- <el-button type="primary" @click="studentOnChange()" style="width: 32%"> -->
-        <el-button type="primary" v-on:click="studentOnChange" style="width: 32%">
+        <el-button v-if="isActive==false" type="primary" v-on:click="studentOnChange" style="width: 32%">
+          <div class="right-align-btn-layer">수강학생 조회</div>
+        </el-button>
+
+        <el-button v-if="isActive==true" type="primary" v-on:click="classOnChange" style="width: 32%" disabled>
+          <div class="right-align-btn-layer">과목 이해도/집중도/참여도</div>
+        </el-button>
+        <el-button v-if="isActive==true" type="primary" v-on:click="lectureOnChange" style="width: 32%" disabled>
+          <div class="right-align-btn-layer">강의별 이해도/집중도/참여도</div>
+        </el-button>
+        <el-button v-if="isActive==true" type="primary" v-on:click="studentOnChange" style="width: 32%" disabled>
           <div class="right-align-btn-layer">수강학생 조회</div>
         </el-button>
   	</div>
-    <div class="table-name">
+    <div class="table-name" v-if="isActive==false">
       <template v-if="buttonType==='classOnChange'"> 
         <master-class-all-table
         :list="classes"
@@ -48,6 +56,26 @@
   	    />
   	  </template>
   	</div>
+    <div class="table-name" v-if="isActive==true">
+      <template v-if="buttonType==='classOnChange'"> 
+        <master-class-all-table
+        :list="classes"
+        disabled
+        />
+      </template>
+      <template v-else-if="buttonType==='lectureOnChange'"> 
+        <master-lecture-all-table
+        :list="lecture"
+        disabled
+        />
+      </template>     
+      <template v-else="buttonType==='studentOnChange'"> 
+        <master-student-all-table
+        :list="student"
+        disabled
+        />
+      </template>
+    </div>
   </div>	
 
 </template>
@@ -82,6 +110,7 @@ export default {
       start_time:'',
       end_time:'',
       location:'',
+      isActive:true,
 		};
 	},
   computed: {
@@ -98,6 +127,11 @@ export default {
     const res = await masterService.getMasterClass({class_id:class_id});
     console.log('res.data=============!!!!',res.data);
     vm.list=res.data;
+    if(res.data.isActive==false){
+      vm.isActive=false;
+    } else {
+      vm.isActive=true;
+    }
   },
 	methods: {
 		/*classes: function(){
@@ -146,7 +180,16 @@ export default {
       const vm=this;
       vm.buttonType='studentOnChange';
     },
+    /*funcRef(){
+      window.addEventListener("hashchange", funcRef, false);
+      console.log('change!');
+    }*/
   },
+  /*window.onpageshow = function(event){
+    if(event.persisted){
+      console.log('change back');
+    }
+  }*/
 };
 	
 
@@ -253,6 +296,10 @@ export default {
   }
   .detail_bottom{
     margin-top:-15px;
+  }
+  .detail_isActive{
+    margin-top: 30px;
+    font-size: 1.5em;
   }
 }
 </style>

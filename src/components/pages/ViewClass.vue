@@ -99,7 +99,7 @@ import utils from '../../utils';
 export default {
   name: 'ViewClass',
   components: {
-    MasterClassTable,
+    MasterClassTable, // local component
   },
   data() {
     return {
@@ -124,7 +124,7 @@ export default {
   },
   async created() {
     const vm = this;
-
+    
     // 새로고침(Refresh, F5) 해도 목록을 가져올 수 있게 하는 부분.
     // TODO: 속도가 눈에 보이게 느려지므로 다른 방법이 있다면 수정 요구.
     // await vm.getMyClassLists();
@@ -155,7 +155,16 @@ export default {
     const vm=this;
     const uniNameLists = await masterService.getUniNameLists();
     vm.uniNameList = uniNameLists.data.map(element=>element.name);
-    // console.log('vm.uniNameList!!!!!!!!===',vm.uniNameList);
+    /*const res = await masterService.getClassLists({university_name : vm.chosen});
+    console.log('res.data=== ', res.data);
+    for(var i=0;i<res.data.length;i++){
+      if(res.data[i].start_date.indexOf("T")!==-1){
+         res.data[i].start_date=res.data[i].start_date.split("T")[0];
+      }
+    }
+    vm.list = res.data;
+    console.log('vm.list',vm.list);*/
+    /*console.log('mounted() 호출');*/
   },
   methods: {
     ...mapActions('NNclass', [
@@ -239,17 +248,19 @@ export default {
     },
     async categoryChange(){
       const vm=this;
-      const deptNameLists = await masterService.getDeptLists({name:vm.chosen});
+      console.log('vm.chosen???1==',vm.chosen);
+      const deptNameLists = await masterService.getDeptLists({name : vm.chosen});
+      console.log('vm.chosen???2==',vm.chosen);
       vm.deptNameList = deptNameLists.data.map(element=>element.name);
       const res = await masterService.getClassLists({university_name : vm.chosen});
-      console.log('res.data[0].start_date=== ', res.data[0].start_date);
-      // console.log('res.data[0].end_date=== ', res.data[0].end_date);
+     /* console.log('res.data[0].start_date=== ', res.data[0].start_date);
       for(var i=0;i<res.data.length;i++){
         if(res.data[i].start_date.indexOf("T")!==-1){
           res.data[i].start_date=res.data[i].start_date.split("T")[0];
         }
-      }
+      }*/
       vm.list = res.data;
+      console.log('res.data',res.data);
       console.log('vm.list',vm.list);
     },
     /*async onChange(end_date_from,end_date_to){
@@ -271,7 +282,7 @@ export default {
       vm.list = res.data;
       console.log('vm.list=============',vm.list);
     },
-    onClickDelete(index) {
+    /*onClickDelete(index) {
       const vm = this;
       const currentTeachingClass = vm.teachingClassList[index];
       vm.$confirm('정말로 이 과목을 삭제하시겠습니까?', `${currentTeachingClass.name || ''} 삭제`, {
@@ -307,7 +318,7 @@ export default {
             duration: 3000,
           });
         });
-    },
+    },*/
   },
 };
 </script>

@@ -194,7 +194,11 @@ export default {
       const deptNameLists = await masterService.getDeptLists({name: vm.chosen});
       vm.department_list = await deptNameLists.data.map(element=>element.name);
       const res = await masterService.getUserLists(type,university_name);
-      vm.list=res.data;
+      vm.list= res.data;
+      console.log('vm.list',vm.list);
+      console.log('1111111111'); 
+/*      vm.$router.push({path:'/a/view/student', query:{university:`${university_name}`} });*/
+      console.log('222222222222');
     },
     async onChange(type,university_name,department_name){
       const vm=this;

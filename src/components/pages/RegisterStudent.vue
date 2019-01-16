@@ -143,10 +143,9 @@ export default {
     vm.input.university_list = uniNameLists.data.map(element=>element.name);
 
     if (vm.isEdit) {
-      console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@is Edit@@@@@@@@@@@@@@@@@');
       const res = await masterService.getMasterUser({ email_id : vm.classId });
-      console.log(vm.classId);
-      console.log('res', res.data);
+      const readDepartmentList = await masterService.getDeptLists({name:res.data.university_name});
+      vm.input.department_list = readDepartmentList.data.map(element=>element.name);
       vm.input.email_id = res.data.email_id || vm.initialInput.email_id;
       vm.input.password = res.data.password || vm.initialInput.password;
       /*vm.input.passwordConfirm = res.data.passwordConfirm || vm.initialInput.passwordConfirm;*/
@@ -205,6 +204,7 @@ export default {
                 duration:0,
               });
             } else {
+              /*vm.$router.push({path:'/a/view/student', query:{university:`${vm.input.university_name}`} });*/
               vm.$router.push('/a/view/student');
             }
             /*vm.$router.push('/a/view/student');*/

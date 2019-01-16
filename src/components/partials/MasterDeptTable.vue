@@ -3,9 +3,14 @@
     <!-- <p> {{ list }} </p> -->
     <div>
       <el-table class="elTable" :data="list" style="width: 100%">
+      <el-table-column prop="dept_id" label="ID" width="50">
+        <template slot-scope="scope">
+          {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
+        </template>
+      </el-table-column>  
       <el-table-column prop="code" label="학과코드" width="100">
       </el-table-column>
-      <el-table-column prop="university.name" label="학과" width="100">
+      <el-table-column prop="university.name" label="대학명" width="150">
         <!-- <template slot-scope="scope">
         {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
         </template> -->
@@ -21,9 +26,9 @@
       </el-table-column>
       <el-table-column prop="manager_name" label="학과담당자" width="100">
       </el-table-column>
-      <el-table-column prop="manager_email" label="학과 대표 이메일" width="180">
+      <el-table-column prop="manager_email" label="학과 대표 이메일" width="190">
       </el-table-column>
-      <el-table-column prop="manager_phone_number" label="학과 전화번호" width="130">
+      <el-table-column prop="manager_phone_number" label="학과 전화번호" width="140">
       </el-table-column>
       <el-table-column label="" header-align="left" align="right">
         <template slot-scope="scope">

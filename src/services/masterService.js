@@ -84,6 +84,7 @@ export default {
   /*과목 목록 조회*/
   getClassLists({university_name,department_name,end_date_from,end_date_to}){
     // return http.get(`/admin_class/list?university_name=${university_name}&department_name=${department_name}&end_date_from=${end_date_from}&end_date_to=${end_date_to}`)
+    console.log('university_name==',university_name,'department_name==',department_name,'end_date_from==',end_date_from,'end_date_to==',end_date_to);
     return http.get('/admin_class/list', {
       params: {
         university_name,
@@ -243,16 +244,18 @@ export default {
 // 행정 관리자 methods
   NNMasterputUni({
     code,
+    old_name,
     name,
     address,
     manager_name,
     manager_email,
     manager_phone_number,
   }) {
-    /*return http.put(`/university/${code}`, {*/
+//    console.log('old_name',old_name,'new_name',name);
     return http.put(`/university?name=${name}`, {
       code,
-      name,
+      old_name,
+      new_name : name,
       address,
       manager_name,
       manager_email,
@@ -290,6 +293,7 @@ export default {
   NNMasterputDept({
     uniNameList,
     code,
+    old_name,
     name,
     part,
     manager_name,
@@ -299,7 +303,8 @@ export default {
     return http.put(`/department`, {
       university_name: uniNameList,
       code,
-      name,
+      old_name,
+      new_name : name,
       part,
       manager_name,
       manager_email,

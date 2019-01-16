@@ -2,20 +2,25 @@
   <div id="class_index_wrapper">
     <div>
       <el-table class="elTable" :data="page" style="width: 100%">
+      <el-table-column prop="uni_id" label="ID" width="50">
+        <template slot-scope="scope">
+          {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
+        </template>
+      </el-table-column>
       <el-table-column prop="code" label="대학코드" width="100">
       </el-table-column>
-      <el-table-column prop="name" label="대학명" width="180">
+      <el-table-column prop="name" label="대학명" width="150">
         <!-- <template slot-scope="scope">
           {{ scope.$name }}
         </template> -->
       </el-table-column>
-      <el-table-column prop="address" label="주소" width="250">
+      <el-table-column prop="address" label="주소" width="280">
       </el-table-column>
       <el-table-column prop="manager_name" label="담당자" width="100">
       </el-table-column>
-      <el-table-column prop="manager_email" label="메일주소" width="220">
+      <el-table-column prop="manager_email" label="메일주소" width="190">
       </el-table-column>
-      <el-table-column prop="manager_phone_number" label="전화번호" width="120">
+      <el-table-column prop="manager_phone_number" label="전화번호" width="140">
       </el-table-column>
       <el-table-column label="" header-align="left" align="right">
         <template slot-scope="scope">
