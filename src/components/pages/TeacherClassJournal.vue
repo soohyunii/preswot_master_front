@@ -1006,39 +1006,6 @@
         }
         return result;
       },
-      // 저널링 옵션 추가
-      newOption() {
-        const vm = this;
-        let check = true;
-        if (vm.selectedOption.length !== 3) {
-          vm.$notify({
-            title: '알림',
-            message: '검색 옵션을 선택해주세요.',
-            type: 'warning',
-          });
-          check = false;
-        }
-        vm.nowOption.forEach((x) => {
-          if (x[0] === vm.selectedOption[0] && x[1] === vm.selectedOption[1] &&
-              x[2] === vm.selectedOption[2]) {
-            vm.$notify({
-              title: '알림',
-              message: '이미 추가된 옵션입니다.',
-              type: 'warning',
-            });
-            vm.selectedOption = [];
-            check = false;
-          }
-        });
-        if (check === true) {
-          vm.nowOption.push(vm.selectedOption);
-          vm.selectedOption = [];
-        }
-      },
-      // 저널링 옵션 삭제
-      delOption(index) {
-        this.nowOption.splice(index, 1);
-      },
     },
     computed: {
       classId() {
