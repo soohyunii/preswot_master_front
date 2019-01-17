@@ -105,6 +105,21 @@ export default {
     const uniNameLists=await masterService.getUniNameLists();
     vm.universityNameList = uniNameLists.data.map(element=>element.name);
   },
+  watch:{
+    list: async function(val, oldVal){
+      console.log('change!');
+      const vm=this;
+      /*const res = await masterService.getBankLists({university_name:vm.chosen});
+      for(let i=0; i<res.data.length; i++){
+        console.log('res.data[i].user.department_name=',res.data[i].user.department_name);
+        if(res.data[i].user.department_name==null){
+          console.log('null값 찍힘');
+          res.data[i].user.department_name='소속없음'
+        }
+      }
+      vm.list=res.data;*/
+    }
+  },
   methods: {
     ...mapActions('NNclass', [
       'getClassLists',
@@ -227,7 +242,17 @@ export default {
       const deptNameList = await masterService.getDeptLists({name : vm.chosen});
       vm.departmentNameList = deptNameList.data.map(element=>element.name);
       const res = await masterService.getBankLists({university_name:vm.chosen});
+      for(let i=0; i<res.data.length; i++){
+        console.log('res.data[i].user.department_name=',res.data[i].user.department_name);
+        if(res.data[i].user.department_name==null){
+          console.log('null값 찍힘');
+          res.data[i].user.department_name='소속없음'
+        }
+      }
+      console.log('vm.list인식1111111111111111');
       vm.list=res.data;
+      console.log('vm.list인식22222222222222');
+
     },
     async showChange(){
       const vm=this;
@@ -235,6 +260,13 @@ export default {
       // vm.sublist=res.data;
       // vm.sublist=vm.list.map(element=>element.teacher_groups.map(element=> element.email_id));
       // vm.list=vm.sublist.map(element=>element.bank_group.name);
+      for(let i=0; i<res.data.length; i++){
+        console.log('res.data[i].user.department_name=',res.data[i].user.department_name);
+        if(res.data[i].user.department_name==null){
+          console.log('null값 찍힘');
+          res.data[i].user.department_name='소속없음'
+        }
+      }
       vm.list=res.data;
 
       /*const prop

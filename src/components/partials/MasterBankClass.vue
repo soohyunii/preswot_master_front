@@ -6,7 +6,7 @@
       </el-table-column> -->
       <!-- <el-table-column prop="bank_id" label="ID" width="50">
         <template slot-scope="scope">
-          {{ (pageNum - 1) * 10 + (scope.$page + 1) }}
+          {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
         </template>
       </el-table-column> -->
       <el-table-column prop="bank_group.name" label="그룹명" width="200px">
@@ -88,6 +88,9 @@ export default {
       },
       groupNameArray: [],
       spanArray: [],
+      departmentArray:[],
+      deptNameArray:[],
+      /*tempNumArray:[],*/
       /*tempArray: [{
         rowspan: 2,
         colspan: 1,
@@ -137,6 +140,12 @@ export default {
     // 연산
     // vm.tempArray = [];
   },
+  async mounted(){
+    const vm=this;
+    console.log('mounted!');
+
+
+  },
   watch:{
     /*setSpanMethod: function(val,oldVal){
       const vm=this;
@@ -150,6 +159,7 @@ export default {
       console.log('watch속성');
       console.log('val==',val);
       console.log('oldVal==',oldVal);
+      console.log('초기 vm.page==', vm.page); 
       // vm.objectSpanMethod()
       vm.groupNameArray = vm.page.map(x => x.bank_group.name);
       console.log('vm.groupNameArray==',vm.groupNameArray);
@@ -188,13 +198,7 @@ export default {
           }
         });
         console.log('vm.spanArray = ', vm.spanArray);
-        // console.log('vm.spanArrayTemp = ', vm.spanArrayTemp);
     },
-    /*objectSpanMethod:function(val, oldVal){
-      const vm=this;
-      console.log('watch속성');
-      vm.objectSpanMethod()
-    },*/ 
   },
   methods: {
     async bankDelete(group_id){
