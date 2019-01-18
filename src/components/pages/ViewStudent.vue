@@ -194,6 +194,11 @@ export default {
       const deptNameLists = await masterService.getDeptLists({name: vm.chosen});
       vm.department_list = await deptNameLists.data.map(element=>element.name);
       const res = await masterService.getUserLists(type,university_name);
+      for(let i=0; i<res.data.length; i++){
+        if(res.data[i].department_name==null){
+          res.data[i].department_name='소속없음'
+        }
+      }
       vm.list= res.data;
       console.log('vm.list',vm.list);
       console.log('1111111111'); 

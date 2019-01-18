@@ -48,7 +48,6 @@
             <el-button type="danger" @click="classDelete(scope.row.class_id)" class="delete-btn">삭제</el-button>
           </template>
         </el-table-column>
-
       </el-table>
       
       <br>

@@ -271,9 +271,9 @@ export default {
   .detail_horizon2{
     position: relative;
     top: -23px;
-    left: 285px;
+    left: 170px;
     /*border:1px solid green;*/
-    width:250px;
+    width:150px;
     // margin-bottom:5px;
     /*margin-top:5px;
     width:470px;*/
@@ -289,10 +289,10 @@ export default {
   .detail_horizon4{
     position:relative;
     top:-23px;
-    left:280px;
-    width:300px;
+    left:125px;
+    width:100px;
     // margin-bottom:5px;
-    // border:1px solid red;
+    /*border:1px solid red;*/
   }
   .detail_bottom{
     margin-top:-15px;

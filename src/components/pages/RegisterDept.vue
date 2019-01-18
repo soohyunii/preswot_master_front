@@ -113,9 +113,11 @@ export default {
       const res = await masterService.getMasterDept({ university_name: vm.uniName, name: vm.deptName });
       console.log('getMasterDept : res======================',res);
       //vm.input.uniNameList = res.data.uniNameList || vm.initialInput.uniNameList;
-      vm.input.uniNameList = res.data.university.name || vm.initialInput.uniNameList;
+      // vm.input.uniNameList = res.data.university.name || vm.initialInput.uniNameList;
+      vm.$set(vm.input, 'uniNameList', res.data.university.name || vm.initialInput.uniNameList);
       vm.input.code = res.data.code || vm.initialInput.code;
-      vm.input.name = res.data.name || vm.initialInput.name;
+      vm.input.name = res.data.university.name || vm.initialInput.name;
+      /*vm.input.name = res.data.name;*/
       vm.input.part = res.data.part || vm.initialInput.part;
       vm.input.manager_name = res.data.manager_name || vm.initialInput.manager_name;
       vm.input.manager_email = res.data.manager_email || vm.initialInput.manager_email;
@@ -161,9 +163,11 @@ export default {
         // TODO: valid === false인 경우에 notify
         if (vm.isEdit) {
           const res = await masterService.getMasterDept({university_name: vm.uniName, name: vm.deptName});
+          /*const id = vm.uniName;*/
           const old_name = res.data.name;
-          console.log('old_name',old_name);
-          // TODO: wrap with try catch
+          /*console.log('id======',id);*/
+          /*console.log('old_name',old_name);
+          console.log('vm.input.name',vm.input.name);*/
           try {
             await masterService.NNMasterputDept({
               old_name,
@@ -190,13 +194,6 @@ export default {
                 duration: 0, 
               });
             } else {
-/*              console.log('$$$$$$$$$$$$$',vm.input.uniNameList);
-              console.log('$$$$$$$$$$$$$',vm.input.code);
-              console.log('$$$$$$$$$$$$$',vm.input.name);
-              console.log('$$$$$$$$$$$$$',vm.input.part);
-              console.log('$$$$$$$$$$$$$',vm.input.manager_name);
-              console.log('$$$$$$$$$$$$$',vm.input.manager_email);
-              console.log('$$$$$$$$$$$$$',vm.input.manager_phone_number);*/
               vm.$router.push('/a/register/dept/success');
 
             }

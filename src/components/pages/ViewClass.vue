@@ -166,6 +166,11 @@ export default {
     console.log('vm.list',vm.list);*/
     /*console.log('mounted() 호출');*/
   },
+  watch:{
+    list: async function(val,oldVal){
+      console.log('ViewClass Watch is here');
+    }
+  },
   methods: {
     ...mapActions('NNclass', [
       'getClassLists',
@@ -259,19 +264,29 @@ export default {
           res.data[i].start_date=res.data[i].start_date.split("T")[0];
         }
       }*/
+      for(let i=0; i<res.data.length; i++){
+        console.log('res.data[i].isActive==',res.data[i].isActive);
+        if(res.data[i].isActive==true){
+          res.data[i].isActive='비활성화'
+        } else {
+          res.data[i].isActive='활성화'
+        }
+      }
       vm.list = res.data;
       console.log('res.data',res.data);
       console.log('vm.list',vm.list);
     },
-    /*async onChange(end_date_from,end_date_to){
-      const vm=this;
-      const res = await masterService.getClassLists({university_name : vm.uniName,department_name : vm.deptName ,end_date_from : vm.end_date_from ,end_date_to : vm.end_date_to});
-      vm.list = res.data;
-      console.log('vm.list=============',vm.list);
-    },*/
     async showChange(){
       const vm=this;
       const res = await masterService.getClassLists({university_name : vm.chosen,department_name : vm.dept_chosen});
+      for(let i=0; i<res.data.length; i++){
+        console.log('res.data[i].isActive==',res.data[i].isActive);
+        if(res.data[i].isActive==true){
+          res.data[i].isActive='비활성화'
+        } else {
+          res.data[i].isActive='활성화'
+        }
+      }
       vm.list = res.data;
     },
     async toChange(){
@@ -279,6 +294,14 @@ export default {
       const res = await masterService.getClassLists({university_name : vm.chosen,department_name : vm.dept_chosen ,end_date_from : vm.date_from_chosen ,end_date_to : vm.date_to_chosen});
       console.log('vm.uniName==',vm.chosen,'vm.deptName====',vm.dept_chosen);
       console.log('vm.date_from_chosen==',vm.date_from_chosen,'vm.date_to_chosen====',vm.date_to_chosen);
+      for(let i=0; i<res.data.length; i++){
+        console.log('res.data[i].isActive==',res.data[i].isActive);
+        if(res.data[i].isActive==true){
+          res.data[i].isActive='비활성화'
+        } else {
+          res.data[i].isActive='활성화'
+        }
+      }
       vm.list = res.data;
       console.log('vm.list=============',vm.list);
     },
