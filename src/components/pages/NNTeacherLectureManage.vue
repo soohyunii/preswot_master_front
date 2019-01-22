@@ -89,6 +89,7 @@ export default {
     });
     await vm.getLecture({ lectureId: vm.lectureId });
     await vm.getKeywords();
+    console.log(vm.$route);
   },
   beforeRouteLeave(to, from, next) {
     const vm = this;

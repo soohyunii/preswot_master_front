@@ -61,15 +61,15 @@
           <el-progress type="circle" :percentage="presentRate" color="red"></el-progress>
         </el-col>
         <el-col id="unde" :span="6" style="text-align: center;">
-          이해도<br><br>
+          이해도 {{ understandingChange }}<br><br>
           <el-progress type="circle" :percentage="understanding" color="cornflowerblue"></el-progress>
         </el-col>
         <el-col id="part" :span="6" style="text-align: center;">
-          참여도<br><br>
+          참여도{{ participationChange }}<br><br>
           <el-progress type="circle" :percentage="participation" color="orange"></el-progress>
         </el-col>
         <el-col id="conc" :span="6" style="text-align: center;">
-          집중도<br><br>
+          집중도{{ concentrationChange }}<br><br>
           <el-progress type="circle" :percentage="concentration" color="darkseagreen"></el-progress>
         </el-col>
         <!-- 테이블 사라짐. 디자인 심플하게
@@ -117,10 +117,10 @@
         </el-col> -->
       </el-row>
       <!-- 실시간 이해도 참여도 집중도 출석률 그래프 -->
+      <el-button size="small" @click="onClick('ABSENT')">결석자 명단</el-button>
       <el-button v-show="!showGraph" size="small" type="primary" @click="onClick('SHOWGRAPH')">실시간 그래프 보이기</el-button>
       <div v-show="showGraph">
         <line-chart :chartCategories = "chartCategories" :chartData = "chartData" />
-        <el-button size="small" @click="onClick('GRAPH')">임시 그래프 그리기</el-button>
         <el-button size="small" type="primary" @click="onClick('SHOWGRAPH')">실시간 그래프 닫기</el-button>
       </div>
       <div style="height: 30px;" />
@@ -280,10 +280,14 @@
               <el-row :gutter="20" style="height: 400px;">
                 <el-col span="11">
                   <h2>현재 출제 목록</h2>
-                  <el-table :data="nowItemTable" height="300px" style="width: 450px;">
+                  <el-table :data="nowItemTable" height="300px" style="width: 450px;" id="dyTable">
                     <el-table-column label="타입" prop="type" width="50px;" />
                     <el-table-column label="이름" prop="name" />
-                    <el-table-column label="제출 현황" width="100px;" />
+                    <el-table-column label="제출 현황" width="100px;">
+                      <template slot-scope="scope" v-if="scope.row.type === '문항' || scope.row.type === '설문'">
+                        {{ scope.row.submit }} / {{ nowStudent }}
+                      </template>
+                    </el-table-column>
                     <el-table-column label="" width="80px;">
                       <template slot-scope="scope">
                         <el-button type="primary" size="small" @click="itemCurrentState(scope.row)"
@@ -330,8 +334,6 @@
         </div>
       </el-row>
 
-      <!-- 강의 대시보드에서 아이템이 나올 때 겹쳐서 보여줄 영역-->
-
       <br />
       <!--<el-row>
         <el-col :span="3"><strong>현재 강의를 듣고있는 인원</strong></el-col>
@@ -365,7 +367,7 @@
 // FIXME : Failed to execute 'postMessage' on 'DOMWindow': The target origin provided ('<URL>')
 // does not match the recipient window's origin ('<URL>'). 에러 해결
 import { getIdFromURL } from 'vue-youtube-embed';
-// import deepCopy from 'deep-copy';
+import deepCopy from 'deep-copy';
 import lectureService from '../../services/lectureService';
 import classService from '../../services/classService';
 import authService from '../../services/authService';
@@ -378,6 +380,7 @@ import LectureSurveyResult from '../partials/LectureSurveyResult';
 import utils from '../../utils';
 import lectureItemService from '../../services/lectureItemService';
 import LineChart from '../partials/NNLineChart';
+import { join } from 'path';
 
 export default {
   name: 'TeacherLectureLive',
@@ -512,16 +515,21 @@ export default {
       // 현재 출석자, 한번이상 출석자, 결석자 명단 초기화
       vm.presentStudent = 0;
       vm.nowStudent = 0;
-      vm.absentStudent = [];
+      vm.absentStudentList = [];
+      vm.nowStudentList = [];
+      vm.nowStudentIdList = [];
       // 출석자, 결석자 명단 갱신
       jsonMSG.forEach((x) => {
         if (x.current === 1) { // 현재 출석중
           vm.nowStudent += 1;
+          // 현재 출석자 명단
+          vm.nowStudentList.push(`${x.name} (${x.email_id})`);
+          vm.nowStudentIdList.push(x.user_id);
         }
         if (x.in_cnt > 0) { // 한번이라도 출석
           vm.presentStudent += 1;
         } else { // 결석자 명단
-          vm.absentStudent.push(x.name);
+          vm.absentStudentList.push(x.name);
         }
       });
       // 실시간 출석률
@@ -548,34 +556,121 @@ export default {
         });
         vm.answerList.push(itemRes);
       });
+      vm.nowItemTable.forEach((z) => {
+        vm.itemNumberList.forEach((v, index) => {
+          if (z.lecture_item_id === v) {
+            z.submit = vm.answerList[index].length; // eslint-disable-line
+          }
+        });
+      });
+      // 실시간 반영 위해서 넣은 의미 없는 코드
+      const trash = vm.nowStudent;
+      vm.nowStudent = 0;
+      vm.nowStudent = trash;
     });
 
-    // 60초마다 주기적으로 대시보드 학생의 정보 받아옴
+    // 60초마다 주기적으로 대시보드 출석률, 이해도, 참여도, 집중도 갱신
     vm.timeInterval = window.setInterval(() => {
-      // console.log('60초');
       // 1분 단위 출석률 변화 계산
       const dis = vm.presentRate - vm.presentRate1;
       if (dis === 0) {
         vm.presentRateChange = '';
       } else if (dis > 0) {
-        vm.presentRateChange = `+${dis}%`;
+        vm.presentRateChange = `+${(dis).toFixed(1)}%`;
       } else if (dis < 0) {
-        vm.presentRateChange = `${dis}%`;
+        vm.presentRateChange = `${(dis).toFixed(1)}%`;
       }
       // 출석률 변화에 따라 색상 변화
       const pres = document.getElementById('pres');
-      if (dis > 30) { // 30% 이상 증가
+      if (dis >= 25) { // 25% 이상 증가
         pres.style.color = 'blue';
-      } else if (dis > 10) { // 10~30% 증가
+      } else if (dis >= 10) { // 10~25% 증가
         pres.style.color = 'green';
-      } else if (dis > -10) { // -10~10%
+      } else if (dis >= -5) { // -5~10%
         pres.style.color = 'black';
-      } else if (dis > -20) { // 10%~20% 감소
+      } else if (dis >= -20) { // -5%~20% 감소
         pres.style.color = 'orange';
       } else { // 20% 이상 감소
         pres.style.color = 'red';
       }
       vm.presentRate1 = vm.presentRate;
+      // 그래프 그리기
+      const minute = vm.chartCategories.length;
+      vm.chartCategories.push(`${minute}분`);
+      vm.chartData[0].push(vm.understanding);
+      vm.chartData[1].push(vm.participation);
+      vm.chartData[2].push(vm.concentration);
+      vm.chartData[3].push(vm.presentRate);
+      // 1분 단위 참여도 변화 계산
+      const dis1 = vm.participation - vm.participationPast;
+      if (dis1 === 0) {
+        vm.participationChange = '';
+      } else if (dis1 > 0) {
+        vm.participationChange = `+${(dis1).toFixed(1)}%`;
+      } else if (dis1 < 0) {
+        vm.participationChange = `${(dis1).toFixed(1)}%`;
+      }
+      // 참여도 변화에 따라 색상 변화
+      const part = document.getElementById('part');
+      if (dis1 >= 25) { // 25% 이상 증가
+        part.style.color = 'blue';
+      } else if (dis1 >= 10) { // 10~25% 증가
+        part.style.color = 'green';
+      } else if (dis1 >= -5) { // -5~10%
+        part.style.color = 'black';
+      } else if (dis1 >= -20) { // -5%~20% 감소
+        part.style.color = 'orange';
+      } else { // 20% 이상 감소
+        part.style.color = 'red';
+      }
+      // 1분 단위 이해도 변화 계산
+      const dis2 = vm.understanding - vm.understandingPast;
+      if (dis2 === 0) {
+        vm.understandingChange = '';
+      } else if (dis2 > 0) {
+        vm.understandingChange = `+${(dis2).toFixed(1)}%`;
+      } else if (dis2 < 0) {
+        vm.understandingChange = `${(dis2).toFixed(1)}%`;
+      }
+      // 이해도 변화에 따라 색상 변화
+      const unde = document.getElementById('unde');
+      if (dis2 >= 25) { // 25% 이상 증가
+        unde.style.color = 'blue';
+      } else if (dis2 >= 10) { // 10~25% 증가
+        unde.style.color = 'green';
+      } else if (dis2 >= -5) { // -5~10%
+        unde.style.color = 'black';
+      } else if (dis2 >= -20) { // -5%~20% 감소
+        unde.style.color = 'orange';
+      } else { // 20% 이상 감소
+        unde.style.color = 'red';
+      }
+      // 1분 단위 집중도 변화 계산
+      const dis3 = vm.concentration - vm.concentrationPast;
+      if (dis3 === 0) {
+        vm.concentrationChange = '';
+      } else if (dis3 > 0) {
+        vm.concentrationChange = `+${(dis3).toFixed(1)}%`;
+      } else if (dis3 < 0) {
+        vm.concentrationChange = `${(dis3).toFixed(1)}%`;
+      }
+      // 집중도 변화에 따라 색상 변화
+      const conc = document.getElementById('conc');
+      if (dis3 >= 25) { // 25% 이상 증가
+        conc.style.color = 'blue';
+      } else if (dis3 >= 10) { // 10~25% 증가
+        conc.style.color = 'green';
+      } else if (dis3 >= -5) { // -5~10%
+        conc.style.color = 'black';
+      } else if (dis3 >= -20) { // -5%~20% 감소
+        conc.style.color = 'orange';
+      } else { // 20% 이상 감소
+        conc.style.color = 'red';
+      }
+      // 현재 값 따로 저장
+      vm.participationPast = vm.participation;
+      vm.concentrationPast = vm.concentration;
+      vm.understandingPast = vm.understanding;
     }, 60000);
   },
   mounted() {
@@ -611,12 +706,17 @@ export default {
       totalStudent: 0, // 총 수강인원
       presentStudent: 0, // 출석인원
       nowStudent: 0, // 현재 인원
-      absentStudent: [], // 결석자 명단
+      nowStudentList: [], // 현재 출석자 명단
+      nowStudentIdList: [], // 현재 출석자 ID 명단
+      absentStudentList: [], // 결석자 명단
       presentRate: 0, // 현재 출석률
       presentRate1: 0, // 1분마다 변경되는 출석률
-      concentration: 75, // 현재 집중도
-      participation: 92, // 현재 참여도
-      understanding: 66, // 현재 이해도
+      concentration: 0, // 현재 집중도
+      participation: 0, // 현재 참여도
+      understanding: 0, // 현재 이해도
+      concentrationPast: 0, // 이전 집중도
+      participationPast: 0, // 이전 참여도
+      understandingPast: 0, // 이전 이해도
       presentRateChange: '', // 출석률 변화
       concentrationChange: '', // 집중도 변화
       participationChange: '', // 참여도 변화
@@ -634,8 +734,8 @@ export default {
       leftStepNav: 0, // 스텝 네비게이션에서 왼쪽의 남은 아이템
       rightStepNav: 0, // 스텝 네비게이션에서 오른쪽의 남은 아이템
       stepDataNav: [], // 아이템이 5개 이상일 경우, 나눠서 보여줘야 함
-      chartCategories: ['1분'],
-      chartData: [['이해도', 75], ['참여도', 92], ['집중도', 66], ['출석률', 80]],
+      chartCategories: ['시작'],
+      chartData: [['이해도', 0], ['참여도', 0], ['집중도', 0], ['출석률', 0]],
       timeInterval: '', // timeInterval 위한 변수
       answerList: [], // 학생들의 문항 제출 결과
       showGraph: false, // 실시간 그래프 보일지
@@ -708,8 +808,10 @@ export default {
           vm.itemTable[vm.activeNum].forEach((x) => {
             if (x.type === 0) {
               x.type = '문항'; // eslint-disable-line
+              x.submit = 0; // eslint-disable-line
             } else if (x.type === 1) {
               x.type = '설문'; // eslint-disable-line
+              x.submit = 0; // eslint-disable-line
             } else if (x.type === 2) {
               x.type = '실습'; // eslint-disable-line
             } else if (x.type === 3) {
@@ -738,17 +840,113 @@ export default {
             });
             break;
           }
-          vm.stepData[vm.activeNum].status = 'success';
-          vm.activeNum += 0.5;
-          vm.nowItemTable = [];
-          const paramsi = {
-            lecture_id: vm.lectureId,
-            group_id: vm.nowGroup,
-          };
-          vm.$socket.emit('LECTURE_GROUP_DEACTIVATION', JSON.stringify(paramsi));
-          vm.nowGroup = -1;
-          vm.tabShow = false;
-          vm.activeTab = 'select';
+          // 미제출자 명단 띄우기 & 내릴지 재확인
+          let notSubmit = '';
+          const notSubmitList = [];
+          vm.nowItemTable.forEach((x) => {
+            const tmpSubmitList = [];
+            if (x.typein === '문항' || x.typein === '설문') {
+              // 문항이나 설문이라면
+              if (vm.itemNumberList.includes(x.lecture_item_id) === true) {
+                // 한 명이라도 제출을 했다면 answerlist 존재
+                const ln = vm.itemNumberList.indexOf(x.lecture_item_id);
+                vm.answerList[ln].forEach((y) => {
+                  const namePlusId = `${y.name} (${y.email_id})`;
+                  tmpSubmitList.push(namePlusId);
+                });
+                // 제출 현황 모두 보고나서 안 낸 사람 체크
+                vm.nowStudentList.forEach((z) => {
+                  if (tmpSubmitList.includes(z) === false) {
+                    // 안 냈다면
+                    if (notSubmitList.includes(z) === false) {
+                      // 안 낸 사람 리스트에 없다면 추가
+                      notSubmitList.push(z);
+                    }
+                  }
+                });
+              } else {
+                // 한 명도 제출 안한 아이템이 있다면
+                notSubmit = '아직 한 명도 제출하지 않은 아이템이 있습니다.';
+              }
+            }
+          });
+          // 미제출자 명단 만들기
+          if (notSubmit === '') {
+            notSubmitList.forEach((x) => {
+              if (notSubmit === '') {
+                notSubmit = `미제출자 명단: ${x}`;
+              } else {
+                notSubmit = notSubmit.concat(`, ${x}`);
+              }
+            });
+          }
+          vm.$confirm(notSubmit, '아이템 내리기', {
+            confirmButtonText: '내리기',
+            cancelButtonText: '취소',
+            type: 'warning',
+          }).then(() => {
+            // 아이템 내리기
+            vm.stepData[vm.activeNum].status = 'success';
+            vm.activeNum += 0.5;
+            const paramsi = {
+              lecture_id: vm.lectureId,
+              group_id: vm.nowGroup,
+            };
+            vm.$socket.emit('LECTURE_GROUP_DEACTIVATION', JSON.stringify(paramsi));
+            vm.nowGroup = -1;
+            vm.tabShow = false;
+            vm.activeTab = 'select';
+            // 서버에 이해도 값 요청해서 받아오기
+            const para = {
+              lecture_id: vm.lectureId,
+            };
+            let totalUnd = 0; // 이해도 합산
+            let totalAns = 0; // 답안 수
+            vm.$socket.emit('REAL_TIME_INFO', JSON.stringify(para));
+            vm.$socket.on('REAL_TIME_INFO', (msg) => {
+              const jsonMSG = JSON.parse(msg);
+              jsonMSG.forEach((x) => {
+                if (x.type === 0) { // 문항에 대해서만
+                  totalUnd += x.ratio;
+                  totalAns += 1;
+                }
+              });
+              if (totalAns === 0) { // 답안이 없는 경우 - NaN
+                vm.understanding = 0;
+              } else {
+                vm.understanding = ((totalUnd / totalAns) * 100).toFixed(1);
+              }
+            });
+
+            // 현재 아이템 제출 결과들로 참여도 구하기
+            let submitN = 0;
+            let questionN = 0;
+            vm.nowItemTable.forEach((x) => {
+              vm.itemNumberList.forEach((y, index) => {
+                if (x.lecture_item_id === y) {
+                  submitN += vm.answerList[index].length;
+                  questionN += 1;
+                }
+              });
+            });
+            // 분모 - 문항or설문의 총 수 * 현재 참여자 수
+            const totalN = questionN * vm.nowStudent;
+            // 참여도 구하기
+            let participate = ((submitN / totalN) * 100).toFixed(1);
+            if (participate > 100) {
+              // 문제를 풀고 이탈한 학생이 있을 경우, 참여도가 100%보다 큰 값으로 나올 수 있음
+              // 이 경우 참여도 100%로 조정
+              participate = 100.0;
+            }
+            if (totalN === 0) { // NaN인 경우
+              participate = 0;
+            }
+            vm.participation = participate;
+            vm.nowItemTable = [];
+            return; // eslint-disable-line
+          }).catch(() => { // eslint-disable-line
+            return; // eslint-disable-line
+          });
           break;
         }
         // 전체 아이템 확인
@@ -765,29 +963,11 @@ export default {
           });
           break;
         }
-        // 임시 그래프 그리기 - 삭제 예정
-        case 'GRAPH': {
-          const len = vm.chartCategories.length;
-          // ..그 아래에
-          vm.chartCategories.push(`${len + 1}분`);
-          vm.chartData.forEach((x) => {
-            const rn = Math.floor(Math.random() * 20) - 9;
-            let rm = x[x.length - 1] + rn;
-            if (rm > 100) {
-              rm = 100;
-            } else if (rm < 0) {
-              rm = 0;
-            }
-            x.push(rm);
-          });
-          break;
-        }
         // 제출현황은 실시간으로 바뀌어야 함
-        // ㅇㅇ ㅂㅆㄷ ㅇㅇ ㅍㅈ ㅇㅇ ㅊ ㅇㅇ ㅈㅇㅋ ㅇㅇ ㅇ ㅇㅇ ㅍㅋ ㅇㅇ ㅅㅌㅇㅂㅇㄷㅂ ㅇㅇ ㅅ ㅇㅇ ㅈ
         // 결석자 명단 확인
         case 'ABSENT': {
           let whoIsAbsent = '';
-          vm.absentStudent.forEach((x) => {
+          vm.absentStudentList.forEach((x) => {
             if (whoIsAbsent === '') {
               whoIsAbsent = x;
             } else {
@@ -801,8 +981,7 @@ export default {
             return; // eslint-disable-line
           });
           break;
-        } // ㅇㅍㅋㄹ
-        // 어떻게 해결법을 찾을지가 관건
+        }
         // 실시간 그래프 보일지
         case 'SHOWGRAPH': {
           if (vm.showGraph === true) {
@@ -838,18 +1017,38 @@ export default {
       vm.selectStatus = [];
       vm.submitStatus = [];
       vm.notyetStatus = '';
+      // 아직 제출 현황이 없다면
       if (vm.itemNumberList.includes(parseInt(data.lecture_item_id, 10)) === false) {
-        // 아직 제출 현황이 없다면
+        vm.notyetStatus = '아직 제출한 학생이 없습니다.';
+        vm.questionAnswerFix = false;
         return;
       }
+      vm.questionAnswerFix = true;
+      // answerList의 몇번째 인덱스에 해당하는지
       const ln = vm.itemNumberList.indexOf(parseInt(data.lecture_item_id, 10));
-      // console.log(data);
-      // console.log(vm.answerList[ln]);
-      // 미제출자 고려 - 전부
-      // vm.notyetStatus
 
-      // 답안 제출 현황 - 문항 - 객관, 단답 / 설문 - 객관만 고려
-      if (data.typein === '문항') {
+      // 미제출자 고려 - 문항 전부 / 설문 전부
+      const tmpNowStudent = deepCopy(vm.nowStudentList);
+      const tmpNowStudentId = deepCopy(vm.nowStudentIdList);
+      vm.answerList[ln].forEach((x) => {
+        // 제출 목록에 이름이 있는 학생들 제외하고
+        if (tmpNowStudentId.includes(x.user_id) === true) {
+          const lm = tmpNowStudentId.indexOf(x.user_id);
+          tmpNowStudentId.splice(lm, 1);
+          tmpNowStudent.splice(lm, 1);
+        }
+      });
+      // 남은 학생을 미제출자로
+      tmpNowStudent.forEach((x) => {
+        if (vm.notyetStatus === '') {
+          vm.notyetStatus = x;
+        } else {
+          vm.notyetStatus = vm.notyetStatus.concat(`, ${x}`);
+        }
+      });
+
+      // 답안 제출 현황 - 문항 & 설문 - 객관만 고려
+      if (data.typein === '문항') { // 문항 - 객관
         lectureItemService.getLectureItem({
           lectureItemId: data.lecture_item_id,
         }).then((res) => {
@@ -882,28 +1081,57 @@ export default {
             vm.questionAnswerFix = false;
           }
         });
+      } else if (data.typein === '설문') { // 설문 - 객관
+        lectureItemService.getLectureItem({
+          lectureItemId: data.lecture_item_id,
+        }).then((res) => {
+          if (res.data.surveys[0].type === 0) {
+            // 객관식 설문이라면
+            vm.questionAnswerFix = true;
+            const totNum = vm.answerList[ln].length;
+            res.data.surveys[0].choice.forEach((x, index) => {
+              const ans = {}; // 결과 데이터
+              ans.answer = x;
+              let ansNum = 0;
+              // 몇 명이 선택했나 계산
+              vm.answerList[ln].forEach((y) => {
+                if (y.answer.includes(index) === true) {
+                  // 해당 답을 선택했다면
+                  ansNum += 1;
+                }
+              });
+              const percent = ((ansNum / totNum) * 100).toFixed(1);
+              ans.num = `${ansNum} / ${totNum} (${percent}%)`;
+              vm.selectStatus.push(ans);
+            });
+          } else {
+            // 객관식이 아니라면
+            vm.questionAnswerFix = false;
+          }
+        });
       }
 
-      // vm.selectStatus
-
       // 몇번 제출 - 전부
-      // vm.submitStatus
-
-      vm.submitStatus = [
-        {
-          submit: '1회',
-          num: '25 / 50 (50%)',
-        }, {
-          submit: '2회',
-          num: '13 / 50 (26%)',
-        }, {
-          submit: '3회',
-          num: '7 / 50 (14%)',
-        }, {
-          submit: '4회 이상',
-          num: '3 / 50 (6%)',
-        },
-      ];
+      const howManySubmit = [0, 0, 0, 0];
+      vm.answerList[ln].forEach((x) => {
+        if (x.count === 0) {
+          howManySubmit[0] += 1;
+        } else if (x.count === 1) {
+          howManySubmit[1] += 1;
+        } else if (x.count === 2) {
+          howManySubmit[2] += 1;
+        } else {
+          howManySubmit[3] += 1;
+        }
+      });
+      const totNum = howManySubmit[0] + howManySubmit[1] + howManySubmit[2] + howManySubmit[3];
+      howManySubmit.forEach((y, index) => {
+        const sub = {};
+        sub.submit = `${index + 1}회`;
+        const per = ((y / totNum) * 100).toFixed(1);
+        sub.num = `${y} / ${totNum} (${per}%)`;
+        vm.submitStatus.push(sub);
+      });
     },
     beforeLeave() {
       const vm = this;
@@ -1030,16 +1258,15 @@ export default {
 .statusbar.activeInfo{
   max-height: 85%;
 }
-#table_design {
+#table_designs {
   border-collapse: collapse;
   text-align: center;
   line-height: 1.5;
   border-top: 1px solid #321;
   border-bottom: 1px solid #321;
   border-block-end: 1px solid #321;
-  width: 200px;
 }
-#table_design tbody td {
+#table_designs tbody td {
   border-block-start: 1px solid #321;
   border-left: 1px solid #321;
   border-right: 1px solid #321;

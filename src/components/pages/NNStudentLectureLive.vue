@@ -243,6 +243,14 @@ export default {
       vm.$socket.emit('HEART_BEAT', JSON.stringify(params2));
     }, 3000);
     */
+   // 강사가 학생보다 나중에 들어올 경우
+    vm.$socket.on('LECTURE_TEACHER_JOIN', () => {
+      const parami = {
+        lecture_id: vm.lectureId,
+        user_id: utils.getUserIdFromJwt(),
+      };
+      vm.$socket.emit('JOIN_LECTURE', JSON.stringify(parami));
+    });
     if (vm.lectureType === 0) {
       vm.$socket.on('RELOAD_LECTURE_ITEMS', (msg) => {
         const jsonMSG = JSON.parse(msg);
@@ -785,7 +793,7 @@ export default {
         } else if (vm.lectureType === 0) {
           vm.lectureItem = [];
         }
-
+        
         // 아이템이 여러 개일 경우 처리
         if (vm.lectureItem.length > 1) {
           vm.lectureItems.push(vm.lectureItem[0]);

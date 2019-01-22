@@ -104,15 +104,18 @@ export default {
   deleteConnection({ lectureItemId }) {
     return http.delete(`/lecture-items/linked_list/${lectureItemId}`);
   },
-  makeGroup({ lectureId, iList }) {
+  makeGroup({ lectureId, iList, start, end }) {
     const itemList = iList;
     let list = itemList[0];
     itemList.splice(0, 1);
     itemList.forEach((x) => {
       list = list + '<$!<>' + x; // eslint-disable-line
     });
+    list = list.toString();
     return http.post(`/lecture-items/${lectureId}/group`, {
       list: list, // eslint-disable-line
+      start: start, // eslint-disable-line
+      end: end, // eslint-disable-line
     });
   },
   showGroup({ lectureId }) {

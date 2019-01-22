@@ -432,7 +432,7 @@ export default {
     margin: 20px 10px;
 }
 #table_design thead {
-    width: 150px;
+    width: 350px;
     padding: 10px;
     vertical-align: top;
     color: #111;

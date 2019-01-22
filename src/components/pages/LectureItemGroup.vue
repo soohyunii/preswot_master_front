@@ -30,6 +30,9 @@
     </div>
     <div v-if="ifGroupMode">
       <el-tag v-for="(k, index) in newGroupList" :key="index">{{ k.name }}</el-tag>
+      <el-time-picker v-model="startTime" placeholder="활성화 시간" style="width: 180px;" default-value="0" />
+      ~
+      <el-time-picker v-model="endTime" placeholder="비활성화 시간" style="width: 180px;" default-value="0" />
       <el-button type="primary" @click="onClick('GROUP_LC_ITEM')">
         그룹화
       </el-button>
@@ -46,6 +49,8 @@
             <el-tag v-for="(k, index) in scope.row.list" :key="index">{{ k.name }}</el-tag>
           </template>
         </el-table-column>
+        <el-table-column label="활성화 시간" v-if="lectureType !== 0" width="150px" prop="start" />
+        <el-table-column label="비활성화 시간" v-if="lectureType !== 0" width="150px" prop="end" />
         <el-table-column width="150px">
           <template slot-scope="scope">
             <el-button @click="onClick('DELETE_GROUP', scope.row)">그룹화 해제</el-button>
@@ -89,6 +94,9 @@ export default {
                   '섞여 같이 보여집니다. 연결되어 있는 아이템은 순서가 유지됩니다. ' +
                   '단독으로 보여줄 아이템은 단독으로 그룹화해주세요.',
       }],
+      lectureType: '', // 0-유인 1-무인단체 2-무인개인
+      startTime: '', // 무인강의에서 지정해 줄 아이템 시작시간
+      endTime: '', // 무인강의에서 지정해 줄 아이템 끝시간
     };
   },
   async created() {
@@ -174,6 +182,17 @@ export default {
     });
     */
 
+    // lecture type === 0-유인 1-무인단체 2-무인개인
+    const tm = await lectureService.getLecture({
+      lectureId: vm.lectureId,
+    });
+    vm.lectureType = tm.data.type;
+
+    const staT = new Date(tm.data.start_time);
+    const endT = new Date(tm.data.end_time);
+    const diffT = (endT - staT) / 1000; // 단위는 초
+    console.log(diffT);
+
     // 아이템 리스트 만들기
     let lin = [];
     vm.itemList.forEach((x) => {
@@ -238,6 +257,18 @@ export default {
         const tempt = {};
         tempt.gid = x.group_id;
         tempt.list = [];
+        if (vm.lectureType !== 0) { // 무인강의일 경우
+          const s = x.start;
+          const e = x.end;
+          let sS = s % 60;
+          const sM = (s - sS) / 60;
+          let eS = e % 60;
+          const eM = (e - eS) / 60;
+          if (sS < 10) { sS = `0${sS}`; }
+          if (eS < 10) { eS = `0${eS}`; }
+          tempt.start = `${sM}:${sS}`;
+          tempt.end = `${eM}:${eS}`;
+        }
         x.list_ids.forEach((y) => {
           vm.itemList.forEach((z) => {
             if (z.listId === parseInt(y, 10)) {
@@ -261,6 +292,27 @@ export default {
             vm.$notify({
               title: '알림',
               message: '그룹화할 아이템을 선택해 주세요.',
+              type: 'warning',
+            });
+            break;
+          }
+          // 시간 설정 안했을 경우 오류 메시지
+          if (vm.startTime === '' || vm.endTime === '') {
+            vm.$notify({
+              title: '알림',
+              message: '아이템의 활성화 시간과 비활성화 시간을 설정해 주세요.',
+              type: 'warning',
+            });
+            break;
+          }
+          // 아이템 그룹의 활성화 시간과 비활성화 시간 설정
+          const startT = (vm.startTime.getTime() / 1000) - 946652400;
+          const endT = (vm.endTime.getTime() / 1000) - 946652400;
+          // 아이템 활성화 시간이 비활성화 시간보다 늦다면 아이템이 종료되지 않음 -> 막아야 함
+          if (startT > endT) {
+            vm.$notify({
+              title: '알림',
+              message: '아이템 활성화 시간이 비활성화 시간보다 늦습니다.',
               type: 'warning',
             });
             break;
@@ -294,6 +346,8 @@ export default {
           lectureItemService.makeGroup({
             lectureId: vm.lectureId,
             iList: tmp,
+            start: startT,
+            end: endT,            
           }).then(() => {
             // 성공했을 경우 알림 메시지
             vm.$notify({
@@ -338,6 +392,8 @@ export default {
         case 'CANCEL_GROUP_MODE': {
           vm.ifGroupMode = false;
           vm.newGroupList = [];
+          vm.startTime = '';
+          vm.endTime = '';
           break;
         }
         // 뒤로 가기
