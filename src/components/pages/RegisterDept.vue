@@ -10,10 +10,9 @@
     <el-form :model="input" ref="elForm" label-position="left" label-width="125px" style="max-width: 800px;" class="elForm-label">
       <el-form-item label="소속대학 선택">
         <el-select v-model="input.uniNameList" style="width:200px;">
-          <!-- <option disabled value="">대학 선택</option> -->
-          <!-- <option v-model="input.uniNameList" v-for="uniNameList in input.uniNameLists" v-bind:selected="input.uniNameLists">{{uniNameList}}</option> -->
           <el-option 
             v-for="uniNameList in input.uniNameLists"
+            :key="uniNameList"
             :label="uniNameList"
             :value="uniNameList">
           </el-option>
@@ -74,7 +73,6 @@ export default {
   name: 'RegisterDept',
   async created() {
     const vm = this;
-    // 학생이 url로 접근하는 경우 방지
     const accessId = utils.getUserIdFromJwt();
     const accessCheck = await authService.returnUserInfo({
       userID: accessId,
@@ -85,7 +83,6 @@ export default {
   },
   data() {
     const initialInput = {
-      // uniNameLists: masterService.getUniNameLists(),
       uniNameLists: '',
       code: '',
       name: '',
@@ -96,78 +93,48 @@ export default {
     };
     return {
       initialInput,
-      input: Object.assign({}, initialInput), // 복사해서 넣음
+      input: Object.assign({}, initialInput),
     };
   },
   async mounted() {
     const vm = this;
-    // const uniNameLists = masterService.getUniNameLists();
     const uniNameLists = await masterService.getUniNameLists();
-    // console.log('getUniNameLists@@@@@@= ',masterService.getUniNameLists());
-    // console.log(vm.initialInput.uniNameList);
-    // console.log('!!!!!!!!!!!!!!!!!!!!!!!',uniNameLists.data);
     vm.input.uniNameLists = uniNameLists.data.map(element => element.name);
-    console.log('vm.input.uniNameLists = ', vm.input.uniNameLists);
 
     if (vm.isEdit) {
       const res = await masterService.getMasterDept({ university_name: vm.uniName, name: vm.deptName });
-      console.log('getMasterDept : res======================',res);
-      //vm.input.uniNameList = res.data.uniNameList || vm.initialInput.uniNameList;
-      // vm.input.uniNameList = res.data.university.name || vm.initialInput.uniNameList;
       vm.$set(vm.input, 'uniNameList', res.data.university.name || vm.initialInput.uniNameList);
       vm.input.code = res.data.code || vm.initialInput.code;
       vm.input.name = res.data.university.name || vm.initialInput.name;
-      /*vm.input.name = res.data.name;*/
       vm.input.part = res.data.part || vm.initialInput.part;
       vm.input.manager_name = res.data.manager_name || vm.initialInput.manager_name;
       vm.input.manager_email = res.data.manager_email || vm.initialInput.manager_email;
       vm.input.manager_phone_number = res.data.manager_phone_number || vm.initialInput.manager_phone_number;
-      // 대학선택, 학과코드, 학과명 미입력시 '*는 필수입력사항입니다 알람'
     }
   },
-  /*data: {
-    uniNameLists : masterService.getUniNameLists()
-  },*/
   computed: {
     isEdit() {
       const vm = this;
       return vm.$route.fullPath.includes('/edit');
     },
-    /*classId() {
-      const vm = this;
-      return vm.$route.path.split('class/')[1].split('/edit')[0];
-    },*/
     uniName() {
       const vm = this;
-      // return vm.$route.query.uniName;
-      // return vm.$route.path.split('edit/')[1].split('/${scope.row.name}')[0];
       return vm.$route.path.split('a/')[1].split('/dept')[0];
     },
     deptName() {
       const vm = this;
-      // return vm.$route.path.split('${scope.row.university.name}/')[1];
       return vm.$route.path.split('dept/')[1].split('/edit')[0];
     },
-    /*uniNameSelected() {
-      const vm = this;
-      return vm.input.uniNameLists.options.selected;
-    }*/
   },
   methods: {
     onSubmit() {
       const vm = this;
       vm.$refs.elForm.validate(async (/* valid, part */) => {
-        // console.log('valid,', valid);
-        // console.log('part', part);
         // TODO: if valid === true 로 감싸기
         // TODO: valid === false인 경우에 notify
         if (vm.isEdit) {
           const res = await masterService.getMasterDept({university_name: vm.uniName, name: vm.deptName});
-          /*const id = vm.uniName;*/
           const old_name = res.data.name;
-          /*console.log('id======',id);*/
-          /*console.log('old_name',old_name);
-          console.log('vm.input.name',vm.input.name);*/
           try {
             await masterService.NNMasterputDept({
               old_name,

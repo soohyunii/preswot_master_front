@@ -10,9 +10,6 @@
       <el-table-column prop="code" label="대학코드" width="100">
       </el-table-column>
       <el-table-column prop="name" label="대학명" width="150">
-        <!-- <template slot-scope="scope">
-          {{ scope.$name }}
-        </template> -->
       </el-table-column>
       <el-table-column prop="address" label="주소" width="280">
       </el-table-column>
@@ -32,7 +29,6 @@
 
         <el-table-column>
           <template slot-scope="scope">
-            <!-- <el-button type="danger" @click="listeners['delete'](scope.$name)" class="delete-btn">삭제</el-button> -->
             <el-button type="danger" @click="deleteUniversity(scope.row.name)" class="delete-btn">삭제</el-button>
           </template>
         </el-table-column>
@@ -81,20 +77,12 @@ export default {
           value: 'name',
           label: '대학명',
         },
-        /*{
-          value: 'code',
-          label: '대학코드',
-        }, */
       ],
       searchQuery: [
         {
           searchType: 'name',
           searchText: '',
         },
-        /*{
-          searchType: 'code',
-          searchText: '',
-        },*/
       ],
     };
   },
@@ -128,12 +116,6 @@ export default {
         try{
           await masterService.delete({ name : uniName });
           await location.reload(true);  
-          /*await vm.$notify({
-            title:'대학 삭제 성공',
-            message:'대학 삭제',
-            type:'success',
-            duration:3000,
-          });*/
         } catch(error){
           vm.$notify({
             title:'대학 삭제 실패',

@@ -2,11 +2,6 @@
   <div id="class_index_wrapper">
     <div>
       <el-table class="elTable" :data="page" style="width: 100%">
-      <!-- <el-table-column prop="name" label="ID" width="50">
-        <template slot-scope="scope">
-          {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
-        </template>
-      </el-table-column> -->
       <el-table-column prop="class_id" label="ID" width="50">
         <template slot-scope="scope">
           {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
@@ -16,20 +11,17 @@
       </el-table-column>
       <el-table-column prop="name" label="과목명" width="140">
       </el-table-column>
-      <el-table-column prop="isActive" label="활성화여부" width="120">  <!-- 기본과목(N)/실제과목(Y)/(실제과목 미등록)/ (상세 페이지 화면에서는 좀 더 자세하게:강의,시간,공간 중 무엇을 미등록했는지 알려주는 알림창 필요) -->
+      <el-table-column prop="isActive" label="활성화여부" width="120">
       </el-table-column>
-      <!-- <el-table-column prop="user.name" label="강사" width="110"> -->
       <el-table-column prop="teacher_email_id" label="강사" width="110">
-      <!-- <el-table-column prop="teacher_list.name" label="강사" width="110"> -->
       </el-table-column>
       <el-table-column prop="start_date" :list="list" label="강의시작일" width="160">
       </el-table-column>
       <el-table-column prop="lecture_register" label="강의등록여부" width="160">
-      </el-table-column>  <!-- 등록 / 미등록 -->
+      </el-table-column>
       <el-table-column prop="attend_rate" label="출석률" width="100">
       </el-table-column>
       <el-table-column label="" header-align="left" align="right">
-        <!-- <template slot-scope="scope" v-if="isActive==false"> -->
         <template slot-scope="scope">
             <router-link :to="`/a/view/${scope.row.class_id}/detail`">
               <el-button class="edit-btn">상세</el-button>
@@ -119,42 +111,9 @@ export default {
   },
   async mounted(){
     const vm=this;
-
-    /*const res = await masterService.getMasterClass({class_id:class_id});
-    if(res.data.isActive==false){
-      vm.isActive=false;
-    } else {
-      vm.isActive=true;
-    }*/
-    /*console.log('vm.list[0].teacher_email_id==',vm.list[0].teacher_email_id);
-    var teacherName = new Array();
-    for(var i=0; i<vm.list.length; i++){
-      teacherName[i] = await masterService.getMasterUser({email_id:vm.list[i].teacher_email_id});
-      console.log('teacherName==',teacherName);
-    }*/
-    /*const teacherName = await masterService.getMasterUser({email_id:vm.list.teacher_email_id});
-    console.log('teacherName==',teacherName);*/
-    // vm.list.teacher_email_id=teacherName.data.map(element=>element.name);
   },
   watch:{
     page: 'changeColumn',
-    /*page: function(val, oldVal){
-      const vm=this;
-      vm.dateArray = vm.page.map(x=>x.start_date);
-      for(var i=0;i<vm.dateArray.length;i++){
-        if(vm.dateArray[i].indexOf("T")!==-1){
-          vm.dateArray[i]=vm.dateArray[i].split("T")[0]; 
-          vm.list.start_date=vm.dateArray[i];
-        }
-      }
-      console.log('vm.list.start_date==',vm.list.start_date);
-      if(vm.list.start_date.indexOf("T")!=-1){
-        console.log(vm.list.start_date.indexOf("T"));
-        vm.list.start_date=vm.list.start_date.split("T")[0];
-      }
-      console.log('vm.dateArray==',vm.dateArray);
-      console.log('vm.page.start_date==',vm.list.start_date);
-    }*/
   },
   created() {
     const vm = this;
@@ -166,22 +125,8 @@ export default {
     }
   },
   methods: {
-    // formatDate: utils.formatDate,
     async changeColumn(){
       const vm=this;
-      /*console.log('method 출력!');
-      const res = await masterService.getClassLists({university_name:vm.chosen,department_name:vm.dept_chosen, end_date_from:vm.date_from_chosen, end_date_to:vm.date_to_chosen});
-      console.log('res.data[0].start_date==',res.data[0].start_date);
-      console.log('res.data[0].start_date.indexOf==',res.data[0].start_date.indexOf("T"));
-      for(var i=0;i<res.data.length;i++){
-        console.log('res.data==',res.data);
-        if(res.data.isActive=='false'){
-          if(res.data[i].start_date.indexOf("T")!==-1){
-            res.data[i].start_date=res.data[i].start_date.split("T")[0];
-          }
-        } 
-      }
-      vm.list=res.data;*/
     },
     async classDelete(class_id){
       const vm=this;
@@ -192,14 +137,7 @@ export default {
       })
       .then(async()=> {
         try{
-          // window.location.reload();
           await masterService.classDelete({class_id: class_id});
-          /*await vm.$notify({
-            title:'강의은행 삭제 성공',
-            message:'강의은행 삭제',
-            type:'success',
-            duration:3000,
-          });*/
           await location.reload(true);  
         } catch(error){
           vm.$notify({
@@ -213,7 +151,6 @@ export default {
     },
     async goBack(){
       window.history.back();
-      console.log('back!');
     },
   },
 };
@@ -255,12 +192,5 @@ export default {
     letter-spacing: normal;
     color: #606266;
   }
-  /*.edit-btn-detail {
-    border: 1px solid blue;
-    width:120px;
-    margin-right: 100px;
-  }*/
 }
 </style>
-
-<!-- <el-table-column prop="user.name" label="강사" width="110"> -->

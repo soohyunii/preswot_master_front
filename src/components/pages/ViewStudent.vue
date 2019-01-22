@@ -6,6 +6,7 @@
       <el-select placeholder="대학선택" v-model="chosen" @change="categoryChange(type,chosen)" style="width:200px; top:20px">
         <el-option 
           v-for="university_name in university_list"
+          :key="university_name"
           :label="university_name"
           :value="university_name">
         </el-option>
@@ -15,6 +16,7 @@
       <el-select placeholder="학과선택" v-model="dept_chosen" @change="onChange(type,chosen,dept_chosen)" style="width:200px; top:20px">
         <el-option 
           v-for="department_name in department_list"
+          :key="department_name"
           :label="department_name"
           :value="department_name">
         </el-option>
@@ -50,7 +52,6 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import MasterStudentTable from '../partials/MasterStudentTable';
-// import classService from '../services/classService';
 import utils from '../../utils';
 import masterService from '../../services/masterService';
 
@@ -61,8 +62,6 @@ export default {
   },
   data() {
     return {
-      /*userId: utils.getUserIdFromJwt(),*/
-      /*user_id:'null',*/
       searchType: 'name',
       searchText: '',
       list: [],
@@ -80,12 +79,10 @@ export default {
   },
   async created() {
     const vm = this;
-    const l = console.log;
     const uniNameLists = await masterService.getUniNameLists();
     vm.university_list = await uniNameLists.data.map(element=>element.name);
-    // 새로고침(Refresh, F5) 해도 목록을 가져올 수 있게 하는 부분.
+    // TODO: 새로고침(Refresh, F5) 해도 목록을 가져올 수 있게 하는 부분.
     // TODO: 속도가 눈에 보이게 느려지므로 다른 방법이 있다면 수정 요구.
-    // await vm.getMyClassLists();
 
     // 검색 기능 : 서버에서 DB 쿼리로 처리하는 게 효율이 나을 것 같으면 나중에 수정.
     if (vm.studyingClassList !== null) {
@@ -127,59 +124,6 @@ export default {
           vm.$router.push(`/a/student/NNclass/${arg.class_id}`);
           break;
         }
-        /*
-        case 'CANCEL': {
-          vm.$confirm('정말로 이 학과를 삭제하시겠습니까?', `${arg.name || ''} 수강 취소`, {
-            confirmButtonText: '예, 삭제합니다.',
-            cancelButtonText: '아니요, 삭제하지 않습니다.',
-            type: 'warning',
-          })
-          .then(async () => {
-            try {
-              await vm.deleteClassUser({
-                classId: arg.class_id,
-                userId: vm.userId,
-              });
-
-              vm.$notify({
-                title: '학과 삭제 성공',
-                message: '학과가 삭제됨',
-                type: 'success',
-                duration: 3000,
-              });
-            } catch (error) {
-              vm.$notify({
-                title: '학과 삭제 실패',
-                message: error.toString(),
-                type: 'error',
-                duration: 3000,
-              });
-            }
-
-            try {
-              await vm.getMyClassLists();
-              vm.list.splice(arg2, 1);
-            } catch (error) {
-              vm.$notify({
-                title: '학과 삭제 실패',
-                message: error.toString(),
-                type: 'error',
-                duration: 0,
-              });
-            }
-          })
-          .catch(() => {
-            vm.$notify({
-              title: '중단됨',
-              message: '학과 삭제 중단됨',
-              type: 'info',
-              duration: 3000,
-            });
-          });
-
-          break;
-        }
-        */
         case 'SEARCH': {
           vm.$router.push({ path: '/a/view/student', query: { type: `${arg.searchType}`, text: `${arg.searchText}` } });
           break;
@@ -200,19 +144,11 @@ export default {
         }
       }
       vm.list= res.data;
-      console.log('vm.list',vm.list);
-      console.log('1111111111'); 
-/*      vm.$router.push({path:'/a/view/student', query:{university:`${university_name}`} });*/
-      console.log('222222222222');
     },
     async onChange(type,university_name,department_name){
       const vm=this;
-      console.log('type = ',type);
-      console.log('university_name = ',university_name);
-      console.log('department_name = ',department_name);
       const res = await masterService.getUserLists(type,university_name,department_name);
       vm.list=res.data;
-      console.log(vm.list);
     },
     onClickDelete(index) {
       const vm = this;
@@ -224,7 +160,6 @@ export default {
       })
         .then(async () => {
           try {
-            // const index = vm.currentClassIndex;
             const currentClass = vm.teachingClassList[index];
             await classService.delete({
               id: currentClass.class_id,
@@ -233,7 +168,7 @@ export default {
               teachingClassIndex: index,
             });
           } catch (error) {
-            console.error(error); // eslint-disable-line no-console
+            console.error(error);
             vm.$notify({
               title: '학생 삭제 실패',
               message: error.toString(),
@@ -278,8 +213,6 @@ export default {
     margin-bottom : 25px;
   }
   .el-form{
-    // text-align : left;
-    // position: absolute;
     font-family: SpoqaHanSans;
     font-size: 16px;
     font-weight: normal;
@@ -290,15 +223,12 @@ export default {
     color: #000000;
     width: 300px;
     margin: 20px 0 0 10px;
-    // border:1px solid red;
   }
   #choiceLists #dept{
-    // border: 1px solid blue;
     position: relative;
     top:-60px;
     left: 200px;
     margin-left: 30px;
-    // width: 300px;
   }
 }
 </style>

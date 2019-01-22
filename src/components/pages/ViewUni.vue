@@ -42,8 +42,6 @@ export default {
     };
   },
   computed: {
-    /* ...mapState('MasterUni', ['MasterUni']),
-    */
     ...mapState('MasterUni', ['studyingUniList']),
   },
   async created() {
@@ -54,7 +52,6 @@ export default {
     await vm.getUniLists();
 
     // 검색 기능 : 서버에서 DB 쿼리로 처리하는 게 효율이 나을 것 같으면 나중에 수정.
-    // console.log("studyingUniList= "+vm.studyingUniList);
   
     if (vm.studyingUniList !== null) {
       if (vm.$route.query.type !== undefined) {
@@ -79,11 +76,6 @@ export default {
   },
   methods: {
     ...mapActions('MasterUni', [
-      /*
-      'getClassLists',
-      'getMyClassLists',
-      */
-      /*'deleteClassUser',*/
       'getUniLists',
     ]),
     formatDate: utils.formatDate,
@@ -98,59 +90,6 @@ export default {
           vm.$router.push(`/a/student/NNclass/${arg.class_id}`);
           break;
         }
-        /*
-        case 'CANCEL': {
-          vm.$confirm('정말로 이 학과를 삭제하시겠습니까?', `${arg.name || ''} 수강 취소`, {
-            confirmButtonText: '예, 삭제합니다.',
-            cancelButtonText: '아니요, 삭제하지 않습니다.',
-            type: 'warning',
-          })
-          .then(async () => {
-            try {
-              await vm.deleteClassUser({
-                classId: arg.class_id,
-                userId: vm.userId,
-              });
-
-              vm.$notify({
-                title: '학과 삭제 성공',
-                message: '학과가 삭제됨',
-                type: 'success',
-                duration: 3000,
-              });
-            } catch (error) {
-              vm.$notify({
-                title: '학과 삭제 실패',
-                message: error.toString(),
-                type: 'error',
-                duration: 3000,
-              });
-            }
-
-            try {
-              await vm.getMyClassLists();
-              vm.list.splice(arg2, 1);
-            } catch (error) {
-              vm.$notify({
-                title: '학과 삭제 실패',
-                message: error.toString(),
-                type: 'error',
-                duration: 0,
-              });
-            }
-          })
-          .catch(() => {
-            vm.$notify({
-              title: '중단됨',
-              message: '학과 삭제 중단됨',
-              type: 'info',
-              duration: 3000,
-            });
-          });
-
-          break;
-        }
-        */
         case 'SEARCH': {
           vm.$router.push({ path: '/a/view/uni', query: { type: `${arg.searchType}`, text: `${arg.searchText}` } });
           break;
@@ -161,9 +100,7 @@ export default {
       }
     },
     onClickDelete(index) {
-      console.log("삭제버튼 인식");
       const vm = this;
-      // const currentTeachingClass = vm.teachingClassList[index];
       const openedUniClass = vm.openedUniList[index];
       vm.$confirm('정말로 이 대학을 삭제하시겠습니까?', `${openedUniClass.name || ''} 삭제`, {
         confirmButtonText: '예, 삭제합니다.',
@@ -172,17 +109,15 @@ export default {
       })
         .then(async () => {
           try {
-            // const index = vm.currentClassIndex;
             const uniClass = vm.openedUniList[index];
             await masterServie.delete({
-              // id: uniClass.class_id,
               name: uniClass.name,
             });
             vm.deleteTeachingClass({
               teachingClassIndex: index,
             });
           } catch (error) {
-            console.error(error); // eslint-disable-line no-console
+            console.error(error);
             vm.$notify({
               title: '대학 삭제 실패',
               message: error.toString(),

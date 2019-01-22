@@ -24,21 +24,6 @@
       </el-table-column>
       <el-table-column prop="final-score" label="최종성적" width="100px">
       </el-table-column>
-      
-      <!-- <el-table-column label="" header-align="left" align="right">
-        <template slot-scope="scope">
-            <router-link :to="`/a/register/uni/${scope.row.code}/edit`">
-              <el-button class="edit-btn">수정</el-button>
-            </router-link>
-          </template>
-        </el-table-column>
-
-        <el-table-column>
-          <template slot-scope="scope">
-            <el-button type="danger" @click="listeners['delete'](scope.$index)" class="delete-btn">삭제</el-button>
-          </template>
-        </el-table-column> -->
-
       </el-table>
       <br>
     </div>
@@ -52,19 +37,6 @@
         </el-pagination>
       </div>
       <br>
-      <!-- <div style="display: block; text-align: center;">
-        <el-select v-model="searchQuery.searchType" style="display: inline-block; width: 100px">
-        <el-option
-            v-for="option in selectOptionList"
-            :key="option.value"
-            :label="option.label"
-            :value="option.value">
-        </el-option>
-        </el-select>
-        <el-input style="display: inline-block; width: 300px" placeholder="검색어를 입력하세요."
-          v-model="searchQuery.searchText" @keydown.enter.native="onClick('SEARCH', searchQuery)"></el-input>
-        <el-button @click="onClick('SEARCH', searchQuery)" icon="el-icon-search" circle></el-button>
-      </div> -->
       <div class="right-align">
       <router-link to="/a/register/student">
         <el-button  type="primary" :class="$attachReactablePostfix('right-align-btn')" style="width: 33%">
@@ -94,20 +66,6 @@ export default {
   data() {
     return {
       pageNum: 1,
-      /*selectOptionList: [
-        {
-          value: 'name',
-          label: '대학명',
-        },
-        {
-          value: 'code',
-          label: '대학코드',
-        }, 
-      ],
-      searchQuery: {
-        searchType: 'name',
-        searchText: '',
-      },*/
     };
   },
   computed: {

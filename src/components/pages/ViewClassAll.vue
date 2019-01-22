@@ -6,13 +6,9 @@
   	  <div class="class_detail">
   	  	<div class="detail_top" v-model="class_name" :list="list"> 과목명 : {{list.name}} </div>
         <div class="detail_isActive" v-if="isActive==true"> 현재 비활성화 과목입니다 </div>
-  	  	<!-- <br/><br/> -->
   	  	<div class="detail" v-if="isActive==false" v-model="teacher_name" :list="list"> 강사명 : {{list.teacher_email_id}} </div>
-  	  	<!-- <br/><br/> -->
   	  	<div class="detail" v-if="isActive==false" v-model="capacity" :list="list"> 정원 : {{list.capacity}} 명</div>
-  	  	<!-- <br/><br/> -->
         <div class="detail_horizon" v-if="isActive==false" v-model="start_date" :list="list">강의날짜 : {{list.start_date}}  ~ </div> <div class="detail_horizon2" v-model="end_date" :list="list"> {{list.end_date}} </div>
-  	  	<!-- <br/><br/> -->
   	  	<div class="detail_horizon3" v-if="isActive==false" v-model="start_time" :list="list">강의시간: {{list.start_time}}  ~ </div> <div class="detail_horizon4" v-model="end_time" :list="list">
         {{list.end_time}}</div>
         <div class="detail_bottom" v-if="isActive==false" v-model="location" :list="list"> 공간 : {{list.location}} </div>
@@ -123,9 +119,7 @@ export default {
   async mounted(){
     const vm=this;
     const class_id = vm.classId;
-    console.log('class_id란?==========',class_id);
     const res = await masterService.getMasterClass({class_id:class_id});
-    console.log('res.data=============!!!!',res.data);
     vm.list=res.data;
     if(res.data.isActive==false){
       vm.isActive=false;
@@ -134,42 +128,8 @@ export default {
     }
   },
 	methods: {
-		/*classes: function(){
-		return {
-			classes: true,
-			lecture: false,
-			student: false,
-			list: [],
-			}
-		},
-		lecture: function() {
-		return {
-			classes: false,
-			lecture: true,
-			student: false,
-			list: [],
-			}	
-		},
-		student: function(){
-		return {
-			classes: false,
-			lecture: false,
-			student: true,
-			list: [],
-			}
-	    },*/	
     classOnChange: function(){
       const vm=this;
-      /*if(vm.buttonType==='classOnChange'){
-        vm.buttonType='classOnChange'
-        console.log('classOnChange');
-      } else if(vm.buttonType==='lectureOnChange'){
-        vm.buttonType='lectureOnChange'
-        console.log('1111111111111');
-      } else {
-        vm.buttonType='studentOnChange'
-        console.log('2222222222222222');
-      }*/
       vm.buttonType='classOnChange';
 	  },
     lectureOnChange: function(){
@@ -180,16 +140,7 @@ export default {
       const vm=this;
       vm.buttonType='studentOnChange';
     },
-    /*funcRef(){
-      window.addEventListener("hashchange", funcRef, false);
-      console.log('change!');
-    }*/
   },
-  /*window.onpageshow = function(event){
-    if(event.persisted){
-      console.log('change back');
-    }
-  }*/
 };
 	
 
@@ -222,25 +173,20 @@ export default {
   	height:200px;
   	top: 20px;
   	left:270px;
-    /*border:1px solid blue;*/
   }
   .profile img {
   	position:relative;
     margin:0px;
-  	/*margin: 50px 50px 10px 30px;
-  	border: 1px solid red;*/
   }
   .profile .class_detail {
   	position: absolute;
   	width: 550px;
   	float:right;
   	margin: 0px 150px 100px 0;
-  	/*border:1px solid blue;*/
     top:110px;
     left:280px;
   }
-  .right-align {
-    /*border:1px solid blue;*/	
+  .right-align {	
     position:relative;
     margin: 150px 0 0 0;
   }
@@ -250,20 +196,13 @@ export default {
   .detail_top{
     margin-bottom:5px;
     width:470px;
-    /*border:1px solid black;*/
   }
   .detail{
-    /*position: relative;*/
-    /*border:1px solid red;*/
     margin-top:5px;
     width:470px;
     margin-bottom:5px;
   }
   .detail_horizon{
-    /*position: relative;
-    top: 0px;
-    left: 70px;*/
-    /*border:1px solid red;*/
     margin-top:5px;
     width:300px;
     margin-bottom:5px;
@@ -272,16 +211,9 @@ export default {
     position: relative;
     top: -23px;
     left: 170px;
-    /*border:1px solid green;*/
     width:150px;
-    // margin-bottom:5px;
-    /*margin-top:5px;
-    width:470px;*/
   }
   .detail_horizon3{
-    /*position: relative;
-    top:-50px;*/
-    /*border:1px solid red;*/
     margin-top:-15px;
     width:470px;
     margin-bottom:5px;
@@ -291,8 +223,6 @@ export default {
     top:-23px;
     left:125px;
     width:100px;
-    // margin-bottom:5px;
-    /*border:1px solid red;*/
   }
   .detail_bottom{
     margin-top:-15px;

@@ -37,7 +37,6 @@ import NClassFromBank from '../components/pages/NClassFromBank';
 import NLectureFromBank from '../components/pages/NLectureFromBank';
 import NLectureItemFromBank from '../components/pages/NLectureItemFromBank';
 
-// 행정 프런트 개발
 import ViewUni from '../components/pages/ViewUni';
 // import ViewUniUpdate from '../components/pages/ViewUniUpdate';
 import ViewDept from '../components/pages/ViewDept';
@@ -378,7 +377,7 @@ export default function authRoutes(root) {
       },
     },
 
-    /* 행정개발 */   
+   // NOTE: 행정개발 
     {
       path: '/view/uni',
       name: 'ViewUni',
@@ -403,14 +402,6 @@ export default function authRoutes(root) {
         title: '관리자 강사 조회',
       },
     },
-    /* {
-      path: '/view/teacherAll',
-      name: 'ViewTeacherAll',
-      component: ViewTeacherAll,
-      meta: {
-        title: '관리자 강사 조회 상세보기',
-      },
-    }, */
     {
       path: '/view/class',
       name: 'ViewClass',
@@ -419,14 +410,6 @@ export default function authRoutes(root) {
         title: '관리자 과목 및 강의 조회',
       },
     },
-    /*{
-      path: '/view/classAll',
-      name: 'ViewClassAll',
-      component: ViewClassAll,
-      meta: {
-        title: '관리자 과목 상세 조회',
-      },
-    },*/
     {
       path: '/view/:code/detail',
       name: 'ViewDetailClass',

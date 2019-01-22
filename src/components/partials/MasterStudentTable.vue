@@ -7,41 +7,17 @@
         {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
         </template>
       </el-table-column>
-      <!-- <el-table-column prop="userType" label="유저타입" width="80">
-      </el-table-column> -->
       <el-table-column prop="email_id" label="메일주소" width="180">
       </el-table-column>
-      <!-- <el-table-column prop="passwd" label="비밀번호" width="120">
-      </el-table-column> -->
       <el-table-column prop="name" label="이름" width="80">
-        <!-- <template slot-scope="scope">
-        {{ scope.row.start_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') : '미정' }}
-        ~
-        {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString('ko-KR') : '미정' }}
-        </template> -->
       </el-table-column>
       <el-table-column prop="birth" label="생년월일" width="100"></el-table-column>
       <el-table-column prop="sex" id="sex" label="성별" width="50">
-        <!-- <el-table-td v-if="sex==1">남자</el-table-td> -->
       </el-table-column>
       <el-table-column prop="phone" label="전화번호" width="130"></el-table-column>
       <el-table-column prop="department_name" label="전공" width="120"></el-table-column>
-      <!-- <el-table-column prop="group" label="소속" width="100"></el-table-column> -->
       <el-table-column prop="account_bank" label="계좌은행" width="80"></el-table-column>
       <el-table-column prop="account_number" label="계좌번호" width="140"></el-table-column>
-      <!-- <el-table-column label="" header-align="left" align="right" width="345"> -->
-        <!-- <el-table-column label="" header-align="left" align="right">
-        <template slot-scope="scope">
-          <router-link :to="`/a/register/student/${scope.row.code}/edit`">
-            <el-button class="edit-btn">수정</el-button>
-          </router-link>
-        </template>
-      </el-table-column>
-      <el-table-column>
-          <template slot-scope="scope">
-            <el-button type="danger" @click="listeners['delete'](scope.$index)" class="delete-btn">삭제</el-button>
-          </template>
-        </el-table-column> -->
         <el-table-column label="" header-align="left" align="right">
         <template slot-scope="scope">
           <router-link :to="`/a/student/${scope.row.email_id}/detail`">
@@ -135,7 +111,6 @@ export default {
     }
   },
   methods: {
-    // formatDate: utils.formatDate,
     async deleteUser(email_id){
       const vm=this;
       vm.$confirm('정말로 이 학생을 삭제하시겠습니까?',{
@@ -147,14 +122,6 @@ export default {
         try{
           await masterService.deleteUser({email_id : email_id});
           await location.reload(true); 
-          //새로고침 후 select box가 이전화면과 동일해야 함 
-          // await history.go(0); 
-          /*await vm.$notify({
-            title:'학과 삭제 성공',
-            message:'학과 삭제',
-            type:'success',
-            duration:3000,
-          });*/
         } catch(error){
           vm.$notify({
             title:'학생 삭제 실패',

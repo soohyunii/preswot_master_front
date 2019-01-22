@@ -2,8 +2,6 @@
 	<div id="class_index_wrapper">
 		<div>
 			<el-table class="elTable" :data="page" style="width:100%">
-<!-- 				<el-table-column prop="email_id" label="메일주소" width="180">
-				</el-table-column> -->
 				<el-table-column prop="name" label="학생이름" width="100">
 				</el-table-column>
 				<el-table-column prop="birth" label="생년월일" width="120">

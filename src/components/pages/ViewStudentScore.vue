@@ -2,7 +2,6 @@
   <div id="class_index_wrapper" class="bt-container">
   	<h2 class="page-title">조회하기 > 학생 및 성적표 > 전체학생 성적표조회</h2>
   	  <div>
-  	  	<!-- <el-form :model="input" ref="elForm" style="max-width: 1000px;" class="elForm"> -->
         <el-form :model="input" style="max-width: 1000px;" class="elForm">
   	        <select id="uni-choice" v-model="input.choiceUni">
   	  	      <option selected="">대학선택</option>
@@ -83,7 +82,6 @@ export default {
 }
 
 .elForm select {
-	/*border: 1px solid red;*/
 	margin-right: 25px;
 	margin-left : 15px;
 	width:180px;

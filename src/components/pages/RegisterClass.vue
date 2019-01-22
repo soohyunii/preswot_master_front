@@ -11,9 +11,9 @@
       <br/><br/><br/><br/><br/><br/>
       <el-form-item label="대학선택">
         <el-select v-model="input.university_name" @change="categoryChange()">
-          <!-- <option value="">대학리스트</option> -->  <!-- DB에 있는 대학 리스트 가져오기 --> 
           <el-option 
             v-for="university_name in input.university_list"
+            :key="university_name"
             :label="university_name"
             :value="university_name">
           </el-option>
@@ -24,6 +24,7 @@
         <el-select v-model="input.department_name" :disabled="input.boolean" @change="categoryTeacherChange()">
           <el-option 
             v-for="department_name in input.department_list"
+            :key="department_name"
             :label="department_name"
             :value="department_name">  
           </el-option>
@@ -51,10 +52,10 @@
 
       <br/><br/><br/><br/><br/><br/>
       <el-form-item label="강사선택">
-        <!-- <el-select id="teacher-choice" v-model="input.teacher_email_id" :disabled="input.isActive" style="width:140px;" @change="showLabel()"> -->
         <el-select id="teacher-choice" v-model="input.teacher_email_id" :disabled="input.isActive" style="width:140px;">  
           <el-option 
             v-for="element in input.teacher_list"
+            :key="element.email_id"
             :label="element.name"
             :value="element.email_id">
           </el-option>
@@ -66,7 +67,6 @@
       </el-form-item>
 
       <el-form-item label="강의시간">
-        <!-- <el-input v-model="input.time" class="subject-title" :disabled="input.isActive"></el-input> -->
         <el-time-picker v-model="input.start_time" format="HH:mm" value="HH:mm" class="subject-startDate" :disabled="input.isActive"></el-time-picker>
         ~
         <el-time-picker v-model="input.end_time" format="HH:mm" value="HH:mm" class="subject-startDate" :disabled="input.isActive"></el-time-picker>
@@ -89,23 +89,9 @@
         >
         </el-date-picker>
       </el-form-item>
-
-      <!-- <el-form-item label="정원">
-        <el-input type="number" v-model.number="input.capacity" :disabled="input.capacityCheck" class="subject-capacity"></el-input>
-      </el-form-item> -->
-
       <el-form-item label="정원">
         <el-input type="number" v-model.number="input.capacity" :disabled="input.isActive" class="subject-capacity"></el-input>
       </el-form-item>
-
-      <!-- <el-form-item label="정원 제한 없음">
-        <el-switch v-model="input.capacityCheck" :disabled="input.isActive"></el-switch>
-      </el-form-item> -->
-
-      <!-- <el-form-item label="강사 소개">
-        <el-input type="textarea" :rows="3" v-model="input.lecturerDescription" class="teacher-description" :disabled="input.isActive"></el-input>
-      </el-form-item> -->
-
       <el-form-item>
         <!-- TODO: use button loading -->
         <br/>
@@ -135,7 +121,6 @@ export default {
   name: 'RegisterClass',
   async created() {
     const vm = this;
-    // 학생이 url로 접근하는 경우 방지
     const accessId = utils.getUserIdFromJwt();
     const accessCheck = await authService.returnUserInfo({
       userID: accessId,
@@ -146,7 +131,6 @@ export default {
   },
   data() {
     const initialInput = {
-      /*class_id:'',*/
       university_list: '',
       department_list: null,
       teacher_list: '',
@@ -159,15 +143,12 @@ export default {
       location: '',
       start_date: new Date(),
       end_date: new Date(),
-      capacity: 0, // 0은 무제한
-      // capacityCheck: false,
-      // lecturerDescription: '',
+      capacity: 0,
       description: '',
-      // select 상자는 여기에 명시해야 할까?
     };
     return {
       initialInput,
-      input: Object.assign({}, initialInput), // 복사해서 넣음
+      input: Object.assign({}, initialInput), 
     };
   },
   async mounted() {
@@ -184,13 +165,7 @@ export default {
 
       vm.input.university_name = res.data.university_name || vm.initialInput.university_name;
       vm.input.department_name = res.data.department_name || vm.initialInput.department_name;
-/*      vm.input.teacher_email_id = res.data.teacher_email_id || vm.initialInput.teacher_email_id;*/
       vm.$set(vm.input, 'teacher_email_id', res.data.teacher_email_id || vm.initialInput.teacher_email_id);
-      /*vm.input.teacher_list.name = vm.initialInput.teacher_list.name;
-      console.log('vm.input.teacher_list?',vm.input.teacher_list);*/
-      /*vm.element = readTeacherList.data.name;
-      console.log('res.data==',res.data);*/
-      /*vm.input.teacher_list = res.data.teacher_list || vm.initialInput.teacher_list;*/
       vm.input.code = res.data.code || vm.initialInput.code;
       vm.input.day_of_week = res.data.day_of_week || vm.initialInput.day_of_week;
       vm.input.name = res.data.name || vm.initialInput.name;
@@ -199,12 +174,8 @@ export default {
       vm.input.location = res.data.location || vm.initialInput.location;
       vm.input.start_date = res.data.start_time || vm.initialInput.start_date;
       vm.input.end_date = res.data.end_time || vm.initialInput.end_date;
-      vm.input.capacity = res.data.capacity || vm.initialInput.capacity; // 0은 무제한
-      // vm.input.capacityCheck = vm.input.capacity === 0;
-      // vm.input.lecturerDescription = res.data.lecturer_description;
-      // vm.input.isActive = res.data.isActive || vm.initialInput.isActive;
+      vm.input.capacity = res.data.capacity || vm.initialInput.capacity;
       vm.input.description = res.data.description;
-      // 필수입력요소 미입력시 '*는 필수입력사항입니다 알람'
     }
   },
   computed: {
@@ -221,8 +192,6 @@ export default {
     onSubmit() {
       const vm = this;
       vm.$refs.elForm.validate(async (/* valid, fields */) => {
-        // console.log('valid,', valid);
-        // console.log('fields', fields);
         // TODO: if valid === true 로 감싸기
         // TODO: valid === false인 경우에 notify
         if (vm.isEdit) {
@@ -254,13 +223,9 @@ export default {
                 duration: 0, 
               }); 
             } else {
-              console.log(vm.input);
-              // console.log('1111');
               vm.$router.push('/a/register/class/success');
-              /*console.log('2222');*/
             }
           } catch (error) {
-            console.log(vm.input);
             vm.$notify({
               title: '과목 등록 실패',
               message: error.toString(),
@@ -274,13 +239,11 @@ export default {
     async categoryChange(){
       const vm=this;
       const deptNameLists = await masterService.getDeptLists({name : vm.input.university_name});
-      console.log('deptNameLists',deptNameLists);
       vm.input.department_list = await deptNameLists.data.map(element=>element.name);
     },
     async categoryTeacherChange(){
       const vm=this;
       const teacherNameLists = await masterService.getUserLists(1,vm.input.university_name,vm.input.department_name);
-      // vm.input.teacher_list = await teacherNameLists.data.map(element=>element.name);
       vm.input.teacher_list = await teacherNameLists.data;
     },
     async categoryNone(){
@@ -291,41 +254,21 @@ export default {
         vm.input.boolean=false;
       }
       const teacherNameLists = await masterService.getUserLists(1,vm.input.university_name,vm.input.department_name);
-      console.log('teacherNameLists = ' , teacherNameLists);
-      // vm.input.teacher_list = await teacherNameLists.data.map(element=>element.name);
       vm.input.teacher_list = teacherNameLists.data;
-      console.log('vm.input.teacher_list = ', vm.input.teacher_list);
     },
     async showLabel(){
-  /*    const vm=this;
-      console.log('change!',vm.input.teacher_email_id);
-      console.log('change!',vm.input.teacher_list.index())
-      console.log('change!',vm.input.teacher_list[0].name);
-*/
     },
   },
   watch: {
     // NOTE: 이거 () => {}로 바꾸면 안됨!! vm이 다른 녀석 들어옴
-    /*'input.capacityCheck': function handler(newVal) {
-      const vm = this;
-      if (newVal) {
-        vm.input.capacity = 0;
-      }
-    },*/
     'input.isActive' : function handler(newVal) {
       const vm = this;
       if(newVal) {
-        /*vm.input.teacher_email_id='',*/
         vm.input.teacher_email_id=null,
         vm.input.day_of_week=0,
-        /*vm.input.start_time='',
-        vm.input.end_time='',
-        vm.input.location='',*/
         vm.input.start_time=null,
         vm.input.end_time=null,
         vm.input.location=null,
-        /*vm.input.start_date=false,
-        vm.input.end_date=false,*/
         vm.input.start_date=null,
         vm.input.end_date=null,
         vm.input.capacity=0;

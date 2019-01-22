@@ -2,13 +2,6 @@
   <div id="class_index_wrapper">
     <div>
       <el-table class="elTable" v-model="setSpanMethod" :data="page" :span-method="objectSpanMethod" style="width: 100%">
-      <!-- <el-table-column prop="bank_group.group_id" label="그룹명" width="200px">
-      </el-table-column> -->
-      <!-- <el-table-column prop="bank_id" label="ID" width="50">
-        <template slot-scope="scope">
-          {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
-        </template>
-      </el-table-column> -->
       <el-table-column prop="bank_group.name" label="그룹명" width="200px">
       </el-table-column>
       </el-table-column>
@@ -69,7 +62,6 @@ export default {
   props: ['list', 'onClick'],
   data() {
     return {
-      // onceFlag: true,
       setSpanMethod:[], 
       pageNum: 1,
       selectOptionList: [
@@ -90,32 +82,6 @@ export default {
       spanArray: [],
       departmentArray:[],
       deptNameArray:[],
-      /*tempNumArray:[],*/
-      /*tempArray: [{
-        rowspan: 2,
-        colspan: 1,
-      }, {
-        rowspan: 0,
-        colspan: 0,
-      }, {
-        rowspan: 2,
-        colspan: 1,
-      }, {
-        rowspan: 0,
-        colspan: 0,
-      }, {
-        rowspan: 4,
-        colspan: 1,
-      }, {
-        rowspan: 0,
-        colspan: 0,
-      }, {
-        rowspan: 0,
-        colspan: 0,
-      } ,{
-        rowspan: 0,
-        colspan: 0,
-      }],*/
     };
   },
   computed: {
@@ -136,55 +102,28 @@ export default {
     if (vm.$route.query.text !== undefined) {
       vm.searchQuery.searchText = vm.$route.query.text;
     }
-    
-    // 연산
-    // vm.tempArray = [];
   },
   async mounted(){
     const vm=this;
-    console.log('mounted!');
-
-
   },
   watch:{
-    /*setSpanMethod: function(val,oldVal){
-      const vm=this;
-      console.log('watch속성');
-      vm.objectSpanMethod()
-    }*/ 
     page: function(val, oldVal){
       const vm=this;
-      // vm.spanArray.length = 0;
       vm.spanArray = [];
-      console.log('watch속성');
-      console.log('val==',val);
-      console.log('oldVal==',oldVal);
-      console.log('초기 vm.page==', vm.page); 
-      // vm.objectSpanMethod()
       vm.groupNameArray = vm.page.map(x => x.bank_group.name);
-      console.log('vm.groupNameArray==',vm.groupNameArray);
-
       let pre_value = '';
       let sameValue = 0;
       let sameValueArray = [];
-      // let spanArrayTemp=[];
       vm.groupNameArray.forEach((element,index) => {
-
-        // 이전 값과 현재 값 비교하기
       if (pre_value === element || sameValue === 0) {
           sameValue++;
           } else {
             sameValueArray.push(sameValue);
             sameValue = 1;
           }
-          // 이전 값 기억하기
           pre_value = element;
         });
       sameValueArray.push(sameValue);
-      console.log('sameValueArray = ', sameValueArray);
-
-      // let spanArrayTemp=new Array();
-      // console.log('@vm.spanArray = ', vm.spanArray);
         sameValueArray.forEach((element,index)=>{
           vm.spanArray.push({
             rowspan: element,
@@ -197,7 +136,6 @@ export default {
             });
           }
         });
-        console.log('vm.spanArray = ', vm.spanArray);
     },
   },
   methods: {
@@ -210,14 +148,7 @@ export default {
       })
       .then(async()=> {
         try{
-          // window.location.reload();
           await masterService.bankDelete({group_id:group_id});
-          /*await vm.$notify({
-            title:'강의은행 삭제 성공',
-            message:'강의은행 삭제',
-            type:'success',
-            duration:3000,
-          });*/
           await location.reload(true);  
         } catch(error){
           vm.$notify({
@@ -229,8 +160,6 @@ export default {
         }
       })
     },
-
-    // 테이블 데이터 합침 잘 안됨 
     objectSpanMethod({row,column,rowIndex,columnIndex}){
       const vm = this;
       if(columnIndex===0 || columnIndex===4 || columnIndex===5){
@@ -277,10 +206,5 @@ export default {
     letter-spacing: normal;
     color: #606266;
   }
-  /*.edit-btn-detail {
-    border: 1px solid blue;
-    width:120px;
-    margin-right: 100px;
-  }*/
 }
 </style>

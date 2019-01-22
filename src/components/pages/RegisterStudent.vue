@@ -29,7 +29,6 @@
       </el-form-item>
 
       <el-form-item label="성별">
-        <!-- <el-input v-model="input.sex" class="subject-title"></el-input> -->
         <input type="radio" id="man" value="1" v-model="input.sex" >
         <label for="man" style="margin-right:10px">남자</label>
         <input type="radio" id="woman" value="2" v-model="input.sex">
@@ -38,7 +37,6 @@
 
       <el-form-item label="생년월일">
         <el-date-picker type="datetime" v-model="input.birth" class="subject-Date" format="yyyy-MM-dd"></el-date-picker>
-        <!-- <el-input v-model="input.birth" class="subject-title" placeholder="ex) 930610"></el-input> -->
       </el-form-item>
 
       <br/><br/><br/><br/><br/>
@@ -46,6 +44,7 @@
         <el-select id="uni-choice" v-model="input.university_name" @change="categoryChange(input.university_name)">
           <el-option 
             v-for="university_name in input.university_list"
+            :key="university_name"
             :label="university_name"
             :value="university_name">
           </el-option>
@@ -56,6 +55,7 @@
         <el-select id="dept-choice" v-model="input.department_name" :disabled="input.boolean">
           <el-option 
             v-for="department_name in input.department_list"
+            :key="department_name"
             :label="department_name"
             :value="department_name">
           </el-option>
@@ -80,7 +80,6 @@
       </el-form-item>
 
       <el-form-item>
-        <!-- TODO: use button loading -->
         <br/>
         <el-button
           type="primary"
@@ -107,7 +106,6 @@ export default {
   name: 'RegisterStudent',
   async created() {
     const vm = this;
-    // 학생이 url로 접근하는 경우 방지
     const accessId = utils.getUserIdFromJwt();
     const accessCheck = await authService.returnUserInfo({
       userID: accessId,
@@ -134,7 +132,7 @@ export default {
     };
     return {
       initialInput,
-      input: Object.assign({}, initialInput), // 복사해서 넣음
+      input: Object.assign({}, initialInput), 
     };
   },
   async mounted() {
@@ -148,7 +146,6 @@ export default {
       vm.input.department_list = readDepartmentList.data.map(element=>element.name);
       vm.input.email_id = res.data.email_id || vm.initialInput.email_id;
       vm.input.password = res.data.password || vm.initialInput.password;
-      /*vm.input.passwordConfirm = res.data.passwordConfirm || vm.initialInput.passwordConfirm;*/
       vm.input.name = res.data.name || vm.initialInput.name;
       vm.input.sex = res.data.sex || vm.initialInput.sex;
       vm.input.type=0;
@@ -158,9 +155,7 @@ export default {
       vm.input.address = res.data.address || vm.initialInput.address;
       vm.input.phone = res.data.phone || vm.initialInput.phone;
       vm.input.account_bank = res.data.account_bank || vm.initialInput.account_bank;
-      vm.input.account_number = res.data.account_number || vm.initialInput.account_number;
-      // 필수입력사항(강사코드,PW,이름,이메일) 미입력시 '*는 필수입력사항입니다 알람'
-      // 패스워드와 패스워드 확인이 일치하지 않을 시 '패스워드가 일치하지 않습니다'경고알람 
+      vm.input.account_number = res.data.account_number || vm.initialInput.account_number; 
     }
   },
   computed: {
@@ -177,8 +172,6 @@ export default {
     onSubmit() {
       const vm = this;
       vm.$refs.elForm.validate(async (/* valid, fields */) => {
-        // console.log('valid,', valid);
-        // console.log('fields', fields);
         // TODO: if valid === true 로 감싸기
         // TODO: valid === false인 경우에 notify
         if (vm.isEdit) {
@@ -204,10 +197,8 @@ export default {
                 duration:0,
               });
             } else {
-              /*vm.$router.push({path:'/a/view/student', query:{university:`${vm.input.university_name}`} });*/
               vm.$router.push('/a/view/student');
             }
-            /*vm.$router.push('/a/view/student');*/
           } catch (error) {
             vm.$notify({
               title: '학생 수정 실패',
@@ -252,7 +243,6 @@ export default {
       const vm=this;
       const deptNameLists = await masterService.getDeptLists({name: vm.input.university_name});
       vm.input.department_list = await deptNameLists.data.map(element=>element.name);
-      console.log(vm.input.department_list);
     },
   },
 };

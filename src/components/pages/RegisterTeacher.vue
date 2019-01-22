@@ -7,7 +7,6 @@
         등록하기 > 강사
       </template>
     </div>
-    <!-- 프런트에서 입력하지 않고도 강사페이지에서 등록하면 자동으로 타입은 1로 넘겨주는 방식 개발하기 -->
     <el-form :model="input" ref="elForm" label-position="left" label-width="125px" style="max-width: 800px;" class="elForm-label">
       <el-form-item label="이메일">
         <el-input v-model="input.email_id" class="subject-title"></el-input>
@@ -30,12 +29,10 @@
       </el-form-item>
 
       <el-form-item label="성별">
-        <!-- <el-input v-model="input.sex" class="subject-title"></el-input> -->
         <input type="radio" id="man" value="1" v-model="input.sex" >
         <label for="man" style="margin-right:10px">남자</label>
         <input type="radio" id="woman" value="2" v-model="input.sex">
         <label for="woman">여자</label>
-        <!-- <span>sex: {{input.sex}}</span> -->
       </el-form-item>
 
       <el-form-item label="전공">
@@ -46,20 +43,17 @@
         <el-date-picker type="datetime" v-model="input.birth" class="subject-Date" format="yyyy-MM-dd"></el-date-picker>
       </el-form-item>
 
-      <el-input v-model="input.type" type="hidden"></el-input> <!-- 유저타입 -->
+      <el-input v-model="input.type" type="hidden"></el-input> 
 
       <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
       <el-form-item label="경력">
         <el-input v-model="input.career" class="subject-title"></el-input>
       </el-form-item>
-
-      <!-- <el-form-item label="소속대학 선택" style="margin-top:60px;"> -->
       <el-form-item label="소속대학 선택">  
         <el-select id="uni-choice" v-model="input.university_name" @change="categoryChange(input.university_name)">
-          <!-- <option value="">대학리스트</option> -->  <!-- DB에 있는 대학 리스트 가져오기 -->
-          <!-- <option value="">선택사항없음</option> -->
           <el-option 
             v-for="university_name in input.university_list"
+            :key="university_name"
             :label="university_name"
             :value="university_name">
           </el-option>
@@ -70,6 +64,7 @@
         <el-select id="dept-choice" v-model="input.department_name" :disabled="input.boolean">
           <el-option 
             v-for="department_name in input.department_list"
+            :key="department_name"
             :label="department_name"
             :value="department_name">
           </el-option>
@@ -123,7 +118,6 @@ export default {
   name: 'RegisterTeacher',
   async created() {
     const vm = this;
-    // 학생이 url로 접근하는 경우 방지
     const accessId = utils.getUserIdFromJwt();
     const accessCheck = await authService.returnUserInfo({
       userID: accessId,
@@ -143,7 +137,7 @@ export default {
       career: '',
       birth: '',
       university_list: '',
-      department_list: null,  /*null 가능*/
+      department_list: null, 
       address: '',
       phone: '',
       account_number: '',
@@ -153,17 +147,13 @@ export default {
     };
     return {
       initialInput,
-      input: Object.assign({}, initialInput), // 복사해서 넣음
+      input: Object.assign({}, initialInput),
     };
   },
   async mounted() {
     const vm = this;
     const uniNameLists = await masterService.getUniNameLists();
-    // console.log('20181211 unniNameLists?????????????==',uniNameLists);
     vm.input.university_list = uniNameLists.data.map(element => element.name);
-    // console.log('20181211 vm.input.university_list?????????????==',vm.input.university_list);
-    // vm.input.university_list = 
-    /*const name = vm.input.university_name;*/
 
     if (vm.isEdit) {
       const res = await masterService.getMasterUser({ email_id: vm.classId });
@@ -183,8 +173,6 @@ export default {
       vm.input.phone = res.data.phone || vm.initialInput.phone;
       vm.input.account_number = res.data.account_number || vm.initialInput.account_number;
       vm.input.account_bank = res.data.account_bank || vm.initialInput.account_bank;
-      // 필수입력사항(강사코드,PW,이름,이메일) 미입력시 '*는 필수입력사항입니다 알람'
-      // 패스워드와 패스워드 확인이 일치하지 않을 시 '패스워드가 일치하지 않습니다'경고알람 
     }
   },
   
@@ -197,22 +185,11 @@ export default {
       const vm = this;
       return vm.$route.path.split('teacher/')[1].split('/edit')[0];
     },
-    /*async categoryChange(university_name){
-      console.log('hello!!');
-      const vm = this;
-      const deptNameLists = await masterService.getDeptLists(vm.input.university_name);
-      // const deptNameLists = await masterService.getDeptLists(university_name);
-      console.log(deptNameLists); 
-      return vm.input.university_name;
-    },*/
-
   },
   methods: {
     onSubmit() {
       const vm = this;
       vm.$refs.elForm.validate(async (/* valid, fields */) => {
-        // console.log('valid,', valid);
-        // console.log('fields', fields);
         // TODO: if valid === true 로 감싸기
         // TODO: valid === false인 경우에 notify
         if (vm.isEdit) {
@@ -251,7 +228,6 @@ export default {
         } else {
           // TODO: wrap with try catch
           try {
-            // console.log(masterService.NNMasterpostTeacher(vm.input));
             await masterService.NNMasterpostTeacher(vm.input);
             if(vm.input.email_id==''||vm.input.password==''||vm.input.passwordConfirm==''||vm.input.name=='') {
               vm.$notify({
@@ -283,22 +259,9 @@ export default {
     },
     async categoryChange(university_name){
       const vm=this;
-      // console.log('vm.input.university_name = ', vm.input.university_name);
       const deptNameLists = await masterService.getDeptLists({name:vm.input.university_name});
-      // const deptNameLists = await masterService.getDeptLists(university_name);
       vm.input.department_list = await deptNameLists.data.map(element=>element.name);
-      // console.log(vm.input.department_list); 
-      // return vm.input.university_name;
     },
-    /*async categoryNone(){
-      const vm=this;
-      if(vm.input.checked==true){
-        vm.input.boolean=true;
-        // console.log('vm.input.boolean',vm.input.boolean);
-      } else {
-        vm.input.boolean=false;
-      }
-    },*/
   },
 };
 </script>

@@ -63,7 +63,6 @@ export default {
   name: 'RegisterUni',
   async created() {
     const vm = this;
-    // 학생이 url로 접근하는 경우 방지
     const accessId = utils.getUserIdFromJwt();
     const accessCheck = await authService.returnUserInfo({
       userID: accessId,
@@ -83,16 +82,13 @@ export default {
     };
     return {
       initialInput,
-      input: Object.assign({}, initialInput), // 복사해서 넣음
+      input: Object.assign({}, initialInput), 
     };
   },
   async mounted() {
     const vm = this;
     if (vm.isEdit) {
-      // console.log('vm.masterId = ', vm.masterId);
-      console.log('@@@@@@@@@@ uniName = ', vm.uniName);
       const res = await masterService.getMasterUni({ name: vm.uniName });
-      // const res = await masterService.getMasterUni({ id: vm.masterId });
       vm.input.code = res.data.code || vm.initialInput.code;
       vm.input.name = res.data.name || vm.initialInput.name;
       vm.input.address = res.data.address || vm.initialInput.address;
@@ -105,16 +101,9 @@ export default {
     isEdit() {
       const vm = this;
       return vm.$route.fullPath.includes('/edit');
-      // console.log(vm.$route.fullPath.includes('/edit'));
     },
-    /*masterId() {
-      const vm = this;
-      return vm.$route.path.split('uni/')[1].split('/edit')[0];
-      // console.log(vm.$route.path.split('uni/')[1].split('/edit')[0]);
-    },*/
     uniName() {
       const vm = this;
-      // return vm.$route.query.uniName;
       return vm.$route.path.split('a/')[1].split('/edit')[0];
     },
   },
@@ -122,16 +111,12 @@ export default {
     onSubmit() {
       const vm = this;
       vm.$refs.elForm.validate(async (/* valid, fields */) => {
-        // console.log('valid,', valid);
-        // console.log('fields', fields);
         // TODO: if valid === true 로 감싸기
         // TODO: valid === false인 경우에 notify
         if (vm.isEdit) {
           const id = vm.uniName;
           const res = await masterService.getMasterUni({ name: vm.uniName });
           const old_name = res.data.name;
-          console.log(id); 
-          console.log('res.data.name==(old_name)==',old_name); 
           try {
             await masterService.NNMasterputUni({
               id,
@@ -160,7 +145,6 @@ export default {
               });
             } else {
               vm.$router.push('/a/register/uni/success');
-              // console.log(res.data);
             }
           } catch (error) {
             if(error=='Error: Request failed with status code 500') {

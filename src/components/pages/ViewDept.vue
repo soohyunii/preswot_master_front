@@ -3,24 +3,7 @@
     <h2 class="page-title">조회하기 > 학과</h2>
     <div>
       <el-form width="100px">
-      <!-- <el-form :model="input" style="max-width: 1000px;" class="elForm"> -->
-        
-        <!-- <select id="uni-choice" v-model="uniName">
-          <option v-for="uniNameList in uniName">{{uniNameList}}</option>
-        </select> -->
-        <!-- <span>대학선택: </span> -->
-        <!--<select id="uni-choice" v-model="uniName">-->
-        <!-- <el-select id="uni-choice" v-model="chosen" v-on:click="onChange(chosen)" placeholder="대학선택"> -->
         <el-select v-model="chosen" placeholder="대학선택" @change="onChange()" style="top:20px;">
-          <!-- <option disabled value="">대학선택</option> -->
-          <!--
-          <el-option 
-            v-for="uniNameList in uniName"
-            :key="uniNameList.chosen"
-            :label="uniNameList.label"
-            :value="uniNameList.chosen">{{uniNameList}}
-          </el-option>
-          -->
           <el-option 
             v-for="name in uniName"
             :key="name.chosen"
@@ -28,18 +11,9 @@
             :value="name">
           </el-option>
         </el-select>
-
-        <!-- <span> 선택 : {{ chosen }} </span> -->
-
-      
-        <!-- <el-button icon="el-icon-search" circle></el-button> -->
       </el-form>  
       </div>
       <div style="margin-top: 50px;"/>
-    <!-- <master-dept-table
-      :list="list"
-      :onClick="onClick"
-    /> -->
     <master-dept-table
       :list="list"
       :onClick="onClick"
@@ -79,67 +53,18 @@ export default {
       list: [],
       uniName: '',
       chosen: '',
-      /*deptList: [],*/
     };
   },
-  /*
-  computed: {
-    ...mapState('MasterDept', ['studyingClassList']),
-  },
-  */
   async created() {
     const vm = this;
 
-/*
-    // 새로고침(Refresh, F5) 해도 목록을 가져올 수 있게 하는 부분.
-    // TODO: 속도가 눈에 보이게 느려지므로 다른 방법이 있다면 수정 요구.
-    // await vm.getMyClassLists();
-    const name = "관리자";
-    const deptLists = await masterService.getDeptLists({name});
-    console.log('%%%%%%%%%%%%deptLists=======',deptLists);
-
-    // 검색 기능 : 서버에서 DB 쿼리로 처리하는 게 효율이 나을 것 같으면 나중에 수정.
-    if (vm.studyingClassList !== null) {
-      if (vm.$route.query.type !== undefined) {
-        vm.searchType = vm.$route.query.type;
-      }
-      if (vm.$route.query.text !== undefined) {
-        vm.searchText = vm.$route.query.text;
-      }
-      for (let i = 0; i < vm.studyingClassList.length; i += 1) {
-        if (vm.searchType === 'name') {
-          if (vm.studyingClassList[i].name.includes(vm.searchText)) {
-            vm.list.push(vm.studyingClassList[i]);
-          }
-        }
-        if (vm.searchType === 'university') {
-          if (vm.studyingClassList[i].master.name.includes(vm.searchText)) {
-            vm.list.push(vm.studyingClassList[i]);
-          }
-        }
-      }
-    }
-    */
   },
   async mounted() {
     const vm=this;
     const uniNameLists = await masterService.getUniNameLists();
-    console.log('uniNameLists======!!!!!!!',uniNameLists);
-    // vm.input.uniNameLists = uniNameLists.data.map(element => element.name);
     vm.uniName = await uniNameLists.data.map(element => element.name);
-    console.log('uniName**************==', vm.uniName);
-    /*const deptNameLists = await masterService.getDeptLists();
-    vm.deptList = await deptNameLists.data.map(element=>element.name);*/
   },
   methods: {
-    /*
-    ...mapActions('MasterDept', [
-      'getDeptLists',
-      'getMyClassLists',
-      'deleteClassUser',
-    ]),
-    */
-    // formatDate: utils.formatDate,
     async onClick(type, arg, arg2) {
       const vm = this;
       switch (type) {
@@ -151,59 +76,6 @@ export default {
           vm.$router.push(`/a/student/MasterDept/${arg.class_id}`);
           break;
         }
-        /*
-        case 'CANCEL': {
-          vm.$confirm('정말로 이 학과를 삭제하시겠습니까?', `${arg.name || ''} 수강 취소`, {
-            confirmButtonText: '예, 삭제합니다.',
-            cancelButtonText: '아니요, 삭제하지 않습니다.',
-            type: 'warning',
-          })
-          .then(async () => {
-            try {
-              await vm.deleteClassUser({
-                classId: arg.class_id,
-                userId: vm.userId,
-              });
-
-              vm.$notify({
-                title: '학과 삭제 성공',
-                message: '학과가 삭제됨',
-                type: 'success',
-                duration: 3000,
-              });
-            } catch (error) {
-              vm.$notify({
-                title: '학과 삭제 실패',
-                message: error.toString(),
-                type: 'error',
-                duration: 3000,
-              });
-            }
-
-            try {
-              await vm.getMyClassLists();
-              vm.list.splice(arg2, 1);
-            } catch (error) {
-              vm.$notify({
-                title: '학과 삭제 실패',
-                message: error.toString(),
-                type: 'error',
-                duration: 0,
-              });
-            }
-          })
-          .catch(() => {
-            vm.$notify({
-              title: '중단됨',
-              message: '학과 삭제 중단됨',
-              type: 'info',
-              duration: 3000,
-            });
-          });
-
-          break;
-        }
-        */
         case 'SEARCH': {
           vm.$router.push({ path: '/a/view/dept', query: { type: `${arg.searchType}`, text: `${arg.searchText}` } });
           break;
@@ -214,43 +86,6 @@ export default {
       }
     },
     onClickDelete(index) {
-    	/*
-      const vm = this;
-      const currentTeachingClass = vm.teachingClassList[index];
-      vm.$confirm('정말로 이 학과를 삭제하시겠습니까?', `${currentTeachingClass.name || ''} 삭제`, {
-        confirmButtonText: '예, 삭제합니다.',
-        cancelButtonText: '아니요, 삭제하지 않습니다.',
-        type: 'warning',
-      })
-        .then(async () => {
-          try {
-            // const index = vm.currentClassIndex;
-            const currentClass = vm.teachingClassList[index];
-            await classService.delete({
-              id: currentClass.class_id,
-            });
-            vm.deleteTeachingClass({
-              teachingClassIndex: index,
-            });
-          } catch (error) {
-            console.error(error); // eslint-disable-line no-console
-            vm.$notify({
-              title: '학과 삭제 실패',
-              message: error.toString(),
-              type: 'error',
-              duration: 3000,
-            });
-          }
-        })
-        .catch(() => {
-          vm.$notify({
-            title: '취소됨',
-            message: '학과 삭제 취소됨',
-            type: 'info',
-            duration: 3000,
-          });
-        });
-        */
     },
     async onChange(payload) {
       const vm = this;
@@ -297,7 +132,6 @@ export default {
     color: #000000;
   }
   .el-form{
-    // text-align : left;
     font-family: SpoqaHanSans;
     font-size: 16px;
     font-weight: normal;
@@ -308,7 +142,6 @@ export default {
     color: #000000;
     width: 200px;
     margin: 20px 0 0 10px;
-    // border:1px solid red;
   }
 }
 </style>

@@ -8,17 +8,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="email_id" label="메일주소" width="180">
-        <!-- <template slot-scope="scope">
-        {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
-        </template> -->
       </el-table-column>
-      <!-- <el-table-column prop="password" label="비밀번호" width="120"> -->
-        <!-- <template slot-scope="scope">
-        {{ scope.row.start_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') : '미정' }}
-        ~
-        {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString('ko-KR') : '미정' }}
-        </template> -->
-      <!-- </el-table-column> -->
       <el-table-column prop="name" label="이름" width="100">
       </el-table-column>
       <el-table-column prop="birth" v-model="birth" label="생년월일" width="110">
@@ -47,25 +37,11 @@
 
         <el-table-column>
           <template slot-scope="scope">
-            <!-- <el-button type="danger" @click="listeners['delete'](scope.$index)" class="delete-btn">삭제</el-button> -->
             <el-button type="danger" @click="deleteUser(scope.row.email_id)" class="delete-btn">삭제</el-button>
           </template>
         </el-table-column>
 
       </el-table>
-      <!-- <el-table-column label="" header-align="left" align="right">
-        <template slot-scope="scope">
-            <router-link :to="`/view/dept/${scope.row.class_id}/edit`">
-              <el-button class="edit-btn">수정</el-button>
-            </router-link>
-          </template>
-        </el-table-column>
-
-        <el-table-column>
-          <template slot-scope="scope">
-            <el-button type="danger" @click="listeners['delete'](scope.$index)" class="delete-btn">삭제</el-button>
-          </template>
-        </el-table-column> -->
       <br>
     </div>
     <div id="pagination" style="display: block; text-align: center;">
@@ -109,10 +85,6 @@ export default {
           value: 'name',
           label: '강사명',
         },
-        /*{
-          value: 'university',
-          label: '대학명',
-        },*/
       ],
       searchQuery: {
         searchType: 'name',
@@ -140,11 +112,8 @@ export default {
     }
   },
   async mounted(){
-    /*const vm=this;
-    console.log('vm.birth==',vm.birth);*/
   },
   methods: {
-    /*formatDate: utils.formatDate,*/
     async deleteUser(email_id){
       await masterService.deleteUser({email_id : email_id});
       window.location.reload();
@@ -167,18 +136,6 @@ export default {
     letter-spacing: normal;
     color: #909399;
   }
-  /*.elTable-label th div{
-    text-align: center;
-    font-family: SpoqaHanSans;
-    font-size: 14px;
-    font-weight: bold;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: 1;
-    letter-spacing: normal;
-    color: #909399;
-    border: 1px solid red;
-  }*/
   .elTable-label tr {
     text-align: center;
     font-family: SpoqaHanSans;

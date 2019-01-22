@@ -6,6 +6,7 @@
         <el-select placeholder="대학선택" v-model="chosen" @change="categoryChange()" style="width:200px; top:20px">
         <el-option 
           v-for="universityName in universityNameList"
+          :key="universityName"
           :label="universityName"
           :value="universityName">
         </el-option>
@@ -13,9 +14,9 @@
     </el-form>
     <el-form id="dept" style="position:relative; left:220px; top:-60px;">
       <el-select placeholder="학과선택" v-model="department_chosen" @change="showChange()" style="width:200px; top:20px;">
-        <!-- <option value="">선택사항없음</option> -->
         <el-option 
           v-for="departmentName in departmentNameList"
+          :key="departmentName"
           :label="departmentName"
           :value="departmentName">
         </el-option>
@@ -72,33 +73,6 @@ export default {
   },
   async created() {
     const vm = this;
-
-    // 새로고침(Refresh, F5) 해도 목록을 가져올 수 있게 하는 부분.
-    // TODO: 속도가 눈에 보이게 느려지므로 다른 방법이 있다면 수정 요구.
-   /* await vm.getBankLists();
-
-
-    
-    if (vm.studyingClassList !== null) {
-      if (vm.$route.query.type !== undefined) {
-        vm.searchType = vm.$route.query.type;
-      }
-      if (vm.$route.query.text !== undefined) {
-        vm.searchText = vm.$route.query.text;
-      }
-      for (let i = 0; i < vm.studyingClassList.length; i += 1) {
-        if (vm.searchType === 'name') {
-          if (vm.studyingClassList[i].name.includes(vm.searchText)) {
-            vm.list.push(vm.studyingClassList[i]);
-          }
-        }
-        if (vm.searchType === 'teacher') {
-          if (vm.studyingClassList[i].master.name.includes(vm.searchText)) {
-            vm.list.push(vm.studyingClassList[i]);
-          }
-        }
-      }
-    }*/
   },
   async mounted(){
     const vm=this;
@@ -107,17 +81,7 @@ export default {
   },
   watch:{
     list: async function(val, oldVal){
-      console.log('change!');
       const vm=this;
-      /*const res = await masterService.getBankLists({university_name:vm.chosen});
-      for(let i=0; i<res.data.length; i++){
-        console.log('res.data[i].user.department_name=',res.data[i].user.department_name);
-        if(res.data[i].user.department_name==null){
-          console.log('null값 찍힘');
-          res.data[i].user.department_name='소속없음'
-        }
-      }
-      vm.list=res.data;*/
     }
   },
   methods: {
@@ -210,7 +174,6 @@ export default {
       })
         .then(async () => {
           try {
-            // const index = vm.currentClassIndex;
             const currentClass = vm.teachingClassList[index];
             await masterService.delete({
               id: currentClass.class_id,
@@ -219,7 +182,7 @@ export default {
               teachingClassIndex: index,
             });
           } catch (error) {
-            console.error(error); // eslint-disable-line no-console
+            console.error(error); 
             vm.$notify({
               title: '학생 삭제 실패',
               message: error.toString(),
@@ -243,43 +206,21 @@ export default {
       vm.departmentNameList = deptNameList.data.map(element=>element.name);
       const res = await masterService.getBankLists({university_name:vm.chosen});
       for(let i=0; i<res.data.length; i++){
-        console.log('res.data[i].user.department_name=',res.data[i].user.department_name);
         if(res.data[i].user.department_name==null){
-          console.log('null값 찍힘');
           res.data[i].user.department_name='소속없음'
         }
       }
-      console.log('vm.list인식1111111111111111');
       vm.list=res.data;
-      console.log('vm.list인식22222222222222');
-
     },
     async showChange(){
       const vm=this;
       const res = await masterService.getBankLists({university_name:vm.chosen, department_name:vm.department_chosen});
-      // vm.sublist=res.data;
-      // vm.sublist=vm.list.map(element=>element.teacher_groups.map(element=> element.email_id));
-      // vm.list=vm.sublist.map(element=>element.bank_group.name);
       for(let i=0; i<res.data.length; i++){
-        console.log('res.data[i].user.department_name=',res.data[i].user.department_name);
         if(res.data[i].user.department_name==null){
-          console.log('null값 찍힘');
           res.data[i].user.department_name='소속없음'
         }
       }
       vm.list=res.data;
-
-      /*const prop
-      for (prop in list){
-        vm.sublist=vm.list[prop].bank_group.name;
-      }*/
-      console.log('vm.list=============',vm.list);
-      // console.log('vm.sublist=============',vm.sublist);
-      // console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!',vm.list.teacher_groups.email_id);
-      /*vm.list.teacher_email_id=res.data.map(element=>element.teacher_groups.map(element=> element.email_id));
-      console.log(vm.list);
-      console.log(vm.list.map(element=>element.name));*/
-      // console.log(vm.list.map(element=>element.teacher_groups.map(element=> element.email_id)));
     },
   },
 };
@@ -312,8 +253,6 @@ export default {
 
   }
   .el-form{
-    // text-align : left;
-    // position: absolute;
     font-family: SpoqaHanSans;
     font-size: 16px;
     font-weight: normal;
@@ -324,7 +263,6 @@ export default {
     color: #000000;
     width: 300px;
     margin: 20px 0 0 10px;
-    //border:1px solid red;
   }
 }
 </style>
