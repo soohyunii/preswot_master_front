@@ -14,7 +14,6 @@
       </el-form>
       <el-form style="position: relative; left:220px; top:-60px;">
         <el-select placeholder="학과선택" v-model="dept_chosen" @change="showChange()" style="width:200px; top:20px">
-          <!-- <option value="">선택사항없음</option> -->
           <el-option 
             v-for="deptName in deptNameList"
             :key="deptName"
@@ -38,6 +37,7 @@
           @change="toChange()"
           >
         </el-date-picker>
+        <el-checkbox v-model="checked" @change="isActiveChange()" :disabled="chosen==undefined">활성화과목만 조회</el-checkbox>
       </el-form>
     </div>
     <div style="margin-top: -70px;"/>
@@ -70,7 +70,7 @@ import utils from '../../utils';
 export default {
   name: 'ViewClass',
   components: {
-    MasterClassTable, // local component
+    MasterClassTable, 
   },
   data() {
     return {
@@ -81,11 +81,12 @@ export default {
       uniNameList:[],
       deptNameList:[],
       semesterNameList:[],
-      chosen:'',
-      dept_chosen:'',
+      chosen: undefined,
+      dept_chosen: undefined,
       semester:'',
-      date_from_chosen:'',
-      date_to_chosen:'',
+      date_from_chosen: undefined,
+      date_to_chosen: undefined,
+      checked: undefined,
     };
   },
   computed: {
@@ -138,6 +139,8 @@ export default {
       for(let i=0; i<res.data.length; i++){
         if(res.data[i].isActive==true){
           res.data[i].isActive='비활성화'
+          res.data[i].teacher_email_id='-'
+          res.data[i].start_date='-'
         } else {
           res.data[i].isActive='활성화'
         }
@@ -168,6 +171,30 @@ export default {
       }
       vm.list = res.data;
     },
+    async isActiveChange(){
+      const vm=this;
+      if(vm.checked==false){
+        const res = await masterService.getClassLists({university_name : vm.chosen,department_name : vm.dept_chosen ,end_date_from : vm.date_from_chosen ,end_date_to : vm.date_to_chosen, isActive:undefined});
+        for(let i=0; i<res.data.length; i++){
+        if(res.data[i].isActive==true){
+          res.data[i].isActive='비활성화'
+        } else {
+            res.data[i].isActive='활성화'
+          }
+        }
+        vm.list=res.data;
+      } else {
+        const res = await masterService.getClassLists({university_name : vm.chosen,department_name : vm.dept_chosen ,end_date_from : vm.date_from_chosen ,end_date_to : vm.date_to_chosen, isActive:!vm.checked});
+        for(let i=0; i<res.data.length; i++){
+        if(res.data[i].isActive==true){
+          res.data[i].isActive='비활성화'
+        } else {
+            res.data[i].isActive='활성화'
+          }
+        }
+        vm.list=res.data;
+      }  
+    }
   },
 };
 </script>
@@ -205,6 +232,11 @@ export default {
     color: #000000;
     width: 300px;
     margin: 20px 0 0 10px;
+  }
+  .el-checkbox{
+    position: relative;
+    top:17px;
+    left:17px;
   }
 }
 </style>

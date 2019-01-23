@@ -77,14 +77,20 @@ export default {
           value: 'name',
           label: '대학명',
         },
-      ],
-      searchQuery: [
         {
-          searchType: 'name',
-          searchText: '',
+          value: 'code',
+          label: '대학코드',
         },
       ],
+      searchQuery: {
+        searchType: '',
+        searchText: '',
+      },
     };
+  },
+  async mounted(){
+    const vm=this;
+    
   },
   computed: {
     listCount() {

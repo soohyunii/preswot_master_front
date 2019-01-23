@@ -5,14 +5,27 @@ export default {
     getMasterUni({name}) {
     return http.get(`/university?name=${name}`);
   },
-  getUniLists() {
-    return http.get(`/university/list`);
+  getUniLists({category,search_word,page}) {
+    return http.get('/university/list',{
+      params: {
+        category,
+        search_word,
+        page,
+      },
+    });
   },
   getUniNameLists() {
     return http.get(`/university/namelist`);
   },
-  getDeptLists({name}) {
-    return http.get(`/department/list?university_name=${name}`)
+  getDeptLists({university_name,category,search_word,page}) {
+    return http.get('/department/list',{
+      params: {
+        university_name,
+        category,
+        search_word,
+        page,
+      },
+    })
   },
   getMasterDept({university_name , name}) {
     return http.get(`/department?university_name=${university_name}&name=${name}`,);
@@ -34,13 +47,14 @@ export default {
   getMasterUser({email_id}){
     return http.get(`/admin_user?email_id=${email_id}`)
   },
-  getClassLists({university_name,department_name,end_date_from,end_date_to}){
+  getClassLists({university_name,department_name,end_date_from,end_date_to,isActive}){
     return http.get('/admin_class/list', {
       params: {
         university_name,
         department_name,
         end_date_from,
         end_date_to,
+        isActive,
       },
     })
   },

@@ -136,7 +136,7 @@ export default {
   },
   async mounted() {
     const vm = this;
-    const uniNameLists = await masterService.getUniLists();
+    const uniNameLists = await masterService.getUniNameLists();
     vm.input.university_list = uniNameLists.data.map(element=>element.name);
     
     

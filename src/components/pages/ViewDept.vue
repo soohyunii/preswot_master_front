@@ -1,6 +1,6 @@
 <template>
   <div id="class_index_wrapper" class="bt-container">
-    <h2 class="page-title">조회하기 > 학과</h2>
+      <h2 class="page-title"  @onClick="clickTitle()">조회하기 > 학과</h2>
     <div>
       <el-form width="100px">
         <el-select v-model="chosen" placeholder="대학선택" @change="onChange()" style="top:20px;">
@@ -48,11 +48,12 @@ export default {
   data() {
     return {
       userId: utils.getUserIdFromJwt(),
-      searchType: 'name',
-      searchText: '',
+      searchType: undefined,
+      searchText: undefined,
       list: [],
       uniName: '',
       chosen: '',
+      pageNum:1,
     };
   },
   async created() {
@@ -89,7 +90,13 @@ export default {
     },
     async onChange(payload) {
       const vm = this;
-      const res = await masterService.getDeptLists({name : vm.chosen});
+      const res = await masterService.getDeptLists({university_name : vm.chosen, category:vm.searchType, search_word:vm.searchText, page:vm.pageNum});
+      vm.list = res.data;
+      console.log(vm.searchType,vm.searchText,vm.pageNum);
+    },
+    async clickTitle(){
+      const vm=this;
+      const res = await masterService.getDeptLists({name : undefined});
       vm.list = res.data;
     },
   },

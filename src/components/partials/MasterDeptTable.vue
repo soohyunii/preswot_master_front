@@ -1,6 +1,5 @@
 <template>
   <div id="class_index_wrapper">
-    <!-- <p> {{ list }} </p> -->
     <div>
       <el-table class="elTable" :data="list" style="width: 100%">
       <el-table-column prop="dept_id" label="ID" width="50">
@@ -11,18 +10,10 @@
       <el-table-column prop="code" label="학과코드" width="100">
       </el-table-column>
       <el-table-column prop="university.name" label="대학명" width="150">
-        <!-- <template slot-scope="scope">
-        {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
-        </template> -->
       </el-table-column>
       <el-table-column prop="name" label="학과명" width="160">
       </el-table-column>
       <el-table-column prop="part" label="분야" width="120">
-        <!-- <template slot-scope="scope">
-        {{ scope.row.start_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') : '미정' }}
-        ~
-        {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString('ko-KR') : '미정' }}
-        </template> -->
       </el-table-column>
       <el-table-column prop="manager_name" label="학과담당자" width="100">
       </el-table-column>
@@ -89,12 +80,12 @@ export default {
           label: '학과명',
         },
         {
-          value: 'university',
-          label: '학과명',
+          value: 'code',
+          label: '학과코드',
         },
       ],
       searchQuery: {
-        searchType: 'name',
+        searchType: '',
         searchText: '',
       },
     };
@@ -103,12 +94,6 @@ export default {
     listCount() {
       return this.list.length;
     },
-    /*
-    page() {
-      const vm = this;
-      return vm.list.slice((vm.pageNum - 1) * 10, vm.pageNum * 10);
-    },
-    */
   },
   created() {
     const vm = this;
@@ -131,14 +116,6 @@ export default {
         try{
           await masterService.deptDelete({university_name: university_name, name: name});
           await location.reload(true); 
-          //새로고침 후 select box가 이전화면과 동일해야 함 
-          // await history.go(0); 
-          /*await vm.$notify({
-            title:'학과 삭제 성공',
-            message:'학과 삭제',
-            type:'success',
-            duration:3000,
-          });*/
         } catch(error){
           vm.$notify({
             title:'학과 삭제 실패',

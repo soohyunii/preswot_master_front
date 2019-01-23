@@ -25,7 +25,7 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import MasterUniTable from '../partials/MasterUniTable';
-import masterServie from '../../services/masterService';
+import masterService from '../../services/masterService';
 import utils from '../../utils';
 
 export default {
@@ -36,9 +36,10 @@ export default {
   data() {
     return {
       userId: utils.getUserIdFromJwt(),
-      searchType: 'name',
-      searchText: '',
+      searchType: undefined,
+      searchText: undefined,
       list: [],
+      pageNum:1,
     };
   },
   computed: {
@@ -49,7 +50,6 @@ export default {
 
     // 새로고침(Refresh, F5) 해도 목록을 가져올 수 있게 하는 부분.
     // TODO: 속도가 눈에 보이게 느려지므로 다른 방법이 있다면 수정 요구.
-    await vm.getUniLists();
 
     // 검색 기능 : 서버에서 DB 쿼리로 처리하는 게 효율이 나을 것 같으면 나중에 수정.
   
@@ -73,6 +73,11 @@ export default {
         }
       }
     }
+  },
+  async mounted(){
+    const vm=this;
+    const res = await masterService.getUniLists({category:vm.searchType, search_word:vm.searchText, page:vm.pageNum});
+    vm.list=res.data;
   },
   methods: {
     ...mapActions('MasterUni', [
@@ -110,7 +115,7 @@ export default {
         .then(async () => {
           try {
             const uniClass = vm.openedUniList[index];
-            await masterServie.delete({
+            await masterService.delete({
               name: uniClass.name,
             });
             vm.deleteTeachingClass({
