@@ -54,7 +54,7 @@
         </el-pagination>
       </div>
       <br>
-      <div style="display: block; text-align: center;">
+      <!-- TODO : <div style="display: block; text-align: center;">
         <el-select v-model="searchQuery.searchType" style="display: inline-block; width: 100px">
         <el-option
             v-for="option in selectOptionList"
@@ -66,7 +66,7 @@
         <el-input style="display: inline-block; width: 300px" placeholder="검색어를 입력하세요."
           v-model="searchQuery.searchText" @keydown.enter.native="onClick('SEARCH', searchQuery)"></el-input>
         <el-button @click="onClick('SEARCH', searchQuery)" icon="el-icon-search" circle></el-button>
-      </div>
+      </div> -->
   </div>
 </template>
 
