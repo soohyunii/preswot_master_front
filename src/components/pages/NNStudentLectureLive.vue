@@ -793,7 +793,6 @@ export default {
         } else if (vm.lectureType === 0) {
           vm.lectureItem = [];
         }
-        
         // 아이템이 여러 개일 경우 처리
         if (vm.lectureItem.length > 1) {
           vm.lectureItems.push(vm.lectureItem[0]);

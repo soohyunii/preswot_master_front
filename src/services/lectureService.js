@@ -148,6 +148,9 @@ export default {
   getMaterialKeywords({ id }) {
     return http.get(`/materials/${id}/keywords`);
   },
+  getWholeStudents({ id }) {  // 전체 수강생 명단 불러오기
+    return http.get(`/lectures/${id}/student-list`);
+  },
   /* 삭제 - 181214
   getOnStudentCount({ lectureId }) {
     return http.get(`lectures/${lectureId}/on-student-count`);

@@ -30,9 +30,8 @@
     </div>
     <div v-if="ifGroupMode">
       <el-tag v-for="(k, index) in newGroupList" :key="index">{{ k.name }}</el-tag>
-      <el-time-picker v-model="startTime" placeholder="활성화 시간" style="width: 180px;" default-value="0" />
-      ~
-      <el-time-picker v-model="endTime" placeholder="비활성화 시간" style="width: 180px;" default-value="0" />
+      <el-time-picker v-model="startTime" v-if="lectureType !== 0" placeholder="활성화 시간" style="width: 150px; margin-left: 20px;" default-value="0" />
+      <el-time-picker v-model="endTime" v-if="lectureType !== 0" placeholder="비활성화 시간" style="width: 150px;" default-value="0" />
       <el-button type="primary" @click="onClick('GROUP_LC_ITEM')">
         그룹화
       </el-button>
@@ -188,11 +187,6 @@ export default {
     });
     vm.lectureType = tm.data.type;
 
-    const staT = new Date(tm.data.start_time);
-    const endT = new Date(tm.data.end_time);
-    const diffT = (endT - staT) / 1000; // 단위는 초
-    console.log(diffT);
-
     // 아이템 리스트 만들기
     let lin = [];
     vm.itemList.forEach((x) => {
@@ -296,26 +290,30 @@ export default {
             });
             break;
           }
-          // 시간 설정 안했을 경우 오류 메시지
-          if (vm.startTime === '' || vm.endTime === '') {
-            vm.$notify({
-              title: '알림',
-              message: '아이템의 활성화 시간과 비활성화 시간을 설정해 주세요.',
-              type: 'warning',
-            });
-            break;
-          }
-          // 아이템 그룹의 활성화 시간과 비활성화 시간 설정
-          const startT = (vm.startTime.getTime() / 1000) - 946652400;
-          const endT = (vm.endTime.getTime() / 1000) - 946652400;
-          // 아이템 활성화 시간이 비활성화 시간보다 늦다면 아이템이 종료되지 않음 -> 막아야 함
-          if (startT > endT) {
-            vm.$notify({
-              title: '알림',
-              message: '아이템 활성화 시간이 비활성화 시간보다 늦습니다.',
-              type: 'warning',
-            });
-            break;
+          let startT = 0;
+          let endT = 0;
+          if (vm.lectureType !== 0) { // 무인강의일 경우
+            // 시간 설정 안했을 경우 오류 메시지
+            if (vm.startTime === '' || vm.endTime === '') {
+              vm.$notify({
+                title: '알림',
+                message: '아이템의 활성화 시간과 비활성화 시간을 설정해 주세요.',
+                type: 'warning',
+              });
+              break;
+            }
+            // 아이템 그룹의 활성화 시간과 비활성화 시간 설정
+            startT = (vm.startTime.getTime() / 1000) - 946652400;
+            endT = (vm.endTime.getTime() / 1000) - 946652400;
+            // 아이템 활성화 시간이 비활성화 시간보다 늦다면 아이템이 종료되지 않음 -> 막아야 함
+            if (startT > endT) {
+              vm.$notify({
+                title: '알림',
+                message: '아이템 활성화 시간이 비활성화 시간보다 늦습니다.',
+                type: 'warning',
+              });
+              break;
+            }
           }
           // 중복 검사
           let dup = false;
@@ -343,25 +341,46 @@ export default {
               tmp.push(x.listId);
             }
           });
-          lectureItemService.makeGroup({
-            lectureId: vm.lectureId,
-            iList: tmp,
-            start: startT,
-            end: endT,            
-          }).then(() => {
-            // 성공했을 경우 알림 메시지
-            vm.$notify({
-              title: '알림',
-              message: '성공적으로 그룹화되었습니다.',
-              type: 'success',
+          // 유인강의일 경우
+          if (vm.lectureType === 0) {
+            lectureItemService.makeGroup({
+              lectureId: vm.lectureId,
+              iList: tmp,
+            }).then(() => {
+              // 성공했을 경우 알림 메시지
+              vm.$notify({
+                title: '알림',
+                message: '성공적으로 그룹화되었습니다.',
+                type: 'success',
+              });
+              // 프론트 갱신
+              vm.groupList = [];
+              vm.refreshGroupList();
+              // 성공했을 경우 아이템 연결 리스트 삭제
+              vm.newGroupList = [];
+              vm.ifGroupMode = false;
             });
-            // 프론트 갱신
-            vm.groupList = [];
-            vm.refreshGroupList();
-            // 성공했을 경우 아이템 연결 리스트 삭제
-            vm.newGroupList = [];
-            vm.ifGroupMode = false;
-          });
+          } else { // 무인강의일 경우
+            lectureItemService.makeGroup({
+              lectureId: vm.lectureId,
+              iList: tmp,
+              start: startT,
+              end: endT,
+            }).then(() => {
+              // 성공했을 경우 알림 메시지
+              vm.$notify({
+                title: '알림',
+                message: '성공적으로 그룹화되었습니다.',
+                type: 'success',
+              });
+              // 프론트 갱신
+              vm.groupList = [];
+              vm.refreshGroupList();
+              // 성공했을 경우 아이템 연결 리스트 삭제
+              vm.newGroupList = [];
+              vm.ifGroupMode = false;
+            });
+          }
           break;
         }
         // 아이템 그룹화 삭제
