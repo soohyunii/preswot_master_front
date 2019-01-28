@@ -179,6 +179,7 @@
 </style>
 
 <script>
+/* eslint-disable max-len no-loop-func */
   import LineChart from '../partials/NNLineChart';
   import TeacherClassJournalDetail from '../partials/NNTeacherClassJournalDetail';
   import WordCloud from '../partials/WordCloud';
@@ -450,12 +451,10 @@
       // // 테스트 서버 값 오류 대응 (끝)
 
       vm.allData.classInfo = res.data;
-      console.log('@teacherClassJournal/getClass res.data = ', res.data);
 
 
       // 강의 번호 목록
       const lectureIdList = res.data.lectures.map(element => (element.lecture_id));
-      console.log('lectureIdList = ', lectureIdList);
 
       for (let index = 0; index < lectureIdList.length; index += 1) {
         // 참여도 가져오기 / allData에 넣기
@@ -477,7 +476,6 @@
           lectureId: lectureIdList[index],
         };
       }
-      console.log('vm.allData = ', vm.allData);
       this.onClick('CLASS_ANALYSIS');
     },
     methods: {
@@ -504,7 +502,6 @@
             break;
           }
           case 'CLASS_ANALYSIS': {
-            console.log('@click CLASS_ANALYSIS');
             vm.mode = '과목 저널링';
             vm.category = '강의 이름';
 
@@ -545,7 +542,6 @@
                     // 아이템별 평균 집중도 : 전체 학생수로 나눈 값을 사용
                     concentrationAverages.push(sum / studentCnt);
                   }
-                  console.log('spendedTimeArr = ', spendedTimeArr);
                   // 강의별 평균 집중도
                   let sum = 0.0;
                   concentrationAverages.forEach((element) => {
@@ -585,7 +581,6 @@
                   });
                   // 학생들이 제출한 question 갯수의 합 / question 갯수 * 학생수
                   const participationAverage = submitCnt / (questionCnt * studentCnt);
-                  // console.log('participationAverage * 100 = ', participationAverage * 100);
                   result[index].push((participationAverage * 100).toFixed(2));
                 } else if (vm.nowOption[index2][2] === '전체') {
                   result[index].push(5);
@@ -724,9 +719,7 @@
 
             const res = await analysisService.getLectureStudents({ classId: vm.classId });
             vm.classStudentList = res.data;
-            console.log('vm.classStudentList = ', vm.classStudentList);
-
-            const res2 = await lectureService.getLecture({ lectureId: payload });
+            // const res2 = await lectureService.getLecture({ lectureId: payload });
             while (vm.chartData.length > 0)vm.chartData.pop(); // 초기화
             while (vm.chartCategories.length > 0)vm.chartCategories.pop(); // 초기화
             vm.tableData = [];
@@ -835,7 +828,6 @@
             const res = await analysisService.getLectureStudents({ classId: vm.classId });
             vm.classStudentList = res.data;
             vm.selectedStudentId = '';
-            console.log('@STUDENT_ANALYSIS, res.data = ', res.data);
             vm.mode = '학생 선택';
             break;
           }

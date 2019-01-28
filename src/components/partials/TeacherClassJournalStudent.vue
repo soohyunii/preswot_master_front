@@ -36,7 +36,6 @@ export default {
   async beforeMount() {
     const vm = this;
     const res = await analysisService.getLectureStudents({ classId: vm.classId });
-    console.log('@journal/studnet res.data = ', res.data);
     vm.allData = res.data;
   },
   data() {

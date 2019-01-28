@@ -84,7 +84,6 @@ export default {
     const vm = this;
     const res = await analysisService.getKeywordItems({ lectureId: vm.lectureId });
     vm.allData = res.data.result;
-    console.log('res.data.result = ', res.data.result);
   },
   data() {
     return {
