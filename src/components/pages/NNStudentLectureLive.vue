@@ -549,6 +549,7 @@ export default {
       nowNum: 0, // 현재 보고 있는 아이템의 번호
       startTime: '', // 학생 로그 제출용
       offset: -1, // 무인[개인] offset
+      oneNote: false, // 자료가 하나인지
     };
   },
   computed: {
@@ -758,7 +759,7 @@ export default {
         case 'QUE': {
           // 만약 지금 보고있던게 자료였다면 로그 제출
           const endTime = new Date();
-          if (vm.nowQuestion[vm.nowNum].soc === '자료') {
+          if (vm.nowQuestion[vm.nowNum].types === '자료') {
             const submitlog = {
               lecture_id: vm.lectureId,
               user_id: utils.getUserIdFromJwt(),
@@ -789,7 +790,7 @@ export default {
           }
           // 만약 지금 보고있던게 자료였다면 로그 제출
           const endTime = new Date();
-          if (vm.nowQuestion[vm.nowNum].soc === '자료') {
+          if (vm.nowQuestion[vm.nowNum].types === '자료') {
             const submitlog = {
               lecture_id: vm.lectureId,
               user_id: utils.getUserIdFromJwt(),
@@ -820,7 +821,7 @@ export default {
           }
           // 만약 지금 보고있던게 자료였다면 로그 제출
           const endTime = new Date();
-          if (vm.nowQuestion[vm.nowNum].soc === '자료') {
+          if (vm.nowQuestion[vm.nowNum].types === '자료') {
             const submitlog = {
               lecture_id: vm.lectureId,
               user_id: utils.getUserIdFromJwt(),
@@ -848,6 +849,21 @@ export default {
     refreshLectureItem(notify, signal) {
       const vm = this;
       if (signal === 0) {
+        // 자료 하나만 보고 있었다면
+        if (vm.oneNote === true) {
+          const endTime = new Date();
+          const submitlog = {
+            lecture_id: vm.lectureId,
+            user_id: utils.getUserIdFromJwt(),
+            type: vm.lectureItem[0].type,
+            start_time: vm.startTime,
+            end_time: endTime,
+            item_id: vm.lectureItem[0].lecture_item_id,
+            order: vm.lectureItem[0].order,
+          };
+          vm.$socket.emit('LECTURE_ITEM_LOG', JSON.stringify(submitlog));
+          vm.oneNote = false;
+        }
         // 아이템 내릴 경우
         vm.lectureItems = [];
         vm.nowQuestion = [];
@@ -875,6 +891,13 @@ export default {
 
         vm.lectureItems = [];
         vm.nowQuestion = [];
+
+        // 자료 하나만 있다면
+        if (res3.data.length === 1) {
+          if (res3.data[0].type === 4) {
+            vm.oneNote = true;
+          }
+        }
 
         // 새로 들어온 문항의 key 생성
         res3.data.forEach((x) => {
