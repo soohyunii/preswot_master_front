@@ -78,7 +78,7 @@
           >
             <template slot-scope="scope">
               <router-link :to="`/a/teacher/NNlecture/${scope.row.lecture_id}/live?classId=${scope.row.class_id}`">
-                <el-button>강의하기</el-button>
+                <el-button v-if="scope.row.type !== '[무인]개인'">강의하기</el-button>
               </router-link>
             </template>
           </el-table-column>

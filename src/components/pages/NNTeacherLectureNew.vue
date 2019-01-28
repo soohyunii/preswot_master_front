@@ -76,6 +76,7 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import lectureService from '../../services/lectureService';
+import lectureItemService from '../../services/lectureItemService';
 import authService from '../../services/authService';
 import utils from '../../utils';
 
@@ -151,9 +152,18 @@ export default {
               startTime: vm.input.lcStartDate,
               endTime: vm.input.lcEndDate,
             });
+            // 강의 수정할 경우 아이템 그룹 전부 해제
+            const group = await lectureItemService.showGroup({
+              lectureId: vm.lectureId,
+            });
+            group.data.list.forEach((x) => {
+              lectureItemService.deleteGroup({
+                groupId: x.group_id,
+              });
+            });
             vm.$notify({
               title: '강의 수정 성공',
-              message: '성공적으로 강의가 수정됨',
+              message: '성공적으로 강의가 수정되었습니다. 아이템 그룹이 전부 해제되었습니다. 다시 그룹화해주세요.',
               type: 'success',
             });
             vm.$router.go(-1);

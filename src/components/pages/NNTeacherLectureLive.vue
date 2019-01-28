@@ -265,7 +265,53 @@
         <el-button size="small" @click="onClick('ABSENT')">결석자 명단</el-button>
         <el-button v-show="!showGraph" size="small" type="primary" @click="onClick('SHOWGRAPH')">실시간 그래프 보이기</el-button>
         <div style="float: right;">
-          <el-popover placement="top" trigger="hover">
+          <el-popover v-if="lectureType === 0" placement="top" trigger="hover">
+            <div style="background-color: #EBEEF5; width: 1200px;">
+              <el-row :gutter="20" style="height: 400px;">
+                <el-col span="11">
+                  <h2>현재 출제 목록</h2>
+                  <el-table :data="nowItemTable" height="300px" style="width: 450px;" id="dyTable">
+                    <el-table-column label="타입" prop="type" width="50px;" />
+                    <el-table-column label="이름" prop="name" />
+                    <el-table-column label="제출 현황" width="100px;">
+                      <template slot-scope="scope" v-if="scope.row.type === '문항' || scope.row.type === '설문'">
+                        {{ scope.row.submit }} / {{ nowStudent }}
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="" width="80px;">
+                      <template slot-scope="scope">
+                        <el-button type="primary" size="small" @click="itemCurrentState(scope.row)"
+                          v-if="scope.row.type === '문항' || scope.row.type === '설문'">
+                          분석
+                        </el-button>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </el-col>
+                <el-col span="9" style="margin-left: 20px;">
+                  <el-tabs v-model="activeTab" type="border-card" style="margin-top: 20px; height: 345px;" v-if="tabShow">
+                    <el-tab-pane label="답안 선택 현황" name="select" v-if="questionAnswerFix">
+                      <el-table :data="selectStatus" height="280px" style="width: 400px;" :row-class-name="tRCName">
+                        <el-table-column label="답안" prop="answer" />
+                        <el-table-column label="학생 수" prop="num" width="130px" />
+                      </el-table>
+                    </el-tab-pane>
+                    <el-tab-pane label="미제출자 목록" name="notyet">
+                      {{ notyetStatus }}
+                    </el-tab-pane>
+                    <el-tab-pane label="학생별 제출 횟수" name="submitNum">
+                      <el-table :data="submitStatus" height="280px" style="width: 400px;">
+                        <el-table-column label="제출 횟수" prop="submit" />
+                        <el-table-column label="학생 수" prop="num" width="130px" />
+                      </el-table>
+                    </el-tab-pane>
+                  </el-tabs>
+                </el-col>
+              </el-row>
+            </div>
+            <el-button size="small" type="primary" @click="onClick('NEXT_ITEM')" slot="reference">다음 아이템 보이기</el-button>
+          </el-popover>
+          <el-popover v-if="lectureType === 1" placement="top" trigger="hover">
             <div style="background-color: #EBEEF5; width: 1200px;">
               <el-row :gutter="20" style="height: 400px;">
                 <el-col span="11">
@@ -317,9 +363,9 @@
                 />
               </div>-->
             </div>
-            <el-button size="small" type="primary" @click="onClick('NEXT_ITEM')" slot="reference">다음 아이템 보이기</el-button>
+            <el-button size="small" type="primary" slot="reference">아이템 현황 보기</el-button>
           </el-popover>
-          <el-button size="small" @click="onClick('HIDE_ITEM')">아이템 내리기</el-button>
+          <el-button v-if="lectureType === 0" size="small" @click="onClick('HIDE_ITEM')">아이템 내리기</el-button>
           <el-button size="small" @click="onClick('FULL_ITEM')">전체 아이템 확인</el-button>
         </div>
         <div v-show="showGraph">
@@ -374,6 +420,8 @@ import LectureSurveyResult from '../partials/LectureSurveyResult';
 import utils from '../../utils';
 import lectureItemService from '../../services/lectureItemService';
 import LineChart from '../partials/NNLineChart';
+import { setTimeout, clearTimeout } from 'timers';
+import automaticLectureService from '../../services/automaticLectureService';
 
 export default {
   name: 'TeacherLectureLive',
@@ -393,6 +441,8 @@ export default {
     const res = await lectureService.getLecture({
       lectureId: vm.lectureId,
     });
+    // lectureType : 0 (유인 강의), 1(무인 단체 강의), 2(무인 개인 강의)
+    vm.lectureType = res.data.type;
     const grp = await lectureItemService.showGroup({
       lectureId: vm.lectureId,
     });
@@ -520,6 +570,110 @@ export default {
       stud.conces = 0;  // 참여한 문항+설문+자료의 수
       vm.totalStudentList.push(stud);
     });
+
+    // 무인 단체
+    if (vm.lectureType === 1) {
+      vm.joinTime = Date.now();
+      vm.timer = [];
+      const res4 = await lectureService.getLecture({
+        lectureId: vm.lectureId,
+      });
+      const lectureStart = new Date(res4.data.start_time);
+      const lectureStartTime = lectureStart.getTime() / 1000; // 강의 시작 시간
+      const enterTime = Math.floor(vm.joinTime / 1000);  // 접속 시간
+      const enterTimeAbs = enterTime - lectureStartTime; // 강의 시작 이후로 몇 초 뒤에 접속했는지
+      const grp = await lectureItemService.showGroup({
+        lectureId: vm.lectureId,
+      });
+      const grp_order = deepCopy(grp.data.list);
+
+      // 강사 접속시 기존 학생들의 출석 정보 불러와야 함
+      const attend = await automaticLectureService.pastAttendanceData({
+        lectureId: vm.lectureId,
+      });
+      // console.log(attend);
+      // 그래프용 배열 만들기
+      const timeHistory = [];
+      for (let i = 0; i < Math.floor(enterTimeAbs / 60) + 1; i += 1) {
+        const his = {};
+        his.att = 0; // 해당 시점 출석자
+        timeHistory.push(his);
+      }
+      // 시간대별 출석률 계산
+      attend.data.forEach((x) => {
+        const ti1 = new Date(x.createdAt);
+        const ti2 = ti1.getTime() / 1000;
+        const ti3 = Math.floor((ti2 - lectureStartTime) / 60);
+        if (x.type === 0) {
+          timeHistory[ti3].att += 1;
+        } else if (x.type === 1) {
+          timeHistory[ti3].att -= 1;
+        }
+      });
+      let timeAt = 0;
+      // 실시간 그래프 그리기
+      timeHistory.forEach((x) => {
+        timeAt += x.att;
+        const tempPresentRate = ((timeAt / vm.totalStudent) * 100).toFixed(1);
+        const minute = vm.chartCategories.length;
+        vm.chartCategories.push(`${minute}분`);
+        vm.chartData[0].push(0);
+        vm.chartData[1].push(0);
+        vm.chartData[2].push(0);
+        vm.chartData[3].push(tempPresentRate);
+      });
+      // console.log(timeHistory);
+
+      grp_order.sort((a, b) => {
+        const aItem = Number(a.start);
+        const bItem = Number(b.start);
+        return aItem - bItem;
+      });
+      
+      // 접속 시간 기준으로 이미 종료된 아이템들은 필요 없음
+      let delItemNum = 0;
+      grp_order.forEach((x) => {
+        if (x.end <= enterTimeAbs) {
+          delItemNum += 1;
+          vm.stepData[delItemNum - 1].status = 'success';
+        }
+      });
+      grp_order.splice(0, delItemNum);
+
+      // 그룹 리스트 하나씩 분리
+      const group_schedule = [];
+      grp_order.forEach((x) => {
+        const gs = {};
+        gs.time = x.start;
+        gs.type = 'start';
+        gs.list_ids = x.list_ids;
+        group_schedule.push(gs);
+        const gs1 = {};
+        gs1.time = x.end;
+        gs1.type = 'end';
+        gs1.list_ids = x.list_ids;
+        group_schedule.push(gs1);
+      });
+
+      // 입장과 동시에 기존에 보던 아이템 보여주고 있어야 할 경우
+      if (group_schedule.length !== 0) {
+        if (group_schedule[0].time <= enterTimeAbs) {
+          group_schedule[0].time = 0;
+          vm.stepData[delItemNum].status = 'process';
+        }
+      }
+      // 타이머 설정해서 아이템 보여주고 내리기
+      group_schedule.forEach((x) => {
+        vm.timer.push(setTimeout(() => {
+          if (x.type === 'start') {
+            vm.stepData[delItemNum].status = 'process';
+          } else if (x.type === 'end') {
+            vm.stepData[delItemNum].status = 'success';
+            delItemNum += 1;
+          }
+        }, (x.time - enterTimeAbs) * 1000));
+      });
+    }
 
     // 출석 변동 있는 경우 - 실시간 출석률 변화
     vm.$socket.on('CHECK_STUDENT_LIST', (msg) => {
@@ -708,6 +862,7 @@ export default {
       videolink: '',
       className: '',
       lectureName: '',
+      lectureType: '',
       mainquestion: [], // 대표문항 리스트
       subquestion: [], // 딸린문항 리스트
       nowGroup: -1, // 현재 그룹 번호
@@ -753,6 +908,8 @@ export default {
       showGraph: false, // 실시간 그래프 보일지
       questionAnswerFix: false, // 고정된 답안이 있는지 - 객관식만 해당
       totalStudentList: [], // 전체 학생의 이해도-참여도-집중도 현재값 리스트
+      joinTime: undefined, // 강사가 강의에 입장한 시간 - 무인 단체
+      timer: [], // 무인 단체에서 타이머
     };
   },
   computed: {

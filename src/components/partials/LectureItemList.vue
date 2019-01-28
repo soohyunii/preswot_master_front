@@ -27,6 +27,7 @@
           align="center"
         ></el-table-column>
 
+        <!-- 아이템별 활성화 시간 설정 기능 사라짐
         <el-table-column
           prop="offset"
           label="활성화 시각"
@@ -37,7 +38,7 @@
           <template slot-scope="scope">
             {{ scope.row.offset }}
           </template>
-        </el-table-column>
+        </el-table-column>-->
 
         <el-table-column
           label="-"

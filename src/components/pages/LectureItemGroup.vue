@@ -96,6 +96,8 @@ export default {
       lectureType: '', // 0-유인 1-무인단체 2-무인개인
       startTime: '', // 무인강의에서 지정해 줄 아이템 시작시간
       endTime: '', // 무인강의에서 지정해 줄 아이템 끝시간
+      lectureStart: '', // 강의 시작 시간 - 무인[단체]
+      lectureEnd: '', // 강의 끝 시간 - 무인[단체]
     };
   },
   async created() {
@@ -186,6 +188,12 @@ export default {
       lectureId: vm.lectureId,
     });
     vm.lectureType = tm.data.type;
+
+    // [무인] 단체에서 강의 그룹화 시간 제한
+    if (vm.lectureType === 1) {
+      vm.lectureStart = tm.data.start_time;
+      vm.lectureEnd = tm.data.end_time;
+    }
 
     // 아이템 리스트 만들기
     let lin = [];
@@ -311,6 +319,45 @@ export default {
                 title: '알림',
                 message: '아이템 활성화 시간이 비활성화 시간보다 늦습니다.',
                 type: 'warning',
+              });
+              break;
+            }
+            // 활성화-비활성화 시간이 강의 시간 내에 있는지
+            const s = new Date(vm.lectureStart);
+            const e = new Date(vm.lectureEnd);
+            // 총 강의 시간
+            const lectureTime = (e - s) / 1000;
+            if (endT >= lectureTime) {
+              // 총 강의 시간보다 아이템이 늦게 종료되면 안 됨
+              vm.$notify({
+                title: '알림',
+                message: '아이템은 강의 시간 내에서 활성화/비활성화 되어야 합니다.',
+                type: 'warning',
+              });
+              break;
+            }
+            
+            // 기존의 아이템 그룹과 시간 겹치는지 테스트
+            let overlap = false;
+            vm.groupList.forEach((x) => {
+              const sM = parseInt((x.start.split(':')[0]), 10);
+              const sS = parseInt((x.start.split(':')[1]), 10);
+              const eM = parseInt((x.end.split(':')[0]), 10);
+              const eS = parseInt((x.end.split(':')[1]), 10);
+              const sT = sM * 60 + sS; // 초 단위로 변환
+              const eT = eM * 60 + eS; // 초 단위로 변환
+              if (!((startT < sT && endT < sT) || (startT > eT && endT > eT))) {
+                // 새 그룹의 시작시간과 끝시간이 기존 그룹의 시작시간보다 빠르거나
+                // 새 그룹의 시작시간과 끝시간이 기존 그룹의 끝시간보다 느리면 통과
+                // 둘 다 해당 안 될 경우 시간이 겹친다는 의미
+                overlap = true;
+              }
+            });
+            if (overlap === true) {
+              vm.$notify({
+                title: '알림',
+                message: '이미 존재하는 아이템 그룹과 활성화 시간이 겹칩니다. 그룹 간 최소 시간 간격은 1초입니다.',
+                type: 'error',
               });
               break;
             }
