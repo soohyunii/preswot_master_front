@@ -935,11 +935,12 @@ export default {
         if (res3.data.length !== 0) {
           vm.lectureItem = res3.data;
           // sequence 순서대로 강의 아이템 정렬
+          /*
           vm.lectureItem.sort((a, b) => {
             const aItemSequence = Number(a.sequence);
             const bItemSequence = Number(b.sequence);
             return aItemSequence - bItemSequence;
-          });
+          }); */
         } else if (vm.lectureType === 0) {
           vm.lectureItem = [];
         }

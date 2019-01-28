@@ -623,6 +623,13 @@ export default {
         vm.chartData[3].push(tempPresentRate);
       });
       // console.log(timeHistory);
+      const para = {
+        lecture_id: vm.lectureId,
+      };
+      vm.$socket.emit('REAL_TIME_INFO', JSON.stringify(para));
+      vm.$socket.on('REAL_TIME_INFO', (msg) => {
+        console.log(msg);
+      });
 
       grp_order.sort((a, b) => {
         const aItem = Number(a.start);
