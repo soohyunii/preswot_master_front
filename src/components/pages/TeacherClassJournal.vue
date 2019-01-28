@@ -179,7 +179,7 @@
 </style>
 
 <script>
-/* eslint-disable max-len no-loop-func */
+/* eslint-disable max-len, no-loop-func */
   import LineChart from '../partials/NNLineChart';
   import TeacherClassJournalDetail from '../partials/NNTeacherClassJournalDetail';
   import WordCloud from '../partials/WordCloud';
