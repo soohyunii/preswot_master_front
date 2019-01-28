@@ -110,6 +110,7 @@
                   <div v-if="lectureItem.length > 1">
                     <div v-for="(item, index) in lectureItems" :key="index">
                       <lecture-live-item
+                        id="iLd"
                         :data="item"
                         :onClick="onClick"
                         :answerSubmitted="submitFlag[item.lecture_item_id]"

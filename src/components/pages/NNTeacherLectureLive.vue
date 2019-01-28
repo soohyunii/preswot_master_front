@@ -850,6 +850,14 @@ export default {
     const vm = this;
     // eslint-disable-next-line
     window.onbeforeunload = function () {
+      // 강사가 강의 화면에서 나가는 경우, 열려있는 아이템을 모두 닫는 동작
+      if (vm.nowGroup !== -1) {
+        const paramsi = {
+          lecture_id: vm.lid,
+          group_id: vm.nowGroup,
+        };
+        vm.$socket.emit('LECTURE_GROUP_DEACTIVATION', JSON.stringify(paramsi));
+      }
       const param = {
         lecture_id: vm.lectureId,
         user_id: utils.getUserIdFromJwt(),
