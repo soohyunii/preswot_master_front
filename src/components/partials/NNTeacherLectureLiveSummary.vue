@@ -2,12 +2,12 @@
   <div class="ts">
     <!-- TODO: translation -->
     <el-row>
-      <el-col :offset="1" :span="3" style="text-align:center;"><div>수강생 평균 집중도</div></el-col>
-      <el-col :span="3"><el-progress :text-inside="true" :stroke-width="20" :percentage="avg_data.avg_concentration_score"></el-progress></el-col>
+      <el-col :offset="1" :span="3" style="text-align:center;"><div>수강생 평균 이해도</div></el-col>
+      <el-col :span="3"><el-progress :text-inside="true" :stroke-width="20" :percentage="avg_data.avg_understanding_score"></el-progress></el-col>
       <el-col :span="4" style="text-align:center;"><div>수강생 평균 참여도</div></el-col>
       <el-col :span="3"><el-progress :text-inside="true" :stroke-width="20" :percentage="avg_data.avg_participation_score" status="success"></el-progress></el-col>
-      <el-col :span="4" style="text-align:center;"><div>수강생 평균 이해도</div></el-col>
-      <el-col :span="3"><el-progress :text-inside="true" :stroke-width="20" :percentage="avg_data.avg_understanding_score" status="success"></el-progress></el-col>
+      <el-col :span="4" style="text-align:center;"><div>수강생 평균 집중도</div></el-col>
+      <el-col :span="3"><el-progress :text-inside="true" :stroke-width="20" :percentage="avg_data.avg_concentration_score" status="success"></el-progress></el-col>
       <el-col :span="3" style="text-align:right;">
         <i class="el-icon-close" @click="onClick('CLOSE_STATUSBAR')" />
       </el-col>
@@ -41,8 +41,8 @@
 </template>
 
 <style lang="scss">
-  .el-progress-bar__innerText{
-  color:#000000;
+  .el-progress-bar__innerText {
+    color:#000000;
   }
   .el-row {
     margin-bottom: 20px;
@@ -103,6 +103,7 @@
 </style>
 <script>
   import realtimeLectureService from '../../services/realtimeLectureService';
+  import { EventBus } from '../../event-bus';
 
   export default {
     // TODO: 전달되는 데이터 명 확인
@@ -121,6 +122,8 @@
     },
     async mounted() {
       const vm = this;
+      EventBus.$on('makeSummary', vm.tm);
+      /*
       vm.$socket.on('GET_REALTIME_STAT', (msg) => {
         const jsonMSG = JSON.parse(msg);
         vm.avg_data = {
@@ -128,7 +131,7 @@
           avg_participation_score: Number(jsonMSG[0].avg_participation_score.toFixed(1)),
           avg_understanding_score: Number(jsonMSG[0].avg_understanding_score.toFixed(1)),
         };
-      });
+      }); */
     },
     destroyed() {
       const vm = this;
@@ -138,10 +141,10 @@
 
     },
     methods: {
-
       async getLectureStat() {
         const vm = this;
         try {
+          /*
           const lectureData = await realtimeLectureService.getStudentLectureLog({
             lectureId: vm.lectureId, opt: vm.opt,
           });
@@ -151,9 +154,20 @@
             // eslint-disable-next-line
           }
 
-          vm.forLoopData = lectureData.data;
+          vm.forLoopData = lectureData.data; */
         } catch (e) {
           throw new Error('request error');
+        }
+      },
+      tm(data) {
+        const vm = this;
+        // 서버에서 넘어온 값으로 그래프 그리기
+        if (data[0] === 'ud') {
+          vm.avg_data.avg_understanding_score = data[1];
+        } else if (data[0] === 'cc') {
+          vm.avg_data.avg_concentration_score = data[1];
+        } else if (data[0] === 'pp') {
+          vm.avg_data.avg_participation_score = data[1];
         }
       },
       onClick(type) {
@@ -163,21 +177,21 @@
             // vm.lectureId = 1; // 강의 아이디를 여기에다가 넣어야됨
             vm.opt = 0;
             clearInterval(vm.loopInterval);
-            vm.loopInterval = setInterval(vm.getLectureStat, 1000);
+            vm.loopInterval = setInterval(vm.getLectureStat, 10000);
             break;
           }
           case 'GET_LECTURE_SCORE_ORDER_BY_PARTICIPATION': {
             // vm.lectureId = 1; // 강의 아이디를 여기에다가 넣어야됨
             vm.opt = 1;
             clearInterval(vm.loopInterval);
-            vm.loopInterval = setInterval(vm.getLectureStat, 1000);
+            vm.loopInterval = setInterval(vm.getLectureStat, 10000);
             break;
           }
           case 'GET_LECTURE_SCORE_ORDER_BY_UNDERSTANDING': {
             // vm.lectureId = 1; // 강의 아이디를 여기에다가 넣어야됨
             vm.opt = 2;
             clearInterval(vm.loopInterval);
-            vm.loopInterval = setInterval(vm.getLectureStat, 1000);
+            vm.loopInterval = setInterval(vm.getLectureStat, 10000);
             break;
           }
           case 'CLOSE_STATUSBAR': {

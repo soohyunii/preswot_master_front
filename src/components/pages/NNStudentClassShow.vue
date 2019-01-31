@@ -61,8 +61,9 @@ export default {
           const type = utils.convertLcType(item.type);
           // eslint-disable-next-line no-param-reassign
           item.type = type;
+          // 수강 완료 or 미완료 기준 변경 -> heartbeat에서 lecture_student_login_logs로
           // eslint-disable-next-line no-param-reassign
-          item.heard = (item.heartbeat_counts.length > 0) ? '수강완료' : '수강미완료';
+          item.heard = (item.lecture_student_login_logs.length > 0) ? '수강완료' : '수강미완료';
           return item;
         });
       }

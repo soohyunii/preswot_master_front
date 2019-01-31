@@ -122,6 +122,7 @@
                   </div>
                 </el-col>
                 <el-col :span="8"><div>
+                  <h3 v-if="lectureType !== 0">남은 시간 {{ remainTime }}</h3>
                   <el-table :data="nowQuestion" v-if="lectureItem.length > 1">
                     <el-table-column label="번호" width="50px;">
                       <template slot-scope="scope">
@@ -237,7 +238,7 @@ export default {
     const params = {
       lecture_id: vm.lectureId,
       user_id: utils.getUserIdFromJwt(),
-    };
+    };0
     vm.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
     /* 삭제 - 181214
     vm.sHeartbeatIntervalId = setInterval(() => {
@@ -361,13 +362,17 @@ export default {
       }
 
       // 입장과 동시에 기존에 보던 아이템 보여주고 있어야 할 경우
+      let lateTime = 0;
+      let originTime = 0;
       if (group_schedule.length !== 0) {
         if (group_schedule[0].time <= enterTimeAbs) {
+          lateTime = enterTimeAbs - group_schedule[0].time;
+          originTime = group_schedule[0].time;
           group_schedule[0].time = 0;
         }
       }
       // 타이머 설정해서 아이템 보여주고 내리기
-      group_schedule.forEach((x) => {
+      group_schedule.forEach((x, index) => {
         vm.timer.push(setTimeout(() => {
           if (x.type === 'start') {
             // 시작 시간 갱신
@@ -484,23 +489,68 @@ export default {
                 vm.nowQuestion.push(tmp);
               });
             }
-            // 아이템 변경 알림 메시지
-            vm.$notify({
-              title: '알림',
-              message: '강의아이템이 변경되었습니다.',
-              type: 'warning',
-            });
+            // 남은 시간 표시 타이머
+            let totalTime;
+            if (x.time === 0) {
+              // 들어온 그때부터 아이템 켜진 경우
+              // 3분~6분동안 보여줄 아이템인데 4분에 접속했다면 360 - 180 - 60 = 120
+              totalTime = group_schedule[index + 1].time - originTime - lateTime - 1;
+            } else {
+              // 추후에 아이템 켜질 경우
+              // 2분~5분동안 보여줄 아이템이라면 그냥 300 - 120 = 180
+              totalTime = group_schedule[index + 1].time - x.time - 1;
+            }
+            // totalTime = group_schedule[index + 1].time - enterTimeAbs - 1;
+            vm.remainTimer = window.setInterval(() => {
+              const ttS = totalTime % 60;
+              const ttM = (totalTime - ttS) / 60;
+              if (ttS < 10) {
+                vm.remainTime = `${ttM}:0${ttS}`;
+              } else {
+                vm.remainTime = `${ttM}:${ttS}`;
+              }
+              totalTime = totalTime - 1;
+              if (totalTime === -1) {
+                vm.remainTime = '';
+                clearInterval(vm.remainTimer);
+              }
+            }, 1000);
           } else if (x.type === 'end') {
+            // 아이템 하나를 보고 있었는데 자료라면
+            if (vm.lectureItem.length === 1 && vm.lectureItem[0].type === 4) {
+              const endTime = new Date();
+              const submitlog = {
+                lecture_id: vm.lectureId,
+                user_id: utils.getUserIdFromJwt(),
+                type: vm.lectureItem[0].type,
+                start_time: vm.startTime,
+                end_time: endTime,
+                item_id: vm.lectureItem[0].lecture_item_id,
+                order: vm.lectureItem[0].order,
+              };
+              vm.$socket.emit('LECTURE_ITEM_LOG', JSON.stringify(submitlog));
+              vm.oneNote = false;
+            }
+            // 아이템 여러개인데 자료를 보고 있었다면
+            else if (vm.lectureItem.length > 1) {
+              const endTime = new Date();
+              if (vm.nowQuestion[vm.nowNum].types === '자료') {
+                const submitlog = {
+                  lecture_id: vm.lectureId,
+                  user_id: utils.getUserIdFromJwt(),
+                  type: vm.nowQuestion[vm.nowNum].type,
+                  start_time: vm.startTime,
+                  end_time: endTime,
+                  item_id: vm.nowQuestion[vm.nowNum].lecture_item_id,
+                  order: vm.nowQuestion[vm.nowNum].order,
+                };
+                vm.$socket.emit('LECTURE_ITEM_LOG', JSON.stringify(submitlog));
+              }
+            }
             vm.nowQuestion = [];
             vm.lectureItem = [];
             vm.lectureItems = [];
             vm.nowNum = 0;
-            // 아이템 변경 알림 메시지
-            vm.$notify({
-              title: '알림',
-              message: '강의아이템이 변경되었습니다.',
-              type: 'warning',
-            });
           }
         }, (x.time - enterTimeAbs) * 1000));
       });
@@ -550,6 +600,8 @@ export default {
       startTime: '', // 학생 로그 제출용
       offset: -1, // 무인[개인] offset
       oneNote: false, // 자료가 하나인지
+      remainTime: '', // 남은 시간 표시 (무인 강의)
+      remainTimer: [], // 남은 시간 표시용 타이머
     };
   },
   computed: {
@@ -720,6 +772,8 @@ export default {
               throw new Error(`not defined type ${type}`);
             }
           }
+          // 제출한 뒤에 시작 시간 갱신
+          vm.startTime = new Date();
           break;
         }
         case 'FOCUSVIDEO': {
@@ -863,6 +917,22 @@ export default {
           };
           vm.$socket.emit('LECTURE_ITEM_LOG', JSON.stringify(submitlog));
           vm.oneNote = false;
+        }
+        // 아이템 여러개인데 자료를 보고 있었다면
+        else if (vm.lectureItem.length > 1) {
+          const endTime = new Date();
+          if (vm.nowQuestion[vm.nowNum].types === '자료') {
+            const submitlog = {
+              lecture_id: vm.lectureId,
+              user_id: utils.getUserIdFromJwt(),
+              type: vm.nowQuestion[vm.nowNum].type,
+              start_time: vm.startTime,
+              end_time: endTime,
+              item_id: vm.nowQuestion[vm.nowNum].lecture_item_id,
+              order: vm.nowQuestion[vm.nowNum].order,
+            };
+            vm.$socket.emit('LECTURE_ITEM_LOG', JSON.stringify(submitlog));
+          }
         }
         // 아이템 내릴 경우
         vm.lectureItems = [];
@@ -1103,13 +1173,17 @@ export default {
       }
 
       // 입장과 동시에 기존에 보던 아이템 보여주고 있어야 할 경우
+      let lateTime = 0;
+      let originTime = 0;
       if (group_schedule.length !== 0) {
         if (group_schedule[0].time <= vm.offset) {
+          lateTime = vm.offset - group_schedule[0].time;
+          originTime = group_schedule[0].time;
           group_schedule[0].time = 0;
         }
       }
       // 타이머 설정해서 아이템 보여주고 내리기
-      group_schedule.forEach((x) => {
+      group_schedule.forEach((x, index) => {
         vm.timer.push(setTimeout(() => {
           if (x.type === 'start') {
             // 시작 시간 갱신
@@ -1226,23 +1300,63 @@ export default {
                 vm.nowQuestion.push(tmp);
               });
             }
-            // 아이템 변경 알림 메시지
-            vm.$notify({
-              title: '알림',
-              message: '강의아이템이 변경되었습니다.',
-              type: 'warning',
-            });
+            // 남은 시간 표시 타이머
+            let totalTime;
+            if (x.time === 0) {
+              totalTime = group_schedule[index + 1].time - originTime - lateTime - 1;
+            } else {
+              totalTime = group_schedule[index + 1].time - x.time - 1;
+            }
+            vm.remainTimer = window.setInterval(() => {
+              const ttS = totalTime % 60;
+              const ttM = (totalTime - ttS) / 60;
+              if (ttS < 10) {
+                vm.remainTime = `${ttM}:0${ttS}`;
+              } else {
+                vm.remainTime = `${ttM}:${ttS}`;
+              }
+              totalTime = totalTime - 1;
+              if (totalTime === -1) {
+                vm.remainTime = '';
+                clearInterval(vm.remainTimer);
+              }
+            }, 1000);
           } else if (x.type === 'end') {
+            // 자료 하나만 보고 있었다면
+            if (vm.lectureItem.length === 1 && vm.lectureItem[0].type === 4) {
+              const endTime = new Date();
+              const submitlog = {
+                lecture_id: vm.lectureId,
+                user_id: utils.getUserIdFromJwt(),
+                type: vm.lectureItem[0].type,
+                start_time: vm.startTime,
+                end_time: endTime,
+                item_id: vm.lectureItem[0].lecture_item_id,
+                order: vm.lectureItem[0].order,
+              };
+              vm.$socket.emit('LECTURE_ITEM_LOG', JSON.stringify(submitlog));
+              vm.oneNote = false;
+            }
+            // 아이템 여러개인데 자료를 보고 있었다면
+            else if (vm.lectureItem.length > 1) {
+              const endTime = new Date();
+              if (vm.nowQuestion[vm.nowNum].types === '자료') {
+                const submitlog = {
+                  lecture_id: vm.lectureId,
+                  user_id: utils.getUserIdFromJwt(),
+                  type: vm.nowQuestion[vm.nowNum].type,
+                  start_time: vm.startTime,
+                  end_time: endTime,
+                  item_id: vm.nowQuestion[vm.nowNum].lecture_item_id,
+                  order: vm.nowQuestion[vm.nowNum].order,
+                };
+                vm.$socket.emit('LECTURE_ITEM_LOG', JSON.stringify(submitlog));
+              }
+            }
             vm.nowQuestion = [];
             vm.lectureItem = [];
             vm.lectureItems = [];
             vm.nowNum = 0;
-            // 아이템 변경 알림 메시지
-            vm.$notify({
-              title: '알림',
-              message: '강의아이템이 변경되었습니다.',
-              type: 'warning',
-            });
           }
         }, (x.time - vm.offset) * 1000));
       });
@@ -1300,6 +1414,18 @@ export default {
         user_id: utils.getUserIdFromJwt(),
       };
       vm.$socket.emit('LEAVE_LECTURE', JSON.stringify(param));
+      /*
+      vm.remainTimer.forEach((item) => {
+        clearTimeout(item);
+      }); */
+      clearInterval(vm.remainTimer);
+
+      vm.$socket._callbacks = null; // eslint-disable-line
+      vm.$socket.close();
+
+      vm.timer.forEach((item) => {
+        clearTimeout(item);
+      });
 
       // 화면 떠나기 전 등록한 Listener 해제. 이 코드가 없으면 리스너가 중복 등록되어 버그가 발생함
       window.removeEventListener('beforeunload', vm.beforeLeave);
@@ -1317,12 +1443,13 @@ export default {
      * 최근에 듣던 강의 아이템과 해당 강의 아이템 시작으로부터의 경과 시간을 보냄
      */
     if (vm.lectureType === 1) {
-      /*
+      /* 무인 단체는 나갈때 별도의 API 없음
       automaticLectureService.offlineLeave({
         lectureId: vm.lectureId,
       });
       */
     } else if (vm.lectureType === 2) {
+      // 무인 개인에서 나갈때 등록
       vm.leaveOnlineLecture();
     }
   },

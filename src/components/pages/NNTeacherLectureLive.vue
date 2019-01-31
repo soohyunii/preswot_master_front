@@ -59,6 +59,7 @@
         <el-col id="pres" :span="6" style="text-align: center;">
           출석률 {{ presentRateChange }}<br><br>
           <el-progress type="circle" :percentage="presentRate" color="red"></el-progress>
+          <br>{{ nowStudent }}명 / {{ totalStudent }}명
         </el-col>
         <el-col id="unde" :span="6" style="text-align: center;">
           이해도 {{ understandingChange }}<br><br>
@@ -263,7 +264,7 @@
         <div style="height: 20px;" />
         <!-- 실시간 이해도 참여도 집중도 출석률 그래프 -->
         <el-button size="small" @click="onClick('ABSENT')">결석자 명단</el-button>
-        <el-button v-show="!showGraph" size="small" type="primary" @click="onClick('SHOWGRAPH')">실시간 그래프 보이기</el-button>
+        <el-button v-if="lectureType === 0" v-show="!showGraph" size="small" type="primary" @click="onClick('SHOWGRAPH')">실시간 그래프 보이기</el-button>
         <div style="float: right;">
           <el-popover v-if="lectureType === 0" placement="top" trigger="hover">
             <div style="background-color: #EBEEF5; width: 1200px;">
@@ -414,7 +415,7 @@ import authService from '../../services/authService';
 import TeacherLectureLiveItemList from '../partials/TeacherLectureLiveItemList';
 import TeacherLectureLiveItem from '../partials/TeacherLectureLiveItem';
 import TeacherLectureLiveChat from '../partials/TeacherLectureLiveChat';
-import TeacherLectureLiveSummary from '../partials/TeacherLectureLiveSummary';
+import TeacherLectureLiveSummary from '../partials/NNTeacherLectureLiveSummary';
 import LectureQuestionResult from '../partials/LectureQuestionResult';
 import LectureSurveyResult from '../partials/LectureSurveyResult';
 import utils from '../../utils';
@@ -422,6 +423,7 @@ import lectureItemService from '../../services/lectureItemService';
 import LineChart from '../partials/NNLineChart';
 import { setTimeout, clearTimeout } from 'timers';
 import automaticLectureService from '../../services/automaticLectureService';
+import { EventBus } from '../../event-bus';
 
 export default {
   name: 'TeacherLectureLive',
@@ -552,6 +554,7 @@ export default {
     }, 18000); */
 
     // 전체 수강생 명단 불러오기
+    vm.absentStudentList = [];
     const wholeStudent = await lectureService.getWholeStudents({
       id: vm.lectureId,
     });
@@ -568,6 +571,7 @@ export default {
       stud.partis = 0;  // 출석 중 강사가 제출한 문항+설문의 수
       stud.concec = 0;  // 집중도의 합
       stud.conces = 0;  // 참여한 문항+설문+자료의 수
+      vm.absentStudentList.push(stud.name);
       vm.totalStudentList.push(stud);
     });
 
@@ -587,11 +591,13 @@ export default {
       });
       const grp_order = deepCopy(grp.data.list);
 
-      // 강사 접속시 기존 학생들의 출석 정보 불러와야 함
+      let activeN = 0;
+      vm.nowItemTable = [];
+
+      /* 강사 접속시 기존 학생들의 출석 정보 불러와야 함
       const attend = await automaticLectureService.pastAttendanceData({
         lectureId: vm.lectureId,
       });
-      // console.log(attend);
       // 그래프용 배열 만들기
       const timeHistory = [];
       for (let i = 0; i < Math.floor(enterTimeAbs / 60) + 1; i += 1) {
@@ -599,6 +605,8 @@ export default {
         his.att = 0; // 해당 시점 출석자
         timeHistory.push(his);
       }
+      console.log(timeHistory);
+      console.log(attend);
       // 시간대별 출석률 계산
       attend.data.forEach((x) => {
         const ti1 = new Date(x.createdAt);
@@ -621,15 +629,7 @@ export default {
         vm.chartData[1].push(0);
         vm.chartData[2].push(0);
         vm.chartData[3].push(tempPresentRate);
-      });
-      // console.log(timeHistory);
-      const para = {
-        lecture_id: vm.lectureId,
-      };
-      vm.$socket.emit('REAL_TIME_INFO', JSON.stringify(para));
-      vm.$socket.on('REAL_TIME_INFO', (msg) => {
-        console.log(msg);
-      });
+      }); */
 
       grp_order.sort((a, b) => {
         const aItem = Number(a.start);
@@ -643,6 +643,7 @@ export default {
         if (x.end <= enterTimeAbs) {
           delItemNum += 1;
           vm.stepData[delItemNum - 1].status = 'success';
+          vm.activeN += 1;
         }
       });
       grp_order.splice(0, delItemNum);
@@ -661,26 +662,68 @@ export default {
         gs1.list_ids = x.list_ids;
         group_schedule.push(gs1);
       });
+      // 실시간 분석
+      vm.realTimeAnalysis();
+      vm.automaticLectureAnalysis();
 
       // 입장과 동시에 기존에 보던 아이템 보여주고 있어야 할 경우
       if (group_schedule.length !== 0) {
         if (group_schedule[0].time <= enterTimeAbs) {
           group_schedule[0].time = 0;
           vm.stepData[delItemNum].status = 'process';
+
+          vm.itemTable[activeN].forEach((x) => {
+            if (x.type === 0) {
+              x.type = '문항'; // eslint-disable-line
+              x.submit = 0; // eslint-disable-line
+            } else if (x.type === 1) {
+              x.type = '설문'; // eslint-disable-line
+              x.submit = 0; // eslint-disable-line
+            } else if (x.type === 2) {
+              x.type = '실습'; // eslint-disable-line
+            } else if (x.type === 3) {
+              x.type = '토론'; // eslint-disable-line
+            } else if (x.type === 4) {
+              x.type = '자료'; // eslint-disable-line
+            }
+          });
+          vm.nowItemTable = vm.itemTable[activeN];
         }
       }
+
       // 타이머 설정해서 아이템 보여주고 내리기
       group_schedule.forEach((x) => {
         vm.timer.push(setTimeout(() => {
           if (x.type === 'start') {
             vm.stepData[delItemNum].status = 'process';
+            vm.itemTable[activeN].forEach((x) => {
+              if (x.type === 0) {
+                x.type = '문항'; // eslint-disable-line
+                x.submit = 0; // eslint-disable-line
+              } else if (x.type === 1) {
+                x.type = '설문'; // eslint-disable-line
+                x.submit = 0; // eslint-disable-line
+              } else if (x.type === 2) {
+                x.type = '실습'; // eslint-disable-line
+              } else if (x.type === 3) {
+                x.type = '토론'; // eslint-disable-line
+              } else if (x.type === 4) {
+                x.type = '자료'; // eslint-disable-line
+              }
+            });
+            vm.nowItemTable = vm.itemTable[activeN];
           } else if (x.type === 'end') {
             vm.stepData[delItemNum].status = 'success';
             delItemNum += 1;
+            activeN += 1;
+            vm.nowItemTable = [];
+            // 아이템 내려갈 시간에 실시간 분석
+            vm.realTimeAnalysis();
+            vm.automaticLectureAnalysis();
           }
         }, (x.time - enterTimeAbs) * 1000));
       });
-    }
+    } // 무인 단체 설정 끝
 
     // 출석 변동 있는 경우 - 실시간 출석률 변화
     vm.$socket.on('CHECK_STUDENT_LIST', (msg) => {
@@ -863,6 +906,12 @@ export default {
         user_id: utils.getUserIdFromJwt(),
       };
       vm.$socket.emit('LEAVE_LECTURE', JSON.stringify(param));
+      clearInterval(vm.timeInterval);
+      EventBus.$off('makeSummary');
+      // 소켓 닫기 전에 callback 함수들 해제해줘야 함
+      // 해제하지 않으면 재접속시 callback함수가 또 만들어져 중복으로 돌아감
+      vm.$socket._callbacks = null; // eslint-disable-line
+      vm.$socket.close();
     };
   },
   data() {
@@ -1081,141 +1130,8 @@ export default {
             vm.nowGroup = -1;
             vm.tabShow = false;
             vm.activeTab = 'select';
-            // 서버에 이해도 값 요청해서 받아오기
-            const para = {
-              lecture_id: vm.lectureId,
-            };
-            let totalUnd = 0; // 이해도 합산
-            let totalAns = 0; // 답안 수
-            vm.$socket.emit('REAL_TIME_INFO', JSON.stringify(para));
-            vm.$socket.on('REAL_TIME_INFO', (msg) => {
-              const realUnder = JSON.parse(msg).understanding;
-              // 전체 학생 이해도 구하기
-              realUnder.forEach((x) => {
-                if (x.type === 0) { // 문항에 대해서만
-                  totalUnd += x.ratio;
-                  totalAns += 1;
-                }
-              });
-              if (totalAns === 0) { // 답안이 없는 경우 - NaN
-                vm.understanding = 0;
-              } else {
-                vm.understanding = ((totalUnd / totalAns) * 100).toFixed(1);
-              }
-              // 개별 학생 이해도 구하기
-              vm.totalStudentList.forEach((y) => {
-                let ratioSum = 0;
-                let itemSum = 0;
-                realUnder.forEach((z) => {
-                  if (y.user_id === z.student_id) {
-                    ratioSum += z.ratio;
-                    itemSum += 1;
-                  }
-                });
-                if (itemSum === 0) { // NaN 예외 처리
-                  y.understanding = 0; // eslint-disable-line
-                } else {
-                  y.understanding = ((ratioSum / itemSum) * 100).toFixed(1); // eslint-disable-line
-                }
-              });
-
-              // 전체 학생 집중도 구하기
-              const response = JSON.parse(msg).response_time;
-              // 반응시간 아이템별로 분류
-              const totalResponse = [];
-              let itemResponse = [];
-              let itId = -1;
-              response.forEach((x) => {
-                if (x.item_id !== itId) { // 새로운 item id
-                  if (itemResponse.length !== 0) { // itemResponse를 넣어줌
-                    totalResponse.push(itemResponse);
-                  }
-                  itemResponse = []; // 초기화
-                  itId = x.item_id;
-                }
-                itemResponse.push(x); // 아이템별 배열에 넣어줌
-              });
-              totalResponse.push(itemResponse); // 다 끝났다면 마지막 아이템 전체에 넣어줌
-              // 개별 학생 집중도 초기화
-              vm.totalStudentList.forEach((x) => {
-                x.concec = 0; // eslint-disable-line
-                x.conces = 0; // eslint-disable-line
-              });
-              // 아이템 하나씩 보면서 학생의 아이템별 집중도 계산
-              totalResponse.forEach((x) => {
-                if (x[0].type === 0 || x[0].type === 1) { // 문항일 경우 본 시간이 짧을수록 집중도 높음
-                  let timeSum = 0;
-                  let itemNum = 0;
-                  let min = -1;
-                  x.forEach((y) => {
-                    timeSum += y.time_sum;
-                    itemNum += 1;
-                    if (min === -1 || min > y.time_sum) { // 처음 값이거나 min보다 time sum이 작을 경우
-                      min = y.time_sum; // 최솟값 재지정
-                    }
-                  });
-                  const avg = timeSum / itemNum;
-                  const avg2 = (avg + min) / 2;
-                  x.forEach((y) => {
-                    vm.totalStudentList.forEach((z) => {
-                      if (y.student_id === z.user_id) {
-                        let ratio = (avg2 / y.time_sum) * 100;
-                        if (ratio > 100) { // 집중도 최댓값 100으로 조정
-                          ratio = 100;
-                        }
-                        // 학생마다 집중도값 추가
-                        z.concec += ratio; // eslint-disable-line
-                        z.conces += 1; // eslint-disable-line
-                      }
-                    });
-                  });
-                } else if (x[0].type === 4) { // 자료일 경우 본 시간이 길수록 집중도 높음
-                  let timeSum = 0;
-                  let itemNum = 0;
-                  let min = -1;
-                  x.forEach((y) => {
-                    timeSum += y.time_sum;
-                    itemNum += 1;
-                    if (min === -1 || min > y.time_sum) { // 처음 값이거나 min보다 time sum이 작을 경우
-                      min = y.time_sum; // 최솟값 재지정
-                    }
-                  });
-                  const avg = timeSum / itemNum;
-                  const avg2 = (avg + min) / 2;
-                  x.forEach((y) => {
-                    vm.totalStudentList.forEach((z) => {
-                      if (y.student_id === z.user_id) {
-                        let ratio = (y.time_sum / avg2) * 100;
-                        if (ratio > 100) { // 집중도 최댓값 100으로 조정
-                          ratio = 100;
-                        }
-                        // 학생마다 집중도값 추가
-                        z.concec += ratio; // eslint-disable-line
-                        z.conces += 1; // eslint-disable-line
-                      }
-                    });
-                  });
-                }
-              });
-              // 학생별 집중도 계산
-              let totalConcen = 0;
-              let conceN = 0;
-              vm.totalStudentList.forEach((x) => {
-                if (x.conces === 0) {
-                  x.concentration = 0; // eslint-disable-line
-                } else {
-                  x.concentration = (x.concec / x.conces).toFixed(1); // eslint-disable-line
-                  totalConcen += (x.concec / x.conces);
-                  conceN += 1;
-                }
-              });
-              // 전체 학생 집중도
-              if (conceN === 0) {
-                vm.concentration = 0;
-              } else {
-                vm.concentration = (totalConcen / conceN).toFixed(1);
-              }
-            });
+            // 서버에 값 요청해서 집중도, 이해도 계산
+            vm.realTimeAnalysis();
 
             // 현재 아이템 제출 결과들로 참여도 구하기
             // 학생별로 참여한 아이템 수 계산
@@ -1250,7 +1166,7 @@ export default {
               wholeN += x.partis;
               if (x.partis === 0) { // 하나도 참여 안했으면 0
                 x.participation = 0; // eslint-disable-line
-              } else {  // 참여도 계산
+              } else { // 참여도 계산
                 x.participation = ((x.partic / x.partis) * 100).toFixed(1); // eslint-disable-line
               }
               // 참여 후 나간 경우
@@ -1269,6 +1185,8 @@ export default {
               participate = 0; // eslint-disable-line
             }
             vm.participation = participate;
+            const pp = ['pp', vm.participation];
+            EventBus.$emit('makeSummary', pp);
             vm.nowItemTable = [];
             return; // eslint-disable-line
           }).catch(() => { // eslint-disable-line
@@ -1477,6 +1395,9 @@ export default {
         user_id: utils.getUserIdFromJwt(),
       };
       vm.$socket.emit('LEAVE_LECTURE', JSON.stringify(param));
+      // timeInterval 초기화
+      clearInterval(vm.timeInterval);
+      EventBus.$off('makeSummary');
 
       // 화면 떠나기 전 등록한 Listener 해제. 이 코드가 없으면 리스너가 중복 등록되어 버그가 발생함
       window.removeEventListener('beforeunload', vm.beforeLeave);
@@ -1534,6 +1455,221 @@ export default {
       vm.stepDataNav.push(vm.stepData[vm.leftStepNav + 3]);
       vm.stepDataNav.push(vm.stepData[vm.leftStepNav + 4]);
     },
+    // 실시간 이해도, 집중도 구하는 함수
+    realTimeAnalysis() {
+      const vm = this;
+      const para = {
+        lecture_id: vm.lectureId,
+      };
+      vm.$socket.emit('REAL_TIME_INFO', JSON.stringify(para));
+      vm.$socket.on('REAL_TIME_INFO', (msg) => {
+        const realUnder = JSON.parse(msg).understanding;
+        // 전체 학생 이해도 구하기
+        let totalUnd = 0; // 이해도 합산
+        let totalAns = 0; // 답안 수
+        realUnder.forEach((x) => {
+          if (x.type === 0) { // 문항에 대해서만
+            totalUnd += x.ratio;
+            totalAns += 1;
+          }
+        });
+        if (totalAns === 0) { // 답안이 없는 경우 - NaN
+          vm.understanding = 0;
+        } else {
+          vm.understanding = ((totalUnd / totalAns) * 100).toFixed(1);
+        }
+        // 개별 학생 이해도 구하기
+        vm.totalStudentList.forEach((y) => {
+          let ratioSum = 0;
+          let itemSum = 0;
+          realUnder.forEach((z) => {
+            if (y.user_id === z.student_id) {
+              ratioSum += z.ratio;
+              itemSum += 1;
+            }
+          });
+          if (itemSum === 0) { // NaN 예외 처리
+            y.understanding = 0; // eslint-disable-line
+          } else {
+            y.understanding = ((ratioSum / itemSum) * 100).toFixed(1); // eslint-disable-line
+          }
+        });
+
+        // 전체 학생 집중도 구하기
+        const response = JSON.parse(msg).response_time;
+        // 반응시간 아이템별로 분류
+        const totalResponse = [];
+        let itemResponse = [];
+        let itId = -1;
+        response.forEach((x) => {
+          if (x.item_id !== itId) { // 새로운 item id
+            if (itemResponse.length !== 0) { // itemResponse를 넣어줌
+              totalResponse.push(itemResponse);
+            }
+            itemResponse = []; // 초기화
+            itId = x.item_id;
+          }
+          itemResponse.push(x); // 아이템별 배열에 넣어줌
+        });
+        totalResponse.push(itemResponse); // 다 끝났다면 마지막 아이템 전체에 넣어줌
+        // 개별 학생 집중도 초기화
+        vm.totalStudentList.forEach((x) => {
+          x.concec = 0; // eslint-disable-line
+          x.conces = 0; // eslint-disable-line
+        });
+        // 아이템 하나씩 보면서 학생의 아이템별 집중도 계산
+        totalResponse.forEach((x) => {
+          if (x[0].type === 0 || x[0].type === 1) { // 문항일 경우 본 시간이 짧을수록 집중도 높음
+            let timeSum = 0;
+            let itemNum = 0;
+            let min = -1;
+            x.forEach((y) => {
+              timeSum += y.time_sum;
+              itemNum += 1;
+              if (min === -1 || min > y.time_sum) { // 처음 값이거나 min보다 time sum이 작을 경우
+                min = y.time_sum; // 최솟값 재지정
+              }
+            });
+            const avg = timeSum / itemNum;
+            const avg2 = (avg + min) / 2;
+            x.forEach((y) => {
+              vm.totalStudentList.forEach((z) => {
+                if (y.student_id === z.user_id) {
+                  let ratio = (avg2 / y.time_sum) * 100;
+                  if (ratio > 100) { // 집중도 최댓값 100으로 조정
+                    ratio = 100;
+                  }
+                  // 학생마다 집중도값 추가
+                  z.concec += ratio; // eslint-disable-line
+                  z.conces += 1; // eslint-disable-line
+                }
+              });
+            });
+          } else if (x[0].type === 4) { // 자료일 경우 본 시간이 길수록 집중도 높음
+            let timeSum = 0;
+            let itemNum = 0;
+            let min = -1;
+            x.forEach((y) => {
+              timeSum += y.time_sum;
+              itemNum += 1;
+              if (min === -1 || min > y.time_sum) { // 처음 값이거나 min보다 time sum이 작을 경우
+                min = y.time_sum; // 최솟값 재지정
+              }
+            });
+            const avg = timeSum / itemNum;
+            const avg2 = (avg + min) / 2;
+            x.forEach((y) => {
+              vm.totalStudentList.forEach((z) => {
+                if (y.student_id === z.user_id) {
+                  let ratio = (y.time_sum / avg2) * 100;
+                  if (ratio > 100) { // 집중도 최댓값 100으로 조정
+                    ratio = 100;
+                  }
+                  // 학생마다 집중도값 추가
+                  z.concec += ratio; // eslint-disable-line
+                  z.conces += 1; // eslint-disable-line
+                }
+              });
+            });
+          }
+        });
+        // 학생별 집중도 계산
+        let totalConcen = 0;
+        let conceN = 0;
+        vm.totalStudentList.forEach((x) => {
+          if (x.conces === 0) {
+            x.concentration = 0; // eslint-disable-line
+          } else {
+            x.concentration = (x.concec / x.conces).toFixed(1); // eslint-disable-line
+            totalConcen += (x.concec / x.conces);
+            conceN += 1;
+          }
+        });
+        // 전체 학생 집중도
+        if (conceN === 0) {
+          vm.concentration = 0;
+        } else {
+          vm.concentration = (totalConcen / conceN).toFixed(1);
+        }
+        // 
+        const ud = ['ud', vm.understanding];
+        EventBus.$emit('makeSummary', ud);
+        const cc = ['cc', vm.concentration];
+        EventBus.$emit('makeSummary', cc);
+      });
+    },
+    // 무인강의에서 참여도 계산
+    automaticLectureAnalysis() {
+      const vm = this;
+      const para = {
+        lecture_id: vm.lectureId,
+      };
+      vm.$socket.emit('REAL_TIME_INFO', JSON.stringify(para));
+      vm.$socket.on('REAL_TIME_INFO', (msg) => {
+        const response = JSON.parse(msg).response_time;
+        // 누적 아이템 제출 결과로 참여도 구하기
+        // 학생별로 참여한 아이템 수 계산
+        const autoItem = [];
+        let itemN = -1;
+        response.forEach((x) => {
+          if (x.item_id !== itemN) {
+            autoItem.push(x.item_id);
+            itemN = x.item_id;
+          }
+        });
+        const questionNoteN = autoItem.length;
+        // 학생별 전체 아이템 수 계산
+        vm.nowStudentIdList.forEach((x) => {
+          vm.totalStudentList.forEach((y) => {
+            if (x === y.user_id) {
+              y.partis = questionNoteN;
+            }
+          });
+        });
+        vm.totalStudentList.forEach((x) => {
+          x.partic = 0;
+          response.forEach((y) => {
+            if (x.user_id === y.student_id) {
+              x.partic += 1; // eslint-diable-line
+            }
+          });
+        });
+        // 개별 학생 누적 참여도 계산
+        let partiN = 0;
+        let wholeN = 0;
+        vm.totalStudentList.forEach((x) => {
+          if (x.partic > x.partis) {
+            x.partis = x.partic;
+          }
+          partiN += x.partic;
+          wholeN += x.partis;
+
+          if (x.partis === 0) { // 하나도 참여 안했으면 0
+            x.participation = 0; // eslint-disable-line
+          } else { // 참여도 계산
+            x.participation = ((x.partic / x.partis) * 100).toFixed(1); // eslint-disable-line
+          }
+          // 참여 후 나간 경우
+          if (x.participation > 100) {
+            x.participation = 100.0; // eslint-disable-line
+          }
+        });
+
+        // 전체 학생 누적 참여도 계산
+        let participate = ((partiN / wholeN) * 100).toFixed(1);
+        if (participate > 100) {
+          // 문제를 풀고 이탈한 학생이 있을 경우, 참여도가 100%보다 큰 값으로 나올 수 있음
+          // 이 경우 참여도 100%로 조정
+          participate = 100.0; // eslint-disable-line
+        }
+        if (partiN === 0) { // NaN인 경우
+          participate = 0; // eslint-disable-line
+        }
+        vm.participation = participate;
+        const pp = ['pp', vm.participation];
+        EventBus.$emit('makeSummary', pp);
+      });
+    },
   },
   beforeDestroy() {
     const vm = this;
@@ -1542,8 +1678,6 @@ export default {
     // 해제하지 않으면 재접속시 callback함수가 또 만들어져 중복으로 돌아감
     vm.$socket._callbacks = null; // eslint-disable-line
     vm.$socket.close();
-    // 1분마다 주기적으로 보내서 확인하는 timeInterval
-    clearInterval(vm.timeInterval);
   },
 };
 </script>
@@ -1597,7 +1731,6 @@ export default {
   border-block-start: 1px solid #321;
   border-left: 1px solid #321;
   border-right: 1px solid #321;
-
   color: #333;
 }
 .el-table .right {
