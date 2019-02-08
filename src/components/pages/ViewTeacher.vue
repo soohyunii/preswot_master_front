@@ -3,7 +3,7 @@
     <h2 class="page-title">조회하기 > 강사</h2>
     <div id="choiceLists">
     <el-form>
-      <el-select placeholder="대학선택" style="width:200px; top:20px;" v-model="chosen" @change="categoryChange(type,chosen,dept_chosen)">
+      <el-select placeholder="대학선택" style="width:200px; top:20px;" v-model="chosen" @change="categoryChange()">
         <el-option 
           v-for="uniName in uniNameList"
           :key="uniName"
@@ -107,9 +107,9 @@ export default {
         }
       }
     },
-    async categoryChange(type,university_name,department_name){
+    async categoryChange(){
       const vm=this;
-      const deptNameLists = await masterService.getDeptLists({name:vm.chosen});
+      const deptNameLists = await masterService.getDeptLists({university_name:vm.chosen, category:undefined});
       vm.deptNameList = await deptNameLists.data.map(element=>element.name);
       const res = await masterService.getUserLists(type,university_name,null);
       for(var i=0;i<res.data.length;i++){

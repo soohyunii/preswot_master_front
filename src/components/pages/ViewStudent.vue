@@ -66,7 +66,7 @@ export default {
       searchText: '',
       list: [],
       chosen:'',
-      dept_chosen:'',
+      dept_chosen:undefined,
       university_list:[],
       department_list:[],
       university_name:'',
@@ -135,7 +135,7 @@ export default {
     },
     async categoryChange(type,university_name){
       const vm=this;
-      const deptNameLists = await masterService.getDeptLists({name: vm.chosen});
+      const deptNameLists = await masterService.getDeptLists({university_name: vm.chosen, category:undefined});
       vm.department_list = await deptNameLists.data.map(element=>element.name);
       const res = await masterService.getUserLists(type,university_name);
       for(let i=0; i<res.data.length; i++){
@@ -147,7 +147,7 @@ export default {
     },
     async onChange(type,university_name,department_name){
       const vm=this;
-      const res = await masterService.getUserLists(type,university_name,department_name);
+      const res = await masterService.getUserLists(type, university_name, department_name);
       vm.list=res.data;
     },
     onClickDelete(index) {

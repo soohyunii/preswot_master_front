@@ -81,6 +81,7 @@ export default {
       uniNameList:[],
       deptNameList:[],
       semesterNameList:[],
+      teacherNameList:[],
       chosen: undefined,
       dept_chosen: undefined,
       semester:'',
@@ -102,6 +103,45 @@ export default {
   },
   watch:{
     list: async function(val,oldVal){
+      const vm=this;
+      if(vm.checked==false){
+        vm.checked=undefined;
+      }
+      const res = await masterService.getClassLists({university_name : vm.chosen,department_name : vm.dept_chosen ,end_date_from : vm.date_from_chosen ,end_date_to : vm.date_to_chosen, isActive:vm.checked});
+      const res2 = await masterService.getClassLists({university_name : vm.chosen,department_name : vm.dept_chosen ,end_date_from : vm.date_from_chosen ,end_date_to : vm.date_to_chosen, isActive:!vm.checked});
+      if(vm.checked==undefined){
+          for(let i=0;i<res.data.length;i++){
+            if(res.data[i].teacher_email_id!==null){
+              const teacherNameTemp = await masterService.getMasterUser({email_id:res.data[i].teacher_email_id});
+               vm.teacherNameList[i] = teacherNameTemp.data.name;
+               vm.list[i].teacher_email_id = vm.teacherNameList[i];
+            }
+          }
+        } else {
+          for(let i=0;i<res2.data.length;i++){
+            if(res2.data[i].teacher_email_id!==null){
+              const teacherNameTemp = await masterService.getMasterUser({email_id:res2.data[i].teacher_email_id});
+               vm.teacherNameList[i] = teacherNameTemp.data.name;
+               vm.list[i].teacher_email_id = vm.teacherNameList[i];
+            }
+          }
+        }
+      for(let i=0; i<res.data.length; i++){
+        if(vm.checked==undefined){
+          if(res.data[i].isActive==true){
+            vm.list[i].isActive='비활성화'
+            vm.list[i].teacher_email_id='-'
+            vm.list[i].start_date='-' 
+          } else {
+           vm.list[i].isActive='활성화'
+          }
+        } 
+      }
+      for(let i=0;i<res2.data.length;i++){
+        if(vm.checked==true){
+          vm.list[i].isActive='활성화'
+        }
+      }      
     }
   },
   methods: {
@@ -133,65 +173,28 @@ export default {
     },
     async categoryChange(){
       const vm=this;
-      const deptNameLists = await masterService.getDeptLists({name : vm.chosen});
+      const deptNameLists = await masterService.getDeptLists({university_name : vm.chosen, category:undefined});
       vm.deptNameList = deptNameLists.data.map(element=>element.name);
       const res = await masterService.getClassLists({university_name : vm.chosen});
-      for(let i=0; i<res.data.length; i++){
-        if(res.data[i].isActive==true){
-          res.data[i].isActive='비활성화'
-          res.data[i].teacher_email_id='-'
-          res.data[i].start_date='-'
-        } else {
-          res.data[i].isActive='활성화'
-        }
-      }
       vm.list = res.data;
     },
     async showChange(){
       const vm=this;
       const res = await masterService.getClassLists({university_name : vm.chosen,department_name : vm.dept_chosen});
-      for(let i=0; i<res.data.length; i++){
-        if(res.data[i].isActive==true){
-          res.data[i].isActive='비활성화'
-        } else {
-          res.data[i].isActive='활성화'
-        }
-      }
       vm.list = res.data;
     },
     async toChange(){
       const vm=this;
       const res = await masterService.getClassLists({university_name : vm.chosen,department_name : vm.dept_chosen ,end_date_from : vm.date_from_chosen ,end_date_to : vm.date_to_chosen});
-      for(let i=0; i<res.data.length; i++){
-        if(res.data[i].isActive==true){
-          res.data[i].isActive='비활성화'
-        } else {
-          res.data[i].isActive='활성화'
-        }
-      }
       vm.list = res.data;
     },
     async isActiveChange(){
       const vm=this;
       if(vm.checked==false){
         const res = await masterService.getClassLists({university_name : vm.chosen,department_name : vm.dept_chosen ,end_date_from : vm.date_from_chosen ,end_date_to : vm.date_to_chosen, isActive:undefined});
-        for(let i=0; i<res.data.length; i++){
-        if(res.data[i].isActive==true){
-          res.data[i].isActive='비활성화'
-        } else {
-            res.data[i].isActive='활성화'
-          }
-        }
         vm.list=res.data;
       } else {
         const res = await masterService.getClassLists({university_name : vm.chosen,department_name : vm.dept_chosen ,end_date_from : vm.date_from_chosen ,end_date_to : vm.date_to_chosen, isActive:!vm.checked});
-        for(let i=0; i<res.data.length; i++){
-        if(res.data[i].isActive==true){
-          res.data[i].isActive='비활성화'
-        } else {
-            res.data[i].isActive='활성화'
-          }
-        }
         vm.list=res.data;
       }  
     }
