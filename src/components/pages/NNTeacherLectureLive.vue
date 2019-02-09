@@ -408,6 +408,7 @@
 // FIXME : Failed to execute 'postMessage' on 'DOMWindow': The target origin provided ('<URL>')
 // does not match the recipient window's origin ('<URL>'). 에러 해결
 import { getIdFromURL } from 'vue-youtube-embed';
+import { setTimeout } from 'timers';
 import deepCopy from 'deep-copy';
 import lectureService from '../../services/lectureService';
 import classService from '../../services/classService';
@@ -421,8 +422,6 @@ import LectureSurveyResult from '../partials/LectureSurveyResult';
 import utils from '../../utils';
 import lectureItemService from '../../services/lectureItemService';
 import LineChart from '../partials/NNLineChart';
-import { setTimeout, clearTimeout } from 'timers';
-import automaticLectureService from '../../services/automaticLectureService';
 import { EventBus } from '../../event-bus';
 
 export default {
@@ -586,10 +585,10 @@ export default {
       const lectureStartTime = lectureStart.getTime() / 1000; // 강의 시작 시간
       const enterTime = Math.floor(vm.joinTime / 1000);  // 접속 시간
       const enterTimeAbs = enterTime - lectureStartTime; // 강의 시작 이후로 몇 초 뒤에 접속했는지
-      const grp = await lectureItemService.showGroup({
+      const grps = await lectureItemService.showGroup({
         lectureId: vm.lectureId,
       });
-      const grp_order = deepCopy(grp.data.list);
+      const grpOrder = deepCopy(grps.data.list);
 
       let activeN = 0;
       vm.nowItemTable = [];
@@ -631,45 +630,44 @@ export default {
         vm.chartData[3].push(tempPresentRate);
       }); */
 
-      grp_order.sort((a, b) => {
+      grpOrder.sort((a, b) => {
         const aItem = Number(a.start);
         const bItem = Number(b.start);
         return aItem - bItem;
       });
-      
       // 접속 시간 기준으로 이미 종료된 아이템들은 필요 없음
       let delItemNum = 0;
-      grp_order.forEach((x) => {
+      grpOrder.forEach((x) => {
         if (x.end <= enterTimeAbs) {
           delItemNum += 1;
           vm.stepData[delItemNum - 1].status = 'success';
           vm.activeN += 1;
         }
       });
-      grp_order.splice(0, delItemNum);
+      grpOrder.splice(0, delItemNum);
 
       // 그룹 리스트 하나씩 분리
-      const group_schedule = [];
-      grp_order.forEach((x) => {
+      const groupSchedule = [];
+      grpOrder.forEach((x) => {
         const gs = {};
         gs.time = x.start;
         gs.type = 'start';
         gs.list_ids = x.list_ids;
-        group_schedule.push(gs);
+        groupSchedule.push(gs);
         const gs1 = {};
         gs1.time = x.end;
         gs1.type = 'end';
         gs1.list_ids = x.list_ids;
-        group_schedule.push(gs1);
+        groupSchedule.push(gs1);
       });
       // 실시간 분석
       vm.realTimeAnalysis();
       vm.automaticLectureAnalysis();
 
       // 입장과 동시에 기존에 보던 아이템 보여주고 있어야 할 경우
-      if (group_schedule.length !== 0) {
-        if (group_schedule[0].time <= enterTimeAbs) {
-          group_schedule[0].time = 0;
+      if (groupSchedule.length !== 0) {
+        if (groupSchedule[0].time <= enterTimeAbs) {
+          groupSchedule[0].time = 0;
           vm.stepData[delItemNum].status = 'process';
 
           vm.itemTable[activeN].forEach((x) => {
@@ -692,23 +690,23 @@ export default {
       }
 
       // 타이머 설정해서 아이템 보여주고 내리기
-      group_schedule.forEach((x) => {
+      groupSchedule.forEach((x) => {
         vm.timer.push(setTimeout(() => {
           if (x.type === 'start') {
             vm.stepData[delItemNum].status = 'process';
-            vm.itemTable[activeN].forEach((x) => {
-              if (x.type === 0) {
-                x.type = '문항'; // eslint-disable-line
-                x.submit = 0; // eslint-disable-line
-              } else if (x.type === 1) {
-                x.type = '설문'; // eslint-disable-line
-                x.submit = 0; // eslint-disable-line
-              } else if (x.type === 2) {
-                x.type = '실습'; // eslint-disable-line
-              } else if (x.type === 3) {
-                x.type = '토론'; // eslint-disable-line
-              } else if (x.type === 4) {
-                x.type = '자료'; // eslint-disable-line
+            vm.itemTable[activeN].forEach((y) => {
+              if (y.type === 0) {
+                y.type = '문항'; // eslint-disable-line
+                y.submit = 0; // eslint-disable-line
+              } else if (y.type === 1) {
+                y.type = '설문'; // eslint-disable-line
+                y.submit = 0; // eslint-disable-line
+              } else if (y.type === 2) {
+                y.type = '실습'; // eslint-disable-line
+              } else if (y.type === 3) {
+                y.type = '토론'; // eslint-disable-line
+              } else if (y.type === 4) {
+                y.type = '자료'; // eslint-disable-line
               }
             });
             vm.nowItemTable = vm.itemTable[activeN];
@@ -1511,7 +1509,9 @@ export default {
           }
           itemResponse.push(x); // 아이템별 배열에 넣어줌
         });
-        totalResponse.push(itemResponse); // 다 끝났다면 마지막 아이템 전체에 넣어줌
+        if (itemResponse.length !== 0) {
+          totalResponse.push(itemResponse); // 다 끝났다면 마지막 아이템 전체에 넣어줌
+        }
         // 개별 학생 집중도 초기화
         vm.totalStudentList.forEach((x) => {
           x.concec = 0; // eslint-disable-line
@@ -1591,7 +1591,7 @@ export default {
         } else {
           vm.concentration = (totalConcen / conceN).toFixed(1);
         }
-        // 
+        // eventBus로 summary에 전달
         const ud = ['ud', vm.understanding];
         EventBus.$emit('makeSummary', ud);
         const cc = ['cc', vm.concentration];
@@ -1622,15 +1622,15 @@ export default {
         vm.nowStudentIdList.forEach((x) => {
           vm.totalStudentList.forEach((y) => {
             if (x === y.user_id) {
-              y.partis = questionNoteN;
+              y.partis = questionNoteN; // eslint-disable-line
             }
           });
         });
         vm.totalStudentList.forEach((x) => {
-          x.partic = 0;
+          x.partic = 0; // eslint-disable-line
           response.forEach((y) => {
             if (x.user_id === y.student_id) {
-              x.partic += 1; // eslint-diable-line
+              x.partic += 1; // eslint-disable-line
             }
           });
         });
@@ -1639,7 +1639,7 @@ export default {
         let wholeN = 0;
         vm.totalStudentList.forEach((x) => {
           if (x.partic > x.partis) {
-            x.partis = x.partic;
+            x.partis = x.partic; // eslint-disable-line
           }
           partiN += x.partic;
           wholeN += x.partis;

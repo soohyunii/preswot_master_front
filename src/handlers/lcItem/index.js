@@ -28,6 +28,7 @@ export default class LcItemHandler {
       inputBody,
       inputTail,
     });
+    return res1;
   }
 
   static postChildLectureItem() { // JS는 함수 이름만으로 같은 함수인지 아닌지 판별,

@@ -1,7 +1,7 @@
 <template>
   <div id="lecture_item_group" class="bt-container">
     <h2>
-      아이템 그룹화
+      아이템 활성화 시간 설정 (무인)
       <el-popover
         style="position: relative; left: 30px; top: 3px;"
         placement="top-start"
@@ -14,6 +14,7 @@
         <i class="el-icon-question fa-lg" slot="reference"></i>
       </el-popover>
     </h2>
+    <!--
     <div>
       <el-table :data="lcConnectionList" style="width: 1150px;">
         <el-table-column label="연결된 아이템 목록">
@@ -27,20 +28,7 @@
           </template>
         </el-table-column>
       </el-table>
-    </div>
-    <div v-if="ifGroupMode">
-      <el-tag v-for="(k, index) in newGroupList" :key="index">{{ k.name }}</el-tag>
-      <el-time-picker v-model="startTime" v-if="lectureType !== 0" placeholder="활성화 시간" style="width: 150px; margin-left: 20px;" default-value="0" />
-      <el-time-picker v-model="endTime" v-if="lectureType !== 0" placeholder="비활성화 시간" style="width: 150px;" default-value="0" />
-      <el-button type="primary" @click="onClick('GROUP_LC_ITEM')">
-        그룹화
-      </el-button>
-      <el-button @click="onClick('CANCEL_GROUP_MODE')">
-        취소
-      </el-button>
-      <!--<p>&#42; 연결된 아이템일 경우, 맨 앞의 아이템이 대표로 나타납니다.</p>-->
-    </div>
-    <div style="height: 30px;" />
+    </div>-->
     <div>
       <el-table :data="groupList" style="width: 1150px;">
         <el-table-column label="아이템 그룹화 목록">
@@ -50,12 +38,24 @@
         </el-table-column>
         <el-table-column label="활성화 시간" v-if="lectureType !== 0" width="150px" prop="start" />
         <el-table-column label="비활성화 시간" v-if="lectureType !== 0" width="150px" prop="end" />
-        <el-table-column width="150px">
+        <el-table-column width="200px">
           <template slot-scope="scope">
-            <el-button @click="onClick('DELETE_GROUP', scope.row)">그룹화 해제</el-button>
+            <el-button @click="onClick('NEW_TIME', scope.row)">활성화 시간 변경</el-button>
           </template>
         </el-table-column>
       </el-table>
+    </div>
+    <div style="height: 10px;" />
+    <div v-if="ifTimeMode">
+      <el-tag v-for="(k, index) in newGroupList" :key="index">{{ k.name }}</el-tag>
+      <el-time-picker v-model="startTime" v-if="lectureType !== 0" placeholder="활성화 시간" style="width: 150px; margin-left: 20px;" default-value="0" />
+      <el-time-picker v-model="endTime" v-if="lectureType !== 0" placeholder="비활성화 시간" style="width: 150px;" default-value="0" />
+      <el-button type="primary" @click="onClick('GROUP_LC_ITEM')">
+        시간 변경
+      </el-button>
+      <el-button @click="onClick('CANCEL_GROUP_MODE')">
+        취소
+      </el-button>
     </div>
     <div style="height: 10px;" />
     <div style="text-align: right;">
@@ -77,7 +77,7 @@ export default {
     return {
       groupList: [], // 연결된 그룹 리스트
       newGroupList: [], // 새로 연결할 그룹 리스트
-      ifGroupMode: false, // 아이템 그룹 모드인지
+      ifTimeMode: false, // 시간 변경 모드인지
       lcConnectionList: [],
       itemList: [],
       lccNum: -1,
@@ -98,6 +98,8 @@ export default {
       endTime: '', // 무인강의에서 지정해 줄 아이템 끝시간
       lectureStart: '', // 강의 시작 시간 - 무인[단체]
       lectureEnd: '', // 강의 끝 시간 - 무인[단체]
+      gid: -1, // 시간 변경할 그룹의 id
+      gList: [], // 그룹의 linked list
     };
   },
   async created() {
@@ -226,29 +228,6 @@ export default {
     },
   },
   methods: {
-    async newGroup(data) {
-      const vm = this;
-      if (vm.ifGroupMode === false) {
-        // 첫번째 아이템 추가라면
-        vm.ifGroupMode = true;
-        data.forEach((x) => {
-          vm.newGroupList.push(x);
-        });
-      } else {
-        // 이후 아이템 추가라면
-        if (vm.newGroupList.includes(data[0])) { // eslint-disable-line
-          vm.$notify({
-            title: '알림',
-            message: '이미 선택한 아이템입니다.',
-            type: 'warning',
-          });
-        } else {
-          data.forEach((x) => {
-            vm.newGroupList.push(x);
-          });
-        }
-      }
-    },
     async refreshGroupList() {
       // 이미 만들어진 그룹 정보 가져오기
       const vm = this;
@@ -287,99 +266,71 @@ export default {
     async onClick(type, data) {
       const vm = this;
       switch (type) {
-        // 새로운 아이템 그룹화
+        // 시간 변경 확정
         case 'GROUP_LC_ITEM': {
-          // 그룹화할 아이템이 없는 경우
-          if (vm.newGroupList.length < 1) {
+          let startT = 0;
+          let endT = 0;
+          // 시간 설정 안했을 경우 오류 메시지
+          if (vm.startTime === '' || vm.endTime === '') {
             vm.$notify({
               title: '알림',
-              message: '그룹화할 아이템을 선택해 주세요.',
+              message: '아이템의 활성화 시간과 비활성화 시간을 설정해 주세요.',
               type: 'warning',
             });
             break;
           }
-          let startT = 0;
-          let endT = 0;
-          if (vm.lectureType !== 0) { // 무인강의일 경우
-            // 시간 설정 안했을 경우 오류 메시지
-            if (vm.startTime === '' || vm.endTime === '') {
-              vm.$notify({
-                title: '알림',
-                message: '아이템의 활성화 시간과 비활성화 시간을 설정해 주세요.',
-                type: 'warning',
-              });
-              break;
-            }
-            // 아이템 그룹의 활성화 시간과 비활성화 시간 설정
-            startT = (vm.startTime.getTime() / 1000) - 946652400;
-            endT = (vm.endTime.getTime() / 1000) - 946652400;
-            // 아이템 활성화 시간이 비활성화 시간보다 늦다면 아이템이 종료되지 않음 -> 막아야 함
-            if (startT > endT) {
-              vm.$notify({
-                title: '알림',
-                message: '아이템 활성화 시간이 비활성화 시간보다 늦습니다.',
-                type: 'warning',
-              });
-              break;
-            }
-            // 활성화-비활성화 시간이 강의 시간 내에 있는지
-            const s = new Date(vm.lectureStart);
-            const e = new Date(vm.lectureEnd);
-            // 총 강의 시간
-            const lectureTime = (e - s) / 1000;
-            if (endT >= lectureTime) {
-              // 총 강의 시간보다 아이템이 늦게 종료되면 안 됨
-              vm.$notify({
-                title: '알림',
-                message: '아이템은 강의 시간 내에서 활성화/비활성화 되어야 합니다.',
-                type: 'warning',
-              });
-              break;
-            }
-            
-            // 기존의 아이템 그룹과 시간 겹치는지 테스트
-            let overlap = false;
-            vm.groupList.forEach((x) => {
+          // 아이템 그룹의 활성화 시간과 비활성화 시간 설정
+          startT = (vm.startTime.getTime() / 1000) - 946652400;
+          endT = (vm.endTime.getTime() / 1000) - 946652400;
+          // 아이템 활성화 시간이 비활성화 시간보다 늦다면 아이템이 종료되지 않음 -> 막아야 함
+          if (startT > endT) {
+            vm.$notify({
+              title: '알림',
+              message: '아이템 활성화 시간이 비활성화 시간보다 늦습니다.',
+              type: 'warning',
+            });
+            break;
+          }
+          // 활성화-비활성화 시간이 강의 시간 내에 있는지
+          const s = new Date(vm.lectureStart);
+          const e = new Date(vm.lectureEnd);
+          // 총 강의 시간
+          const lectureTime = (e - s) / 1000;
+          if (endT >= lectureTime) {
+            // 총 강의 시간보다 아이템이 늦게 종료되면 안 됨
+            vm.$notify({
+              title: '알림',
+              message: '아이템은 강의 시간 내에서 활성화/비활성화 되어야 합니다.',
+              type: 'warning',
+            });
+            break;
+          }
+
+          // 기존의 아이템 그룹과 시간 겹치는지 테스트
+          let overlap = false;
+          vm.groupList.forEach((x) => {
+            // 현재 변경하는 아이템 그룹과는 겹쳐도 됨 (당연히)
+            if (x.gid !== vm.gid) {
               const sM = parseInt((x.start.split(':')[0]), 10);
               const sS = parseInt((x.start.split(':')[1]), 10);
               const eM = parseInt((x.end.split(':')[0]), 10);
               const eS = parseInt((x.end.split(':')[1]), 10);
-              const sT = sM * 60 + sS; // 초 단위로 변환
-              const eT = eM * 60 + eS; // 초 단위로 변환
+              const sT = (sM * 60) + sS; // 초 단위로 변환
+              const eT = (eM * 60) + eS; // 초 단위로 변환
               if (!((startT < sT && endT < sT) || (startT > eT && endT > eT))) {
                 // 새 그룹의 시작시간과 끝시간이 기존 그룹의 시작시간보다 빠르거나
                 // 새 그룹의 시작시간과 끝시간이 기존 그룹의 끝시간보다 느리면 통과
                 // 둘 다 해당 안 될 경우 시간이 겹친다는 의미
                 overlap = true;
               }
-            });
-            if (overlap === true) {
-              vm.$notify({
-                title: '알림',
-                message: '이미 존재하는 아이템 그룹과 활성화 시간이 겹칩니다. 그룹 간 최소 시간 간격은 1초입니다.',
-                type: 'error',
-              });
-              break;
             }
-          }
-          // 중복 검사
-          let dup = false;
-          vm.newGroupList.forEach((x) => {
-            vm.groupList.forEach((y) => {
-              y.list.forEach((z) => {
-                if (x.listId === z.id) {
-                  dup = true;
-                }
-              });
-            });
           });
-          if (dup === true) {
+          if (overlap === true) {
             vm.$notify({
               title: '알림',
-              message: '이미 그룹화된 아이템입니다.',
+              message: '이미 존재하는 아이템 그룹과 활성화 시간이 겹칩니다. 그룹 간 최소 시간 간격은 1초입니다.',
               type: 'error',
             });
-            vm.newGroupList = [];
             break;
           }
           const tmp = [];
@@ -388,78 +339,65 @@ export default {
               tmp.push(x.listId);
             }
           });
-          // 유인강의일 경우
-          if (vm.lectureType === 0) {
-            lectureItemService.makeGroup({
-              lectureId: vm.lectureId,
-              iList: tmp,
-            }).then(() => {
-              // 성공했을 경우 알림 메시지
-              vm.$notify({
-                title: '알림',
-                message: '성공적으로 그룹화되었습니다.',
-                type: 'success',
-              });
-              // 프론트 갱신
-              vm.groupList = [];
-              vm.refreshGroupList();
-              // 성공했을 경우 아이템 연결 리스트 삭제
-              vm.newGroupList = [];
-              vm.ifGroupMode = false;
-            });
-          } else { // 무인강의일 경우
-            lectureItemService.makeGroup({
-              lectureId: vm.lectureId,
-              iList: tmp,
-              start: startT,
-              end: endT,
-            }).then(() => {
-              // 성공했을 경우 알림 메시지
-              vm.$notify({
-                title: '알림',
-                message: '성공적으로 그룹화되었습니다.',
-                type: 'success',
-              });
-              // 프론트 갱신
-              vm.groupList = [];
-              vm.refreshGroupList();
-              // 성공했을 경우 아이템 연결 리스트 삭제
-              vm.newGroupList = [];
-              vm.ifGroupMode = false;
-            });
-          }
-          break;
-        }
-        // 아이템 그룹화 삭제
-        case 'DELETE_GROUP': {
-          const gid = data.gid;
-          // 서버에서 삭제
-          lectureItemService.deleteGroup({
-            groupId: gid,
+          lectureItemService.editGroup({
+            lectureId: vm.lectureId,
+            iList: vm.gList,
+            groupId: vm.gid,
+            start: startT,
+            end: endT,
           }).then(() => {
             // 성공했을 경우 알림 메시지
             vm.$notify({
               title: '알림',
-              message: '성공적으로 해제되었습니다.',
+              message: '성공적으로 변경되었습니다.',
               type: 'success',
             });
             // 프론트 갱신
-            let deleteGNum = -1;
-            vm.groupList.forEach((x, index) => {
-              if (x.gid === gid) {
-                deleteGNum = index;
-              }
+            vm.groupList = [];
+            vm.refreshGroupList();
+            // 성공했을 경우 아이템 연결 리스트 삭제
+            vm.newGroupList = [];
+            vm.ifTimeMode = false;
+            vm.gid = -1;
+            vm.gList = [];
+          });
+          break;
+        }
+        // 아이템 시간 변경
+        case 'NEW_TIME': {
+          if (vm.ifTimeMode === true) {
+            vm.$notify({
+              title: '알림',
+              message: '이미 시간 변경중입니다.',
+              type: 'error',
             });
-            vm.groupList.splice(deleteGNum, 1);
+            break;
+          }
+          vm.ifTimeMode = true;
+          vm.gid = data.gid;
+          const grp = await lectureItemService.showGroup({
+            lectureId: vm.lectureId,
+          });
+          grp.data.list.forEach((x) => {
+            if (x.group_id === vm.gid) {
+              x.list_ids.forEach((y) => {
+                vm.gList.push(parseInt(y, 10));
+              });
+            }
+          });
+          data.list.forEach((x) => {
+            vm.newGroupList.push(x);
           });
           break;
         }
         // 그룹화 취소
         case 'CANCEL_GROUP_MODE': {
-          vm.ifGroupMode = false;
+          vm.ifTimeMode = false;
           vm.newGroupList = [];
           vm.startTime = '';
           vm.endTime = '';
+          vm.gid = -1;
+          vm.gList = [];
           break;
         }
         // 뒤로 가기

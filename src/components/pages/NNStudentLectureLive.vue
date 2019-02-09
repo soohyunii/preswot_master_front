@@ -64,7 +64,7 @@
               :video-id="youtubeId"
               player-width="100%"
               player-height="400px"
-              :player-vars="{ autoplay: 1 }"
+              :player-vars="{ autoplay: 1, modestbranding: 1 }"
               :mute="true">
             </youtube>
             <div style="float: right">
@@ -188,6 +188,7 @@
 <script>
 import { getIdFromURL } from 'vue-youtube-embed';
 import { setTimeout, clearTimeout } from 'timers';
+import deepCopy from 'deep-copy';
 import classService from '../../services/classService';
 import lectureService from '../../services/lectureService';
 import studentService from '../../services/studentService';
@@ -196,8 +197,6 @@ import lectureItemService from '../../services/lectureItemService';
 import LectureLiveMaterial from '../partials/LectureLiveMaterial';
 import utils from '../../utils';
 import automaticLectureService from '../../services/automaticLectureService';
-import deepCopy from 'deep-copy';
-import { PassThrough } from 'stream';
 
 export default {
   name: 'NNStudentLectureLive',
@@ -238,7 +237,7 @@ export default {
     const params = {
       lecture_id: vm.lectureId,
       user_id: utils.getUserIdFromJwt(),
-    };0
+    };
     vm.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
     /* 삭제 - 181214
     vm.sHeartbeatIntervalId = setInterval(() => {
@@ -283,7 +282,6 @@ export default {
       const lectureStartTime = lectureStart.getTime() / 1000; // 강의 시작 시간
       const enterTime = Math.floor(vm.joinTime / 1000);  // 접속 시간
       const enterTimeAbs = enterTime - lectureStartTime; // 강의 시작 이후로 몇 초 뒤에 접속했는지
-      
       /*
       const res4 = await automaticLectureService.offlineJoin({
         lectureId: vm.lectureId,
@@ -299,35 +297,34 @@ export default {
       const grp = await lectureItemService.showGroup({
         lectureId: vm.lectureId,
       });
-      const grp_order = deepCopy(grp.data.list);
-      grp_order.sort((a, b) => {
+      const grpOrder = deepCopy(grp.data.list);
+      grpOrder.sort((a, b) => {
         const aItem = Number(a.start);
         const bItem = Number(b.start);
         return aItem - bItem;
       });
-      
       // 접속 시간 기준으로 이미 종료된 아이템들은 필요 없음
       let delItemNum = 0;
-      grp_order.forEach((x) => {
+      grpOrder.forEach((x) => {
         if (x.end <= enterTimeAbs) {
           delItemNum += 1;
         }
       });
-      grp_order.splice(0, delItemNum);
+      grpOrder.splice(0, delItemNum);
 
       // 그룹 리스트 하나씩 분리
-      const group_schedule = [];
-      grp_order.forEach((x) => {
+      const groupSchedule = [];
+      grpOrder.forEach((x) => {
         const gs = {};
         gs.time = x.start;
         gs.type = 'start';
         gs.list_ids = x.list_ids;
-        group_schedule.push(gs);
+        groupSchedule.push(gs);
         const gs1 = {};
         gs1.time = x.end;
         gs1.type = 'end';
         gs1.list_ids = x.list_ids;
-        group_schedule.push(gs1);
+        groupSchedule.push(gs1);
       });
 
       // 아이템들의 리스트 만들기
@@ -343,7 +340,7 @@ export default {
         // 아이템이 하나
         if (x.linked_list.includes('<$!<>') === false) {
           const iId = parseInt(x.linked_list, 10);
-          const item = await lectureItemService.getLectureItem({
+          const item = await lectureItemService.getLectureItem({ // eslint-disable-line
             lectureItemId: iId,
           });
           itemList.subItem.push(item.data);
@@ -352,7 +349,7 @@ export default {
           const splicedItem = x.linked_list.split('<$!<>');
           for (let j = 0; j < splicedItem.length; j += 1) {
             const y = splicedItem[j];
-            const item = await lectureItemService.getLectureItem({
+            const item = await lectureItemService.getLectureItem({ // eslint-disable-line
               lectureItemId: parseInt(y, 10),
             });
             itemList.subItem.push(item.data);
@@ -364,20 +361,19 @@ export default {
       // 입장과 동시에 기존에 보던 아이템 보여주고 있어야 할 경우
       let lateTime = 0;
       let originTime = 0;
-      if (group_schedule.length !== 0) {
-        if (group_schedule[0].time <= enterTimeAbs) {
-          lateTime = enterTimeAbs - group_schedule[0].time;
-          originTime = group_schedule[0].time;
-          group_schedule[0].time = 0;
+      if (groupSchedule.length !== 0) {
+        if (groupSchedule[0].time <= enterTimeAbs) {
+          lateTime = enterTimeAbs - groupSchedule[0].time;
+          originTime = groupSchedule[0].time;
+          groupSchedule[0].time = 0;
         }
       }
       // 타이머 설정해서 아이템 보여주고 내리기
-      group_schedule.forEach((x, index) => {
+      groupSchedule.forEach((x, index) => {
         vm.timer.push(setTimeout(() => {
           if (x.type === 'start') {
             // 시작 시간 갱신
             vm.startTime = new Date();
-            let nowN = 0;
             vm.nowNum = 0;
             vm.lectureItems = [];
             vm.nowQuestion = [];
@@ -454,7 +450,7 @@ export default {
             // 아이템이 여러 개일 경우 처리
             if (vm.lectureItem.length > 1) {
               vm.lectureItems.push(vm.lectureItem[0]);
-              vm.lectureItem.forEach((v, index) => {
+              vm.lectureItem.forEach((v, indx) => {
                 const tmp = {};
                 // 제출 여부
                 if (v.type === 4) {
@@ -485,7 +481,7 @@ export default {
                 tmp.type = v.type;
                 tmp.order = v.order;
                 tmp.lecture_item_id = v.lecture_item_id;
-                tmp.num = index + 1;
+                tmp.num = indx + 1;
                 vm.nowQuestion.push(tmp);
               });
             }
@@ -494,13 +490,13 @@ export default {
             if (x.time === 0) {
               // 들어온 그때부터 아이템 켜진 경우
               // 3분~6분동안 보여줄 아이템인데 4분에 접속했다면 360 - 180 - 60 = 120
-              totalTime = group_schedule[index + 1].time - originTime - lateTime - 1;
+              totalTime = groupSchedule[index + 1].time - originTime - lateTime - 1;
             } else {
               // 추후에 아이템 켜질 경우
               // 2분~5분동안 보여줄 아이템이라면 그냥 300 - 120 = 180
-              totalTime = group_schedule[index + 1].time - x.time - 1;
+              totalTime = groupSchedule[index + 1].time - x.time - 1;
             }
-            // totalTime = group_schedule[index + 1].time - enterTimeAbs - 1;
+            // totalTime = groupSchedule[index + 1].time - enterTimeAbs - 1;
             vm.remainTimer = window.setInterval(() => {
               const ttS = totalTime % 60;
               const ttM = (totalTime - ttS) / 60;
@@ -509,15 +505,15 @@ export default {
               } else {
                 vm.remainTime = `${ttM}:${ttS}`;
               }
-              totalTime = totalTime - 1;
+              totalTime -= 1;
               if (totalTime === -1) {
                 vm.remainTime = '';
                 clearInterval(vm.remainTimer);
               }
             }, 1000);
           } else if (x.type === 'end') {
-            // 아이템 하나를 보고 있었는데 자료라면
             if (vm.lectureItem.length === 1 && vm.lectureItem[0].type === 4) {
+            // 아이템 하나를 보고 있었는데 자료라면
               const endTime = new Date();
               const submitlog = {
                 lecture_id: vm.lectureId,
@@ -530,9 +526,8 @@ export default {
               };
               vm.$socket.emit('LECTURE_ITEM_LOG', JSON.stringify(submitlog));
               vm.oneNote = false;
-            }
-            // 아이템 여러개인데 자료를 보고 있었다면
-            else if (vm.lectureItem.length > 1) {
+            } else if (vm.lectureItem.length > 1) {
+              // 아이템 여러개인데 자료를 보고 있었다면
               const endTime = new Date();
               if (vm.nowQuestion[vm.nowNum].types === '자료') {
                 const submitlog = {
@@ -903,8 +898,8 @@ export default {
     refreshLectureItem(notify, signal) {
       const vm = this;
       if (signal === 0) {
-        // 자료 하나만 보고 있었다면
         if (vm.oneNote === true) {
+          // 자료 하나만 보고 있었다면
           const endTime = new Date();
           const submitlog = {
             lecture_id: vm.lectureId,
@@ -917,9 +912,8 @@ export default {
           };
           vm.$socket.emit('LECTURE_ITEM_LOG', JSON.stringify(submitlog));
           vm.oneNote = false;
-        }
-        // 아이템 여러개인데 자료를 보고 있었다면
-        else if (vm.lectureItem.length > 1) {
+        } else if (vm.lectureItem.length > 1) {
+          // 아이템 여러개인데 자료를 보고 있었다면
           const endTime = new Date();
           if (vm.nowQuestion[vm.nowNum].types === '자료') {
             const submitlog = {
@@ -1095,7 +1089,7 @@ export default {
       const vm = this;
       vm.materialLink = `http://docs.google.com/gview?url=${data}&embedded=true`;
     },
-    async getLectureItem(flag) {
+    async getLectureItem(flag) { // eslint-disable-line
       // 무인 강의 - 개인
       // 강사가 설정해 놓은 활성화 시간에 따라 자동으로 강의 아이템 그룹들이 나오는데
       // 아이템 보기는 활성화 되는 시점에 세팅
@@ -1110,35 +1104,34 @@ export default {
       const grp = await lectureItemService.showGroup({
         lectureId: vm.lectureId,
       });
-      const grp_order = deepCopy(grp.data.list);
-      grp_order.sort((a, b) => {
+      const grpOrder = deepCopy(grp.data.list);
+      grpOrder.sort((a, b) => {
         const aItem = Number(a.start);
         const bItem = Number(b.start);
         return aItem - bItem;
       });
-      
       // offset 기준으로 이미 종료된 아이템들은 필요 없음
       let delItemNum = 0;
-      grp_order.forEach((x) => {
+      grpOrder.forEach((x) => {
         if (x.end <= vm.offset) {
           delItemNum += 1;
         }
       });
-      grp_order.splice(0, delItemNum);
+      grpOrder.splice(0, delItemNum);
 
       // 그룹 리스트 하나씩 분리
-      const group_schedule = [];
-      grp_order.forEach((x) => {
+      const groupSchedule = [];
+      grpOrder.forEach((x) => {
         const gs = {};
         gs.time = x.start;
         gs.type = 'start';
         gs.list_ids = x.list_ids;
-        group_schedule.push(gs);
+        groupSchedule.push(gs);
         const gs1 = {};
         gs1.time = x.end;
         gs1.type = 'end';
         gs1.list_ids = x.list_ids;
-        group_schedule.push(gs1);
+        groupSchedule.push(gs1);
       });
 
       // 아이템들의 리스트 만들기
@@ -1154,7 +1147,7 @@ export default {
         // 아이템이 하나
         if (x.linked_list.includes('<$!<>') === false) {
           const iId = parseInt(x.linked_list, 10);
-          const item = await lectureItemService.getLectureItem({
+          const item = await lectureItemService.getLectureItem({ // eslint-disable-line
             lectureItemId: iId,
           });
           itemList.subItem.push(item.data);
@@ -1163,7 +1156,7 @@ export default {
           const splicedItem = x.linked_list.split('<$!<>');
           for (let j = 0; j < splicedItem.length; j += 1) {
             const y = splicedItem[j];
-            const item = await lectureItemService.getLectureItem({
+            const item = await lectureItemService.getLectureItem({ // eslint-disable-line
               lectureItemId: parseInt(y, 10),
             });
             itemList.subItem.push(item.data);
@@ -1175,20 +1168,19 @@ export default {
       // 입장과 동시에 기존에 보던 아이템 보여주고 있어야 할 경우
       let lateTime = 0;
       let originTime = 0;
-      if (group_schedule.length !== 0) {
-        if (group_schedule[0].time <= vm.offset) {
-          lateTime = vm.offset - group_schedule[0].time;
-          originTime = group_schedule[0].time;
-          group_schedule[0].time = 0;
+      if (groupSchedule.length !== 0) {
+        if (groupSchedule[0].time <= vm.offset) {
+          lateTime = vm.offset - groupSchedule[0].time;
+          originTime = groupSchedule[0].time;
+          groupSchedule[0].time = 0;
         }
       }
       // 타이머 설정해서 아이템 보여주고 내리기
-      group_schedule.forEach((x, index) => {
+      groupSchedule.forEach((x, index) => {
         vm.timer.push(setTimeout(() => {
           if (x.type === 'start') {
             // 시작 시간 갱신
             vm.startTime = new Date();
-            let nowN = 0;
             vm.nowNum = 0;
             vm.lectureItems = [];
             vm.nowQuestion = [];
@@ -1265,7 +1257,7 @@ export default {
             // 아이템이 여러 개일 경우 처리
             if (vm.lectureItem.length > 1) {
               vm.lectureItems.push(vm.lectureItem[0]);
-              vm.lectureItem.forEach((v, index) => {
+              vm.lectureItem.forEach((v, indx) => {
                 const tmp = {};
                 // 제출 여부
                 if (v.type === 4) {
@@ -1296,16 +1288,16 @@ export default {
                 tmp.type = v.type;
                 tmp.order = v.order;
                 tmp.lecture_item_id = v.lecture_item_id;
-                tmp.num = index + 1;
+                tmp.num = indx + 1;
                 vm.nowQuestion.push(tmp);
               });
             }
             // 남은 시간 표시 타이머
             let totalTime;
             if (x.time === 0) {
-              totalTime = group_schedule[index + 1].time - originTime - lateTime - 1;
+              totalTime = groupSchedule[index + 1].time - originTime - lateTime - 1;
             } else {
-              totalTime = group_schedule[index + 1].time - x.time - 1;
+              totalTime = groupSchedule[index + 1].time - x.time - 1;
             }
             vm.remainTimer = window.setInterval(() => {
               const ttS = totalTime % 60;
@@ -1315,7 +1307,7 @@ export default {
               } else {
                 vm.remainTime = `${ttM}:${ttS}`;
               }
-              totalTime = totalTime - 1;
+              totalTime -= 1;
               if (totalTime === -1) {
                 vm.remainTime = '';
                 clearInterval(vm.remainTimer);
@@ -1336,9 +1328,8 @@ export default {
               };
               vm.$socket.emit('LECTURE_ITEM_LOG', JSON.stringify(submitlog));
               vm.oneNote = false;
-            }
-            // 아이템 여러개인데 자료를 보고 있었다면
-            else if (vm.lectureItem.length > 1) {
+            } else if (vm.lectureItem.length > 1) {
+              // 아이템 여러개인데 자료를 보고 있었다면
               const endTime = new Date();
               if (vm.nowQuestion[vm.nowNum].types === '자료') {
                 const submitlog = {
@@ -1391,13 +1382,7 @@ export default {
     },
     leaveOnlineLecture() { // 무인[개인] 강의 종료
       const vm = this;
-      let newOffset = vm.participationTime;
-      let lectureItemId;
-      if (vm.lectureItem.length === 0) {
-        lectureItemId = undefined;
-      } else {
-        lectureItemId = vm.lectureItem[0].lecture_item_id;
-      }
+      const newOffset = vm.participationTime;
       automaticLectureService.onlineLeave({
         lectureId: vm.localLectureId,
         offset: newOffset,
