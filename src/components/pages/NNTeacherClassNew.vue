@@ -88,6 +88,7 @@
 import classService from '../../services/classService';
 import authService from '../../services/authService';
 import utils from '../../utils';
+import { POINT_CONVERSION_COMPRESSED } from 'constants';
 
 export default {
   name: 'TeacherClassNew',
@@ -120,13 +121,13 @@ export default {
       input: Object.assign({}, initialInput), // 복사해서 넣음
       notice: [{
         title: '공개',
-        content: '학생의 과목 목록에 노출되며 수강신청이 가능합니다.',
+        content: '학생의 과목 목록에 노출되며 강의 수강이 가능합니다.',
       }, {
         title: '비공개',
         content: '학생의 과목 목록에 노출되지 않습니다.',
       }, {
         title: '마감',
-        content: '학생의 과목 목록에 노출되나 수강신청은 불가능합니다.',
+        content: '학생의 과목 목록에 노출되나 강의 수강은 불가능합니다.',
       }],
     };
   },
@@ -140,7 +141,7 @@ export default {
       vm.input.summary = res.data.summary || vm.initialInput.summary;
       vm.input.activeStartDate = res.data.start_time || vm.initialInput.activeStartDate;
       vm.input.activeEndDate = res.data.end_time || vm.initialInput.activeEndDate;
-      vm.input.capacity = res.data.capacity || vm.initialInput.capacity; // 0은 무제한
+      vm.input.capacity = res.data.capacity || vm.initialInput.capacity; // 정원 0은 무제한
       vm.input.capacityCheck = vm.input.capacity === 0;
       vm.input.lecturerDescription = res.data.lecturer_description;
       vm.input.description = res.data.description;
@@ -174,6 +175,15 @@ export default {
           title: '오류',
           message: '강의 시작일이 종료일보다 늦습니다.',
           type: 'error',
+        });
+        return;
+      }
+      // 최대 수강 정원은 10000명. 10000명을 넘어설 경우 미리 차단
+      if (vm.input.capacity > 10000) {
+        vm.$notify({
+          title: '오류',
+          message: '최대 수강 정원은 10000명입니다. 그 이상을 원하시면 무제한으로 설정해주세요.',
+          type: 'warning',
         });
         return;
       }
