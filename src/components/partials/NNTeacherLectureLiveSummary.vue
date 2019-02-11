@@ -102,7 +102,7 @@
 
 </style>
 <script>
-  import realtimeLectureService from '../../services/realtimeLectureService';
+  // import realtimeLectureService from '../../services/realtimeLectureService';
   import { EventBus } from '../../event-bus';
 
   export default {
@@ -142,7 +142,8 @@
     },
     methods: {
       async getLectureStat() {
-        const vm = this;
+        const vm = this; // eslint-disable-line
+        // 아직 수정 X. 추후에 수정할 것
         try {
           /*
           const lectureData = await realtimeLectureService.getStudentLectureLog({

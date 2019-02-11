@@ -390,6 +390,7 @@ export default {
 
       if (vm.isNewItem) {
         try {
+          // 아이템 만들기
           await vm.postLcItem({
             inputHead: vm.inputHead,
             inputBody: vm.inputBody,
