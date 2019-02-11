@@ -159,6 +159,24 @@ export default {
   methods: {
     onSubmit() {
       const vm = this;
+      // 과목 제목 입력 안했을 경우 오류 처리 - 190211
+      if (vm.input.title === '') {
+        vm.$notify({
+          title: '오류',
+          message: '과목 제목을 입력해 주세요.',
+          type: 'error',
+        });
+        return;
+      }
+      // 과목 시작 시간이 끝 시간보다 빠르면 오류 처리 - 190211
+      if (vm.input.activeStartDate > vm.input.activeEndDate) {
+        vm.$notify({
+          title: '오류',
+          message: '강의 시작일이 종료일보다 늦습니다.',
+          type: 'error',
+        });
+        return;
+      }
       vm.$refs.elForm.validate(async (/* valid, fields */) => {
         // console.log('valid,', valid);
         // console.log('fields', fields);

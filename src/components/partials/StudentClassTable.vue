@@ -23,7 +23,7 @@
           <!--
           <el-button type="success" @click="onClick('DETAIL', scope.row)">살펴보기</el-button>
           -->
-          <el-button type="primary" @click="onClick('LISTEN', scope.row)">강의듣기</el-button>
+          <el-button type="primary" v-if="scope.row.opened !== 2" @click="onClick('LISTEN', scope.row)">강의듣기</el-button>
           <!-- FIXME: 건호씨 요구사항에 따라 수강취소 버튼 주석 씌움 -->
           <!-- <el-button type="danger" @click="onClick('CANCEL', scope.row, (pageNum - 1) * 10 + (scope.$index))">수강취소</el-button> -->
         </template>

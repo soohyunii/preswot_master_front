@@ -38,9 +38,9 @@
         </el-table-column>
         <el-table-column label="활성화 시간" v-if="lectureType !== 0" width="150px" prop="start" />
         <el-table-column label="비활성화 시간" v-if="lectureType !== 0" width="150px" prop="end" />
-        <el-table-column width="200px">
+        <el-table-column width="160px">
           <template slot-scope="scope">
-            <el-button @click="onClick('NEW_TIME', scope.row)">활성화 시간 변경</el-button>
+            <el-button size="small" @click="onClick('NEW_TIME', scope.row)">활성화 시간 변경</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -65,7 +65,6 @@
     </div>
   </div>
 </template>
-
 
 <script>
 import lectureItemService from '../../services/lectureItemService';
