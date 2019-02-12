@@ -83,35 +83,33 @@ export default {
         confirmButtonText: '예, 삭제합니다.',
         cancelButtonText: '아니요, 삭제하지 않습니다.',
         type: 'warning',
-      })
-        .then(async () => {
-          try {
-            // const index = vm.currentClassIndex;
-            const currentClass = vm.teachingClassList[index];
-            await classService.delete({
-              id: currentClass.class_id,
-            });
-            vm.deleteTeachingClass({
-              teachingClassIndex: index,
-            });
-          } catch (error) {
-            console.error(error); // eslint-disable-line no-console
-            vm.$notify({
-              title: '과목 삭제 실패',
-              message: error.toString(),
-              type: 'error',
-              duration: 3000,
-            });
-          }
-        })
-        .catch(() => {
+      }).then(async () => {
+        try {
+          // const index = vm.currentClassIndex;
+          const currentClass = vm.teachingClassList[index];
+          await classService.delete({
+            id: currentClass.class_id,
+          });
+          vm.deleteTeachingClass({
+            teachingClassIndex: index,
+          });
+        } catch (error) {
+          console.error(error); // eslint-disable-line no-console
           vm.$notify({
-            title: '취소됨',
-            message: '과목 삭제 취소됨',
-            type: 'info',
+            title: '과목 삭제 실패',
+            message: error.toString(),
+            type: 'error',
             duration: 3000,
           });
+        }
+      }).catch(() => {
+        vm.$notify({
+          title: '취소됨',
+          message: '과목 삭제 취소됨',
+          type: 'info',
+          duration: 3000,
         });
+      });
     },
   },
 };

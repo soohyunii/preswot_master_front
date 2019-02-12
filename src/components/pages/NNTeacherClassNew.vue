@@ -88,7 +88,6 @@
 import classService from '../../services/classService';
 import authService from '../../services/authService';
 import utils from '../../utils';
-import { POINT_CONVERSION_COMPRESSED } from 'constants';
 
 export default {
   name: 'TeacherClassNew',
