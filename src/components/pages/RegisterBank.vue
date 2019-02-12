@@ -145,6 +145,15 @@ export default {
       vm.input.name = res.data.name || vm.initialInput.name;
     }
   },
+  /*watch:{
+    items: async function(val,oldVal){
+      const vm=this;
+      console.log('watch인식!');
+      if(vm.tagSelection!==[]){
+        console.log('vm.tagSelection==',vm.tagSelection);
+      }
+    }
+  },*/
   computed: {
     isEdit() {
       const vm = this;
@@ -206,7 +215,7 @@ export default {
     },
     async categoryChange(university_name){
       const vm=this;
-      const deptNameLists = await masterService.getDeptLists({name:vm.input.university_name});
+      const deptNameLists = await masterService.getDeptLists({university_name:vm.input.university_name, category:undefined});
       vm.input.department_list = await deptNameLists.data.map(element=>element.name);
       vm.input.department_name=null;
       const itemLists = await masterService.getUserLists(1,vm.input.university_name, vm.input.department_name);
@@ -223,11 +232,13 @@ export default {
     },
     handleSelectionChange(val) {
       const vm = this;
+      vm.tagSelection=[];
       vm.multipleSelection = val;
       vm.input.email_items = val;
       for(var i=0;i<val.length;i++){
-        vm.tagSelection[i] = val[i].email_id; 
+        vm.tagSelection[i] = val[i].email_id;
       }
+      console.log('vm.tagSelection==',vm.tagSelection);
     },
   },
 };

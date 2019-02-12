@@ -259,7 +259,7 @@ export default {
     },
     async categoryChange(university_name){
       const vm=this;
-      const deptNameLists = await masterService.getDeptLists({name:vm.input.university_name});
+      const deptNameLists = await masterService.getDeptLists({university_name:vm.input.university_name, category:undefined});
       vm.input.department_list = await deptNameLists.data.map(element=>element.name);
     },
   },
