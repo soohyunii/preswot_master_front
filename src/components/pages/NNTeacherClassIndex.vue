@@ -1,6 +1,7 @@
 <template>
   <div id="teacher_class_index_wrapper" class="bt-container">
     <h2 class="page-title">강의중인 과목 목록</h2>
+    <div style="height: 50px;" />
     <class-list
       @row-click="onClickClass"
       @delete="onClickDelete"
@@ -119,9 +120,9 @@ export default {
 <style lang="scss" scoped>
 
 #teacher_class_index_wrapper {
-  .page-title{
+  .page-title {
     float:left;
-    width:1000px;
+    width: 100%;
     height: 24px;
       
     font-family: SpoqaHanSans;
