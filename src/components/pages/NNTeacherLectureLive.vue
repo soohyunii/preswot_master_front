@@ -263,7 +263,7 @@
       <el-row>
         <div style="height: 20px;" />
         <!-- 실시간 이해도 참여도 집중도 출석률 그래프 -->
-        <el-button size="small" @click="onCLick('TOTAL_STUDENT')">학생 접속 정보</el-button>
+        <el-button size="small" @click="onClick('STUDENT_STATUS')">학생 접속 정보</el-button>
         <el-button size="small" @click="onClick('ABSENT')">결석자 명단</el-button>
         <el-button v-if="lectureType === 0" v-show="!showGraph" size="small" type="primary" @click="onClick('SHOWGRAPH')">실시간 그래프 보이기</el-button>
         <div style="float: right;">
@@ -1197,6 +1197,11 @@ export default {
         // 전체 아이템 확인
         case 'FULL_ITEM': {
           window.open('itemList');
+          break;
+        }
+        // 학생 접속 정보 확인
+        case 'STUDENT_STATUS': {
+          window.open('studentStatus');
           break;
         }
         // 강사의 아이템 미리보기 화면 - 제출 버튼 무효화

@@ -11,7 +11,7 @@
       @row-click="onClickLecture"
       @join="onClickJoin"
       type="STUDENT"
-      :list="lectureList"
+      :list="lectureL"
     />
     <br />
   </div>
@@ -22,6 +22,7 @@ import { mapState, mapActions, mapGetters } from 'vuex';
 import LectureList from '../partials/LectureList';
 import utils from '../../utils';
 import lectureService from '../../services/lectureService';
+import { resolve } from 'url';
 
 export default {
   name: 'StudentClassShow',
@@ -30,34 +31,8 @@ export default {
   },
   data() {
     return {
-      lectureList: [],
+      lectureL: [],
     };
-  },
-  async created() {
-    const vm = this;
-    if (!vm.studyingClassList) {
-      vm.lectureList = [];
-    }
-    const currentClass = vm.currentStudyingClass(Number.parseInt(vm.$route.params.classId, 10));
-    if (currentClass && currentClass.lectures) {
-      for (let i = 0; i < currentClass.lectures.length; i += 1) {
-        const item = currentClass.lectures[i];
-        const type = utils.convertLcType(item.type);
-        item.type = type;
-        const res = await lectureService.studentLoginLog({
-          lectureId: item.lecture_id,
-        }).then((result) => {
-          if (result.data.login === true) {
-            item.heard = '수강완료';
-          } else {
-            item.heard = '수강미완료';
-          }
-        });
-      }
-      vm.lectureList = currentClass.lectures;
-    } else {
-      vm.lectureList = [];
-    }
   },
   async mounted() {
     const vm = this;
@@ -66,6 +41,28 @@ export default {
       type: 'STUDENT',
       classId: vm.classId,
     });
+    // 학생이 본인의 수강 강의들 불러오는 부분 mounted에서 동작
+    const currentClass = await vm.currentStudyingClass(Number.parseInt(vm.classId, 10));
+    if (currentClass && currentClass.lectures) {
+      const lecL = currentClass.lectures;
+      for (let i = 0; i < lecL.length; i += 1) {
+        const item = lecL[i];
+        const type = utils.convertLcType(item.type);
+        item.type = type;
+        // 수강 완료 - 미완료는 별도의 API 통해 결정
+        const res = await lectureService.studentLoginLog({
+          lectureId: item.lecture_id,
+        });
+        if (res.data.login === true) {
+          item.heard = '수강완료';
+        } else {
+          item.heard = '수강미완료';
+        }
+      }
+      vm.lectureL = lecL;
+    } else {
+      vm.lectureL = [];
+    }
   },
   computed: {
     ...mapState('NNclass', [
@@ -80,7 +77,7 @@ export default {
     },
     lectureList() {
       const vm = this;
-      return vm.lectureList;
+      return vm.lectureL;
       /*
       return currentClass.lectures.map((item) => {
         const type = utils.convertLcType(item.type);
