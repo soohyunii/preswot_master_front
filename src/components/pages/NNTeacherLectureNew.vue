@@ -65,7 +65,7 @@
           @click="onSubmit" class="putLecture-btn"
         >
           <div class="putLecture-btn-layer">
-            {{ isManage ? '강의 수정' : '강의 추가'}}
+            {{ isManage ? '강의 기본 정보 수정' : '강의 추가' }}
           </div>
         </el-button>
       </el-form-item>
@@ -144,37 +144,31 @@ export default {
         }
 
         if (vm.isManage) {
-          try {
-            await lectureService.putLecture({
+          // 강의 수정시 확인 안내문 출력
+          vm.$confirm('강의 기본 정보를 수정하실 경우, 기존의 아이템 그룹이 전부 해제되어 ' +
+          '다시 설정하셔야 합니다. 수정하시겠습니까?', '강의 기본 정보 수정', {
+            confirmButtonText: '수정',
+            cancelButtonText: '취소',
+            type: 'warning',
+          }).then(() => {
+            lectureService.putLecture({
               lectureId: vm.lectureId,
               type: vm.input.type,
               name: vm.input.title,
               startTime: vm.input.lcStartDate,
               endTime: vm.input.lcEndDate,
             });
-            // 강의 수정할 경우 아이템 그룹 전부 해제
-            const group = await lectureItemService.showGroup({
-              lectureId: vm.lectureId,
-            });
-            group.data.list.forEach((x) => {
-              lectureItemService.deleteGroup({
-                groupId: x.group_id,
-              });
-            });
+            // then 뒤에 await 불가능해서 별도의 외부 함수로 구현
+            vm.deleteAllGroup();
+            return; // eslint-disable-line
+          }).catch(() => { // eslint-disable-line
             vm.$notify({
-              title: '강의 수정 성공',
-              message: '성공적으로 강의가 수정되었습니다. 아이템 그룹이 전부 해제되었습니다. 다시 그룹화해주세요.',
-              type: 'success',
+              title: '강의 수정 취소',
+              message: '강의 수정이 취소되었습니다.',
+              type: 'warning',
             });
-            vm.$router.go(-1);
-          } catch (error) {
-            vm.$notify({
-              title: '강의 수정 실패',
-              message: error.toString(),
-              type: 'error',
-              duration: 0,
-            });
-          }
+            return; // eslint-disable-line
+          });
         } else {
           try {
             await lectureService.postLecture({
@@ -200,6 +194,24 @@ export default {
           }
         }
       });
+    },
+    async deleteAllGroup() {
+      const vm = this;
+      // 강의 수정할 경우 아이템 그룹 전부 해제
+      const group = await lectureItemService.showGroup({
+        lectureId: vm.lectureId,
+      });
+      group.data.list.forEach((x) => {
+        lectureItemService.deleteGroup({
+          groupId: x.group_id,
+        });
+      });
+      vm.$notify({
+        title: '강의 수정 성공',
+        message: '성공적으로 강의가 수정되었습니다. 아이템 그룹이 전부 해제되었습니다. 다시 그룹화해주세요.',
+        type: 'success',
+      });
+      vm.$router.go(-1); // 새로고침
     },
   },
   computed: {

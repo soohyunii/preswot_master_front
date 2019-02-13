@@ -537,20 +537,24 @@ export default {
       })
         .then(async () => {
           try {
-            // 아이템 삭제
-            await lectureItemService.deleteLectureItem({
-              lectureItemId: targetLectureItem.lecture_item_id,
-            });
-            // 연결 리스트 삭제
-            await lectureItemService.deleteConnection({
-              lectureItemId: mainItemId,
-            });
             // 그룹 삭제 (있다면)
             if (ifGrp !== '') {
               await lectureItemService.deleteGroup({
                 groupId: ifGrp,
               });
             }
+            // 연결 리스트 삭제
+            await lectureItemService.deleteConnection({
+              lectureItemId: mainItemId,
+            });
+            // 아이템 삭제
+            await lectureItemService.deleteLectureItem({
+              lectureItemId: targetLectureItem.lecture_item_id,
+            });
+            // 프론트에서 아이템 지워주기
+            const oriI = vm.lectureItemList.indexOf(targetLectureItem);
+            vm.lectureItemList.splice(oriI, 1);
+            // 삭제한 뒤에 아이템 다시 서버에 업로드
             await vm.lectureItemList.forEach((item, i) => {
               if (item.sequence - 1 > index) {
                 lectureItemService.putLectureItem({

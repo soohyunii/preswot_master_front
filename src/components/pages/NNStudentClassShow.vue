@@ -21,6 +21,7 @@
 import { mapState, mapActions, mapGetters } from 'vuex';
 import LectureList from '../partials/LectureList';
 import utils from '../../utils';
+import lectureService from '../../services/lectureService';
 
 export default {
   name: 'StudentClassShow',
@@ -29,7 +30,34 @@ export default {
   },
   data() {
     return {
+      lectureList: [],
     };
+  },
+  async created() {
+    const vm = this;
+    if (!vm.studyingClassList) {
+      vm.lectureList = [];
+    }
+    const currentClass = vm.currentStudyingClass(Number.parseInt(vm.$route.params.classId, 10));
+    if (currentClass && currentClass.lectures) {
+      for (let i = 0; i < currentClass.lectures.length; i += 1) {
+        const item = currentClass.lectures[i];
+        const type = utils.convertLcType(item.type);
+        item.type = type;
+        const res = await lectureService.studentLoginLog({
+          lectureId: item.lecture_id,
+        }).then((result) => {
+          if (result.data.login === true) {
+            item.heard = '수강완료';
+          } else {
+            item.heard = '수강미완료';
+          }
+        });
+      }
+      vm.lectureList = currentClass.lectures;
+    } else {
+      vm.lectureList = [];
+    }
   },
   async mounted() {
     const vm = this;
@@ -52,22 +80,27 @@ export default {
     },
     lectureList() {
       const vm = this;
-      if (!vm.studyingClassList) {
-        return [];
-      }
-      const currentClass = vm.currentStudyingClass(vm.classId);
-      if (currentClass && currentClass.lectures) {
-        return currentClass.lectures.map((item) => {
-          const type = utils.convertLcType(item.type);
-          // eslint-disable-next-line no-param-reassign
-          item.type = type;
-          // 수강 완료 or 미완료 기준 변경 -> heartbeat에서 lecture_student_login_logs로
-          // eslint-disable-next-line no-param-reassign
-          item.heard = (item.lecture_student_login_logs.length > 0) ? '수강완료' : '수강미완료';
-          return item;
+      return vm.lectureList;
+      /*
+      return currentClass.lectures.map((item) => {
+        const type = utils.convertLcType(item.type);
+        // eslint-disable-next-line no-param-reassign
+        item.type = type;
+        const res = lectureService.studentLoginLog({
+          lectureId: item.lecture_id,
         });
-      }
-      return [];
+        res.then((result) => {
+          if (result.data.login === true) {
+            item.heard = '수강완료';
+          } else {
+            item.heard = '수강미완료';
+          }
+          console.log(item.heard);
+        });
+        // 수강 완료 or 미완료 기준 변경 -> heartbeat에서 lecture_student_login_logs로
+        // eslint-disable-next-line no-param-reassign
+        return item;
+      }); */
     },
   },
   methods: {
