@@ -13,7 +13,6 @@ import ClassIndex from '../components/pages/ClassIndex';
 import ClassDetail from '../components/pages/ClassDetail';
 // import Test from '../components/TestComponent';
 import authRoutes from './authRoutes';
-import ProfileEdit from '../components/pages/ProfileEdit';
 
 Vue.use(Router);
 
@@ -34,11 +33,6 @@ export default new Router({
       path: '/forgot-password/:rand/:userId',
       name: 'FindingPasswordPage',
       component: FindingPasswordPage,
-    },
-    {
-      path: '/profileEdit',
-      name: ProfileEdit,
-      component: ProfileEdit,
     },
     {
       path: '/tos',

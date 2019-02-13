@@ -91,6 +91,33 @@ export default {
   }) {
     return http.delete(`/lectures/${lectureId}/keywords/${lectureKeyword}`);
   },
+  NNpostLectureKeyword({
+    lectureId,
+    keyword,
+    weight,
+  }) {
+    return http.post(`/lectures/${lectureId}/keyword`, {
+      keyword,
+      weight,
+    });
+  },
+  NNdeleteLectureKeyword({
+    lectureId,
+    keywordId,
+  }) {
+    return http.delete(`/lectures/${lectureId}/keyword/${keywordId}`);
+  },
+  NNputLectureKeyword({
+    lectureId,
+    keywordId,
+    keyword,
+    weight,
+  }) {
+    return http.put(`/lectures/${lectureId}/keyword/${keywordId}`, {
+      keyword,
+      weight,
+    });
+  },
   getLectureKeywordRelations({
     lectureId,
   }) {
