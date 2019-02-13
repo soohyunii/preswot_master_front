@@ -204,4 +204,9 @@ export default {
   }) {
     return http.delete(`/lectures/${lectureId}/material-keyword`);
   },
+  studentLoginLog({
+    lectureId,
+  }) {
+    return http.get(`/lectures/${lectureId}/is-lectured`);
+  },
 };
