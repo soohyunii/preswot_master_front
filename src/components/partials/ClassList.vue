@@ -1,6 +1,6 @@
 <template functional>
   <div id="class_list_wrapper">
-    <div v-if="props.list.length === 0">
+    <div v-if="props.list.length === 0" style="margin-left: 20px;">
       강의 중인 과목이 없습니다.
     </div>
     <div v-else>

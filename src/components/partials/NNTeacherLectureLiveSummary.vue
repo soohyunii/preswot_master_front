@@ -154,7 +154,6 @@
             lectureData.data[i].latest_pic_path = '"'+ lectureData.data[i].latest_pic_path + '"';
             // eslint-disable-next-line
           }
-
           vm.forLoopData = lectureData.data; */
         } catch (e) {
           throw new Error('request error');
@@ -179,6 +178,7 @@
             vm.opt = 0;
             clearInterval(vm.loopInterval);
             vm.loopInterval = setInterval(vm.getLectureStat, 10000);
+            // 시간 간격은 10초로
             break;
           }
           case 'GET_LECTURE_SCORE_ORDER_BY_PARTICIPATION': {

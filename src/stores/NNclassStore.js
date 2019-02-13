@@ -93,8 +93,14 @@ export default {
     },
     async getMyClassLists({ commit }) {
       const res = await classService.getMyClassList();
+      const tmp = res.data.studyingClasses;
+      const sc = [];
+      tmp.forEach((x) => {
+        if (x.opened !== 1) { // 비공개가 아닌 공개, 마감 강의
+          sc.push(x);
+        }
+      });
 
-      const sc = res.data.studyingClasses;
       commit('updateStudyingClassList', {
         studyingClassList: sc,
       });

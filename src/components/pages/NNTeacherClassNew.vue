@@ -120,13 +120,13 @@ export default {
       input: Object.assign({}, initialInput), // 복사해서 넣음
       notice: [{
         title: '공개',
-        content: '학생의 과목 목록에 노출되며 수강신청이 가능합니다.',
+        content: '학생의 과목 목록에 노출되며 강의 수강이 가능합니다.',
       }, {
         title: '비공개',
         content: '학생의 과목 목록에 노출되지 않습니다.',
       }, {
         title: '마감',
-        content: '학생의 과목 목록에 노출되나 수강신청은 불가능합니다.',
+        content: '학생의 과목 목록에 노출되나 강의 수강은 불가능합니다.',
       }],
     };
   },
@@ -140,7 +140,7 @@ export default {
       vm.input.summary = res.data.summary || vm.initialInput.summary;
       vm.input.activeStartDate = res.data.start_time || vm.initialInput.activeStartDate;
       vm.input.activeEndDate = res.data.end_time || vm.initialInput.activeEndDate;
-      vm.input.capacity = res.data.capacity || vm.initialInput.capacity; // 0은 무제한
+      vm.input.capacity = res.data.capacity || vm.initialInput.capacity; // 정원 0은 무제한
       vm.input.capacityCheck = vm.input.capacity === 0;
       vm.input.lecturerDescription = res.data.lecturer_description;
       vm.input.description = res.data.description;
@@ -159,6 +159,33 @@ export default {
   methods: {
     onSubmit() {
       const vm = this;
+      // 과목 제목 입력 안했을 경우 오류 처리 - 190211
+      if (vm.input.title === '') {
+        vm.$notify({
+          title: '오류',
+          message: '과목 제목을 입력해 주세요.',
+          type: 'error',
+        });
+        return;
+      }
+      // 과목 시작 시간이 끝 시간보다 빠르면 오류 처리 - 190211
+      if (vm.input.activeStartDate > vm.input.activeEndDate) {
+        vm.$notify({
+          title: '오류',
+          message: '강의 시작일이 종료일보다 늦습니다.',
+          type: 'error',
+        });
+        return;
+      }
+      // 최대 수강 정원은 10000명. 10000명을 넘어설 경우 미리 차단
+      if (vm.input.capacity > 10000) {
+        vm.$notify({
+          title: '오류',
+          message: '최대 수강 정원은 10000명입니다. 그 이상을 원하시면 무제한으로 설정해주세요.',
+          type: 'warning',
+        });
+        return;
+      }
       vm.$refs.elForm.validate(async (/* valid, fields */) => {
         // console.log('valid,', valid);
         // console.log('fields', fields);

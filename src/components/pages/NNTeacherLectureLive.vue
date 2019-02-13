@@ -263,6 +263,7 @@
       <el-row>
         <div style="height: 20px;" />
         <!-- 실시간 이해도 참여도 집중도 출석률 그래프 -->
+        <el-button size="small" @click="onCLick('TOTAL_STUDENT')">전체 학생 정보</el-button>
         <el-button size="small" @click="onClick('ABSENT')">결석자 명단</el-button>
         <el-button v-if="lectureType === 0" v-show="!showGraph" size="small" type="primary" @click="onClick('SHOWGRAPH')">실시간 그래프 보이기</el-button>
         <div style="float: right;">
