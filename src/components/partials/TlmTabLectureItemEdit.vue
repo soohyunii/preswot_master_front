@@ -554,7 +554,6 @@ export default {
             // 프론트에서 아이템 지워주기
             const oriI = vm.lectureItemList.indexOf(targetLectureItem);
             vm.lectureItemList.splice(oriI, 1);
-            return;
             // 삭제한 뒤에 아이템 다시 서버에 업로드
             await vm.lectureItemList.forEach((item, i) => {
               if (item.sequence - 1 > index) {
