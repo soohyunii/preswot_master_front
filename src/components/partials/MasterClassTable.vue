@@ -15,11 +15,13 @@
       </el-table-column>
       <el-table-column prop="teacher_email_id" label="강사" width="110">
       </el-table-column>
-      <el-table-column prop="start_date" :list="list" label="강의시작일" width="160">
+      <el-table-column prop="start_date" :list="list" label="강의시작일" width="120">
       </el-table-column>
-      <el-table-column prop="lecture_register" label="강의등록여부" width="160">
+      <el-table-column prop="end_date" label="강의종료일" width="120">
       </el-table-column>
-      <el-table-column prop="attend_rate" label="출석률" width="100">
+      <el-table-column prop="lecture_register" label="강의등록여부" width="100">
+      </el-table-column>
+      <el-table-column prop="attend_rate" label="출석률" width="80">
       </el-table-column>
       <el-table-column label="" header-align="left" align="right">
         <template slot-scope="scope">
