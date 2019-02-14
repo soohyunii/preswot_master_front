@@ -147,7 +147,13 @@
             align="center"
           >
             <template slot-scope="scope">
-              <el-button v-if="scope.row.heard === '수강미완료'" @click="listeners['join'](scope.$index)">강의보기</el-button>
+              <!--무인강의는 반복 수강 가능, 유인강의는 한번만 가능-->
+              <el-button
+                v-if="scope.row.heard === '수강미완료' || scope.row.type !== '[유인]'"
+                @click="listeners['join'](scope.$index)"
+              >
+                강의보기
+              </el-button>
             </template>
           </el-table-column>
         </template>
