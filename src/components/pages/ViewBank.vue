@@ -202,7 +202,7 @@ export default {
     },
     async categoryChange(){
       const vm=this;
-      const deptNameList = await masterService.getDeptLists({name : vm.chosen});
+      const deptNameList = await masterService.getDeptLists({university_name : vm.chosen, category:undefined});
       vm.departmentNameList = deptNameList.data.map(element=>element.name);
       const res = await masterService.getBankLists({university_name:vm.chosen});
       for(let i=0; i<res.data.length; i++){
