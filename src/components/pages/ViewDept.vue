@@ -92,7 +92,7 @@ export default {
       const vm = this;
       const res = await masterService.getDeptLists({university_name : vm.chosen, category:vm.searchType, search_word:vm.searchText, page:vm.pageNum});
       vm.list = res.data;
-      console.log(vm.searchType,vm.searchText,vm.pageNum);
+      // console.log(vm.searchType,vm.searchText,vm.pageNum);
     },
     async clickTitle(){
       const vm=this;
