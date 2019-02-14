@@ -1,32 +1,40 @@
 <template>
   <div id="class_index_wrapper">
     <div>
-      <el-table class="elTable" :data="page" style="width: 100%">
-      <el-table-column label="번호" width="100">
+      <el-table class="elTable" :data="list" style="width: 100%">
+      <el-table-column prop="dept_id" label="ID" width="50">
         <template slot-scope="scope">
-        {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
+          {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
         </template>
+      </el-table-column>  
+      <el-table-column prop="code" label="학과코드" width="100">
       </el-table-column>
-      <el-table-column prop="name" label="과목">
+      <el-table-column prop="university.name" label="대학명" width="150">
       </el-table-column>
-      <el-table-column prop="master.name" label="강사" width="150">
+      <el-table-column prop="name" label="학과명" width="160">
       </el-table-column>
-      <el-table-column label="기간">
+      <el-table-column prop="part" label="분야" width="120">
+      </el-table-column>
+      <el-table-column prop="manager_name" label="학과담당자" width="100">
+      </el-table-column>
+      <el-table-column prop="manager_email" label="학과 대표 이메일" width="190">
+      </el-table-column>
+      <el-table-column prop="manager_phone_number" label="학과 전화번호" width="140">
+      </el-table-column>
+      <el-table-column label="" header-align="left" align="right">
         <template slot-scope="scope">
-        {{ scope.row.start_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') : '미정' }}
-        ~
-        {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString('ko-KR') : '미정' }}
-        </template>
-      </el-table-column>
-      <el-table-column label="" header-align="left" align="right" width="345">
-        <template slot-scope="scope">
-          <!--
-          <el-button type="success" @click="onClick('DETAIL', scope.row)">살펴보기</el-button>
-          -->
-          <el-button type="primary" v-if="scope.row.opened !== 2" @click="onClick('LISTEN', scope.row)">강의듣기</el-button>
-          <!-- FIXME: 건호씨 요구사항에 따라 수강취소 버튼 주석 씌움 -->
-        </template>
-      </el-table-column>
+            <router-link :to="`/a/${scope.row.university.name}/dept/${scope.row.name}/edit`">
+              <el-button class="edit-btn">수정</el-button>
+            </router-link>
+          </template>
+        </el-table-column>
+
+        <el-table-column>
+          <template slot-scope="scope">
+            <el-button type="danger" @click="deptDelete(scope.row.university.name,scope.row.name)" class="delete-btn">삭제</el-button>
+          </template>
+        </el-table-column>
+
       </el-table>
       <br>
     </div>
@@ -40,7 +48,7 @@
         </el-pagination>
       </div>
       <br>
-      <div style="display: block; text-align: center;">
+      <!-- TODO : <div style="display: block; text-align: center;">
         <el-select v-model="searchQuery.searchType" style="display: inline-block; width: 100px">
         <el-option
             v-for="option in selectOptionList"
@@ -52,15 +60,16 @@
         <el-input style="display: inline-block; width: 300px" placeholder="검색어를 입력하세요."
           v-model="searchQuery.searchText" @keydown.enter.native="onClick('SEARCH', searchQuery)"></el-input>
         <el-button @click="onClick('SEARCH', searchQuery)" icon="el-icon-search" circle></el-button>
-      </div>
+      </div> -->
   </div>
 </template>
 
 <script>
 import utils from '../../utils';
+import masterService from '../../services/masterService';
 
 export default {
-  name: 'StudentClassTable',
+  name: 'MasterDeptTable',
   props: ['list', 'onClick'],
   data() {
     return {
@@ -68,15 +77,15 @@ export default {
       selectOptionList: [
         {
           value: 'name',
-          label: '과목',
+          label: '학과명',
         },
         {
-          value: 'teacher',
-          label: '강사',
+          value: 'code',
+          label: '학과코드',
         },
       ],
       searchQuery: {
-        searchType: 'name',
+        searchType: '',
         searchText: '',
       },
     };
@@ -84,10 +93,6 @@ export default {
   computed: {
     listCount() {
       return this.list.length;
-    },
-    page() {
-      const vm = this;
-      return vm.list.slice((vm.pageNum - 1) * 10, vm.pageNum * 10);
     },
   },
   created() {
@@ -100,7 +105,27 @@ export default {
     }
   },
   methods: {
-    formatDate: utils.formatDate,
+    async deptDelete(university_name, name){
+      const vm=this;
+      vm.$confirm('정말로 이 학과를 삭제하시겠습니까?',{
+        confirmButtonText:'예, 삭제합니다',
+        cancelButtonText:'아니오, 삭제하지 않습니다',
+        type:'warning',
+      })
+      .then(async()=> {
+        try{
+          await masterService.deptDelete({university_name: university_name, name: name});
+          await location.reload(true); 
+        } catch(error){
+          vm.$notify({
+            title:'학과 삭제 실패',
+            message:error.toString(),
+            type:'error',
+            duration:3000,
+          }); 
+        }
+      })
+    }
   },
 };
 </script>

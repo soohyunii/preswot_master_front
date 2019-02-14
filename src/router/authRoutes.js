@@ -41,6 +41,33 @@ import LectureItemGroup from '../components/pages/LectureItemGroup';
 import TeacherLectureLiveItemShow from '../components/pages/TeacherLectureLiveItemShow';
 import TeacherLectureLiveStudentStatus from '../components/pages/TeacherLectureLiveStudentStatus';
 
+import ViewUni from '../components/pages/ViewUni';
+// import ViewUniUpdate from '../components/pages/ViewUniUpdate';
+import ViewDept from '../components/pages/ViewDept';
+import ViewTeacher from '../components/pages/ViewTeacher';
+// import ViewTeacherAll from '../components/pages/ViewTeacherAll';
+import ViewClass from '../components/pages/ViewClass';
+import ViewDetailClass from '../components/pages/ViewClassAll';
+import ViewStudent from '../components/pages/ViewStudent';
+import ViewStudentScore from '../components/pages/ViewStudentScore';
+import ViewDetailStudent from '../components/pages/ViewDetailStudent';
+import ViewBank from '../components/pages/ViewBank';
+import RegisterUni from '../components/pages/RegisterUni';
+
+// import RegisterUniEdit from '../components/pages/RegisterUni';
+import RegisterUniSuccess from '../components/pages/RegisterUniSuccess';
+import RegisterDept from '../components/pages/RegisterDept';
+import RegisterDeptSuccess from '../components/pages/RegisterDeptSuccess';
+import RegisterTeacher from '../components/pages/RegisterTeacher';
+import RegisterTeacherSuccess from '../components/pages/RegisterTeacherSuccess';
+import RegisterClass from '../components/pages/RegisterClass';
+import RegisterClassSuccess from '../components/pages/RegisterClassSuccess';
+import RegisterStudent from '../components/pages/RegisterStudent';
+import RegisterStudentSuccess from '../components/pages/RegisterStudentSuccess';
+import RegisterBank from '../components/pages/RegisterBank';
+import RegisterBankSuccess from '../components/pages/RegisterBankSuccess';
+
+
 export default function authRoutes(root) {
   return [
     // {
@@ -376,12 +403,246 @@ export default function authRoutes(root) {
         title: '강사 강의 보고서 페이지',
       },
     },
+
     {
       path: '/bank',
       name: 'Bank',
       component: Bank,
       meta: {
         title: '강의 은행',
+      },
+    },
+
+   // NOTE: 행정개발 
+    {
+      path: '/view/uni',
+      name: 'ViewUni',
+      component: ViewUni,
+      meta: {
+        title: '조회하기-대학',
+      },
+    },
+    {
+      path: '/view/dept',
+      name: 'ViewDept',
+      component: ViewDept,
+      meta: {
+        title: '관리자 학과 조회',
+      },
+    },   
+    {
+      path: '/view/teacher',
+      name: 'ViewTeacher',
+      component: ViewTeacher,
+      meta: {
+        title: '관리자 강사 조회',
+      },
+    },
+    {
+      path: '/view/class',
+      name: 'ViewClass',
+      component: ViewClass,
+      meta: {
+        title: '관리자 과목 및 강의 조회',
+      },
+    },
+    {
+      path: '/view/:code/detail',
+      name: 'ViewDetailClass',
+      component: ViewDetailClass,
+      meta: {
+        title: '관리자 과목 상세 보기',
+      },
+    },
+    {
+      path: '/view/student',
+      name: 'ViewStudent',
+      component: ViewStudent,
+      meta: {
+        title: '관리자 학생 조회',
+      },
+    },
+    {
+      path: '/view/studentScore',
+      name: 'ViewStudentScore',
+      component: ViewStudentScore,
+      meta: {
+        title: '관리자 학생성적표 조회',
+      },
+    },
+    {
+      path: '/student/:code/detail',
+      name: 'ViewDetailStudent',
+      component: ViewDetailStudent,
+      meta: {
+        title: '관리자 학생 개인 성적표 조회',
+      },
+    },
+    {
+      path: '/view/bank',
+      name: 'ViewBank',
+      component: ViewBank,
+      meta: {
+        title: '관리자 강의은행 조회',
+      },
+    },
+    {
+      path: '/register/uni',
+      name: 'RegisterUni',
+      component: RegisterUni,
+      meta: {
+        title: '관리자 대학 등록',
+      },
+    },
+    {
+      path: '/register/uni/success',
+      name: 'RegisterUniSuccess',
+      component: RegisterUniSuccess,
+      meta: {
+        title: '관리자 대학 등록 성공',
+      },
+    },
+    /*{
+      alias: '/register/uni/edit/:code',
+      path: '/register/uni',
+      name: 'RegisterUni',
+      component: RegisterUni,
+      meta: {
+        title: '관리자 대학 수정',
+      },
+    },*/
+    {
+      alias: '/:code/edit',
+      path: '/register/uni',
+      name: 'RegisterUni',
+      component: RegisterUni,
+      meta: {
+        title: '관리자 대학 수정',
+      },
+    },
+    {
+      path: '/register/dept',
+      name: 'RegisterDept',
+      component: RegisterDept,
+      meta: {
+        title: '관리자 학과 등록',
+      },
+    },
+    {
+      path: '/register/dept/success',
+      name: 'RegisterDeptSuccess',
+      component: RegisterDeptSuccess,
+      meta: {
+        title: '관리자 학과 등록 성공',
+      },
+    },
+    {
+      alias: '/:code/dept/:code/edit',
+      path: '/register/dept',
+      name: 'RegisterDept',
+      component: RegisterDept,
+      meta: {
+        title: '관리자 학과 수정',
+      },
+    },
+    {
+      path: '/register/teacher',
+      name: 'RegisterTeacher',
+      component: RegisterTeacher,
+      meta: {
+        title: '관리자 강사 등록',
+      },
+    },
+    {
+      path: '/register/teacher/success',
+      name: 'RegisterTeacherSuccess',
+      component: RegisterTeacherSuccess,
+      meta: {
+        title: '관리자 강사 등록 성공',
+      },
+    },
+    {
+      alias: '/teacher/:code/edit',
+      path: '/register/teacher',
+      name: 'RegisterTeacher',
+      component: RegisterTeacher,
+      meta: {
+        title: '관리자 강사 수정',
+      },
+    },
+    {
+      path: '/register/class',
+      name: 'RegisterClass',
+      component: RegisterClass,
+      meta: {
+        title: '관리자 과목 등록',
+      },
+    },
+    {
+      alias: '/class/:code/edit',
+      path: '/register/class',
+      name: 'RegisterClass',
+      component: RegisterClass,
+      meta: {
+        title: '관리자 과목 수정',
+      },
+    },
+    {
+      path: '/register/class/success',
+      name: 'RegisterClassSuccess',
+      component: RegisterClassSuccess,
+      meta: {
+        title: '관리자 과목 등록 성공',
+      },
+    },
+    {
+      path: '/register/student',
+      name: 'RegisterStudent',
+      component: RegisterStudent,
+      meta: {
+        title: '관리자 학생 등록',
+      },
+    },
+    {
+      path: '/register/student/success',
+      name: 'RegisterStudentSuccess',
+      component: RegisterStudentSuccess,
+      meta: {
+        title: '관리자 학생 등록 성공',
+      },
+    },
+    {
+      alias: '/student/:code/edit',
+      path:'/register/student',
+      name: 'RegisterStudent',
+      component: RegisterStudent,
+      meta: {
+        title: '관리자 학생 수정',
+      },
+    },
+    {
+      path: '/register/bank',
+      name: 'RegisterBank',
+      component: RegisterBank,
+      meta: {
+        title: '관리자 강의은행그룹 등록',
+      },
+    },
+    {
+      alias: '/bank/:code/edit',
+      path: '/register/bank',
+      name: 'RegisterBank',
+      component: RegisterBank,
+      meta: {
+        title: '관리자 강의은행그룹 수정',
+      },
+    },
+    {
+      path: '/register/bank/success',
+      name: 'RegisterBankSuccess',
+      component: RegisterBankSuccess,
+      meta: {
+        title: '관리자 강의은행그룹 등록 성공',
       },
     },
   ].map((route) => {

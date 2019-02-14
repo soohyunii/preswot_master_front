@@ -2,31 +2,41 @@
   <div id="class_index_wrapper">
     <div>
       <el-table class="elTable" :data="page" style="width: 100%">
-      <el-table-column label="번호" width="100">
+      <el-table-column prop="user_id" label="ID" width="50">
         <template slot-scope="scope">
         {{ (pageNum - 1) * 10 + (scope.$index + 1) }}
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="과목">
+      <el-table-column prop="email_id" label="메일주소" width="180">
       </el-table-column>
-      <el-table-column prop="master.name" label="강사" width="150">
+      <el-table-column prop="name" label="이름" width="80">
       </el-table-column>
-      <el-table-column label="기간">
+      <el-table-column prop="birth" label="생년월일" width="100"></el-table-column>
+      <el-table-column prop="sex" id="sex" label="성별" width="50">
+      </el-table-column>
+      <el-table-column prop="phone" label="전화번호" width="130"></el-table-column>
+      <el-table-column prop="department_name" label="전공" width="120"></el-table-column>
+      <el-table-column prop="account_bank" label="계좌은행" width="80"></el-table-column>
+      <el-table-column prop="account_number" label="계좌번호" width="140"></el-table-column>
+        <el-table-column label="" header-align="left" align="right">
         <template slot-scope="scope">
-        {{ scope.row.start_time ? new Date(scope.row.start_time).toLocaleDateString('ko-KR') : '미정' }}
-        ~
-        {{ scope.row.end_time ? new Date(scope.row.end_time).toLocaleDateString('ko-KR') : '미정' }}
+          <router-link :to="`/a/student/${scope.row.email_id}/detail`">
+            <el-button class="edit-btn">상세</el-button>
+          </router-link>
         </template>
       </el-table-column>
-      <el-table-column label="" header-align="left" align="right" width="345">
+        <el-table-column label="" header-align="left" align="right">
         <template slot-scope="scope">
-          <!--
-          <el-button type="success" @click="onClick('DETAIL', scope.row)">살펴보기</el-button>
-          -->
-          <el-button type="primary" v-if="scope.row.opened !== 2" @click="onClick('LISTEN', scope.row)">강의듣기</el-button>
-          <!-- FIXME: 건호씨 요구사항에 따라 수강취소 버튼 주석 씌움 -->
+          <router-link :to="`/a/student/${scope.row.email_id}/edit`">
+            <el-button class="edit-btn">수정</el-button>
+          </router-link>
         </template>
       </el-table-column>
+      <el-table-column>
+          <template slot-scope="scope">
+            <el-button type="danger" @click="deleteUser(scope.row.email_id)" class="delete-btn">삭제</el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <br>
     </div>
@@ -40,7 +50,7 @@
         </el-pagination>
       </div>
       <br>
-      <div style="display: block; text-align: center;">
+      <!-- TODO : <div style="display: block; text-align: center;">
         <el-select v-model="searchQuery.searchType" style="display: inline-block; width: 100px">
         <el-option
             v-for="option in selectOptionList"
@@ -52,15 +62,16 @@
         <el-input style="display: inline-block; width: 300px" placeholder="검색어를 입력하세요."
           v-model="searchQuery.searchText" @keydown.enter.native="onClick('SEARCH', searchQuery)"></el-input>
         <el-button @click="onClick('SEARCH', searchQuery)" icon="el-icon-search" circle></el-button>
-      </div>
+      </div> -->
   </div>
 </template>
 
 <script>
 import utils from '../../utils';
+import masterService from '../../services/masterService';
 
 export default {
-  name: 'StudentClassTable',
+  name: 'MasterStudentTable',
   props: ['list', 'onClick'],
   data() {
     return {
@@ -68,11 +79,11 @@ export default {
       selectOptionList: [
         {
           value: 'name',
-          label: '과목',
+          label: '이름',
         },
         {
-          value: 'teacher',
-          label: '강사',
+          value: 'userId',
+          label: '유저ID',
         },
       ],
       searchQuery: {
@@ -100,7 +111,27 @@ export default {
     }
   },
   methods: {
-    formatDate: utils.formatDate,
+    async deleteUser(email_id){
+      const vm=this;
+      vm.$confirm('정말로 이 학생을 삭제하시겠습니까?',{
+        confirmButtonText:'예, 삭제합니다',
+        cancelButtonText:'아니오, 삭제하지 않습니다',
+        type:'warning',
+      })
+      .then(async()=> {
+        try{
+          await masterService.deleteUser({email_id : email_id});
+          await location.reload(true); 
+        } catch(error){
+          vm.$notify({
+            title:'학생 삭제 실패',
+            message:error.toString(),
+            type:'error',
+            duration:3000,
+          }); 
+        }
+      })
+    }
   },
 };
 </script>

@@ -81,7 +81,7 @@
             <!-- <router-link to="/a/profile" v-show="isJwtValid">
             </router-link> -->
 
-            <router-link to="/tos" v-show="!isJwtValid">
+            <router-link to="/register" v-show="!isJwtValid">
               <el-button :type="appTheme" plain>
                 회원가입
               </el-button>
@@ -179,6 +179,11 @@ export default {
             vm.$router.push('/');
           }
           // TODO: translation
+          vm.$notify({
+            title: '로그아웃',
+            message: '로그아웃 성공',
+            type: 'success',
+          });
           setTimeout(() => {
             location.reload();
           }, 800);

@@ -918,6 +918,7 @@ export default {
     return {
       tableItemList: [],
       tableItemIndex: [],
+      localLectureId: '', // beforeDestory에서 vm.$route.params.lectureId 를 못읽는 문제가 발생하여 임시 저장
       currentLectureItemId: [],
       path: '',
       isAuto: false,
