@@ -206,6 +206,8 @@ export default {
     vm.$socket.connect();
     vm.joinTime = Date.now();
 
+    vm.myId = utils.getUserIdFromJwt();
+
     // 강의 아이템 목록, 첨부파일 목록, 과목, 강의명 가져오기
     const res = await lectureService.getLecture({
       lectureId: vm.lectureId,
@@ -606,6 +608,7 @@ export default {
       oneNote: false, // 자료가 하나인지
       remainTime: '', // 남은 시간 표시 (무인 강의)
       remainTimer: [], // 남은 시간 표시용 타이머
+      myId: '', // 학생 본인의 ID
     };
   },
   computed: {
@@ -633,7 +636,7 @@ export default {
       // 학생이 강의 화면에서 나가는 경우
       const param = {
         lecture_id: vm.lectureId,
-        user_id: utils.getUserIdFromJwt(),
+        user_id: vm.myId,
       };
       vm.$socket.emit('LEAVE_LECTURE', JSON.stringify(param));
       clearInterval(vm.timeInterval);
@@ -1429,7 +1432,7 @@ export default {
       const vm = this;
       const param = {
         lecture_id: vm.localLectureId,
-        user_id: utils.getUserIdFromJwt(),
+        user_id: vm.myId,
       };
       vm.$socket.emit('LEAVE_LECTURE', JSON.stringify(param));
       /*
