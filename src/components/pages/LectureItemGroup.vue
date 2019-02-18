@@ -2,6 +2,7 @@
   <div id="lecture_item_group" class="bt-container">
     <h2>
       아이템 활성화 시간 설정 (무인)
+      <!--
       <el-popover
         style="position: relative; left: 30px; top: 3px;"
         placement="top-start"
@@ -12,7 +13,7 @@
           <el-table-column width="480" property="content" label="내용"></el-table-column>
         </el-table>
         <i class="el-icon-question fa-lg" slot="reference"></i>
-      </el-popover>
+      </el-popover>-->
     </h2>
     <!--
     <div>
@@ -56,17 +57,36 @@
       <el-button @click="onClick('CANCEL_GROUP_MODE')">
         취소
       </el-button>
+      <p>&#42; 활성화/비활성화 시간은 강의 시작 시점이 기준입니다.</p>
+      <p>예) 아이템을 강의 시작후 5분째에 보여주고 10분째에 내리고 싶을 경우, 활성화 시간은 00:05:00, 비활성화 시간은 00:10:00으로 설정해주세요.</p>
     </div>
     <div style="height: 10px;" />
+    <div>
+    <div v-if="videoLink === ''">
+      등록된 영상이 없습니다.
+    </div>
+    <div v-else>
+      강의 영상
+      <youtube
+        id="video"
+        :video-id="youtubeId"
+        player-width="480px"
+        player-height="360px"
+        :player-vars="{ autoplay: 1, modestbranding: 1 }"
+        :mute="true">
+      </youtube>
+    </div></div>
     <div style="text-align: right;">
       <a href="javascript:history.back();">
         <el-button @click="onClick('BACK')" style="margin-right: 20px;">뒤로 가기</el-button>
       </a>
     </div>
   </div>
+  
 </template>
 
 <script>
+import { getIdFromURL } from 'vue-youtube-embed';
 import lectureItemService from '../../services/lectureItemService';
 import lectureService from '../../services/lectureService';
 
@@ -99,6 +119,7 @@ export default {
       lectureEnd: '', // 강의 끝 시간 - 무인[단체]
       gid: -1, // 시간 변경할 그룹의 id
       gList: [], // 그룹의 linked list
+      videoLink: '',
     };
   },
   async created() {
@@ -106,11 +127,16 @@ export default {
     const lecture = await lectureService.getLecture({
       lectureId: vm.lectureId,
     });
+    // 아이템 리스트
     vm.itemList = lecture.data.lecture_items;
-
     vm.itemList.forEach((x) => {
       x.listId = ''; // eslint-disable-line
     });
+
+    // 비디오 링크
+    if (lecture.data.video_link !== null) {
+      vm.videoLink = lecture.data.video_link;
+    }
 
     // 셔플방지 연결된 문항 판별
     const res = await lectureItemService.showConnection({
@@ -224,6 +250,10 @@ export default {
     lectureId() {
       const vm = this;
       return Number.parseInt(vm.$route.query.lectureId, 10);
+    },
+    youtubeId() {
+      const vm = this;
+      return getIdFromURL(vm.videoLink);
     },
   },
   methods: {

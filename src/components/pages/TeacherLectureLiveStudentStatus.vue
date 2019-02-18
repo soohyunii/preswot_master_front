@@ -18,10 +18,7 @@
 </template>
 
 <script>
-import lectureService from '../../services/lectureService';
 import authService from '../../services/authService';
-import lectureItemService from '../../services/lectureItemService';
-import TeacherLectureLiveItem from '../partials/TeacherLectureLiveItem';
 import utils from '../../utils';
 
 export default {

@@ -59,6 +59,22 @@
         ></el-date-picker>
       </el-form-item>
 
+      <el-form-item label="결과 공개 여부">
+        <el-switch v-model="input.open" active-text="공개" inactive-text="비공개">
+        </el-switch>
+        <el-popover
+          style="position: relative; left: 30px; top: 3px;"
+          placement="top-start"
+          width="400"
+          trigger="hover">
+          <el-table :data="notice2">
+            <el-table-column width="100" prop="title" label="유형"></el-table-column>
+            <el-table-column width="290" prop="content" label="내용"></el-table-column>
+          </el-table>
+          <i class="el-icon-question fa-lg" slot="reference"></i>
+        </el-popover>
+      </el-form-item>
+
       <el-form-item>
         <el-button
           type="primary"
@@ -99,6 +115,7 @@ export default {
       type: 0,
       lcStartDate: new Date(),
       lcEndDate: new Date(),
+      open: false,
     };
     return {
       initialInput,
@@ -112,6 +129,13 @@ export default {
       }, {
         title: '[무인]개인',
         content: '활성화 기간동안 자유롭게 수강이 가능합니다. \n강의 아이템 활성화 시간 설정이 필요합니다.',
+      }],
+      notice2: [{
+        title: '비공개',
+        content: '학생이 강의 목록의 "결과 보기" 메뉴에서 본인의 해당 강의 성적을 확인할 수 없습니다.',
+      }, {
+        title: '공개',
+        content: '학생이 강의 목록의 "결과 보기" 메뉴에서 본인의 해당 강의 성적을 확인할 수 있습니다.',
       }],
     };
   },
@@ -171,12 +195,23 @@ export default {
           });
         } else {
           try {
-            await lectureService.postLecture({
+            const a = await lectureService.postLecture({
               classId,
               type: vm.input.type,
               name: vm.input.title,
               start_time: vm.input.lcStartDate,
               end_time: vm.input.lcEndDate,
+            });
+            let ro;
+            if (vm.input.open === false) {
+              ro = 0; // 비공개
+            } else {
+              ro = 1; // 공개
+            }
+            const lId = a.data.lecture.lecture_id;
+            await lectureService.changeResultOpen({
+              lectureId: lId,
+              result: ro,
             });
             vm.$notify({
               title: '강의 추가 성공',
@@ -206,6 +241,17 @@ export default {
           groupId: x.group_id,
         });
       });
+      // 공개 비공개 여부 변경
+      let ro;
+      if (vm.input.open === false) {
+        ro = 0; // 비공개
+      } else {
+        ro = 1; // 공개
+      }
+      await lectureService.changeResultOpen({
+        lectureId: vm.lectureId,
+        result: ro,
+      });
       vm.$notify({
         title: '강의 수정 성공',
         message: '성공적으로 강의가 수정되었습니다. 아이템 그룹이 전부 해제되었습니다. 다시 그룹화해주세요.',
@@ -233,7 +279,7 @@ export default {
 <style lang="scss" scoped>
 #teacher_lecture_new_wrapper {
  .bt_container{
-   margin-right: auto;
+    margin-right: auto;
     margin-left: auto;
     padding-left: 15px;
     padding-right: 15px;

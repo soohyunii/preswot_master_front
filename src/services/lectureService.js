@@ -236,4 +236,10 @@ export default {
   }) {
     return http.get(`/lectures/${lectureId}/is-lectured`);
   },
+  changeResultOpen({
+    lectureId,
+    result,
+  }) {
+    return http.get(`/lectures/${lectureId}/result-opened/${result}`);
+  },
 };

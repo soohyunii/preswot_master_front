@@ -567,14 +567,6 @@ export default {
       tmp.email = x.email_id;
       tmp.id = x.user_id;
       tmp.current = '미출석';
-      /*
-      if (x.current === 1) { // 현재 출석중
-        tmp.current = '출석 중';
-      } else if (x.in_cnt > 0) { // 출석했지만 나감
-        tmp.current = '출석 후 이탈';
-      } else {
-        tmp.current = '미출석';
-      } */
       vm.ipList.push(tmp);
     });
 

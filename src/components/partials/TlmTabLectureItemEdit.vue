@@ -43,9 +43,13 @@
         </el-button>
         <p>&#42; 맨 앞의 아이템이 대표 아이템으로 등록됩니다.</p>
       </div>
-
+      <p v-if="lectureType !== 0">&#42; 무인 강의의 경우, '활성화 시간 설정'에서 아이템 그룹별로 활성화 시간을 설정해주세요.</p>
+      <br v-if="lectureType === 0" />
       <div class="ps-align-right">
-        <br />
+        <router-link :to="`/a/teacher/NNlecture/itemgroup?lectureId=${lectureId}`" v-if="lectureType !== 0">
+          <el-button type="primary">활성화 시간 설정</el-button>
+        </router-link>
+        <!--el-button type="primary" v-if="lectureType !== 0" style="margin-right: 50px;" @click="onClick('CHANGE_ALL')">일괄 활성화 시간 설정</el-button-->
         <router-link :to="`/a/teacher/NNlecture/itemconnection?lectureId=${lectureId}`">
           <el-button type="primary">아이템 연결 관리</el-button>
         </router-link>
@@ -63,6 +67,8 @@
         </router-link>
       </div>
     </div>
+
+      
     <div v-if="ifShowCList">
       <el-table :data="connectedList">
         <el-table-column label="대표 아이템" width="300px">
@@ -89,7 +95,7 @@
       </div>
     </div>
     <div v-if="isEditing">
-      <el-button @click="onClick('CANCEL_EDIT')" icon="el-icon-back"> 뒤로 가기</el-button>
+      <el-button @click="onClick('CANCEL_EDIT')" icon="el-icon-back">뒤로 가기</el-button>
       <lecture-item-editor :numOfLectureItem="numOfLectureItem" />
     </div>
   </div>
@@ -365,6 +371,9 @@ export default {
               throw new Error(`not defined type ${type}`);
             }
           }
+          break;
+        }
+        case 'CHANGE_ALL': { // 모든 아이템 활성화 시간 일괄 변경
           break;
         }
         default: {
