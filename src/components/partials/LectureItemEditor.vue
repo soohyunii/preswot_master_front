@@ -396,6 +396,11 @@ export default {
             inputBody: vm.inputBody,
             inputTail: vm.inputTail,
           });
+          vm.$notify({
+            title: '생성 완료',
+            message: '아이템이 생성되었습니다.',
+            type: 'success',
+          });
 
           vm.reset();
 
@@ -414,6 +419,11 @@ export default {
             inputHead: vm.inputHead,
             inputBody: vm.inputBody,
             inputTail: vm.inputTail,
+          });
+          vm.$notify({
+            title: '수정 완료',
+            message: '아이템이 수정되었습니다.',
+            type: 'success',
           });
 
           vm.reset();

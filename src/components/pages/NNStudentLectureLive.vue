@@ -30,19 +30,20 @@
       <el-tabs type="card">
         <el-tab-pane label="강의아이템">
           <div v-for="(item, index) in lectureItem" :key="index">
-              <lecture-live-item
-                :data="item"
-                :onClick="onClick"
-                :answerSubmitted="submitFlag[item.lecture_item_id]"
-                :lectureType="lectureType"
-                type="STUDENT"/>
+            <lecture-live-item
+              :data="item"
+              :onClick="onClick"
+              :answerSubmitted="submitFlag[item.lecture_item_id]"
+              :lectureType="lectureType"
+              type="STUDENT"
+            />
           </div>
         </el-tab-pane>
         <el-tab-pane label="강의자료">
           <lecture-live-material
             :materialList="materialList"
             :presentMaterial="presentMaterial"
-            />
+          />
         </el-tab-pane>
       </el-tabs>
     </template>
@@ -169,7 +170,6 @@
         </el-col>
       </el-row>
     </template>
-    <!--
     <el-dialog
       title="Info"
       :visible.sync="continueDialogVisible"
@@ -181,7 +181,7 @@
         <el-button type="primary" @click="continueLecture(true)">예</el-button>
         <el-button type="primary" @click="continueLecture(false)">아니오</el-button>
       </span>
-    </el-dialog>-->
+    </el-dialog>
   </div>
 </template>
 
@@ -553,12 +553,21 @@ export default {
       const res5 = await automaticLectureService.onlineJoin({
         lectureId: vm.lectureId,
       });
+      if (res5.data.offset === 0) {
+        // offset이 0이면 이어 볼 필요가 없음 - 처음 입장
+        vm.continueDialogVisible = false;
+        vm.continueLecture(false);
+      } else {
+        // offset이 0이 아니면 이어서 볼지 처음부터 볼지 질문
+        vm.continueDialogVisible = true;
+      }
+      /*
       if (res5.data.offset === -1) {
         vm.continueLecture(false);
       } else {
         vm.continueLecture(true);
       }
-      vm.pauseFlag = false;
+      vm.pauseFlag = false; */
     }
   },
   data() {
@@ -1094,12 +1103,22 @@ export default {
       // 강사가 설정해 놓은 활성화 시간에 따라 자동으로 강의 아이템 그룹들이 나오는데
       // 아이템 보기는 활성화 되는 시점에 세팅
       const vm = this;
+      vm.joinTime = Date.now(); // offset 측정 시작 시점은 '이어보기' or '처음부터 보기'를 선택한 이후
       vm.timer = [];
       const res4 = await automaticLectureService.onlineJoin({
         lectureId: vm.lectureId,
       });
-      vm.offset = res4.data.offset;
-
+      if (flag === false) {
+        // 처음부터 본다면 offset 0
+        vm.offset = 0;
+        // 기존 서버 offset도 지우기
+        await automaticLectureService.deleteOffset({
+          lectureId: vm.lectureId,
+        });
+      } else {
+        // 이어서 본다면 offset 받아오기
+        vm.offset = res4.data.offset;
+      }
       // 모든 그룹 리스트 불러오기
       const grp = await lectureItemService.showGroup({
         lectureId: vm.lectureId,
@@ -1374,9 +1393,10 @@ export default {
       return Object.keys(groups).map(group => groups[group]);
     },
     continueLecture(flag) {
+      // flag가 true면 이어 보기, false면 처음부터 보기
       const vm = this;
       vm.joinTime = Date.now();
-      vm.continueDialogVisible = false;
+      vm.continueDialogVisible = false; // 안내문 가리기
       vm.continueFlag = flag;
       vm.getLectureItem(flag);
     },

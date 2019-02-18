@@ -33,6 +33,11 @@ export default {
   pastAttendanceData({ // [무인]단체 학생들 출석 정보
     lectureId,
   }) {
-    return http.get(`automatic_lectures/online/${lectureId}/students`);
+    return http.get(`/automatic_lectures/online/${lectureId}/students`);
+  },
+  deleteOffset({ // [무인]개인 학생 offset 지우기 -> 학생이 처음부터 볼 경우
+    lectureId,
+  }) {
+    return http.post(`/automatic_lectures/online/${lectureId}`);
   },
 };

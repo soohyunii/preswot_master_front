@@ -73,43 +73,6 @@
           집중도 {{ concentrationChange }}<br><br>
           <el-progress type="circle" :percentage="concentration" color="darkseagreen"></el-progress>
         </el-col>
-        <!-- 테이블 사라짐. 디자인 심플하게
-        <el-col :span="4">
-          <table id="table_design">
-            <tbody>
-              <tr>
-                <td>전체 출석 현황</td>
-                <td>{{ presentStudent }} 명 / {{ totalStudent }} 명</td>
-              </tr>
-              <tr>
-                <td>현재 출석 현황</td>
-                <td>{{ nowStudent }} 명 / {{ totalStudent }} 명</td>
-              </tr>
-            </tbody>
-          </table>
-          <table id="table_design">
-            <thead>
-              <th></th>
-              <th>이해도</th>
-              <th>참여도</th>
-              <th>집중도</th>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Max</td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>Min</td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-        </el-col> -->
       </el-row>
       <div style="height: 30px;" />
 
@@ -262,8 +225,29 @@
 
       <el-row>
         <div style="height: 20px;" />
-        <!-- 실시간 이해도 참여도 집중도 출석률 그래프 -->
-        <el-button size="small" @click="onClick('STUDENT_STATUS')">학생 접속 정보</el-button>
+        <el-popover v-if="lectureType === 0" placement="top" trigger="hover">
+          <div style="width: 720px;">
+            <el-table :data="ipList" border="true" height="400px" size="medium">
+              <el-table-column label="" prop="num" width="30px" />
+              <el-table-column label="이름" prop="name" />
+              <el-table-column label="이메일" prop="email" />
+              <el-table-column label="현재 접속 여부" prop="current" />
+              <!--el-table-column label="IP count" prop="ip" /-->
+              <el-table-column label="재접속 허용" width="120px">
+                <template slot-scope="scope">
+                  <el-button type="primary" size="small" @click="entrancePermit(scope.row)">
+                    허용
+                  </el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+            <div style="height: 5px;" />
+            <div style="float: right;">
+              <el-button size="small" @click="onClick('PERMIT_ALL')">전체 학생 재접속 허용</el-button>
+            </div>
+          </div>
+          <el-button size="small" slot="reference">학생 접속 정보</el-button>
+        </el-popover>
         <el-button size="small" @click="onClick('ABSENT')">결석자 명단</el-button>
         <el-button v-if="lectureType === 0" v-show="!showGraph" size="small" type="primary" @click="onClick('SHOWGRAPH')">실시간 그래프 보이기</el-button>
         <div style="float: right;">
@@ -553,13 +537,15 @@ export default {
       vm.$socket.emit('UPDATE_TIMELINE_LOG', JSON.stringify(params));
     }, 18000); */
 
-    // 전체 수강생 명단 불러오기
+    // 처음 접속시 전체 수강생 명단 불러오기
     vm.absentStudentList = [];
     const wholeStudent = await lectureService.getWholeStudents({
       id: vm.lectureId,
     });
     vm.totalStudent = wholeStudent.data.length; // 총 수강인원
-    wholeStudent.data.forEach((x) => { // 전체 수강생 리스트
+    vm.ipList = []; // ipList 초기화
+    wholeStudent.data.forEach((x, index) => {
+      // 전체 수강생 리스트
       const stud = {};
       stud.name = x.name;
       stud.user_id = x.user_id;
@@ -573,6 +559,15 @@ export default {
       stud.conces = 0;  // 참여한 문항+설문+자료의 수
       vm.absentStudentList.push(stud.name);
       vm.totalStudentList.push(stud);
+
+      // 학생 접속 정보 팝업
+      const tmp = {};
+      tmp.num = index + 1;
+      tmp.name = x.name;
+      tmp.email = x.email_id;
+      tmp.id = x.user_id;
+      tmp.current = '미출석';
+      vm.ipList.push(tmp);
     });
 
     // 무인 단체
@@ -728,14 +723,14 @@ export default {
     vm.$socket.on('CHECK_STUDENT_LIST', (msg) => {
       const jsonMSG = JSON.parse(msg);
       // 현재 출석자, 한번이상 출석자, 결석자 명단 초기화
-      console.log(jsonMSG);
       vm.presentStudent = 0;
       vm.nowStudent = 0;
       vm.absentStudentList = [];
       vm.nowStudentList = [];
       vm.nowStudentIdList = [];
+      vm.ipList = [];
       // 출석자, 결석자 명단 갱신
-      jsonMSG.forEach((x) => {
+      jsonMSG.forEach((x, index) => {
         if (x.current === 1) { // 현재 출석중
           vm.nowStudent += 1;
           // 현재 출석자 명단
@@ -747,6 +742,20 @@ export default {
         } else { // 결석자 명단
           vm.absentStudentList.push(x.name);
         }
+        // 학생 접속 정보 팝업
+        const tmp = {};
+        tmp.num = index + 1;
+        tmp.name = x.name;
+        tmp.email = x.email_id;
+        tmp.id = x.user_id;
+        if (x.current === 1) { // 현재 출석중
+          tmp.current = '출석 중';
+        } else if (x.in_cnt > 0) { // 출석했지만 나감
+          tmp.current = '출석 후 이탈';
+        } else {
+          tmp.current = '미출석';
+        }
+        vm.ipList.push(tmp);
       });
       // 실시간 출석률
       vm.presentRate = ((vm.nowStudent / vm.totalStudent) * 100).toFixed(1);
@@ -975,6 +984,7 @@ export default {
       totalStudentList: [], // 전체 학생의 이해도-참여도-집중도 현재값 리스트
       joinTime: undefined, // 강사가 강의에 입장한 시간 - 무인 단체
       timer: [], // 무인 단체에서 타이머
+      ipList: [], // ip 카운트 및 학생 재접속 허용 관리
     };
   },
   computed: {
@@ -1200,9 +1210,20 @@ export default {
           window.open('itemList');
           break;
         }
-        // 학생 접속 정보 확인
-        case 'STUDENT_STATUS': {
-          window.open('studentStatus');
+        // 전체 학생 접속 허용
+        case 'PERMIT_ALL': {
+          vm.totalStudentList.forEach((x) => {
+            const paramsi = {
+              user_id: x.user_id,
+              lecture_id: vm.lectureId,
+            };
+            vm.$socket.emit('STUDENT_JOIN_ALLOW', JSON.stringify(paramsi));
+          });
+          vm.$notify({
+            title: '알림',
+            message: '모든 학생의 강의 재접속이 허용되었습니다.',
+            type: 'success',
+          });
           break;
         }
         // 강사의 아이템 미리보기 화면 - 제출 버튼 무효화
@@ -1259,6 +1280,20 @@ export default {
           throw new Error(`not defined type ${type}`);
         }
       }
+    },
+    // 학생 재접속 허가
+    async entrancePermit(data) {
+      const vm = this;
+      const paramsi = {
+        user_id: data.id,
+        lecture_id: vm.lectureId,
+      };
+      vm.$socket.emit('STUDENT_JOIN_ALLOW', JSON.stringify(paramsi));
+      vm.$notify({
+        title: '알림',
+        message: `${data.name} 학생의 강의 재접속이 허용되었습니다.`,
+        type: 'success',
+      });
     },
     // 아이템별 분석
     itemCurrentState(data) {

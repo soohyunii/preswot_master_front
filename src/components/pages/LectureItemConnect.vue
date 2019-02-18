@@ -55,7 +55,6 @@
           취소
         </el-button>
     </div>
-    <div style="height: 30px;" />
     <div>
       <!--
       <el-table :data="connectList" style="width: 1150px;">
@@ -76,9 +75,10 @@
       <a href="javascript:history.back();">
         <el-button @click="onClick('BACK')" style="margin-right: 20px;">뒤로 가기</el-button>
       </a>
+      <!--
       <router-link :to="`/a/teacher/NNlecture/itemgroup?lectureId=${lectureId}`" v-if="lectureType !== 0">
         <el-button type="primary" style="margin-right: 20px;">활성화 시간 설정</el-button>
-      </router-link>
+      </router-link>-->
     </div>
   </div>
 </template>
@@ -445,7 +445,7 @@ export default {
       // 성공했을 경우 알림 메시지
       vm.$notify({
         title: '알림',
-        message: '성공적으로 그룹화되었습니다.',
+        message: '성공적으로 연결되었습니다.',
         type: 'success',
       });
       // 프론트 갱신
@@ -535,11 +535,21 @@ export default {
             iList: tmp,
           }).then(() => {
             // 성공했을 경우 알림 메시지
-            vm.$notify({
-              title: '알림',
-              message: '성공적으로 그룹화되었습니다.',
-              type: 'success',
-            });
+            if (vm.lectureType === 0) {
+              // 유인강의에서 메시지
+              vm.$notify({
+                title: '알림',
+                message: '성공적으로 그룹화되었습니다.',
+                type: 'success',
+              });
+            } else {
+              // 무인강의에서 메시지 - 활성화 시간 설정 안내
+              vm.$notify({
+                title: '알림',
+                message: '성공적으로 그룹화되었습니다. "활성화 시간 설정"에서 활성화 시간을 설정해주세요.',
+                type: 'success',
+              });
+            }
             // 프론트 갱신
             vm.renewal();
             // 성공했을 경우 아이템 그룹화 리스트 삭제
