@@ -206,6 +206,8 @@ export default {
     vm.$socket.connect();
     vm.joinTime = Date.now();
 
+    vm.myId = utils.getUserIdFromJwt();
+
     // 강의 아이템 목록, 첨부파일 목록, 과목, 강의명 가져오기
     const res = await lectureService.getLecture({
       lectureId: vm.lectureId,
@@ -606,6 +608,7 @@ export default {
       oneNote: false, // 자료가 하나인지
       remainTime: '', // 남은 시간 표시 (무인 강의)
       remainTimer: [], // 남은 시간 표시용 타이머
+      myId: '', // 학생 본인의 ID
     };
   },
   computed: {
@@ -628,7 +631,20 @@ export default {
   mounted() {
     const vm = this;
     vm.localLectureId = vm.lectureId; // 선언부 주석 참조
-    window.addEventListener('beforeunload', vm.beforeLeave);
+    // eslint-disable-next-line
+    window.onbeforeunload = function () {
+      // 학생이 강의 화면에서 나가는 경우
+      const param = {
+        lecture_id: vm.lectureId,
+        user_id: vm.myId,
+      };
+      vm.$socket.emit('LEAVE_LECTURE', JSON.stringify(param));
+      clearInterval(vm.timeInterval);
+      // 소켓 닫기 전에 callback 함수들 해제해줘야 함
+      // 해제하지 않으면 재접속시 callback함수가 또 만들어져 중복으로 돌아감
+      vm.$socket._callbacks = null; // eslint-disable-line
+      vm.$socket.close();
+    };
   },
   methods: {
     async onClick(type, data) {
@@ -1416,7 +1432,7 @@ export default {
       const vm = this;
       const param = {
         lecture_id: vm.localLectureId,
-        user_id: utils.getUserIdFromJwt(),
+        user_id: vm.myId,
       };
       vm.$socket.emit('LEAVE_LECTURE', JSON.stringify(param));
       /*
@@ -1424,9 +1440,6 @@ export default {
         clearTimeout(item);
       }); */
       clearInterval(vm.remainTimer);
-
-      vm.$socket._callbacks = null; // eslint-disable-line
-      vm.$socket.close();
 
       vm.timer.forEach((item) => {
         clearTimeout(item);
