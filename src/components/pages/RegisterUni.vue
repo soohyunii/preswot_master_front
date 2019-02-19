@@ -148,7 +148,7 @@ export default {
               vm.$router.push('/a/register/uni/success');
             }
           } catch (error) {
-            if (error==='Error: Request failed with status code 500') {
+            if (error === 'Error: Request failed with status code 500') {
               vm.$notify({
                 title: '대학등록 실패',
                 message: '대학코드나 대학명이 중복되었는지 확인해주세요',

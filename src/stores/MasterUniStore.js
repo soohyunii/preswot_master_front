@@ -91,8 +91,6 @@ export default {
     },
     async getMyUniLists({ commit }) {
       const res = await MasterService.getMyUniList();
-
-      /*const sc = res.data.studyingUnies;*/
       const sc = res.data.code;
       commit('updateStudyingUniList', {
         studyingUniList: sc,

@@ -208,7 +208,7 @@ export default {
                 type: 'error',
                 duration: 0,
               });
-            } else if (vm.input.password!== vm.input.passwordConfirm){ 
+            } else if (vm.input.password !== vm.input.passwordConfirm) {
               vm.$notify({
                 title: '강사 수정 실패',
                 message: '패스워드가 일치하는지 확인해주세요',
@@ -236,18 +236,18 @@ export default {
                 title: '강사 등록 실패',
                 message: '필수입력사항(*)을 모두 기재해 주세요',
                 type: 'error',
-                duration: 0, 
+                duration: 0,
               });
-            } else if (vm.input.password!== vm.input.passwordConfirm){
+            } else if (vm.input.password !== vm.input.passwordConfirm) {
               vm.$notify({
-                title:'강사 등록 실패',
+                title: '강사 등록 실패',
                 message: '패스워드가 일치하는지 확인해주세요',
                 type: 'error',
                 duration: 0,
               });
             } else {
               vm.$router.push('/a/register/teacher/success');
-            } 
+            }
           } catch (error) {
             vm.$notify({
               title: '강사 등록 실패',
@@ -259,10 +259,11 @@ export default {
         }
       });
     },
-    async categoryChange(university_name){
-      const vm=this;
-      const deptNameLists = await masterService.getDeptLists({university_name:vm.input.university_name, category:undefined});
-      vm.input.department_list = await deptNameLists.data.map(element=>element.name);
+    async categoryChange() {
+      const vm = this;
+      const deptNameLists = await masterService.getDeptLists({
+        university_name: vm.input.university_name, category: undefined });
+      vm.input.department_list = await deptNameLists.data.map(element => element.name);
     },
   },
 };

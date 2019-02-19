@@ -63,20 +63,6 @@ export default {
   data() {
     return {
       pageNum: 1,
-      /*selectOptionList: [
-        {
-          value: 'name',
-          label: '대학명',
-        },
-        {
-          value: 'code',
-          label: '대학코드',
-        }, 
-      ],
-      searchQuery: {
-        searchType: 'name',
-        searchText: '',
-      },*/
     };
   },
   computed: {

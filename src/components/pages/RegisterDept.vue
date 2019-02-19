@@ -156,8 +156,8 @@ export default {
           // TODO: wrap with try catch
           try {
             await masterService.NNMasterpostDept(vm.input);
-            if (vm.input.uniNameLists=== '' || vm.input.code=== '' ||
-              vm.input.name=== '') {
+            if (vm.input.uniNameLists === '' || vm.input.code === '' ||
+              vm.input.name === '') {
               vm.$notify({
                 title: '학과 등록 실패',
                 message: '필수입력사항(*)을 모두 기재해 주세요',
@@ -166,7 +166,6 @@ export default {
               });
             } else {
               vm.$router.push('/a/register/dept/success');
-
             }
           } catch (error) {
             vm.$notify({

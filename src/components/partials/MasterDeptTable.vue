@@ -112,12 +112,12 @@ export default {
         cancelButtonText: '아니오, 삭제하지 않습니다',
         type: 'warning',
       })
-      .then(async() => {
+      .then(async () => {
         try {
-          await masterService.deptDelete({ university_name: university_name,
-            name: name });
+          await masterService.deptDelete({ university_name,
+            name });
           await location.reload(true);
-        } catch (error){
+        } catch (error) {
           vm.$notify({
             title: '학과 삭제 실패',
             message: error.toString(),
@@ -125,8 +125,8 @@ export default {
             duration: 3000,
           });
         }
-      })
-    }
+      });
+    },
   },
 };
 </script>

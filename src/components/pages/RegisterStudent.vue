@@ -98,6 +98,7 @@
 </template>
 
 <script>
+/* eslint-disable camelcase */
 import masterService from '../../services/masterService';
 import authService from '../../services/authService';
 import utils from '../../utils';
@@ -183,20 +184,20 @@ export default {
               id,
               ...vm.input,
             });
-            if (vm.input.email_id === ''|| vm.input.password === ''||
-              vm.input.passwordConfirm === ''|| vm.input.name === ''){
+            if (vm.input.email_id === '' || vm.input.password === '' ||
+              vm.input.passwordConfirm === '' || vm.input.name === '') {
               vm.$notify({
                 title: '학생 수정 실패',
                 message: '필수입력사항(*)을 모두 기재해 주세요',
                 type: 'error',
-                duration: 0, 
+                duration: 0,
               });
-            } else if(vm.input.password!==vm.input.passwordConfirm){
+            } else if (vm.input.password !== vm.input.passwordConfirm) {
               vm.$notify({
-                title:'학생 수정 실패',
+                title: '학생 수정 실패',
                 message: '패스워드가 일치하는지 확인해주세요',
-                type:'error',
-                duration:0,
+                type: 'error',
+                duration: 0,
               });
             } else {
               vm.$router.push('/a/view/student');
@@ -213,19 +214,20 @@ export default {
           // TODO: wrap with try catch
           try {
             await masterService.NNMasterpostStudent(vm.input);
-            if(vm.input.email_id==''||vm.input.password==''||vm.input.passwordConfirm==''||vm.input.name==''){
+            if (vm.input.email_id === '' || vm.input.password === '' ||
+              vm.input.passwordConfirm === '' || vm.input.name === '') {
               vm.$notify({
                 title: '학생 등록 실패',
                 message: '필수입력사항(*)을 모두 기재해 주세요',
                 type: 'error',
-                duration: 0, 
+                duration: 0,
               });
-            } else if(vm.input.password!==vm.input.passwordConfirm){
+            } else if (vm.input.password !== vm.input.passwordConfirm) {
               vm.$notify({
-                title:'학생 등록 실패',
+                title: '학생 등록 실패',
                 message: '패스워드가 일치하는지 확인해주세요',
-                type:'error',
-                duration:0,
+                type: 'error',
+                duration: 0,
               });
             } else {
               vm.$router.push('/a/register/student/success');
@@ -241,10 +243,11 @@ export default {
         }
       });
     },
-    async categoryChange(university_name){
-      const vm=this;
-      const deptNameLists = await masterService.getDeptLists({university_name: vm.input.university_name, category:undefined});
-      vm.input.department_list = await deptNameLists.data.map(element=>element.name);
+    async categoryChange() {
+      const vm = this;
+      const deptNameLists = await masterService.getDeptLists({
+        university_name: vm.input.university_name, category: undefined });
+      vm.input.department_list = await deptNameLists.data.map(element => element.name);
     },
   },
 };

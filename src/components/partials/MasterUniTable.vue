@@ -114,7 +114,7 @@ export default {
         cancelButtonText: '아니오, 삭제하지 않습니다',
         type: 'warning',
       })
-      .then(async() => {
+      .then(async () => {
         try {
           await masterService.delete({ name: uniName });
           await location.reload(true);
@@ -126,8 +126,8 @@ export default {
             duration: 3000,
           });
         }
-      })
-    }
+      });
+    },
   },
 };
 </script>
