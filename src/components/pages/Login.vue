@@ -69,7 +69,6 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-import utils from '../../utils';
 
 export default {
   name: 'Login',

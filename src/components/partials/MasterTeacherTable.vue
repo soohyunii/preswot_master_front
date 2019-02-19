@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import utils from '../../utils';
+/* eslint-disable camelcase */
 import masterService from '../../services/masterService';
 
 export default {
@@ -90,7 +90,7 @@ export default {
         searchType: 'name',
         searchText: '',
       },
-      birth:null,
+      birth: null,
     };
   },
   computed: {
@@ -111,17 +111,14 @@ export default {
       vm.searchQuery.searchText = vm.$route.query.text;
     }
   },
-  async mounted(){
-  },
   methods: {
-    async deleteUser(email_id){
-      await masterService.deleteUser({email_id : email_id});
+    async deleteUser(email_id) {
+      await masterService.deleteUser({ email_id });
       window.location.reload();
-    }
+    },
   },
 };
 </script>
-
 
 <style lang="scss" scoped>
 #class_index_wrapper {

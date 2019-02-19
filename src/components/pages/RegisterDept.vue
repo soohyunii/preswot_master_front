@@ -102,14 +102,16 @@ export default {
     vm.input.uniNameLists = uniNameLists.data.map(element => element.name);
 
     if (vm.isEdit) {
-      const res = await masterService.getMasterDept({ university_name: vm.uniName, name: vm.deptName });
+      const res = await masterService.getMasterDept({ university_name: vm.uniName,
+        name: vm.deptName });
       vm.$set(vm.input, 'uniNameList', res.data.university.name || vm.initialInput.uniNameList);
       vm.input.code = res.data.code || vm.initialInput.code;
       vm.input.name = res.data.university.name || vm.initialInput.name;
       vm.input.part = res.data.part || vm.initialInput.part;
       vm.input.manager_name = res.data.manager_name || vm.initialInput.manager_name;
       vm.input.manager_email = res.data.manager_email || vm.initialInput.manager_email;
-      vm.input.manager_phone_number = res.data.manager_phone_number || vm.initialInput.manager_phone_number;
+      vm.input.manager_phone_number = res.data.manager_phone_number ||
+      vm.initialInput.manager_phone_number;
     }
   },
   computed: {
@@ -133,11 +135,12 @@ export default {
         // TODO: if valid === true 로 감싸기
         // TODO: valid === false인 경우에 notify
         if (vm.isEdit) {
-          const res = await masterService.getMasterDept({university_name: vm.uniName, name: vm.deptName});
-          const old_name = res.data.name;
+          const res = await masterService.getMasterDept({ university_name: vm.uniName,
+            name: vm.deptName });
+          const oldName = res.data.name;
           try {
             await masterService.NNMasterputDept({
-              old_name,
+              oldName,
               ...vm.input,
             });
             vm.$router.push('/a/view/dept');
@@ -153,12 +156,13 @@ export default {
           // TODO: wrap with try catch
           try {
             await masterService.NNMasterpostDept(vm.input);
-            if(vm.input.uniNameLists=='' || vm.input.code=='' || vm.input.name=='') {
+            if (vm.input.uniNameLists=== '' || vm.input.code=== '' ||
+              vm.input.name=== '') {
               vm.$notify({
                 title: '학과 등록 실패',
                 message: '필수입력사항(*)을 모두 기재해 주세요',
                 type: 'error',
-                duration: 0, 
+                duration: 0,
               });
             } else {
               vm.$router.push('/a/register/dept/success');

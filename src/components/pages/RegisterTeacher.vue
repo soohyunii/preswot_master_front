@@ -137,12 +137,12 @@ export default {
       career: '',
       birth: '',
       university_list: '',
-      department_list: null, 
+      department_list: null,
       address: '',
       phone: '',
       account_number: '',
       account_bank: '',
-      checked:false,
+      checked: false,
       boolean: false,
     };
     return {
@@ -157,8 +157,9 @@ export default {
 
     if (vm.isEdit) {
       const res = await masterService.getMasterUser({ email_id: vm.classId });
-      const readDepartmentList = await masterService.getDeptLists({name:res.data.university_name});
-      vm.input.department_list = readDepartmentList.data.map(element=>element.name);
+      const readDepartmentList = await masterService.getDeptLists({ name:
+        res.data.university_name });
+      vm.input.department_list = readDepartmentList.data.map(element => element.name);
       vm.input.email_id = res.data.email_id || vm.initialInput.email_id;
       vm.input.password = res.data.password || vm.initialInput.password;
       vm.input.name = res.data.name || vm.initialInput.name;
@@ -175,7 +176,6 @@ export default {
       vm.input.account_bank = res.data.account_bank || vm.initialInput.account_bank;
     }
   },
-  
   computed: {
     isEdit() {
       const vm = this;
@@ -200,16 +200,17 @@ export default {
               id,
               ...vm.input,
             });
-            if(vm.input.email_id==''||vm.input.password==''||vm.input.passwordConfirm==''||vm.input.name=='') {
+            if (vm.input.email_id === '' || vm.input.password === '' ||
+              vm.input.passwordConfirm === '' || vm.input.name === '') {
               vm.$notify({
                 title: '강사 수정 실패',
                 message: '필수입력사항(*)을 모두 기재해 주세요',
                 type: 'error',
-                duration: 0, 
+                duration: 0,
               });
-            } else if(vm.input.password!==vm.input.passwordConfirm){
+            } else if (vm.input.password!== vm.input.passwordConfirm){ 
               vm.$notify({
-                title:'강사 수정 실패',
+                title: '강사 수정 실패',
                 message: '패스워드가 일치하는지 확인해주세요',
                 type: 'error',
                 duration: 0,
@@ -229,14 +230,15 @@ export default {
           // TODO: wrap with try catch
           try {
             await masterService.NNMasterpostTeacher(vm.input);
-            if(vm.input.email_id==''||vm.input.password==''||vm.input.passwordConfirm==''||vm.input.name=='') {
+            if (vm.input.email_id === '' || vm.input.password === '' ||
+              vm.input.passwordConfirm === '' || vm.input.name === '') {
               vm.$notify({
                 title: '강사 등록 실패',
                 message: '필수입력사항(*)을 모두 기재해 주세요',
                 type: 'error',
                 duration: 0, 
               });
-            } else if(vm.input.password!==vm.input.passwordConfirm){
+            } else if (vm.input.password!== vm.input.passwordConfirm){
               vm.$notify({
                 title:'강사 등록 실패',
                 message: '패스워드가 일치하는지 확인해주세요',

@@ -24,39 +24,38 @@
 </template>
 
 <script>
-import {mapActions, mapState} from 'vuex';
 import utils from '../../utils';
-import MasterStudentScore from '../partials/MasterStudentScore';	
+import authService from '../../services/authService';
+import MasterStudentScore from '../partials/MasterStudentScore';
 
 export default {
-	name: 'ViewStudentScore',
-	components: {
-		MasterStudentScore,
-	},
-	async created() {
-		const vm = this;
-		const accessId = utils.getUserIdFromJwt();
-		const accessCheck = await authService.returnUserInfo({
-			userID: accessId,
-		});
-		if (accessCheck.data.userInfo.type === 0){
-			vm.$router.push('/');
-		}
-	},
-	data() {
-		const initialInput = {
-			choiceUni: '대학선택',
-			choiceDept: '학과선택',
-			choiceSemester: '학기선택',
-		};
-		return {
-			initialInput,
-			input: Object.assign({}, initialInput),
-			list: [],
-		};
-	},
-}
-	
+  name: 'ViewStudentScore',
+  components: {
+    MasterStudentScore,
+  },
+  async created() {
+    const vm = this;
+    const accessId = utils.getUserIdFromJwt();
+    const accessCheck = await authService.returnUserInfo({
+      userID: accessId,
+    });
+    if (accessCheck.data.userInfo.type === 0) {
+      vm.$router.push('/');
+    }
+  },
+  data() {
+    const initialInput = {
+      choiceUni: '대학선택',
+      choiceDept: '학과선택',
+      choiceSemester: '학기선택',
+    };
+    return {
+      initialInput,
+      input: Object.assign({}, initialInput),
+      list: [],
+    };
+  },
+};
 </script>
 
 <style lang="scss" scoped>
