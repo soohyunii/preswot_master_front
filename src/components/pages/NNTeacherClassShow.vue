@@ -1,8 +1,8 @@
 <template>
   <div id="teacher_lecture_index_wrapper" class="bt-container">
-      <h2 class="page-title">{{ currentTeachingClass(classId) ? currentTeachingClass(classId).name : '' }}</h2>
+    <h2 class="page-title">{{ currentTeachingClass(classId) ? currentTeachingClass(classId).name : '' }}</h2>
     <div class="right-align-margin-bottom-15">
-      <el-button @click="onClick('EVALUATION')" :class="$attachReactablePostfix('el-btn')">과목진단</el-button>
+      <!--<el-button @click="onClick('EVALUATION')" :class="$attachReactablePostfix('el-btn')">과목진단</el-button>-->
       <el-button @click="onClick('ANALYSIS')" :class="$attachReactablePostfix('el-btn')">과목저널링</el-button>
       <el-button @click="onClick('Report')" :class="$attachReactablePostfix('el-btn')">성적표</el-button>
       <el-button @click="onClick('Q&A')" :class="$attachReactablePostfix('el-btn')">게시판</el-button>
@@ -215,7 +215,8 @@ export default {
   }
 
  .right-align-margin-bottom-15 {
-    display:inline-block;
+    float: right;
+    display: block;
     text-align: center;
     margin-top : 40px;
     margin-bottom : 25px;

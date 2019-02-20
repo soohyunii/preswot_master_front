@@ -19,7 +19,7 @@
             </el-form-item>
           </el-form>
           <el-button style="position: relative; left: 125px" type="primary" @click="onClick('ADD')">키워드 등록</el-button>
-          <el-button style="position: relative; left: 125px" type="primary" @click="onClick('KEYWORD_EXTRACT_STEP_1')">자동 추출</el-button>
+          <!-- <el-button style="position: relative; left: 125px" type="primary" @click="onClick('KEYWORD_EXTRACT_STEP_1')">자동 추출</el-button>
           <el-popover
             style="position: relative; left: 125px"
             placement="top-start"
@@ -31,6 +31,7 @@
             </el-table>
             <i class="el-icon-question fa-lg" slot="reference"></i>
         </el-popover>
+         -->
         </el-col>
         <el-col :span="12">
           <div id="lecture_keywords_table_wrapper">
@@ -184,26 +185,12 @@ export default {
   },
   computed: {
     ...mapState('keyword', [
-      'addedKeywordList',
+      'addedkeywordList',
+      'keywordList',
     ]),
     ...mapGetters('keyword', [
       'isKeywordDuplicated',
     ]),
-    keywordList: {
-      get() {
-        const res = [];
-        // JAVA에서의 List.addAll()
-        Array.prototype.push.apply(res, this.$store.state.keyword.keywordList);
-        Array.prototype.push.apply(res, this.$store.state.keyword.movedKeywordList);
-        Array.prototype.push.apply(res, this.$store.state.keyword.addedKeywordList);
-        return res;
-      },
-      set(/* value */) {
-        // NOTE: 여기서는 다른곳에서 다 해줘서 해줄 필요가 없다?
-        // 그래도 set 함수가 없으면 vue가 꼬장부려서 놔둠
-        // console.log('lecture keyword set value', value); // eslint-disable-line
-      },
-    },
     // 강의 키워드 총합 계산
     totalWeight() {
       return this.keywordList.reduce((totalWeight, item) => { // eslint-disable-line
@@ -223,6 +210,9 @@ export default {
       'deleteLectureKeywords',
       'getKeywords',
       'editLectureKeywords',
+      'NNpostLectureKeyword',
+      'NNdeleteLectureKeyword',
+      'NNputLectureKeyword',
     ]),
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -237,7 +227,7 @@ export default {
       const vm = this;
       switch (type) {
         case 'ADD': {
-          this.$refs.elForm.validate(((valid) => {
+          this.$refs.elForm.validate(async (valid) => { // TODO: valid 에러 : 제출후 빨간색으로 빈 칸이 강조됨.
             if (valid) {
               const keyname = this.input.keyword;
               const keyvalue = this.input.weight;
@@ -266,22 +256,28 @@ export default {
                 this.$refs.elForm.resetFields();
                 return;
               }
+
+              const res = await this.NNpostLectureKeyword({
+                keyword: keyname,
+                weight: keyvalue,
+              });
+
               const dictKeyword = {};
-              dictKeyword.keyword = keyname;
-              dictKeyword.weight = keyvalue;
+              dictKeyword.keyword = res.data.keyword.keyword;
+              dictKeyword.weight = res.data.keyword.weight;
+              dictKeyword.keywordId = res.data.keyword.id;
               dictKeyword.edit = false;
               const newKeywordList = deepCopy(this.keywordList);
               newKeywordList.push(dictKeyword);
               this.updateKeywordList({
                 keywordList: newKeywordList,
               });
-              this.postLectureKeywords();
               this.$refs.elForm.resetFields();
             }
-          }));
+          });
           break;
         }
-        case 'ADD_KEYWORD': {
+        case 'ADD_KEYWORD': { // 키워드 자동 추출에서 키워드 추가
           if (this.isKeywordDuplicated(payload.keyword)) {
             // TODO: notify user the keyword is duplicated
             vm.$notify({
@@ -309,21 +305,53 @@ export default {
           break;
         }
         case 'DELETE_TAG': {
-          console.log('DELETE_TAG', payload); // eslint-disable-line
-          this.deleteKeyword({
-            payload,
-          });
-          this.deleteLectureKeywords();
+          const res = await this.NNdeleteLectureKeyword({ keywordId: payload.keywordId });
+          if (res.data.success === true) {
+            this.deleteKeyword({
+              payload,
+            });
+          } else {
+            vm.$notify({
+              title: '알림',
+              message: res.data.message,
+              type: 'warning',
+            });
+          }
           break;
         }
         // 키워드 테이블에서 수정
         case 'EDIT_KEYWORD': {
           const keyvalue = payload.weight;
+          // edit 아닌 상태
+          if (payload.edit !== true) {
+            const res = await this.NNputLectureKeyword(payload);
+            if (res.data.success !== true) {
+              vm.$notify({
+                title: '알림',
+                message: res.data.message,
+                type: 'warning',
+              });
+              return;
+            }
+          }
+
+          // edit 상태
           if (payload.edit === true) {
+            // 유효성 검사 후 서버에 edit 요청 보냄
             if (keyvalue > 100 || keyvalue < 1 || keyvalue.length === 0) {
               vm.$notify({
                 title: '알림',
                 message: '키워드에 대한 중요도는 100 이하 1 이상의 값으로 입력해주세요.',
+                type: 'warning',
+              });
+              return;
+            }
+            const res = await this.NNputLectureKeyword(payload);
+            // 불가능하면 메시지 출력
+            if (res.data.success !== true) {
+              vm.$notify({
+                title: '알림',
+                message: res.data.message,
                 type: 'warning',
               });
               return;
@@ -432,7 +460,7 @@ export default {
     margin: 20px 10px;
 }
 #table_design thead {
-    width: 150px;
+    width: 350px;
     padding: 10px;
     vertical-align: top;
     color: #111;

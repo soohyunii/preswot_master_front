@@ -91,6 +91,33 @@ export default {
   }) {
     return http.delete(`/lectures/${lectureId}/keywords/${lectureKeyword}`);
   },
+  NNpostLectureKeyword({
+    lectureId,
+    keyword,
+    weight,
+  }) {
+    return http.post(`/lectures/${lectureId}/keyword`, {
+      keyword,
+      weight,
+    });
+  },
+  NNdeleteLectureKeyword({
+    lectureId,
+    keywordId,
+  }) {
+    return http.delete(`/lectures/${lectureId}/keyword/${keywordId}`);
+  },
+  NNputLectureKeyword({
+    lectureId,
+    keywordId,
+    keyword,
+    weight,
+  }) {
+    return http.put(`/lectures/${lectureId}/keyword/${keywordId}`, {
+      keyword,
+      weight,
+    });
+  },
   getLectureKeywordRelations({
     lectureId,
   }) {
@@ -148,6 +175,9 @@ export default {
   getMaterialKeywords({ id }) {
     return http.get(`/materials/${id}/keywords`);
   },
+  getWholeStudents({ id }) {  // 전체 수강생 명단 불러오기
+    return http.get(`/lectures/${id}/student-list`);
+  },
   /* 삭제 - 181214
   getOnStudentCount({ lectureId }) {
     return http.get(`lectures/${lectureId}/on-student-count`);
@@ -200,5 +230,16 @@ export default {
     lectureId,
   }) {
     return http.delete(`/lectures/${lectureId}/material-keyword`);
+  },
+  studentLoginLog({
+    lectureId,
+  }) {
+    return http.get(`/lectures/${lectureId}/is-lectured`);
+  },
+  changeResultOpen({
+    lectureId,
+    result,
+  }) {
+    return http.get(`/lectures/${lectureId}/result-opened/${result}`);
   },
 };

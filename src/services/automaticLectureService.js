@@ -18,17 +18,26 @@ export default {
   onlineJoin({ // 입장 flag 전송
     lectureId,
   }) {
-    return http.get(`/automatic_lectures/online/join/${lectureId}`);
+    return http.get(`/automatic_lectures/online/${lectureId}`);
   },
   onlineLeave({ // 퇴장 flag 업로드
     lectureId,
-    lectureItemId,
     offset,
   }) {
-    return http.post('/automatic_lectures/online/leave', {
+    return http.post(`/automatic_lectures/online/${lectureId}`, {
       lecture_id: lectureId,
-      lecture_item_id: lectureItemId,
+      lecture_item_group_id: 0,
       offset,
     });
+  },
+  pastAttendanceData({ // [무인]단체 학생들 출석 정보
+    lectureId,
+  }) {
+    return http.get(`/automatic_lectures/online/${lectureId}/students`);
+  },
+  deleteOffset({ // [무인]개인 학생 offset 지우기 -> 학생이 처음부터 볼 경우
+    lectureId,
+  }) {
+    return http.post(`/automatic_lectures/online/${lectureId}`);
   },
 };

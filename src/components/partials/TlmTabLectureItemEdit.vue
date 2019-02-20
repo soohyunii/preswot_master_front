@@ -43,15 +43,20 @@
         </el-button>
         <p>&#42; 맨 앞의 아이템이 대표 아이템으로 등록됩니다.</p>
       </div>
-
+      <p v-if="lectureType !== 0">&#42; 무인 강의의 경우, '활성화 시간 설정'에서 아이템 그룹별로 활성화 시간을 설정해주세요.</p>
+      <br v-if="lectureType === 0" />
       <div class="ps-align-right">
-        <br />
+        <router-link :to="`/a/teacher/NNlecture/itemgroup?lectureId=${lectureId}`" v-if="lectureType !== 0">
+          <el-button type="primary">활성화 시간 설정</el-button>
+        </router-link>
+        <!--el-button type="primary" v-if="lectureType !== 0" style="margin-right: 50px;" @click="onClick('CHANGE_ALL')">일괄 활성화 시간 설정</el-button-->
         <router-link :to="`/a/teacher/NNlecture/itemconnection?lectureId=${lectureId}`">
           <el-button type="primary">아이템 연결 관리</el-button>
         </router-link>
+        <!--
         <el-button id="btn_add_new_lc_item" @click="onClick('ADD_LC_ITEM_SEQUENCE')" type="primary">
           강의 아이템 순서 저장
-        </el-button>
+        </el-button>-->
         <el-button id="btn_add_new_lc_item" @click="onClick('ADD_NEW_LC_ITEM')" type="primary">
           강의 아이템 추가
         </el-button>
@@ -62,6 +67,8 @@
         </router-link>
       </div>
     </div>
+
+      
     <div v-if="ifShowCList">
       <el-table :data="connectedList">
         <el-table-column label="대표 아이템" width="300px">
@@ -88,7 +95,7 @@
       </div>
     </div>
     <div v-if="isEditing">
-      <el-button @click="onClick('CANCEL_EDIT')" icon="el-icon-back"> 뒤로 가기</el-button>
+      <el-button @click="onClick('CANCEL_EDIT')" icon="el-icon-back">뒤로 가기</el-button>
       <lecture-item-editor :numOfLectureItem="numOfLectureItem" />
     </div>
   </div>
@@ -366,6 +373,9 @@ export default {
           }
           break;
         }
+        case 'CHANGE_ALL': { // 모든 아이템 활성화 시간 일괄 변경
+          break;
+        }
         default: {
           throw new Error(`not defined type ${type}`);
         }
@@ -480,27 +490,50 @@ export default {
       const vm = this;
       const targetLectureItem = vm.lectureItemList[index];
 
-      // 연결된 아이템이 있을 경우 삭제 불가
+      // 그룹이 아닌 경우 -> 그냥 삭제하면 됨
+      // 단독 그룹이자 단독 리스트 -> 삭제하면서 리스트, 그룹 삭제
+      // 복수 그룹이자 단독 리스트 -> 삭제 방지
       const res = await lectureItemService.showConnection({
         lectureId: this.$route.params.lectureId,
       });
-      if (res.data.length !== 0) {
-        this.$notify({
-          title: '알림',
-          message: '연결된 아이템이 있을 경우, 아이템 삭제가 불가능합니다.',
-          type: 'warning',
-        });
-        return;
-      }
+      let listN;
+      let mainItemId;
+      let listNm;
+      res.data.forEach((x) => {
+        if (x.linked_list.includes('<$!<>') === true) {
+          const spl = x.linked_list.split('<$!<>');
+          spl.forEach((y) => {
+            if (parseInt(y, 10) === targetLectureItem.lecture_item_id) {
+              listN = x.lecture_item_list_id;
+              listNm = spl.length;
+              mainItemId = x.item_id;
+            }
+          });
+        } else if (parseInt(x.linked_list, 10) === targetLectureItem.lecture_item_id) {
+          listN = x.lecture_item_list_id;
+          listNm = 1;
+          mainItemId = x.item_id;
+        }
+      });
 
-      // 그룹화 아이템이 있을 경우 삭제 불가
       const rest = await lectureItemService.showGroup({
         lectureId: this.$route.params.lectureId,
       });
-      if (rest.data.list.length !== 0) {
-        this.$notify({
+      let dupGrp = false;
+      let ifGrp = '';
+      rest.data.list.forEach((z) => {
+        // 어떤 그룹에 속하는데 다른 아이템과 함께 그룹을 이룰 경우 삭제 불가
+        if (z.list_ids.includes(`${listN}`) === true) {
+          ifGrp = z.group_id;
+          if (listNm > 1 || z.list_ids.length > 1) {
+            dupGrp = true;
+          }
+        }
+      });
+      if (dupGrp === true) {
+        vm.$notify({
           title: '알림',
-          message: '아이템 그룹화가 되어있을 경우, 아이템 삭제가 불가능합니다.',
+          message: '다른 아이템과 그룹을 이루고 있을 경우, 삭제가 불가능합니다.',
           type: 'warning',
         });
         return;
@@ -513,9 +546,24 @@ export default {
       })
         .then(async () => {
           try {
+            // 그룹 삭제 (있다면)
+            if (ifGrp !== '') {
+              await lectureItemService.deleteGroup({
+                groupId: ifGrp,
+              });
+            }
+            // 연결 리스트 삭제
+            await lectureItemService.deleteConnection({
+              lectureItemId: mainItemId,
+            });
+            // 아이템 삭제
             await lectureItemService.deleteLectureItem({
               lectureItemId: targetLectureItem.lecture_item_id,
             });
+            // 프론트에서 아이템 지워주기
+            const oriI = vm.lectureItemList.indexOf(targetLectureItem);
+            vm.lectureItemList.splice(oriI, 1);
+            // 삭제한 뒤에 아이템 다시 서버에 업로드
             await vm.lectureItemList.forEach((item, i) => {
               if (item.sequence - 1 > index) {
                 lectureItemService.putLectureItem({
@@ -584,6 +632,3 @@ export default {
   },
 };
 </script>
-
-
-

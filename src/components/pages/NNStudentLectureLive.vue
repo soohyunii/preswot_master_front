@@ -30,19 +30,20 @@
       <el-tabs type="card">
         <el-tab-pane label="강의아이템">
           <div v-for="(item, index) in lectureItem" :key="index">
-              <lecture-live-item
-                :data="item"
-                :onClick="onClick"
-                :answerSubmitted="submitFlag[item.lecture_item_id]"
-                :lectureType="lectureType"
-                type="STUDENT"/>
+            <lecture-live-item
+              :data="item"
+              :onClick="onClick"
+              :answerSubmitted="submitFlag[item.lecture_item_id]"
+              :lectureType="lectureType"
+              type="STUDENT"
+            />
           </div>
         </el-tab-pane>
         <el-tab-pane label="강의자료">
           <lecture-live-material
             :materialList="materialList"
             :presentMaterial="presentMaterial"
-            />
+          />
         </el-tab-pane>
       </el-tabs>
     </template>
@@ -64,7 +65,7 @@
               :video-id="youtubeId"
               player-width="100%"
               player-height="400px"
-              :player-vars="{ autoplay: 1 }"
+              :player-vars="{ autoplay: 1, modestbranding: 1 }"
               :mute="true">
             </youtube>
             <div style="float: right">
@@ -92,30 +93,37 @@
                 강사님의 신호를 기다리는 중입니다.
               </div>
               <div v-else>
+                <!-- 필요성이 사라진 일시정지와 재시작 버튼
                 <el-button v-show="!pauseFlag && lectureType === 2" type="primary" @click="onClick('PAUSE')">일시정지</el-button>
-                <el-button v-show="pauseFlag && lectureType === 2" type="primary" @click="onClick('RESTART')">재시작</el-button>
+                <el-button v-show="pauseFlag && lectureType === 2" type="primary" @click="onClick('RESTART')">재시작</el-button> -->
                 <br>
                 <el-col :span="itemSize">
-                  <div v-for="(item, index) in lectureItem" :key="index" v-if="lectureItem.length < 2">
-                    <lecture-live-item
-                      :data="item"
-                      :onClick="onClick"
-                      :answerSubmitted="submitFlag[item.lecture_item_id]"
-                      :lectureType="lectureType"
-                      type="STUDENT"/>
+                  <div v-if="lectureItem.length < 2">
+                    <div v-for="(item, index) in lectureItem" :key="index">
+                      <lecture-live-item
+                        :data="item"
+                        :onClick="onClick"
+                        :answerSubmitted="submitFlag[item.lecture_item_id]"
+                        :lectureType="lectureType"
+                        type="STUDENT"/>
+                    </div>
                   </div>
-                  <div v-for="(item, index) in lectureItems" :key="index" v-if="lectureItem.length > 1">
-                    <lecture-live-item
-                      :data="item"
-                      :onClick="onClick"
-                      :answerSubmitted="submitFlag[item.lecture_item_id]"
-                      :lectureType="lectureType"
-                      type="STUDENT"/>
-                    <el-button type="primary" @click="onClick('PREV')">이전</el-button>
-                    <el-button type="primary" @click="onClick('NEXT')">다음</el-button>
+                  <div v-if="lectureItem.length > 1">
+                    <div v-for="(item, index) in lectureItems" :key="index">
+                      <lecture-live-item
+                        id="iLd"
+                        :data="item"
+                        :onClick="onClick"
+                        :answerSubmitted="submitFlag[item.lecture_item_id]"
+                        :lectureType="lectureType"
+                        type="STUDENT"/>
+                      <el-button type="primary" @click="onClick('PREV')">이전</el-button>
+                      <el-button type="primary" @click="onClick('NEXT')">다음</el-button>
+                    </div>
                   </div>
                 </el-col>
                 <el-col :span="8"><div>
+                  <h3 v-if="lectureType !== 0">남은 시간 {{ remainTime }}</h3>
                   <el-table :data="nowQuestion" v-if="lectureItem.length > 1">
                     <el-table-column label="번호" width="50px;">
                       <template slot-scope="scope">
@@ -171,7 +179,6 @@
       :close-on-click-modal="false"
       :show-close="false"
       width="220px">
-      <!-- :before-close="handleClose"> -->
       <span>강의를 이어서 보시겠습니까?</span>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="continueLecture(true)">예</el-button>
@@ -184,10 +191,12 @@
 <script>
 import { getIdFromURL } from 'vue-youtube-embed';
 import { setTimeout, clearTimeout } from 'timers';
+import deepCopy from 'deep-copy';
 import classService from '../../services/classService';
 import lectureService from '../../services/lectureService';
 import studentService from '../../services/studentService';
 import LectureLiveItem from '../partials/LectureLiveItem';
+import lectureItemService from '../../services/lectureItemService';
 import LectureLiveMaterial from '../partials/LectureLiveMaterial';
 import utils from '../../utils';
 import automaticLectureService from '../../services/automaticLectureService';
@@ -200,6 +209,8 @@ export default {
     // 소켓 연결 및 주기적으로 보내는 신호, 리스너 등록
     vm.$socket.connect();
     vm.joinTime = Date.now();
+
+    vm.myId = utils.getUserIdFromJwt();
 
     // 강의 아이템 목록, 첨부파일 목록, 과목, 강의명 가져오기
     const res = await lectureService.getLecture({
@@ -243,6 +254,14 @@ export default {
       vm.$socket.emit('HEART_BEAT', JSON.stringify(params2));
     }, 3000);
     */
+   // 강사가 학생보다 나중에 들어올 경우
+    vm.$socket.on('LECTURE_TEACHER_JOIN', () => {
+      const parami = {
+        lecture_id: vm.lectureId,
+        user_id: utils.getUserIdFromJwt(),
+      };
+      vm.$socket.emit('JOIN_LECTURE', JSON.stringify(parami));
+    });
     if (vm.lectureType === 0) {
       vm.$socket.on('RELOAD_LECTURE_ITEMS', (msg) => {
         const jsonMSG = JSON.parse(msg);
@@ -260,27 +279,301 @@ export default {
         window.location.href = '/download';
       }
     });
-    if (vm.lectureType === 1) {
+    if (vm.lectureType === 1) { // 무인강의 - 단체
       vm.timer = [];
+      const res4 = await lectureService.getLecture({
+        lectureId: vm.lectureId,
+      });
+      const lectureStart = new Date(res4.data.start_time);
+      const lectureStartTime = lectureStart.getTime() / 1000; // 강의 시작 시간
+      const enterTime = Math.floor(vm.joinTime / 1000);  // 접속 시간
+      const enterTimeAbs = enterTime - lectureStartTime; // 강의 시작 이후로 몇 초 뒤에 접속했는지
+      /*
       const res4 = await automaticLectureService.offlineJoin({
         lectureId: vm.lectureId,
       });
+      console.log(res4);
       res4.data.items.forEach((item) => {
         vm.timer.push(setTimeout(() => {
           vm.lectureItem = [];
           vm.lectureItem.push(item);
         }, item.offset * 1000));
+      }); */
+      // 모든 그룹 리스트 불러오기
+      const grp = await lectureItemService.showGroup({
+        lectureId: vm.lectureId,
       });
-    } else if (vm.lectureType === 2) {
+      const grpOrder = deepCopy(grp.data.list);
+      grpOrder.sort((a, b) => {
+        const aItem = Number(a.start);
+        const bItem = Number(b.start);
+        return aItem - bItem;
+      });
+      // 접속 시간 기준으로 이미 종료된 아이템들은 필요 없음
+      let delItemNum = 0;
+      grpOrder.forEach((x) => {
+        if (x.end <= enterTimeAbs) {
+          delItemNum += 1;
+        }
+      });
+      grpOrder.splice(0, delItemNum);
+
+      // 그룹 리스트 하나씩 분리
+      const groupSchedule = [];
+      grpOrder.forEach((x) => {
+        const gs = {};
+        gs.time = x.start;
+        gs.type = 'start';
+        gs.list_ids = x.list_ids;
+        groupSchedule.push(gs);
+        const gs1 = {};
+        gs1.time = x.end;
+        gs1.type = 'end';
+        gs1.list_ids = x.list_ids;
+        groupSchedule.push(gs1);
+      });
+
+      // 아이템들의 리스트 만들기
+      const per = await lectureItemService.showConnection({
+        lectureId: vm.lectureId,
+      });
+      const linkedList = [];
+      for (let i = 0; i < per.data.length; i += 1) {
+        const x = per.data[i];
+        const itemList = {};
+        itemList.lecture_item_list_id = x.lecture_item_list_id;
+        itemList.subItem = [];
+        // 아이템이 하나
+        if (x.linked_list.includes('<$!<>') === false) {
+          const iId = parseInt(x.linked_list, 10);
+          const item = await lectureItemService.getLectureItem({ // eslint-disable-line
+            lectureItemId: iId,
+          });
+          itemList.subItem.push(item.data);
+        } else {
+          // 연결 아이템이 여러 개
+          const splicedItem = x.linked_list.split('<$!<>');
+          for (let j = 0; j < splicedItem.length; j += 1) {
+            const y = splicedItem[j];
+            const item = await lectureItemService.getLectureItem({ // eslint-disable-line
+              lectureItemId: parseInt(y, 10),
+            });
+            itemList.subItem.push(item.data);
+          }
+        }
+        linkedList.push(itemList);
+      }
+
+      // 입장과 동시에 기존에 보던 아이템 보여주고 있어야 할 경우
+      let lateTime = 0;
+      let originTime = 0;
+      if (groupSchedule.length !== 0) {
+        if (groupSchedule[0].time <= enterTimeAbs) {
+          lateTime = enterTimeAbs - groupSchedule[0].time;
+          originTime = groupSchedule[0].time;
+          groupSchedule[0].time = 0;
+        }
+      }
+      // 타이머 설정해서 아이템 보여주고 내리기
+      groupSchedule.forEach((x, index) => {
+        vm.timer.push(setTimeout(() => {
+          if (x.type === 'start') {
+            // 시작 시간 갱신
+            vm.startTime = new Date();
+            vm.nowNum = 0;
+            vm.lectureItems = [];
+            vm.nowQuestion = [];
+            vm.lectureItem = [];
+
+            // 보여줄 아이템 선택
+            x.list_ids.forEach((y) => {
+              linkedList.forEach((z) => {
+                if (z.lecture_item_list_id === parseInt(y, 10)) {
+                  // 해당 리스트의 아이템
+                  z.subItem.forEach((v) => {
+                    vm.lectureItem.push(v);
+                  });
+                }
+              });
+            });
+
+            // 문항들의 key 생성
+            vm.lectureItem.forEach((w) => {
+              if (w.type === 0) {
+                if (w.questions[0].type === 0) {
+                  // 아직 보기가 안 섞인 문제일 경우
+                  if (vm.questionList.includes(w.lecture_item_id) === false) {
+                    // 보기의 수
+                    const numBogi = w.questions[0].choice.length;
+                    // 보기가 바뀔 배열
+                    const key = [];
+                    const checkRandom = [];
+                    // 특정 보기가 key에 들어갔는지 체크하는 배열
+                    for (let cr = 0; cr < numBogi; cr += 1) {
+                      checkRandom.push(false);
+                    }
+                    // key 생성과정
+                    for (let c = 0; c < numBogi; c += 1) {
+                      let suc = true;
+                      while (suc) {
+                        const temp = Math.floor(Math.random() * numBogi);
+                        if (checkRandom[temp] === false) {
+                          checkRandom[temp] = true;
+                          key.push(temp);
+                          suc = false;
+                        }
+                      }
+                    }
+                    // key가 생성된 question의 lecture_item_id와 만들어진 key를 저장
+                    // 강사가 문항을 내렸다 다시 올릴 경우 이미 만들어진 key를 이용해 동일하게 섞인 순서의 보기가 출력됨
+                    vm.questionList.push(w.lecture_item_id);
+                    vm.questionKey.push(key);
+                  }
+                }
+              }
+            });
+
+            // key에 맞게 문항 보기 섞어주기 - item에 대해
+            vm.lectureItem.forEach((w) => {
+              if (w.type === 0) {
+                if (w.questions[0].type === 0) {
+                  const numBogi = w.questions[0].choice.length;
+                  const newBogi = [];
+                  const newNum = vm.questionList.indexOf(w.lecture_item_id);
+                  for (let b = 0; b < numBogi; b += 1) {
+                    newBogi.push(-1);
+                  }
+                  for (let d = 0; d < numBogi; d += 1) {
+                    newBogi[d] = w.questions[0].choice[vm.questionKey[newNum][d]];
+                  }
+                  for (let c = 0; c < numBogi; c += 1) {
+                    w.questions[0].choice[c] = newBogi[c]; // eslint-disable-line
+                  }
+                }
+              }
+            });
+
+            // 아이템이 여러 개일 경우 처리
+            if (vm.lectureItem.length > 1) {
+              vm.lectureItems.push(vm.lectureItem[0]);
+              vm.lectureItem.forEach((v, indx) => {
+                const tmp = {};
+                // 제출 여부
+                if (v.type === 4) {
+                  tmp.types = '자료';
+                  tmp.soc = '';
+                } else if (v.type === 0) {
+                  tmp.types = '문항';
+                  if (v.questions[0].student_answer_logs.length > 0) {
+                    tmp.soc = 'O';
+                  } else {
+                    tmp.soc = 'X';
+                  }
+                } else if (v.type === 1) {
+                  tmp.types = '설문';
+                  tmp.surveyType = v.surveys[0].type; // 설문일 경우 객관식or주관식
+                  if (v.surveys[0].student_surveys.length > 0) {
+                    tmp.soc = 'O';
+                  } else {
+                    tmp.soc = 'X';
+                  }
+                } else if (v.type === 2) {
+                  tmp.types = '실습';
+                  tmp.soc = '';
+                } else if (v.type === 3) {
+                  tmp.types = '토론';
+                  tmp.soc = '';
+                }
+                tmp.type = v.type;
+                tmp.order = v.order;
+                tmp.lecture_item_id = v.lecture_item_id;
+                tmp.num = indx + 1;
+                vm.nowQuestion.push(tmp);
+              });
+            }
+            // 남은 시간 표시 타이머
+            let totalTime;
+            if (x.time === 0) {
+              // 들어온 그때부터 아이템 켜진 경우
+              // 3분~6분동안 보여줄 아이템인데 4분에 접속했다면 360 - 180 - 60 = 120
+              totalTime = groupSchedule[index + 1].time - originTime - lateTime - 1;
+            } else {
+              // 추후에 아이템 켜질 경우
+              // 2분~5분동안 보여줄 아이템이라면 그냥 300 - 120 = 180
+              totalTime = groupSchedule[index + 1].time - x.time - 1;
+            }
+            // totalTime = groupSchedule[index + 1].time - enterTimeAbs - 1;
+            vm.remainTimer = window.setInterval(() => {
+              const ttS = totalTime % 60;
+              const ttM = (totalTime - ttS) / 60;
+              if (ttS < 10) {
+                vm.remainTime = `${ttM}:0${ttS}`;
+              } else {
+                vm.remainTime = `${ttM}:${ttS}`;
+              }
+              totalTime -= 1;
+              if (totalTime === -1) {
+                vm.remainTime = '';
+                clearInterval(vm.remainTimer);
+              }
+            }, 1000);
+          } else if (x.type === 'end') {
+            if (vm.lectureItem.length === 1 && vm.lectureItem[0].type === 4) {
+            // 아이템 하나를 보고 있었는데 자료라면
+              const endTime = new Date();
+              const submitlog = {
+                lecture_id: vm.lectureId,
+                user_id: utils.getUserIdFromJwt(),
+                type: vm.lectureItem[0].type,
+                start_time: vm.startTime,
+                end_time: endTime,
+                item_id: vm.lectureItem[0].lecture_item_id,
+                order: vm.lectureItem[0].order,
+              };
+              vm.$socket.emit('LECTURE_ITEM_LOG', JSON.stringify(submitlog));
+              vm.oneNote = false;
+            } else if (vm.lectureItem.length > 1) {
+              // 아이템 여러개인데 자료를 보고 있었다면
+              const endTime = new Date();
+              if (vm.nowQuestion[vm.nowNum].types === '자료') {
+                const submitlog = {
+                  lecture_id: vm.lectureId,
+                  user_id: utils.getUserIdFromJwt(),
+                  type: vm.nowQuestion[vm.nowNum].type,
+                  start_time: vm.startTime,
+                  end_time: endTime,
+                  item_id: vm.nowQuestion[vm.nowNum].lecture_item_id,
+                  order: vm.nowQuestion[vm.nowNum].order,
+                };
+                vm.$socket.emit('LECTURE_ITEM_LOG', JSON.stringify(submitlog));
+              }
+            }
+            vm.nowQuestion = [];
+            vm.lectureItem = [];
+            vm.lectureItems = [];
+            vm.nowNum = 0;
+          }
+        }, (x.time - enterTimeAbs) * 1000));
+      });
+    } else if (vm.lectureType === 2) { // 무인강의 - 개인
       const res5 = await automaticLectureService.onlineJoin({
         lectureId: vm.lectureId,
       });
+      if (res5.data.offset === 0) {
+        // offset이 0이면 이어 볼 필요가 없음 - 처음 입장
+        vm.continueDialogVisible = false;
+        vm.continueLecture(false);
+      } else {
+        // offset이 0이 아니면 이어서 볼지 처음부터 볼지 질문
+        vm.continueDialogVisible = true;
+      }
+      /*
       if (res5.data.offset === -1) {
         vm.continueLecture(false);
       } else {
-        vm.continueDialogVisible = true;
+        vm.continueLecture(true);
       }
-      vm.pauseFlag = false;
+      vm.pauseFlag = false; */
     }
   },
   data() {
@@ -315,6 +608,11 @@ export default {
       nowQuestion: [], // 실시간 문항에 대한 정보용
       nowNum: 0, // 현재 보고 있는 아이템의 번호
       startTime: '', // 학생 로그 제출용
+      offset: -1, // 무인[개인] offset
+      oneNote: false, // 자료가 하나인지
+      remainTime: '', // 남은 시간 표시 (무인 강의)
+      remainTimer: [], // 남은 시간 표시용 타이머
+      myId: '', // 학생 본인의 ID
     };
   },
   computed: {
@@ -338,7 +636,20 @@ export default {
   mounted() {
     const vm = this;
     vm.localLectureId = vm.lectureId; // 선언부 주석 참조
-    window.addEventListener('beforeunload', vm.beforeLeave);
+    // eslint-disable-next-line
+    window.onbeforeunload = function () {
+      // 학생이 강의 화면에서 나가는 경우
+      const param = {
+        lecture_id: vm.lectureId,
+        user_id: vm.myId,
+      };
+      vm.$socket.emit('LEAVE_LECTURE', JSON.stringify(param));
+      clearInterval(vm.timeInterval);
+      // 소켓 닫기 전에 callback 함수들 해제해줘야 함
+      // 해제하지 않으면 재접속시 callback함수가 또 만들어져 중복으로 돌아감
+      vm.$socket._callbacks = null; // eslint-disable-line
+      vm.$socket.close();
+    };
   },
   methods: {
     async onClick(type, data) {
@@ -384,16 +695,6 @@ export default {
               const endTime = new Date();
               if (vm.lectureItem.length > 1) {
                 // 여러 아이템 중 하나 제출
-                /*
-                studentService.postLog({
-                  id: vm.nowQuestion[vm.nowNum].lecture_item_id,
-                  lecture_id: vm.lectureId,
-                  item_id: vm.nowQuestion[vm.nowNum].lecture_item_id,
-                  type: vm.nowQuestion[vm.nowNum].type,
-                  order: vm.nowQuestion[vm.nowNum].order,
-                  start_time: vm.startTime,
-                  end_time: endTime,
-                }); */
                 const submitlog = {
                   lecture_id: vm.lectureId,
                   user_id: utils.getUserIdFromJwt(),
@@ -408,16 +709,6 @@ export default {
                 vm.nowQuestion[vm.nowNum].soc = 'O';
               } else {
                 // 한 아이템 하나 제출
-                /*
-                studentService.postLog({
-                  id: vm.lectureItem[0].lecture_item_id,
-                  lecture_id: vm.lectureId,
-                  item_id: vm.lectureItem[0].lecture_item_id,
-                  type: vm.lectureItem[0].type,
-                  order: vm.lectureItem[0].order,
-                  start_time: vm.startTime,
-                  end_time: endTime,
-                }); */
                 const submitlog = {
                   lecture_id: vm.lectureId,
                   user_id: utils.getUserIdFromJwt(),
@@ -447,16 +738,6 @@ export default {
               const endTime = new Date();
               if (vm.lectureItem.length > 1) {
                 // 여러 아이템 중 설문
-                /*
-                studentService.postLog({
-                  id: vm.nowQuestion[vm.nowNum].lecture_item_id,
-                  lecture_id: vm.lectureId,
-                  item_id: vm.nowQuestion[vm.nowNum].lecture_item_id,
-                  type: vm.nowQuestion[vm.nowNum].type,
-                  order: vm.nowQuestion[vm.nowNum].order,
-                  start_time: vm.startTime,
-                  end_time: endTime,
-                }); */
                 studentService.submitSurvey({
                   surveyId: data.surveyId,
                   item_id: vm.nowQuestion[vm.nowNum].lecture_item_id,
@@ -479,16 +760,6 @@ export default {
                 vm.nowQuestion[vm.nowNum].soc = 'O';
               } else {
                 // 한 아이템 설문
-                /*
-                studentService.postLog({
-                  id: vm.lectureItem[0].lecture_item_id,
-                  lecture_id: vm.lectureId,
-                  item_id: vm.lectureItem[0].lecture_item_id,
-                  type: vm.lectureItem[0].type,
-                  order: vm.lectureItem[0].order,
-                  start_time: vm.startTime,
-                  end_time: endTime,
-                }); */
                 studentService.submitSurvey({
                   surveyId: data.surveyId,
                   item_id: vm.lectureItem[0].lecture_item_id,
@@ -526,13 +797,10 @@ export default {
               throw new Error(`not defined type ${type}`);
             }
           }
+          // 제출한 뒤에 시작 시간 갱신
+          vm.startTime = new Date();
           break;
         }
-        /*
-        case 'SENDREALTIMEQUESTION': {
-          break;
-        }
-        */
         case 'FOCUSVIDEO': {
           if (vm.focusVideoFlag) {
             vm.focusVideoFlag = false;
@@ -570,17 +838,7 @@ export default {
         case 'QUE': {
           // 만약 지금 보고있던게 자료였다면 로그 제출
           const endTime = new Date();
-          if (vm.nowQuestion[vm.nowNum].soc === '자료') {
-            /*
-            studentService.postLog({
-              id: vm.nowQuestion[vm.nowNum].lecture_item_id,
-              lecture_id: vm.lectureId,
-              item_id: vm.nowQuestion[vm.nowNum].lecture_item_id,
-              type: vm.nowQuestion[vm.nowNum].type,
-              order: vm.nowQuestion[vm.nowNum].order,
-              start_time: vm.startTime,
-              end_time: endTime,
-            }); */
+          if (vm.nowQuestion[vm.nowNum].types === '자료') {
             const submitlog = {
               lecture_id: vm.lectureId,
               user_id: utils.getUserIdFromJwt(),
@@ -611,17 +869,7 @@ export default {
           }
           // 만약 지금 보고있던게 자료였다면 로그 제출
           const endTime = new Date();
-          if (vm.nowQuestion[vm.nowNum].soc === '자료') {
-            /*
-            studentService.postLog({
-              id: vm.nowQuestion[vm.nowNum].lecture_item_id,
-              lecture_id: vm.lectureId,
-              item_id: vm.nowQuestion[vm.nowNum].lecture_item_id,
-              type: vm.nowQuestion[vm.nowNum].type,
-              order: vm.nowQuestion[vm.nowNum].order,
-              start_time: vm.startTime,
-              end_time: endTime,
-            }); */
+          if (vm.nowQuestion[vm.nowNum].types === '자료') {
             const submitlog = {
               lecture_id: vm.lectureId,
               user_id: utils.getUserIdFromJwt(),
@@ -652,17 +900,7 @@ export default {
           }
           // 만약 지금 보고있던게 자료였다면 로그 제출
           const endTime = new Date();
-          if (vm.nowQuestion[vm.nowNum].soc === '자료') {
-            /*
-            studentService.postLog({
-              id: vm.nowQuestion[vm.nowNum].lecture_item_id,
-              lecture_id: vm.lectureId,
-              item_id: vm.nowQuestion[vm.nowNum].lecture_item_id,
-              type: vm.nowQuestion[vm.nowNum].type,
-              order: vm.nowQuestion[vm.nowNum].order,
-              start_time: vm.startTime,
-              end_time: endTime,
-            }); */
+          if (vm.nowQuestion[vm.nowNum].types === '자료') {
             const submitlog = {
               lecture_id: vm.lectureId,
               user_id: utils.getUserIdFromJwt(),
@@ -690,6 +928,36 @@ export default {
     refreshLectureItem(notify, signal) {
       const vm = this;
       if (signal === 0) {
+        if (vm.oneNote === true) {
+          // 자료 하나만 보고 있었다면
+          const endTime = new Date();
+          const submitlog = {
+            lecture_id: vm.lectureId,
+            user_id: utils.getUserIdFromJwt(),
+            type: vm.lectureItem[0].type,
+            start_time: vm.startTime,
+            end_time: endTime,
+            item_id: vm.lectureItem[0].lecture_item_id,
+            order: vm.lectureItem[0].order,
+          };
+          vm.$socket.emit('LECTURE_ITEM_LOG', JSON.stringify(submitlog));
+          vm.oneNote = false;
+        } else if (vm.lectureItem.length > 1) {
+          // 아이템 여러개인데 자료를 보고 있었다면
+          const endTime = new Date();
+          if (vm.nowQuestion[vm.nowNum].types === '자료') {
+            const submitlog = {
+              lecture_id: vm.lectureId,
+              user_id: utils.getUserIdFromJwt(),
+              type: vm.nowQuestion[vm.nowNum].type,
+              start_time: vm.startTime,
+              end_time: endTime,
+              item_id: vm.nowQuestion[vm.nowNum].lecture_item_id,
+              order: vm.nowQuestion[vm.nowNum].order,
+            };
+            vm.$socket.emit('LECTURE_ITEM_LOG', JSON.stringify(submitlog));
+          }
+        }
         // 아이템 내릴 경우
         vm.lectureItems = [];
         vm.nowQuestion = [];
@@ -717,6 +985,13 @@ export default {
 
         vm.lectureItems = [];
         vm.nowQuestion = [];
+
+        // 자료 하나만 있다면
+        if (res3.data.length === 1) {
+          if (res3.data[0].type === 4) {
+            vm.oneNote = true;
+          }
+        }
 
         // 새로 들어온 문항의 key 생성
         res3.data.forEach((x) => {
@@ -778,15 +1053,15 @@ export default {
         if (res3.data.length !== 0) {
           vm.lectureItem = res3.data;
           // sequence 순서대로 강의 아이템 정렬
+          /*
           vm.lectureItem.sort((a, b) => {
             const aItemSequence = Number(a.sequence);
             const bItemSequence = Number(b.sequence);
             return aItemSequence - bItemSequence;
-          });
+          }); */
         } else if (vm.lectureType === 0) {
           vm.lectureItem = [];
         }
-
         // 아이템이 여러 개일 경우 처리
         if (vm.lectureItem.length > 1) {
           vm.lectureItems.push(vm.lectureItem[0]);
@@ -844,135 +1119,279 @@ export default {
       const vm = this;
       vm.materialLink = `http://docs.google.com/gview?url=${data}&embedded=true`;
     },
-    async getLectureItem() {
-      // 무인 강의
-      // 강사가 설정해 놓은 활성화 시간에 따라 자동으로 강의 아이템이 나오는데
-      // 아이템 보기는 활성화 되기 전에 미리 세팅
+    async getLectureItem(flag) { // eslint-disable-line
+      // 무인 강의 - 개인
+      // 강사가 설정해 놓은 활성화 시간에 따라 자동으로 강의 아이템 그룹들이 나오는데
+      // 아이템 보기는 활성화 되는 시점에 세팅
       const vm = this;
+      vm.joinTime = Date.now(); // offset 측정 시작 시점은 '이어보기' or '처음부터 보기'를 선택한 이후
       vm.timer = [];
       const res4 = await automaticLectureService.onlineJoin({
         lectureId: vm.lectureId,
       });
-
-      // 문항들의 key 생성
-      res4.data.items.forEach((x) => {
-        if (x.type === 0) {
-          if (x.questions[0].type === 0) {
-            // 아직 보기가 안 섞인 문제일 경우
-            if (vm.questionList.includes(x.lecture_item_id) === false) {
-              // 보기의 수
-              const numBogi = x.questions[0].choice.length;
-              // 보기가 바뀔 배열
-              const key = [];
-              const checkRandom = [];
-              // 특정 보기가 key에 들어갔는지 체크하는 배열
-              for (let cr = 0; cr < numBogi; cr += 1) {
-                checkRandom.push(false);
-              }
-              // key 생성과정
-              for (let c = 0; c < numBogi; c += 1) {
-                let suc = true;
-                while (suc) {
-                  const temp = Math.floor(Math.random() * numBogi);
-                  if (checkRandom[temp] === false) {
-                    checkRandom[temp] = true;
-                    key.push(temp);
-                    suc = false;
-                  }
-                }
-              }
-              // key가 생성된 question의 lecture_item_id와 만들어진 key를 저장
-              // 강사가 문항을 내렸다 다시 올릴 경우 이미 만들어진 key를 이용해 동일하게 섞인 순서의 보기가 출력됨
-              vm.questionList.push(x.lecture_item_id);
-              vm.questionKey.push(key);
-            }
-          }
-        }
-      });
-
-      // 문항들의 key 생성 - rawItem에 대해
-      res4.data.rawItems.forEach((x) => {
-        if (x.type === 0) {
-          if (x.questions[0].type === 0) {
-            // 아직 보기가 안 섞인 문제일 경우
-            if (vm.questionList.includes(x.lecture_item_id) === false) {
-              // 보기의 수
-              const numBogi = x.questions[0].choice.length;
-              // 보기가 바뀔 배열
-              const key = [];
-              const checkRandom = [];
-              // 특정 보기가 key에 들어갔는지 체크하는 배열
-              for (let cr = 0; cr < numBogi; cr += 1) {
-                checkRandom.push(false);
-              }
-              // key 생성과정
-              for (let c = 0; c < numBogi; c += 1) {
-                let suc = true;
-                while (suc) {
-                  const temp = Math.floor(Math.random() * numBogi);
-                  if (checkRandom[temp] === false) {
-                    checkRandom[temp] = true;
-                    key.push(temp);
-                    suc = false;
-                  }
-                }
-              }
-              // key가 생성된 question의 lecture_item_id와 만들어진 key를 저장
-              // 강사가 문항을 내렸다 다시 올릴 경우 이미 만들어진 key를 이용해 동일하게 섞인 순서의 보기가 출력됨
-              vm.questionList.push(x.lecture_item_id);
-              vm.questionKey.push(key);
-            }
-          }
-        }
-      });
-
-      // key에 맞게 문항 보기 섞어주기 - item에 대해
-      res4.data.items.forEach((x) => {
-        if (x.questions[0].type === 0) {
-          if (x.type === 0) {
-            const numBogi = x.questions[0].choice.length;
-            const newBogi = [];
-            const newNum = vm.questionList.indexOf(x.lecture_item_id);
-            for (let b = 0; b < numBogi; b += 1) {
-              newBogi.push(-1);
-            }
-            for (let d = 0; d < numBogi; d += 1) {
-              newBogi[d] = x.questions[0].choice[vm.questionKey[newNum][d]];
-            }
-            for (let c = 0; c < numBogi; c += 1) {
-              x.questions[0].choice[c] = newBogi[c]; // eslint-disable-line
-            }
-          }
-        }
-      });
-
-      // key에 맞게 문항 보기 섞어주기 - rawItem에 대해
-      res4.data.rawItems.forEach((x) => {
-        if (x.questions[0].type === 0) {
-          if (x.type === 0) {
-            const numBogi = x.questions[0].choice.length;
-            const newBogi = [];
-            const newNum = vm.questionList.indexOf(x.lecture_item_id);
-            for (let b = 0; b < numBogi; b += 1) {
-              newBogi.push(-1);
-            }
-            for (let d = 0; d < numBogi; d += 1) {
-              newBogi[d] = x.questions[0].choice[vm.questionKey[newNum][d]];
-            }
-            for (let c = 0; c < numBogi; c += 1) {
-              x.questions[0].choice[c] = newBogi[c]; // eslint-disable-line
-            }
-          }
-        }
-      });
-
-      let lectureItemList;
-      if (vm.continueFlag === true) {
-        lectureItemList = res4.data.items;
+      if (flag === false) {
+        // 처음부터 본다면 offset 0
+        vm.offset = 0;
+        // 기존 서버 offset도 지우기
+        await automaticLectureService.deleteOffset({
+          lectureId: vm.lectureId,
+        });
       } else {
-        lectureItemList = res4.data.rawItems;
+        // 이어서 본다면 offset 받아오기
+        vm.offset = res4.data.offset;
+      }
+      // 모든 그룹 리스트 불러오기
+      const grp = await lectureItemService.showGroup({
+        lectureId: vm.lectureId,
+      });
+      const grpOrder = deepCopy(grp.data.list);
+      grpOrder.sort((a, b) => {
+        const aItem = Number(a.start);
+        const bItem = Number(b.start);
+        return aItem - bItem;
+      });
+      // offset 기준으로 이미 종료된 아이템들은 필요 없음
+      let delItemNum = 0;
+      grpOrder.forEach((x) => {
+        if (x.end <= vm.offset) {
+          delItemNum += 1;
+        }
+      });
+      grpOrder.splice(0, delItemNum);
+
+      // 그룹 리스트 하나씩 분리
+      const groupSchedule = [];
+      grpOrder.forEach((x) => {
+        const gs = {};
+        gs.time = x.start;
+        gs.type = 'start';
+        gs.list_ids = x.list_ids;
+        groupSchedule.push(gs);
+        const gs1 = {};
+        gs1.time = x.end;
+        gs1.type = 'end';
+        gs1.list_ids = x.list_ids;
+        groupSchedule.push(gs1);
+      });
+
+      // 아이템들의 리스트 만들기
+      const per = await lectureItemService.showConnection({
+        lectureId: vm.lectureId,
+      });
+      const linkedList = [];
+      for (let i = 0; i < per.data.length; i += 1) {
+        const x = per.data[i];
+        const itemList = {};
+        itemList.lecture_item_list_id = x.lecture_item_list_id;
+        itemList.subItem = [];
+        // 아이템이 하나
+        if (x.linked_list.includes('<$!<>') === false) {
+          const iId = parseInt(x.linked_list, 10);
+          const item = await lectureItemService.getLectureItem({ // eslint-disable-line
+            lectureItemId: iId,
+          });
+          itemList.subItem.push(item.data);
+        } else {
+          // 연결 아이템이 여러 개
+          const splicedItem = x.linked_list.split('<$!<>');
+          for (let j = 0; j < splicedItem.length; j += 1) {
+            const y = splicedItem[j];
+            const item = await lectureItemService.getLectureItem({ // eslint-disable-line
+              lectureItemId: parseInt(y, 10),
+            });
+            itemList.subItem.push(item.data);
+          }
+        }
+        linkedList.push(itemList);
       }
 
+      // 입장과 동시에 기존에 보던 아이템 보여주고 있어야 할 경우
+      let lateTime = 0;
+      let originTime = 0;
+      if (groupSchedule.length !== 0) {
+        if (groupSchedule[0].time <= vm.offset) {
+          lateTime = vm.offset - groupSchedule[0].time;
+          originTime = groupSchedule[0].time;
+          groupSchedule[0].time = 0;
+        }
+      }
+      // 타이머 설정해서 아이템 보여주고 내리기
+      groupSchedule.forEach((x, index) => {
+        vm.timer.push(setTimeout(() => {
+          if (x.type === 'start') {
+            // 시작 시간 갱신
+            vm.startTime = new Date();
+            vm.nowNum = 0;
+            vm.lectureItems = [];
+            vm.nowQuestion = [];
+            vm.lectureItem = [];
+
+            // 보여줄 아이템 선택
+            x.list_ids.forEach((y) => {
+              linkedList.forEach((z) => {
+                if (z.lecture_item_list_id === parseInt(y, 10)) {
+                  // 해당 리스트의 아이템
+                  z.subItem.forEach((v) => {
+                    vm.lectureItem.push(v);
+                  });
+                }
+              });
+            });
+
+            // 문항들의 key 생성
+            vm.lectureItem.forEach((w) => {
+              if (w.type === 0) {
+                if (w.questions[0].type === 0) {
+                  // 아직 보기가 안 섞인 문제일 경우
+                  if (vm.questionList.includes(w.lecture_item_id) === false) {
+                    // 보기의 수
+                    const numBogi = w.questions[0].choice.length;
+                    // 보기가 바뀔 배열
+                    const key = [];
+                    const checkRandom = [];
+                    // 특정 보기가 key에 들어갔는지 체크하는 배열
+                    for (let cr = 0; cr < numBogi; cr += 1) {
+                      checkRandom.push(false);
+                    }
+                    // key 생성과정
+                    for (let c = 0; c < numBogi; c += 1) {
+                      let suc = true;
+                      while (suc) {
+                        const temp = Math.floor(Math.random() * numBogi);
+                        if (checkRandom[temp] === false) {
+                          checkRandom[temp] = true;
+                          key.push(temp);
+                          suc = false;
+                        }
+                      }
+                    }
+                    // key가 생성된 question의 lecture_item_id와 만들어진 key를 저장
+                    // 강사가 문항을 내렸다 다시 올릴 경우 이미 만들어진 key를 이용해 동일하게 섞인 순서의 보기가 출력됨
+                    vm.questionList.push(w.lecture_item_id);
+                    vm.questionKey.push(key);
+                  }
+                }
+              }
+            });
+
+            // key에 맞게 문항 보기 섞어주기 - item에 대해
+            vm.lectureItem.forEach((w) => {
+              if (w.type === 0) {
+                if (w.questions[0].type === 0) {
+                  const numBogi = w.questions[0].choice.length;
+                  const newBogi = [];
+                  const newNum = vm.questionList.indexOf(w.lecture_item_id);
+                  for (let b = 0; b < numBogi; b += 1) {
+                    newBogi.push(-1);
+                  }
+                  for (let d = 0; d < numBogi; d += 1) {
+                    newBogi[d] = w.questions[0].choice[vm.questionKey[newNum][d]];
+                  }
+                  for (let c = 0; c < numBogi; c += 1) {
+                    w.questions[0].choice[c] = newBogi[c]; // eslint-disable-line
+                  }
+                }
+              }
+            });
+
+            // 아이템이 여러 개일 경우 처리
+            if (vm.lectureItem.length > 1) {
+              vm.lectureItems.push(vm.lectureItem[0]);
+              vm.lectureItem.forEach((v, indx) => {
+                const tmp = {};
+                // 제출 여부
+                if (v.type === 4) {
+                  tmp.types = '자료';
+                  tmp.soc = '';
+                } else if (v.type === 0) {
+                  tmp.types = '문항';
+                  if (v.questions[0].student_answer_logs.length > 0) {
+                    tmp.soc = 'O';
+                  } else {
+                    tmp.soc = 'X';
+                  }
+                } else if (v.type === 1) {
+                  tmp.types = '설문';
+                  tmp.surveyType = v.surveys[0].type; // 설문일 경우 객관식or주관식
+                  if (v.surveys[0].student_surveys.length > 0) {
+                    tmp.soc = 'O';
+                  } else {
+                    tmp.soc = 'X';
+                  }
+                } else if (v.type === 2) {
+                  tmp.types = '실습';
+                  tmp.soc = '';
+                } else if (v.type === 3) {
+                  tmp.types = '토론';
+                  tmp.soc = '';
+                }
+                tmp.type = v.type;
+                tmp.order = v.order;
+                tmp.lecture_item_id = v.lecture_item_id;
+                tmp.num = indx + 1;
+                vm.nowQuestion.push(tmp);
+              });
+            }
+            // 남은 시간 표시 타이머
+            let totalTime;
+            if (x.time === 0) {
+              totalTime = groupSchedule[index + 1].time - originTime - lateTime - 1;
+            } else {
+              totalTime = groupSchedule[index + 1].time - x.time - 1;
+            }
+            vm.remainTimer = window.setInterval(() => {
+              const ttS = totalTime % 60;
+              const ttM = (totalTime - ttS) / 60;
+              if (ttS < 10) {
+                vm.remainTime = `${ttM}:0${ttS}`;
+              } else {
+                vm.remainTime = `${ttM}:${ttS}`;
+              }
+              totalTime -= 1;
+              if (totalTime === -1) {
+                vm.remainTime = '';
+                clearInterval(vm.remainTimer);
+              }
+            }, 1000);
+          } else if (x.type === 'end') {
+            // 자료 하나만 보고 있었다면
+            if (vm.lectureItem.length === 1 && vm.lectureItem[0].type === 4) {
+              const endTime = new Date();
+              const submitlog = {
+                lecture_id: vm.lectureId,
+                user_id: utils.getUserIdFromJwt(),
+                type: vm.lectureItem[0].type,
+                start_time: vm.startTime,
+                end_time: endTime,
+                item_id: vm.lectureItem[0].lecture_item_id,
+                order: vm.lectureItem[0].order,
+              };
+              vm.$socket.emit('LECTURE_ITEM_LOG', JSON.stringify(submitlog));
+              vm.oneNote = false;
+            } else if (vm.lectureItem.length > 1) {
+              // 아이템 여러개인데 자료를 보고 있었다면
+              const endTime = new Date();
+              if (vm.nowQuestion[vm.nowNum].types === '자료') {
+                const submitlog = {
+                  lecture_id: vm.lectureId,
+                  user_id: utils.getUserIdFromJwt(),
+                  type: vm.nowQuestion[vm.nowNum].type,
+                  start_time: vm.startTime,
+                  end_time: endTime,
+                  item_id: vm.nowQuestion[vm.nowNum].lecture_item_id,
+                  order: vm.nowQuestion[vm.nowNum].order,
+                };
+                vm.$socket.emit('LECTURE_ITEM_LOG', JSON.stringify(submitlog));
+              }
+            }
+            vm.nowQuestion = [];
+            vm.lectureItem = [];
+            vm.lectureItems = [];
+            vm.nowNum = 0;
+          }
+        }, (x.time - vm.offset) * 1000));
+      });
+      /*
       const result = vm.groupBy(lectureItemList, item => [item.offset]);
       vm.pastLectureItem.lectureItemId = res4.data.items[0].lecture_item_id;
       vm.pastLectureItem.offset = res4.data.offset;
@@ -983,6 +1402,7 @@ export default {
           vm.lectureItem = item;
         }, item[0].offset * 1000));
       });
+      */
     },
     groupBy(array, f) {
       const groups = {};
@@ -994,30 +1414,19 @@ export default {
       return Object.keys(groups).map(group => groups[group]);
     },
     continueLecture(flag) {
+      // flag가 true면 이어 보기, false면 처음부터 보기
       const vm = this;
       vm.joinTime = Date.now();
-      vm.continueDialogVisible = false;
+      vm.continueDialogVisible = false; // 안내문 가리기
       vm.continueFlag = flag;
-      vm.getLectureItem();
+      vm.getLectureItem(flag);
     },
-    leaveOnlineLecture() {
+    leaveOnlineLecture() { // 무인[개인] 강의 종료
       const vm = this;
-      let offset = vm.participationTime;
-      if (vm.lectureItem[0]
-        && vm.lectureItem[0].lecture_item_id === vm.pastLectureItem.lectureItemId
-        && vm.continueFlag) {
-        offset += vm.pastLectureItem.offset;
-      }
-      let lectureItemId;
-      if (vm.lectureItem.length === 0) {
-        lectureItemId = undefined;
-      } else {
-        lectureItemId = vm.lectureItem[0].lecture_item_id;
-      }
+      const newOffset = vm.participationTime;
       automaticLectureService.onlineLeave({
-        lectureId: vm.lectureId,
-        lectureItemId,
-        offset,
+        lectureId: vm.localLectureId,
+        offset: newOffset,
       });
       vm.timer.forEach((item) => {
         clearTimeout(item);
@@ -1028,9 +1437,18 @@ export default {
       const vm = this;
       const param = {
         lecture_id: vm.localLectureId,
-        user_id: utils.getUserIdFromJwt(),
+        user_id: vm.myId,
       };
       vm.$socket.emit('LEAVE_LECTURE', JSON.stringify(param));
+      /*
+      vm.remainTimer.forEach((item) => {
+        clearTimeout(item);
+      }); */
+      clearInterval(vm.remainTimer);
+
+      vm.timer.forEach((item) => {
+        clearTimeout(item);
+      });
 
       // 화면 떠나기 전 등록한 Listener 해제. 이 코드가 없으면 리스너가 중복 등록되어 버그가 발생함
       window.removeEventListener('beforeunload', vm.beforeLeave);
@@ -1039,16 +1457,22 @@ export default {
   beforeDestroy() {
     const vm = this;
     vm.beforeLeave();
-    /*
-     *  무인 강의에서 학생이 강의에서 나갈 경우, 강의 수강 시간을 알기 위해
-     *  최근에 듣던 강의 아이템과 해당 강의 아이템 시작으로부터의 경과 시간을 보냄
-     */
+    // 소켓 닫기 전에 callback 함수들 해제해줘야 함
+    // 해제하지 않으면 재접속시 callback함수가 또 만들어져 중복으로 돌아감
+    vm.$socket._callbacks = null; // eslint-disable-line
     vm.$socket.close();
+    /*
+     * 무인 강의에서 학생이 강의에서 나갈 경우, 강의 수강 시간을 알기 위해
+     * 최근에 듣던 강의 아이템과 해당 강의 아이템 시작으로부터의 경과 시간을 보냄
+     */
     if (vm.lectureType === 1) {
+      /* 무인 단체는 나갈때 별도의 API 없음
       automaticLectureService.offlineLeave({
         lectureId: vm.lectureId,
       });
+      */
     } else if (vm.lectureType === 2) {
+      // 무인 개인에서 나갈때 등록
       vm.leaveOnlineLecture();
     }
   },

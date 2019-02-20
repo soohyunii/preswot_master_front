@@ -18,6 +18,9 @@ if (isProd) {
   socketPort = 8001;
 }
 
+개발 서버는 13.125.182.116
+8090 8091
+
 /*
 // 로컬 서버 테스트용
 serverUrl = 'http://localhost';

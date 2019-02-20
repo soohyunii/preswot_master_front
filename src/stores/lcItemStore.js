@@ -60,9 +60,10 @@ export default {
       // console.log('lcItemType', inputHead);
 
       const lcItemType = utils.convertLcItemType(inputHead.lcItemType);
+      let res;
       switch (lcItemType) {
         case 0: { // * 문항
-          await QuestionHandler.postLcItem({
+          res = await QuestionHandler.postLcItem({
             lectureId: rootState.lc.lecture.lecture_id,
             inputHead,
             inputBody,
@@ -71,7 +72,7 @@ export default {
           break;
         }
         case 1: { // * 설문
-          await SurveyHandler.postLcItem({
+          res = await SurveyHandler.postLcItem({
             lectureId: rootState.lc.lecture.lecture_id,
             inputHead,
             inputBody,
@@ -80,7 +81,7 @@ export default {
           break;
         }
         case 2: { // * 실습
-          await PracticeHandler.postLcItem({
+          res = await PracticeHandler.postLcItem({
             lectureId: rootState.lc.lecture.lecture_id,
             inputHead,
             inputBody,
@@ -89,7 +90,7 @@ export default {
           break;
         }
         case 3: { // * 토론
-          await DiscussionHandler.postLcItem({
+          res = await DiscussionHandler.postLcItem({
             lectureId: rootState.lc.lecture.lecture_id,
             inputHead,
             inputBody,
@@ -98,7 +99,7 @@ export default {
           break;
         }
         case 4: { // * 자료
-          await NoteHandler.postLcItem({
+          res = await NoteHandler.postLcItem({
             lectureId: rootState.lc.lecture.lecture_id,
             inputHead,
             inputBody,
@@ -110,6 +111,8 @@ export default {
           throw new Error(`not defined lcItemType ${lcItemType}`);
         }
       }
+      // 프론트에 생성된 lecture_item_id 알려주기 위해
+      return res;
     },
     async putLcItem({ state }, { inputHead, inputBody, inputTail }) {
       const lcItemType = utils.convertLcItemType(inputHead.lcItemType);

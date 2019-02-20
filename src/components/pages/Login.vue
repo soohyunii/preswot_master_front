@@ -110,13 +110,29 @@ export default {
               vm.$router.push('/');
             }
           } catch (error) {
+            if (error.response.status === 403) {
+              vm.$notify({
+                title: 'warning',
+                message: '입력하신 계정은 존재하지 않습니다.',
+                type: 'warning',
+                duration: 5000,
+              });
+            } else if (error.response.status === 406) {
+              vm.$notify({
+                title: 'Sorry',
+                message: '비밀번호가 일치하지 않습니다.',
+                type: 'warning',
+                duration: 5000,
+              });
+            } else {
+              vm.$notify({
+                title: 'Sorry',
+                message: (error.response !== undefined) ? error.response.data.message : error.message, //eslint-disable-line
+                type: 'warning',
+                duration: 5000,
+              });
+            }
             // console.dir(error);
-            vm.$notify({
-              title: 'Sorry',
-              message: (error.response !== undefined) ? error.response.data.message : error.message,
-              type: 'warning',
-              duration: 5000,
-            });
           }
           break;
         }

@@ -53,6 +53,7 @@
         </el-popover>
       </el-form-item>
 
+      <!-- 아이템 그룹별로 활성화 되면서 아이템 개별 활성화는 필요 없어짐
       <el-form-item label="활성화 시각" v-if="lecture.type !== 0">
         <el-time-picker
           v-model="inputHead.lcItemOffset"
@@ -66,7 +67,7 @@
           content="강의 시작 시간을 기준으로 강의 아이템이 활성화되는 시각을 정합니다.">
           <i class="el-icon-question fa-lg" slot="reference"></i>
         </el-popover>
-      </el-form-item>
+      </el-form-item> -->
 
       <div v-show="!inputHead.lcItemType">
         <el-alert
@@ -167,9 +168,11 @@ export default {
       vm.inputHead.lcItemResult = item.result;
       vm.resultVisible = !!item.result;
 
+      /*
       const offset = new Date(2018, 8, 15, 0, 0, 0);
       offset.setSeconds(item.offset);
       vm.inputHead.lcItemOffset = offset;
+      */
 
       // * Init inputBody, tail
       switch (vm.inputHead.lcItemType) {
@@ -207,7 +210,7 @@ export default {
       lcItemType: null,
       lcItemSequence: vm.numOfLectureItem + 1,
       lcItemResult: false,
-      lcItemOffset: new Date(2018, 8, 15, 0, 0, 0),
+      lcItemOffset: null,
     };
     return {
       initialInputHead,
@@ -383,16 +386,20 @@ export default {
           return;
         }
       }
-      if (vm.lecture.type === 0) {
-        vm.inputHead.lcItemOffset = null;
-      }
+      vm.inputHead.lcItemOffset = null;
 
       if (vm.isNewItem) {
         try {
+          // 아이템 만들기
           await vm.postLcItem({
             inputHead: vm.inputHead,
             inputBody: vm.inputBody,
             inputTail: vm.inputTail,
+          });
+          vm.$notify({
+            title: '생성 완료',
+            message: '아이템이 생성되었습니다.',
+            type: 'success',
           });
 
           vm.reset();
@@ -412,6 +419,11 @@ export default {
             inputHead: vm.inputHead,
             inputBody: vm.inputBody,
             inputTail: vm.inputTail,
+          });
+          vm.$notify({
+            title: '수정 완료',
+            message: '아이템이 수정되었습니다.',
+            type: 'success',
           });
 
           vm.reset();

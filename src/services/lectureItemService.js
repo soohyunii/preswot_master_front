@@ -104,15 +104,56 @@ export default {
   deleteConnection({ lectureItemId }) {
     return http.delete(`/lecture-items/linked_list/${lectureItemId}`);
   },
-  makeGroup({ lectureId, iList }) {
+  makeGroupNo({ lectureId, iList }) {
     const itemList = iList;
     let list = itemList[0];
     itemList.splice(0, 1);
     itemList.forEach((x) => {
       list = list + '<$!<>' + x; // eslint-disable-line
     });
+    list = list.toString();
     return http.post(`/lecture-items/${lectureId}/group`, {
       list: list, // eslint-disable-line
+    });
+  },
+  editGroupNo({ lectureId, iList, groupId }) {
+    const itemList = iList;
+    let list = itemList[0];
+    itemList.splice(0, 1);
+    itemList.forEach((x) => {
+      list = list + '<$!<>' + x; // eslint-disable-line
+    });
+    list = list.toString();
+    return http.put(`/lecture-items/${lectureId}/group/${groupId}`, {
+      group_list: list, // eslint-disable-line
+    });
+  },
+  makeGroup({ lectureId, iList, start, end }) {
+    const itemList = iList;
+    let list = itemList[0];
+    itemList.splice(0, 1);
+    itemList.forEach((x) => {
+      list = list + '<$!<>' + x; // eslint-disable-line
+    });
+    list = list.toString();
+    return http.post(`/lecture-items/${lectureId}/group`, {
+      list: list, // eslint-disable-line
+      start: start, // eslint-disable-line
+      end: end, // eslint-disable-line
+    });
+  },
+  editGroup({ lectureId, iList, groupId, start, end }) {
+    const itemList = iList;
+    let list = itemList[0];
+    itemList.splice(0, 1);
+    itemList.forEach((x) => {
+      list = list + '<$!<>' + x; // eslint-disable-line
+    });
+    list = list.toString();
+    return http.put(`/lecture-items/${lectureId}/group/${groupId}`, {
+      group_list: list, // eslint-disable-line
+      start: start, // eslint-disable-line
+      end: end, // eslint-disable-line
     });
   },
   showGroup({ lectureId }) {

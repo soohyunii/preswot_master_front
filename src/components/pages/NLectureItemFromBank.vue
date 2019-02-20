@@ -813,9 +813,9 @@ export default {
           vm.$refs.multipleTable.clearSelection();
           break;
         }
-        // 선택된 강의들 가져오기
+        // 선택된 강의 아이템들 가져오기
         case 'BRING_LECTURE_ITEM': {
-          // 선택된 강의가 없을 경우
+          // 선택된 강의 아이템이 없을 경우
           if (vm.multipleSelection.length === 0) {
             vm.$notify({
               title: '알림',
@@ -834,6 +834,15 @@ export default {
             title: '알림',
             message: '성공적으로 강의 아이템을 가져왔습니다.',
             type: 'success',
+          });
+          break;
+        }
+        // 아이템 미리보기의 제출 버튼
+        case 'SUBMIT': {
+          vm.$notify({
+            title: '알림',
+            message: '이 버튼은 현재 수강중인 학생만 이용할 수 있습니다.',
+            type: 'warning',
           });
           break;
         }

@@ -11,7 +11,7 @@
       @row-click="onClickLecture"
       @join="onClickJoin"
       type="STUDENT"
-      :list="lectureList"
+      :list="lectureL"
     />
     <br />
   </div>
@@ -21,6 +21,7 @@
 import { mapState, mapActions, mapGetters } from 'vuex';
 import LectureList from '../partials/LectureList';
 import utils from '../../utils';
+import lectureService from '../../services/lectureService';
 
 export default {
   name: 'StudentClassShow',
@@ -29,6 +30,7 @@ export default {
   },
   data() {
     return {
+      lectureL: [],
     };
   },
   async mounted() {
@@ -38,6 +40,28 @@ export default {
       type: 'STUDENT',
       classId: vm.classId,
     });
+    // 학생이 본인의 수강 강의들 불러오는 부분 mounted에서 동작
+    const currentClass = await vm.currentStudyingClass(Number.parseInt(vm.classId, 10));
+    if (currentClass && currentClass.lectures) {
+      const lecL = currentClass.lectures;
+      for (let i = 0; i < lecL.length; i += 1) {
+        const item = lecL[i];
+        const type = utils.convertLcType(item.type);
+        item.type = type;
+        // 수강 완료 - 미완료는 별도의 API 통해 결정
+        const res = await lectureService.studentLoginLog({ // eslint-disable-line
+          lectureId: item.lecture_id,
+        });
+        if (res.data.login === true) {
+          item.heard = '수강완료';
+        } else {
+          item.heard = '수강미완료';
+        }
+      }
+      vm.lectureL = lecL;
+    } else {
+      vm.lectureL = [];
+    }
   },
   computed: {
     ...mapState('NNclass', [
@@ -52,21 +76,27 @@ export default {
     },
     lectureList() {
       const vm = this;
-      if (!vm.studyingClassList) {
-        return [];
-      }
-      const currentClass = vm.currentStudyingClass(vm.classId);
-      if (currentClass && currentClass.lectures) {
-        return currentClass.lectures.map((item) => {
-          const type = utils.convertLcType(item.type);
-          // eslint-disable-next-line no-param-reassign
-          item.type = type;
-          // eslint-disable-next-line no-param-reassign
-          item.heard = (item.lecture_student_login_logs.length > 0) ? '수강완료' : '수강미완료';
-          return item;
+      return vm.lectureL;
+      /*
+      return currentClass.lectures.map((item) => {
+        const type = utils.convertLcType(item.type);
+        // eslint-disable-next-line no-param-reassign
+        item.type = type;
+        const res = lectureService.studentLoginLog({
+          lectureId: item.lecture_id,
         });
-      }
-      return [];
+        res.then((result) => {
+          if (result.data.login === true) {
+            item.heard = '수강완료';
+          } else {
+            item.heard = '수강미완료';
+          }
+          console.log(item.heard);
+        });
+        // 수강 완료 or 미완료 기준 변경 -> heartbeat에서 lecture_student_login_logs로
+        // eslint-disable-next-line no-param-reassign
+        return item;
+      }); */
     },
   },
   methods: {
@@ -103,7 +133,7 @@ export default {
     onClickLecture() {
       // 없으면 LectureList.vue 에러나는데 TeacherClassShow와 같이 쓰고있어서 빈 메소드를 넣어둠.
     },
-    onClickJoin(index) {
+    async onClickJoin(index) {
       const vm = this;
       const lectureId = vm.lectureList[index].lecture_id;
       const lectureType = vm.lectureList[index].type;
@@ -111,6 +141,7 @@ export default {
       const lectureEndTime = Date.parse(vm.lectureList[index].end_time);
       const currentTime = Date.now();
 
+      // 무인 강의일 경우
       if (lectureType !== '[유인]') {
         // 강의 활성화 시간 이전에 강의보기를 클릭한 경우
         if (currentTime < lectureStartTime) {
@@ -131,8 +162,39 @@ export default {
         } else {
           vm.$router.push(`/a/student/NNlecture/${lectureId}/live`);
         }
-      } else {
-        vm.$router.push(`/a/student/NNlecture/${lectureId}/live`);
+      } else { // 유인 강의일 경우
+        /* 강사가 접속했는지 is_auto 값 따지기 - 기능 삭제
+         *
+         * const realTimeLectureInfo = await lectureService.getLecture({
+         *   lectureId: vm.lectureList[index].lecture_id,
+         * });
+         * const realTimeLectureInfo = await lectureService.getLecture({
+         *   lectureId: vm.lectureList[index].lecture_id,
+         * });
+         * if (realTimeLectureInfo.data.is_auto === false) {
+         *   // 아직 강사가 접속 안했다면
+         *   vm.$notify({
+         *     title: 'Info',
+         *     message: '아직 열리지 않은 강의입니다. 조금만 기다려주세요.',
+         *     type: 'info',
+         *     duration: 2000,
+         *   });
+         *   return;
+         * }
+         */
+        const res = await lectureService.studentLoginLog({
+          lectureId: vm.lectureList[index].lecture_id,
+        });
+        if (res.data.login === true) { // 접속 방지
+          vm.$notify({
+            title: 'Info',
+            message: '이미 수강한 강의입니다. 재접속을 원하실 경우 강사에게 문의해주세요.',
+            type: 'info',
+            duration: 2000,
+          });
+        } else {
+          vm.$router.push(`/a/student/NNlecture/${lectureId}/live`);
+        }
       }
     },
   },
