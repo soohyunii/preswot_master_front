@@ -94,6 +94,8 @@
 </template>
 
 <script>
+/* eslint-disable no-unused-vars */
+/* eslint-disable camelcase */
 import masterService from '../../services/masterService';
 import authService from '../../services/authService';
 import utils from '../../utils';
@@ -116,44 +118,33 @@ export default {
       university_name: '',
       department_name: '',
       capacity: 0,
-      type:1,
+      type: 1,
       choiceTeacher: '',
-      university_list:[],
-      department_list:[],
-      items:[],
-      email_items:[],
-      email_id:[],
-      email_id_list:[],
-      checkedbox:false,
-      booleantag:false,
+      university_list: [],
+      department_list: [],
+      items: [],
+      email_items: [],
+      email_id: [],
+      email_id_list: [],
+      checkedbox: false,
+      booleantag: false,
     };
     return {
       initialInput,
       input: Object.assign({}, initialInput),
       multipleSelection: [],
-      tagSelection:[],
+      tagSelection: [],
     };
   },
   async mounted() {
     const vm = this;
     const uniNameLists = await masterService.getUniNameLists();
-    vm.input.university_list = uniNameLists.data.map(element=>element.name);
-    
-    
+    vm.input.university_list = uniNameLists.data.map(element => element.name);
     if (vm.isEdit) {
       const res = await masterService.getMasterBank({ group_id: vm.groupId });
       vm.input.name = res.data.name || vm.initialInput.name;
     }
   },
-  /*watch:{
-    items: async function(val,oldVal){
-      const vm=this;
-      console.log('watch인식!');
-      if(vm.tagSelection!==[]){
-        console.log('vm.tagSelection==',vm.tagSelection);
-      }
-    }
-  },*/
   computed: {
     isEdit() {
       const vm = this;
@@ -173,11 +164,11 @@ export default {
           // TODO: wrap with try catch
           try {
             await masterService.NNMasterputBank({
-              group_id:id,
-              university_name:vm.input.university_name,
-              department_name:vm.input.department_name,
-              new_name:vm.input.name, 
-              email_id_list:vm.tagSelection,
+              group_id: id,
+              university_name: vm.input.university_name,
+              department_name: vm.input.department_name,
+              new_name: vm.input.name,
+              email_id_list: vm.tagSelection,
             });
             vm.$router.push('/a/view/bank');
           } catch (error) {
@@ -191,8 +182,13 @@ export default {
         } else {
           // TODO: wrap with try catch
           try {
-            await masterService.NNMasterpostBank({university_name:vm.input.university_name, department_name:vm.input.department_name, name:vm.input.name, email_id_list:vm.tagSelection});
-              if(vm.input.name==''){
+            await masterService.NNMasterpostBank({
+              university_name: vm.input.university_name,
+              department_name: vm.input.department_name,
+              name: vm.input.name,
+              email_id_list: vm.tagSelection,
+            });
+            if (vm.input.name === '') {
               vm.$notify({
                 title: '강의은행그룹 등록 실패',
                 message: '필수입력사항(*)을 기재해 주세요',
@@ -213,32 +209,37 @@ export default {
         }
       });
     },
-    async categoryChange(university_name){
-      const vm=this;
-      const deptNameLists = await masterService.getDeptLists({university_name:vm.input.university_name, category:undefined});
-      vm.input.department_list = await deptNameLists.data.map(element=>element.name);
-      vm.input.department_name=null;
-      const itemLists = await masterService.getUserLists(1,vm.input.university_name, vm.input.department_name);
-      for(var i=0;i<itemLists.data.length;i++){
-        if(itemLists.data[i].department_name==null){
-          itemLists.data[i].department_name='소속 없음'
+    async categoryChange(university_name) {
+      const vm = this;
+      const deptNameLists = await masterService.getDeptLists({
+        university_name: vm.input.university_name,
+        category: undefined,
+      });
+      vm.input.department_list = await deptNameLists.data.map(element => element.name);
+      vm.input.department_name = null;
+      const itemLists = await masterService.getUserLists(1,
+        vm.input.university_name,
+        vm.input.department_name,
+        );
+      for (let i = 0; i < itemLists.data.length; i += 1) {
+        if (itemLists.data[i].department_name == null) {
+          itemLists.data[i].department_name = '소속 없음';
         }
       }
       vm.input.items = itemLists.data;
     },
-    selectClose(items){
-      const vm=this;
-      const itemName=vm.input.email_items.splice(vm.input.items,1);
+    selectClose(items) {
+      const vm = this;
+      const itemName = vm.input.email_items.splice(vm.input.items, 1);
     },
     handleSelectionChange(val) {
       const vm = this;
-      vm.tagSelection=[];
+      vm.tagSelection = [];
       vm.multipleSelection = val;
       vm.input.email_items = val;
-      for(var i=0;i<val.length;i++){
+      for (let i = 0; i < val.length; i += 1) {
         vm.tagSelection[i] = val[i].email_id;
       }
-      console.log('vm.tagSelection==',vm.tagSelection);
     },
   },
 };

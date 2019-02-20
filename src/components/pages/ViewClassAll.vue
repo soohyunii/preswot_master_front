@@ -77,73 +77,70 @@
 </template>
 
 <script>
-import {mapActions, mapState} from 'vuex';
-import utils from '../../utils';
-import MasterClassAllTable from '../partials/MasterClassAllTable';	
+/* eslint-disable no-mixed-spaces-and-tabs */
+/* eslint-disable camelcase */
+import MasterClassAllTable from '../partials/MasterClassAllTable';
 import MasterStudentAllTable from '../partials/MasterStudentAllTable';
 import MasterLectureAllTable from '../partials/MasterLectureAllTable';
 import masterService from '../../services/masterService';
 
 export default {
-	name: 'ViewClassAll',
-	components: {
-		MasterClassAllTable,
-		MasterStudentAllTable,
-		MasterLectureAllTable,
-	},
-	data(){
-		return {
-			list: [],
-      classes:[],
-      lecture:[],
-      student:[],
-      buttonType:'',
-      class_name:'',
-      teacher_name:'',
-      capacity:0,
-      start_date:new Date(),
-      end_date:new Date(),
-      start_time:'',
-      end_time:'',
-      location:'',
-      isActive:true,
-		};
-	},
+  name: 'ViewClassAll',
+  components: {
+    MasterClassAllTable,
+    MasterStudentAllTable,
+    MasterLectureAllTable,
+  },
+  data() {
+    return {
+      list: [],
+      classes: [],
+      lecture: [],
+      student: [],
+      buttonType: '',
+      class_name: '',
+      teacher_name: '',
+      capacity: 0,
+      start_date: new Date(),
+      end_date: new Date(),
+      start_time: '',
+      end_time: '',
+      location: '',
+      isActive: true,
+    };
+  },
   computed: {
-    classId(){
-      const vm=this;
+    classId() {
+      const vm = this;
       return vm.$route.path.split('view/')[1].split('/detail')[0];
     },
-
   },
-  async mounted(){
-    const vm=this;
+  async mounted() {
+    const vm = this;
     const class_id = vm.classId;
-    const res = await masterService.getMasterClass({class_id:class_id});
-    vm.list=res.data;
-    if(res.data.isActive==false){
-      vm.isActive=false;
+    const res = await masterService.getMasterClass({ class_id });
+    vm.list = res.data;
+    if (res.data.isActive === false) {
+      vm.isActive = false;
     } else {
-      vm.isActive=true;
+      vm.isActive = true;
     }
   },
-	methods: {
-    classOnChange: function(){
-      const vm=this;
-      vm.buttonType='classOnChange';
-	  },
-    lectureOnChange: function(){
-      const vm=this;
-      vm.buttonType='lectureOnChange';
+  methods: {
+    async classOnChange() {
+      const vm = this;
+      vm.buttonType = 'classOnChange';
     },
-    studentOnChange: function(){
-      const vm=this;
-      vm.buttonType='studentOnChange';
+    async lectureOnChange() {
+      const vm = this;
+      vm.buttonType = 'lectureOnChange';
+    },
+    async studentOnChange() {
+      const vm = this;
+      vm.buttonType = 'studentOnChange';
     },
   },
 };
-	
-
 </script>
 
 <style lang="scss" scoped>

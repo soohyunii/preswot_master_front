@@ -50,6 +50,7 @@
 </template> 
 
 <script>
+/* eslint-disable camelcase */
 import { mapActions, mapState } from 'vuex';
 import MasterStudentTable from '../partials/MasterStudentTable';
 import utils from '../../utils';
@@ -65,13 +66,13 @@ export default {
       searchType: 'name',
       searchText: '',
       list: [],
-      chosen:'',
-      dept_chosen:undefined,
-      university_list:[],
-      department_list:[],
-      university_name:'',
-      department_name:null,
-      type:0,  
+      chosen: '',
+      dept_chosen: undefined,
+      university_list: [],
+      department_list: [],
+      university_name: '',
+      department_name: null,
+      type: 0,
     };
   },
   computed: {
@@ -80,7 +81,7 @@ export default {
   async created() {
     const vm = this;
     const uniNameLists = await masterService.getUniNameLists();
-    vm.university_list = await uniNameLists.data.map(element=>element.name);
+    vm.university_list = await uniNameLists.data.map(element => element.name);
     // TODO: 새로고침(Refresh, F5) 해도 목록을 가져올 수 있게 하는 부분.
     // TODO: 속도가 눈에 보이게 느려지므로 다른 방법이 있다면 수정 요구.
 
@@ -113,7 +114,7 @@ export default {
       'deleteClassUser',
     ]),
     formatDate: utils.formatDate,
-    async onClick(type, arg, arg2) {
+    async onClick(type, arg) {
       const vm = this;
       switch (type) {
         case 'DETAIL': {
@@ -133,22 +134,25 @@ export default {
         }
       }
     },
-    async categoryChange(type,university_name){
-      const vm=this;
-      const deptNameLists = await masterService.getDeptLists({university_name: vm.chosen, category:undefined});
-      vm.department_list = await deptNameLists.data.map(element=>element.name);
-      const res = await masterService.getUserLists(type,university_name);
-      for(let i=0; i<res.data.length; i++){
-        if(res.data[i].department_name==null){
-          res.data[i].department_name='소속없음'
+    async categoryChange(type, university_name) {
+      const vm = this;
+      const deptNameLists = await masterService.getDeptLists({
+        university_name: vm.chosen,
+        category: undefined,
+      });
+      vm.department_list = await deptNameLists.data.map(element => element.name);
+      const res = await masterService.getUserLists(type, university_name);
+      for (let i = 0; i < res.data.length; i += 1) {
+        if (res.data[i].department_name === null) {
+          res.data[i].department_name = '소속없음';
         }
       }
-      vm.list= res.data;
+      vm.list = res.data;
     },
-    async onChange(type,university_name,department_name){
-      const vm=this;
+    async onChange(type, university_name, department_name) {
+      const vm = this;
       const res = await masterService.getUserLists(type, university_name, department_name);
-      vm.list=res.data;
+      vm.list = res.data;
     },
     onClickDelete(index) {
       const vm = this;
@@ -161,14 +165,13 @@ export default {
         .then(async () => {
           try {
             const currentClass = vm.teachingClassList[index];
-            await classService.delete({
+            await masterService.delete({
               id: currentClass.class_id,
             });
             vm.deleteTeachingClass({
               teachingClassIndex: index,
             });
           } catch (error) {
-            console.error(error);
             vm.$notify({
               title: '학생 삭제 실패',
               message: error.toString(),

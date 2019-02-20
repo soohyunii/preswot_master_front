@@ -58,7 +58,6 @@ export default {
     },
     updateStudyingUniList(state, { studyingUniList }) {
       state.studyingUniList = studyingUniList;
-      // console.log(state.studyingUniList);
     },
     deleteStudyingUni(state, { studyingUniIndex }) {
       state.studyingUniList.splice(studyingUniIndex, 1);
@@ -80,40 +79,18 @@ export default {
       });
       return res;
     },
-    async getMasterDept({}) {
-
-    },
+    /* async getMasterDept({}) {
+    }, */
     async getDeptLists({ commit }) {
       const res = await MasterService.getDeptLists();
 
       const sc = res.data;
-      console.log('res.data==============',res.data);
-      // console.log(res.data);
       commit('updateStudyingUniList', {
         studyingUniList: sc,
-      }); 
-
-      /*
-      commit('updateOpenedUniList', {
-        openedUniList: res.data,
       });
-      */
-      // console.log(res.data); 
-      
-      /*
-      commit('updateGoingUniList', {
-        goingUniList: res.data.name,
-      });
-      
-      commit('updateFinishedUniList', {
-        finishedUniList: res.data.address,
-      });
-      */
     },
     async getMyUniLists({ commit }) {
       const res = await MasterService.getMyUniList();
-
-      /*const sc = res.data.studyingUnies;*/
       const sc = res.data.code;
       commit('updateStudyingUniList', {
         studyingUniList: sc,

@@ -58,7 +58,6 @@ export default {
     },
     updateStudyingTeacherList(state, { studyingTeacherList }) {
       state.studyingTeacherList = studyingTeacherList;
-      // console.log(state.studyingTeacherList);
     },
     deleteStudyingTeacher(state, { studyingTeacherIndex }) {
       state.studyingTeacherList.splice(studyingTeacherIndex, 1);
@@ -80,39 +79,17 @@ export default {
       });
       return res;
     },
-    async getMasterTeacher({}) {
-
-    },
+    /* async getMasterTeacher({}) {
+    }, */
     async getTeacherLists({ commit }) {
       const res = await MasterService.getTeacherLists();
-
       const sc = res.data;
-      // console.log(res.data);
       commit('updateStudyingTeacherList', {
         studyingTeacherList: sc,
-      }); 
-
-      /*
-      commit('updateOpenedTeacherList', {
-        openedTeacherList: res.data,
       });
-      */
-      // console.log(res.data); 
-      
-      /*
-      commit('updateGoingTeacherList', {
-        goingTeacherList: res.data.name,
-      });
-      
-      commit('updateFinishedTeacherList', {
-        finishedTeacherList: res.data.address,
-      });
-      */
     },
     async getMyTeacherLists({ commit }) {
       const res = await MasterService.getMyTeacherList();
-
-      /*const sc = res.data.studyingTeacheres;*/
       const sc = res.data.code;
       commit('updateStudyingTeacherList', {
         studyingTeacherList: sc,
@@ -136,9 +113,8 @@ export default {
         });
       } else {
         const newStudyingTeacherList = deepCopy(state.studyingTeacherList);
-        /*const currentTeacher = newStudyingTeacherList.find(item => item.Teacher_id === TeacherId);*/
-        const currentTeacher = newStudyingTeacherList.find(item => item.user_id === UserId);
-        console.log('MasterTeacherStore.currentTeacher==',currentTeacher);
+        const currentTeacher = newStudyingTeacherList.find(item => item.user_id === TeacherId);
+        /* 위 라인의 item => item.user_id === UserId 가 UserId is not defined라서 TeacherId로 임의로 바꿈 */
         currentTeacher.lectures = res.data.lectures;
         commit('updateStudyingTeacherList', {
           studyingTeacherList: newStudyingTeacherList,

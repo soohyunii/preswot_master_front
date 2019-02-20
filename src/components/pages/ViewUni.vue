@@ -39,7 +39,7 @@ export default {
       searchType: undefined,
       searchText: undefined,
       list: [],
-      pageNum:1,
+      pageNum: 1,
     };
   },
   computed: {
@@ -52,7 +52,6 @@ export default {
     // TODO: 속도가 눈에 보이게 느려지므로 다른 방법이 있다면 수정 요구.
 
     // 검색 기능 : 서버에서 DB 쿼리로 처리하는 게 효율이 나을 것 같으면 나중에 수정.
-  
     if (vm.studyingUniList !== null) {
       if (vm.$route.query.type !== undefined) {
         vm.searchType = vm.$route.query.type;
@@ -74,17 +73,21 @@ export default {
       }
     }
   },
-  async mounted(){
-    const vm=this;
-    const res = await masterService.getUniLists({category:vm.searchType, search_word:vm.searchText, page:vm.pageNum});
-    vm.list=res.data;
+  async mounted() {
+    const vm = this;
+    const res = await masterService.getUniLists({
+      category: vm.searchType,
+      search_word: vm.searchText,
+      page: vm.pageNum,
+    });
+    vm.list = res.data;
   },
   methods: {
     ...mapActions('MasterUni', [
       'getUniLists',
     ]),
     formatDate: utils.formatDate,
-    async onClick(type, arg, arg2) {
+    async onClick(type, arg) {
       const vm = this;
       switch (type) {
         case 'DETAIL': {
@@ -122,7 +125,6 @@ export default {
               teachingClassIndex: index,
             });
           } catch (error) {
-            console.error(error);
             vm.$notify({
               title: '대학 삭제 실패',
               message: error.toString(),
