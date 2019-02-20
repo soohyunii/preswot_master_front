@@ -112,7 +112,7 @@ export default {
         category: undefined,
       });
       vm.deptNameList = await deptNameLists.data.map(element => element.name);
-      const res = await masterService.getUserLists(type, university_name, null);
+      const res = await masterService.getUserLists(vm.type, vm.chosen, null);
       for (let i = 0; i < res.data.length; i += 1) {
         if (res.data[i].birth.indexOf('T') !== -1) {
           res.data[i].birth = res.data[i].birth.split('T')[0];
@@ -122,9 +122,9 @@ export default {
     },
     async categoryAllShow() {
       const vm = this;
-      const deptNameListsAll = await masterService.getUserLists(type,
-        university_name,
-        department_name,
+      const deptNameListsAll = await masterService.getUserLists(vm.type,
+        vm.chosen,
+        vm.dept_chosen,
         );
       vm.list = deptNameListsAll.data;
     },
