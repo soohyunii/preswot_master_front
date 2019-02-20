@@ -111,9 +111,6 @@ export default {
       return vm.list.slice((vm.pageNum - 1) * 10, vm.pageNum * 10);
     },
   },
-  watch: {
-    page: 'changeColumn',
-  },
   created() {
     const vm = this;
     if (vm.$route.query.type !== undefined) {

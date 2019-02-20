@@ -45,6 +45,7 @@
 </template>
 
 <script>
+/* eslint-disable no-unused-vars */
 import { mapActions, mapState } from 'vuex';
 import MasterBankClass from '../partials/MasterBankClass';
 import masterService from '../../services/masterService';
@@ -80,7 +81,7 @@ export default {
     vm.universityNameList = uniNameLists.data.map(element=>element.name);
   },
   watch:{
-    list: async function(val, oldVal){
+    list: async function list(val, oldVal){
       const vm=this;
     }
   },
