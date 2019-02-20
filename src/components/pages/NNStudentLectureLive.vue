@@ -151,6 +151,9 @@
                 :presentMaterial="presentMaterial"
               />
             </el-tab-pane>
+            <el-tab-pane label="출제문항">
+              <StudentSelfQuiz />
+            </el-tab-pane>
             <!-- // TODO : 실시간 질문
             <el-tab-pane label="실시간 질문">
               <el-input v-model="comment" placeholder="내용을 입력해주세요." type="textarea" :autosize="{ minRows: 10, maxRows: 15 }"></el-input>
@@ -188,6 +191,7 @@ import LectureLiveItem from '../partials/LectureLiveItem';
 import LectureLiveMaterial from '../partials/LectureLiveMaterial';
 import utils from '../../utils';
 import automaticLectureService from '../../services/automaticLectureService';
+import StudentSelfQuiz from '../partials/StudentSelfQuiz';
 
 export default {
   name: 'NNStudentLectureLive',
@@ -329,6 +333,7 @@ export default {
   components: {
     LectureLiveItem,
     LectureLiveMaterial,
+    StudentSelfQuiz,
   },
   mounted() {
     const vm = this;

@@ -150,6 +150,17 @@
               <el-button @click="listeners['join'](scope.$index)">강의보기</el-button>
             </template>
           </el-table-column>
+          <el-table-column
+            label="강의별 문제"
+            width="100"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <router-link :to="`/a/student/NNclass/${scope.row.class_id}/quiz?lectureId=${scope.row.lecture_id}`">
+                <el-button>출제</el-button>
+              </router-link>
+            </template>
+          </el-table-column>
         </template>
       </el-table>
     </div>

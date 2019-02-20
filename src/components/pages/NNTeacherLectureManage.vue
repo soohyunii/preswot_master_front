@@ -33,6 +33,9 @@
       <el-tab-pane label="강의 지식맵 관리" name="kmap" lazy>
         <knowledgeMap />
       </el-tab-pane>
+      <el-tab-pane label="학생 아이템 관리" name="admission">
+        <ItemAdmission />
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -53,6 +56,7 @@ import TlmTabMainVideoEdit from '../partials/TlmTabMainVideoEdit';
 import KnowledgeMap from '../partials/NNKnowledgeMap';
 import { EventBus } from '../../event-bus';
 import utils from '../../utils';
+import ItemAdmission from '../partials/ItemAdmission';
 
 
 export default {
@@ -65,6 +69,7 @@ export default {
     TlmTabLectureItemEdit,
     TlmTabAllowedProgram,
     KnowledgeMap,
+    ItemAdmission,
   },
   data() {
     return {

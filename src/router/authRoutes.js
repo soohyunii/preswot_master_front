@@ -39,6 +39,7 @@ import NLectureItemFromBank from '../components/pages/NLectureItemFromBank';
 import LectureItemConnect from '../components/pages/LectureItemConnect';
 import LectureItemGroup from '../components/pages/LectureItemGroup';
 import TeacherLectureLiveItemShow from '../components/pages/TeacherLectureLiveItemShow';
+import StudentLectureQuiz from '../components/pages/StudentLectureQuiz';
 
 export default function authRoutes(root) {
   return [
@@ -373,6 +374,14 @@ export default function authRoutes(root) {
       component: Bank,
       meta: {
         title: '강의 은행',
+      },
+    },
+    {
+      path: '/student/NNclass/:classId/quiz',
+      name: 'StudentLectureQuiz',
+      component: StudentLectureQuiz,
+      meta: {
+        title: 'Student Lecture Quiz',
       },
     },
   ].map((route) => {
