@@ -117,6 +117,11 @@ export default {
         if (res.data[i].birth.indexOf('T') !== -1) {
           res.data[i].birth = res.data[i].birth.split('T')[0];
         }
+        if (res.data[i].sex === 1) {
+          res.data[i].sex = '남자';
+        } else {
+          res.data[i].sex = '여자';
+        }
       }
       vm.list = res.data;
     },
@@ -131,6 +136,13 @@ export default {
     async onChange(type, university_name, department_name) {
       const vm = this;
       const res = await masterService.getUserLists(type, university_name, department_name);
+      for (let i = 0; i < res.data.length; i += 1) {
+        if (res.data[i].sex === 1) {
+          res.data[i].sex = '남자';
+        } else {
+          res.data[i].sex = '여자';
+        }
+      }
       vm.list = res.data;
     },
     onClickDelete(index) {

@@ -8,7 +8,13 @@
       </template>
     </div>
     <el-form :model="input" ref="elForm" label-position="left" label-width="125px" style="max-width: 800px;" class="elForm-label">
-      <el-form-item label="이메일">
+      <el-form-item label="이메일" v-if="isEdit">
+        <el-input v-model="input.email_id" class="subject-title" :disabled="true"></el-input>
+        &nbsp; <font color="red" size="5em">*</font>
+        &nbsp; <font color="red" size="2em">이메일 수정 불가</font>
+      </el-form-item>
+
+      <el-form-item label="이메일" v-else>
         <el-input v-model="input.email_id" class="subject-title"></el-input>
         &nbsp; <font color="red" size="5em">*</font>
       </el-form-item>

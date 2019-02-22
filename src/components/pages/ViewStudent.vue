@@ -146,12 +146,24 @@ export default {
         if (res.data[i].department_name === null) {
           res.data[i].department_name = '소속없음';
         }
+        if (res.data[i].sex === 1) {
+          res.data[i].sex = '남자';
+        } else {
+          res.data[i].sex = '여자';
+        }
       }
       vm.list = res.data;
     },
     async onChange(type, university_name, department_name) {
       const vm = this;
       const res = await masterService.getUserLists(type, university_name, department_name);
+      for (let i = 0; i < res.data.length; i += 1) {
+        if (res.data[i].sex === 1) {
+          res.data[i].sex = '남자';
+        } else {
+          res.data[i].sex = '여자';
+        }
+      }
       vm.list = res.data;
     },
     onClickDelete(index) {
