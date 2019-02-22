@@ -6,7 +6,6 @@
           <el-radio-button label="1">단답</el-radio-button>
           <el-radio-button label="0">객관</el-radio-button>
           <el-radio-button label="2">서술</el-radio-button>
-          <el-radio-button label="4">SQL</el-radio-button>
         </el-radio-group>
       </el-form-item>
       <div v-show="questionType === null">
@@ -90,21 +89,7 @@
             </el-upload>
           </el-form-item>
         </template>
-        <template v-if="questionType === '4'">
-          <el-form-item label="SQLite">
-            <el-upload
-              :auto-upload="false"
-              :file-list="initFileList"
-              :limit="1"
-              :on-exceed="handleExceed">
-              <el-button slot="trigger">파일 추가</el-button>
-            </el-upload>
-          </el-form-item>
-          <el-form-item label="답">
-            <el-input v-model="answer[0]" placeholder="내용을 입력하세요." type="textarea"></el-input>
-          </el-form-item>
-        </template>
-
+       
         <el-form-item label="난이도">
           <el-select v-model="level">
             <el-option v-for="diff in diffList" :key="diff" :value="diff">
@@ -130,7 +115,7 @@
           </div>
         </el-form-item>
         <div class="ps-align-right">
-          <el-button type="primary" @click="onCreate">출제하기</el-button>
+          <el-button type="primary" @click="onCreate">제출ㅇㅇ</el-button>
         </div>
       </div>
     </el-form>
@@ -240,8 +225,19 @@ export default {
     async onCreate() {
       const vm = this;
       const lid = vm.$route.params.lectureId;
+      // console.log(`question 제목 - ${questionName}`);
       if (!vm.keywordList.length) {
-        vm.$message.warning('키워드는 필수 입력입니다.');
+        vm.$notify({
+          title: '알림',
+          message: '키워드는 필수 입력입니다.',
+          type: 'warning',
+        });
+      } else if (!vm.questionName.length) {
+        vm.$notify({
+          title: '알림',
+          message: '제목은 필수 입력입니다.',
+          type: 'warning',
+        });
       } else {
         const res = await studentService.postQuestion({
           id: lid,

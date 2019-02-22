@@ -6,7 +6,6 @@
           <el-radio-button label="1">단답</el-radio-button>
           <el-radio-button label="0">객관</el-radio-button>
           <el-radio-button label="2">서술</el-radio-button>
-          <el-radio-button label="4">SQL</el-radio-button>
         </el-radio-group>
         <span> &nbsp; * 문항 유형 수정 불가 </span>
       </el-form-item>
@@ -82,21 +81,6 @@
             </el-upload>
           </el-form-item>
         </template>
-        <template v-if="questionType === '4'">
-          <el-form-item label="SQLite">
-            <el-upload
-              :auto-upload="false"
-              :file-list="initFileList"
-              :limit="1"
-              :on-exceed="handleExceed">
-              <el-button slot="trigger">파일 추가</el-button>
-            </el-upload>
-          </el-form-item>
-          <el-form-item label="답">
-            <el-input v-model="answer[0]" placeholder="내용을 입력하세요." type="textarea"></el-input>
-          </el-form-item>
-        </template>
-
         <el-form-item label="난이도">
           <el-select v-model="level">
             <el-option v-for="diff in diffList" :key="diff" :value="diff">
@@ -130,30 +114,38 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
 import studentService from '../../services/studentService';
 import { EventBus } from '../../event-bus';
 
 export default {
   data() {
     return {
-      questionType: null,
-      questionName: [],
-      question: [],
-      initFileList: [],
-      questionList: [],
-      answer: [''],
-      level: 3,
-      diffList: [5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5, 0],
-      keywordName: '',
-      keywordPoint: '',
-      pts: [5, 4, 3, 2, 1],
-      keywordList: [],
-      keyList: [],
+      // questionType: null,
+      // questionName: [],
+      // question: [],
+      // initFileList: [],
+      // questionList: [],
+      // answer: [''],
+      // level: 3,
+      // diffList: [5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5, 0],
+      // keywordName: '',
+      // keywordPoint: '',
+      // pts: [5, 4, 3, 2, 1],
+      // keywordList: [],
+      // keyList: [],
     };
   },
   created() {
     const vm = this;
-    EventBus.$on('qId', vm.questionEdit);
+    // EventBus.$on('qId', vm.questionEdit);
+  },
+  computed: {
+    ...mapState('studentQuestion', [
+      'mode',
+      'index',
+    ]),
+    
   },
   methods: {
     initialForm() {
@@ -237,10 +229,11 @@ export default {
       }
     },
     async onModify() {
+      this.mode = 2;
       const vm = this;
       const lid = vm.$route.params.lectureId;
       if (!vm.keywordList.length) {
-        vm.$message.warning('키워드는 필수 입력입니다.');
+        vm.$message.warning('키워드는 필수 입력입니다. QuizEdit');
       } else {
         const res = await studentService.postQuestion({
           id: lid,

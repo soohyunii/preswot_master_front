@@ -129,7 +129,7 @@ export default {
       type,
     });
   },
-  getQuestion({ id }) {
+  getQuestionList({ id }) {
     return http.get(`/student/${id}/question`);
   },
   deleteQuestion({ id, qId }) {
