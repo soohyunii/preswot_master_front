@@ -116,6 +116,7 @@ export default {
     });
   },
   NNMasterputDept({
+    old_university_name,
     uniNameList,
     code,
     old_name,
@@ -126,6 +127,7 @@ export default {
     manager_phone_number,
   }) {
     return http.put('/department', {
+      old_university_name,
       university_name: uniNameList,
       code,
       old_name,

@@ -8,7 +8,19 @@
       </template>
     </div>
     <el-form :model="input" ref="elForm" label-position="left" label-width="125px" style="max-width: 800px;" class="elForm-label">
-      <el-form-item label="소속대학 선택">
+      <el-form-item label="소속대학 선택" v-if="isEdit">
+        <el-select v-model="input.uniNameList" style="width:200px;" disabled placeholder="Select">
+          <el-option 
+            v-for="uniNameList in input.uniNameLists"
+            :key="uniNameList"
+            :label="uniNameList"
+            :value="uniNameList">
+          </el-option>
+        </el-select> &nbsp; <font color="red" size="5em">*</font>
+        </el-select> &nbsp; <font color="red" size="2em">수정 시 대학변경 불가능</font>
+      </el-form-item>
+
+      <el-form-item label="소속대학 선택" v-else>
         <el-select v-model="input.uniNameList" style="width:200px;">
           <el-option 
             v-for="uniNameList in input.uniNameLists"
@@ -65,6 +77,7 @@
 </template>
 
 <script>
+/* eslint-disable camelcase */
 import masterService from '../../services/masterService';
 import authService from '../../services/authService';
 import utils from '../../utils';
@@ -106,7 +119,7 @@ export default {
         name: vm.deptName });
       vm.$set(vm.input, 'uniNameList', res.data.university.name || vm.initialInput.uniNameList);
       vm.input.code = res.data.code || vm.initialInput.code;
-      vm.input.name = res.data.university.name || vm.initialInput.name;
+      vm.input.name = res.data.name || vm.initialInput.name;
       vm.input.part = res.data.part || vm.initialInput.part;
       vm.input.manager_name = res.data.manager_name || vm.initialInput.manager_name;
       vm.input.manager_email = res.data.manager_email || vm.initialInput.manager_email;
@@ -137,10 +150,12 @@ export default {
         if (vm.isEdit) {
           const res = await masterService.getMasterDept({ university_name: vm.uniName,
             name: vm.deptName });
-          const oldName = res.data.name;
+          const old_university_name = res.data.university.name;
+          const old_name = res.data.name;
           try {
             await masterService.NNMasterputDept({
-              oldName,
+              old_university_name,
+              old_name,
               ...vm.input,
             });
             vm.$router.push('/a/view/dept');

@@ -55,6 +55,7 @@
 </template>
 
 <script>
+/* eslint-disable camelcase */
 import masterService from '../../services/masterService';
 import authService from '../../services/authService';
 import utils from '../../utils';
@@ -117,11 +118,11 @@ export default {
         if (vm.isEdit) {
           const id = vm.uniName;
           const res = await masterService.getMasterUni({ name: vm.uniName });
-          const oldName = res.data.name;
+          const old_name = res.data.name;
           try {
             await masterService.NNMasterputUni({
               id,
-              oldName,
+              old_name,
               ...vm.input,
             });
             vm.$router.push('/a/view/uni');
