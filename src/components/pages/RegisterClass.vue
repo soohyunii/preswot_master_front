@@ -243,12 +243,21 @@ export default {
         university_name: vm.input.university_name, category: undefined });
       vm.input.department_list = await deptNameLists.data.map(
         element => element.name);
+      if (vm.input.university_name !== undefined && vm.input.department_name !== undefined) {
+        vm.input.department_name = undefined;
+        vm.input.teacher_email_id = undefined;
+      }
     },
     async categoryTeacherChange() {
       const vm = this;
       const teacherNameLists = await masterService.getUserLists(1,
         vm.input.university_name, vm.input.department_name);
       vm.input.teacher_list = await teacherNameLists.data;
+      if (vm.input.university_name !== undefined &&
+        vm.input.department_name !== undefined &&
+        vm.input.teacher_email_id !== undefined) {
+        vm.input.teacher_email_id = undefined;
+      }
     },
     async categoryNone() {
       const vm = this;

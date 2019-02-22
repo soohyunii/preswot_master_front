@@ -113,6 +113,9 @@ export default {
       });
       vm.deptNameList = await deptNameLists.data.map(element => element.name);
       const res = await masterService.getUserLists(vm.type, vm.chosen, null);
+      if (vm.chosen !== undefined && vm.dept_chosen !== undefined) {
+        vm.dept_chosen = undefined;
+      }
       for (let i = 0; i < res.data.length; i += 1) {
         if (res.data[i].birth.indexOf('T') !== -1) {
           res.data[i].birth = res.data[i].birth.split('T')[0];

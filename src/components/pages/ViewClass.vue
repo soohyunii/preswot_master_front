@@ -193,6 +193,9 @@ export default {
       });
       vm.deptNameList = deptNameLists.data.map(element => element.name);
       const res = await masterService.getClassLists({ university_name: vm.chosen });
+      if (vm.chosen !== undefined && vm.dept_chosen !== undefined) {
+        vm.dept_chosen = undefined;
+      }
       vm.list = res.data;
     },
     async showChange() {
