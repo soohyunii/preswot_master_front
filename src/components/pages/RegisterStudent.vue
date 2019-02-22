@@ -8,7 +8,13 @@
       </template>
     </div>
     <el-form :model="input" ref="elForm" label-position="left" label-width="125px" style="max-width: 800px;" class="elForm-label">
-      <el-form-item label="이메일">
+      <el-form-item label="이메일" v-if="isEdit">
+        <el-input v-model="input.email_id" class="subject-title" :disabled="true"></el-input>
+        &nbsp; <font color="red" size="5em">*</font>
+        &nbsp; <font color="red" size="2em">이메일 수정 불가</font>
+      </el-form-item>
+
+      <el-form-item label="이메일" v-else>
         <el-input v-model="input.email_id" class="subject-title"></el-input>
         &nbsp; <font color="red" size="5em">*</font>
       </el-form-item>
@@ -98,6 +104,7 @@
 </template>
 
 <script>
+/* eslint-disable camelcase */
 import masterService from '../../services/masterService';
 import authService from '../../services/authService';
 import utils from '../../utils';
@@ -122,7 +129,7 @@ export default {
       name: '',
       type: 0,
       sex: '',
-      birth:new Date(),
+      birth: new Date(),
       university_list: '',
       department_list: null,
       address: '',
@@ -132,30 +139,31 @@ export default {
     };
     return {
       initialInput,
-      input: Object.assign({}, initialInput), 
+      input: Object.assign({}, initialInput),
     };
   },
   async mounted() {
     const vm = this;
     const uniNameLists = await masterService.getUniNameLists();
-    vm.input.university_list = uniNameLists.data.map(element=>element.name);
+    vm.input.university_list = uniNameLists.data.map(element => element.name);
 
     if (vm.isEdit) {
-      const res = await masterService.getMasterUser({ email_id : vm.classId });
-      const readDepartmentList = await masterService.getDeptLists({name:res.data.university_name});
-      vm.input.department_list = readDepartmentList.data.map(element=>element.name);
+      const res = await masterService.getMasterUser({ email_id: vm.classId });
+      const readDepartmentList = await masterService.getDeptLists({
+        name: res.data.university_name });
+      vm.input.department_list = readDepartmentList.data.map(element => element.name);
       vm.input.email_id = res.data.email_id || vm.initialInput.email_id;
       vm.input.password = res.data.password || vm.initialInput.password;
       vm.input.name = res.data.name || vm.initialInput.name;
       vm.input.sex = res.data.sex || vm.initialInput.sex;
-      vm.input.type=0;
+      vm.input.type = 0;
       vm.input.birth = res.data.birth || vm.initialInput.birth;
       vm.input.university_name = res.data.university_name || vm.initialInput.university_name;
       vm.input.department_name = res.data.department_name || vm.initialInput.department_name;
       vm.input.address = res.data.address || vm.initialInput.address;
       vm.input.phone = res.data.phone || vm.initialInput.phone;
       vm.input.account_bank = res.data.account_bank || vm.initialInput.account_bank;
-      vm.input.account_number = res.data.account_number || vm.initialInput.account_number; 
+      vm.input.account_number = res.data.account_number || vm.initialInput.account_number;
     }
   },
   computed: {
@@ -182,19 +190,20 @@ export default {
               id,
               ...vm.input,
             });
-            if(vm.input.email_id==''||vm.input.password==''||vm.input.passwordConfirm==''||vm.input.name==''){
+            if (vm.input.email_id === '' || vm.input.password === '' ||
+              vm.input.passwordConfirm === '' || vm.input.name === '') {
               vm.$notify({
                 title: '학생 수정 실패',
                 message: '필수입력사항(*)을 모두 기재해 주세요',
                 type: 'error',
-                duration: 0, 
+                duration: 0,
               });
-            } else if(vm.input.password!==vm.input.passwordConfirm){
+            } else if (vm.input.password !== vm.input.passwordConfirm) {
               vm.$notify({
-                title:'학생 수정 실패',
+                title: '학생 수정 실패',
                 message: '패스워드가 일치하는지 확인해주세요',
-                type:'error',
-                duration:0,
+                type: 'error',
+                duration: 0,
               });
             } else {
               vm.$router.push('/a/view/student');
@@ -211,19 +220,20 @@ export default {
           // TODO: wrap with try catch
           try {
             await masterService.NNMasterpostStudent(vm.input);
-            if(vm.input.email_id==''||vm.input.password==''||vm.input.passwordConfirm==''||vm.input.name==''){
+            if (vm.input.email_id === '' || vm.input.password === '' ||
+              vm.input.passwordConfirm === '' || vm.input.name === '') {
               vm.$notify({
                 title: '학생 등록 실패',
                 message: '필수입력사항(*)을 모두 기재해 주세요',
                 type: 'error',
-                duration: 0, 
+                duration: 0,
               });
-            } else if(vm.input.password!==vm.input.passwordConfirm){
+            } else if (vm.input.password !== vm.input.passwordConfirm) {
               vm.$notify({
-                title:'학생 등록 실패',
+                title: '학생 등록 실패',
                 message: '패스워드가 일치하는지 확인해주세요',
-                type:'error',
-                duration:0,
+                type: 'error',
+                duration: 0,
               });
             } else {
               vm.$router.push('/a/register/student/success');
@@ -239,10 +249,11 @@ export default {
         }
       });
     },
-    async categoryChange(university_name){
-      const vm=this;
-      const deptNameLists = await masterService.getDeptLists({university_name: vm.input.university_name, category:undefined});
-      vm.input.department_list = await deptNameLists.data.map(element=>element.name);
+    async categoryChange() {
+      const vm = this;
+      const deptNameLists = await masterService.getDeptLists({
+        university_name: vm.input.university_name, category: undefined });
+      vm.input.department_list = await deptNameLists.data.map(element => element.name);
     },
   },
 };

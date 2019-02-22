@@ -45,6 +45,7 @@
 </template>
 
 <script>
+/* eslint-disable no-unused-vars */
 import { mapActions, mapState } from 'vuex';
 import MasterBankClass from '../partials/MasterBankClass';
 import masterService from '../../services/masterService';
@@ -61,11 +62,11 @@ export default {
       searchType: 'name',
       searchText: '',
       list: [],
-      sublist:[],
-      universityNameList:[],
-      departmentNameList:[],
-      chosen:'',
-      department_chosen:'',
+      sublist: [],
+      universityNameList: [],
+      departmentNameList: [],
+      chosen: '',
+      department_chosen: '',
     };
   },
   computed: {
@@ -74,15 +75,15 @@ export default {
   async created() {
     const vm = this;
   },
-  async mounted(){
-    const vm=this;
-    const uniNameLists=await masterService.getUniNameLists();
-    vm.universityNameList = uniNameLists.data.map(element=>element.name);
+  async mounted() {
+    const vm = this;
+    const uniNameLists = await masterService.getUniNameLists();
+    vm.universityNameList = uniNameLists.data.map(element => element.name);
   },
-  watch:{
-    list: async function(val, oldVal){
-      const vm=this;
-    }
+  watch: {
+    list: async function list(val, oldVal) {
+      const vm = this;
+    },
   },
   methods: {
     ...mapActions('NNclass', [
@@ -102,7 +103,6 @@ export default {
           vm.$router.push(`/a/student/NNclass/${arg.class_id}`);
           break;
         }
-        
         case 'CANCEL': {
           vm.$confirm('정말로 이 강의은행을 삭제하시겠습니까?', `${''} 강의은행 취소`, {
             confirmButtonText: '예, 삭제합니다.',
@@ -154,7 +154,6 @@ export default {
 
           break;
         }
-        
         case 'SEARCH': {
           vm.$router.push({ path: '/a/view/bank', query: { type: `${arg.searchType}`, text: `${arg.searchText}` } });
           break;
@@ -182,7 +181,6 @@ export default {
               teachingClassIndex: index,
             });
           } catch (error) {
-            console.error(error); 
             vm.$notify({
               title: '학생 삭제 실패',
               message: error.toString(),
@@ -200,27 +198,33 @@ export default {
           });
         });
     },
-    async categoryChange(){
-      const vm=this;
-      const deptNameList = await masterService.getDeptLists({university_name : vm.chosen, category:undefined});
-      vm.departmentNameList = deptNameList.data.map(element=>element.name);
-      const res = await masterService.getBankLists({university_name:vm.chosen});
-      for(let i=0; i<res.data.length; i++){
-        if(res.data[i].user.department_name==null){
-          res.data[i].user.department_name='소속없음'
+    async categoryChange() {
+      const vm = this;
+      const deptNameList = await masterService.getDeptLists({
+        university_name: vm.chosen,
+        category: undefined,
+      });
+      vm.departmentNameList = deptNameList.data.map(element => element.name);
+      const res = await masterService.getBankLists({ university_name: vm.chosen });
+      for (let i = 0; i < res.data.length; i += 1) {
+        if (res.data[i].user.department_name === null) {
+          res.data[i].user.department_name = '소속없음';
         }
       }
-      vm.list=res.data;
+      vm.list = res.data;
     },
-    async showChange(){
-      const vm=this;
-      const res = await masterService.getBankLists({university_name:vm.chosen, department_name:vm.department_chosen});
-      for(let i=0; i<res.data.length; i++){
-        if(res.data[i].user.department_name==null){
-          res.data[i].user.department_name='소속없음'
+    async showChange() {
+      const vm = this;
+      const res = await masterService.getBankLists({
+        university_name: vm.chosen,
+        department_name: vm.department_chosen,
+      });
+      for (let i = 0; i < res.data.length; i += 1) {
+        if (res.data[i].user.department_name === null) {
+          res.data[i].user.department_name = '소속없음';
         }
       }
-      vm.list=res.data;
+      vm.list = res.data;
     },
   },
 };

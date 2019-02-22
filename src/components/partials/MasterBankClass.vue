@@ -37,7 +37,7 @@
         </el-pagination>
       </div>
       <br>
-      <div style="display: block; text-align: center;">
+      <!-- TODO : <div style="display: block; text-align: center;">
         <el-select v-model="searchQuery.searchType" style="display: inline-block; width: 100px">
         <el-option
             v-for="option in selectOptionList"
@@ -49,12 +49,14 @@
         <el-input style="display: inline-block; width: 300px" placeholder="검색어를 입력하세요."
           v-model="searchQuery.searchText" @keydown.enter.native="onClick('SEARCH', searchQuery)"></el-input>
         <el-button @click="onClick('SEARCH', searchQuery)" icon="el-icon-search" circle></el-button>
-      </div>
+      </div> -->
   </div>
 </template>
 
 <script>
-import utils from '../../utils';
+/* eslint-disable no-unused-vars */
+/* eslint-disable camelcase */
+/* eslint-disable prefer-const */
 import masterService from '../../services/masterService';
 
 export default {
@@ -62,7 +64,7 @@ export default {
   props: ['list', 'onClick'],
   data() {
     return {
-      setSpanMethod:[], 
+      setSpanMethod: [],
       pageNum: 1,
       selectOptionList: [
         {
@@ -80,8 +82,8 @@ export default {
       },
       groupNameArray: [],
       spanArray: [],
-      departmentArray:[],
-      deptNameArray:[],
+      departmentArray: [],
+      deptNameArray: [],
     };
   },
   computed: {
@@ -92,7 +94,6 @@ export default {
       const vm = this;
       return vm.list.slice((vm.pageNum - 1) * 10, vm.pageNum * 10);
     },
-    
   },
   created() {
     const vm = this;
@@ -103,68 +104,66 @@ export default {
       vm.searchQuery.searchText = vm.$route.query.text;
     }
   },
-  async mounted(){
-    const vm=this;
-  },
-  watch:{
-    page: function(val, oldVal){
-      const vm=this;
+  watch: {
+    page: function page(val, oldVal) {
+      const vm = this;
       vm.spanArray = [];
       vm.groupNameArray = vm.page.map(x => x.bank_group.name);
       let pre_value = '';
       let sameValue = 0;
       let sameValueArray = [];
-      vm.groupNameArray.forEach((element,index) => {
-      if (pre_value === element || sameValue === 0) {
-          sameValue++;
-          } else {
-            sameValueArray.push(sameValue);
-            sameValue = 1;
-          }
-          pre_value = element;
-        });
+      vm.groupNameArray.forEach((element, index) => {
+        if (pre_value === element || sameValue === 0) {
+          sameValue += 1;
+        } else {
+          sameValueArray.push(sameValue);
+          sameValue = 1;
+        }
+        pre_value = element;
+      });
       sameValueArray.push(sameValue);
-        sameValueArray.forEach((element,index)=>{
-          vm.spanArray.push({
-            rowspan: element,
-            colspan: 1,
-          });
-          for (let i = 0 ; i < element-1 ; i++ ) {
-            vm.spanArray.push({
-              rowspan: 0,
-              colspan: 0,
-            });
-          }
+      sameValueArray.forEach((element, index) => {
+        vm.spanArray.push({
+          rowspan: element,
+          colspan: 1,
         });
+        for (let i = 0; i < element - 1; i += 1) {
+          vm.spanArray.push({
+            rowspan: 0,
+            colspan: 0,
+          });
+        }
+      });
     },
   },
   methods: {
-    async bankDelete(group_id){
-      const vm=this;
-      vm.$confirm('정말로 이 강의은행을 삭제하시겠습니까?',{
-        confirmButtonText:'예, 삭제합니다',
-        cancelButtonText:'아니오, 삭제하지 않습니다',
-        type:'warning',
-      })
-      .then(async()=> {
-        try{
-          await masterService.bankDelete({group_id:group_id});
-          await location.reload(true);  
-        } catch(error){
-          vm.$notify({
-            title:'강의은행 삭제 실패',
-            message:error.toString(),
-            type:'error',
-            duration:3000,
-          }); 
-        }
-      })
-    },
-    objectSpanMethod({row,column,rowIndex,columnIndex}){
+    async bankDelete(group_id) {
       const vm = this;
-      if(columnIndex===0 || columnIndex===4 || columnIndex===5){
-          return vm.spanArray[rowIndex];
+      vm.$confirm('정말로 이 강의은행을 삭제하시겠습니까?', {
+        confirmButtonText: '예, 삭제합니다',
+        cancelButtonText: '아니오, 삭제하지 않습니다',
+        type: 'warning',
+      })
+      .then(async () => {
+        try {
+          await masterService.bankDelete({ group_id });
+          await location.reload(true);
+        } catch (error) {
+          vm.$notify({
+            title: '강의은행 삭제 실패',
+            message: error.toString(),
+            type: 'error',
+            duration: 3000,
+          });
+        }
+      });
+    },
+    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+      const vm = this;
+      if (columnIndex === 0 || columnIndex === 4 || columnIndex === 5) {
+        return vm.spanArray[rowIndex];
       }
+      return true;
     },
   },
 };

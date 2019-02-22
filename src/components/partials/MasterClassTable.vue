@@ -56,7 +56,7 @@
         </el-pagination>
       </div>
       <br>
-      <div style="display: block; text-align: center;">
+      <!-- TODO : <div style="display: block; text-align: center;">
         <el-select v-model="searchQuery.searchType" style="display: inline-block; width: 100px">
         <el-option
             v-for="option in selectOptionList"
@@ -68,12 +68,12 @@
         <el-input style="display: inline-block; width: 300px" placeholder="검색어를 입력하세요."
           v-model="searchQuery.searchText" @keydown.enter.native="onClick('SEARCH', searchQuery)"></el-input>
         <el-button @click="onClick('SEARCH', searchQuery)" icon="el-icon-search" circle></el-button>
-      </div>
+      </div> -->
   </div>
 </template>
 
 <script>
-import utils from '../../utils';
+/* eslint-disable camelcase */
 import masterService from '../../services/masterService';
 
 export default {
@@ -96,10 +96,10 @@ export default {
         searchType: 'name',
         searchText: '',
       },
-      dateArray:[],
-      start_date:[],
-      teacherName:[],
-      isActive:true,
+      dateArray: [],
+      start_date: [],
+      teacherName: [],
+      isActive: true,
     };
   },
   computed: {
@@ -111,12 +111,6 @@ export default {
       return vm.list.slice((vm.pageNum - 1) * 10, vm.pageNum * 10);
     },
   },
-  async mounted(){
-    const vm=this;
-  },
-  watch:{
-    page: 'changeColumn',
-  },
   created() {
     const vm = this;
     if (vm.$route.query.type !== undefined) {
@@ -127,31 +121,28 @@ export default {
     }
   },
   methods: {
-    async changeColumn(){
-      const vm=this;
-    },
-    async classDelete(class_id){
-      const vm=this;
-      vm.$confirm('정말로 이 과목을 삭제하시겠습니까?',{
-        confirmButtonText:'예, 삭제합니다',
-        cancelButtonText:'아니오, 삭제하지 않습니다',
-        type:'warning',
+    async classDelete(class_id) {
+      const vm = this;
+      vm.$confirm('정말로 이 과목을 삭제하시겠습니까?', {
+        confirmButtonText: '예, 삭제합니다',
+        cancelButtonText: '아니오, 삭제하지 않습니다',
+        type: 'warning',
       })
-      .then(async()=> {
-        try{
-          await masterService.classDelete({class_id: class_id});
-          await location.reload(true);  
-        } catch(error){
+      .then(async () => {
+        try {
+          await masterService.classDelete({ class_id });
+          await location.reload(true);
+        } catch (error) {
           vm.$notify({
-            title:'과목 삭제 실패',
-            message:error.toString(),
-            type:'error',
-            duration:3000,
-          }); 
+            title: '과목 삭제 실패',
+            message: error.toString(),
+            type: 'error',
+            duration: 3000,
+          });
         }
-      })
+      });
     },
-    async goBack(){
+    async goBack() {
       window.history.back();
     },
   },

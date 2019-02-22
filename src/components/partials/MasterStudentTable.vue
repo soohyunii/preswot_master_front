@@ -50,7 +50,7 @@
         </el-pagination>
       </div>
       <br>
-      <div style="display: block; text-align: center;">
+      <!-- TODO : <div style="display: block; text-align: center;">
         <el-select v-model="searchQuery.searchType" style="display: inline-block; width: 100px">
         <el-option
             v-for="option in selectOptionList"
@@ -62,12 +62,12 @@
         <el-input style="display: inline-block; width: 300px" placeholder="검색어를 입력하세요."
           v-model="searchQuery.searchText" @keydown.enter.native="onClick('SEARCH', searchQuery)"></el-input>
         <el-button @click="onClick('SEARCH', searchQuery)" icon="el-icon-search" circle></el-button>
-      </div>
+      </div> -->
   </div>
 </template>
 
 <script>
-import utils from '../../utils';
+/* eslint-disable camelcase */
 import masterService from '../../services/masterService';
 
 export default {
@@ -111,27 +111,27 @@ export default {
     }
   },
   methods: {
-    async deleteUser(email_id){
-      const vm=this;
-      vm.$confirm('정말로 이 학생을 삭제하시겠습니까?',{
-        confirmButtonText:'예, 삭제합니다',
-        cancelButtonText:'아니오, 삭제하지 않습니다',
-        type:'warning',
+    async deleteUser(email_id) {
+      const vm = this;
+      vm.$confirm('정말로 이 학생을 삭제하시겠습니까?', {
+        confirmButtonText: '예, 삭제합니다',
+        cancelButtonText: '아니오, 삭제하지 않습니다',
+        type: 'warning',
       })
-      .then(async()=> {
-        try{
-          await masterService.deleteUser({email_id : email_id});
-          await location.reload(true); 
-        } catch(error){
+      .then(async () => {
+        try {
+          await masterService.deleteUser({ email_id });
+          await location.reload(true);
+        } catch (error) {
           vm.$notify({
-            title:'학생 삭제 실패',
-            message:error.toString(),
-            type:'error',
-            duration:3000,
-          }); 
+            title: '학생 삭제 실패',
+            message: error.toString(),
+            type: 'error',
+            duration: 3000,
+          });
         }
-      })
-    }
+      });
+    },
   },
 };
 </script>

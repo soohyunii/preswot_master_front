@@ -376,8 +376,6 @@ export default function authRoutes(root) {
         title: '강의 은행',
       },
     },
-
-   // NOTE: 행정개발 
     {
       path: '/view/uni',
       name: 'ViewUni',
@@ -393,7 +391,7 @@ export default function authRoutes(root) {
       meta: {
         title: '관리자 학과 조회',
       },
-    },   
+    },
     {
       path: '/view/teacher',
       name: 'ViewTeacher',
@@ -568,7 +566,7 @@ export default function authRoutes(root) {
     },
     {
       alias: '/student/:code/edit',
-      path:'/register/student/edit',
+      path: '/register/student/edit',
       name: 'RegisterStudentEdit',
       component: RegisterStudent,
       meta: {

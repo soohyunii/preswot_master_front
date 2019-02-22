@@ -148,21 +148,21 @@ export default {
     };
     return {
       initialInput,
-      input: Object.assign({}, initialInput), 
+      input: Object.assign({}, initialInput),
     };
   },
   async mounted() {
     const vm = this;
     const uniNameLists = await masterService.getUniNameLists();
     vm.input.university_list = uniNameLists.data.map(element => element.name);
-    
     if (vm.isEdit) {
       const res = await masterService.getMasterClass({ class_id: vm.classId });
-      const readDepartmentList = await masterService.getDeptLists({name:res.data.university_name});
-      vm.input.department_list=readDepartmentList.data.map(element=>element.name);
-      const readTeacherList = await masterService.getUserLists(1, res.data.university_name,res.data.department_name);
+      const readDepartmentList = await masterService.getDeptLists({
+        name: res.data.university_name });
+      vm.input.department_list = readDepartmentList.data.map(element => element.name);
+      const readTeacherList = await masterService.getUserLists(1, res.data.university_name,
+      res.data.department_name);
       vm.input.teacher_list = readTeacherList.data;
-
       vm.input.university_name = res.data.university_name || vm.initialInput.university_name;
       vm.input.department_name = res.data.department_name || vm.initialInput.department_name;
       vm.$set(vm.input, 'teacher_email_id', res.data.teacher_email_id || vm.initialInput.teacher_email_id);
@@ -215,13 +215,14 @@ export default {
           // TODO: wrap with try catch
           try {
             await masterService.NNMasterpostClass(vm.input);
-            if(vm.input.university_name==''||vm.input.department_name==''||vm.input.code==''){
+            if (vm.input.university_name === '' || vm.input.department_name === '' ||
+              vm.input.code === '') {
               vm.$notify({
                 title: '과목 등록 실패',
                 message: '필수입력사항(*)을 모두 기재해 주세요',
                 type: 'error',
-                duration: 0, 
-              }); 
+                duration: 0,
+              });
             } else {
               vm.$router.push('/a/register/class/success');
             }
@@ -236,42 +237,44 @@ export default {
         }
       });
     },
-    async categoryChange(){
-      const vm=this;
-      const deptNameLists = await masterService.getDeptLists({university_name : vm.input.university_name, category:undefined});
-      vm.input.department_list = await deptNameLists.data.map(element=>element.name);
+    async categoryChange() {
+      const vm = this;
+      const deptNameLists = await masterService.getDeptLists({
+        university_name: vm.input.university_name, category: undefined });
+      vm.input.department_list = await deptNameLists.data.map(
+        element => element.name);
     },
-    async categoryTeacherChange(){
-      const vm=this;
-      const teacherNameLists = await masterService.getUserLists(1,vm.input.university_name,vm.input.department_name);
+    async categoryTeacherChange() {
+      const vm = this;
+      const teacherNameLists = await masterService.getUserLists(1,
+        vm.input.university_name, vm.input.department_name);
       vm.input.teacher_list = await teacherNameLists.data;
     },
-    async categoryNone(){
-      const vm=this;
-      if(vm.input.checked==true){
-        vm.input.boolean=true;
+    async categoryNone() {
+      const vm = this;
+      if (vm.input.checked === true) {
+        vm.input.boolean = true;
       } else {
-        vm.input.boolean=false;
+        vm.input.boolean = false;
       }
-      const teacherNameLists = await masterService.getUserLists(1,vm.input.university_name,vm.input.department_name);
+      const teacherNameLists = await masterService.getUserLists(1,
+        vm.input.university_name, vm.input.department_name);
       vm.input.teacher_list = teacherNameLists.data;
-    },
-    async showLabel(){
     },
   },
   watch: {
     // NOTE: 이거 () => {}로 바꾸면 안됨!! vm이 다른 녀석 들어옴
-    'input.isActive' : function handler(newVal) {
+    'input.isActive': function handler(newVal) {
       const vm = this;
-      if(newVal) {
-        vm.input.teacher_email_id=null,
-        vm.input.day_of_week=0,
-        vm.input.start_time=null,
-        vm.input.end_time=null,
-        vm.input.location=null,
-        vm.input.start_date=null,
-        vm.input.end_date=null,
-        vm.input.capacity=0;
+      if (newVal) {
+        vm.input.teacher_email_id = null;
+        vm.input.day_of_week = 0;
+        vm.input.start_time = null;
+        vm.input.end_time = null;
+        vm.input.location = null;
+        vm.input.start_date = null;
+        vm.input.end_date = null;
+        vm.input.capacity = 0;
       }
     },
   },
