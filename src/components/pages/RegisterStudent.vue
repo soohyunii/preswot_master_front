@@ -149,9 +149,8 @@ export default {
 
     if (vm.isEdit) {
       const res = await masterService.getMasterUser({ email_id: vm.classId });
-      const readDepartmentList = await masterService.getDeptLists({
-        name: res.data.university_name });
-      vm.input.department_list = readDepartmentList.data.map(element => element.name);
+      /* const readDepartmentList = await masterService.getDeptLists({
+        name: res.data.university_name, category: undefined }); */
       vm.input.email_id = res.data.email_id || vm.initialInput.email_id;
       vm.input.password = res.data.password || vm.initialInput.password;
       vm.input.name = res.data.name || vm.initialInput.name;
@@ -159,6 +158,9 @@ export default {
       vm.input.type = 0;
       vm.input.birth = res.data.birth || vm.initialInput.birth;
       vm.input.university_name = res.data.university_name || vm.initialInput.university_name;
+      const readDepartmentList = await masterService.getDeptLists({
+        university_name: vm.input.university_name, category: undefined });
+      vm.input.department_list = readDepartmentList.data.map(element => element.name);
       vm.input.department_name = res.data.department_name || vm.initialInput.department_name;
       vm.input.address = res.data.address || vm.initialInput.address;
       vm.input.phone = res.data.phone || vm.initialInput.phone;

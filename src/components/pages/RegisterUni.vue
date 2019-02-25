@@ -120,12 +120,21 @@ export default {
           const res = await masterService.getMasterUni({ name: vm.uniName });
           const old_name = res.data.name;
           try {
-            await masterService.NNMasterputUni({
-              id,
-              old_name,
-              ...vm.input,
-            });
-            vm.$router.push('/a/view/uni');
+            if (vm.input.code === '' || vm.input.name === '') {
+              vm.$notify({
+                title: '대학 등록 실패',
+                message: '필수입력사항(*)을 모두 기재해 주세요',
+                type: 'error',
+                duration: 0,
+              });
+            } else {
+              await masterService.NNMasterputUni({
+                id,
+                old_name,
+                ...vm.input,
+              });
+              vm.$router.push('/a/view/uni');
+            }
           } catch (error) {
             vm.$notify({
               title: '대학 수정 실패',

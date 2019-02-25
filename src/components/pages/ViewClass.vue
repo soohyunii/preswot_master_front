@@ -113,6 +113,7 @@ export default {
         end_date_to: vm.date_to_chosen,
         isActive: vm.checked,
       });
+      console.log('res==',res);
       const res2 = await masterService.getClassLists({
         university_name: vm.chosen,
         department_name: vm.dept_chosen,
@@ -122,20 +123,23 @@ export default {
       });
       if (vm.checked === undefined) {
         for (let i = 0; i < res.data.length; i += 1) {
-          if (res.data[i].teacher_email_id !== null) {
+          if (res.data[i].users[0].email_id !== null) {
+            console.log('res.data[i].users==',res.data[1].users[0].email_id);
             const teacherNameTemp = await masterService.getMasterUser({
-              email_id: res.data[i].teacher_email_id });
+              email_id: res.data[i].users[0].email_id });
+            console.log('teacherNameTemp',teacherNameTemp);
             vm.teacherNameList[i] = teacherNameTemp.data.name;
-            vm.list[i].teacher_email_id = vm.teacherNameList[i];
+            vm.list[i].users[0].email_id = vm.teacherNameList[i];
+            console.log('vm.list[i].users[0].email_id==',vm.list[i].users[0].email_id);
           }
         }
       } else {
         for (let i = 0; i < res2.data.length; i += 1) {
-          if (res2.data[i].teacher_email_id !== null) {
+          if (res2.data[i].users.email_id !== null) {
             const teacherNameTemp = await masterService.getMasterUser({
-              email_id: res2.data[i].teacher_email_id });
+              email_id: res2.data[i].users.email_id });
             vm.teacherNameList[i] = teacherNameTemp.data.name;
-            vm.list[i].teacher_email_id = vm.teacherNameList[i];
+            vm.list[i].users.email_id = vm.teacherNameList[i];
           }
         }
       }
@@ -143,7 +147,7 @@ export default {
         if (vm.checked === undefined) {
           if (res.data[i].isActive === true) {
             vm.list[i].isActive = '비활성화';
-            vm.list[i].teacher_email_id = '-';
+            vm.list[i].users.email_id = '-';
             vm.list[i].start_date = '-';
             vm.list[i].end_date = '-';
           } else {
