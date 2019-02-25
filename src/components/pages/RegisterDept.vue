@@ -153,12 +153,21 @@ export default {
           const old_university_name = res.data.university.name;
           const old_name = res.data.name;
           try {
-            await masterService.NNMasterputDept({
-              old_university_name,
-              old_name,
-              ...vm.input,
-            });
-            vm.$router.push('/a/view/dept');
+            if (vm.input.code === '' || vm.input.name === '') {
+              vm.$notify({
+                title: '학과 수정 실패',
+                message: '필수입력사항(*)을 모두 기재해 주세요',
+                type: 'error',
+                duration: 0,
+              });
+            } else {
+              await masterService.NNMasterputDept({
+                old_university_name,
+                old_name,
+                ...vm.input,
+              });
+              vm.$router.push('/a/view/dept');
+            }
           } catch (error) {
             vm.$notify({
               title: '학과 수정 실패',

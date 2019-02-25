@@ -122,7 +122,7 @@ export default {
           try {
             if (vm.input.code === '' || vm.input.name === '') {
               vm.$notify({
-                title: '대학 등록 실패',
+                title: '대학 수정 실패',
                 message: '필수입력사항(*)을 모두 기재해 주세요',
                 type: 'error',
                 duration: 0,

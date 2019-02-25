@@ -163,14 +163,23 @@ export default {
           const id = vm.groupId;
           // TODO: wrap with try catch
           try {
-            await masterService.NNMasterputBank({
-              group_id: id,
-              university_name: vm.input.university_name,
-              department_name: vm.input.department_name,
-              new_name: vm.input.name,
-              email_id_list: vm.tagSelection,
-            });
-            vm.$router.push('/a/view/bank');
+            if (vm.input.name === '') {
+              vm.$notify({
+                title: '강의은행그룹 수정 실패',
+                message: '필수입력사항(*)을 기재해 주세요',
+                type: 'error',
+                duration: 0,
+              });
+            } else {
+              await masterService.NNMasterputBank({
+                group_id: id,
+                university_name: vm.input.university_name,
+                department_name: vm.input.department_name,
+                new_name: vm.input.name,
+                email_id_list: vm.tagSelection,
+              });
+              vm.$router.push('/a/view/bank');
+            }
           } catch (error) {
             vm.$notify({
               title: '강의은행그룹 수정 실패',

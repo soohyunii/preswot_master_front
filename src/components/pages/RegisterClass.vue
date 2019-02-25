@@ -200,11 +200,29 @@ export default {
           const id = vm.classId;
           // TODO: wrap with try catch
           try {
-            await masterService.NNMasterputClass({
-              class_id: id,
-              ...vm.input,
-            });
-            vm.$router.push('/a/view/class');
+            if (vm.input.university_name === '' ||
+              vm.input.department_name === '' ||
+              vm.input.code === '') {
+              vm.$notify({
+                title: '과목 수정 실패',
+                message: '필수입력사항(*)을 모두 기재해 주세요',
+                type: 'error',
+                duration: 0,
+              });
+            } else if (vm.isActive === false && vm.input.user_email_id === '') {
+              vm.$notify({
+                title: '과목 수정 실패',
+                message: '실제 운영 과목 등록 시 강사 선택은 필수입니다',
+                type: 'error',
+                duration: 0,
+              });
+            } else {
+              await masterService.NNMasterputClass({
+                class_id: id,
+                ...vm.input,
+              });
+              vm.$router.push('/a/view/class');
+            }
           } catch (error) {
             vm.$notify({
               title: '과목 수정 실패',

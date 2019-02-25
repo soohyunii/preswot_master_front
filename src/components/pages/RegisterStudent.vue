@@ -188,10 +188,6 @@ export default {
           const id = vm.classId;
           // TODO: wrap with try catch
           try {
-            await masterService.NNMasterputStudent({
-              id,
-              ...vm.input,
-            });
             if (vm.input.email_id === '' || vm.input.password === '' ||
               vm.input.passwordConfirm === '' || vm.input.name === '') {
               vm.$notify({
@@ -208,6 +204,10 @@ export default {
                 duration: 0,
               });
             } else {
+              await masterService.NNMasterputStudent({
+                id,
+                ...vm.input,
+              });
               vm.$router.push('/a/view/student');
             }
           } catch (error) {
