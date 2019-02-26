@@ -2,18 +2,17 @@
   <div id="lecture_item_group" class="bt-container">
     <h2>
       아이템 활성화 시간 설정 (무인)
-      <!--
       <el-popover
         style="position: relative; left: 30px; top: 3px;"
         placement="top-start"
         width="600"
         trigger="hover">
         <el-table :data="notice">
-          <el-table-column width="120" property="title" label="상태"></el-table-column>
+          <el-table-column width="120" property="title" label="구분"></el-table-column>
           <el-table-column width="480" property="content" label="내용"></el-table-column>
         </el-table>
         <i class="el-icon-question fa-lg" slot="reference"></i>
-      </el-popover>-->
+      </el-popover>
     </h2>
     <!--
     <div>
@@ -31,58 +30,109 @@
       </el-table>
     </div>-->
     <div>
-      <el-table :data="groupList" style="width: 1150px;">
-        <el-table-column label="아이템 그룹화 목록">
-          <template slot-scope="scope">
-            <el-tag v-for="(k, index) in scope.row.list" :key="index">{{ k.name }}</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label="활성화 시간" v-if="lectureType !== 0" width="150px" prop="start" />
-        <el-table-column label="비활성화 시간" v-if="lectureType !== 0" width="150px" prop="end" />
-        <el-table-column width="160px">
-          <template slot-scope="scope">
-            <el-button size="small" @click="onClick('NEW_TIME', scope.row)">활성화 시간 변경</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+      <el-tabs>
+        <el-tab-pane label="간편 설정">
+          <el-table :data="groupList" style="width: 1150px;">
+            <el-table-column label="아이템 그룹화 목록">
+              <template slot-scope="scope">
+                <el-tag v-for="(k, index) in scope.row.list" :key="index">{{ k.name }}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="활성화 시간" v-if="lectureType !== 0" width="150px" prop="during" />
+            <el-table-column width="160px">
+              <template slot-scope="scope">
+                <el-button size="small" @click="onClick('NEW_SIMPLE_TIME', scope.row)">시간 변경</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <div style="height: 10px;" />
+          <div v-if="!ifSimpleMode" style="text-align: right;">
+            <el-button type="primary" style="margin-right: 20px;" @click="onClick('TIME_OK')">시간 확정</el-button>
+          </div>
+          <div v-if="ifSimpleMode">
+            <el-tag v-for="(k, index) in newSimpleGroupList" :key="index">{{ k.name }}</el-tag>
+            <el-time-picker v-model="simpleTime" v-if="lectureType !== 0" placeholder="활성화 시간" style="width: 150px; margin-left: 20px;" default-value="0" />
+            <el-button type="primary" @click="onClick('SIMPLE_GROUP_LC_ITEM')">
+              시간 변경
+            </el-button>
+            <el-button @click="onClick('CANCEL_SIMPLE_GROUP_MODE')">
+              취소
+            </el-button>
+            <p>&#42; 활성화 시간은 이전 아이템 이후로 '얼마동안 활성화할지'입니다.</p>
+            <p>예) 이 아이템 그룹을 3분동안 활성화하고 싶다면, '00:03:00'으로 설정해주세요. 이 아이템 그룹이 활성화되고 3분이 지나면 다음 아이템 그룹이 활성화됩니다.</p>
+          </div>
+          <div>
+            <div v-if="videoLink === ''">
+              등록된 영상이 없습니다.
+            </div>
+            <div v-else>
+              강의 영상
+              <youtube
+                id="video"
+                :video-id="youtubeId"
+                player-width="480px"
+                player-height="360px"
+                :player-vars="{ autoplay: 1, modestbranding: 1 }"
+                :mute="true">
+              </youtube>
+            </div>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="수동 설정">
+          <el-table :data="groupList" style="width: 1150px;">
+            <el-table-column label="아이템 그룹화 목록">
+              <template slot-scope="scope">
+                <el-tag v-for="(k, index) in scope.row.list" :key="index">{{ k.name }}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="활성화 시각" v-if="lectureType !== 0" width="150px" prop="start" />
+            <el-table-column label="비활성화 시각" v-if="lectureType !== 0" width="150px" prop="end" />
+            <el-table-column width="160px">
+              <template slot-scope="scope">
+                <el-button size="small" @click="onClick('NEW_TIME', scope.row)">시간 변경</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <div style="height: 10px;" />
+          <div v-if="ifTimeMode">
+            <el-tag v-for="(k, index) in newGroupList" :key="index">{{ k.name }}</el-tag>
+            <el-time-picker v-model="startTime" v-if="lectureType !== 0" placeholder="활성화 시각" style="width: 150px; margin-left: 20px;" default-value="0" />
+            <el-time-picker v-model="endTime" v-if="lectureType !== 0" placeholder="비활성화 시각" style="width: 150px;" default-value="0" />
+            <el-button type="primary" @click="onClick('GROUP_LC_ITEM')">
+              시간 변경
+            </el-button>
+            <el-button @click="onClick('CANCEL_GROUP_MODE')">
+              취소
+            </el-button>
+            <p>&#42; 활성화/비활성화 시각은 강의 시작 시점이 기준입니다.</p>
+            <p>예) 아이템을 강의 시작후 5분째에 보여주고 10분째에 내리고 싶을 경우, 활성화 시각은 00:05:00, 비활성화 시각은 00:10:00으로 설정해주세요.</p>
+          </div>
+          <div style="height: 10px;" />
+          <div>
+            <div v-if="videoLink === ''">
+              등록된 영상이 없습니다.
+            </div>
+            <div v-else>
+              강의 영상
+              <youtube
+                id="video"
+                :video-id="youtubeId"
+                player-width="480px"
+                player-height="360px"
+                :player-vars="{ autoplay: 1, modestbranding: 1 }"
+                :mute="true">
+              </youtube>
+            </div>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
     </div>
-    <div style="height: 10px;" />
-    <div v-if="ifTimeMode">
-      <el-tag v-for="(k, index) in newGroupList" :key="index">{{ k.name }}</el-tag>
-      <el-time-picker v-model="startTime" v-if="lectureType !== 0" placeholder="활성화 시간" style="width: 150px; margin-left: 20px;" default-value="0" />
-      <el-time-picker v-model="endTime" v-if="lectureType !== 0" placeholder="비활성화 시간" style="width: 150px;" default-value="0" />
-      <el-button type="primary" @click="onClick('GROUP_LC_ITEM')">
-        시간 변경
-      </el-button>
-      <el-button @click="onClick('CANCEL_GROUP_MODE')">
-        취소
-      </el-button>
-      <p>&#42; 활성화/비활성화 시간은 강의 시작 시점이 기준입니다.</p>
-      <p>예) 아이템을 강의 시작후 5분째에 보여주고 10분째에 내리고 싶을 경우, 활성화 시간은 00:05:00, 비활성화 시간은 00:10:00으로 설정해주세요.</p>
-    </div>
-    <div style="height: 10px;" />
-    <div>
-    <div v-if="videoLink === ''">
-      등록된 영상이 없습니다.
-    </div>
-    <div v-else>
-      강의 영상
-      <youtube
-        id="video"
-        :video-id="youtubeId"
-        player-width="480px"
-        player-height="360px"
-        :player-vars="{ autoplay: 1, modestbranding: 1 }"
-        :mute="true">
-      </youtube>
-    </div></div>
     <div style="text-align: right;">
       <a href="javascript:history.back();">
-        <el-button @click="onClick('BACK')" style="margin-right: 20px;">뒤로 가기</el-button>
+        <el-button @click="onClick('BACK')">뒤로 가기</el-button>
       </a>
     </div>
   </div>
-  
 </template>
 
 <script>
@@ -96,25 +146,26 @@ export default {
     return {
       groupList: [], // 연결된 그룹 리스트
       newGroupList: [], // 새로 연결할 그룹 리스트
+      newSimpleGroupList: [],
       ifTimeMode: false, // 시간 변경 모드인지
+      ifSimpleMode: false, // 간편 시간 변경 모드인지
       lcConnectionList: [],
       itemList: [],
       lccNum: -1,
       notice: [{ // 강사용 도움말
-        title: '아이템 연결',
-        content: '순서를 유지시킬 아이템들을 선택할 수 있습니다. ' +
-                  '함께 연결된 아이템들은 셔플되지 않고 그 순서가 유지됩니다. ' +
-                  '아이템을 단독으로라도 연결 목록에 추가해야 그룹화가 가능합니다. ' +
-                  '아이템 연결 작업이 모두 끝난 뒤 그룹화를 진행해 주세요.',
+        title: '간편 설정',
+        content: '모든 아이템 그룹이 강의 시작 시점부터 릴레이로 보여집니다. ' +
+                  '어떤 아이템 그룹이 얼마동안 활성화되어야 할 지 시간만 설정해주세요. ' +
+                  '사전에 그룹화한 순서대로 아이템이 활성화됩니다.',
       }, {
-        title: '아이템 그룹화',
-        content: '강사가 "아이템 보이기"를 할 경우 같은 그룹에 속한 아이템들은 순서가 랜덤하게 ' +
-                  '섞여 같이 보여집니다. 연결되어 있는 아이템은 순서가 유지됩니다. ' +
-                  '단독으로 보여줄 아이템은 단독으로 그룹화해주세요.',
+        title: '수동 설정',
+        content: '모든 아이템 그룹의 활성화/비활성화 시간을 강사가 수동으로 지정해줍니다. ' +
+                 '사전에 그룹화한 순서와 무관하게 아이템을 활성화할 수 있습니다.',
       }],
       lectureType: '', // 0-유인 1-무인단체 2-무인개인
       startTime: '', // 무인강의에서 지정해 줄 아이템 시작시간
       endTime: '', // 무인강의에서 지정해 줄 아이템 끝시간
+      simpleTime: '', // 간편모드에서 지정해 줄 시간
       lectureStart: '', // 강의 시작 시간 - 무인[단체]
       lectureEnd: '', // 강의 끝 시간 - 무인[단체]
       gid: -1, // 시간 변경할 그룹의 id
@@ -278,6 +329,7 @@ export default {
           if (eS < 10) { eS = `0${eS}`; }
           tempt.start = `${sM}:${sS}`;
           tempt.end = `${eM}:${eS}`;
+          tempt.during = '0:00';
         }
         x.list_ids.forEach((y) => {
           vm.itemList.forEach((z) => {
@@ -321,18 +373,20 @@ export default {
             break;
           }
           // 활성화-비활성화 시간이 강의 시간 내에 있는지
-          const s = new Date(vm.lectureStart);
-          const e = new Date(vm.lectureEnd);
-          // 총 강의 시간
-          const lectureTime = (e - s) / 1000;
-          if (endT >= lectureTime) {
-            // 총 강의 시간보다 아이템이 늦게 종료되면 안 됨
-            vm.$notify({
-              title: '알림',
-              message: '아이템은 강의 시간 내에서 활성화/비활성화 되어야 합니다.',
-              type: 'warning',
-            });
-            break;
+          if (vm.lectyreType === 1) {
+            const s = new Date(vm.lectureStart);
+            const e = new Date(vm.lectureEnd);
+            // 총 강의 시간
+            const lectureTime = (e - s) / 1000;
+            if (endT >= lectureTime) {
+              // 총 강의 시간보다 아이템이 늦게 종료되면 안 됨
+              vm.$notify({
+                title: '알림',
+                message: '아이템은 강의 시간 내에서 활성화/비활성화 되어야 합니다.',
+                type: 'warning',
+              });
+              break;
+            }
           }
 
           // 기존의 아이템 그룹과 시간 겹치는지 테스트
@@ -396,6 +450,71 @@ export default {
           });
           break;
         }
+        case 'SIMPLE_GROUP_LC_ITEM': {
+          if (vm.simpleTime === '') {
+            vm.$notify({
+              title: '알림',
+              message: '아이템의 활성화 시간을 설정해 주세요.',
+              type: 'warning',
+            });
+            break;
+          }
+          const duringT = (vm.simpleTime.getTime() / 1000) - 946652400;
+          let sS = duringT % 60;
+          const sM = (duringT - sS) / 60;
+          if (sS < 10) { sS = `0${sS}`; }
+          vm.groupList.forEach((x) => {
+            if (x.gid === vm.gid) {
+              x.during = `${sM}:${sS}`;
+            }
+          });
+          vm.newSimpleGroupList = [];
+          vm.ifSimpleMode = false;
+          vm.gid = -1;
+          vm.gList = [];
+          break;
+        }
+        // 간편 모드 시간 확정
+        case 'TIME_OK': {
+          // 모든 아이템들의 시간 합이 강의 시간 넘어서는지
+          let total = 0;
+          vm.groupList.forEach((x) => {
+            const tt = parseInt(x.during.split(':')[0], 10) * 60 + parseInt(x.during.split(':')[1], 10);
+            total += tt;
+          });
+          if (vm.lectureType === 1) {
+            const s = new Date(vm.lectureStart);
+            const e = new Date(vm.lectureEnd);
+            // 총 강의 시간
+            const lectureTime = (e - s) / 1000;
+            if (total >= lectureTime) {
+              // 총 강의 시간보다 아이템이 늦게 종료되면 안 됨
+              vm.$notify({
+                title: '알림',
+                message: '아이템은 강의 시간 내에서 활성화/비활성화 되어야 합니다.',
+                type: 'warning',
+              });
+              break;
+            }
+          }
+          // 하나씩 맺어주기
+          let startT = 0;
+          let endT;
+          const tt = parseInt(x.during.split(':')[0], 10) * 60 + parseInt(x.during.split(':')[1], 10);
+          for (let i = 0; i < vm.groupList.length; i += 1) {
+            const x = vm.groupList[i];
+            console.log(x);
+            // 여기 수정해야 함
+            await lectureItemService.editGrdoup({
+              lectureId: vm.lectureId,
+              iList: vm.gList,
+              groupId: vm.gid,
+              start: startT,
+              end: endT,
+            });
+          }
+          break;
+        }
         // 아이템 시간 변경
         case 'NEW_TIME': {
           if (vm.ifTimeMode === true) {
@@ -423,12 +542,46 @@ export default {
           });
           break;
         }
+        case 'NEW_SIMPLE_TIME': {
+          if (vm.ifSimpleMode === true) {
+            vm.$notify({
+              title: '알림',
+              message: '이미 시간 변경중입니다.',
+              type: 'error',
+            });
+            break;
+          }
+          vm.ifSimpleMode = true;
+          vm.gid = data.gid;
+          const grp = await lectureItemService.showGroup({
+            lectureId: vm.lectureId,
+          });
+          grp.data.list.forEach((x) => {
+            if (x.group_id === vm.gid) {
+              x.list_ids.forEach((y) => {
+                vm.gList.push(parseInt(y, 10));
+              });
+            }
+          });
+          data.list.forEach((x) => {
+            vm.newSimpleGroupList.push(x);
+          });
+          break;
+        }
         // 그룹화 취소
         case 'CANCEL_GROUP_MODE': {
           vm.ifTimeMode = false;
           vm.newGroupList = [];
           vm.startTime = '';
           vm.endTime = '';
+          vm.gid = -1;
+          vm.gList = [];
+          break;
+        }
+        case 'CANCEL_SIMPLE_GROUP_MODE': {
+          vm.ifSimpleMode = false;
+          vm.newSimpleGroupList = [];
+          vm.simpleTime = '';
           vm.gid = -1;
           vm.gList = [];
           break;
