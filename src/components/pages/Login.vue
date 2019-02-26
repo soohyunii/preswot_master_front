@@ -200,6 +200,14 @@ export default {
     if (vm.redirectTo) {
       vm.openNoti('warning', vm.$t('LOGIN.LOGIN_REQUIRED'), 'Warning');
     }
+    if (vm.$route.query.alert === 'expired') {
+      vm.$notify({
+        title: 'warning',
+        message: '로그인이 세션이 만료되었습니다. 다른곳에서 로그인 하였거나, 일정 시간 이상 경과한 경우 발생할 수 있습니다. 다시 로그인 해주세요.',
+        type: 'warning',
+        duration: 10000,
+      });
+    }
   },
 };
 </script>
