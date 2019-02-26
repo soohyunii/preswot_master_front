@@ -1,6 +1,11 @@
 <template>
   <div id="student_class_grade_wrapper" class="bt-container">
     <h2>{{ currentStudyingClass(classId) ? currentStudyingClass(classId).name : '' }} > 결과보기</h2>
+    <div v-if="questionList.length === 0">
+      <h3>결과가 없습니다.</h3>
+      <p>강의 결과가 비공개로 설정되었거나, 결과를 표시할 항목이 하나도 없는 경우에 발생합니다.</p>
+    </div>
+
     <div class="one-lecture-wrapper" v-for="lecture in questionList" :key="lecture">
       <h3>{{ lecture.name }}</h3>
       <el-table :data="lecture.questions">
