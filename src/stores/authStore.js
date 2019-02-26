@@ -8,6 +8,7 @@ export default {
   namespaced: true,
   state: {
     jwt: utils.getJwtFromLocalStorage(),
+    temporalJwt: '', // 아직 약관에 동의하지 않은 경우, 토큰 임시 저장.
     locale: utils.getDefaultLocale(),
     redirectionTimeoutId: null,
   },
@@ -27,6 +28,9 @@ export default {
       window.localStorage.setItem('jwt', jwt);
       http.defaults.headers.common['x-access-token'] = jwt || null;
     },
+    updateTemporalJwt(state, { jwt }) {
+      state.temporalJwt = jwt;
+    },
     updateLocale(state, { locale }) {
       state.locale = locale;
       window.localStorage.setItem('locale', locale);
@@ -38,7 +42,11 @@ export default {
   actions: {
     async reqLogin({ commit }, { email, password }) {
       const res = await authService.login({ email, password });
-      if (res.data.success) {
+      if (res.data.terms === 0) { // 아직 약관에 동의하지 않았다면
+        commit('updateTemporalJwt', {
+          jwt: res.data.token,
+        });
+      } else if (res.data.success) {
         commit('updateJwt', {
           jwt: res.data.token,
         });
@@ -46,6 +54,12 @@ export default {
         throw new Error('login failed');
       }
       return res;
+    },
+    async agreeTos({ state, commit }) {
+      commit('updateJwt', {
+        jwt: state.temporalJwt,
+      });
+      await authService.agreeTos();
     },
     async findPassword({ commit }, { email }) {
       await authService.findPassword({ email });

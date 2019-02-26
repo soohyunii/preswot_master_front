@@ -4,6 +4,7 @@ import LandingPage from '../components/pages/LandingPage';
 import Login from '../components/pages/Login';
 import FindingPasswordPage from '../components/pages/FindingPasswordPage';
 import Tos from '../components/pages/Tos';
+import NNTos from '../components/pages/NNTos';
 import Register from '../components/pages/Register';
 import DownloadPage from '../components/pages/DownloadPage';
 import PolicyPage from '../components/pages/PolicyPage';
@@ -35,9 +36,14 @@ export default new Router({
       component: FindingPasswordPage,
     },
     {
-      path: '/tos',
+      path: '/PPtos',
       name: 'Tos',
       component: Tos,
+    },
+    {
+      path: '/tos',
+      name: 'Tos',
+      component: NNTos,
     },
     {
       path: '/register',

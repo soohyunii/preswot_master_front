@@ -95,7 +95,7 @@ export default {
         case 'LOGIN': {
           try {
             // const res = await vm.reqLogin({
-            await vm.reqLogin({
+            const res = await vm.reqLogin({
               email: vm.input.email,
               password: vm.input.password,
             });
@@ -103,7 +103,9 @@ export default {
             // TODO: translate
 
             // vm.openNoti('success', 'Login Success !!', 'Success');
-            if (vm.redirectTo) {
+            if (res.data.terms === 0) {
+              vm.$router.push('/tos');
+            } else if (vm.redirectTo) {
               // jwt 업데이트 후 페이지 이동 이루어지도록
               vm.$router.push(vm.redirectTo);
             } else {
