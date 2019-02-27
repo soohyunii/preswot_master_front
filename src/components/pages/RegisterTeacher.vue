@@ -157,8 +157,10 @@ export default {
 
     if (vm.isEdit) {
       const res = await masterService.getMasterUser({ email_id: vm.classId });
-      const readDepartmentList = await masterService.getDeptLists({ name:
-        res.data.university_name });
+      const readDepartmentList = await masterService.getDeptLists({
+        university_name: res.data.university_name,
+        category: undefined,
+      });
       vm.input.department_list = readDepartmentList.data.map(element => element.name);
       vm.input.email_id = res.data.email_id || vm.initialInput.email_id;
       vm.input.password = res.data.password || vm.initialInput.password;
@@ -196,10 +198,6 @@ export default {
           const id = vm.classId;
           // TODO: wrap with try catch
           try {
-            await masterService.NNMasterputTeacher({
-              id,
-              ...vm.input,
-            });
             if (vm.input.email_id === '' || vm.input.password === '' ||
               vm.input.passwordConfirm === '' || vm.input.name === '') {
               vm.$notify({
@@ -216,6 +214,10 @@ export default {
                 duration: 0,
               });
             } else {
+              await masterService.NNMasterputTeacher({
+                id,
+                ...vm.input,
+              });
               vm.$router.push('/a/view/teacher');
             }
           } catch (error) {

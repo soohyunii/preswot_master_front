@@ -13,7 +13,7 @@
       </el-table-column>
       <el-table-column prop="isActive" label="활성화여부" width="120">
       </el-table-column>
-      <el-table-column prop="teacher_email_id" label="강사" width="110">
+      <el-table-column prop="users[0].email_id" label="강사" width="110">
       </el-table-column>
       <el-table-column prop="start_date" :list="list" label="강의시작일" width="120">
       </el-table-column>

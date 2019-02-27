@@ -9,8 +9,8 @@
   	  	<div class="detail" v-if="isActive==false" v-model="teacher_name" :list="list"> 강사명 : {{list.teacher_email_id}} </div>
   	  	<div class="detail" v-if="isActive==false" v-model="capacity" :list="list"> 정원 : {{list.capacity}} 명</div>
         <div class="detail_horizon" v-if="isActive==false" v-model="start_date" :list="list">강의날짜 : {{list.start_date}}  ~ </div> <div class="detail_horizon2" v-model="end_date" :list="list"> {{list.end_date}} </div>
-  	  	<div class="detail_horizon3" v-if="isActive==false" v-model="start_time" :list="list">강의시간: {{list.start_time}}  ~ </div> <div class="detail_horizon4" v-model="end_time" :list="list">
-        {{list.end_time}}</div>
+  	  	<!-- <div class="detail_horizon3" v-if="isActive==false" v-model="start_time" :list="list">강의시간: {{list.start_time}}  ~ </div> <div class="detail_horizon4" v-model="end_time" :list="list">
+        {{list.end_time}}</div> -->
         <div class="detail_bottom" v-if="isActive==false" v-model="location" :list="list"> 공간 : {{list.location}} </div>
   	  </div>
   	</div>
@@ -200,7 +200,7 @@ export default {
     margin-bottom:5px;
   }
   .detail_horizon{
-    margin-top:5px;
+    margin-top:6px;
     width:300px;
     margin-bottom:5px;
   }
@@ -214,15 +214,17 @@ export default {
     margin-top:-15px;
     width:470px;
     margin-bottom:5px;
+    border: 1px solid red;
   }
   .detail_horizon4{
     position:relative;
     top:-23px;
     left:125px;
     width:100px;
+    border: 1px solid blue;
   }
   .detail_bottom{
-    margin-top:-15px;
+    margin-top:-17px;
   }
   .detail_isActive{
     margin-top: 30px;
