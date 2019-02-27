@@ -51,7 +51,7 @@
         </router-link>
         <!--el-button type="primary" v-if="lectureType !== 0" style="margin-right: 50px;" @click="onClick('CHANGE_ALL')">일괄 활성화 시간 설정</el-button-->
         <router-link :to="`/a/teacher/NNlecture/itemconnection?lectureId=${lectureId}`">
-          <el-button type="primary">아이템 연결 관리</el-button>
+          <el-button type="primary">아이템 그룹화/순서화</el-button>
         </router-link>
         <!--
         <el-button id="btn_add_new_lc_item" @click="onClick('ADD_LC_ITEM_SEQUENCE')" type="primary">

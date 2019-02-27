@@ -96,8 +96,7 @@ export default {
         case 'LOGIN': {
           try {
             // const res = await vm.reqLogin({
-           // console.log('vm.$store.state.auth.jwt111; = ', vm.$store.state.auth.jwt);
-            await vm.reqLogin({
+            const res = await vm.reqLogin({
               email: vm.input.email,
               password: vm.input.password,
             });
@@ -107,8 +106,10 @@ export default {
             // console.log('login res', JSON.stringify(res));
             // TODO: translate
 
-            // vm.openNoti                        ('success', 'Login Success !!', 'Success');
-            if (vm.redirectTo) {
+            // vm.openNoti('success', 'Login Success !!', 'Success');
+            if (res.data.terms === 0) {
+              vm.$router.push('/tos');
+            } else if (vm.redirectTo) {
               // jwt 업데이트 후 페이지 이동 이루어지도록
               vm.$router.push(vm.redirectTo);
             } else {
@@ -205,6 +206,14 @@ export default {
     const vm = this;
     if (vm.redirectTo) {
       vm.openNoti('warning', vm.$t('LOGIN.LOGIN_REQUIRED'), 'Warning');
+    }
+    if (vm.$route.query.alert === 'expired') {
+      vm.$notify({
+        title: 'warning',
+        message: '로그인이 세션이 만료되었습니다. 다른곳에서 로그인 하였거나, 일정 시간 이상 경과한 경우 발생할 수 있습니다. 다시 로그인 해주세요.',
+        type: 'warning',
+        duration: 10000,
+      });
     }
   },
 };

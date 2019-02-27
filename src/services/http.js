@@ -22,4 +22,16 @@ if (jwt) {
   axiosConfig.headers['x-access-token'] = jwt;
 }
 
-export default axios.create(axiosConfig);
+const instance = axios.create(axiosConfig);
+
+instance.interceptors.response.use(response => (response)
+, (error) => {
+  if (error.response.status === 401) {
+    const getUrl = window.location;
+    const frontLoginUrl = `${getUrl.protocol}//${getUrl.host}/login?alert=expired`;
+    window.location.href = frontLoginUrl;
+  }
+  return Promise.reject(error);
+});
+
+export default instance;

@@ -371,6 +371,8 @@ export default {
     },
     async onSubmit() {
       const vm = this;
+      // ***** 유효성 검사 *****
+
       // 자료,문항,실습은 키워드가 없다면 알람을 띄우고 막음
       if (vm.inputHead.lcItemType === 'question' ||
           vm.inputHead.lcItemType === 'note' ||
@@ -387,6 +389,23 @@ export default {
         }
       }
       vm.inputHead.lcItemOffset = null;
+
+      // 보기가 하나도 없는 객관식 문항은 생성 불가
+      if (vm.inputHead.lcItemType === 'question' &&
+      vm.inputBody.questionType === 'MULTIPLE_CHOICE' &&
+      (vm.inputTail.questionList[0] === undefined || vm.inputTail.questionList[0] === '') &&
+      (vm.inputTail.questionList[1] === undefined || vm.inputTail.questionList[1] === '') &&
+      (vm.inputTail.questionList[2] === undefined || vm.inputTail.questionList[2] === '') &&
+      (vm.inputTail.questionList[3] === undefined || vm.inputTail.questionList[3] === '') &&
+      (vm.inputTail.questionList[4] === undefined || vm.inputTail.questionList[4] === '')) {
+        vm.$notify({
+          title: '생성 실패',
+          message: '문항 - 객관은 보기를 반드시 입력해야 합니다.',
+          type: 'error',
+          duration: 5000,
+        });
+        return;
+      }
 
       if (vm.isNewItem) {
         try {

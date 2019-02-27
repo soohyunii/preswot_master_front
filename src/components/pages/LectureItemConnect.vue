@@ -1,7 +1,7 @@
 <template>
   <div id="lecture_item_connect" class="bt-container">
     <h2>
-      아이템 연결하기
+      아이템 그룹화/순서화
       <el-popover
         style="position: relative; left: 30px; top: 3px;"
         placement="top-start"
@@ -25,10 +25,10 @@
           <el-button v-else size="small" @click="delGroup(scope.row)">해제</el-button>
         </template>
       </el-table-column>
-      <el-table-column label="연결" prop="fix" width="80px" align="center"></el-table-column>
-      <el-table-column label="" width="80px" align="center">
+      <el-table-column label="순서 연결" prop="fix" width="80px" align="center"></el-table-column>
+      <el-table-column label="" width="100px" align="center">
         <template slot-scope="scope">
-          <el-button v-if="scope.row.fix === ''" size="small" @click="newConnect(scope.row)">연결</el-button>
+          <el-button v-if="scope.row.fix === ''" size="small" @click="newConnect(scope.row)">순서화</el-button>
           <el-button v-else size="small" @click="delConnect(scope.row)">해제</el-button>
         </template>
       </el-table-column>
@@ -39,7 +39,7 @@
     <div v-if="ifConnectMode">
       <el-tag v-for="(k, index) in newConnectList" :key="index">{{ k.name }}</el-tag>
       <el-button type="primary" @click="onClick('CONNECT_LC_ITEM')">
-        연결
+        순서화
       </el-button>
       <el-button @click="onClick('CANCEL_CONNECT_MODE')">
         취소
@@ -106,10 +106,10 @@ export default {
                   '강의 중 보여줄 순서대로 그룹을 설정해주세요. ' +
                   '그룹에 속하지 않은 아이템은 강의 중 활성화되지 않습니다.',
       }, {
-        title: '2단계 - 아이템 연결',
+        title: '2단계 - 아이템 순서화',
         content: '그룹 안의 아이템들은 기본적으로 순서가 랜덤하게 셔플되는데, ' +
-                  '같은 연결로 묶인 아이템들은 순서가 셔플되지 않고 유지됩니다. ' +
-                  '같은 그룹에 속한 아이템끼리만 아이템 연결이 가능합니다.',
+                  '같은 순서화로 묶인 아이템들은 순서가 셔플되지 않고 유지됩니다. ' +
+                  '같은 그룹에 속한 아이템 내에서만 순서화가 가능합니다.',
       }, {
         title: '3단계 - 그룹 시간 설정 (무인강의 전용)',
         content: '강사가 수동으로 아이템을 활성화하지 않는 무인 강의의 경우, ' +
@@ -180,6 +180,7 @@ export default {
       });
       let groupNum = 1;
       let listNum = 1;
+      let listSubNum = 1;
       grp.data.list.forEach((x) => {
         x.list_ids.forEach((y) => {
           seq.data.forEach((z) => {
@@ -191,14 +192,16 @@ export default {
                   // 연결리스트에 속하는 각 아이템에 대해
                   itemList.forEach((v) => {
                     if (parseInt(w, 10) === v.lecture_item_id) {
-                      v.fix = listNum; // eslint-disable-line
+                      v.fix = `${listNum} - ${listSubNum}`; // eslint-disable-line
                       v.group = groupNum; // eslint-disable-line
                       v.gN = x.group_id; // eslint-disable-line
                       v.fixx = 1; // eslint-disable-line
                     }
                   });
+                  listSubNum += 1;
                 });
                 listNum += 1;
+                listSubNum = 1;
               } else {
                 // 연결리스트 아이템이 한 개 - 고정 X
                 itemList.forEach((v) => {

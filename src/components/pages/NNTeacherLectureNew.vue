@@ -3,7 +3,7 @@
     <h2 v-if="isManage === false" class="page-title">
       강의 추가
     </h2>
-    <el-form :model="input" ref="elForm" label-width="125px" style="max-width: 800px;">
+    <el-form @submit.native.prevent :model="input" ref="elForm" label-width="125px" style="max-width: 800px;">
 
       <el-form-item label="강의 타이틀">
         <el-input v-model="input.title"  class="lecture-title"></el-input>
@@ -91,6 +91,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
+import deepCopy from 'deep-copy';
 import lectureService from '../../services/lectureService';
 import lectureItemService from '../../services/lectureItemService';
 import authService from '../../services/authService';
@@ -148,6 +149,8 @@ export default {
       vm.input.type = vm.lecture.type || vm.initialInput.type;
       vm.input.lcStartDate = new Date(vm.lecture.start_time) || vm.initialInput.lcStartDate;
       vm.input.lcEndDate = new Date(vm.lecture.end_time) || vm.initialInput.lcEndDate;
+      vm.input.open = vm.lecture.result_opened;
+      vm.originInput = deepCopy(vm.input);
     }
   },
   methods: {
@@ -167,14 +170,34 @@ export default {
           vm.input.lcEndDate.setDate(vm.input.lcStartDate.getDate());
         }
 
-        if (vm.isManage) {
-          // 강의 수정시 확인 안내문 출력
-          vm.$confirm('강의 기본 정보를 수정하실 경우, 기존의 아이템 그룹이 전부 해제되어 ' +
-          '다시 설정하셔야 합니다. 수정하시겠습니까?', '강의 기본 정보 수정', {
-            confirmButtonText: '수정',
-            cancelButtonText: '취소',
-            type: 'warning',
-          }).then(() => {
+        if (vm.isManage) { // 강의 정보 수정일 경우
+          if (vm.input.type !== vm.originInput.type) { // 강의 타입이 변경되었을 경우
+            // 확인 안내문 출력
+            vm.$confirm('강의 타입을 수정하실 경우, 기존의 아이템 그룹이 전부 해제되어 ' +
+            '다시 설정하셔야 합니다. 수정하시겠습니까?', '강의 기본 정보 수정', {
+              confirmButtonText: '수정',
+              cancelButtonText: '취소',
+              type: 'warning',
+            }).then(() => {
+              lectureService.putLecture({
+                lectureId: vm.lectureId,
+                type: vm.input.type,
+                name: vm.input.title,
+                startTime: vm.input.lcStartDate,
+                endTime: vm.input.lcEndDate,
+              });
+              // then 뒤에 await 불가능해서 별도의 외부 함수로 구현
+              vm.deleteAllGroup();
+              return; // eslint-disable-line
+            }).catch(() => { // eslint-disable-line
+              vm.$notify({
+                title: '강의 수정 취소',
+                message: '강의 수정이 취소되었습니다.',
+                type: 'warning',
+              });
+              return; // eslint-disable-line
+            });
+          } else { // 강의 타입이 변경되지 않았으면
             lectureService.putLecture({
               lectureId: vm.lectureId,
               type: vm.input.type,
@@ -185,14 +208,7 @@ export default {
             // then 뒤에 await 불가능해서 별도의 외부 함수로 구현
             vm.deleteAllGroup();
             return; // eslint-disable-line
-          }).catch(() => { // eslint-disable-line
-            vm.$notify({
-              title: '강의 수정 취소',
-              message: '강의 수정이 취소되었습니다.',
-              type: 'warning',
-            });
-            return; // eslint-disable-line
-          });
+          }
         } else {
           try {
             const a = await lectureService.postLecture({
@@ -254,7 +270,7 @@ export default {
       });
       vm.$notify({
         title: '강의 수정 성공',
-        message: '성공적으로 강의가 수정되었습니다. 아이템 그룹이 전부 해제되었습니다. 다시 그룹화해주세요.',
+        message: '성공적으로 강의가 수정되었습니다.',
         type: 'success',
       });
       vm.$router.go(-1); // 새로고침

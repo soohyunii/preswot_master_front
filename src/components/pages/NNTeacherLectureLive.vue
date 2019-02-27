@@ -381,10 +381,11 @@
             resultType="실시간"/>
         </el-row>
       </div>
+      <!--
       <div class="statusbar" v-bind:class="{ activeInfo: isInfoVisible }">
         <div class="statusbar_for_click" @click="onClick('TOGGLE_STATUS_INFO')"></div>
         <teacher-lecture-live-summary :lectureId= "lectureId"/>
-      </div>
+      </div> -->
     </template>
   </div>
 </template>

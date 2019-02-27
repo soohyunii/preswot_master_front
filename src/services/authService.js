@@ -10,6 +10,9 @@ export default {
       password,
     });
   },
+  agreeTos() {
+    return http.get('/auth/terms');
+  },
   findPassword({ email }) {
     return http.get(`/auth/${email}/find-password`);
   },
