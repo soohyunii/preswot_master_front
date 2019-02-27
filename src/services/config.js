@@ -1,5 +1,11 @@
 /* eslint-disable import/prefer-default-export */
 
+let serverUrl = 'http://192.168.0.8';
+
+let backPort = 8000;
+let socketPort = 8001;
+
+/*
 let serverUrl = 'http://192.168.0.2';
 
 let backPort = 8000;
@@ -17,6 +23,6 @@ if (isProd) {
   backPort = 8000;
   socketPort = 8001;
 }
-
+*/
 export const baseUrl = `${serverUrl}:${backPort}`;
 export const websocketUrl = `${serverUrl}:${socketPort}`;
