@@ -112,7 +112,6 @@ export default {
               vm.$router.push('/');
             }
           } catch (error) {
-            console.log(error);
             if (error.response.status === 403) {
               vm.$notify({
                 title: 'warning',
