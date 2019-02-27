@@ -80,9 +80,6 @@ export default {
       });
       return res;
     },
-    async getMasterUni({}) {
-
-    },
     async getUniLists({ commit }) {
       const res = await MasterService.getUniLists();
 
@@ -90,29 +87,10 @@ export default {
       // console.log(res.data);
       commit('updateStudyingUniList', {
         studyingUniList: sc,
-      }); 
-
-      /*
-      commit('updateOpenedUniList', {
-        openedUniList: res.data,
       });
-      */
-      // console.log(res.data); 
-      
-      /*
-      commit('updateGoingUniList', {
-        goingUniList: res.data.name,
-      });
-      
-      commit('updateFinishedUniList', {
-        finishedUniList: res.data.address,
-      });
-      */
     },
     async getMyUniLists({ commit }) {
       const res = await MasterService.getMyUniList();
-
-      /*const sc = res.data.studyingUnies;*/
       const sc = res.data.code;
       commit('updateStudyingUniList', {
         studyingUniList: sc,

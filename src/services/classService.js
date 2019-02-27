@@ -1,5 +1,7 @@
 // import axios from 'axios';
 // import config from './config';
+/* eslint-disable camelcase */
+/* eslint-disable no-unused-vars */
 import http from './http';
 import utils from '../utils';
 
@@ -35,7 +37,7 @@ export default {
     return http.get(`/classes/${id}/keyword-relations`);
   },
   getMasterUniLists() {
-    return http.get(`/university/list`);
+    return http.get('/university/list');
   },
   postClass({ //
     title,
@@ -211,7 +213,7 @@ export default {
     email,
     phone,
   }) {
-    return http.put(`/view/dept`, {
+    return http.put('/view/dept', {
       choiceUni,
       code,
       name,
@@ -230,24 +232,6 @@ export default {
     email,
     phone,
   }) {
-    console.log('choiceUni = ', choiceUni);
-    console.log('choiceUni = ', code);
-    console.log('choiceUni = ', name);
-    console.log('choiceUni = ', fields);
-    console.log('choiceUni = ', manager);
-    console.log('choiceUni = ', email);
-    console.log('choiceUni = ', phone);
-    /*
-    return http.post(`/register/dept/success`, {
-      choiceUni,
-      code,
-      name,
-      fields,
-      manager,
-      email,
-      phone,
-    });
-    */
     return {
       success: true,
     };
@@ -267,7 +251,7 @@ export default {
     account,
     bank,
   }) {
-    return http.put(`view/teacher`,{
+    return http.put('view/teacher', {
       email,
       password,
       passwordConfirm,
@@ -299,7 +283,7 @@ export default {
     bank,
   }) {
     return {
-      success : true,
+      success: true,
     };
   },
   NNMasterputClass({
@@ -317,7 +301,7 @@ export default {
     lecturerDescription,
     description,
   }) {
-    return http.put(`/view/class`,{
+    return http.put('/view/class', {
       choiceUni,
       choiceDept,
       choiceTeacher,
@@ -331,7 +315,7 @@ export default {
       capacity,
       lecturerDescription,
       description,
-    })
+    });
   },
   NNMasterpostClass({
     choiceUni,
@@ -349,7 +333,7 @@ export default {
     description,
   }) {
     return {
-      success:true,
+      success: true,
     };
   },
   NNMasterputStudent({
@@ -366,7 +350,7 @@ export default {
     account,
     bank,
   }) {
-    return http.put(`view/student`,{
+    return http.put('view/student', {
       email,
       password,
       passwordConfirm,
@@ -405,7 +389,7 @@ export default {
     capacity,
     choiceTeacher,
   }) {
-    return (http.put(`view/bank`), {
+    return (http.put('view/bank'), {
       code,
       name,
       capacity,

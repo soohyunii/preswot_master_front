@@ -62,6 +62,8 @@
 </template>
 
 <script>
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-unused-vars */
 import { mapActions, mapState } from 'vuex';
 import MasterClassTable from '../partials/MasterClassTable';
 import masterService from '../../services/masterService';
@@ -70,7 +72,7 @@ import utils from '../../utils';
 export default {
   name: 'ViewClass',
   components: {
-    MasterClassTable, 
+    MasterClassTable,
   },
   data() {
     return {
@@ -78,13 +80,13 @@ export default {
       searchType: 'name',
       searchText: '',
       list: [],
-      uniNameList:[],
-      deptNameList:[],
-      semesterNameList:[],
-      teacherNameList:[],
+      uniNameList: [],
+      deptNameList: [],
+      semesterNameList: [],
+      teacherNameList: [],
       chosen: undefined,
       dept_chosen: undefined,
-      semester:'',
+      semester: '',
       date_from_chosen: undefined,
       date_to_chosen: undefined,
       checked: undefined,
@@ -93,56 +95,68 @@ export default {
   computed: {
     ...mapState('NNclass', ['studyingClassList']),
   },
-  async created() {
+  async mounted() {
     const vm = this;
-  },
-  async mounted(){
-    const vm=this;
     const uniNameLists = await masterService.getUniNameLists();
-    vm.uniNameList = uniNameLists.data.map(element=>element.name);
+    vm.uniNameList = uniNameLists.data.map(element => element.name);
   },
-  watch:{
-    list: async function(val,oldVal){
-      const vm=this;
-      if(vm.checked==false){
-        vm.checked=undefined;
+  watch: {
+    list: async function list(val, oldVal) {
+      const vm = this;
+      if (vm.checked === false) {
+        vm.checked = undefined;
       }
-      const res = await masterService.getClassLists({university_name : vm.chosen,department_name : vm.dept_chosen ,end_date_from : vm.date_from_chosen ,end_date_to : vm.date_to_chosen, isActive:vm.checked});
-      const res2 = await masterService.getClassLists({university_name : vm.chosen,department_name : vm.dept_chosen ,end_date_from : vm.date_from_chosen ,end_date_to : vm.date_to_chosen, isActive:!vm.checked});
-      if(vm.checked==undefined){
-          for(let i=0;i<res.data.length;i++){
-            if(res.data[i].teacher_email_id!==null){
-              const teacherNameTemp = await masterService.getMasterUser({email_id:res.data[i].teacher_email_id});
-               vm.teacherNameList[i] = teacherNameTemp.data.name;
-               vm.list[i].teacher_email_id = vm.teacherNameList[i];
-            }
-          }
-        } else {
-          for(let i=0;i<res2.data.length;i++){
-            if(res2.data[i].teacher_email_id!==null){
-              const teacherNameTemp = await masterService.getMasterUser({email_id:res2.data[i].teacher_email_id});
-               vm.teacherNameList[i] = teacherNameTemp.data.name;
-               vm.list[i].teacher_email_id = vm.teacherNameList[i];
-            }
+      const res = await masterService.getClassLists({
+        university_name: vm.chosen,
+        department_name: vm.dept_chosen,
+        end_date_from: vm.date_from_chosen,
+        end_date_to: vm.date_to_chosen,
+        isActive: vm.checked,
+      });
+      const res2 = await masterService.getClassLists({
+        university_name: vm.chosen,
+        department_name: vm.dept_chosen,
+        end_date_from: vm.date_from_chosen,
+        end_date_to: vm.date_to_chosen,
+        isActive: !vm.checked,
+      });
+      if (vm.checked === undefined) {
+        for (let i = 0; i < res.data.length; i += 1) {
+          if (res.data[i].teacher_email_id !== null) {
+            const teacherNameTemp = await masterService.getMasterUser({
+              email_id: res.data[i].teacher_email_id });
+            vm.teacherNameList[i] = teacherNameTemp.data.name;
+            vm.list[i].teacher_email_id = vm.teacherNameList[i];
           }
         }
-      for(let i=0; i<res.data.length; i++){
-        if(vm.checked==undefined){
-          if(res.data[i].isActive==true){
-            vm.list[i].isActive='비활성화'
-            vm.list[i].teacher_email_id='-'
-            vm.list[i].start_date='-' 
+      } else {
+        for (let i = 0; i < res2.data.length; i += 1) {
+          if (res2.data[i].teacher_email_id !== null) {
+            const teacherNameTemp = await masterService.getMasterUser({
+              email_id: res2.data[i].teacher_email_id });
+            vm.teacherNameList[i] = teacherNameTemp.data.name;
+            vm.list[i].teacher_email_id = vm.teacherNameList[i];
+          }
+        }
+      }
+      for (let i = 0; i < res.data.length; i += 1) {
+        if (vm.checked === undefined) {
+          if (res.data[i].isActive === true) {
+            vm.list[i].isActive = '비활성화';
+            vm.list[i].teacher_email_id = '-';
+            vm.list[i].start_date = '-';
+            vm.list[i].end_date = '-';
           } else {
-           vm.list[i].isActive='활성화'
+            vm.list[i].isActive = '활성화';
           }
-        } 
-      }
-      for(let i=0;i<res2.data.length;i++){
-        if(vm.checked==true){
-          vm.list[i].isActive='활성화'
         }
-      }      
-    }
+      }
+      for (let i = 0; i < res2.data.length; i += 1) {
+        if (vm.checked === true) {
+          vm.list[i].isActive = '활성화';
+        }
+      }
+    },
   },
   methods: {
     ...mapActions('NNclass', [
@@ -151,7 +165,7 @@ export default {
       'deleteClassUser',
     ]),
     formatDate: utils.formatDate,
-    async onClick(type, arg, arg2) {
+    async onClick(type, arg) {
       const vm = this;
       switch (type) {
         case 'DETAIL': {
@@ -171,33 +185,56 @@ export default {
         }
       }
     },
-    async categoryChange(){
-      const vm=this;
-      const deptNameLists = await masterService.getDeptLists({university_name : vm.chosen, category:undefined});
-      vm.deptNameList = deptNameLists.data.map(element=>element.name);
-      const res = await masterService.getClassLists({university_name : vm.chosen});
+    async categoryChange() {
+      const vm = this;
+      const deptNameLists = await masterService.getDeptLists({
+        university_name: vm.chosen,
+        category: undefined,
+      });
+      vm.deptNameList = deptNameLists.data.map(element => element.name);
+      const res = await masterService.getClassLists({ university_name: vm.chosen });
       vm.list = res.data;
     },
-    async showChange(){
-      const vm=this;
-      const res = await masterService.getClassLists({university_name : vm.chosen,department_name : vm.dept_chosen});
+    async showChange() {
+      const vm = this;
+      const res = await masterService.getClassLists({
+        university_name: vm.chosen,
+        department_name: vm.dept_chosen,
+      });
       vm.list = res.data;
     },
-    async toChange(){
-      const vm=this;
-      const res = await masterService.getClassLists({university_name : vm.chosen,department_name : vm.dept_chosen ,end_date_from : vm.date_from_chosen ,end_date_to : vm.date_to_chosen});
+    async toChange() {
+      const vm = this;
+      const res = await masterService.getClassLists({
+        university_name: vm.chosen,
+        department_name: vm.dept_chosen,
+        end_date_from: vm.date_from_chosen,
+        end_date_to: vm.date_to_chosen,
+      });
       vm.list = res.data;
     },
-    async isActiveChange(){
-      const vm=this;
-      if(vm.checked==false){
-        const res = await masterService.getClassLists({university_name : vm.chosen,department_name : vm.dept_chosen ,end_date_from : vm.date_from_chosen ,end_date_to : vm.date_to_chosen, isActive:undefined});
-        vm.list=res.data;
+    async isActiveChange() {
+      const vm = this;
+      if (vm.checked === false) {
+        const res = await masterService.getClassLists({
+          university_name: vm.chosen,
+          department_name: vm.dept_chosen,
+          end_date_from: vm.date_from_chosen,
+          end_date_to: vm.date_to_chosen,
+          isActive: undefined,
+        });
+        vm.list = res.data;
       } else {
-        const res = await masterService.getClassLists({university_name : vm.chosen,department_name : vm.dept_chosen ,end_date_from : vm.date_from_chosen ,end_date_to : vm.date_to_chosen, isActive:!vm.checked});
-        vm.list=res.data;
-      }  
-    }
+        const res = await masterService.getClassLists({
+          university_name: vm.chosen,
+          department_name: vm.dept_chosen,
+          end_date_from: vm.date_from_chosen,
+          end_date_to: vm.date_to_chosen,
+          isActive: !vm.checked,
+        });
+        vm.list = res.data;
+      }
+    },
   },
 };
 </script>
@@ -243,3 +280,4 @@ export default {
   }
 }
 </style>
+

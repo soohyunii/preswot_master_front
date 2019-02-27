@@ -55,6 +55,7 @@
 </template>
 
 <script>
+/* eslint-disable camelcase */
 import masterService from '../../services/masterService';
 import authService from '../../services/authService';
 import utils from '../../utils';
@@ -82,7 +83,7 @@ export default {
     };
     return {
       initialInput,
-      input: Object.assign({}, initialInput), 
+      input: Object.assign({}, initialInput),
     };
   },
   async mounted() {
@@ -94,7 +95,8 @@ export default {
       vm.input.address = res.data.address || vm.initialInput.address;
       vm.input.manager_name = res.data.manager_name || vm.initialInput.manager_name;
       vm.input.manager_email = res.data.manager_email || vm.initialInput.manager_email;
-      vm.input.manager_phone_number = res.data.manager_phone_number || vm.initialInput.manager_phone_number;
+      vm.input.manager_phone_number = res.data.manager_phone_number ||
+      vm.initialInput.manager_phone_number;
     }
   },
   computed: {
@@ -136,7 +138,7 @@ export default {
           // TODO: wrap with try catch
           try {
             await masterService.NNMasterpostUni(vm.input);
-            if (vm.input.code == '' || vm.input.name == '') {
+            if (vm.input.code === '' || vm.input.name === '') {
               vm.$notify({
                 title: '대학 등록 실패',
                 message: '필수입력사항(*)을 모두 기재해 주세요',
@@ -147,19 +149,19 @@ export default {
               vm.$router.push('/a/register/uni/success');
             }
           } catch (error) {
-            if(error=='Error: Request failed with status code 500') {
+            if (error === 'Error: Request failed with status code 500') {
               vm.$notify({
-              title: '대학등록 실패',
-              message: '대학코드나 대학명이 중복되었는지 확인해주세요',
-              type: 'error',
-              duration: 0,
+                title: '대학등록 실패',
+                message: '대학코드나 대학명이 중복되었는지 확인해주세요',
+                type: 'error',
+                duration: 0,
               });
             } else {
               vm.$notify({
-              title: '대학등록 실패',
-              message: error.toString(),
-              type: 'error',
-              duration: 0,
+                title: '대학등록 실패',
+                message: error.toString(),
+                type: 'error',
+                duration: 0,
               });
             }
           }

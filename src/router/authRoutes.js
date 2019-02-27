@@ -413,8 +413,6 @@ export default function authRoutes(root) {
         title: '강의 은행',
       },
     },
-
-   // NOTE: 행정개발 
     {
       path: '/view/uni',
       name: 'ViewUni',
@@ -430,7 +428,7 @@ export default function authRoutes(root) {
       meta: {
         title: '관리자 학과 조회',
       },
-    },   
+    },
     {
       path: '/view/teacher',
       name: 'ViewTeacher',
@@ -503,19 +501,10 @@ export default function authRoutes(root) {
         title: '관리자 대학 등록 성공',
       },
     },
-    /*{
-      alias: '/register/uni/edit/:code',
-      path: '/register/uni',
-      name: 'RegisterUni',
-      component: RegisterUni,
-      meta: {
-        title: '관리자 대학 수정',
-      },
-    },*/
     {
       alias: '/:code/edit',
-      path: '/register/uni',
-      name: 'RegisterUni',
+      path: '/register/uni/edit',
+      name: 'RegisterUniEdit',
       component: RegisterUni,
       meta: {
         title: '관리자 대학 수정',
@@ -538,9 +527,9 @@ export default function authRoutes(root) {
       },
     },
     {
-      alias: '/:code/dept/:code/edit',
-      path: '/register/dept',
-      name: 'RegisterDept',
+      alias: '/:unicode/dept/:code/edit',
+      path: '/register/dept/edit',
+      name: 'RegisterDeptEdit',
       component: RegisterDept,
       meta: {
         title: '관리자 학과 수정',
@@ -564,8 +553,8 @@ export default function authRoutes(root) {
     },
     {
       alias: '/teacher/:code/edit',
-      path: '/register/teacher',
-      name: 'RegisterTeacher',
+      path: '/register/teacher/edit',
+      name: 'RegisterTeacherEdit',
       component: RegisterTeacher,
       meta: {
         title: '관리자 강사 수정',
@@ -581,8 +570,8 @@ export default function authRoutes(root) {
     },
     {
       alias: '/class/:code/edit',
-      path: '/register/class',
-      name: 'RegisterClass',
+      path: '/register/class/edit',
+      name: 'RegisterClassEdit',
       component: RegisterClass,
       meta: {
         title: '관리자 과목 수정',
@@ -614,8 +603,8 @@ export default function authRoutes(root) {
     },
     {
       alias: '/student/:code/edit',
-      path:'/register/student',
-      name: 'RegisterStudent',
+      path: '/register/student/edit',
+      name: 'RegisterStudentEdit',
       component: RegisterStudent,
       meta: {
         title: '관리자 학생 수정',
@@ -631,8 +620,8 @@ export default function authRoutes(root) {
     },
     {
       alias: '/bank/:code/edit',
-      path: '/register/bank',
-      name: 'RegisterBank',
+      path: '/register/bank/edit',
+      name: 'RegisterBankEdit',
       component: RegisterBank,
       meta: {
         title: '관리자 강의은행그룹 수정',

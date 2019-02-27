@@ -45,6 +45,7 @@
 </template>
 
 <script>
+/* eslint-disable camelcase */
 import { mapActions, mapState } from 'vuex';
 import MasterTeacherTable from '../partials/MasterTeacherTable';
 import masterService from '../../services/masterService';
@@ -61,22 +62,19 @@ export default {
       searchType: 'name',
       searchText: '',
       list: [],
-      chosen:'',
-      uniNameList:[],
-      deptNameList:[],
-      dept_chosen:'',
-      type:1,
+      chosen: '',
+      uniNameList: [],
+      deptNameList: [],
+      dept_chosen: '',
+      type: 1,
       nothing: undefined,
     };
   },
   computed: {
     ...mapState('MasterTeacher', ['studyingTeacherList']),
   },
-  async created() {
+  async mounted() {
     const vm = this;
-  },
-  async mounted(){
-    const vm=this;
     const uniNameLists = await masterService.getUniNameLists();
     vm.uniNameList = await uniNameLists.data.map(element => element.name);
   },
@@ -87,7 +85,7 @@ export default {
       'deleteClassUser',
     ]),
     formatDate: utils.formatDate,
-    async onClick(type, arg, arg2) {
+    async onClick(type, arg) {
       const vm = this;
       switch (type) {
         case 'DETAIL': {
@@ -107,26 +105,44 @@ export default {
         }
       }
     },
-    async categoryChange(){
-      const vm=this;
-      const deptNameLists = await masterService.getDeptLists({university_name:vm.chosen, category:undefined});
-      vm.deptNameList = await deptNameLists.data.map(element=>element.name);
-      const res = await masterService.getUserLists(type,university_name,null);
-      for(var i=0;i<res.data.length;i++){
-        if(res.data[i].birth.indexOf("T")!==-1){
-          res.data[i].birth=res.data[i].birth.split("T")[0];
+    async categoryChange() {
+      const vm = this;
+      const deptNameLists = await masterService.getDeptLists({
+        university_name: vm.chosen,
+        category: undefined,
+      });
+      vm.deptNameList = await deptNameLists.data.map(element => element.name);
+      const res = await masterService.getUserLists(vm.type, vm.chosen, null);
+      for (let i = 0; i < res.data.length; i += 1) {
+        if (res.data[i].birth.indexOf('T') !== -1) {
+          res.data[i].birth = res.data[i].birth.split('T')[0];
+        }
+        if (res.data[i].sex === 1) {
+          res.data[i].sex = '남자';
+        } else {
+          res.data[i].sex = '여자';
         }
       }
-      vm.list=res.data;
+      vm.list = res.data;
     },
-    async categoryAllShow(){
-      const vm=this;
-      const deptNameListsAll = await masterService.getUserLists(type,university_name,department_name);
-      vm.list=deptNameListsAll.data;
+    async categoryAllShow() {
+      const vm = this;
+      const deptNameListsAll = await masterService.getUserLists(vm.type,
+        vm.chosen,
+        vm.dept_chosen,
+        );
+      vm.list = deptNameListsAll.data;
     },
-    async onChange(type,university_name,department_name){
-      const vm=this;
-      const res = await masterService.getUserLists(type,university_name,department_name);
+    async onChange(type, university_name, department_name) {
+      const vm = this;
+      const res = await masterService.getUserLists(type, university_name, department_name);
+      for (let i = 0; i < res.data.length; i += 1) {
+        if (res.data[i].sex === 1) {
+          res.data[i].sex = '남자';
+        } else {
+          res.data[i].sex = '여자';
+        }
+      }
       vm.list = res.data;
     },
     onClickDelete(index) {
@@ -147,7 +163,6 @@ export default {
               teachingClassIndex: index,
             });
           } catch (error) {
-            console.error(error); 
             vm.$notify({
               title: '강사 삭제 실패',
               message: error.toString(),

@@ -25,69 +25,65 @@
 </template>
 
 <script>
-import {mapActions, mapState} from 'vuex';
-import utils from '../../utils';
+/* eslint-disable camelcase */
 import MasterStudentScoreDetail from '../partials/MasterStudentScoreDetail';
 import masterService from '../../services/masterService';
 
 export default {
-	name: 'ViewDetailStudent',
-	components: {
+  name: 'ViewDetailStudent',
+  components: {
     MasterStudentScoreDetail,
-	},
-	data(){
-		return {
-			list: [],
-      name:null,
-      sex:null,
-      birth:new Date(),
-      university_name:'',
-      department_name:'',
-      address:'',
-      email_id:'',
-      phone:'',
-      account_number:'',
-      account_bank:'',
-		};
-	},
+  },
+  data() {
+    return {
+      list: [],
+      name: null,
+      sex: null,
+      birth: new Date(),
+      university_name: '',
+      department_name: '',
+      address: '',
+      email_id: '',
+      phone: '',
+      account_number: '',
+      account_bank: '',
+    };
+  },
   computed: {
-    classId(){
-      const vm=this;
+    classId() {
+      const vm = this;
       return vm.$route.path.split('student/')[1].split('/detail')[0];
     },
-
   },
-  async mounted(){
-    const vm=this;
+  async mounted() {
+    const vm = this;
     const class_id = vm.classId;
-    const res = await masterService.getMasterUser({email_id:class_id});
-    vm.list=res.data;
-    if(vm.list.sex==1){
-      vm.list.sex="남자"
+    const res = await masterService.getMasterUser({ email_id: class_id });
+    vm.list = res.data;
+    if (vm.list.sex === 1) {
+      vm.list.sex = '남자';
     } else {
-      vm.list.sex="여자"
+      vm.list.sex = '여자';
     }
-    if(vm.list.birth.indexOf("T")!=-1){
-      vm.list.birth=vm.list.birth.split("T")[0];
+    if (vm.list.birth.indexOf('T') !== -1) {
+      vm.list.birth = vm.list.birth.split('T')[0];
     }
   },
-	methods: {
-    classOnChange: function(){
-      const vm=this;
-      vm.buttonType='classOnChange';
-	  },
-    lectureOnChange: function(){
-      const vm=this;
-      vm.buttonType='lectureOnChange';
+  methods: {
+    async classOnChange() {
+      const vm = this;
+      vm.buttonType = 'classOnChange';
     },
-    studentOnChange: function(){
-      const vm=this;
-      vm.buttonType='studentOnChange';
+    async lectureOnChange() {
+      const vm = this;
+      vm.buttonType = 'lectureOnChange';
+    },
+    async studentOnChange() {
+      const vm = this;
+      vm.buttonType = 'studentOnChange';
     },
   },
 };
-	
-
 </script>
 
 <style lang="scss" scoped>

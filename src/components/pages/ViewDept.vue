@@ -35,7 +35,6 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
 import MasterDeptTable from '../partials/MasterDeptTable';
 import utils from '../../utils';
 import masterService from '../../services/masterService';
@@ -53,20 +52,16 @@ export default {
       list: [],
       uniName: '',
       chosen: '',
-      pageNum:1,
+      pageNum: 1,
     };
   },
-  async created() {
-    const vm = this;
-
-  },
   async mounted() {
-    const vm=this;
+    const vm = this;
     const uniNameLists = await masterService.getUniNameLists();
     vm.uniName = await uniNameLists.data.map(element => element.name);
   },
   methods: {
-    async onClick(type, arg, arg2) {
+    async onClick(type, arg) {
       const vm = this;
       switch (type) {
         case 'DETAIL': {
@@ -86,17 +81,18 @@ export default {
         }
       }
     },
-    onClickDelete(index) {
-    },
-    async onChange(payload) {
+    async onChange() {
       const vm = this;
-      const res = await masterService.getDeptLists({university_name : vm.chosen, category:vm.searchType, search_word:vm.searchText, page:vm.pageNum});
+      const res = await masterService.getDeptLists({
+        university_name: vm.chosen,
+        category: vm.searchType,
+        search_word: vm.searchText,
+        page: vm.pageNum });
       vm.list = res.data;
-      // console.log(vm.searchType,vm.searchText,vm.pageNum);
     },
-    async clickTitle(){
-      const vm=this;
-      const res = await masterService.getDeptLists({name : undefined});
+    async clickTitle() {
+      const vm = this;
+      const res = await masterService.getDeptLists({ name: undefined });
       vm.list = res.data;
     },
   },

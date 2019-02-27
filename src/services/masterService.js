@@ -1,12 +1,12 @@
+/* eslint-disable camelcase */
 import http from './http';
-import utils from '../utils';
 
 export default {
-    getMasterUni({name}) {
+  getMasterUni({ name }) {
     return http.get(`/university?name=${name}`);
   },
-  getUniLists({category,search_word,page}) {
-    return http.get('/university/list',{
+  getUniLists({ category, search_word, page }) {
+    return http.get('/university/list', {
       params: {
         category,
         search_word,
@@ -15,39 +15,39 @@ export default {
     });
   },
   getUniNameLists() {
-    return http.get(`/university/namelist`);
+    return http.get('/university/namelist');
   },
-  getDeptLists({university_name,category,search_word,page}) {
-    return http.get('/department/list',{
+  getDeptLists({ university_name, category, search_word, page }) {
+    return http.get('/department/list', {
       params: {
         university_name,
         category,
         search_word,
         page,
       },
-    })
+    });
   },
-  getMasterDept({university_name , name}) {
-    return http.get(`/department?university_name=${university_name}&name=${name}`,);
+  getMasterDept({ university_name, name }) {
+    return http.get(`/department?university_name=${university_name}&name=${name}`);
   },
-  getUserLists_b(type,university_name,department_name) {
-    return http.get(`/admin_user/list?type=${type}&university_name=${university_name}&department_name=${department_name}`)
+  getUserLists_b(type, university_name, department_name) {
+    return http.get(`/admin_user/list?type=${type}&university_name=${university_name}&department_name=${department_name}`);
   },
 
-  getUserLists(type,university_name,department_name) {
+  getUserLists(type, university_name, department_name) {
     return http.get('/admin_user/list', {
       params: {
         type,
         university_name,
         department_name,
       },
-    })
+    });
   },
 
-  getMasterUser({email_id}){
-    return http.get(`/admin_user?email_id=${email_id}`)
+  getMasterUser({ email_id }) {
+    return http.get(`/admin_user?email_id=${email_id}`);
   },
-  getClassLists({university_name,department_name,end_date_from,end_date_to,isActive}){
+  getClassLists({ university_name, department_name, end_date_from, end_date_to, isActive }) {
     return http.get('/admin_class/list', {
       params: {
         university_name,
@@ -56,22 +56,22 @@ export default {
         end_date_to,
         isActive,
       },
-    })
+    });
   },
 
-  getMasterClass({class_id}){
-    return http.get(`/admin_class?class_id=${class_id}`)
+  getMasterClass({ class_id }) {
+    return http.get(`/admin_class?class_id=${class_id}`);
   },
-  getBankLists({university_name,department_name}){
+  getBankLists({ university_name, department_name }) {
     return http.get('/admin_bank/list', {
       params: {
         university_name,
         department_name,
       },
-    })
+    });
   },
-  getMasterBank({group_id}){
-    return http.get(`/admin_bank?group_id=${group_id}`)
+  getMasterBank({ group_id }) {
+    return http.get(`/admin_bank?group_id=${group_id}`);
   },
   NNMasterputUni({
     code,
@@ -85,7 +85,7 @@ export default {
     return http.put(`/university?name=${name}`, {
       code,
       old_name,
-      new_name : name,
+      new_name: name,
       address,
       manager_name,
       manager_email,
@@ -108,17 +108,15 @@ export default {
       manager_email,
       manager_phone_number,
     });
-    return {
-      success: true,
-    };
   },
   delete({
     name,
   }) {
-    return http.delete(`/university?name=${name}`,{
+    return http.delete(`/university?name=${name}`, {
     });
   },
   NNMasterputDept({
+    old_university_name,
     uniNameList,
     code,
     old_name,
@@ -128,11 +126,12 @@ export default {
     manager_email,
     manager_phone_number,
   }) {
-    return http.put(`/department`, {
+    return http.put('/department', {
+      old_university_name,
       university_name: uniNameList,
       code,
       old_name,
-      new_name : name,
+      new_name: name,
       part,
       manager_name,
       manager_email,
@@ -148,21 +147,21 @@ export default {
     manager_email,
     manager_phone_number,
   }) {
-    return http.post(`/department`,{
-      university_name : uniNameList,
+    return http.post('/department', {
+      university_name: uniNameList,
       code,
       name,
       part,
       manager_name,
       manager_email,
-      manager_phone_number,     
+      manager_phone_number,
     });
   },
   deptDelete({
     university_name,
     name,
   }) {
-    return http.delete(`/department?name=${name}&university_name=${university_name}`,{
+    return http.delete(`/department?name=${name}&university_name=${university_name}`, {
     });
   },
   NNMasterputTeacher({
@@ -181,7 +180,7 @@ export default {
     account_bank,
     account_number,
   }) {
-    return http.put(`/admin_user`,{
+    return http.put('/admin_user', {
       university_name,
       department_name,
       email_id,
@@ -214,7 +213,7 @@ export default {
     account_bank,
     account_number,
   }) {
-    return http.post(`/admin_user`,{
+    return http.post('/admin_user', {
       university_name,
       department_name,
       email_id,
@@ -229,12 +228,12 @@ export default {
       career,
       account_bank,
       account_number,
-    })
+    });
   },
   deleteUser({
     email_id,
   }) {
-    return http.delete(`/admin_user?email_id=${email_id}`,{
+    return http.delete(`/admin_user?email_id=${email_id}`, {
     });
   },
   NNMasterputClass({
@@ -251,10 +250,10 @@ export default {
     start_time,
     end_time,
     location,
-    day_of_week,  
+    day_of_week,
     capacity,
   }) {
-    return http.put(`/admin_class`,{
+    return http.put('/admin_class', {
       class_id,
       name,
       isActive,
@@ -268,9 +267,9 @@ export default {
       start_time,
       end_time,
       location,
-      day_of_week,  
+      day_of_week,
       capacity,
-    })
+    });
   },
   NNMasterpostClass({
     university_name,
@@ -288,7 +287,7 @@ export default {
     capacity,
     description,
   }) {
-    return http.post(`/admin_class`,{
+    return http.post('/admin_class', {
       university_name,
       department_name,
       teacher_email_id,
@@ -318,7 +317,7 @@ export default {
     account_bank,
     account_number,
   }) {
-    return http.put(`/admin_user`,{
+    return http.put('/admin_user', {
       email_id,
       password,
       name,
@@ -335,7 +334,7 @@ export default {
   classDelete({
     class_id,
   }) {
-    return http.delete(`/admin_class?class_id=${class_id}`,{
+    return http.delete(`/admin_class?class_id=${class_id}`, {
     });
   },
   NNMasterpostStudent({
@@ -352,7 +351,7 @@ export default {
     account_bank,
     account_number,
   }) {
-    return http.post(`/admin_user`,{
+    return http.post('/admin_user', {
       university_name,
       department_name,
       email_id,
@@ -374,7 +373,7 @@ export default {
     new_name,
     email_id_list,
   }) {
-    return http.put(`/admin_bank`, {
+    return http.put('/admin_bank', {
       group_id,
       university_name,
       department_name,
@@ -388,17 +387,17 @@ export default {
     name,
     email_id_list,
   }) {
-    return http.post(`/admin_bank`,{
+    return http.post('/admin_bank', {
       university_name,
       department_name,
       name,
       email_id_list,
-    }); 
+    });
   },
   bankDelete({
-    group_id
-  }){
-    return http.delete(`/admin_bank?group_id=${group_id}`,{     
+    group_id,
+  }) {
+    return http.delete(`/admin_bank?group_id=${group_id}`, {
     });
   },
 

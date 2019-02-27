@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import utils from '../../utils';
+/* eslint-disable camelcase */
 import masterService from '../../services/masterService';
 
 export default {
@@ -105,27 +105,28 @@ export default {
     }
   },
   methods: {
-    async deptDelete(university_name, name){
-      const vm=this;
-      vm.$confirm('정말로 이 학과를 삭제하시겠습니까?',{
-        confirmButtonText:'예, 삭제합니다',
-        cancelButtonText:'아니오, 삭제하지 않습니다',
-        type:'warning',
+    async deptDelete(university_name, name) {
+      const vm = this;
+      vm.$confirm('정말로 이 학과를 삭제하시겠습니까?', {
+        confirmButtonText: '예, 삭제합니다',
+        cancelButtonText: '아니오, 삭제하지 않습니다',
+        type: 'warning',
       })
-      .then(async()=> {
-        try{
-          await masterService.deptDelete({university_name: university_name, name: name});
-          await location.reload(true); 
-        } catch(error){
+      .then(async () => {
+        try {
+          await masterService.deptDelete({ university_name,
+            name });
+          await location.reload(true);
+        } catch (error) {
           vm.$notify({
-            title:'학과 삭제 실패',
-            message:error.toString(),
-            type:'error',
-            duration:3000,
-          }); 
+            title: '학과 삭제 실패',
+            message: error.toString(),
+            type: 'error',
+            duration: 3000,
+          });
         }
-      })
-    }
+      });
+    },
   },
 };
 </script>
