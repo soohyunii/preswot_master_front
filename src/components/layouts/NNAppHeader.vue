@@ -225,7 +225,7 @@ export default {
   },
   methods: {
     ...mapMutations('layout', ['updateCollapse']),
-    ...mapMutations('auth', ['updateJwt', 'updateLocale']),
+    ...mapMutations('auth', ['updateJwt', 'updateTemporalJwt', 'updateLocale']),
     _changeLocale(locale) {
       const vm = this;
       vm.$i18n.locale = locale;
@@ -248,6 +248,9 @@ export default {
         }
         case 'LOGOUT': {
           vm.updateJwt({
+            jwt: '',
+          });
+          vm.updateTemporalJwt({
             jwt: '',
           });
           if (vm.$route.meta.auth) {
