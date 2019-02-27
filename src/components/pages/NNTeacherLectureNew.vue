@@ -3,7 +3,7 @@
     <h2 v-if="isManage === false" class="page-title">
       강의 추가
     </h2>
-    <el-form :model="input" ref="elForm" label-width="125px" style="max-width: 800px;">
+    <el-form @submit.native.prevent :model="input" ref="elForm" label-width="125px" style="max-width: 800px;">
 
       <el-form-item label="강의 타이틀">
         <el-input v-model="input.title"  class="lecture-title"></el-input>
