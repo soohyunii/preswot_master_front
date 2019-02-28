@@ -152,7 +152,7 @@
               </el-button>
             </template>
           </el-table-column>
-          <el-table-column
+          <!--<el-table-column
             label="강의별 문제"
             width="100"
             align="center"
@@ -162,7 +162,7 @@
                 <el-button>출제</el-button>
               </router-link>
             </template>
-          </el-table-column>
+          </el-table-column>-->
         </template>
       </el-table>
     </div>
