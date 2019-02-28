@@ -94,11 +94,13 @@
             </ul>
           </span>
         </div>
-      
+
+      <!--      
       <div style="display:inline-block; position:absolute; top: 20px; left:632px;" v-if="authType === 0||authType === 1">
         <input v-model="testData" type="text" id="headerInput" class="inputtestclass" placeholder="Please input"/>
         <i class="el-icon-search" @click="onClick('asdfsadf')"></i>
       </div>
+      -->
 
       <!-- 회원가입 막아놓기
       <router-link to="/tos" v-show="!isJwtValid">
