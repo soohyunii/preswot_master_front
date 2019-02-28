@@ -19,11 +19,13 @@
         </div>
       </router-link>
 
+      <!--
       <router-link to="/classes" v-if="authType === 0||authType === 1">
         <div style="display:inline-block; position:absolute; top: 15px; left:230px;">
           <span class="normal">과목목록</span>
         </div>
       </router-link>
+      -->
       <router-link to="/a/student/NNclass" v-if="authType === 0" v-show="isJwtValid">
         <div :class="$attachReactablePostfix('div3')">
           <span :class="$attachReactablePostfix('common')">수강중인 과목</span>
