@@ -30,7 +30,7 @@
       </el-table>
     </div>-->
     <div>
-      <el-tabs>
+      <el-tabs @tab-click="tabChange()">
         <el-tab-pane label="간편 설정">
           <el-table :data="groupList" style="width: 1150px;">
             <el-table-column label="아이템 그룹화 목록">
@@ -311,6 +311,7 @@ export default {
     async refreshGroupList() {
       // 이미 만들어진 그룹 정보 가져오기
       const vm = this;
+      vm.groupList = [];
       const rest = await lectureItemService.showGroup({
         lectureId: vm.lectureId,
       });
@@ -343,6 +344,16 @@ export default {
         });
         vm.groupList.push(tempt);
       });
+    },
+    // 탭 변경시 모두 초기화
+    tabChange() {
+      const vm = this;
+      vm.ifTimeMode = false;
+      vm.ifSimpleMode = false;
+      vm.gid = -1;
+      vm.gList = [];
+      vm.newGroupList = [];
+      vm.newSimpleGroupList = [];
     },
     async onClick(type, data) {
       const vm = this;
@@ -465,7 +476,7 @@ export default {
           if (sS < 10) { sS = `0${sS}`; }
           vm.groupList.forEach((x) => {
             if (x.gid === vm.gid) {
-              x.during = `${sM}:${sS}`;
+              x.during = `${sM}:${sS}`; // eslint-disable-line
             }
           });
           vm.newSimpleGroupList = [];
@@ -479,7 +490,7 @@ export default {
           // 모든 아이템들의 시간 합이 강의 시간 넘어서는지
           let total = 0;
           vm.groupList.forEach((x) => {
-            const tt = parseInt(x.during.split(':')[0], 10) * 60 + parseInt(x.during.split(':')[1], 10);
+            const tt = (parseInt(x.during.split(':')[0], 10) * 60) + (parseInt(x.during.split(':')[1], 10));
             total += tt;
           });
           if (vm.lectureType === 1) {
@@ -500,19 +511,36 @@ export default {
           // 하나씩 맺어주기
           let startT = 0;
           let endT;
-          const tt = parseInt(x.during.split(':')[0], 10) * 60 + parseInt(x.during.split(':')[1], 10);
           for (let i = 0; i < vm.groupList.length; i += 1) {
             const x = vm.groupList[i];
-            console.log(x);
-            // 여기 수정해야 함
-            await lectureItemService.editGrdoup({
+            const tt = (parseInt(x.during.split(':')[0], 10) * 60) + (parseInt(x.during.split(':')[1], 10)); // 바꿀 아이템의 지속 시간
+            // 시작, 끝 시간 설정
+            endT = startT + tt;
+            if (startT !== 0) {
+              startT += 1;
+            }
+            if (startT !== 0 && tt === 0) {
+              endT += 1;
+            }
+            const tmpList = [];
+            x.list.forEach((y) => {
+              tmpList.push(y.id);
+            });
+            await lectureItemService.editGroup({ // eslint-disable-line
               lectureId: vm.lectureId,
-              iList: vm.gList,
-              groupId: vm.gid,
+              iList: tmpList,
+              groupId: x.gid,
               start: startT,
               end: endT,
             });
+            startT = endT;
           }
+          vm.$notify({
+            title: '알림',
+            message: '성공적으로 변경되었습니다. 변경된 시각은 "수동 설정" 탭에서 확인하세요.',
+            type: 'success',
+          });
+          vm.refreshGroupList();
           break;
         }
         // 아이템 시간 변경
