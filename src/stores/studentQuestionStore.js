@@ -7,7 +7,6 @@ export default {
     mode: 0, // 0 - list, 1 - new, 2 - modify
     post: null,
     put: null,
-    
     index: -1,
     studentQuestionList: [],
     modifyQuestion: { student_question_keywords: [] },
