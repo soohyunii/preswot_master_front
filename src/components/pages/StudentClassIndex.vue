@@ -23,6 +23,7 @@
           <!-- TODO: Link to each page per button-->
           <el-button>과목지식맵</el-button>
           <el-button @click="onClick('ANALYSIS')">과목저널링</el-button>
+          <el-button @click="onClick('Q&A')">Q&amp;A</el-button>
           <br /><br />
 
           <class-scenario type="STUDENT" />
@@ -77,6 +78,10 @@ export default {
             classId: vm.currentStudyingClass.class_id,
           });
           vm.$router.push(`/a/student/class/${vm.currentStudyingClass.class_id}/${userId}/journal`);
+          break;
+        }
+        case 'Q&A': {
+          vm.$router.push(`/a/class/${vm.currentStudyingClass.class_id}/board/0`);
           break;
         }
         default: {

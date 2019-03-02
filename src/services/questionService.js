@@ -55,8 +55,11 @@ export default {
   },
   postQuestionTestCase({
     questionId,
+    testcase,
   }) {
-    return http.post(`/questions/${questionId}/testcases`);
+    return http.post(`/questions/${questionId}/testcases`, {
+      testcase,
+    });
   },
   putQuestionTestCase({
     questionId,
@@ -75,13 +78,25 @@ export default {
   }) {
     return http.delete(`/questions/${questionId}/testcases/${num}`);
   },
-  postQuestionFile({
+  postQuestionAnswerFile({
     questionId,
     file,
   }) {
     const form = new FormData();
     form.append('file', file, file.name);
     return http.post(`/questions/${questionId}/file`, form, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  },
+  postQuestionFile({
+    questionId,
+    file,
+  }) {
+    const form = new FormData();
+    form.append('file', file, file.name);
+    return http.post(`/questions/${questionId}/material-file`, form, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -104,9 +119,52 @@ export default {
   }) {
     return http.get(`/questions/${questionId}/result`);
   },
+  NNgetQuestionResult({
+    questionId,
+    classId,
+  }) {
+    return http.get(`/questions/${questionId}/${classId}/result`);
+  },
   selectPreviousSqlite({
     guid, questionId,
   }) {
     return http.put(`/questions/${questionId}/sqlite/${guid}`);
+  },
+  extractAnswer({
+    lectureItemId,
+    ratioStudent,
+  }) {
+    return http.post(`/questions/${lectureItemId}/extract-answer/`, {
+      ratioStudent,
+    });
+  },
+  autoGradeDescription({
+    lectureItemId,
+    teacherSideList,
+    studentSideList,
+  }) {
+    return http.post(`/questions/${lectureItemId}/auto-grade-description`, {
+      teacherSideList,
+      studentSideList,
+    });
+  },
+
+  getQuestionKeywords({
+    questionId,
+  }) {
+    return http.get(`/questions/${questionId}/keywords`);
+  },
+  postQuestionKeywords({
+    questionId,
+    data,
+  }) {
+    return http.post(`/questions/${questionId}/keywords`, {
+      data,
+    });
+  },
+  deleteQuestionKeywords({
+    questionId,
+  }) {
+    return http.delete(`/questions/${questionId}/keywords`);
   },
 };

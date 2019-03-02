@@ -7,6 +7,9 @@ export default {
   getClassLists() {
     return http.get('/classes');
   },
+  getMainClassLists() { // TODO : 필요 없다면 삭제할 것.
+    return http.get('/main_classes');
+  },
   getMyClassList() { //
     return http.get('/classes/my');
   },
@@ -18,6 +21,15 @@ export default {
   },
   getClassNeedScoring({ id }) {
     return http.get(`/classes/${id}/need-scoring`);
+  },
+  getClassTotalResult({ id }) {
+    return http.get(`/classes/${id}/total-result`);
+  },
+  NNgetClassTotalResult({ id, classId }) {
+    return http.get(`/classes/${id}/${classId}/total-result`);
+  },
+  getClassStudentResult({ id }) {
+    return http.get(`/classes/${id}/student-result`);
   },
   getClassKeywordRelations({ id }) {
     return http.get(`/classes/${id}/keyword-relations`);
@@ -39,6 +51,28 @@ export default {
       teachers: teacherEmailList ? teacherEmailList : [], // eslint-disable-line
     });
   },
+  NNpostClass({
+    title,
+    opened,
+    summary,
+    activeStartDate,
+    activeEndDate,
+    capacity,
+    lecturerDescription,
+    description,
+  }) {
+    return http.post('/classes', {
+      name: title,
+      opened,
+      summary,
+      start_time: activeStartDate,
+      end_time: activeEndDate,
+      capacity,
+      lecturer_description: lecturerDescription,
+      description,
+      teachers: [], // 현재 프론트에서는 공동 강사 입력 없음 23 May 2018
+    });
+  },
   putClass({
     name,
     description,
@@ -56,6 +90,28 @@ export default {
     Object.assign(param, { end_time: activeEndDate });
     utils.assignIfNotNil(param, { opened });
     return http.put(`/classes/${id}`, param);
+  },
+  NNputClass({
+    id,
+    title,
+    opened,
+    summary,
+    activeStartDate,
+    activeEndDate,
+    capacity,
+    lecturerDescription,
+    description,
+  }) {
+    return http.put(`/classes/${id}`, {
+      name: title,
+      opened,
+      summary,
+      start_time: activeStartDate,
+      end_time: activeEndDate,
+      capacity,
+      lecturer_description: lecturerDescription,
+      description,
+    });
   },
   postTeacher({
     id,
@@ -88,5 +144,16 @@ export default {
     id,
   }) {
     return http.post(`/classes/${id}/user`);
+  },
+  deleteClassUser({
+    classId,
+    userId,
+  }) {
+    return http.delete(`/classes/${classId}/user/${userId}`);
+  },
+  regradeQuestion({
+    questionId,
+  }) {
+    return http.get(`/student_lecture_logs/re/${questionId}`);
   },
 };

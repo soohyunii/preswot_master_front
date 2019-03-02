@@ -111,7 +111,8 @@ export default {
         lecture_id: Number.parseInt(vm.$route.params.scId, 10),
         user_id: utils.getUserIdFromJwt(),
       };
-      this.$socket.emit('HEART_BEAT', JSON.stringify(params2));
+      // 삭제 - 181214
+      // this.$socket.emit('HEART_BEAT', JSON.stringify(params2));
     }, 3000);
   },
   data() {
@@ -257,11 +258,6 @@ export default {
     updateScenario() {
       const vm = this;
       vm.fleetingSc = vm.sc;
-      vm.$notify({
-        title: '시나리오 변경',
-        message: '시나리오 변경이 일어났습니다.',
-        type: 'success',
-      });
       vm.refreshScItems();
     },
   },

@@ -24,9 +24,10 @@
           <el-button @click="onClick('EVALUATION')">과목진단</el-button>
           <el-button @click="onClick('OPEN_KNOWLEDGEMAP_MODAL')">과목지식맵</el-button>
           <el-button @click="onClick('ANALYSIS')">과목저널링</el-button>
-          <el-button @click="onClick('SCORING')">체점 항목</el-button>
+          <el-button @click="onClick('SCORING')">채점 항목</el-button>
           <el-button type="primary" @click="onClick('EDIT')">과목수정</el-button>
           <el-button type="danger" @click="onClick('DELETE')">과목삭제</el-button>
+          <el-button @click="onClick('Q&A')">Q&amp;A</el-button>
           <br /><br />
 
           <class-scenario type="TEACHER" />
@@ -85,7 +86,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('class', ['currentClassIndex']),
+    ...mapState('class', ['teachingClassList', 'currentClassIndex']),
     ...mapGetters('class', [
       'currentTeachingClass',
       'isTeachingClassListEmpty',
@@ -144,12 +145,6 @@ export default {
                 vm.deleteTeachingClass({
                   teachingClassIndex: index,
                 });
-                vm.$notify({
-                  title: '삭제됨',
-                  message: '과목이 삭제됨',
-                  type: 'success',
-                  duration: 3000,
-                });
               } catch (error) {
                 vm.$notify({
                   title: '과목 삭제 실패',
@@ -167,6 +162,10 @@ export default {
                 duration: 3000,
               });
             });
+          break;
+        }
+        case 'Q&A': {
+          vm.$router.push(`/a/class/${vm.currentTeachingClass.class_id}/board/0`);
           break;
         }
         default: {

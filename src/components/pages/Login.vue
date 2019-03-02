@@ -1,5 +1,5 @@
 <template>
-  <div id="login_wrapper">
+  <div :id="$attachReactablePostfix('login_wrapper')" class="bt-container">
     <el-container>
 
       <el-row>
@@ -13,14 +13,14 @@
           <el-input placeholder="abc@gmail.com" v-model="input.email" type="email">
             <template slot="prepend">{{ $t('LOGIN.EMAIL_LABEL') }}</template>
           </el-input>
-          <el-input placeholder="********" v-model="input.password" type="password">
+          <el-input placeholder="********" v-model="input.password" type="password" @keydown.enter.native="onClick('LOGIN')">
             <template slot="prepend">{{ $t('LOGIN.PASSWORD_LABEL') }}</template>
           </el-input>
           <br />
           <br />
           <!-- TODO: add disabled attr according to validation -->
           <el-button
-            id="btn_login"
+            :id="$attachReactablePostfix('btn_login')"
             type="primary"
             @click="onClick('LOGIN')"
           >
@@ -33,18 +33,19 @@
             {{ $t('LOGIN.FORGOT_PASSWORD_BUTTON') }}
           </el-button>
           <el-dialog
-            title="비밀번호 초기화"
+            title="비밀번호 변경"
             :visible.sync="isModalVisible"
-            width="30%"
+            :width="$isPhone?'80%':'30%'"
             center
           >
             <!-- TODO: replace 브랜드 로고 -->
-            <el-button type="primary" plain slot="title">Brand Logo</el-button>
-            <h2>비밀번호 변경</h2>
+            <!--<el-button type="primary" plain slot="title">Brand Logo</el-button>-->
+            <!-- <h2>비밀번호 변경</h2> 
             <span>비밀번호를 변경할 이메일을 입력하세요.</span>
             <br/><br/><hr><br/>
+            -->
             <el-form :model="input" label-width="120px" label-position="top">
-              <el-form-item label="이메일">
+              <el-form-item label="비밀번호를 변경할 이메일 주소를 입력하세요.">
                 <el-input v-model="findingPasswordEmail"></el-input>
               </el-form-item>
             </el-form>
@@ -60,9 +61,9 @@
         </el-col>
       </el-row>
     </el-container>
-    jwt: {{ jwt }} <br />
+    <!-- jwt: {{ jwt }} <br />
     input: {{ input }} <br />
-    redirectTo: {{ redirectTo }}
+    redirectTo: {{ redirectTo }} -->
   </div>
 </template>
 
@@ -74,8 +75,10 @@ export default {
   data() {
     return {
       input: {
-        email: 'adoji92@gmail.com',
-        password: 'adjadj1234',
+        // email: 'adoji92@gmail.com',
+        // password: 'adjadj1234',
+        email: '',
+        password: '',
       },
       isModalVisible: false,
       findingPasswordEmail: '',
@@ -98,7 +101,8 @@ export default {
             });
             // console.log('login res', JSON.stringify(res));
             // TODO: translate
-            vm.openNoti('success', 'Login Success !!', 'Success');
+
+            // vm.openNoti('success', 'Login Success !!', 'Success');
             if (vm.redirectTo) {
               // jwt 업데이트 후 페이지 이동 이루어지도록
               vm.$router.push(vm.redirectTo);
@@ -106,9 +110,29 @@ export default {
               vm.$router.push('/');
             }
           } catch (error) {
-            // console.error('login error', error);
-            // TODO: translate
-            vm.openNoti('error', 'Login Failed !!');
+            if (error.response.status === 403) {
+              vm.$notify({
+                title: 'warning',
+                message: '입력하신 계정은 존재하지 않습니다.',
+                type: 'warning',
+                duration: 5000,
+              });
+            } else if (error.response.status === 406) {
+              vm.$notify({
+                title: 'Sorry',
+                message: '비밀번호가 일치하지 않습니다.',
+                type: 'warning',
+                duration: 5000,
+              });
+            } else {
+              vm.$notify({
+                title: 'Sorry',
+                message: (error.response !== undefined) ? error.response.data.message : error.message, //eslint-disable-line
+                type: 'warning',
+                duration: 5000,
+              });
+            }
+            // console.dir(error);
           }
           break;
         }
@@ -179,3 +203,39 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped> // scoped 를 풀었을경우, 강사 로그인 - 내 강의 목록 - 강의 개설 이동시 폰트가 커지는 버그가 있음. 해당 화면 새로고침시 다시 작아짐..
+.el-input{
+  margin:10px;
+}
+
+#btn_login{
+  margin:0 20px 0 100px;
+  width:150px;
+}
+
+#login_wrapper{
+  margin-top:70px;
+  padding-left:100px;
+}
+
+#login_wrapper h1{
+  margin:0.67em 15px;
+}
+
+.el-form-item label{
+  font-size:1.2em;
+  margin-left: 10px;
+  padding-bottom:0px;
+}
+
+#login_wrapper-phone{
+  margin-top:70px;
+}
+
+#btn_login-phone{
+  margin:0 20px 0 20px;
+  width:100px;
+}
+
+</style>

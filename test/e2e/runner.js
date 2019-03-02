@@ -45,6 +45,9 @@ devConfigPromise.then((devConfig) => {
     opts = opts.concat(['--env', 'chrome']);
   }
 
+  opts = opts.concat(['--verbose']);
+  // opts = opts.concat(['--tag', 'question']);
+
   const runner = spawn('./node_modules/.bin/nightwatch', opts, { stdio: 'inherit' });
 
   runner.on('exit', (code) => {

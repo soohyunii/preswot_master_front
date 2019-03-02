@@ -113,12 +113,6 @@ export default {
                 vm.removeScItem({
                   lectureElementIndex: index,
                 });
-                vm.$notify({
-                  title: '삭제됨',
-                  message: '시나리오 아이템이 삭제됨',
-                  type: 'success',
-                  duration: 3000,
-                });
               } catch (error) {
                 vm.$notify({
                   title: '시나리오 아이템 삭제 실패',
