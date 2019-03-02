@@ -36,6 +36,6 @@ export default new Vuex.Store({
     report,
     allowedProgram,
     grading,
-    studentQuestion,
+    studentQuestion: studentQuestion,
   },
 });

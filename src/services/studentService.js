@@ -143,7 +143,7 @@ export default {
   getKeyword({ id }) {
     return http.get(`/lectures/${id}/keywords`);
   },
-  putQuestion({ id, qId, name, question, score, difficulty, choice, answer, isCheck }) {
+  putQuestion({ id, qId, name, question, score, difficulty, choice, answer }) {
     return http.put(`/student/${id}/question/${qId}`, {
       name,
       question,
@@ -151,7 +151,6 @@ export default {
       difficulty,
       choice,
       answer,
-      isCheck,
     });
   },
   deleteKeyword({ id, qId }) {
