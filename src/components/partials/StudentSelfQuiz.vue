@@ -143,12 +143,12 @@ export default {
     async onClick(type, index) {
       const vm = this;
       const lid = vm.curLectureId;
-
       // const lid = vm.$route.params.lectureId;
       const tar = vm.studentQuestionList[index];
       switch (type) {
         case 'MODIFY' : {
           vm.updateStudentQuestionMode({ mode: 2 });
+          alert(`MODIFY - ${JSON.stringify(index)}`);
           vm.transferStudentQuestion({ index });
           // vm.index = vm.quizData[index].student_question_id;
           // vm.studentQuestion = tar;
