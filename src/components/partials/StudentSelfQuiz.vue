@@ -87,6 +87,7 @@ export default {
       studentQuestionList: state => state.studentQuestion.studentQuestionList,
       mode: state => state.studentQuestion.mode,
     }),
+    ...mapState('NNclass',['curLectureId']),
     ...mapGetters('studentQuestion', ['getIndex']),
   },
   async created() {
@@ -104,7 +105,7 @@ export default {
   async mounted() {
     const vm = this;
     const lid = vm.$route.params.lectureId;
-
+    // const lid = vm.curLectureId;
     await vm.getQuestionList({ lectureId: lid })
 
 
@@ -137,11 +138,13 @@ export default {
     // },
     async onClick(type, index) {
       const vm = this;
-      const lid = vm.$route.params.lectureId;
+      const lid = vm.curLectureId;
+      // const lid = vm.$route.params.lectureId;
       const tar = vm.studentQuestionList[index];
       switch (type) {
         case 'MODIFY' : {
           vm.updateStudentQuestionMode({ mode: 2 });
+          alert(`MODIFY - ${JSON.stringify(index)}`);
           vm.transferStudentQuestion({ index });
           // vm.index = vm.quizData[index].student_question_id;
           // vm.studentQuestion = tar;
