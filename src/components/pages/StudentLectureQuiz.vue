@@ -1,116 +1,102 @@
 <template>
-  <div id="student_lecture_quiz_wrapper" class="bt-container">
-    <h2 class ="page-title">
-      문제 출제
-    </h2>
-    <el-table :data="quizData" height="400">
-      <el-table-column prop="index" label="번호" align="center" width="100">
-      </el-table-column>
-      <el-table-column prop="type" label="문항 유형" align="center" width="150">
-      </el-table-column>
-      <el-table-column prop="name" label="문제 이름" align="center" width="200">
-      </el-table-column>
-      <el-table-column prop="date" label="제출 시간" align="center" width="350">
-      </el-table-column>
-      <el-table-column label="수정" align="center" width="120">
-        <template slot-scope="scope">
-          <el-button size="small" @click="onClick('MODIFY', scope.row)">수정</el-button>
-        </template>
-      </el-table-column>
-      <el-table-column label="미리보기" align="center" width="130">
-        <template slot-scope="scope">
-          <el-button size="small" @click="onClick('PREVIEW', scope.row)">미리보기</el-button>
-        </template>
-      </el-table-column>
-      <el-table-column label="삭제" align="center" width="120">
-        <template slot-scope="scope">
-          <el-button type="danger" size="small" @click="onClick('DELETE', scope.row)">삭제</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <div class="ps-align-right">
-      <el-select v-model="typeVal" placeholder="선택">
-        <el-option v-for="qtype in qtypes" :key="qtype.typeVal" :value="qtype.typeVal">
-        </el-option>
-      </el-select>
-      <el-button type="primary" @click="onSubmit">출제하기</el-button>
-    </div>
+  <div class="bt-container">
+      <el-breadcrumb style="font-size: 24px; margin-top: 16px; margin-bottom: 32px;" separator=">">
+        <el-breadcrumb-item :to="{ path: '/a/student/NNclass/'+classId }">{{ className }}</el-breadcrumb-item>
+        <el-breadcrumb-item>{{ lectureName }}</el-breadcrumb-item>
+      </el-breadcrumb>
+      <el-row :gutter="20">
+        <el-col :span="itemSize+8">
+          <el-tabs type="card">
+           
+            <el-tab-pane label="출제문항">
+              <StudentSelfQuiz/>
+            </el-tab-pane>
+
+            <el-tab-pane label="문항평가">
+              <StudentSelfQuiz/>
+            </el-tab-pane>             
+
+          </el-tabs>
+        </el-col>
+      </el-row>
+   
   </div>
 </template>
 
 <script>
-  export default {
-    name: 'StudentLectureQuiz',
-    data() {
-      return {
-        quizData: [{
-          index: '1',
-          type: '객관',
-          name: '2014147515_001',
-          date: '2019-01-14 15:06',
-        }, {
-          index: '2',
-          type: '객관',
-          name: '2014147515_002',
-          date: '2019-01-14 16:12',
-        }],
-        qtypes: [{
-          typeVal: '단답',
-        }, {
-          typeVal: '객관',
-        }],
-        typeVal: '',
-      };
-    },
-    methods: {
-      onClick(type) {
-        const vm = this;
-        switch (type) {
-          case 'MODIFY' : {
-            vm.$notify({
-              title: '제출 완료',
-              message: '수정',
-              type: 'success',
-            });
-            break;
-          }
-          case 'PREVIEW' : {
-            vm.$notify({
-              title: '제출 완료',
-              message: '미리보기',
-              type: 'success',
-            });
-            break;
-          }
-          case 'DELETE' : {
-            vm.$notify({
-              title: '제출 완료',
-              message: '삭제',
-              type: 'success',
-            });
-            break;
-          }
-          default : {
-            break;
-          }
-        }
-      },
-      onSubmit() {
-        const vm = this;
-        if (!this.typeVal) {
-          vm.$notify({
-            title: '제출 실패',
-            message: '유형 선택 바람',
-            type: 'warning',
-          });
-        } else {
-          vm.$notify({
-            title: '제출 완료',
-            message: '출제 시작',
-            type: 'success',
-          });
-        }
-      },
-    },
-  };
+import deepCopy from 'deep-copy';
+import classService from '../../services/classService';
+import lectureService from '../../services/lectureService';
+import studentService from '../../services/studentService';
+import LectureLiveItem from '../partials/LectureLiveItem';
+import lectureItemService from '../../services/lectureItemService';
+import LectureLiveMaterial from '../partials/LectureLiveMaterial';
+import utils from '../../utils';
+import automaticLectureService from '../../services/automaticLectureService';
+import StudentSelfQuiz from '../partials/StudentSelfQuiz';
+
+export default {
+  name: 'NNStudentLectureLive',
+  async created() {
+    const vm = this;
+    // 소켓 연결 및 주기적으로 보내는 신호, 리스너 등록
+    const res = await lectureService.getLecture({
+      lectureId: vm.lectureId,
+    });
+    /*
+     *  lectureType : 0 (유인 강의), 1(무인 단체 강의), 2(무인 개인 강의)
+     */
+  },
+  data() {
+    return {
+      
+    };
+  },
+  computed: {
+   
+  },
+  components: {
+    LectureLiveItem,
+    LectureLiveMaterial,
+    StudentSelfQuiz,
+  },
+  mounted() {
+
+  },
+  methods: {
+    
+  },
+
+
+};
 </script>
+
+<style>
+.el-row {
+  margin-bottom: 20px;
+}
+.grid-content {
+  border-radius: 4px;
+  min-height: 500px;
+}
+.bg-purple-light {
+  background: #e5e9f2;
+}
+.statusbar {
+  position:fixed;
+  left:0px;
+  bottom:0px;
+  width:100%;
+  padding: 8px 0px 5px 0px;
+  background:rgba(0, 0, 0, 0.6);
+  color: white;
+  -webkit-transition: max-height 1s;
+  -moz-transition: max-height 1s;
+  -ms-transition: max-height 1s;
+  -o-transition: max-height 1s;
+  transition: max-height 1s;
+  overflow: hidden;
+  height:100%;
+  max-height:25px;
+}
+</style>

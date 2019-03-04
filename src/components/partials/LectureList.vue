@@ -159,7 +159,7 @@
           >
             <template slot-scope="scope">
               <router-link :to="`/a/student/NNclass/${scope.row.class_id}/quiz?lectureId=${scope.row.lecture_id}`">
-                <el-button>출제</el-button>
+                <el-button>출제ㅇㅇ</el-button>
               </router-link>
             </template>
           </el-table-column>
