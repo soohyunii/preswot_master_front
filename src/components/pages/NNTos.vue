@@ -10,7 +10,7 @@
             </el-form-item>
             <!-- TODO: terms of use / privacy policy text 주루루룩 -->
             <el-form-item prop="checkTou" id="checkTou">
-              <el-card class="box-card">
+              <el-card class="box-card" style="height: 300px; overflow: scroll;">
                 <!-- <div class="tos">
                   <p>
                     이용 약관(영어: Terms of service terms of use이나
