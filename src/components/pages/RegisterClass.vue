@@ -21,7 +21,9 @@
       </el-form-item>
 
       <el-form-item label="학과선택">
-        <el-select v-model="input.department_name" :disabled="input.boolean" @change="categoryTeacherChange()">
+        <!-- <el-select v-model="input.department_name" :disabled="input.boolean" @change="categoryTeacherChange()"> -->
+        <el-select v-model="input.department_name" multiple placeholder="선택" 
+        @change="categoryTeacherChange()"> 
           <el-option 
             v-for="department_name in input.department_list"
             :key="department_name"
@@ -29,7 +31,7 @@
             :value="department_name">  
           </el-option>
         </el-select>
-        <el-checkbox v-model="input.checked" style="margin-left:20px;" @change="categoryNone()">소속 없음</el-checkbox> 
+        <!-- <el-checkbox v-model="input.checked" style="margin-left:20px;" @change="categoryNone()">소속 없음</el-checkbox>  -->
         &nbsp; <font color="red" size="5em">*</font>
       </el-form-item>
 
@@ -132,7 +134,8 @@ export default {
   data() {
     const initialInput = {
       university_list: '',
-      department_list: null,
+      /* department_list: null, */
+      department_list: [],
       teacher_list: '',
       code: '',
       isActive: false,
@@ -243,6 +246,9 @@ export default {
         university_name: vm.input.university_name, category: undefined });
       vm.input.department_list = await deptNameLists.data.map(
         element => element.name);
+      console.log(vm.input.department_list);
+      console.log('vm.input.department_list.length==',vm.input.department_list.length);
+      console.log('vm.input.department_list[0]==',vm.input.department_list[0]);
       if (vm.input.university_name !== undefined && vm.input.department_name !== undefined) {
         vm.input.department_name = undefined;
         vm.input.teacher_email_id = undefined;
@@ -250,6 +256,7 @@ export default {
     },
     async categoryTeacherChange() {
       const vm = this;
+      console.log('choice department==',vm.input.department_name);
       const teacherNameLists = await masterService.getUserLists(1,
         vm.input.university_name, vm.input.department_name);
       vm.input.teacher_list = await teacherNameLists.data;
@@ -259,7 +266,7 @@ export default {
         vm.input.teacher_email_id = undefined;
       }
     },
-    async categoryNone() {
+    /* async categoryNone() {
       const vm = this;
       if (vm.input.checked === true) {
         vm.input.boolean = true;
@@ -269,7 +276,7 @@ export default {
       const teacherNameLists = await masterService.getUserLists(1,
         vm.input.university_name, vm.input.department_name);
       vm.input.teacher_list = teacherNameLists.data;
-    },
+    }, */
   },
   watch: {
     // NOTE: 이거 () => {}로 바꾸면 안됨!! vm이 다른 녀석 들어옴
