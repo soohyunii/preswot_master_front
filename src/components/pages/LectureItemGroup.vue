@@ -524,7 +524,10 @@ export default {
             }
             const tmpList = [];
             x.list.forEach((y) => {
-              tmpList.push(y.id);
+              // 그룹에서 리스트 안 겹치는 것들만 추가하기
+              if (tmpList.includes(y.id) === false) {
+                tmpList.push(y.id);
+              }
             });
             await lectureItemService.editGroup({ // eslint-disable-line
               lectureId: vm.lectureId,
