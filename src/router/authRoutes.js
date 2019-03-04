@@ -39,7 +39,6 @@ import NLectureItemFromBank from '../components/pages/NLectureItemFromBank';
 import LectureItemConnect from '../components/pages/LectureItemConnect';
 import LectureItemGroup from '../components/pages/LectureItemGroup';
 import TeacherLectureLiveItemShow from '../components/pages/TeacherLectureLiveItemShow';
-import StudentLectureQuiz from '../components/pages/StudentLectureQuiz';
 import TeacherLectureLiveStudentStatus from '../components/pages/TeacherLectureLiveStudentStatus';
 
 import ViewUni from '../components/pages/ViewUni';
@@ -633,14 +632,6 @@ export default function authRoutes(root) {
       component: RegisterBankSuccess,
       meta: {
         title: '관리자 강의은행그룹 등록 성공',
-      },
-    },
-    {
-      path: '/student/NNclass/:classId/quiz',
-      name: 'StudentLectureQuiz',
-      component: StudentLectureQuiz,
-      meta: {
-        title: 'Student Lecture Quiz',
       },
     },
   ].map((route) => {
