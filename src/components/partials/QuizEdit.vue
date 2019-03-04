@@ -155,6 +155,7 @@ export default {
   },
   computed: {
     ...mapState('studentQuestion', ['modifyQuestion']),
+    ...mapState('NNclass', ['curLectureId']),
 
   },
   methods: {
@@ -162,7 +163,8 @@ export default {
     ...mapMutations('studentQuestion', ['updateStudentQuestionMode']),
     async questionEdit(data) {
       const vm = this;
-      const lid = vm.$route.params.lectureId;
+      const lid = vm.curLectureId;
+      // const lid = vm.$route.params.lectureId;
       const list = await studentService.getQuestion({ id: lid });
       for (let i = 0; i < list.data.length; i += 1) {
         if (data === list.data[i].student_question_id) {
@@ -227,7 +229,9 @@ export default {
     async onModify() {
 
       const vm = this;
-      const lid = vm.$route.params.lectureId;
+      // const lid = vm.$route.params.lectureId;
+      const lid = vm.curLectureId;
+
       if (!vm.myKeywordList.length) {
         vm.$message.warning('키워드는 필수 입력입니다. QuizEdit');
       } else if (vm.modifyQuestion.choice.includes('') || vm.modifyQuestion.name === "" || vm.modifyQuestion.question === "") {
@@ -240,7 +244,6 @@ export default {
         if (res.data) {
           await vm.deleteKeyword({ id: lid, qId: vm.modifyQuestion.student_question_id });
           let res2 = await vm.postKeyword({ id: lid, qId: vm.modifyQuestion.student_question_id, data: vm.myKeywordList });
-          alert(`res2 - ${res2}`);
         } else {
           vm.$message.warning('수정을 실패하였습니다. 다시한번 시도해주세요. QuizEdit');
         }

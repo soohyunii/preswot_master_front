@@ -87,12 +87,15 @@ export default {
       studentQuestionList: state => state.studentQuestion.studentQuestionList,
       mode: state => state.studentQuestion.mode,
     }),
+    ...mapState('NNclass', ['curLectureId']),
     ...mapGetters('studentQuestion', ['getIndex']),
+
   },
   async created() {
     const vm = this;
+    const lid = vm.curLectureId;
     // const lid = vm.$route.params.lectureId;
-    // let res = await vm.getQuestionList(lid);
+    // let res = await vm.getQuestionList({ lectureId: lid });
     // const res11 = await studentService.getQuestionList(lid);
 
     // const res = await studentService.getQuestionList({ id: lid });
@@ -103,8 +106,10 @@ export default {
   },
   async mounted() {
     const vm = this;
-    const lid = vm.$route.params.lectureId;
+    const lid = vm.curLectureId;
 
+    // const lid = vm.$route.params.lectureId;
+    // alert(`lectureId - ${lid}`);
     await vm.getQuestionList({ lectureId: lid })
 
 
@@ -137,7 +142,9 @@ export default {
     // },
     async onClick(type, index) {
       const vm = this;
-      const lid = vm.$route.params.lectureId;
+      const lid = vm.curLectureId;
+
+      // const lid = vm.$route.params.lectureId;
       const tar = vm.studentQuestionList[index];
       switch (type) {
         case 'MODIFY' : {

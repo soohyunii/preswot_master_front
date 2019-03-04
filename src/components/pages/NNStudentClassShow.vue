@@ -10,6 +10,7 @@
     <lecture-list
       @row-click="onClickLecture"
       @join="onClickJoin"
+      @homework="onClickEstimate"
       type="STUDENT"
       :list="lectureL"
     />
@@ -18,7 +19,7 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters } from 'vuex';
+import { mapState, mapActions, mapGetters, mapMutations } from 'vuex';
 import LectureList from '../partials/LectureList';
 import utils from '../../utils';
 import lectureService from '../../services/lectureService';
@@ -66,10 +67,12 @@ export default {
   computed: {
     ...mapState('NNclass', [
       'studyingClassList',
+      'curLectureId',
     ]),
     ...mapGetters('NNclass', [
       'currentStudyingClass',
     ]),
+  
     classId() {
       const vm = this;
       return Number.parseInt(vm.$route.params.classId, 10);
@@ -103,6 +106,10 @@ export default {
     ...mapActions('NNclass', [
       'getClass',
       'getMyClassLists',
+      'updateLectureId,'
+    ]),
+    ...mapMutations('NNclass', [
+      'updateCurLectureId',
     ]),
     onClick(type) {
       const vm = this;
@@ -133,8 +140,20 @@ export default {
     onClickLecture() {
       // 없으면 LectureList.vue 에러나는데 TeacherClassShow와 같이 쓰고있어서 빈 메소드를 넣어둠.
     },
+    async onClickEstimate(index) {
+      const vm = this;
+      // alert(index);
+      const lectureId = vm.lectureList[index].lecture_id;
+      const classId = vm.lectureList[index].class_id;
+      // alert(lectureId);
+      vm.updateCurLectureId({ lid: lectureId });
+
+      vm.$router.push(`/a/student/NNclass/${classId}/quiz?lectureId=${lectureId}`);
+ 
+    },
     async onClickJoin(index) {
       const vm = this;
+      // alert(index);
       const lectureId = vm.lectureList[index].lecture_id;
       const lectureType = vm.lectureList[index].type;
       const lectureStartTime = Date.parse(vm.lectureList[index].start_time);

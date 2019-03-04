@@ -1,5 +1,6 @@
 <template functional>
   <div id="lecture_list_wrapper">
+
     <div v-if="props.list.length === 0">
       생성된 강의가 없습니다.
     </div>
@@ -114,7 +115,7 @@
             align="center"
           ></el-table-column>
           <el-table-column
-            label="활성화 시간"
+            label="활성화 시간ㅇ"
             width="300"
             align="center"
           >
@@ -150,19 +151,23 @@
               <el-button @click="listeners['join'](scope.$index)">
                 강의보기
               </el-button>
+
             </template>
           </el-table-column>
+        
           <el-table-column
             label="강의별 문제"
             width="100"
             align="center"
           >
             <template slot-scope="scope">
-              <router-link :to="`/a/student/NNclass/${scope.row.class_id}/quiz?lectureId=${scope.row.lecture_id}`">
-                <el-button>출제ㅇㅇ</el-button>
-              </router-link>
+              <!-- <router-link :to="`/a/student/NNclass/${scope.row.class_id}/quiz?lectureId=${scope.row.lecture_id}`"> -->
+              <!-- </router-link> -->
+              <el-button @click="listeners['homework'](scope.$index)">제출</el-button>
+
             </template>
           </el-table-column>
+          
         </template>
       </el-table>
     </div>
@@ -175,6 +180,9 @@ import isArray from 'lodash.isarray';
 
 export default {
   name: 'LectureList',
+  async created() {
+    // alert('created');
+  },
   props: {
     type: {
       type: String,
@@ -222,6 +230,7 @@ export default {
       type: null,
     },
   },
+  
 };
 </script>
 

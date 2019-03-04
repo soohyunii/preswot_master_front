@@ -13,7 +13,7 @@
             </el-tab-pane>
 
             <el-tab-pane label="문항평가">
-              <StudentSelfQuiz/>
+              <StudentSelfQuizEstimate/>
             </el-tab-pane>             
 
           </el-tabs>
@@ -34,31 +34,38 @@ import LectureLiveMaterial from '../partials/LectureLiveMaterial';
 import utils from '../../utils';
 import automaticLectureService from '../../services/automaticLectureService';
 import StudentSelfQuiz from '../partials/StudentSelfQuiz';
+import StudentSelfQuizEstimate from '../partials/StudentSelfQuizEstimate';
 
 export default {
-  name: 'NNStudentLectureLive',
+  name: 'StudentLectureQuiz',
   async created() {
     const vm = this;
-    // 소켓 연결 및 주기적으로 보내는 신호, 리스너 등록
+    // alert('createdAt');
+    const lid = vm.curLectureId;
+
     const res = await lectureService.getLecture({
-      lectureId: vm.lectureId,
+      lectureId: lid,
     });
-    /*
-     *  lectureType : 0 (유인 강의), 1(무인 단체 강의), 2(무인 개인 강의)
-     */
+    // vm.lectureType = res.data.type;
+  
+    // // vm.path = res2.data.name.concat(' > ', res.data.name);
+    // vm.className = res.data.name;
+    // vm.classId = res.data.class_id;
+    // vm.lectureName = res.data.name;
   },
   data() {
     return {
-      
+      className: '',
+      lectureName: '',
+      classId: -1,
+      lectureType: null,
     };
   },
-  computed: {
-   
+ computed: {
   },
   components: {
-    LectureLiveItem,
-    LectureLiveMaterial,
     StudentSelfQuiz,
+    StudentSelfQuizEstimate,
   },
   mounted() {
 

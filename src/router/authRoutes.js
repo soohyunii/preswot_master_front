@@ -386,7 +386,7 @@ export default function authRoutes(root) {
       },
     },
     {
-      path: '/student/NNclass/:classId/quiz',
+      path: '/student/NNclass/:classId/quiz/',
       name: 'StudentLectureQuiz',
       component: StudentLectureQuiz,
       meta: {
