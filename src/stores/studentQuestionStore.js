@@ -4,7 +4,7 @@ import studentService from '../services/studentService';
 export default {
   namespaced: true,
   state: {
-    lectureId: null,
+    lectureId: 0,
     mode: 0, // 0 - list, 1 - new, 2 - modify
     post: null,
     put: null,
@@ -34,7 +34,6 @@ export default {
     },
     transferStudentQuestion(state, { index }) {
       state.modifyQuestion = state.studentQuestionList[index];
-      // alert(JSON.stringify(state.modifyQuestion));
     },
     updateStudentQuestionIndex(state, index) {
       state.index = index;
@@ -45,6 +44,9 @@ export default {
     updateStudentEstimateQuestionList(state, { studentEstimateQuestionList }) {
       state.studentEstimateQuestionList = studentEstimateQuestionList;
     },
+    updateLectureId(state, { lid }) {
+      state.lectureId = lid;
+    },
   },
   getters: {
     getIndex: function (state) {
@@ -54,6 +56,12 @@ export default {
   actions: {
     transferStudentQuestion({ commit }, { index }) {
       commit('transferStudentQuestion', { index });
+    },
+    updateStudentQuestionMode1({ commit, dispatch, state }, { mode }) {
+      if ( mode === 0 ) {
+        dispatch('getQuestionList', { lectureId: state.lectureId });
+      }
+      commit('updateStudentQuestionMode', { mode });
     },
     pushQuestion({ commit }, { data }) {
       const q = data.data;
@@ -129,7 +137,6 @@ export default {
       await studentService.postQuestion(state.newQuestion)
     },
     async deleteKeyword({ state }, { id, qId }) {
-      alert(`delete -${id}, ${qId}`);
       let res = await studentService.deleteKeyword({ id, qId });
       return res;
     },

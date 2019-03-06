@@ -130,26 +130,25 @@ export default {
       keywordName: '',
       keywordPoint: '',
       pts: [5, 4, 3, 2, 1],
-      keywordList: [],
+      keywordList: ['a','b'],
       keyList: [],
     };
   },
   computed: {
-    ...mapState('studentQuestion',['mode','studentQuestionList'])
+    ...mapState('studentQuestion',['mode','studentQuestionList','lectureId']),
+    // ...mapState('NNclass',['curLectureId']),
   },
   async mounted() {
     const vm = this;
-    const lid = vm.$route.params.lectureId;
+    const lid = vm.lectureId;
     const res = await studentService.getKeyword({ id: lid });
+    alert(`new keywords - ${JSON.stringify(res.data)}`);
     for (let i = 0; i < res.data.length; i += 1) {
       vm.keyList.push(res.data[i]);
     }
   },
   methods: {
-    ...mapActions('studentQuestion', ['pushQuestion']),
-    ...mapMutations('studentQuestion',[
-      'updateStudentQuestionMode'
-    ]),
+    ...mapActions('studentQuestion', ['pushQuestion','updateStudentQuestionMode1']),
     initialForm() {
       const vm = this;
       vm.level = 3;
@@ -157,7 +156,7 @@ export default {
       vm.question = [];
       vm.questionList = [];
       vm.choice = [];
-      vm.answer = [];
+      vm.answer = [''];
       vm.initFileList = [];
       vm.keywordName = '';
       vm.keywordPoint = '';
@@ -226,7 +225,7 @@ export default {
     },
     async onCreate() {
       const vm = this;
-      const lid = vm.$route.params.lectureId;
+      const lid = vm.lectureId;
       if (!vm.keywordList.length) {
         vm.$notify({
           title: '알림',
@@ -257,7 +256,7 @@ export default {
           });
           if (keywordRes) {
             vm.pushQuestion({ data: res });
-            vm.updateStudentQuestionMode({ mode: 0 });
+            vm.updateStudentQuestionMode1({ mode: 0 });
           } else {
 
           }

@@ -67,7 +67,6 @@ export default {
   computed: {
     ...mapState('NNclass', [
       'studyingClassList',
-      'curLectureId',
     ]),
     ...mapGetters('NNclass', [
       'currentStudyingClass',
@@ -106,10 +105,10 @@ export default {
     ...mapActions('NNclass', [
       'getClass',
       'getMyClassLists',
-      'updateLectureId,'
     ]),
-    ...mapMutations('NNclass', [
-      'updateCurLectureId',
+    ...mapActions('studentQuestion', ['updateStudentQuestionMode1']),
+    ...mapMutations('studentQuestion', [
+      'updateLectureId',
     ]),
     onClick(type) {
       const vm = this;
@@ -145,8 +144,9 @@ export default {
       // alert(index);
       const lectureId = vm.lectureList[index].lecture_id;
       const classId = vm.lectureList[index].class_id;
-      // alert(lectureId);
-      vm.updateCurLectureId({ lid: lectureId });
+      vm.updateLectureId({ lid: lectureId });
+      // 처음 들어갈때 리스트로 초기화
+      vm.updateStudentQuestionMode1({ mode: 0 });
 
       vm.$router.push(`/a/student/NNclass/${classId}/quiz?lectureId=${lectureId}`);
  

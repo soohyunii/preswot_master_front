@@ -24,9 +24,10 @@
               :before-close="handleClose"
               center
               width="30%">
-              <quiz-preview
-                :data="quizItem"
-                :answer="previewAnswer"/>
+              <quiz-preview/>
+              <!-- <quiz-preview
+                :data="modifyQuestion"
+                :answer="previewAnswer"/> -->
               <span slot="footer" class="dialog-footer">
                 <el-button @click="handleClose">닫기</el-button>
               </span>
@@ -44,12 +45,12 @@
       </div>
     </div>
     <div v-else-if="mode === 1">
-      <el-button @click="onBack(0)" icon="el-icon-back">뒤로가기</el-button>
+      <el-button @click="onBack(0)" icon="el-icon-back">뒤로가기1</el-button>
       <br><br>
       <quiz-new/>
     </div>
     <div v-else-if="mode === 2">
-      <el-button @click="onBack(1)" icon="el-icon-back">뒤로가기</el-button>
+      <el-button @click="onBack(1)" icon="el-icon-back">뒤로가기2</el-button>
       <br><br>
       <quiz-edit/>
     </div>
@@ -78,7 +79,8 @@ export default {
       makeNew: false,
       // mode: 0,  // 0-리스트, 1-등록, 2-수정
       // quizData: [],
-      q_index: -1,
+      quizData: null,
+      previewAnswer: null,
     };
   },
   computed: {
@@ -86,14 +88,13 @@ export default {
       index: state => state.studentQuestion.index,
       studentQuestionList: state => state.studentQuestion.studentQuestionList,
       mode: state => state.studentQuestion.mode,
+      lectureId: state => state.studentQuestion.lectureId,
     }),
-    ...mapState('NNclass', ['curLectureId']),
+    // ...mapState('NNclass', ['curLectureId']),
     ...mapGetters('studentQuestion', ['getIndex']),
 
   },
   async created() {
-    const vm = this;
-    const lid = vm.curLectureId;
     // const lid = vm.$route.params.lectureId;
     // let res = await vm.getQuestionList({ lectureId: lid });
     // const res11 = await studentService.getQuestionList(lid);
@@ -106,12 +107,10 @@ export default {
   },
   async mounted() {
     const vm = this;
-    const lid = vm.curLectureId;
-
+    const lid = vm.lectureId;
     // const lid = vm.$route.params.lectureId;
-    // alert(`lectureId - ${lid}`);
     await vm.getQuestionList({ lectureId: lid })
-
+    vm.updateStudentQuestionMode1({ mode: 0})
 
     // console.log(`question len - ${vm.studentQuestionList.length}`);
     // alert(vm.studentQuestionList);
@@ -131,24 +130,26 @@ export default {
       'getQuestionList',
       'deleteQuestion',
       'transferStudentQuestion',
+      'updateStudentQuestionMode1',
     ]),
     ...mapMutations('studentQuestion',[
       'updateStudentQuestionIndex',
       'updateStudentQuestionIndex',
       'updateStudentQuestionMode',
+      'updateLectureId',
     ]),
     // setIndex() {
     //   this.$store.state.studentQuestion.index = this.q_index;
     // },
     async onClick(type, index) {
       const vm = this;
-      const lid = vm.curLectureId;
-      // const lid = vm.$route.params.lectureId;
+      const lid = vm.lectureId;
+
       const tar = vm.studentQuestionList[index];
       switch (type) {
         case 'MODIFY' : {
-          vm.updateStudentQuestionMode({ mode: 2 });
-          alert(`MODIFY - ${JSON.stringify(index)}`);
+          
+          vm.updateStudentQuestionMode1({ mode: 2 });
           vm.transferStudentQuestion({ index });
           // vm.index = vm.quizData[index].student_question_id;
           // vm.studentQuestion = tar;
@@ -158,9 +159,11 @@ export default {
           break;
         }
         case 'PREVIEW' : {
-          vm.dialogVisible = true;
-          vm.quizItem = tar;
-          vm.previewAnswer = [];
+                    vm.transferStudentQuestion({ index });
+
+          // vm.quizData = tar;
+          // vm.previewAnswer = tar.answer;
+          // alert(`preview - ${JSON.stringify(vm.quizData)}`);
           break;
         }
         case 'DELETE' : {
@@ -206,7 +209,7 @@ export default {
       const vm = this;
       // alert(vm.mode);
       // vm.mode = 1;
-      this.updateStudentQuestionMode({ mode: 1 });
+      this.updateStudentQuestionMode1({ mode: 1 });
       // vm.quizForm = true;
       // vm.makeEdit = false;
     },
@@ -225,7 +228,7 @@ export default {
         type: 'warning',
       })
         .then(async () => {
-          this.updateStudentQuestionMode({ mode: 0 });
+          this.updateStudentQuestionMode1({ mode: 0 });
         })
         .catch(() => {
         });

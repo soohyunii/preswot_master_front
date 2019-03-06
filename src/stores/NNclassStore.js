@@ -73,7 +73,6 @@ export default {
       state.popularClassList = popularClassList;
     },
     updateCurLectureId(state, { lid }) {
-      alert(lid);
       state.curLectureId = lid;
     },
   },

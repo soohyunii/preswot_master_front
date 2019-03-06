@@ -34,46 +34,23 @@
 
         <template v-if="modifyQuestion.type === '단답'">
           <el-form-item label="답">
-            <el-input v-for="(item, index) in answer" :key="index" 
-            v-model="answer[index]" placeholder="내용을 입력하세요." type="textarea"></el-input>
+            <el-input v-for="(item, index) in modifyQuestion.answer" :key="index" 
+            v-model="modifyQuestion.answer[index]" placeholder="내용을 입력하세요." type="textarea"></el-input>
             <p><el-button type="primary" @click="onClick('ADD_ANSWER')">추가</el-button>
-            <el-button v-if="answer.length > 1" type="danger" @click="onClick('DELETE_ANSWER')">제거</el-button></p>
+            <el-button v-if="modifyQuestion.answer.length > 1" type="danger" @click="onClick('DELETE_ANSWER')">제거</el-button></p>
           </el-form-item>
         </template>
         <template v-if="modifyQuestion.type === '객관'">
           <el-form-item label="보기">
-            <!-- <el-checkbox-group v-model="modifyQuestion.answer">
-              <el-checkbox label="1">1.</el-checkbox>
-              <div class="answer-list">
-                <el-input v-model="questionList[0]" placeholder="내용을 입력하세요."></el-input>
-              </div>
-              <el-checkbox label="2">2.</el-checkbox>
-              <div style="display: inline-block; width: 90%; margin-left: 10px;">
-                <el-input v-model="questionList[1]" placeholder="내용을 입력하세요."></el-input>
-              </div>
-              <el-checkbox label="3">3.</el-checkbox>
-              <div style="display: inline-block; width: 90%; margin-left: 10px;">
-                <el-input v-model="questionList[2]" placeholder="내용을 입력하세요."></el-input>
-              </div>
-              <el-checkbox label="4">4.</el-checkbox>
-              <div style="display: inline-block; width: 90%; margin-left: 10px;">
-                <el-input v-model="questionList[3]" placeholder="내용을 입력하세요."></el-input>
-              </div>
-              <el-checkbox label="5">5.</el-checkbox>
-              <div style="display: inline-block; width: 90%; margin-left: 10px;">
-                <el-input v-model="questionList[4]" placeholder="내용을 입력하세요."></el-input>
-              </div>
-            </el-checkbox-group> -->
-            <!--  -->
-            <el-checkbox-group v-model="modifyQuestion.answer" style="width: 100%;">
-              <div v-for="(choice, index) in modifyQuestion.choice" :key="index">
-                  <el-checkbox :label="(index + 1).toString()">{{ index + 1 }}</el-checkbox>
-                <el-input v-model="modifyQuestion.choice[index]" placeholder="내용을 입력하세요."  class="answer-list"></el-input>
-              </div>
+              <el-checkbox-group v-model="modifyQuestion.answer" @change="handleAnswerListChange">
+      
+                <div v-for="(item, index) in modifyQuestion.choice" :key="index">
+                  <el-checkbox :label="index">{{ item }}.</el-checkbox>
+                  <el-input v-model="modifyQuestion.choice[n-1]" placeholder="내용을 입력하세요."  class="answer-list"></el-input>
+                </div>
+      
             </el-checkbox-group>
 
-
-            <!--  -->
           </el-form-item>
         </template>
         <template v-if="modifyQuestion.type === '서술'">
@@ -130,9 +107,11 @@
 <script>
 import { mapState, mapActions, mapMutations } from 'vuex';
 import studentService from '../../services/studentService';
+import lectureService from '../../services/lectureService'; 
 import { EventBus } from '../../event-bus';
 
 export default {
+  name: 'QuizEdit',
   data() {
     return {
       keyList: [{'keyword': 'a'}, {'keyword': 'b'}],
@@ -141,34 +120,36 @@ export default {
       myKeywordList: [],
       keywordName: null,
       keywordPoint: null,
+      questionType: 1,
+      quizForm: null,
     };
   },
   async created() {
     const vm = this;
     let test = vm.index;
+    
+    // 해당 문항의 키워드를 임시로 배열로 옮김
     while(vm.myKeywordList.length) { vm.myKeywordList.pop(); }
-    // alert(JSON.stringify(vm.myKeywordList));
     for (let i = 0; i < vm.modifyQuestion.student_question_keywords.length ; i += 1) {
       vm.myKeywordList.push(vm.modifyQuestion.student_question_keywords[i]);
     }
-
+    // 해당 강의의 키워드를 불러옴
+    const keywords = await lectureService.getLectureKeywords({ lectureId: vm.lectureId });
+    vm.keyList = keywords.data;
   },
   computed: {
-    ...mapState('studentQuestion', ['modifyQuestion']),
-    ...mapState('NNclass', ['curLectureId']),
+    ...mapState('studentQuestion', ['modifyQuestion','lectureId']),
 
   },
   methods: {
-    ...mapActions('studentQuestion', ['putQuestion','deleteKeyword','postKeyword']),
-    ...mapMutations('studentQuestion', ['updateStudentQuestionMode']),
+    ...mapActions('studentQuestion', ['putQuestion','deleteKeyword','postKeyword','updateStudentQuestionMode1']),
     async questionEdit(data) {
       const vm = this;
-      const lid = vm.curLectureId;
+      const lid = vm.lectureId;
       // const lid = vm.$route.params.lectureId;
       const list = await studentService.getQuestion({ id: lid });
       for (let i = 0; i < list.data.length; i += 1) {
         if (data === list.data[i].student_question_id) {
-          //
         }
       }
     },
@@ -206,8 +187,8 @@ export default {
                   message: '이미 등록한 키워드는 등록할 수 없습니다.',
                   type: 'warning',
                 });
-                vm.keywordName = '';
-                vm.keywordPoint = '';
+                vm.keywordName = null;
+                vm.keywordPoint = null;
                 return;
               }
             }
@@ -230,11 +211,11 @@ export default {
 
       const vm = this;
       // const lid = vm.$route.params.lectureId;
-      const lid = vm.curLectureId;
+      const lid = vm.lectureId;
 
       if (!vm.myKeywordList.length) {
         vm.$message.warning('키워드는 필수 입력입니다. QuizEdit');
-      } else if (vm.modifyQuestion.choice.includes('') || vm.modifyQuestion.name === "" || vm.modifyQuestion.question === "") {
+      } else if ( vm.modifyQuestion.name === "" || vm.modifyQuestion.question === "") {
         vm.$message.warning('모든 정보를 입력해주세요. QuizEdit');
       } else if (vm.modifyQuestion.answer.length === 0) {
         vm.$message.warning('정답을 선택해주세요. QuizEdit');
@@ -252,37 +233,8 @@ export default {
           message: '성공적으로 수정 완료됨',
           type: 'success',
         });
-        vm.updateStudentQuestionMode({ mode: 0 });
+        vm.updateStudentQuestionMode1({ mode: 0 });
       }
-      //   const res = await studentService.postQuestion({
-      //     id: lid,
-      //     name: vm.questionName,
-      //     question: vm.question,
-      //     choice: vm.questionList,
-      //     answer: vm.answer,
-      //     difficulty: vm.level,
-      //     type: vm.questionType,
-      //   });
-      //   try {
-      //     await studentService.postKeyword({
-      //       id: lid,
-      //       qId: res.data.student_question_id,
-      //       data: vm.keywordList,
-      //     });
-      //   } catch (error) {
-      //     vm.$notify({
-      //       title: '키워드 추가/수정 실패',
-      //       message: error.toString(),
-      //       type: 'error',
-      //       duration: 3000,
-      //     });
-      //   }
-      //   vm.$notify({
-      //     title: '수정 완료',
-      //     message: '성공적으로 수정 완료됨',
-      //     type: 'success',
-      //   });
-      // }
       
     },
   },

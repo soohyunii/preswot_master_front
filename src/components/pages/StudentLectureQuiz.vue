@@ -41,11 +41,11 @@ export default {
   async created() {
     const vm = this;
     // alert('createdAt');
-    const lid = vm.curLectureId;
+    // const lid = vm.curLectureId;
 
-    const res = await lectureService.getLecture({
-      lectureId: lid,
-    });
+    // const res = await lectureService.getLecture({
+    //   lectureId: lid,
+    // });
     // vm.lectureType = res.data.type;
   
     // // vm.path = res2.data.name.concat(' > ', res.data.name);

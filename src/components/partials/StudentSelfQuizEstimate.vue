@@ -55,7 +55,7 @@ import QuizPreview from '../partials/QuizPreview';
 import studentService from '../../services/studentService';
 
 export default {
-  name: 'StudentSelfQuiz',
+  name: 'StudentSelfQuizEstimate',
   components: {
     QuizPreview,
   },
