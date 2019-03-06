@@ -56,6 +56,7 @@
           </template>
         </el-table-column>
 
+        <!--
         <el-table-column
           v-if="!props.isPhone"
           label="-"
@@ -78,6 +79,7 @@
             <el-button type="danger" @click="listeners['delete'](scope.$index)" class="delete-btn">삭제</el-button>
           </template>
         </el-table-column>
+        -->
       </el-table>
     </div>
   </div>

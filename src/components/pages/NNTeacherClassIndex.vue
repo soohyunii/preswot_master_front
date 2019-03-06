@@ -14,16 +14,23 @@
     <br />
 
     <div class="right-align">
+      <!--
       <router-link to="/a/teacher/NNclass/new">
         <el-button  type="primary" :class="$attachReactablePostfix('right-align-btn')" style="width: 49%">
           <div class="right-align-btn-layer">과목 개설</div>
         </el-button>
       </router-link>
+      -->
+      <el-button @click="onClick('NEW')" type="primary" :class="$attachReactablePostfix('right-align-btn')">
+        <div class="right-align-btn-layer">과목 개설</div>
+      </el-button>
+      <!--
       <router-link :to="`/a/teacher/NNclass/newfrombank`">
         <el-button type="primary" :class="$attachReactablePostfix('right-align-btn')" style="width: 49%">
           <div class="right-align-btn-layer">과목은행에서 가져오기</div>
         </el-button>
       </router-link>
+      -->
     </div>
   </div>
 </template>
@@ -69,6 +76,23 @@ export default {
     ...mapActions('NNclass', [
       'getMyClassLists',
     ]),
+    onClick(type) {
+      const vm = this;
+      switch (type) {
+        case 'NEW': {
+          vm.$notify({
+            title: '알림',
+            message: '과목 개설은 관리자를 통해서 진행해주세요.',
+            type: 'warning',
+            duration: 5000,
+          });
+          break;
+        }
+        default: {
+          throw new Error(`not defined type ${type}`);
+        }
+      }
+    },
     onClickClass(row, _, column) {
       if (column.label === '-') {
         return;
