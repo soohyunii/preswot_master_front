@@ -333,6 +333,16 @@
       <div v-if="data.type === 2" class="practice">
         <p>실습</p>
         <h3 style="margin:20px;">강사의 지시에 따라주세요.</h3>
+        <el-row type="flex" justify="center">
+          <el-button
+            type="primary"
+            onclick="window.open('http://localhost:8000', '_blank');">
+            To JupyterHub
+          </el-button>
+        </el-row>
+        <el-row type="flex" justify="center">
+          TEST FOR HUB
+        </el-row>
         <pre>{{ data.lecture_code_practices[0].code }}</pre>
       </div>
       <div v-if="data.type === 3" class="discuss">
