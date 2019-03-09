@@ -15,7 +15,7 @@
             <el-button size="small" @click="onClick('MODIFY', scope.$index)">수정</el-button>
           </template>
         </el-table-column>
-        <el-table-column label="미리보기" align="center" width="130">
+        <!-- <el-table-column label="미리보기" align="center" width="130">
           <template slot-scope="scope">
             <el-button size="small" @click="onClick('PREVIEW', scope.$index)">미리보기</el-button>
             <el-dialog
@@ -25,15 +25,15 @@
               center
               width="30%">
               <quiz-preview/>
-              <!-- <quiz-preview
+              <quiz-preview
                 :data="modifyQuestion"
-                :answer="previewAnswer"/> -->
+                :answer="previewAnswer"/>
               <span slot="footer" class="dialog-footer">
                 <el-button @click="handleClose">닫기</el-button>
               </span>
             </el-dialog>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="삭제" align="center" width="120">
           <template slot-scope="scope">
             <el-button type="danger" size="small" @click="onClick('DELETE', scope.$index)">삭제</el-button>
@@ -95,14 +95,6 @@ export default {
 
   },
   async created() {
-    // const lid = vm.$route.params.lectureId;
-    // let res = await vm.getQuestionList({ lectureId: lid });
-    // const res11 = await studentService.getQuestionList(lid);
-
-    // const res = await studentService.getQuestionList({ id: lid });
-    // for (let i = 0; i < res.data.length; i += 1) {
-    //   vm.quizData.push(res.data[i]);
-    // }
 
   },
   async mounted() {
@@ -112,18 +104,6 @@ export default {
     await vm.getQuestionList({ lectureId: lid })
     vm.updateStudentQuestionMode1({ mode: 0})
 
-    // console.log(`question len - ${vm.studentQuestionList.length}`);
-    // alert(vm.studentQuestionList);
-    // for (let i = 0; i < vm.studentQuestionList.length; i += 1) {
-    //   vm.quiz.push(vm.studentQuestionList[i]);
-    // }
-
-    // console.log(`lectureId - ${lid}`);
-    // const res = await studentService.getQuestion({ id: lid });
-    // const key = await studentService.getKeyword({ id: lid });
-    // for (let i = 0; i < key.data.length; i += 1) {
-    //   vm.keyList.push(key.data[i]);
-    // }
   },
   methods: {
     ...mapActions('studentQuestion', [
@@ -233,21 +213,6 @@ export default {
         .catch(() => {
         });
 
-    },
-    handleClose() {
-      const vm = this;
-      vm.dialogVisible = false;
-    },
-    // handleExceed() {
-    //   const vm = this;
-    //   vm.$message.warning('업로드 가능한 파일 개수를 초과하였습니다.');
-    // },
-    handleChange(file, filelist) {
-      const vm = this;
-      if (!(['image/jpeg', 'image/png', 'image/gif', 'video/mp4'].includes(file.raw.type))) {
-        vm.$message.warning('업로드 가능한 파일 형식이 아닙니다.');
-        vm.initFileList = filelist.slice(0, -1);
-      }
     },
   },
 };

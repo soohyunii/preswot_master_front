@@ -4,13 +4,17 @@ import studentService from '../services/studentService';
 export default {
   namespaced: true,
   state: {
+    lectureHomework: null,  // 해당 강의 숙제여부 체크
     lectureId: 0,
     mode: 0, // 0 - list, 1 - new, 2 - modify
     post: null,
     put: null,
     index: -1,
-    studentQuestionList: [],
-    studentEstimateQuestionList: [],
+    studentQuestionList: [],        // 내가 작성한 문항 리스트
+    studentEstimateQuestionList: [], // 평가해야할 문항리스트
+    studentQuestionKeywords: [], // 디테일 문항 키워드 리스트
+    dialogVisible: false,           // 문항평가하기 컴포넌트 다이얼로그 속성값
+    studentEstimateCheck: null,
     modifyQuestion: { student_question_keywords: [] },
     newQuestion: {
       name: null,
@@ -47,6 +51,18 @@ export default {
     updateLectureId(state, { lid }) {
       state.lectureId = lid;
     },
+    updateLectureHomework(state, { lectureHomework }) {
+      state.lectureHomework = lectureHomework;
+    },
+    updateStudentEstimateQuestionList(state, { studentEstimateQuestionList }) {
+      state.studentEstimateQuestionList = studentEstimateQuestionList;
+    },
+    updateStudentQuestionKeywords(state, { studentQuestionKeywords }) {
+      state.studentQuestionKeywords = studentQuestionKeywords;
+    },
+    updateDialogVisible(state, { value }) {
+      state.dialogVisible = value;
+    }
   },
   getters: {
     getIndex: function (state) {
@@ -154,5 +170,31 @@ export default {
       const results = await studentService.getEstimateQuestion({ id });
       commit('updateStudentEstimateQuestionList', { studentEstimateQuestionList: results });
     },
+    async getLectureHomeworkCheck({ commit }, { id }) {
+      const result = await studentService.getLectureHomeworkCheck({ id });
+      commit('updateLectureHomework', { lectureHomework: result.data });
+    },
+    async getSudentEstimateQuestionList({ commit }, { id }) {
+      const result = await studentService.getStudentEstimateQuestionList({ id });
+      if (!result.data.success) {
+        return;
+      }
+      let estimates = [];
+      for (let i = 0 ; i < result.data.result.length ; i += 1) {
+        estimates.push(result.data.result[i]);
+        if (result.data.result[i].type === 0) {
+          estimates[i].type = '객관';
+        } else if ( result.data.result[i].type === 1) {
+          estimates[i].type = '단답';
+        } else {
+          estimates[i].type = '서술';
+        }
+      }
+      commit('updateStudentEstimateQuestionList', { studentEstimateQuestionList: estimates });
+    },
+    async getStudentQuestionKeywords({ commit }, { id, qId }) {
+      const result = await studentService.getStudentQuestionKeywords({ id, qId });
+      commit(`updateStudentQuestionKeywords`, { studentQuestionKeywords: result.data });
+    }
   },
 };

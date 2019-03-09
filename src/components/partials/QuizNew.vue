@@ -258,8 +258,10 @@ export default {
             vm.pushQuestion({ data: res });
             vm.updateStudentQuestionMode1({ mode: 0 });
           } else {
-
-          }
+            alert(`keyword failure`);
+          } 
+        } else {
+          vm.updateStudentQuestionMode1({ mode: 0 });
         }
       }
     },

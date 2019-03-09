@@ -1,7 +1,6 @@
 <template>
   <div>
-    <div v-if="mode === 0">
-      <el-table :data="studentQuestionList" height="400">
+    <el-table :data="studentEstimateQuestionList" height="400">
         <el-table-column type="index" label="번호" align="center" width="100">
         </el-table-column>
         <el-table-column prop="type" label="문항 유형" align="center" width="150">
@@ -13,97 +12,91 @@
        
         <el-table-column label="평가하기" align="center" width="130">
           <template slot-scope="scope">
-            <el-button size="small" @click="onClick('PREVIEW', scope.$index)">평가하기</el-button>
-            <el-dialog
-              title="미리보기"
-              :visible.sync="dialogVisible"
-              :before-close="handleClose"
-              center
-              width="30%">
-              <quiz-preview
-                :data="quizItem"
-                :answer="previewAnswer"/>
-              <span slot="footer" class="dialog-footer">
-                <el-button @click="handleClose">닫기</el-button>
-              </span>
-            </el-dialog>
+            <el-button size="small" @click="onClick('ESTIMATE', scope.$index)">평가하기</el-button>
           </template>
         </el-table-column>
         
       </el-table>
-      <div class="ps-align-right">
-        <p><el-button type="primary" @click="onCreate">출제하기</el-button></p>
-      </div>
-    </div>
-    <div v-else-if="mode === 1">
-      <el-button @click="onBack(0)" icon="el-icon-back">뒤로가기</el-button>
-      <br><br>
-      <quiz-new/>
-    </div>
-    <div v-else-if="mode === 2">
-      <el-button @click="onBack(1)" icon="el-icon-back">뒤로가기</el-button>
-      <br><br>
-      <quiz-edit/>
-    </div>
-    
+
+      <el-dialog :visible.sync="dialogVisible" title="문항 평가하기" :before-close="handleClose" center width="30%">
+        <quiz-estimate :question="currentQuestion"></quiz-estimate>
+          <el-button @click="handleClose">닫기</el-button>
+      </el-dialog>
+
   </div>
 </template>
 
 <script>
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
 import QuizPreview from '../partials/QuizPreview';
+import QuizEstimate from '../partials/QuizEstimate';
 import studentService from '../../services/studentService';
 
 export default {
   name: 'StudentSelfQuizEstimate',
   components: {
     QuizPreview,
+    QuizEstimate,
   },
   data() {
     return {
-      quizForm: false,
-      makeEdit: false,
-      makeNew: false,
-      // mode: 0,  // 0-리스트, 1-등록, 2-수정
-      // quizData: [],
-      q_index: -1,
+      currentQuestion: null,
     };
   },
   computed: {
     ...mapState({
       index: state => state.studentQuestion.index,
-      studentQuestionList: state => state.studentQuestion.studentQuestionList,
+      studentEstimateQuestionList: state => state.studentQuestion.studentEstimateQuestionList,
       mode: state => state.studentQuestion.mode,
+      lectureId: state => state.studentQuestion.lectureId,
+      lectureHomework: state => state.studentQuestion.lectureHomework,
+      studentQuestionKeywords: state => state.studentQuestion.studentQuestionKeywords,
+      dialogVisible: state => state.studentQuestion.dialogVisible,
     }),
-    ...mapState('NNclass', ['curLectureId']),
-    ...mapGetters('studentQuestion', ['getIndex']),
   },
   async created() {
     const vm = this;
-
+    const lectureId = vm.lectureId;
+    await vm.getSudentEstimateQuestionList({ id: lectureId });
   },
   async mounted() {
     const vm = this;
-    const lid = vm.curLectureId;
 
-    await vm.getQuestionList({ lectureId: lid })
   },
   methods: {
     ...mapActions('studentQuestion', [
       'getQuestionList',
       'deleteQuestion',
       'transferStudentQuestion',
+      'getSudentEstimateQuestionList',
+      'getSudentEstimateQuestionList',
+      'getStudentQuestionKeywords',
     ]),
     ...mapMutations('studentQuestion',[
       'updateStudentQuestionIndex',
       'updateStudentQuestionIndex',
       'updateStudentQuestionMode',
+      'updateDialogVisible',
     ]),
     async onClick(type, index) {
       const vm = this;
-      const lid = vm.curLectureId;
-      const tar = vm.studentQuestionList[index];
-      
+      const q = vm.studentEstimateQuestionList[index];
+      await vm.getStudentQuestionKeywords({ id: vm.lectureId, qId: q.student_question_id });
+
+      switch (type) {
+        case 'ESTIMATE': {
+          vm.updateDialogVisible({ value: true });
+          vm.currentQuestion = q;
+          break;
+        }
+        default : {
+          break;
+        }
+      }
+    },
+    handleClose() {
+      const vm = this;
+      vm.updateDialogVisible({ value: false });
     },
     onCreate() {
 

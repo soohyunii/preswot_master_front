@@ -23,6 +23,7 @@ import { mapState, mapActions, mapGetters, mapMutations } from 'vuex';
 import LectureList from '../partials/LectureList';
 import utils from '../../utils';
 import lectureService from '../../services/lectureService';
+import studentService from '../../services/studentService';
 
 export default {
   name: 'StudentClassShow',
@@ -71,6 +72,7 @@ export default {
     ...mapGetters('NNclass', [
       'currentStudyingClass',
     ]),
+    ...mapState('studentQuestion', ['lectureHomework']),
   
     classId() {
       const vm = this;
@@ -106,7 +108,7 @@ export default {
       'getClass',
       'getMyClassLists',
     ]),
-    ...mapActions('studentQuestion', ['updateStudentQuestionMode1']),
+    ...mapActions('studentQuestion', ['updateStudentQuestionMode1','getLectureHomeworkCheck']),
     ...mapMutations('studentQuestion', [
       'updateLectureId',
     ]),
@@ -144,12 +146,17 @@ export default {
       // alert(index);
       const lectureId = vm.lectureList[index].lecture_id;
       const classId = vm.lectureList[index].class_id;
-      vm.updateLectureId({ lid: lectureId });
-      // 처음 들어갈때 리스트로 초기화
-      vm.updateStudentQuestionMode1({ mode: 0 });
 
-      vm.$router.push(`/a/student/NNclass/${classId}/quiz?lectureId=${lectureId}`);
- 
+      await vm.getLectureHomeworkCheck({ id: lectureId });
+      if (vm.lectureHomework.success) {
+        vm.updateLectureId({ lid: lectureId });
+        // 처음 들어갈때 리스트로 초기화
+        vm.updateStudentQuestionMode1({ mode: 0 });
+        vm.$router.push(`/a/student/NNclass/${classId}/quiz?lectureId=${lectureId}`);
+
+      } else {
+        alert('no homework');
+      }
     },
     async onClickJoin(index) {
       const vm = this;
