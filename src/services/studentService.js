@@ -119,6 +119,9 @@ export default {
       answer: answer, // eslint-disable-line
     });
   },
+  getLectureHomeworkCheck({ id }) {
+    return http.get(`/student/${id}/check`);
+  },
   postQuestion({ id, name, question, choice, answer, difficulty, type }) {
     return http.post(`/student/${id}/question`, {
       name,
@@ -129,7 +132,7 @@ export default {
       type,
     });
   },
-  getQuestion({ id }) {
+  getQuestionList({ id }) {
     return http.get(`/student/${id}/question`);
   },
   deleteQuestion({ id, qId }) {
@@ -143,7 +146,7 @@ export default {
   getKeyword({ id }) {
     return http.get(`/lectures/${id}/keywords`);
   },
-  putQuestion({ id, qId, name, question, score, difficulty, choice, answer, isCheck }) {
+  putQuestion({ id, qId, name, question, score, difficulty, choice, answer }) {
     return http.put(`/student/${id}/question/${qId}`, {
       name,
       question,
@@ -151,7 +154,6 @@ export default {
       difficulty,
       choice,
       answer,
-      isCheck,
     });
   },
   deleteKeyword({ id, qId }) {
@@ -160,6 +162,18 @@ export default {
   postFile({ id, qId, file }) {
     return http.post(`/student/${id}/question/${qId}/file`, {
       file,
+    });
+  },
+  getStudentEstimateQuestionList({ id }) {
+    return http.get(`student/${id}/question/random`);
+  },
+  getStudentQuestionKeywords({ id, qId }) {
+    return http.get(`/student/${id}/question/${qId}/keywords`);
+  },
+  postStudentQuestionScore({ id, qId, score }) {
+    return http.post(`/student/${id}/question/scoring`, {
+      student_question_id: qId,
+      score: score
     });
   },
 };

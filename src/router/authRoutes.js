@@ -630,6 +630,9 @@ export default function authRoutes(root) {
       path: '/register/bank/success',
       name: 'RegisterBankSuccess',
       component: RegisterBankSuccess,
+      path: '/student/NNclass/:classId/quiz/',
+      name: 'StudentLectureQuiz',
+      component: StudentLectureQuiz,
       meta: {
         title: '관리자 강의은행그룹 등록 성공',
       },

@@ -12,6 +12,7 @@ export default {
      * 초기값으로 []를 주니까 서버에서 받아온건데 비어있는건지
      * 아니면 아직 서버로부터 안받아온건지 구분이 안가서 null로 초기화함
      */
+    curLectureId: null,
     openedClassList: null,
     goingClassList: null,
     finishedClassList: null,
@@ -71,8 +72,16 @@ export default {
     updatePopularClassList(state, { popularClassList }) {
       state.popularClassList = popularClassList;
     },
+    updateCurLectureId(state, { lid }) {
+      state.curLectureId = lid;
+    },
   },
   actions: {
+    updateLectureId({ commit }, { lid }) {
+      commit('updateCurLectureId', {
+        lid: lid
+      })
+    },
     async putScore({ state }, { id, score }) {
       const res = await classService.putScore({
         id, score,

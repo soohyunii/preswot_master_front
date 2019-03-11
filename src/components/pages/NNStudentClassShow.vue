@@ -10,6 +10,7 @@
     <lecture-list
       @row-click="onClickLecture"
       @join="onClickJoin"
+      @homework="onClickEstimate"
       type="STUDENT"
       :list="lectureL"
     />
@@ -18,10 +19,11 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters } from 'vuex';
+import { mapState, mapActions, mapGetters, mapMutations } from 'vuex';
 import LectureList from '../partials/LectureList';
 import utils from '../../utils';
 import lectureService from '../../services/lectureService';
+import studentService from '../../services/studentService';
 
 export default {
   name: 'StudentClassShow',
@@ -70,6 +72,8 @@ export default {
     ...mapGetters('NNclass', [
       'currentStudyingClass',
     ]),
+    ...mapState('studentQuestion', ['lectureHomework']),
+  
     classId() {
       const vm = this;
       return Number.parseInt(vm.$route.params.classId, 10);
@@ -104,6 +108,10 @@ export default {
       'getClass',
       'getMyClassLists',
     ]),
+    ...mapActions('studentQuestion', ['updateStudentQuestionMode1','getLectureHomeworkCheck']),
+    ...mapMutations('studentQuestion', [
+      'updateLectureId',
+    ]),
     onClick(type) {
       const vm = this;
       switch (type) {
@@ -133,8 +141,31 @@ export default {
     onClickLecture() {
       // 없으면 LectureList.vue 에러나는데 TeacherClassShow와 같이 쓰고있어서 빈 메소드를 넣어둠.
     },
+    async onClickEstimate(index) {
+      const vm = this;
+      // alert(index);
+      const lectureId = vm.lectureList[index].lecture_id;
+      const classId = vm.lectureList[index].class_id;
+
+      await vm.getLectureHomeworkCheck({ id: lectureId });
+      if (vm.lectureHomework.success) {
+        await vm.updateLectureId({ lid: lectureId });
+        // 처음 들어갈때 리스트로 초기화
+        vm.updateStudentQuestionMode1({ mode: 0 });
+        vm.$router.push(`/a/student/NNclass/${classId}/quiz?lectureId=${lectureId}`);
+
+      } else {
+        vm.$notify({
+          title: 'Info',
+          message: '해당 강의의 숙제가 활성화되지 않았습니다.',
+          type: 'info',
+          duration: 2000,
+        });
+      }
+    },
     async onClickJoin(index) {
       const vm = this;
+      // alert(index);
       const lectureId = vm.lectureList[index].lecture_id;
       const lectureType = vm.lectureList[index].type;
       const lectureStartTime = Date.parse(vm.lectureList[index].start_time);

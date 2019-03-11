@@ -16,13 +16,13 @@ import report from './reportStore';
 import keyword from './keywordStore';
 import allowedProgram from './allowedProgramStore';
 import grading from './gradingStore';
+import studentQuestion from './studentQuestionStore';
 
 import MasterUni from './MasterUniStore';
 import MasterDept from './MasterDeptStore';
 import MasterTeacher from './MasterTeacherStore';
 
 Vue.use(Vuex);
-
 export default new Vuex.Store({
   modules: {
     auth,
@@ -43,5 +43,6 @@ export default new Vuex.Store({
     MasterUni,
     MasterDept,
     MasterTeacher,
+    studentQuestion: studentQuestion,
   },
 });
