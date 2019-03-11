@@ -33,6 +33,9 @@
       <el-tab-pane label="강의 지식맵 관리" name="kmap" lazy>
         <knowledgeMap />
       </el-tab-pane>
+      <el-tab-pane label="학생 문제 출제 과제" name="submit">
+        <student-submit-manage />
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -46,6 +49,7 @@ import TlmTabLectureItemEdit from '../partials/TlmTabLectureItemEdit';
 import TlmTabAllowedProgram from '../partials/TlmTabAllowedProgram';
 import TlmTabMaterialEdit from '../partials/TlmTabMaterialEdit';
 import TlmTabMainVideoEdit from '../partials/TlmTabMainVideoEdit';
+import StudentSubmitManage from '../partials/StudentSubmitManage';
 // import utils from '../../utils';
 // import MaterialUpload from '../partials/MaterialUpload';
 // import RecommendKeywords from '../partials/RecommendKeywords';
@@ -64,6 +68,7 @@ export default {
     TlmTabMainVideoEdit,
     TlmTabLectureItemEdit,
     TlmTabAllowedProgram,
+    StudentSubmitManage,
     KnowledgeMap,
   },
   data() {

@@ -242,4 +242,50 @@ export default {
   }) {
     return http.get(`/lectures/${lectureId}/result-opened/${result}`);
   },
+  // 학생 문제 출제 관리 API들
+  registerStudentSubmit({
+    lectureId,
+    homeworkStartAt,
+    homeworkEndAt,
+    scoringStartAt,
+    scoringEndAt,
+  }) {
+    return http.post(`/lectures/${lectureId}/homework`, {
+      homeworkStartAt,
+      homeworkEndAt,
+      scoringStartAt,
+      scoringEndAt,
+    });
+  },
+  deleteStudentSubmit({
+    lectureId,
+  }) {
+    return http.delete(`/lectures/${lectureId}/homework`);
+  },
+  loadStudentSubmit({
+    lectureId,
+  }) {
+    return http.get(`/lectures/${lectureId}/homework`);
+  },
+  loadStudentSubmitResult({
+    lectureId,
+  }) {
+    return http.get(`/lectures/${lectureId}/homework/result`);
+  },
+  notSubmitHomework({
+    lectureId,
+  }) {
+    return http.get(`/lectures/${lectureId}/homework-attendance`);
+  },
+  notScoringHomework({
+    lectureId,
+  }) {
+    return http.get(`/lectures/${lectureId}/scoring-attendance`);
+  },
+  studentQuestion({
+    lectureId,
+    questionId,
+  }) {
+    return http.get(`/lectures/${lectureId}/homework/${questionId}`);
+  },
 };

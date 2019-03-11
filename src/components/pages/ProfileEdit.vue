@@ -50,6 +50,7 @@
             </el-form-item> -->
             <el-form-item v-if="checkTou">
               <p>* 문자, 숫자, 특수문자를 포함해야하며, 8글자 이상 입력해야 합니다.</p>
+              <p>* 사용 가능한 특수문자: !, @, #, $, %, &#38;, *</p>
             </el-form-item>
             <el-form-item label="비밀번호" prop="password" id="password" v-if="checkTou">
               <div style="width: 300px">

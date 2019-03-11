@@ -44,6 +44,8 @@
                 <el-button size="small" @click="onClick('NEW_SIMPLE_TIME', scope.row)">시간 변경</el-button>
               </template>
             </el-table-column>
+            <el-table-column label="활성화 시각 (결과)" v-if="lectureType !== 0" width="150px" prop="start" />
+            <el-table-column label="비활성화 시각 (결과)" v-if="lectureType !== 0" width="150px" prop="end" />
           </el-table>
           <div style="height: 10px;" />
           <div v-if="!ifSimpleMode" style="text-align: right;">
@@ -51,7 +53,7 @@
           </div>
           <div v-if="ifSimpleMode">
             <el-tag v-for="(k, index) in newSimpleGroupList" :key="index">{{ k.name }}</el-tag>
-            <el-time-picker v-model="simpleTime" v-if="lectureType !== 0" placeholder="활성화 시간" style="width: 150px; margin-left: 20px;" default-value="0" />
+            <el-time-picker v-model="simpleTime" v-if="lectureType !== 0" placeholder="활성화 시간" style="width: 150px; margin-left: 20px;" default-value="0" editable="false"/>
             <el-button type="primary" @click="onClick('SIMPLE_GROUP_LC_ITEM')">
               시간 변경
             </el-button>
@@ -373,7 +375,15 @@ export default {
           }
           // 아이템 그룹의 활성화 시간과 비활성화 시간 설정
           startT = (vm.startTime.getTime() / 1000) - 946652400;
+          // 키보드로 입력할 경우 시간 기준이 다름 - 조정
+          if (startT > 10000) {
+            startT -= 599616000;
+          }
           endT = (vm.endTime.getTime() / 1000) - 946652400;
+          // 키보드로 입력할 경우 시간 기준이 다름 - 조정
+          if (endT > 10000) {
+            endT -= 599616000;
+          }
           // 아이템 활성화 시간이 비활성화 시간보다 늦다면 아이템이 종료되지 않음 -> 막아야 함
           if (startT > endT) {
             vm.$notify({
@@ -470,7 +480,11 @@ export default {
             });
             break;
           }
-          const duringT = (vm.simpleTime.getTime() / 1000) - 946652400;
+          let duringT = (vm.simpleTime.getTime() / 1000) - 946652400;
+          // 키보드로 입력할 경우 시간 기준이 다름 - 조정
+          if (duringT > 10000) {
+            duringT -= 599616000;
+          }
           let sS = duringT % 60;
           const sM = (duringT - sS) / 60;
           if (sS < 10) { sS = `0${sS}`; }
@@ -540,7 +554,7 @@ export default {
           }
           vm.$notify({
             title: '알림',
-            message: '성공적으로 변경되었습니다. 변경된 시각은 "수동 설정" 탭에서 확인하세요.',
+            message: '성공적으로 변경되었습니다.',
             type: 'success',
           });
           vm.refreshGroupList();
