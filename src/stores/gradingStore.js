@@ -181,10 +181,11 @@ export default {
               number: 0,
             });
           }
-          console.log(theQuestion);
           for (let i = 0; i < questionResult.numberOfStudent; i += 1) {
-            console.log(theQuestion.answers[i]);
-            questionResult.obAnswers[Number.parseInt(theQuestion.answers[i].answer, 10) - 1].number += 1;
+            // 190311 수정 - 답 안 내거나 중복 제출한 학생들
+            for (let j = 0; j < theQuestion.answers[i].answer.length; j += 1) {
+              questionResult.obAnswers[Number.parseInt(theQuestion.answers[i].answer[j], 10) - 1].number += 1;
+            }
           }
         } else if (questionResult.type === 'SW') {
           for (let i = 0; i < questionResult.numberOfStudent; i += 1) {
