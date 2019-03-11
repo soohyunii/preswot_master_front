@@ -204,7 +204,24 @@ export default {
               class_id: id,
               ...vm.input,
             });
-            vm.$router.push('/a/view/class');
+            if (vm.input.university_name === '' || vm.input.department_name === '' ||
+              vm.input.code === '') {
+              vm.$notify({
+                title: '과목 수정 실패',
+                message: '필수입력사항(*)을 모두 기재해 주세요',
+                type: 'error',
+                duration: 0,
+              });
+            } else if (vm.input.isActive === false && vm.input.teacher_email_id === undefined) {
+              vm.$notify({
+                title: '과목 수정 실패',
+                message: '강사를 선택 해주세요',
+                type: 'error',
+                duration: 0,
+              });
+            } else {
+              vm.$router.push('/a/view/class');
+            }
           } catch (error) {
             vm.$notify({
               title: '과목 수정 실패',
@@ -222,6 +239,13 @@ export default {
               vm.$notify({
                 title: '과목 등록 실패',
                 message: '필수입력사항(*)을 모두 기재해 주세요',
+                type: 'error',
+                duration: 0,
+              });
+            } else if (vm.input.isActive === false && vm.input.teacher_email_id === undefined) {
+              vm.$notify({
+                title: '과목 등록 실패',
+                message: '강사를 선택 해주세요',
                 type: 'error',
                 duration: 0,
               });

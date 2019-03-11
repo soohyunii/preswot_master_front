@@ -122,12 +122,17 @@ export default {
       });
       if (vm.checked === undefined) {
         for (let i = 0; i < res.data.length; i += 1) {
-          if (res.data[i].teacher_email_id !== null) {
-            const teacherNameTemp = await masterService.getMasterUser({
-              email_id: res.data[i].teacher_email_id });
-            vm.teacherNameList[i] = teacherNameTemp.data.name;
-            vm.list[i].teacher_email_id = vm.teacherNameList[i];
+          for (let j = 0; j < res.data[i].users.length; j += 1) {
+            if (res.data[i].users[j].user_class.role === 'teacher'
+              && res.data[i].isActive === false) {
+              const teacherNameTemp = await masterService.getMasterUser({
+                email_id: res.data[i].users[j].email_id,
+              });
+              vm.teacherNameList[i] = teacherNameTemp.data.name;
+              vm.list[i].teacher_email_id = vm.teacherNameList[i];
+            }
           }
+          /* TODO : 강사가 여러명일 경우를 해결 못 함 + 활성화 과목일 때 */
         }
       } else {
         for (let i = 0; i < res2.data.length; i += 1) {
