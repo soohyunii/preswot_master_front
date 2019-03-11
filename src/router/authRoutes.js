@@ -67,6 +67,8 @@ import RegisterStudentSuccess from '../components/pages/RegisterStudentSuccess';
 import RegisterBank from '../components/pages/RegisterBank';
 import RegisterBankSuccess from '../components/pages/RegisterBankSuccess';
 
+import StudentLectureQuiz from '../components/pages/StudentLectureQuiz';
+
 
 export default function authRoutes(root) {
   return [
@@ -630,6 +632,8 @@ export default function authRoutes(root) {
       path: '/register/bank/success',
       name: 'RegisterBankSuccess',
       component: RegisterBankSuccess,
+    },
+    {
       path: '/student/NNclass/:classId/quiz/',
       name: 'StudentLectureQuiz',
       component: StudentLectureQuiz,
