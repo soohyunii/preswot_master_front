@@ -26,18 +26,7 @@
             <el-input v-model="question" placeholder="내용을 입력하세요." 
             type="textarea" :autosize="{ minRows: 8, maxRows: 12 }"></el-input>
           </el-form-item>
-          <el-form-item>
-            <el-upload
-              :auto-upload="false"
-              :on-change="handleChange"
-              :limit="3"
-              :on-exceed="handleExceed"
-              :file-list="initFileList">
-              <el-button slot="trigger" type="primary">파일 추가</el-button>
-              <span slot="tip" class="el-upload__tip">
-                사진(jpg, png, gif) 및 동영상(mp4) 파일만 가능합니다.</span>
-            </el-upload>
-          </el-form-item>
+        
 
           <template v-if="questionType === '1'">
             <el-form-item label="답">
@@ -66,15 +55,7 @@
               <el-input v-model="answer[0]" placeholder="내용을 입력하세요." type="textarea"
               :autosize="{ minRows: 8, maxRows: 12}"></el-input>
             </el-form-item>
-            <el-form-item>
-              <el-upload
-                :auto-upload="false"
-                :file-list="initFileList"
-                :limit="3"
-                :on-exceed="handleExceed">
-                <el-button slot="trigger" type="primary">파일 추가</el-button>
-              </el-upload>
-            </el-form-item>
+       
           </template>
         
           <el-form-item label="난이도">
@@ -142,7 +123,7 @@ export default {
     const vm = this;
     const lid = vm.lectureId;
     const res = await studentService.getKeyword({ id: lid });
-    alert(`new keywords - ${JSON.stringify(res.data)}`);
+    // alert(`new keywords - ${JSON.stringify(res.data)}`);
     for (let i = 0; i < res.data.length; i += 1) {
       vm.keyList.push(res.data[i]);
     }

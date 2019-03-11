@@ -19,18 +19,6 @@
           <el-input v-model="modifyQuestion.question" placeholder="내용을 입력하세요." 
           type="textarea" :autosize="{ minRows: 8, maxRows: 12 }"></el-input>
         </el-form-item>
-        <el-form-item>
-          <el-upload
-            :auto-upload="false"
-            :on-change="handleChange"
-            :limit="3"
-            :on-exceed="handleExceed"
-            :file-list="initFileList">
-            <el-button slot="trigger" type="primary">파일 추가</el-button>
-            <span slot="tip" class="el-upload__tip">
-              사진(jpg, png, gif) 및 동영상(mp4) 파일만 가능합니다.</span>
-          </el-upload>
-        </el-form-item>
 
         <template v-if="modifyQuestion.type === '단답'">
           <el-form-item label="답">
@@ -58,15 +46,7 @@
             <el-input v-model="answer[0]" placeholder="내용을 입력하세요." type="textarea"
             :autosize="{ minRows: 8, maxRows: 12}"></el-input>
           </el-form-item>
-          <el-form-item>
-            <el-upload
-              :auto-upload="false"
-              :file-list="initFileList"
-              :limit="3"
-              :on-exceed="handleExceed">
-              <el-button slot="trigger" type="primary">파일 추가</el-button>
-            </el-upload>
-          </el-form-item>
+         
         </template>
         <el-form-item label="난이도">
           <el-select v-model="modifyQuestion.difficulty">

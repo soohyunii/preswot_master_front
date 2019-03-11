@@ -2,34 +2,40 @@
   <div class="form">
     <br>
     <div class="question">
-      {{ question.question }}
+      이름 : {{ question.name }}
     </div>
-    <br><br>
+    <br>
     <div class="answer">
       <div v-if="question.type =='객관'">
-        <el-checkbox-group v-model="result" size="small">
-          <div v-for="(value,index) in result" :key="value">
-            <!-- <div v-if="value.check ===true">
-              <el-checkbox v-model="value.check" border disabled>{{ value.choice }}</el-checkbox>
-            </div>
-            <div v-else>
-              <el-checkbox border disabled>{{ value.choice }}</el-checkbox>
+        유형: 객관
+        <br><br>
+        문제: {{ question.question }}
+        <br><br>
+        <el-checkbox-group v-model="question.answer" size="small">
 
-            </div> -->
-              <el-checkbox v-model="check" border disabled>{{ value.choice }}</el-checkbox>
-
+          <div v-for="(value,index) in question.choice" :key="value">
+              <el-checkbox :label ="value" border disabled></el-checkbox>
           </div>
+
         </el-checkbox-group>
-        <!-- <li v-for="(value,index) in question.choice" :key="value">
-          {{ index+1 }}-{{ value}}
-        </li> -->
       </div>
       <div v-if="question.type =='단답'">
-        단답형
+        유형: 단답
+        <br><br>
+        문제: {{ question.question }}
+        <br>
       </div>
        <div v-if="question.type =='서술'">
-        {{ question.answer }}
+        유형: 서술
+        <br><br>
+        문제: {{ question.question }}
+        <br>
       </div>
+
+      <br>
+        키워드:
+        <span v-for="(value,index) in studentQuestionKeywords" :key="value">{{ value.keyword }} : {{ value.score_portion}}점 </span>
+      <br><br>
 
       <span v-for="(value,index) in score" :key="value">
             <el-button @click="onClick('SCORE',index)">{{ value }}</el-button>
@@ -52,12 +58,35 @@ export default {
       }
    },
   computed : {
-    ...mapState('studentQuestion',['studentQuestionKeywords','dialogVisible']),
-   
+    ...mapState('studentQuestion',[
+      'studentQuestionKeywords','dialogVisible'
+      
+    ]),
   },
-  created() {
+  watch: {
+    question: function(newVal, oldVal) {
+      const vm = this;
+      vm.result = [];
+      if (vm.question.type === '객관') {
+        const answer = vm.question.answer;
+        const choice = vm.question.choice;
+        for (let i = 0 ; i < choice.length ; i += 1) {
+          if (answer.includes(choice[i])) {
+            let obj = { choice: choice[i], check: true };
+            vm.result.push(obj);
+          } else {
+            let obj = { choice: choice[i], check: false };
+            vm.result.push(obj);
+          }
+        }
+      }
+      alert(`keywords - ${JSON.stringify(vm.studentQuestionKeywords)}`);
+ 
+    }
+  },
+  async mounted() {
     const vm = this;
-    // alert(`created -dd ${JSON.stringify(vm.question)}`);
+    vm.result = [];
     if (vm.question.type === '객관') {
       const answer = vm.question.answer;
       const choice = vm.question.choice;
@@ -72,14 +101,22 @@ export default {
       }
     }
 
+  },
+  created() {
+
     
   },
   methods: {
+    ...mapActions('studentQuestion', ['postStudentQuestionScore']),
     ...mapMutations('studentQuestion', ['updateDialogVisible']),
     async onClick(type, index) {
       const vm = this;
       switch (type) {
         case 'SCORE': {
+          
+          // alert(`score - ${vm.score[index]}`);
+          // alert(`current question - ${JSON.stringify(vm.question)}`);
+          await vm.postStudentQuestionScore({ id: vm.question.lecture_id, qId: vm.question.student_question_id, score: vm.score[index]})
           vm.updateDialogVisible({ value: false });
 
           break;
@@ -103,6 +140,6 @@ export default {
   
  }
  .form {
-   background-color: cornflowerblue;
+   background-color: #e5e9f2;
  }
 </style>

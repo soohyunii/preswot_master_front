@@ -45,12 +45,12 @@
       </div>
     </div>
     <div v-else-if="mode === 1">
-      <el-button @click="onBack(0)" icon="el-icon-back">뒤로가기1</el-button>
+      <el-button @click="onBack(0)" icon="el-icon-back">뒤로가기</el-button>
       <br><br>
       <quiz-new/>
     </div>
     <div v-else-if="mode === 2">
-      <el-button @click="onBack(1)" icon="el-icon-back">뒤로가기2</el-button>
+      <el-button @click="onBack(1)" icon="el-icon-back">뒤로가기</el-button>
       <br><br>
       <quiz-edit/>
     </div>
@@ -89,6 +89,7 @@ export default {
       studentQuestionList: state => state.studentQuestion.studentQuestionList,
       mode: state => state.studentQuestion.mode,
       lectureId: state => state.studentQuestion.lectureId,
+      lectureHomework: state => state.studentQuestion.lectureHomework,
     }),
     // ...mapState('NNclass', ['curLectureId']),
     ...mapGetters('studentQuestion', ['getIndex']),
@@ -124,18 +125,25 @@ export default {
     async onClick(type, index) {
       const vm = this;
       const lid = vm.lectureId;
-
       const tar = vm.studentQuestionList[index];
+      const currentTime = Date.now();
+      const endTime = Date.parse(vm.lectureHomework.lecture.homeworkEndAt);
+
+      if (endTime < currentTime) {
+          vm.$notify({
+          title: 'Completed',
+          message: '이미 숙제 제출 기간이 종료되었습니다..',
+          type: 'warning',
+          duration: 3000,
+        });
+        return;
+      }
+
       switch (type) {
         case 'MODIFY' : {
           
           vm.updateStudentQuestionMode1({ mode: 2 });
           vm.transferStudentQuestion({ index });
-          // vm.index = vm.quizData[index].student_question_id;
-          // vm.studentQuestion = tar;
-          // this.updateStudentQuestionIndex({
-          //   index: tar.student_question_idm
-          // });
           break;
         }
         case 'PREVIEW' : {
@@ -187,11 +195,31 @@ export default {
     },
     onCreate() {
       const vm = this;
-      // alert(vm.mode);
-      // vm.mode = 1;
-      this.updateStudentQuestionMode1({ mode: 1 });
-      // vm.quizForm = true;
-      // vm.makeEdit = false;
+
+      // alert(`lecturehomework - ${JSON.stringify(vm.lectureHomework)}`);
+      const currentTime = Date.now();
+      const startTime = Date.parse(vm.lectureHomework.lecture.homeworkStartAt);
+      // alert(`cur - ${currentTime}, start - ${startTime}`);
+      if (startTime > currentTime) {
+          vm.$notify({
+          title: 'Error',
+          message: '숙제 제출 기간이 아닙니다.',
+          type: 'warning',
+          duration: 3000,
+        });
+        return;
+      }
+      if (vm.studentQuestionList.length >= 1) {
+        vm.$notify({
+          title: 'Completed',
+          message: '이미 숙제 제출이 완료되었습니다.',
+          type: 'warning',
+          duration: 3000,
+        });
+        return;
+      } else {
+        this.updateStudentQuestionMode1({ mode: 1 });
+      }
     },
     onBack(type) {
       const vm = this;

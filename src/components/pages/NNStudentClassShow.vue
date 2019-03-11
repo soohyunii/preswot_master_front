@@ -149,13 +149,18 @@ export default {
 
       await vm.getLectureHomeworkCheck({ id: lectureId });
       if (vm.lectureHomework.success) {
-        vm.updateLectureId({ lid: lectureId });
+        await vm.updateLectureId({ lid: lectureId });
         // 처음 들어갈때 리스트로 초기화
         vm.updateStudentQuestionMode1({ mode: 0 });
         vm.$router.push(`/a/student/NNclass/${classId}/quiz?lectureId=${lectureId}`);
 
       } else {
-        alert('no homework');
+        vm.$notify({
+          title: 'Info',
+          message: '해당 강의의 숙제가 활성화되지 않았습니다.',
+          type: 'info',
+          duration: 2000,
+        });
       }
     },
     async onClickJoin(index) {

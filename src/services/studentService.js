@@ -169,5 +169,11 @@ export default {
   },
   getStudentQuestionKeywords({ id, qId }) {
     return http.get(`/student/${id}/question/${qId}/keywords`);
-  }
+  },
+  postStudentQuestionScore({ id, qId, score }) {
+    return http.post(`/student/${id}/question/scoring`, {
+      student_question_id: qId,
+      score: score
+    });
+  },
 };

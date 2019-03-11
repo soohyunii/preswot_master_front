@@ -7,7 +7,7 @@
         </el-table-column>
         <el-table-column prop="name" label="문항 이름" align="center" width="200">
         </el-table-column>
-        <el-table-column prop="submitTime" label="최초 제출 시간" align="center" width="350">
+        <el-table-column prop="estimated" label="체점 상태" align="center" width="350">
         </el-table-column>
        
         <el-table-column label="평가하기" align="center" width="130">
@@ -81,6 +81,11 @@ export default {
     async onClick(type, index) {
       const vm = this;
       const q = vm.studentEstimateQuestionList[index];
+      if (q.estimated === '완료') {
+        alert('평가 완료된 문항입니다.');        
+        return;
+      }
+
       await vm.getStudentQuestionKeywords({ id: vm.lectureId, qId: q.student_question_id });
 
       switch (type) {

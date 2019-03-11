@@ -10,6 +10,7 @@ export default {
     post: null,
     put: null,
     index: -1,
+    message: null,                  // 예외처리 메시지
     studentQuestionList: [],        // 내가 작성한 문항 리스트
     studentEstimateQuestionList: [], // 평가해야할 문항리스트
     studentQuestionKeywords: [], // 디테일 문항 키워드 리스트
@@ -62,6 +63,13 @@ export default {
     },
     updateDialogVisible(state, { value }) {
       state.dialogVisible = value;
+    },
+    updateStateStudentQuestion(state, { idx }) {
+      state.studentEstimateQuestionList[idx]['estimated'] = '완료';
+      // alert(`updated state - ${JSON.stringify(state.studentEstimateQuestionList)}`);
+    },
+    updateMessage(state, { message }) {
+      state.message = message;
     }
   },
   getters: {
@@ -177,6 +185,7 @@ export default {
     async getSudentEstimateQuestionList({ commit }, { id }) {
       const result = await studentService.getStudentEstimateQuestionList({ id });
       if (!result.data.success) {
+        commit('updateMessage', { message: result.data.message });
         return;
       }
       let estimates = [];
@@ -189,12 +198,30 @@ export default {
         } else {
           estimates[i].type = '서술';
         }
+        estimates[i]['estimated'] = '미완료';
       }
+      // alert(`estimate - ${JSON.stringify(estimates)}`);
+
       commit('updateStudentEstimateQuestionList', { studentEstimateQuestionList: estimates });
     },
     async getStudentQuestionKeywords({ commit }, { id, qId }) {
       const result = await studentService.getStudentQuestionKeywords({ id, qId });
       commit(`updateStudentQuestionKeywords`, { studentQuestionKeywords: result.data });
+    },
+    async postStudentQuestionScore({ state, commit }, { id, qId, score }) {
+
+      const result = await studentService.postStudentQuestionScore({ id, qId, score });
+      // alert(`result - ${JSON.stringify(result.data)}`);
+      if (result.data.success) {
+        for (let i = 0 ; i < state.studentEstimateQuestionList.length ; i += 1) {
+          if (state.studentEstimateQuestionList[i].student_question_id === qId) {
+            // state.studentEstimateQuestionList[i]['estimated'] = true;
+            commit('updateStateStudentQuestion', { idx: i });
+          }
+        }
+      } else {
+  
+      }
     }
   },
 };

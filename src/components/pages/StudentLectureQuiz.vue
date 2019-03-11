@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import deepCopy from 'deep-copy';
 import classService from '../../services/classService';
 import lectureService from '../../services/lectureService';
@@ -38,20 +39,20 @@ import StudentSelfQuizEstimate from '../partials/StudentSelfQuizEstimate';
 
 export default {
   name: 'StudentLectureQuiz',
+  computed: {
+    ...mapState('studentQuestion',['lectureId']),
+  },
   async created() {
     const vm = this;
     // alert('createdAt');
-    // const lid = vm.curLectureId;
-
-    // const res = await lectureService.getLecture({
-    //   lectureId: lid,
-    // });
-    // vm.lectureType = res.data.type;
-  
-    // // vm.path = res2.data.name.concat(' > ', res.data.name);
-    // vm.className = res.data.name;
-    // vm.classId = res.data.class_id;
-    // vm.lectureName = res.data.name;
+    const lid = vm.lectureId;
+    const res = await lectureService.getLecture({
+      lectureId: lid,
+    });
+    vm.lectureType = res.data.type;
+    vm.className = res.data.name;
+    vm.classId = res.data.class_id;
+    vm.lectureName = res.data.name;
   },
   data() {
     return {
@@ -61,8 +62,6 @@ export default {
       lectureType: null,
     };
   },
- computed: {
-  },
   components: {
     StudentSelfQuiz,
     StudentSelfQuizEstimate,
@@ -70,11 +69,6 @@ export default {
   mounted() {
 
   },
-  methods: {
-    
-  },
-
-
 };
 </script>
 

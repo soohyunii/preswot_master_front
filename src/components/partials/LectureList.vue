@@ -115,7 +115,7 @@
             align="center"
           ></el-table-column>
           <el-table-column
-            label="활성화 시간ㅇ"
+            label="활성화 시간"
             width="300"
             align="center"
           >
