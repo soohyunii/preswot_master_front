@@ -344,6 +344,12 @@
           TEST FOR HUB
         </el-row>
         <pre>{{ data.lecture_code_practices[0].code }}</pre>
+        <el-table :data="similarityScores" height="540px" border="true" :row-class-name="tRCName">
+          <el-table-column label="아이디" prop="student_id" align="center" />
+          <el-table-column label="코드점수" prop="code_score" width="80px" align="center" />
+          <el-table-column label="출력점수" prop="output_score" width="80px" align="center" />
+          <el-table-column label="갱신시간" prop="datetime" width="160px" align="center" />
+        </el-table>
       </div>
       <div v-if="data.type === 3" class="discuss">
         <p>토론</p>
@@ -392,9 +398,17 @@ import { getIdFromURL } from 'vue-youtube-embed';
 import Discussion from './NNDiscussion';
 import { baseUrl } from '../../services/config';
 import utils from '../../utils';
+import lectureItemService from '../../services/lectureItemService';
 
 export default {
-  props: ['lectureType', 'data', 'onClick', 'type', 'answerSubmitted'],
+  async created() {
+    const vm = this;
+    const scores = await lectureItemService.getSimilarityScores({
+      classId: vm.classId,
+    });
+    vm.similarityScores = scores;
+  },
+  props: ['lectureType', 'data', 'onClick', 'type', 'answerSubmitted', 'classId'],
   data() {
     return {
       answer: [],
@@ -406,6 +420,7 @@ export default {
         path: undefined,
         player: undefined,
       },
+      similarityScores: []
     };
   },
   computed: {

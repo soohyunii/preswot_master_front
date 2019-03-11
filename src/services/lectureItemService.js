@@ -162,4 +162,16 @@ export default {
   deleteGroup({ groupId }) {
     return http.delete(`/lecture-items/group/${groupId}`);
   },
+  getSimilarityScores({ classId }) {
+    // return http.get(`/similarity_score/`);
+    // return http.get(`/similarity_score/${classId}`);
+    return [
+      {
+        student_id: '1234',
+        output_score: '0.3',
+        code_score: '0.9',
+        datetime: '2019-01-01 00:00:00',
+      },
+    ];
+  },
 };
