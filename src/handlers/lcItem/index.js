@@ -20,7 +20,7 @@ export default class LcItemHandler {
       lectureItemId,
       name: inputHead.lcItemName,
       sequence: inputHead.lcItemSequence,
-      result: inputHead.lcItemResult,
+      // result: inputHead.lcItemResult,
       offset: lcItemOffset,
     });
     await this.postChildLectureItem({
