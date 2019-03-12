@@ -370,7 +370,7 @@ export default {
           groupSchedule[0].time = 0;
         }
       }
-      // 타이머 설정해서 아이템 보여주고 내리기
+      // 타이머 설정해서 아이템 보여주고 숨기기
       groupSchedule.forEach((x, index) => {
         vm.timer.push(setTimeout(() => {
           if (x.type === 'start') {
@@ -1210,7 +1210,7 @@ export default {
           groupSchedule[0].time = 0;
         }
       }
-      // 타이머 설정해서 아이템 보여주고 내리기
+      // 타이머 설정해서 아이템 보여주고 숨기기
       groupSchedule.forEach((x, index) => {
         vm.timer.push(setTimeout(() => {
           if (x.type === 'start') {

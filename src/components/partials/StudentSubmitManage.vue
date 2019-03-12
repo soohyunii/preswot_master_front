@@ -253,7 +253,7 @@ export default {
             });
             break;
           }
-          const hs = new Date(vm.scoringStart).toISOString();
+          const hs = new Date(vm.homeworkStart).toISOString();
           const he = new Date(vm.homeworkEnd).toISOString();
           const ss = new Date(vm.scoringStart).toISOString();
           const se = new Date(vm.scoringEnd).toISOString();

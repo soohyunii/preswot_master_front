@@ -6,7 +6,7 @@
           <el-radio-group v-model="questionType" @change="initialForm">
             <el-radio-button label="1">단답</el-radio-button>
             <el-radio-button label="0">객관</el-radio-button>
-            <el-radio-button label="2">서술</el-radio-button>
+            <!--el-radio-button label="2">서술</el-radio-button-->
           </el-radio-group>
         </el-form-item>
         <div v-show="questionType === null">
@@ -83,7 +83,7 @@
             </div>
           </el-form-item>
           <div class="ps-align-right">
-            <el-button type="primary" @click="onCreate">제출ㅇㅇ</el-button>
+            <el-button type="primary" @click="onCreate">제출</el-button>
           </div>
         </div>
       </el-form>
