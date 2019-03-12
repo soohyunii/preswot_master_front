@@ -408,7 +408,7 @@ export default {
     });
     vm.similarityScores = scores.data;
   },
-  props: ['lectureType', 'data', 'onClick', 'type', 'answerSubmitted', 'classId'],
+  props: ['lectureType', 'data', 'onClick', 'type', 'answerSubmitted'],
   data() {
     return {
       answer: [],
@@ -460,6 +460,10 @@ export default {
       const vm = this;
       const jwt = vm.$store.state.auth.jwt;
       return utils.getAuthTypeFromJwt(jwt);
+    },
+    classId() {
+      const vm = this;
+      return Number.parseInt(vm.$route.query.classId, 10);
     },
   },
   methods: {

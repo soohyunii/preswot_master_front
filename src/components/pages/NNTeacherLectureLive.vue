@@ -1214,7 +1214,7 @@ export default {
         }
         // 전체 아이템 확인
         case 'FULL_ITEM': {
-          window.open('itemList');
+          window.open('itemList?classId=' + vm.classId);
           break;
         }
         // 전체 학생 접속 허용
