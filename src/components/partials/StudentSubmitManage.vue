@@ -206,10 +206,10 @@ export default {
         });
         tmp.title = res5.data.name;
         tmp.data = res5.data;
-        if (!res5.data.score_avg) {
+        if (res5.data.scoring_avg === 0 || res5.data.scoring_avg === null) {
           tmp.score = '평가 없음';
         } else {
-          tmp.score = res5.data.score_avg;
+          tmp.score = res5.data.scoring_avg;
         }
         vm.studentQuestion.push(tmp);
       }
