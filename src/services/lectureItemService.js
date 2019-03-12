@@ -164,7 +164,73 @@ export default {
   },
   getSimilarityScores({ classId }) {
     // return http.get(`/similarity_score/`);
-    // return http.get(`/similarity_score/${classId}`);
+    return http.get(`/similarity_score/${classId}`);
+    /*
+    return [
+      {
+        "email_id": "student1",
+        "datetime": "2019-03-10T10:30:02.000Z",
+        "code_score": "0.87",
+        "output_score": "0.96",
+        "class_id": 1234,
+        "lecture_id": null,
+        "file_name": "sample0.ipynb",
+        "assignment_score": null,
+        "createdAt": "2019-03-10T10:30:02.000Z",
+        "updatedAt": "2019-03-10T10:30:02.000Z"
+      },
+      {
+        "email_id": "student2",
+        "datetime": "2019-03-10T10:30:02.000Z",
+        "code_score": "file name error",
+        "output_score": "file name error",
+        "class_id": 1234,
+        "lecture_id": null,
+        "file_name": "sample0.ipynb",
+        "assignment_score": null,
+        "createdAt": "2019-03-10T10:30:02.000Z",
+        "updatedAt": "2019-03-10T10:30:02.000Z"
+      },
+      {
+        "email_id": "student3",
+        "datetime": "2019-03-10T10:30:02.000Z",
+        "code_score": "file name error",
+        "output_score": "file name error",
+        "class_id": 1234,
+        "lecture_id": null,
+        "file_name": "sample0.ipynb",
+        "assignment_score": null,
+        "createdAt": "2019-03-10T10:30:02.000Z",
+        "updatedAt": "2019-03-10T10:30:02.000Z"
+      },
+      {
+        "email_id": "student4",
+        "datetime": "2019-03-10T10:30:02.000Z",
+        "code_score": "0.762",
+        "output_score": "0.932",
+        "class_id": 1234,
+        "lecture_id": null,
+        "file_name": "sample0.ipynb",
+        "assignment_score": null,
+        "createdAt": "2019-03-10T10:30:02.000Z",
+        "updatedAt": "2019-03-10T10:30:02.000Z"
+      },
+      {
+        "email_id": "student5",
+        "datetime": "2019-03-10T10:30:02.000Z",
+        "code_score": "file name error",
+        "output_score": "file name error",
+        "class_id": 1234,
+        "lecture_id": null,
+        "file_name": "sample0.ipynb",
+        "assignment_score": null,
+        "createdAt": "2019-03-10T10:30:02.000Z",
+        "updatedAt": "2019-03-10T10:30:02.000Z"
+      }
+    ];
+     */
+
+    /*
     return [
       {
         student_id: '1234',
@@ -173,5 +239,6 @@ export default {
         datetime: '2019-01-01 00:00:00',
       },
     ];
+    */
   },
 };

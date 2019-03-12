@@ -345,7 +345,7 @@
         </el-row>
         <pre>{{ data.lecture_code_practices[0].code }}</pre>
         <el-table :data="similarityScores" height="540px" border="true" :row-class-name="tRCName">
-          <el-table-column label="아이디" prop="student_id" align="center" />
+          <el-table-column label="아이디" prop="email_id" align="center" />
           <el-table-column label="코드점수" prop="code_score" width="80px" align="center" />
           <el-table-column label="출력점수" prop="output_score" width="80px" align="center" />
           <el-table-column label="갱신시간" prop="datetime" width="160px" align="center" />
@@ -406,7 +406,7 @@ export default {
     const scores = await lectureItemService.getSimilarityScores({
       classId: vm.classId,
     });
-    vm.similarityScores = scores;
+    vm.similarityScores = scores.data;
   },
   props: ['lectureType', 'data', 'onClick', 'type', 'answerSubmitted', 'classId'],
   data() {
