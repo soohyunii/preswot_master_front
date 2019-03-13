@@ -122,20 +122,22 @@ export default {
       });
       if (vm.checked === undefined) {
         for (let i = 0; i < res.data.length; i += 1) {
-          if (res.data[i].users[0].email_id !== null) {
+          if (res.data[i].isActive === false) {
             const teacherNameTemp = await masterService.getMasterUser({
-              email_id: res.data[i].users[0].email_id });
+              email_id: res.data[i].master.email_id,
+            });
             vm.teacherNameList[i] = teacherNameTemp.data.name;
-            vm.list[i].users[0].email_id = vm.teacherNameList[i];
+            vm.list[i].master.email_id = vm.teacherNameList[i];
           }
+          /* TODO : 강사가 여러명일 경우를 해결 못 함 + 활성화 과목일 때 */
         }
       } else {
         for (let i = 0; i < res2.data.length; i += 1) {
-          if (res2.data[i].users.email_id !== null) {
+          if (res2.data[i].master.email_id !== null) {
             const teacherNameTemp = await masterService.getMasterUser({
-              email_id: res2.data[i].users.email_id });
+              email_id: res2.data[i].master.email_id });
             vm.teacherNameList[i] = teacherNameTemp.data.name;
-            vm.list[i].users.email_id = vm.teacherNameList[i];
+            vm.list[i].master.email_id = vm.teacherNameList[i];
           }
         }
       }
@@ -193,6 +195,9 @@ export default {
       });
       vm.deptNameList = deptNameLists.data.map(element => element.name);
       const res = await masterService.getClassLists({ university_name: vm.chosen });
+      if (vm.chosen !== undefined && vm.dept_chosen !== undefined) {
+        vm.dept_chosen = undefined;
+      }
       vm.list = res.data;
     },
     async showChange() {

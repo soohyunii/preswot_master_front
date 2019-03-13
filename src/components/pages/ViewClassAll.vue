@@ -224,7 +224,7 @@ export default {
     border: 1px solid blue;
   }
   .detail_bottom{
-    margin-top:-17px;
+    margin-top:-18px;
   }
   .detail_isActive{
     margin-top: 30px;

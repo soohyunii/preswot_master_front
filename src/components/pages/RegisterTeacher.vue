@@ -266,6 +266,9 @@ export default {
       const deptNameLists = await masterService.getDeptLists({
         university_name: vm.input.university_name, category: undefined });
       vm.input.department_list = await deptNameLists.data.map(element => element.name);
+      if (vm.input.university_name !== undefined && vm.input.department_name !== undefined) {
+        vm.input.department_name = undefined;
+      }
     },
   },
 };

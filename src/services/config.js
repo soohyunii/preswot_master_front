@@ -1,4 +1,5 @@
 /* eslint-disable import/prefer-default-export */
+/* eslint-disable prefer-const */
 
 let serverUrl = 'http://192.168.0.8';
 

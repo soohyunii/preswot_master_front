@@ -142,6 +142,9 @@ export default {
       });
       vm.department_list = await deptNameLists.data.map(element => element.name);
       const res = await masterService.getUserLists(type, university_name);
+      if (vm.chosen !== undefined && vm.dept_chosen !== undefined) {
+        vm.dept_chosen = undefined;
+      }
       for (let i = 0; i < res.data.length; i += 1) {
         if (res.data[i].department_name === null) {
           res.data[i].department_name = '소속없음';

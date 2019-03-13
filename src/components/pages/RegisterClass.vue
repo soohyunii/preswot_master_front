@@ -22,6 +22,8 @@
 
       <el-form-item label="학과선택">
         <el-select v-model="input.department_name" :disabled="input.boolean" @change="categoryTeacherChange()">
+        <!-- <el-select v-model="input.department_name" multiple placeholder="선택" 
+        @change="categoryTeacherChange()">  -->
           <el-option 
             v-for="department_name in input.department_list"
             :key="department_name"
@@ -200,8 +202,11 @@ export default {
           const id = vm.classId;
           // TODO: wrap with try catch
           try {
-            if (vm.input.university_name === '' ||
-              vm.input.department_name === '' ||
+            await masterService.NNMasterputClass({
+              class_id: id,
+              ...vm.input,
+            });
+            if (vm.input.university_name === '' || vm.input.department_name === '' ||
               vm.input.code === '') {
               vm.$notify({
                 title: '과목 수정 실패',
@@ -209,18 +214,14 @@ export default {
                 type: 'error',
                 duration: 0,
               });
-            } else if (vm.isActive === false && vm.input.user_email_id === '') {
+            } else if (vm.input.isActive === false && vm.input.teacher_email_id === undefined) {
               vm.$notify({
                 title: '과목 수정 실패',
-                message: '실제 운영 과목 등록 시 강사 선택은 필수입니다',
+                message: '강사를 선택 해주세요',
                 type: 'error',
                 duration: 0,
               });
             } else {
-              await masterService.NNMasterputClass({
-                class_id: id,
-                ...vm.input,
-              });
               vm.$router.push('/a/view/class');
             }
           } catch (error) {
@@ -243,10 +244,10 @@ export default {
                 type: 'error',
                 duration: 0,
               });
-            } else if (vm.isActive === false && vm.input.user_email_id === '') {
+            } else if (vm.input.isActive === false && vm.input.teacher_email_id === undefined) {
               vm.$notify({
                 title: '과목 등록 실패',
-                message: '실제 운영 과목 등록 시 강사 선택은 필수입니다',
+                message: '강사를 선택 해주세요',
                 type: 'error',
                 duration: 0,
               });
@@ -270,12 +271,21 @@ export default {
         university_name: vm.input.university_name, category: undefined });
       vm.input.department_list = await deptNameLists.data.map(
         element => element.name);
+      if (vm.input.university_name !== undefined && vm.input.department_name !== undefined) {
+        vm.input.department_name = undefined;
+        vm.input.teacher_email_id = undefined;
+      }
     },
     async categoryTeacherChange() {
       const vm = this;
       const teacherNameLists = await masterService.getUserLists(1,
         vm.input.university_name, vm.input.department_name);
       vm.input.teacher_list = await teacherNameLists.data;
+      if (vm.input.university_name !== undefined &&
+        vm.input.department_name !== undefined &&
+        vm.input.teacher_email_id !== undefined) {
+        vm.input.teacher_email_id = undefined;
+      }
     },
     async categoryNone() {
       const vm = this;

@@ -206,6 +206,9 @@ export default {
       });
       vm.departmentNameList = deptNameList.data.map(element => element.name);
       const res = await masterService.getBankLists({ university_name: vm.chosen });
+      if (vm.chosen !== undefined && vm.department_chosen !== undefined) {
+        vm.department_chosen = undefined;
+      }
       for (let i = 0; i < res.data.length; i += 1) {
         if (res.data[i].user.department_name === null) {
           res.data[i].user.department_name = '소속없음';
