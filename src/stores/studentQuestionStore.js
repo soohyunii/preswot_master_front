@@ -39,6 +39,9 @@ export default {
     },
     transferStudentQuestion(state, { index }) {
       state.modifyQuestion = state.studentQuestionList[index];
+      for (let i = 0 ; i < state.modifyQuestion.answer.length ; i += 1) {
+        state.modifyQuestion.answer[i] = parseInt(state.modifyQuestion.answer[i], 10);
+      }
     },
     updateStudentQuestionIndex(state, index) {
       state.index = index;

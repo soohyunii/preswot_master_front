@@ -80,7 +80,7 @@ export default {
           }
         }
       }
-      alert(`keywords - ${JSON.stringify(vm.studentQuestionKeywords)}`);
+      // alert(`keywords - ${JSON.stringify(vm.studentQuestionKeywords)}`);
  
     }
   },
