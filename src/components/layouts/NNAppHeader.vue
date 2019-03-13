@@ -18,6 +18,14 @@
           <span :class="$attachReactablePostfix('common')">강의중인 과목</span>
         </div>
       </router-link>
+
+      <!--
+      <router-link to="/classes" v-if="authType === 0||authType === 1">
+        <div style="display:inline-block; position:absolute; top: 15px; left:230px;">
+          <span class="normal">과목목록</span>
+        </div>
+      </router-link>
+      -->
       <router-link to="/a/student/NNclass" v-if="authType === 0" v-show="isJwtValid">
         <div :class="$attachReactablePostfix('div3')">
           <span :class="$attachReactablePostfix('common')">수강중인 과목</span>
@@ -28,16 +36,81 @@
           <span :class="$attachReactablePostfix('common')">강의 은행</span>
         </div>
       </router-link>
-      <!--
-      <div style="display:inline-block; position:absolute; top: 20px; left:632px;">
+      
+        <div style="display:inline-block; position:absolute; top: 15px; left:230px;" class="normal_manager" v-if="authType === 3" v-show="isJwtValid">
+          <span>등록하기
+            <ul>
+              <li>
+                <router-link to="/a/register/uni" v-if="authType === 3" v-show="isJwtValid">대학
+                </router-link>
+              </li>
+              <li>
+                <router-link to="/a/register/dept" v-if="authType === 3" v-show="isJwtValid">학과
+                </router-link>
+              </li>
+              <li>
+                <router-link to="/a/register/teacher" v-if="authType === 3" v-show="isJwtValid">강사
+                </router-link>
+              </li>
+              <li>
+                <router-link to="/a/register/class" v-if="authType === 3" v-show="isJwtValid">과목
+                </router-link>
+              </li>
+              <li>
+                <router-link to="/a/register/student" v-if="authType === 3" v-show="isJwtValid">학생
+                </router-link>
+              </li>
+              <li>
+                <router-link to="/a/register/bank" v-if="authType === 3" v-show="isJwtValid">강의은행그룹
+                </router-link>
+              </li>
+            </ul>
+
+          </span>
+        </div>
+      
+      
+        <div style="display:inline-block; position:absolute; top: 15px; left:365px;" class="normal_manager" v-if="authType === 3" v-show="isJwtValid">
+          <span>조회하기
+            <ul>
+              <li>
+                <router-link to="/a/view/uni" v-if="authType === 3" v-show="isJwtValid">대학</router-link>
+              </li>
+              <li>
+                <router-link to="/a/view/dept" v-if="authType === 3" v-show="isJwtValid">학과</router-link>
+              </li>
+              <li>
+                <router-link to="/a/view/teacher" v-if="authType === 3" v-show="isJwtValid">강사</router-link>
+              </li>
+              <li>
+                <router-link to="/a/view/class" v-if="authType === 3" v-show="isJwtValid">과목</router-link>
+              </li>
+              <li>
+                <router-link to="/a/view/student" v-if="authType === 3" v-show="isJwtValid">학생및성적표</router-link>
+              </li>
+              <li>
+                <router-link to="/a/view/bank" v-if="authType === 3" v-show="isJwtValid">강의은행그룹</router-link>
+              </li>
+            </ul>
+          </span>
+        </div>
+
+      <!--      
+      <div style="display:inline-block; position:absolute; top: 20px; left:632px;" v-if="authType === 0||authType === 1">
         <input v-model="testData" type="text" id="headerInput" class="inputtestclass" placeholder="Please input"/>
         <i class="el-icon-search" @click="onClick('asdfsadf')"></i>
       </div>
       -->
+
       <!-- 회원가입 막아놓기
       <router-link to="/tos" v-show="!isJwtValid">
         <div :class="$attachReactablePostfix('div4')">
           <span :class="$attachReactablePostfix('common')">회원가입</span>
+
+      
+      <router-link to="/register" v-show="!isJwtValid">
+        <div style="display:inline-block; position:absolute; top: 15px; left:990px;">
+          <span class="normal">회원가입</span>
         </div>
       </router-link>-->
       <router-link to="/login" v-show="!isJwtValid">
@@ -124,6 +197,55 @@
     font-size: 13px;
     font-weight: bold;
     color: #20a0ff;
+  }
+  .normal_manager{
+    width: 65px;
+    height: 74px;
+    font-family: SpoqaHanSans;
+    font-size: 13px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.17;
+    letter-spacing: normal;
+    color: #ffffff;
+  }
+  .normal_manager:hover{
+    font-size: 13px;
+    font-weight: bold;
+    color: #20a0ff;
+  }
+
+  .normal_manager ul{
+    list-style:none;
+    padding-left:10px;
+    width:100px;
+    background-color:#233656;
+  }
+
+  .normal_manager ul li{
+    display:none;
+    font-family: SpoqaHanSans;
+    line-height: normal;
+    padding:5px 2px 5px 0;
+    height:25px;
+  }
+
+  .normal_manager:hover ul li{
+    display:block;
+  }
+
+  .normal_manager ul li a{
+    text-decoration:none;
+    color:#ffffff;
+  }
+
+  .normal_manager ul li a:hover{
+    color:#20a0ff;
+  }
+
+  #header2:hover {
+    background-color:blueviolet;
   }
 
   .div1-phone {
@@ -225,7 +347,7 @@ export default {
   },
   methods: {
     ...mapMutations('layout', ['updateCollapse']),
-    ...mapMutations('auth', ['updateJwt', 'updateLocale']),
+    ...mapMutations('auth', ['updateJwt', 'updateTemporalJwt', 'updateLocale']),
     _changeLocale(locale) {
       const vm = this;
       vm.$i18n.locale = locale;
@@ -248,6 +370,9 @@ export default {
         }
         case 'LOGOUT': {
           vm.updateJwt({
+            jwt: '',
+          });
+          vm.updateTemporalJwt({
             jwt: '',
           });
           if (vm.$route.meta.auth) {

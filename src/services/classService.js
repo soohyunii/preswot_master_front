@@ -1,5 +1,7 @@
 // import axios from 'axios';
 // import config from './config';
+/* eslint-disable camelcase */
+/* eslint-disable no-unused-vars */
 import http from './http';
 import utils from '../utils';
 
@@ -33,6 +35,9 @@ export default {
   },
   getClassKeywordRelations({ id }) {
     return http.get(`/classes/${id}/keyword-relations`);
+  },
+  getMasterUniLists() {
+    return http.get('/university/list');
   },
   postClass({ //
     title,
@@ -119,7 +124,7 @@ export default {
   }) {
     return http.post(`/classes/${id}/teacher/${teacherEmail}`, {});
   },
-  deleteTeacer({
+  deleteTeacher({
     id,
     teacherEmail,
   }) {
@@ -156,4 +161,251 @@ export default {
   }) {
     return http.get(`/student_lecture_logs/re/${questionId}`);
   },
+
+// 행정 관리자 methods
+  NNMasterputUni({
+    id,
+    code,
+    name,
+    address,
+    manager,
+    email,
+    phone,
+  }) {
+    return http.put(`/view/uni/${id}`, {
+      code,
+      name,
+      address,
+      manager,
+      email,
+      phone,
+    });
+  },
+  NNMasterpostUni({
+    code,
+    name,
+    address,
+    manager,
+    email,
+    phone,
+  }) {
+    /*
+    return http.post('/register/uni/success', {
+      code: code,
+      name,
+      address,
+      manager,
+      email,
+      phone,
+     바로 성공 페이지로 돌아가는 거면(목록명시x) 위의 요소들 필요 없는가?
+    });
+    */
+    return {
+      success: true,
+    };
+  },
+  NNMasterputDept({
+    choiceUni,
+    code,
+    name,
+    fields,
+    manager,
+    email,
+    phone,
+  }) {
+    return http.put('/view/dept', {
+      choiceUni,
+      code,
+      name,
+      fields,
+      manager,
+      email,
+      phone,
+    });
+  },
+  NNMasterpostDept({
+    choiceUni,
+    code,
+    name,
+    fields,
+    manager,
+    email,
+    phone,
+  }) {
+    return {
+      success: true,
+    };
+  },
+  NNMasterputTeacher({
+    email,
+    password,
+    passwordConfirm,
+    name,
+    sex,
+    career,
+    birth,
+    choiceUni,
+    choiceDept,
+    address,
+    phone,
+    account,
+    bank,
+  }) {
+    return http.put('view/teacher', {
+      email,
+      password,
+      passwordConfirm,
+      name,
+      sex,
+      career,
+      birth,
+      choiceUni,
+      choiceDept,
+      address,
+      phone,
+      account,
+      bank,
+    });
+  },
+  NNMasterpostTeacher({
+    email,
+    password,
+    passwordConfirm,
+    name,
+    sex,
+    career,
+    birth,
+    choiceUni,
+    choiceDept,
+    address,
+    phone,
+    account,
+    bank,
+  }) {
+    return {
+      success: true,
+    };
+  },
+  NNMasterputClass({
+    choiceUni,
+    choiceDept,
+    choiceTeacher,
+    code,
+    frequency,
+    name,
+    time,
+    classRoom,
+    activeStartDate,
+    activeEndDate,
+    capacity,
+    lecturerDescription,
+    description,
+  }) {
+    return http.put('/view/class', {
+      choiceUni,
+      choiceDept,
+      choiceTeacher,
+      code,
+      frequency,
+      name,
+      time,
+      classRoom,
+      activeStartDate,
+      activeEndDate,
+      capacity,
+      lecturerDescription,
+      description,
+    });
+  },
+  NNMasterpostClass({
+    choiceUni,
+    choiceDept,
+    choiceTeacher,
+    code,
+    frequency,
+    name,
+    time,
+    classRoom,
+    activeStartDate,
+    activeEndDate,
+    capacity,
+    lecturerDescription,
+    description,
+  }) {
+    return {
+      success: true,
+    };
+  },
+  NNMasterputStudent({
+    email,
+    password,
+    passwordConfirm,
+    name,
+    sex,
+    birth,
+    choiceUni,
+    choiceDept,
+    address,
+    phone,
+    account,
+    bank,
+  }) {
+    return http.put('view/student', {
+      email,
+      password,
+      passwordConfirm,
+      name,
+      sex,
+      birth,
+      choiceUni,
+      choiceDept,
+      address,
+      phone,
+      account,
+      bank,
+    });
+  },
+  NNMasterpostStudent({
+    email,
+    password,
+    passwordConfirm,
+    name,
+    sex,
+    birth,
+    choiceUni,
+    choiceDept,
+    address,
+    phone,
+    account,
+    bank,
+  }) {
+    return {
+      success: true,
+    };
+  },
+  NNMasterputBank({
+    code,
+    name,
+    capacity,
+    choiceTeacher,
+  }) {
+    return (http.put('view/bank'), {
+      code,
+      name,
+      capacity,
+      choiceTeacher,
+    });
+  },
+  NNMasterpostBank({
+    code,
+    name,
+    capacity,
+    choiceTeacher,
+  }) {
+    return {
+      success: true,
+    };
+  },
+
+
 };

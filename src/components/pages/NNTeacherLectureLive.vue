@@ -1,5 +1,5 @@
 <template>
-  <div id="teacher_lecture_live_wrapper" class="bt-container">
+  <div id="teacher_lecture_live_wrapper" class="bt-container" style="height: 1000px;">
     <template v-if="$isPhone">
       <!-- <h2>{{ path }}</h2><br/> -->
       <el-breadcrumb style="font-size: 24px; margin-top: 16px; margin-bottom: 32px;" separator=">">
@@ -225,7 +225,7 @@
 
       <el-row>
         <div style="height: 20px;" />
-        <el-popover v-if="lectureType === 0" placement="top" trigger="hover">
+        <el-popover v-if="lectureType === 0" trigger="hover" placement="top">
           <div style="width: 720px;">
             <el-table :data="ipList" border="true" height="400px" size="medium">
               <el-table-column label="" prop="num" width="30px" />
@@ -251,12 +251,12 @@
         <el-button size="small" @click="onClick('ABSENT')">결석자 명단</el-button>
         <el-button v-if="lectureType === 0" v-show="!showGraph" size="small" type="primary" @click="onClick('SHOWGRAPH')">실시간 그래프 보이기</el-button>
         <div style="float: right;">
-          <el-popover v-if="lectureType === 0" placement="top" trigger="hover">
+          <el-popover v-if="lectureType === 0" placement="bottom" trigger="hover">
             <div style="background-color: #EBEEF5; width: 1200px;">
-              <el-row :gutter="20" style="height: 400px;">
+              <el-row :gutter="20" style="height: 350px;">
                 <el-col span="11">
                   <h2>현재 출제 목록</h2>
-                  <el-table :data="nowItemTable" height="300px" style="width: 450px;" id="dyTable">
+                  <el-table :data="nowItemTable" height="250px" style="width: 450px;" id="dyTable">
                     <el-table-column label="타입" prop="type" width="50px;" />
                     <el-table-column label="이름" prop="name" />
                     <el-table-column label="제출 현황" width="100px;">
@@ -277,7 +277,7 @@
                 <el-col span="9" style="margin-left: 20px;">
                   <el-tabs v-model="activeTab" type="border-card" style="margin-top: 20px; height: 345px;" v-if="tabShow">
                     <el-tab-pane label="답안 선택 현황" name="select" v-if="questionAnswerFix">
-                      <el-table :data="selectStatus" height="280px" style="width: 400px;" :row-class-name="tRCName">
+                      <el-table :data="selectStatus" height="250px" style="width: 400px;" :row-class-name="tRCName">
                         <el-table-column label="답안" prop="answer" />
                         <el-table-column label="학생 수" prop="num" width="130px" />
                       </el-table>
@@ -286,7 +286,7 @@
                       {{ notyetStatus }}
                     </el-tab-pane>
                     <el-tab-pane label="학생별 제출 횟수" name="submitNum">
-                      <el-table :data="submitStatus" height="280px" style="width: 400px;">
+                      <el-table :data="submitStatus" height="250px" style="width: 400px;">
                         <el-table-column label="제출 횟수" prop="submit" />
                         <el-table-column label="학생 수" prop="num" width="130px" />
                       </el-table>
@@ -297,7 +297,7 @@
             </div>
             <el-button size="small" type="primary" @click="onClick('NEXT_ITEM')" slot="reference">다음 아이템 보이기</el-button>
           </el-popover>
-          <el-popover v-if="lectureType === 1" placement="top" trigger="hover">
+          <el-popover v-if="lectureType === 1" placement="bottom" trigger="hover">
             <div style="background-color: #EBEEF5; width: 1200px;">
               <el-row :gutter="20" style="height: 400px;">
                 <el-col span="11">
@@ -351,7 +351,7 @@
             </div>
             <el-button size="small" type="primary" slot="reference">아이템 현황 보기</el-button>
           </el-popover>
-          <el-button v-if="lectureType === 0" size="small" @click="onClick('HIDE_ITEM')">아이템 내리기</el-button>
+          <el-button v-if="lectureType === 0" size="small" @click="onClick('HIDE_ITEM')">아이템 숨기기</el-button>
           <el-button size="small" @click="onClick('FULL_ITEM')">전체 아이템 확인</el-button>
         </div>
         <div v-show="showGraph">
@@ -381,10 +381,11 @@
             resultType="실시간"/>
         </el-row>
       </div>
+      <!--
       <div class="statusbar" v-bind:class="{ activeInfo: isInfoVisible }">
         <div class="statusbar_for_click" @click="onClick('TOGGLE_STATUS_INFO')"></div>
         <teacher-lecture-live-summary :lectureId= "lectureId"/>
-      </div>
+      </div> -->
     </template>
   </div>
 </template>
@@ -685,7 +686,7 @@ export default {
         }
       }
 
-      // 타이머 설정해서 아이템 보여주고 내리기
+      // 타이머 설정해서 아이템 보여주고 숨리기
       groupSchedule.forEach((x) => {
         vm.timer.push(setTimeout(() => {
           if (x.type === 'start') {
@@ -927,6 +928,7 @@ export default {
     return {
       tableItemList: [],
       tableItemIndex: [],
+      localLectureId: '', // beforeDestory에서 vm.$route.params.lectureId 를 못읽는 문제가 발생하여 임시 저장
       currentLectureItemId: [],
       path: '',
       isAuto: false,
@@ -1073,13 +1075,13 @@ export default {
           vm.nowGroup = vm.groupIdList[vm.activeNum];
           break;
         }
-        // 아이템 내리기
+        // 아이템 숨리기
         case 'HIDE_ITEM': {
           if (vm.activeNum % 1 === 0.5 || vm.activeNum === -0.5) {
             // 내릴 아이템이 없음
             vm.$notify({
               title: '알림',
-              message: '내릴 아이템이 없습니다.',
+              message: '숨길 아이템이 없습니다.',
               type: 'warning',
             });
             break;
@@ -1124,12 +1126,12 @@ export default {
               }
             });
           }
-          vm.$confirm(notSubmit, '아이템 내리기', {
-            confirmButtonText: '내리기',
+          vm.$confirm(notSubmit, '아이템 숨기기', {
+            confirmButtonText: '숨기기',
             cancelButtonText: '취소',
             type: 'warning',
           }).then(() => {
-            // 아이템 내리기
+            // 아이템 숨기기
             vm.stepData[vm.activeNum].status = 'success';
             vm.activeNum += 0.5;
             const paramsi = {

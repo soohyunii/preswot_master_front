@@ -18,6 +18,10 @@ import allowedProgram from './allowedProgramStore';
 import grading from './gradingStore';
 import studentQuestion from './studentQuestionStore';
 
+import MasterUni from './MasterUniStore';
+import MasterDept from './MasterDeptStore';
+import MasterTeacher from './MasterTeacherStore';
+
 Vue.use(Vuex);
 export default new Vuex.Store({
   modules: {
@@ -36,6 +40,9 @@ export default new Vuex.Store({
     report,
     allowedProgram,
     grading,
+    MasterUni,
+    MasterDept,
+    MasterTeacher,
     studentQuestion: studentQuestion,
   },
 });

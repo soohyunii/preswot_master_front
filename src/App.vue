@@ -2,7 +2,7 @@
   <div :id="$attachReactablePostfix('app')" :style="{ backgroundImage: ('url('+require('@/assets/study05.jpg')+')') }"
    :oncontextmenu="authType === 1 ? '' : 'return false'" :ondragstart="authType === 1 ? '' : 'return false'">
     <el-container>
-      <el-header>
+      <el-header :id="authType === 3 ? 'header_admin' : ''">
         <app-header />
       </el-header>
       <el-container>
@@ -146,4 +146,9 @@ export default {
 
   /* sh e */
 }
+
+#header_admin{
+  z-index:3;
+}
+
 </style>
