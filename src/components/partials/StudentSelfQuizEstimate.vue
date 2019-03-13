@@ -82,7 +82,11 @@ export default {
       const vm = this;
       const q = vm.studentEstimateQuestionList[index];
       if (q.estimated === '완료') {
-        alert('평가 완료된 문항입니다.');        
+          vm.$notify({
+            title: '평가 완료',
+            message: '이미 평가가 완료된 문항입니다.',
+            type: 'error',
+          });
         return;
       }
 

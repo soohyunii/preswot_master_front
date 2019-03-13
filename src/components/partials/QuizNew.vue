@@ -1,12 +1,11 @@
 <template>
   <div style="width: 600px;">
     <div v-show="isAdd">
-      <el-form :model="quizForm" label-width="100px">
+      <el-form label-width="100px">
         <el-form-item label="문항 유형">
           <el-radio-group v-model="questionType" @change="initialForm">
             <el-radio-button label="1">단답</el-radio-button>
             <el-radio-button label="0">객관</el-radio-button>
-            <el-radio-button label="2">서술</el-radio-button>
           </el-radio-group>
         </el-form-item>
         <div v-show="questionType === null">
@@ -30,12 +29,11 @@
 
           <template v-if="questionType === '1'">
             <el-form-item label="답">
-              <el-input v-for="(item, index) in answer" :key="index" 
-              v-model="answer[index]" placeholder="내용을 입력하세요." type="textarea"></el-input>
-              <p>
+              <el-input v-model="answer[0]" placeholder="내용을 입력하세요." type="textarea"></el-input>
+              <!-- <p>
               <el-button type="primary" @click="onClick('ADD_ANSWER')">추가</el-button>
               <el-button v-if="answer.length > 1" type="danger" @click="onClick('DELETE_ANSWER')">제거</el-button>
-              </p>
+              </p> -->
             </el-form-item>
           </template>
           <template v-if="questionType === '0'">
@@ -43,8 +41,10 @@
               <el-checkbox-group v-model="answer" @change="handleAnswerListChange">
       
                 <div v-for="n in 5" :key="n">
-                  <el-checkbox :label="n">{{ n }}.</el-checkbox>
+                  <el-checkbox :label="n">{{ n }}. </el-checkbox>
+                  <span class="answer-list">
                   <el-input v-model="choice[n-1]" placeholder="내용을 입력하세요."  class="answer-list"></el-input>
+                  </span>
                 </div>
       
               </el-checkbox-group>
@@ -83,7 +83,7 @@
             </div>
           </el-form-item>
           <div class="ps-align-right">
-            <el-button type="primary" @click="onCreate">제출ㅇㅇ</el-button>
+            <el-button type="primary" @click="onCreate">제출</el-button>
           </div>
         </div>
       </el-form>
@@ -111,8 +111,9 @@ export default {
       keywordName: '',
       keywordPoint: '',
       pts: [5, 4, 3, 2, 1],
-      keywordList: ['a','b'],
+      keywordList: [],
       keyList: [],
+      value: null,
     };
   },
   computed: {
@@ -123,7 +124,6 @@ export default {
     const vm = this;
     const lid = vm.lectureId;
     const res = await studentService.getKeyword({ id: lid });
-    // alert(`new keywords - ${JSON.stringify(res.data)}`);
     for (let i = 0; i < res.data.length; i += 1) {
       vm.keyList.push(res.data[i]);
     }
@@ -137,13 +137,14 @@ export default {
       vm.question = [];
       vm.questionList = [];
       vm.choice = [];
-      vm.answer = [''];
+      vm.answer = [];
       vm.initFileList = [];
       vm.keywordName = '';
       vm.keywordPoint = '';
       vm.keywordList = [];
     },
     handleAnswerListChange(val) {
+      // alert(val);
       this.answer = val;
     },
     handleChange(file, filelist) {
@@ -179,6 +180,7 @@ export default {
                 });
                 vm.keywordName = '';
                 vm.keywordPoint = '';
+                break;
               }
             }
             if (vm.keywordName !== '') {
@@ -219,6 +221,12 @@ export default {
           message: '제목은 필수 입력입니다.',
           type: 'warning',
         });
+      } else if (!vm.question) {
+        vm.$notify({
+          title: '알림',
+          message: '제목은 필수 입력입니다.',
+          type: 'warning',
+        });
       } else {
         const res = await studentService.postQuestion({
           id: lid,
@@ -249,3 +257,8 @@ export default {
   },
 };
 </script>
+<style>
+.answer-list {
+  width: 250px;
+}
+</style>

@@ -74,13 +74,7 @@ export default {
   },
   data() {
     return {
-      quizForm: false,
-      makeEdit: false,
-      makeNew: false,
       // mode: 0,  // 0-리스트, 1-등록, 2-수정
-      // quizData: [],
-      quizData: null,
-      previewAnswer: null,
     };
   },
   computed: {
@@ -147,11 +141,8 @@ export default {
           break;
         }
         case 'PREVIEW' : {
-                    vm.transferStudentQuestion({ index });
-
-          // vm.quizData = tar;
-          // vm.previewAnswer = tar.answer;
-          // alert(`preview - ${JSON.stringify(vm.quizData)}`);
+          
+          vm.transferStudentQuestion({ index });
           break;
         }
         case 'DELETE' : {

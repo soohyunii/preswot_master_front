@@ -60,6 +60,7 @@ export default {
       lectureName: '',
       classId: -1,
       lectureType: null,
+      itemSize: 24
     };
   },
   components: {

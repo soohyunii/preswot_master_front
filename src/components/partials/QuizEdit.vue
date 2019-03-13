@@ -5,7 +5,6 @@
         <el-radio-group v-model="modifyQuestion.type" disabled>
           <el-radio-button label="1">단답</el-radio-button>
           <el-radio-button label="0">객관</el-radio-button>
-          <el-radio-button label="2">서술</el-radio-button>
         </el-radio-group>
         <span> &nbsp; * 문항 유형 수정 불가 </span>
       </el-form-item>
@@ -23,18 +22,15 @@
         <template v-if="modifyQuestion.type === '단답'">
           <el-form-item label="답">
             <el-input v-for="(item, index) in modifyQuestion.answer" :key="index" 
-            v-model="modifyQuestion.answer[index]" placeholder="내용을 입력하세요." type="textarea"></el-input>
-            <p><el-button type="primary" @click="onClick('ADD_ANSWER')">추가</el-button>
-            <el-button v-if="modifyQuestion.answer.length > 1" type="danger" @click="onClick('DELETE_ANSWER')">제거</el-button></p>
+              v-model="modifyQuestion.answer[index]" placeholder="내용을 입력하세요." type="textarea"></el-input>
           </el-form-item>
         </template>
         <template v-if="modifyQuestion.type === '객관'">
           <el-form-item label="보기">
               <el-checkbox-group v-model="modifyQuestion.answer" @change="handleAnswerListChange">
-      
                 <div v-for="(item, index) in modifyQuestion.choice" :key="index">
-                  <el-checkbox :label="index">{{ item }}.</el-checkbox>
-                  <el-input v-model="modifyQuestion.choice[n-1]" placeholder="내용을 입력하세요."  class="answer-list"></el-input>
+                  <el-checkbox :label="index+1">{{ index+1 }}.</el-checkbox>
+                  <el-input v-model="modifyQuestion.choice[index]" placeholder="내용을 입력하세요."  class="answer-list"></el-input>
                 </div>
       
             </el-checkbox-group>
@@ -97,6 +93,7 @@ export default {
       keyList: [{'keyword': 'a'}, {'keyword': 'b'}],
       diffList: [5,4,3,2,1],
       pts: [5,4,3,2,1],
+      myanswer: [],
       myKeywordList: [],
       keywordName: null,
       keywordPoint: null,
@@ -107,7 +104,7 @@ export default {
   async created() {
     const vm = this;
     let test = vm.index;
-    
+    // alert(`modify question - ${JSON.stringify(vm.modifyQuestion)}`);
     // 해당 문항의 키워드를 임시로 배열로 옮김
     while(vm.myKeywordList.length) { vm.myKeywordList.pop(); }
     for (let i = 0; i < vm.modifyQuestion.student_question_keywords.length ; i += 1) {
@@ -116,6 +113,16 @@ export default {
     // 해당 강의의 키워드를 불러옴
     const keywords = await lectureService.getLectureKeywords({ lectureId: vm.lectureId });
     vm.keyList = keywords.data;
+   
+    // alert(JSON.stringify(vm.myanswer));
+    for (let i = 0 ; i < vm.modifyQuestion.answer.length ; i += 1 ) {
+      vm.modifyQuestion.answer[i] = parseInt(vm.modifyQuestion.answer[i], 10);
+    }
+  },
+  watch: {
+  },
+  mounted() {
+
   },
   computed: {
     ...mapState('studentQuestion', ['modifyQuestion','lectureId']),
@@ -187,6 +194,11 @@ export default {
         }
       }
     },
+    handleAnswerListChange(val){
+      const vm = this;
+      vm.modifyQuestion.answer = val 
+      // alert(`change - ${JSON.stringify(vm.modifyQuestion.answer)}`);
+    },
     async onModify() {
 
       const vm = this;
@@ -217,6 +229,7 @@ export default {
       }
       
     },
+
   },
 };
 </script>
@@ -224,7 +237,7 @@ export default {
 <style>
 .answer-list { 
   display: inline-block;
-  width: 90%;
+  width: 80%;
   margin-left: 10px;
 }
 </style>
