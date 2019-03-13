@@ -206,6 +206,7 @@ export default {
         });
         tmp.title = res5.data.name;
         tmp.data = res5.data;
+        // 평균 점수가 null 또는 0으로 표시 -> '평가 없음'
         if (res5.data.scoring_avg === 0 || res5.data.scoring_avg === null) {
           tmp.score = '평가 없음';
         } else {
