@@ -6,10 +6,6 @@
           <el-radio-group v-model="questionType" @change="initialForm">
             <el-radio-button label="1">단답</el-radio-button>
             <el-radio-button label="0">객관</el-radio-button>
-<<<<<<< HEAD
-=======
-            <!--el-radio-button label="2">서술</el-radio-button-->
->>>>>>> b3425e74fb5add0d00ae1f097605bd798c48e2e4
           </el-radio-group>
         </el-form-item>
         <div v-show="questionType === null">

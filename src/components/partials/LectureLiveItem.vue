@@ -6,7 +6,7 @@
     <div v-else class="lecture-item">
       <div v-if="data.type === 0" class="question-box"> <!-- 질문 -->
         <div v-if="data.questions[0].type === 0">
-          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT' && data.result === 1)">
+          <template v-if="(studentAnswerLogIndex !== -1 && type === 'STUDENT' && data.result === 1)">
             <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
@@ -36,7 +36,7 @@
           </template>
           <template v-else>
             <p>문항 - 객관</p>
-            <p v-if="(data.questions[0].student_answer_logs.length > 0 || answerSubmitted) && type === 'STUDENT'" style="color: red;">제출 완료</p>
+            <p v-if="(studentAnswerLogIndex !== -1 || answerSubmitted) && type === 'STUDENT'" style="color: red;">제출 완료</p>
             <div v-show="data.questions[0].question_material && data.questions[0].question_material.length > 0">
               <div class="questionFile"
                 v-for="file in data.questions[0].question_material"
@@ -63,7 +63,7 @@
           </template>
         </div>
         <div v-if="data.questions[0].type === 1">
-          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT' && data.result === 1)">
+          <template v-if="(studentAnswerLogIndex !== -1 && type === 'STUDENT' && data.result === 1)">
             <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
@@ -87,7 +87,7 @@
           </template>
           <template v-else>
             <p>문항 - 단답</p>
-            <p v-if="(data.questions[0].student_answer_logs.length > 0 || answerSubmitted) && type === 'STUDENT'" style="color: red;">제출 완료</p>
+            <p v-if="(studentAnswerLogIndex !== -1 || answerSubmitted) && type === 'STUDENT'" style="color: red;">제출 완료</p>
             <div v-show="data.questions[0].question_material && data.questions[0].question_material.length > 0">
               <div class="questionFile"
                 v-for="file in data.questions[0].question_material"
@@ -110,7 +110,7 @@
           </template>
         </div>
         <div v-if="data.questions[0].type === 2">
-          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT' && data.result === 1)">
+          <template v-if="(studentAnswerLogIndex !== -1 && type === 'STUDENT' && data.result === 1)">
             <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
@@ -148,7 +148,7 @@
           </template>
           <template v-else>
             <p>문항 - 서술</p>
-            <p v-if="(data.questions[0].student_answer_logs.length > 0 || answerSubmitted) && type === 'STUDENT'" style="color: red;">제출 완료</p>
+            <p v-if="(studentAnswerLogIndex !== -1 || answerSubmitted) && type === 'STUDENT'" style="color: red;">제출 완료</p>
             <div v-show="data.questions[0].question_material.length > 0">
               <div class="questionFile"
                 v-for="file in data.questions[0].question_material"
@@ -179,7 +179,7 @@
           </template>
         </div>
         <div v-if="data.questions[0].type === 3">
-          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT' && data.result === 1)">
+          <template v-if="(studentAnswerLogIndex !== -1 && type === 'STUDENT' && data.result === 1)">
             <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
@@ -197,7 +197,7 @@
           </template>
           <template v-else>
             <p>문항 - SW</p>
-            <p v-if="(data.questions[0].student_answer_logs.length > 0 || answerSubmitted) && type === 'STUDENT'" style="color: red;">제출 완료</p>
+            <p v-if="(studentAnswerLogIndex !== -1 || answerSubmitted) && type === 'STUDENT'" style="color: red;">제출 완료</p>
             <div v-show="data.questions[0].question_material.length > 0">
               <div class="questionFile"
                 v-for="file in data.questions[0].question_material"
@@ -237,7 +237,7 @@
           </template>
         </div>
         <div v-if="data.questions[0].type === 4">
-          <template v-if="(data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT' && data.result === 1)">
+          <template v-if="(studentAnswerLogIndex !== -1 && type === 'STUDENT' && data.result === 1)">
             <!-- 이미 제출한 경우 -->
             <p>제출이 완료되었습니다.</p>
             <br />
@@ -261,7 +261,7 @@
           </template>
           <template v-else>
             <p>문항 - SQL</p>
-            <p v-if="(data.questions[0].student_answer_logs.length > 0 || answerSubmitted) && type === 'STUDENT'" style="color: red;">제출 완료</p>
+            <p v-if="(studentAnswerLogIndex !== -1 || answerSubmitted) && type === 'STUDENT'" style="color: red;">제출 완료</p>
             <div v-show="data.questions[0].question_material.length > 0">
               <div class="questionFile"
                 v-for="file in data.questions[0].question_material"
@@ -285,7 +285,7 @@
         </div>
         <el-row type="flex" justify="center">
           <el-button
-            v-if="!((data.questions[0].student_answer_logs.length > 0 && type === 'STUDENT' && data.result === 1) || (data.result === 1 && answerSubmitted))"
+            v-if="!((studentAnswerLogIndex !== -1 && type === 'STUDENT' && data.result === 1) || (data.result === 1 && answerSubmitted))"
             type="primary"
             @click="preOnClick()">
             제출
@@ -300,7 +300,7 @@
           </template>
           <template v-else>
             <p>설문 - 객관</p>
-            <p v-if="(data.surveys[0].student_surveys.length > 0 || answerSubmitted) && type === 'STUDENT'" style="color: red;">제출 완료</p>
+            <p v-if="(data.surveys[0].student_surveys.length > 0 || answerSubmitted) && type === 'STUDENT'" style="color: red;">{{ studentAnswerLogIndex }}제출 완료</p>
             <pre>{{ data.surveys[0].comment }}</pre>
             <el-radio-group v-model="answer[0]" style="width: 100%;">
               <div v-for="(choice,index) in data.surveys[0].choice" :key="index">
@@ -316,7 +316,7 @@
           </template>
           <template v-else>
             <p>설문 - 주관</p>
-            <p v-if="(data.surveys[0].student_surveys.length > 0 || answerSubmitted) && type === 'STUDENT'" style="color: red;">제출 완료</p>
+            <p v-if="(data.surveys[0].student_surveys.length > 0 || answerSubmitted) && type === 'STUDENT'" style="color: red;">{{ studentAnswerLogIndex }}제출 완료</p>
             <pre>{{ data.surveys[0].comment }}</pre>
             <el-input placeholder="내용을 입력해주세요." v-model="answer[0]"></el-input>
           </template>
@@ -401,7 +401,6 @@ export default {
   computed: {
     Url() {
       const vm = this;
-
       if (vm.data.type === 4) {
         if (vm.data.notes[0].note_type === 0) {
           const url = baseUrl + vm.data.notes[0].files[0].client_path;

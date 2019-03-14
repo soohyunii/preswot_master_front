@@ -460,7 +460,8 @@ export default {
                   tmp.soc = '';
                 } else if (v.type === 0) {
                   tmp.types = '문항';
-                  if (v.questions[0].student_answer_logs.length > 0) {
+                  const userId = utils.getUserIdFromJwt();
+                  if (v.questions[0].student_answer_logs.findIndex(item => item.student_id === userId) !== -1) {
                     tmp.soc = 'O';
                   } else {
                     tmp.soc = 'X';
@@ -848,6 +849,7 @@ export default {
           // 문항 이동
           vm.lectureItems = [];
           vm.lectureItems.push(vm.lectureItem[data - 1]);
+          console.log(vm.lectureItem[data - 1]);
           vm.nowNum = data - 1;
           // 시작 시간 갱신
           vm.startTime = new Date();
@@ -1068,7 +1070,8 @@ export default {
               tmp.soc = '';
             } else if (x.type === 0) {
               tmp.types = '문항';
-              if (x.questions[0].student_answer_logs.length > 0) {
+              const userId = utils.getUserIdFromJwt();
+              if (x.questions[0].student_answer_logs.findIndex(item => item.student_id === userId) !== -1) {
                 tmp.soc = 'O';
               } else {
                 tmp.soc = 'X';
@@ -1300,7 +1303,8 @@ export default {
                   tmp.soc = '';
                 } else if (v.type === 0) {
                   tmp.types = '문항';
-                  if (v.questions[0].student_answer_logs.length > 0) {
+                  const userId = utils.getUserIdFromJwt();
+                  if (v.questions[0].student_answer_logs.findIndex(item => item.student_id === userId) !== -1) {
                     tmp.soc = 'O';
                   } else {
                     tmp.soc = 'X';
