@@ -140,6 +140,7 @@ export default {
       const lectureType = vm.lectureList[index].type;
       const lectureStartTime = Date.parse(vm.lectureList[index].start_time);
       const lectureEndTime = Date.parse(vm.lectureList[index].end_time);
+      const classId = vm.classId;
       const currentTime = Date.now();
 
       if (lectureType !== '[유인]') {
@@ -160,10 +161,10 @@ export default {
             duration: 2000,
           });
         } else {
-          vm.$router.push(`/a/student/NNlecture/${lectureId}/live`);
+          vm.$router.push(`/a/student/NNlecture/${lectureId}/live?classId=${classId}`);
         }
       } else {
-        vm.$router.push(`/a/student/NNlecture/${lectureId}/live`);
+        vm.$router.push(`/a/student/NNlecture/${lectureId}/live?classId=${classId}`);
       }
     },
   },

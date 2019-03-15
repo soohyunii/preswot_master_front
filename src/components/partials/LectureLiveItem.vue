@@ -336,7 +336,8 @@
         <el-row type="flex" justify="center">
           <el-button
             type="primary"
-            onclick="window.open('http://localhost:8000', '_blank');">
+            onclick="window.open('http://192.168.99.100:8000', '_blank');">
+            <!--  onclick="window.open('http://localhost:8000', '_blank');">  -->
             To JupyterHub
           </el-button>
         </el-row>
