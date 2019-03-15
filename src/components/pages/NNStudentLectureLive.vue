@@ -275,6 +275,11 @@ export default {
         window.location.href = '/download';
       }
     });
+    // 강사가 인증번호 요청
+    vm.$socket.on('START_AUTHENTIACATION', (msg) => {
+      const jsonMSG = JSON.parse(msg);
+      console.log(jsonMSG);
+    });
     if (vm.lectureType === 1) { // 무인강의 - 단체
       vm.timer = [];
       const res4 = await lectureService.getLecture({

@@ -15,7 +15,6 @@ export default class LcItemHandler {
         (60 * inputHead.lcItemOffset.getMinutes()) + inputHead.lcItemOffset.getSeconds();
     }
 
-    alert(`put lecture item - ${JSON.stringify(inputHead)}`)
     const lectureItemId = res1.data.lecture_item_id;
     await lectureItemService.putLectureItem({
       lectureItemId,

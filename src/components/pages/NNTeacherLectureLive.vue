@@ -243,6 +243,7 @@
             </el-table>
             <div style="height: 5px;" />
             <div style="float: right;">
+              <el-button size="small" type="primary" @click="onClick('ATTENDANCE_CHECK')">출석 확인</el-button>
               <el-button size="small" @click="onClick('PERMIT_ALL')">전체 학생 재접속 허용</el-button>
             </div>
           </div>
@@ -986,6 +987,7 @@ export default {
       joinTime: undefined, // 강사가 강의에 입장한 시간 - 무인 단체
       timer: [], // 무인 단체에서 타이머
       ipList: [], // ip 카운트 및 학생 재접속 허용 관리
+      attendanceNumber: '', // 출석 인증번호
     };
   },
   computed: {
@@ -1275,6 +1277,45 @@ export default {
           } else {
             vm.focusFlag = true;
           }
+          break;
+        }
+        // 출석 인증번호 보내기 - 유인강의 전용
+        /* /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/
+
+        /
+          [\w!#$%&'*+/=?^_`{|}~-]
+          +
+          (?:\.[\w!#$%&'*+/=?^_`{|}~-]+)
+          *
+          @
+          (?:[\w]
+            (?:[\w-]*[\w])
+          ?\.)
+          +
+          [\w]
+          (?:[\w-]*[\w])?
+        /
+
+
+        */
+        case 'ATTENDANCE_CHECK': {
+          console.log('출석 체크');
+          vm.$prompt('출석 인증번호 숫자 4자리를 입력해주세요.', '출석 체크', {
+            confirmButtonText: '확인',
+            cancelButtonText: '취소',
+            inputPattern: /^[0-9]{4}$/,
+            inputErrorMessage: '숫자 4자리를 입력해주세요.'
+          }).then(({ value }) => {
+            vm.attendanceNumber = value;
+            console.log(vm.attendanceNumber);
+            const paramsi = {
+              lecture_id: vm.lectureId,
+              message: vm.attendanceNumber,
+            };
+            vm.$socket.emit('START_AUTHENTICATION', JSON.stringify(paramsi));
+          }).catch(() => {
+            return; // eslint-disable-line
+          });
           break;
         }
         default: {
