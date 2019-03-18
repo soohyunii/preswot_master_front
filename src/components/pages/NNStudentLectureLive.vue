@@ -276,9 +276,36 @@ export default {
       }
     });
     // 강사가 인증번호 요청
-    vm.$socket.on('START_AUTHENTIACATION', (msg) => {
+    vm.$socket.on('START_AUTHENTICATION', (msg) => {
       const jsonMSG = JSON.parse(msg);
-      console.log(jsonMSG);
+      vm.checkNumber = jsonMSG.message;
+      const wer = new RegExp('^' + vm.checkNumber + '$');
+      vm.$prompt('출석 인증번호 숫자 4자리를 입력해주세요.', '출석 체크', {
+        confirmButtonText: '확인',
+        inputPattern: wer,
+        inputErrorMessage: '인증번호가 틀립니다.',
+        showCancelButton: false
+      }).then(({ value }) => {
+        vm.$notify({
+          title: '알림',
+          message: '정상적으로 출석 인증이 되었습니다.',
+          type: 'success',
+        });
+        // 강사에게 출석 인증 신호 보내기
+        const paramsi = {
+          lecture_id: vm.lectureId,
+          user_id: utils.getUserIdFromJwt(),
+          message: vm.checkNumber,
+        };
+        vm.$socket.emit('SEND_AUTHENTICATION', JSON.stringify(paramsi));
+      }).catch(() => {
+        vm.$notify({
+          title: '알림',
+          message: '출석 인증이 되지 않았습니다.',
+          type: 'warning',
+        });
+        return;
+      });
     });
     if (vm.lectureType === 1) { // 무인강의 - 단체
       vm.timer = [];
@@ -615,6 +642,7 @@ export default {
       remainTime: '', // 남은 시간 표시 (무인 강의)
       remainTimer: [], // 남은 시간 표시용 타이머
       myId: '', // 학생 본인의 ID
+      checkNumber: '', // 강사가 보낸 인증번호
     };
   },
   computed: {

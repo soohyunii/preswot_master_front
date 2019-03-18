@@ -721,6 +721,12 @@ export default {
       });
     } // 무인 단체 설정 끝
 
+    // 실시간 출석 인증
+    vm.$socket.on('RECV_AUTHENTICATION', (msg) => {
+      const jsonMSG = JSON.parse(msg);
+      console.log(jsonMSG);
+    });
+
     // 출석 변동 있는 경우 - 실시간 출석률 변화
     vm.$socket.on('CHECK_STUDENT_LIST', (msg) => {
       const jsonMSG = JSON.parse(msg);
@@ -1280,26 +1286,7 @@ export default {
           break;
         }
         // 출석 인증번호 보내기 - 유인강의 전용
-        /* /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/
-
-        /
-          [\w!#$%&'*+/=?^_`{|}~-]
-          +
-          (?:\.[\w!#$%&'*+/=?^_`{|}~-]+)
-          *
-          @
-          (?:[\w]
-            (?:[\w-]*[\w])
-          ?\.)
-          +
-          [\w]
-          (?:[\w-]*[\w])?
-        /
-
-
-        */
         case 'ATTENDANCE_CHECK': {
-          console.log('출석 체크');
           vm.$prompt('출석 인증번호 숫자 4자리를 입력해주세요.', '출석 체크', {
             confirmButtonText: '확인',
             cancelButtonText: '취소',
@@ -1307,7 +1294,6 @@ export default {
             inputErrorMessage: '숫자 4자리를 입력해주세요.'
           }).then(({ value }) => {
             vm.attendanceNumber = value;
-            console.log(vm.attendanceNumber);
             const paramsi = {
               lecture_id: vm.lectureId,
               message: vm.attendanceNumber,

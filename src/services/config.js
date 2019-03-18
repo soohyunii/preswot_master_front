@@ -1,9 +1,9 @@
 /* eslint-disable import/prefer-default-export */
 
-const serverUrl = 'http://13.125.31.75';
+const serverUrl = 'http://13.125.182.116';
 // const serverUrl = 'http://127.0.0.1';
-const backPort = 8010;
-const socketPort = 8011;
+const backPort = 8090;
+const socketPort = 8091;
 /*
 const isTest = document.URL.includes('13.124.196.202');
 const isProd = document.URL.includes('preswot');
