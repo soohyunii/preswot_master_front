@@ -49,7 +49,12 @@
   	  <template v-else="buttonType==='studentOnChange'"> 
   	  	<master-student-all-table
   	    :list="student"
+        v-if="buttonShow==false"
   	    />
+        <div class="center-align" v-if="buttonShow==true">조회 할 학생이 없습니다</div>
+        <el-button class="center-align-btn" v-if="buttonShow==true" v-on:click="mappingChange">
+          <div>학생-과목 매핑하기</div>
+        </el-button>
   	  </template>
   	</div>
     <div class="table-name" v-if="isActive==true">
@@ -107,6 +112,7 @@ export default {
       end_time: '',
       location: '',
       isActive: true,
+      buttonShow: false,
     };
   },
   computed: {
@@ -138,6 +144,22 @@ export default {
     async studentOnChange() {
       const vm = this;
       vm.buttonType = 'studentOnChange';
+      if (vm.student.length === 0) {
+        vm.buttonShow = true;
+      }
+    },
+    async mappingChange(class_id) {
+      const vm = this;
+      console.log('현재 과목이 어느대학, 어느 학과에 소속되어 있는지를 가져와 아래 메시지창에 띄운다.');
+      class_id = 7;
+      const res = await masterService.getMasterClass({ class_id });
+      const uniName = res.data.university_name;
+      const deptName = res.data.department_name;
+      vm.$confirm(`${uniName} ${deptName} 학과 학생들과 매핑하겠습니까?`, undefined, {
+        confirmButtonText: '예, 매핑하겠습니다',
+        cancelButtonText: '아니오, 매핑하지 않겠습니다',
+        type: 'warning',
+      });
     },
   },
 };
@@ -229,6 +251,14 @@ export default {
   .detail_isActive{
     margin-top: 30px;
     font-size: 1.5em;
+  }
+  .center-align {
+    margin: 60px 0 30px 0;
+    padding: 0 0 0 45%;
+  }
+  .center-align-btn {
+    margin: 0 0 0 40%;
+    width: 22%;
   }
 }
 </style>

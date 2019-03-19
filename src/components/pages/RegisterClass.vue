@@ -53,7 +53,7 @@
       </el-form-item>
 
       <br/><br/><br/><br/><br/><br/>
-      <el-form-item label="강사선택">
+      <el-form-item label="주강사선택">
         <el-select id="teacher-choice" v-model="input.user_email_id" :disabled="input.isActive" style="width:140px;">  
           <el-option 
             v-for="element in input.teacher_list"
@@ -65,6 +65,17 @@
         &nbsp; <font color="red" size="5em">*</font>
         <font color="red" size="2em">실제 운영 과목 등록 시 강사 선택 필수</font>
       </el-form-item> 
+
+      <el-form-item label="부강사선택">
+        <el-select id="teacher2-choice" v-model="input.user_value" multiple :disabled="input.isActive" style="width:300px;">  
+          <el-option 
+            v-for="element in input.teacher_list"
+            :key="element.email_id"
+            :label="element.name"
+            :value="element.email_id">
+          </el-option>
+        </el-select>
+      </el-form-item>
 
       <el-form-item label="과목차수">
         <el-input type="number" v-model="input.day_of_week" class="subject-title" :disabled="input.isActive"></el-input>
@@ -149,6 +160,7 @@ export default {
       end_date: new Date(),
       capacity: 0,
       description: '',
+      user_value: [],
     };
     return {
       initialInput,
@@ -244,7 +256,7 @@ export default {
                 type: 'error',
                 duration: 0,
               });
-            } else if (vm.input.isActive === false && vm.input.teacher_email_id === undefined) {
+            } else if (vm.input.isActive === false && vm.input.user_email_id === undefined) {
               vm.$notify({
                 title: '과목 등록 실패',
                 message: '강사를 선택 해주세요',

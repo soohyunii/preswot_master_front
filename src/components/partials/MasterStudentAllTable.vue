@@ -2,15 +2,15 @@
   <div id="class_index_wrapper">
     <div>
       <el-table class="elTable" :data="page" style="width: 100%">
-      <el-table-column prop="code" label="학생코드" width="233px">
-      </el-table-column>
       <el-table-column prop="name" label="학생이름" width="233px">
       </el-table-column>
-      <el-table-column prop="sex" label="성별" width="233px">
-      </el-table-column>
-      <el-table-column prop="age" label="나이" width="233px">
-      </el-table-column>
       <el-table-column prop="dept" label="학과" width="233px">
+      </el-table-column>
+      <el-table-column prop="understanding" label="이해도" width="233px">
+      </el-table-column>
+      <el-table-column prop="concentrating" label="집중도" width="233px">
+      </el-table-column>
+      <el-table-column prop="participating" label="참여도" width="233px">
       </el-table-column>
       </el-table>
       <br>
