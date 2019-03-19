@@ -213,6 +213,7 @@ export default {
          *   return;
          * }
          */
+        /* 재접속 방지 기능 - 삭제 190319
         const res = await lectureService.studentLoginLog({
           lectureId: vm.lectureList[index].lecture_id,
         });
@@ -223,9 +224,8 @@ export default {
             type: 'info',
             duration: 2000,
           });
-        } else {
-          vm.$router.push(`/a/student/NNlecture/${lectureId}/live`);
-        }
+        } else { } */
+        vm.$router.push(`/a/student/NNlecture/${lectureId}/live`);
       }
     },
   },

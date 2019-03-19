@@ -233,18 +233,19 @@
               <el-table-column label="이메일" prop="email" />
               <el-table-column label="현재 접속 여부" prop="current" />
               <!--el-table-column label="IP count" prop="ip" /-->
-              <el-table-column label="재접속 허용" width="120px">
+              <el-table-column label="출석 인증" prop="number" />
+              <!--el-table-column label="재접속 허용" width="120px">
                 <template slot-scope="scope">
                   <el-button type="primary" size="small" @click="entrancePermit(scope.row)">
                     허용
                   </el-button>
                 </template>
-              </el-table-column>
+              </el-table-column-->
             </el-table>
             <div style="height: 5px;" />
             <div style="float: right;">
-              <el-button size="small" type="primary" @click="onClick('ATTENDANCE_CHECK')">출석 확인</el-button>
-              <el-button size="small" @click="onClick('PERMIT_ALL')">전체 학생 재접속 허용</el-button>
+              <el-button size="small" type="primary" @click="onClick('ATTENDANCE_CHECK')">출석 인증번호 입력</el-button>
+              <!--el-button size="small" @click="onClick('PERMIT_ALL')">전체 학생 재접속 허용</el-button-->
             </div>
           </div>
           <el-button size="small" slot="reference">학생 접속 정보</el-button>
@@ -546,6 +547,7 @@ export default {
     });
     vm.totalStudent = wholeStudent.data.length; // 총 수강인원
     vm.ipList = []; // ipList 초기화
+    vm.attendanceList = [];
     wholeStudent.data.forEach((x, index) => {
       // 전체 수강생 리스트
       const stud = {};
@@ -568,9 +570,12 @@ export default {
       tmp.name = x.name;
       tmp.email = x.email_id;
       tmp.id = x.user_id;
-      tmp.current = '미출석';
+      tmp.current = '미접속';
+      tmp.number = '-';
       vm.ipList.push(tmp);
     });
+    // ipList 그대로 복사
+    vm.attendanceList = deepCopy(vm.ipList);
 
     // 무인 단체
     if (vm.lectureType === 1) {
@@ -724,7 +729,12 @@ export default {
     // 실시간 출석 인증
     vm.$socket.on('RECV_AUTHENTICATION', (msg) => {
       const jsonMSG = JSON.parse(msg);
-      console.log(jsonMSG);
+      vm.ipList.forEach((x, index) => {
+        if (x.id === jsonMSG[0].user_id) {
+          x.number = '출석';
+          vm.attendanceList[index].number = '출석';
+        }
+      });
     });
 
     // 출석 변동 있는 경우 - 실시간 출석률 변화
@@ -756,12 +766,17 @@ export default {
         tmp.name = x.name;
         tmp.email = x.email_id;
         tmp.id = x.user_id;
-        if (x.current === 1) { // 현재 출석중
-          tmp.current = '출석 중';
-        } else if (x.in_cnt > 0) { // 출석했지만 나감
-          tmp.current = '출석 후 이탈';
+        if (vm.attendanceList[index].number === '출석') {
+          tmp.number = '출석';
         } else {
-          tmp.current = '미출석';
+          tmp.number = '-';
+        }
+        if (x.current === 1) { // 현재 접속중
+          tmp.current = '접속 중';
+        } else if (x.in_cnt > 0) { // 접속했지만 나감
+          tmp.current = '접속 후 이탈';
+        } else {
+          tmp.current = '미접속';
         }
         vm.ipList.push(tmp);
       });
@@ -994,6 +1009,7 @@ export default {
       timer: [], // 무인 단체에서 타이머
       ipList: [], // ip 카운트 및 학생 재접속 허용 관리
       attendanceNumber: '', // 출석 인증번호
+      attendanceList: [], // 출석 인증번호 여부 리스트
     };
   },
   computed: {

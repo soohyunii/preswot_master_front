@@ -59,7 +59,8 @@
         <el-table-column label="이메일" prop="email" width="250px" />
         <el-table-column label="문제 이름" prop="title" />
         <el-table-column label="평가 점수" prop="score" width="100px" />
-        <el-table-column width="200px">
+        <el-table-column label="평가 인원" prop="scoreCnt" width="100px" />
+        <el-table-column width="150px">
           <template slot-scope="scope">
             <el-button @click="questionShow(scope.row)">미리보기</el-button>
           </template>
@@ -210,7 +211,8 @@ export default {
         if (res5.data.scoring_avg === 0 || res5.data.scoring_avg === null) {
           tmp.score = '평가 없음';
         } else {
-          tmp.score = res5.data.scoring_avg;
+          tmp.score = res5.data.scoring_avg.toFixed(2);
+          tmp.scoreCnt = res5.data.scoring_cnt;
         }
         vm.studentQuestion.push(tmp);
       }

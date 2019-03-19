@@ -27,7 +27,7 @@
             <el-table-column
               label="평균 점수">
               <template slot-scope="scope">
-                {{ scope.row.avgScore }} / {{scope.row.score}}
+                {{ scope.row.avgScore.toFixed(2) }} / {{scope.row.score}}
               </template>
             </el-table-column>
             <el-table-column

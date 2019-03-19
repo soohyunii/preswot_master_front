@@ -13,8 +13,8 @@
         <br><br>
         <el-checkbox-group v-model="question.answer" size="small">
 
-          <div v-for="(value,index) in question.choice" :key="value">
-              <el-checkbox :label ="value" border disabled></el-checkbox>
+          <div v-for="(value) in question.choice" :key="value">
+            <el-checkbox :label ="value" border disabled></el-checkbox>
           </div>
 
         </el-checkbox-group>
@@ -33,12 +33,17 @@
       </div>
 
       <br>
+        정답:
+        <span v-for="(value) in answers" :key="value">{{ value + ' ' }}</span>
+      <br>
+
+      <br>
         키워드:
-        <span v-for="(value,index) in studentQuestionKeywords" :key="value">{{ value.keyword }} : {{ value.score_portion}}점 </span>
+        <span v-for="(value) in studentQuestionKeywords" :key="value">{{ value.keyword }} : {{ value.score_portion}}점 </span>
       <br><br>
 
       <span v-for="(value,index) in score" :key="value">
-            <el-button @click="onClick('SCORE',index)">{{ value }}</el-button>
+        <el-button @click="onClick('SCORE',index)">{{ value }}</el-button>
       </span>
      
     </div>
@@ -54,25 +59,26 @@ export default {
         result: [],
         check: true,
         score: [1,2,3,4,5],
-
+        answers: [],
       }
    },
   computed : {
     ...mapState('studentQuestion',[
       'studentQuestionKeywords','dialogVisible'
-      
     ]),
   },
   watch: {
     question: function(newVal, oldVal) {
       const vm = this;
       vm.result = [];
+      vm.answers = [];
       if (vm.question.type === '객관') {
         const answer = vm.question.answer;
         const choice = vm.question.choice;
         for (let i = 0 ; i < choice.length ; i += 1) {
-          if (answer.includes(choice[i])) {
+          if (answer.includes((i + 1).toString())) {
             let obj = { choice: choice[i], check: true };
+            vm.answers.push(`${i + 1}번`);
             vm.result.push(obj);
           } else {
             let obj = { choice: choice[i], check: false };
@@ -81,18 +87,19 @@ export default {
         }
       }
       // alert(`keywords - ${JSON.stringify(vm.studentQuestionKeywords)}`);
- 
     }
   },
   async mounted() {
     const vm = this;
     vm.result = [];
+    vm.answers = [];
     if (vm.question.type === '객관') {
       const answer = vm.question.answer;
       const choice = vm.question.choice;
       for (let i = 0 ; i < choice.length ; i += 1) {
-        if (answer.includes(choice[i])) {
+        if (answer.includes((i + 1).toString())) {
           let obj = { choice: choice[i], check: true };
+          vm.answers.push(`${i + 1}번`);
           vm.result.push(obj);
         } else {
           let obj = { choice: choice[i], check: false };
@@ -100,7 +107,6 @@ export default {
         }
       }
     }
-
   },
   created() {
 
@@ -135,9 +141,6 @@ export default {
 <style>
  .question {
    background-color: blanchedalmond;
- }
- .answer {
-  
  }
  .form {
    background-color: #e5e9f2;
