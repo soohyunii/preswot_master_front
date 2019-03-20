@@ -241,7 +241,7 @@ export default {
       user_id: utils.getUserIdFromJwt(),
     };
     vm.$socket.emit('JOIN_LECTURE', JSON.stringify(params));
-    /* 삭제 - 181214
+    // 삭제 - 181214 했다가 190320 되살림
     vm.sHeartbeatIntervalId = setInterval(() => {
       const params2 = {
         lecture_id: vm.lectureId,
@@ -249,7 +249,6 @@ export default {
       };
       vm.$socket.emit('HEART_BEAT', JSON.stringify(params2));
     }, 3000);
-    */
    // 강사가 학생보다 나중에 들어올 경우
     vm.$socket.on('LECTURE_TEACHER_JOIN', () => {
       const parami = {

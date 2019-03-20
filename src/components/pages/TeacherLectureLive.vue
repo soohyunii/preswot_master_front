@@ -289,7 +289,7 @@ export default {
       };
       vm.$socket.emit('UPDATE_TIMELINE_LOG', JSON.stringify(params));
     }, 18000);
-    /* 삭제 - 181214
+    // 삭제 - 181214 했다가 190320 되살림
     vm.sHeartbeatIntervalId = setInterval(() => {
       const params2 = {
         lecture_id: Number.parseInt(vm.$route.params.scId, 10),
@@ -297,7 +297,6 @@ export default {
       };
       this.$socket.emit('HEART_BEAT', JSON.stringify(params2));
     }, 3000);
-    */
   },
   async beforeMount() {
     const vm = this;
