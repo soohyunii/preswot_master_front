@@ -39,8 +39,8 @@
             <p v-if="(data.questions[0].student_answer_logs.length > 0 || answerSubmitted) && type === 'STUDENT'" style="color: red;">제출 완료</p>
             <div v-show="data.questions[0].question_material.length > 0">
               <div class="questionFile"
-                v-for="file in data.questions[0].question_material"
-                :key="file.file_guid">
+                   v-for="file in data.questions[0].question_material"
+                   :key="file.file_guid">
                 <img
                   v-if="['.jpg','.png','.gif','.JPG','.PNG','.GIF'].includes(file.file_type)"
                   :src="getUrl(file.client_path)"
@@ -90,8 +90,8 @@
             <p v-if="(data.questions[0].student_answer_logs.length > 0 || answerSubmitted) && type === 'STUDENT'" style="color: red;">제출 완료</p>
             <div v-show="data.questions[0].question_material && data.questions[0].question_material.length > 0">
               <div class="questionFile"
-                v-for="file in data.questions[0].question_material"
-                :key="file.file_guid">
+                   v-for="file in data.questions[0].question_material"
+                   :key="file.file_guid">
                 <img
                   v-if="['.jpg','.png','.gif','.JPG','.PNG','.GIF'].includes(file.file_type)"
                   :src="getUrl(file.client_path)"
@@ -151,8 +151,8 @@
             <p v-if="(data.questions[0].student_answer_logs.length > 0 || answerSubmitted) && type === 'STUDENT'" style="color: red;">제출 완료</p>
             <div v-show="data.questions[0].question_material.length > 0">
               <div class="questionFile"
-                v-for="file in data.questions[0].question_material"
-                :key="file.file_guid">
+                   v-for="file in data.questions[0].question_material"
+                   :key="file.file_guid">
                 <img
                   v-if="['.jpg','.png','.gif','.JPG','.PNG','.GIF'].includes(file.file_type)"
                   :src="getUrl(file.client_path)"
@@ -200,8 +200,8 @@
             <p v-if="(data.questions[0].student_answer_logs.length > 0 || answerSubmitted) && type === 'STUDENT'" style="color: red;">제출 완료</p>
             <div v-show="data.questions[0].question_material.length > 0">
               <div class="questionFile"
-                v-for="file in data.questions[0].question_material"
-                :key="file.file_guid">
+                   v-for="file in data.questions[0].question_material"
+                   :key="file.file_guid">
                 <img
                   v-if="['.jpg','.png','.gif','.JPG','.PNG','.GIF'].includes(file.file_type)"
                   :src="getUrl(file.client_path)"
@@ -264,8 +264,8 @@
             <p v-if="(data.questions[0].student_answer_logs.length > 0 || answerSubmitted) && type === 'STUDENT'" style="color: red;">제출 완료</p>
             <div v-show="data.questions[0].question_material.length > 0">
               <div class="questionFile"
-                v-for="file in data.questions[0].question_material"
-                :key="file.file_guid">
+                   v-for="file in data.questions[0].question_material"
+                   :key="file.file_guid">
                 <img
                   v-if="['.jpg','.png','.gif','.JPG','.PNG','.GIF'].includes(file.file_type)"
                   :src="getUrl(file.client_path)"
@@ -336,13 +336,9 @@
         <el-row type="flex" justify="center">
           <el-button
             type="primary"
-            onclick="window.open('http://192.168.99.100:8000', '_blank');">
-            <!--  onclick="window.open('http://localhost:8000', '_blank');">  -->
+            onclick="window.open('http://localhost:8000', '_blank');">
             To JupyterHub
           </el-button>
-        </el-row>
-        <el-row type="flex" justify="center">
-          TEST FOR HUB
         </el-row>
         <pre>{{ data.lecture_code_practices[0].code }}</pre>
         <el-table :data="similarityScores" height="540px" border="true" :row-class-name="tRCName">
@@ -350,6 +346,23 @@
           <el-table-column label="코드점수" prop="code_score" width="80px" align="center" />
           <el-table-column label="출력점수" prop="output_score" width="80px" align="center" />
           <el-table-column label="갱신시간" prop="datetime" width="160px" align="center" />
+        </el-table>
+        <el-row type="flex" justify="center">
+          <el-form>
+            <el-form-item label="과제명" prop="assignmentName">
+              <el-input v-model="input.assignmentName"></el-input>
+            </el-form-item>
+          </el-form>
+          <el-button
+            type="primary" @click="checkAssignment">
+            Check Assignments
+          </el-button>
+        </el-row>
+        <el-table :data="assignmentScores" height="540px" border="true" :row-class-name="tRCName">
+          <el-table-column label="아이디" prop="email_id" align="center" />
+          <el-table-column label="과제명" prop="assignment_name" width="80px" align="center" />
+          <el-table-column label="점수" prop="score" width="80px" align="center" />
+          <el-table-column label="최대점수" prop="max_score" width="80px" align="center" />
         </el-table>
       </div>
       <div v-if="data.type === 3" class="discuss">
@@ -395,246 +408,259 @@
 </template>
 
 <script>
-import { getIdFromURL } from 'vue-youtube-embed';
-import Discussion from './NNDiscussion';
-import { baseUrl } from '../../services/config';
-import utils from '../../utils';
-import lectureItemService from '../../services/lectureItemService';
+  import { getIdFromURL } from 'vue-youtube-embed';
+  import Discussion from './NNDiscussion';
+  import { baseUrl } from '../../services/config';
+  import utils from '../../utils';
+  import lectureItemService from '../../services/lectureItemService';
 
-export default {
-  async created() {
-    const vm = this;
-    const scores = await lectureItemService.getSimilarityScores({
-      classId: vm.classId,
-    });
-    vm.similarityScores = scores.data;
-  },
-  props: ['lectureType', 'data', 'onClick', 'type', 'answerSubmitted'],
-  data() {
-    return {
-      answer: [],
-      answerFile: [],
-      currentFile: {
-        visible: false,
-        name: undefined,
-        type: undefined,
-        path: undefined,
-        player: undefined,
-      },
-      similarityScores: []
-    };
-  },
-  computed: {
-    Url() {
+  export default {
+    async created() {
       const vm = this;
+      const scores = await lectureItemService.getSimilarityScores({
+        classId: vm.classId,
+      });
+      vm.similarityScores = scores.data;
+    },
+    props: ['lectureType', 'data', 'onClick', 'type', 'answerSubmitted'],
+    data() {
+      return {
+        answer: [],
+        answerFile: [],
+        currentFile: {
+          visible: false,
+          name: undefined,
+          type: undefined,
+          path: undefined,
+          player: undefined,
+        },
+        similarityScores: [],
+        assignmentScores: [],
+        input: {
+          assignmentName: ''
+        },
+      };
+    },
+    computed: {
+      Url() {
+        const vm = this;
 
-      if (vm.data.type === 4) {
-        if (vm.data.notes[0].note_type === 0) {
-          const url = baseUrl + vm.data.notes[0].files[0].client_path;
-          return url;
-        }
-        if (vm.data.notes[0].note_type === 1) {
-          const url = baseUrl + vm.data.notes[0].files[0].client_path;
-          return `http://docs.google.com/gview?url=${url}&embedded=true`;
-        }
-        if (vm.data.notes[0].note_type === 2) {
-          return vm.data.notes[0].url;
-        }
-        if (vm.data.notes[0].note_type === 3) {
-          const id = getIdFromURL(vm.data.notes[0].url);
-          const interval = vm.data.notes[0].youtube_interval.split('<?>');
-          return `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&start=${interval[0]}&end=${interval[1]}`;
-        }
-      }
-      return '';
-    },
-    exampleFileUrl() {
-      const vm = this;
-      return baseUrl + vm.currentFile.path;
-    },
-    studentAnswerLogIndex() {
-      const vm = this;
-      const userId = utils.getUserIdFromJwt();
-      return vm.data.questions[0].student_answer_logs.findIndex(item => item.student_id === userId);
-    },
-    authType() {
-      const vm = this;
-      const jwt = vm.$store.state.auth.jwt;
-      return utils.getAuthTypeFromJwt(jwt);
-    },
-    classId() {
-      const vm = this;
-      return Number.parseInt(vm.$route.query.classId, 10);
-    },
-  },
-  methods: {
-    preOnClick() {
-      const vm = this;
-      let arg = {};
-      switch (vm.data.type) {
-        case 0: // 문항
-          arg = {
-            type: 0,
-            lectureItemId: vm.data.lecture_item_id,
-            questionId: vm.data.questions[0].question_id,
-            questionType: vm.data.questions[0].type,
-            language: vm.data.questions[0].accept_language,
-            answer: vm.answer,
-          };
-          if (vm.data.questions[0].type === 2) {
-            if (vm.$refs.answerUpload.uploadFiles !== undefined) {
-              vm.answerFile = vm.$refs.answerUpload.uploadFiles;
-              arg.answerFile = vm.answerFile;
-            }
+        if (vm.data.type === 4) {
+          if (vm.data.notes[0].note_type === 0) {
+            const url = baseUrl + vm.data.notes[0].files[0].client_path;
+            return url;
           }
-          break;
-        case 1: // 설문
-          arg = {
-            type: 1,
-            lectureItemId: vm.data.lecture_item_id,
-            surveyId: vm.data.surveys[0].survey_id,
-            surveyType: vm.data.surveys[0].type,
-            answer: vm.answer,
-          };
-          break;
-        default:
-          break;
-      }
-      vm.onClick('SUBMIT', arg);
-      vm.clearAnswer();
+          if (vm.data.notes[0].note_type === 1) {
+            const url = baseUrl + vm.data.notes[0].files[0].client_path;
+            return `http://docs.google.com/gview?url=${url}&embedded=true`;
+          }
+          if (vm.data.notes[0].note_type === 2) {
+            return vm.data.notes[0].url;
+          }
+          if (vm.data.notes[0].note_type === 3) {
+            const id = getIdFromURL(vm.data.notes[0].url);
+            const interval = vm.data.notes[0].youtube_interval.split('<?>');
+            return `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&start=${interval[0]}&end=${interval[1]}`;
+          }
+        }
+        return '';
+      },
+      exampleFileUrl() {
+        const vm = this;
+        return baseUrl + vm.currentFile.path;
+      },
+      studentAnswerLogIndex() {
+        const vm = this;
+        const userId = utils.getUserIdFromJwt();
+        return vm.data.questions[0].student_answer_logs.findIndex(item => item.student_id === userId);
+      },
+      authType() {
+        const vm = this;
+        const jwt = vm.$store.state.auth.jwt;
+        return utils.getAuthTypeFromJwt(jwt);
+      },
+      classId() {
+        const vm = this;
+        return Number.parseInt(vm.$route.query.classId, 10);
+      },
     },
-    onChange(data) { // 문항 - 객관값 보정 (0 1 2 3 4를 1 2 3 4 5로) 을 위한 함수
-      const vm = this;
-      vm.answer = data + 1;
+    methods: {
+      preOnClick() {
+        const vm = this;
+        let arg = {};
+        switch (vm.data.type) {
+          case 0: // 문항
+            arg = {
+              type: 0,
+              lectureItemId: vm.data.lecture_item_id,
+              questionId: vm.data.questions[0].question_id,
+              questionType: vm.data.questions[0].type,
+              language: vm.data.questions[0].accept_language,
+              answer: vm.answer,
+            };
+            if (vm.data.questions[0].type === 2) {
+              if (vm.$refs.answerUpload.uploadFiles !== undefined) {
+                vm.answerFile = vm.$refs.answerUpload.uploadFiles;
+                arg.answerFile = vm.answerFile;
+              }
+            }
+            break;
+          case 1: // 설문
+            arg = {
+              type: 1,
+              lectureItemId: vm.data.lecture_item_id,
+              surveyId: vm.data.surveys[0].survey_id,
+              surveyType: vm.data.surveys[0].type,
+              answer: vm.answer,
+            };
+            break;
+          default:
+            break;
+        }
+        vm.onClick('SUBMIT', arg);
+        vm.clearAnswer();
+      },
+      onChange(data) { // 문항 - 객관값 보정 (0 1 2 3 4를 1 2 3 4 5로) 을 위한 함수
+        const vm = this;
+        vm.answer = data + 1;
+      },
+      clearAnswer() {
+        const vm = this;
+        vm.answer = [];
+      },
+      handleVisible(file) {
+        const vm = this;
+        vm.currentFile.name = file.name;
+        vm.currentFile.type = file.file_type;
+        vm.currentFile.path = file.client_path;
+        if (['.mp4', '.jpg', '.png', '.gif'].includes(vm.currentFile.type)) {
+          vm.currentFile.visible = true;
+        } else {
+          utils.downloadFile(vm.url, vm.currentFile.name);
+        }
+      },
+      handleClose() {
+        const vm = this;
+        vm.currentFile.visible = false;
+        if (vm.currentFile.type === '.mp4') {
+          vm.currentFile.player = vm.$refs.player.player;
+          vm.currentFile.player.stop();
+        }
+      },
+      getUrl(arg) {
+        return baseUrl + arg;
+      },
+      async checkAssignment() {
+        const vm = this;
+        const assignmentName = this.input.assignmentName;
+        const scores = await lectureItemService.getAssignmentScores({
+          classId: vm.classId,
+          assignmentName: assignmentName,
+        });
+        vm.assignmentScores = scores.data;
+      },
     },
-    clearAnswer() {
-      const vm = this;
-      vm.answer = [];
+    components: {
+      Discussion,
     },
-    handleVisible(file) {
-      const vm = this;
-      vm.currentFile.name = file.name;
-      vm.currentFile.type = file.file_type;
-      vm.currentFile.path = file.client_path;
-      if (['.mp4', '.jpg', '.png', '.gif'].includes(vm.currentFile.type)) {
-        vm.currentFile.visible = true;
-      } else {
-        utils.downloadFile(vm.url, vm.currentFile.name);
-      }
-    },
-    handleClose() {
-      const vm = this;
-      vm.currentFile.visible = false;
-      if (vm.currentFile.type === '.mp4') {
-        vm.currentFile.player = vm.$refs.player.player;
-        vm.currentFile.player.stop();
-      }
-    },
-    getUrl(arg) {
-      return baseUrl + arg;
-    },
-  },
-  components: {
-    Discussion,
-  },
-};
+  };
 </script>
 
 <style lang="scss">
-.lecture-live-item-wrapper {
-  pre {
-    overflow-x: auto; /* Use horizontal scroller if needed; for Firefox 2, not needed in Firefox 3 */
-    white-space: pre-wrap; /* css-3 */
-    white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
-    white-space: -pre-wrap; /* Opera 4-6 */
-    white-space: -o-pre-wrap; /* Opera 7 */
-    /* width: 99%; */
-    word-wrap: break-word; /* Internet Explorer 5.5+ */
-  }
-  .el-checkbox__label {
-    white-space: pre-line; /* css-3 */
-  }
-  .radio-one {
-    /*border:1px solid red;*/
-    margin:15px;
-  }
+  .lecture-live-item-wrapper {
+    pre {
+      overflow-x: auto; /* Use horizontal scroller if needed; for Firefox 2, not needed in Firefox 3 */
+      white-space: pre-wrap; /* css-3 */
+      white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
+      white-space: -pre-wrap; /* Opera 4-6 */
+      white-space: -o-pre-wrap; /* Opera 7 */
+      /* width: 99%; */
+      word-wrap: break-word; /* Internet Explorer 5.5+ */
+    }
+    .el-checkbox__label {
+      white-space: pre-line; /* css-3 */
+    }
+    .radio-one {
+      /*border:1px solid red;*/
+      margin:15px;
+    }
 
-  .lecture-item {
-    /*border:1px solid green;*/
-    margin:30px 0;
-  }
+    .lecture-item {
+      /*border:1px solid green;*/
+      margin:30px 0;
+    }
 
-  .lecture-item .question-box{
-    padding:5px 0 0 0;
-  }
+    .lecture-item .question-box{
+      padding:5px 0 0 0;
+    }
 
-  .lecture-item p{  /*sh : 이 경우 <p>제출이 완료되었습니다.</p>도 스타일이 적용되기 때문에 후에 분리시키는 조치가 필요함*/
-    margin: 10px 0 0 10px;
-    font-size: 1.1em;
-  }
-
-
-  .lecture-item pre{
-    /*border:1px solid red;*/
-    margin: 20px 0 0 15px;
-  }
+    .lecture-item p{  /*sh : 이 경우 <p>제출이 완료되었습니다.</p>도 스타일이 적용되기 때문에 후에 분리시키는 조치가 필요함*/
+      margin: 10px 0 0 10px;
+      font-size: 1.1em;
+    }
 
 
-  /*.lecture-item span{
-    <span>답 : </span> 을 아예 없애는건?
-  }
-  */
+    .lecture-item pre{
+      /*border:1px solid red;*/
+      margin: 20px 0 0 15px;
+    }
 
-  .lecture-item .el-button{
-    margin:10px 0;
-  }
 
-  .lecture-item .el-input{
-    margin:20px 0 0 0;
-  }
+    /*.lecture-item span{
+      <span>답 : </span> 을 아예 없애는건?
+    }
+    */
 
-  .lecture-item .margin-text{ /*문항 - 서술,SW*/
-    margin:20px 0 0 0;
-  }
+    .lecture-item .el-button{
+      margin:10px 0;
+    }
 
-  .lecture-item .practice{
-    padding:5px 0 20px 0;
-  }
+    .lecture-item .el-input{
+      margin:20px 0 0 0;
+    }
 
-  .lecture-item .discuss{
-    padding:5px 0 0 0;
-    height:530px;
-  }
+    .lecture-item .margin-text{ /*문항 - 서술,SW*/
+      margin:20px 0 0 0;
+    }
 
-  .item + .item:before {
-    content: ", ";
+    .lecture-item .practice{
+      padding:5px 0 20px 0;
+    }
+
+    .lecture-item .discuss{
+      padding:5px 0 0 0;
+      height:530px;
+    }
+
+    .item + .item:before {
+      content: ", ";
+    }
+    .lecture-item .note{
+      padding:10px;
+      margin:10px;
+      // height:530px;
+    }.noteWrap {
+       position: relative;
+       width: 100%;
+       padding-bottom: 56.25%;
+     }
+    .noteWrap iframe {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+    .questionNoteWrap {
+      position: relative;
+      width: 100%;
+    }
+    .questionNoteWrap video {
+      // position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+    .lecture-item .questionFile{
+      padding:10px 10px 10px 10px;
+      margin:10px 10px 10px 10px;
+    }
   }
-  .lecture-item .note{
-    padding:10px;
-    margin:10px;
-    // height:530px;
-  }.noteWrap {
-    position: relative;
-    width: 100%;
-    padding-bottom: 56.25%;
-  }
-  .noteWrap iframe {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-  }
-  .questionNoteWrap {
-    position: relative;
-    width: 100%;
-  }
-  .questionNoteWrap video {
-    // position: absolute;
-    width: 100%;
-    height: 100%;
-  }
-  .lecture-item .questionFile{
-    padding:10px 10px 10px 10px;
-    margin:10px 10px 10px 10px;
-  }
-}
 </style>

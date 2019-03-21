@@ -166,4 +166,7 @@ export default {
     // return http.get(`/similarity_score/`);
     return http.get(`/similarity_score/${classId}`);
   },
+  getAssignmentScores({ classId, assignmentName }) {
+    return http.get(`/coding_assignment/${classId}/assignment/${assignmentName}`);
+  },
 };

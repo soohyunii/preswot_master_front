@@ -69,6 +69,40 @@
           </el-table>
         </div>
       </el-tab-pane>
+
+      <el-tab-pane label="코딩 과제 결과" name="coding_assignment">
+        <div class="one-lecture-wrapper" v-for="lecture in questionList" :key="lecture.lectureId">
+          <h3>{{ lecture.name }}</h3>
+          <el-table :data="lecture.questions">
+            <el-table-column
+              prop="no"
+              label="No.">
+            </el-table-column>
+            <el-table-column
+              prop="name"
+              label="강의 도구 이름">
+            </el-table-column>
+            <el-table-column
+              label="채점한 수강생 수">
+              <template slot-scope="scope">
+                {{ scope.row.numberOfScored }} / {{scope.row.numberOfStudent}}
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="평균 점수">
+              <template slot-scope="scope">
+                {{ scope.row.avgScore }} / {{scope.row.score}}
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="">
+              <template slot-scope="scope">
+                <el-button size="small" @click="onClickResult('CODING_ASSIGNMENTS', scope.row.itemId)">상세보기</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -125,6 +159,9 @@ export default {
         vm.$router.push(`/a/teacher/class/${vm.classId}/grading/question/${itemId}`);
       } else if (type === 'SURVEY') {
         vm.$router.push(`/a/teacher/class/${vm.classId}/grading/survey/${itemId}`);
+      } else if (type === 'CODING_ASSIGNMENTS') {
+        //need fixing
+        vm.$router.push(`/a/teacher/class/${vm.classId}/grading/question/${itemId}`);
       }
     },
   },
