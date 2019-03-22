@@ -145,6 +145,11 @@ export default {
   }) {
     return http.delete(`/classes/${id}`);
   },
+  getClassUser({
+    id,
+  }) {
+    return http.get(`/classes/${id}/user`);
+  },
   postClassUser({
     id,
   }) {

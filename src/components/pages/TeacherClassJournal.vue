@@ -1,6 +1,6 @@
 <template>
   <div class="bt-container">
-    <el-button style="float: right" v-if="!isInDepthAnalize" type="primary" @click="isInDepthAnalize = true">심화 분석</el-button>
+    <!-- <el-button style="float: right" v-if="!isInDepthAnalize" type="primary" @click="isInDepthAnalize = true">심화 분석</el-button> -->
     <el-button style="float: right" v-if="isInDepthAnalize" @click="turnOffInDepthAnalize()" plain>기초 분석</el-button>
     <el-breadcrumb style="font-size: 24px; margin-top: 16px; margin-bottom: 32px;" separator=">">
       <el-breadcrumb-item :to="{ path: '/a/teacher/NNclass/'+classId }">{{ className }}</el-breadcrumb-item>
@@ -15,7 +15,7 @@
     <!-- <teacher-class-journal-student :classId="classId" v-if="mode === '학생별 분석'" /> -->
     <el-select v-if="mode === '학생 선택' || mode === '학생별 분석'" v-model="selectedStudentId" placeholder="학생을 선택하세요." @change="onClick('SELECT_STUDENT')">
       <el-option
-        v-for="(item, index) in classStudentList"
+        v-for="(item, index) in lectureStudentList"
         :key="index"
         :label="item.email_id"
         :value="item.user_id">
@@ -111,7 +111,7 @@
           </template>
         </el-table-column>
       </el-table>
-        <el-button style="float: right" v-if="mode === '과목 저널링'" type="primary" @click="onClick('STUDENT_ANALYSIS')">학생별 분석</el-button>
+        <el-button style="float: right; margin-top: 10px; margin-right: 15px;" v-if="mode === '과목 저널링'" size="small" type="primary" @click="onClick('STUDENT_ANALYSIS')">학생별 분석</el-button>
         <teacher-class-journal-detail @childs-close-event="closeStatusBar()" :propDataSet = "studentDataSet" v-if = "isActiveInfo"/>
     </template>
   </div>
@@ -179,6 +179,7 @@
 </style>
 
 <script>
+/* https://docs.google.com/document/d/1k8ywrL7H2yKblhqdgimhtlxM8CAHFJ7L0cjVNFPzQTA/ 인수인계서/저널링 문서 참조 */
 /* eslint-disable max-len, no-loop-func */
   import LineChart from '../partials/NNLineChart';
   import TeacherClassJournalDetail from '../partials/NNTeacherClassJournalDetail';
@@ -201,6 +202,7 @@
     data() {
       return {
         className: '',
+        classStudentCount: 0,
         lectureId: '',
         lectureName: '',
         defaultValue: 0,
@@ -216,7 +218,7 @@
         isInDepthAnalize: false,
         mode: '과목 저널링', // 과목 저널링, 강의 상세 통계, 키워드 상세 통계
         category: '강의명',
-        classStudentList: '', // 학생별 분석시, 학생 목록 저장 배열
+        lectureStudentList: '', // 학생별 분석시, 학생 목록 저장 배열
         selectedStudentId: '', // 학생별 분석시, 선택된 학생 id 저장
         selectedStudentEmail: '', // 학생별 분석시, 선택된 학생 email 저장
 
@@ -438,45 +440,47 @@
     },
     async beforeMount() {
       const vm = this;
-      const res = await classService.getClass({ id: vm.classId });
-      vm.className = res.data.name;
+      try {
+        const res = await classService.getClass({ id: vm.classId });
+        vm.className = res.data.name;
+        vm.allData.classInfo = res.data;
 
-      // // 테스트 서버 값 오류 대응 (시작)
-      // res.data.lectures = res.data.lectures.filter((value) => {
-      //   if (value.lecture_id === 1 || value.lecture_id === 6) {
-      //     return true;
-      //   }
-      //   return false;
-      // });
-      // // 테스트 서버 값 오류 대응 (끝)
+        const res2 = await classService.getClassUser({ id: vm.classId });
+        vm.classStudentCount = res2.data.length;
 
-      vm.allData.classInfo = res.data;
+        // 강의 번호 목록
+        const lectureIdList = res.data.lectures.map(element => (element.lecture_id));
 
-
-      // 강의 번호 목록
-      const lectureIdList = res.data.lectures.map(element => (element.lecture_id));
-
-      for (let index = 0; index < lectureIdList.length; index += 1) {
-        // 참여도 가져오기 / allData에 넣기
-        const res1 = await analysisService.getParticipation({ lectureId: lectureIdList[index] }); // eslint-disable-line
-        vm.allData.participation[index] = {
-          ...res1.data,
-          lectureId: lectureIdList[index],
-        };
-        // 이해도 가져오기 / allData에 넣기
-        const res2 = await analysisService.getUnderstanding({ lectureId: lectureIdList[index] }); // eslint-disable-line
-        vm.allData.understanding[index] = {
-          ...res2.data,
-          lectureId: lectureIdList[index],
-        };
-        // 집중도 가져오기 / allData에 넣기
-        const res3 = await analysisService.getConcentration({ lectureId: lectureIdList[index] }); // eslint-disable-line
-        vm.allData.concentration[index] = {
-          ...res3.data,
-          lectureId: lectureIdList[index],
-        };
+        for (let index = 0; index < lectureIdList.length; index += 1) {
+          // 참여도 가져오기 / allData에 넣기
+          const res1 = await analysisService.getParticipation({ lectureId: lectureIdList[index] }); // eslint-disable-line
+          vm.allData.participation[index] = {
+            ...res1.data,
+            lectureId: lectureIdList[index],
+          };
+          // 이해도 가져오기 / allData에 넣기
+          const res2 = await analysisService.getUnderstanding({ lectureId: lectureIdList[index] }); // eslint-disable-line
+          vm.allData.understanding[index] = {
+            ...res2.data,
+            lectureId: lectureIdList[index],
+          };
+          // 집중도 가져오기 / allData에 넣기
+          const res3 = await analysisService.getConcentration({ lectureId: lectureIdList[index] }); // eslint-disable-line
+          vm.allData.concentration[index] = {
+            ...res3.data,
+            lectureId: lectureIdList[index],
+          };
+        }
+        this.onClick('CLASS_ANALYSIS');
+      } catch (error) {
+        vm.$notify({
+          title: '데이터 수신 실패',
+          message: '관리자에게 문의해주세요.',
+          type: 'error',
+          duration: 5000,
+        });
+        throw error;
       }
-      this.onClick('CLASS_ANALYSIS');
     },
     methods: {
       async onClick(type, payload, payload2) {
@@ -511,94 +515,151 @@
             vm.tableData = [];
             vm.dataIsPrepared = false;
 
-            // 값 연산 - 자료는 서버 수정중이라 우선 문항에 대해서만
+            // console.log('vm.allData = ', vm.allData);
+
             const result = [];
             for (let index = 0; index < vm.allData.classInfo.lectures.length; index += 1) {
               result[index] = [];
-              // lecture를 들은 학생의 수
-              const studentCnt = vm.allData.participation[index].lession.question.students.length;
-              for (let index2 = 0; index2 < vm.nowOption.length; index2 += 1) {
-                // 우선, '문항 / 전체 / '에 대해서만 계산
-                if (vm.nowOption[index2][2] === '집중도') {
-                  // 강의별 집중력을 저장할 2차원 배열
-                  const concentrations = [];
-                  const concentrationAverages = [];
-                  const spendedTimeArr = []; // 디버깅용 - 개발후 삭제
-                  for (let index3 = 0; index3 < vm.allData.concentration[index].lession.question.items.length; index3 += 1) {
-                    concentrations[index3] = [];
-                    spendedTimeArr[index3] = []; // 디버깅용 - 개발후 삭제
-                    vm.allData.concentration[index].lession.question.items[index3].list.forEach((element) => {
-                      const fixedStartTime = new Date(element.start_time);
-                      const fixedEndTime = new Date(element.end_time);
-                      const spendedTimes = ((fixedEndTime - fixedStartTime) / 1000);
-                      const standard = vm.allData.concentration[index].lession.question.items[index3].response_time;
-                      spendedTimeArr[index3].push(spendedTimes); // 디버깅용 - 개발후 삭제
-                      concentrations[index3].push((standard / spendedTimes) < 1 ? standard / spendedTimes : 1); // 1보다 크면 1 처리 : 서버 요구사항
-                    });
-                    let sum = 0.0;
-                    concentrations[index3].forEach((element) => {
-                      sum += element;
-                    });
-                    // 아이템별 평균 집중도 : 전체 학생수로 나눈 값을 사용
-                    concentrationAverages.push(sum / studentCnt);
-                  }
-                  // 강의별 평균 집중도
-                  let sum = 0.0;
-                  concentrationAverages.forEach((element) => {
-                    sum += element;
-                  });
-                  const concentrationAverage = sum / concentrationAverages.length;
-                  result[index].push((concentrationAverage * 100).toFixed(2));
-                } else if (vm.nowOption[index2][2] === '이해도') {
-                  let lectureUnderstanding = 0;
-                  let lectureUnderstandingSum = 0;
-                  const itemUnderstanding = [];
-                  const itemUnderstandingSum = [];
 
-                  // items 객체 순회
-                  const keys = Object.keys(vm.allData.understanding[index].lession.question.items);
-                  const itemsObjectLength = keys.length;
-                  for (let index3 = 0; index3 < itemsObjectLength; index3 += 1) {
-                    itemUnderstandingSum[index3] = 0;
-                    vm.allData.understanding[index].lession.question.items[keys[index3]].forEach((element) => {
-                      itemUnderstandingSum[index3] += element.ratio;
-                    });
-                    const itemLength = vm.allData.understanding[index].lession.question.items[keys[index3]].length;
-                    itemUnderstanding[index3] = itemLength !== 0 ? (itemUnderstandingSum[index3] / itemLength) : 0;
+              for (let index2 = 0; index2 < vm.nowOption.length; index2 += 1) {
+                if (vm.nowOption[index2][2] === '집중도') {
+                  // lession 객체가 있고,
+                  if (vm.allData.concentration[index].lession !== undefined) {
+                    const concentrations = []; // 강의 안에 아이템별 집중력을 저장할 2차원 배열
+                    const concentrationAverages = []; // 강의별 집중력의 평균을 저장할 1차원 배열
+                    // lession 객체 안에 question(.items)이 있으면
+                    if (vm.allData.concentration[index].lession.question.items !== undefined) {
+                      for (let index3 = 0; index3 < vm.allData.concentration[index].lession.question.items.length; index3 += 1) { // 강의 안에 문항 아이템 순회
+                        concentrations[index3] = [];
+                        vm.allData.concentration[index].lession.question.items[index3].list.forEach((element) => {
+                          const fixedStartTime = new Date(element.start_time);
+                          const fixedEndTime = new Date(element.end_time);
+                          const spendedTimes = ((fixedEndTime - fixedStartTime) / 1000);
+                          const standard = vm.allData.concentration[index].lession.question.items[index3].response_time;
+                          concentrations[index3].push((standard / spendedTimes) < 1 ? standard / spendedTimes : 1); // 1보다 크면 1 처리 : 서버 요구사항
+                        });
+                        let sum = 0.0;
+                        concentrations[index3].forEach((element) => {
+                          sum += element;
+                        });
+                        // 아이템별 평균 집중도
+                        concentrationAverages.push(sum / vm.classStudentCount);
+                      }
+                      // console.log('spendedTimeArr = ', spendedTimeArr);
+                    }
+                    // lession 객체 안에 survey(.items)이 있으면
+                    if (vm.allData.concentration[index].lession.survey.items !== undefined) {
+                      for (let index3 = 0; index3 < vm.allData.concentration[index].lession.survey.items.length; index3 += 1) { // 강의 안에 문항 아이템 순회
+                        concentrations[index3] = [];
+                        vm.allData.concentration[index].lession.survey.items[index3].list.forEach((element) => {
+                          const fixedStartTime = new Date(element.start_time);
+                          const fixedEndTime = new Date(element.end_time);
+                          const spendedTimes = ((fixedEndTime - fixedStartTime) / 1000);
+                          const standard = vm.allData.concentration[index].lession.survey.items[index3].response_time;
+                          concentrations[index3].push((standard / spendedTimes) < 1 ? standard / spendedTimes : 1); // 1보다 크면 1 처리 : 서버 요구사항
+                        });
+                        let sum = 0.0;
+                        concentrations[index3].forEach((element) => {
+                          sum += element;
+                        });
+                        // 아이템별 평균 집중도
+                        concentrationAverages.push(sum / vm.classStudentCount);
+                      }
+                    }
+                    if (concentrationAverages.length !== 0) { // 아이템 순회 결과가 있으면
+                      // 강의별 평균 집중도
+                      let sum = 0.0;
+                      concentrationAverages.forEach((element) => {
+                        sum += element;
+                      });
+                      const concentrationAverage = sum / concentrationAverages.length;
+                      result[index].push((concentrationAverage * 100).toFixed(2));
+                    } else { // 아이템 순회 결과가 없으면
+                      result[index].push(0);
+                    }
+                  } else { // 강의가 없으면
+                    result[index].push(0);
                   }
-                  itemUnderstanding.forEach((element) => {
-                    lectureUnderstandingSum += element;
-                  });
-                  lectureUnderstanding = lectureUnderstandingSum / itemsObjectLength;
-                  result[index].push((lectureUnderstanding * 100).toFixed(2));
+                } else if (vm.nowOption[index2][2] === '이해도') {
+                  if (vm.allData.understanding[index].lession !== undefined &&
+                    vm.allData.understanding[index].lession.question !== undefined &&
+                    vm.allData.understanding[index].lession.question.items !== undefined) {
+                    let lectureUnderstanding = 0;
+                    let lectureUnderstandingSum = 0;
+                    const itemUnderstanding = [];
+                    const itemUnderstandingSum = [];
+
+                    // items 객체 순회
+                    const keys = Object.keys(vm.allData.understanding[index].lession.question.items);
+                    const itemsObjectLength = keys.length;
+                    for (let index3 = 0; index3 < itemsObjectLength; index3 += 1) {
+                      itemUnderstandingSum[index3] = 0;
+                      vm.allData.understanding[index].lession.question.items[keys[index3]].forEach((element) => {
+                        itemUnderstandingSum[index3] += element.ratio;
+                      });
+                      const itemLength = vm.allData.understanding[index].lession.question.items[keys[index3]].length;
+                      itemUnderstanding[index3] = itemLength !== 0 ? (itemUnderstandingSum[index3] / itemLength) : 0;
+                    }
+                    itemUnderstanding.forEach((element) => {
+                      lectureUnderstandingSum += element;
+                    });
+                    lectureUnderstanding = lectureUnderstandingSum / itemsObjectLength;
+                    result[index].push((lectureUnderstanding * 100).toFixed(2));
+                  } else {
+                    result[index].push(0);
+                  }
                 } else if (vm.nowOption[index2][2] === '참여도') {
-                  // lecture에 question이 몇개 포함되어 있는가
-                  const questionCnt = Object.keys(vm.allData.participation[index].lession.question.items).length;
-                  // 학생들이 제출한 question 갯수의 합
-                  let submitCnt = 0;
-                  vm.allData.participation[index].lession.question.students.forEach((element) => {
-                    submitCnt += element.list.length;
-                  });
-                  // 학생들이 제출한 question 갯수의 합 / question 갯수 * 학생수
-                  const participationAverage = submitCnt / (questionCnt * studentCnt);
-                  result[index].push((participationAverage * 100).toFixed(2));
+                  if (vm.allData.participation[index].lession !== undefined) {
+                    let itemCnt = 0;
+                    let submitCnt = 0;
+                    // lecture에 note 포함되어 있는가
+                    if (vm.allData.participation[index].lession.note !== undefined &&
+                      vm.allData.participation[index].lession.note.items !== undefined) {
+                      // 아이템 갯수
+                      itemCnt += Object.keys(vm.allData.participation[index].lession.note.items).length;
+                      // 제출 갯수
+                      vm.allData.participation[index].lession.note.students.forEach((element) => {
+                        submitCnt += element.list.length;
+                      });
+                    }
+                    // lecture에 practice 포함되어 있는가
+                    if (vm.allData.participation[index].lession.practice !== undefined &&
+                      vm.allData.participation[index].lession.practice.items !== undefined) {
+                      itemCnt += Object.keys(vm.allData.participation[index].lession.practice.items).length;
+                      // 제출 갯수
+                      vm.allData.participation[index].lession.practice.students.forEach((element) => {
+                        submitCnt += element.list.length;
+                      });
+                    }
+                    // lecture에 question 포함되어 있는가
+                    if (vm.allData.participation[index].lession.question !== undefined &&
+                      vm.allData.participation[index].lession.question.items !== undefined) {
+                      itemCnt += Object.keys(vm.allData.participation[index].lession.question.items).length;
+                      // 제출 갯수
+                      vm.allData.participation[index].lession.question.students.forEach((element) => {
+                        submitCnt += element.list.length;
+                      });
+                    }
+                    // lecture에 survey 포함되어 있는가
+                    if (vm.allData.participation[index].lession.survey !== undefined &&
+                      vm.allData.participation[index].lession.survey.items !== undefined) {
+                      itemCnt += Object.keys(vm.allData.participation[index].lession.survey.items).length;
+                      // 제출 갯수
+                      vm.allData.participation[index].lession.survey.students.forEach((element) => {
+                        submitCnt += element.list.length;
+                      });
+                    }
+                    // 학생들이 제출한 갯수의 합 / item 갯수 * 학생수
+                    const participationAverage = submitCnt / (itemCnt * vm.classStudentCount);
+                    result[index].push((participationAverage * 100).toFixed(2));
+                  } else {
+                    result[index].push(0);
+                  }
                 } else if (vm.nowOption[index2][2] === '전체') {
                   result[index].push(5);
                 }
-                // result[index].push((index * index2 * 10) + 20);
               }
             }
-            // console.log('vm.allData = ', vm.allData);
-            // const start_time = vm.allData.concentration[0].lession.question.items[0].list[0].start_time;
-            // console.log('start_time = ', start_time);
-            // console.log('start_time instanceof Date = ', start_time instanceof Date);
-            // const new_start_time = new Date(start_time);
-            // console.log('new_start_time = ', new_start_time);
-            // const end_time = vm.allData.concentration[0].lession.question.items[0].list[0].end_time;
-            // console.log('end_time = ', end_time);
-            // const new_end_time = new Date(end_time);
-            // console.log(' new_end_time - new_start_time = ', new_end_time - new_start_time);
-
             // 값 출력
             Array.prototype.push.apply(vm.chartCategories, vm.allData.classInfo.lectures.map(x => x.name));
             for (let index2 = 0; index2 < vm.nowOption.length; index2 += 1) {
@@ -626,71 +687,444 @@
             vm.lectureName = payload2;
 
             const res = await lectureService.getLecture({ lectureId: payload });
+            console.log('res.data = ', res.data);
+            const lectureItems = res.data.lecture_items;
+            console.log('lectureItems = ', lectureItems);
             while (vm.chartData.length > 0)vm.chartData.pop(); // 초기화
             while (vm.chartCategories.length > 0)vm.chartCategories.pop(); // 초기화
             vm.tableData = [];
 
-            // 값 연산 - 자료는 서버 수정중이라 우선 문항에 대해서만
+            const result = []; // 최종 결과 출력할 2차원 배열
             const filteredParticipation = vm.allData.participation.filter(x => x.lectureId === payload)[0];
             const filteredConcentration = vm.allData.concentration.filter(x => x.lectureId === payload)[0];
             const filteredUnderstanding = vm.allData.understanding.filter(x => x.lectureId === payload)[0];
-            const result = [];
-            const keys = Object.keys(filteredParticipation.lession.question.items);
-            const names = [];
-            keys.forEach((element) => {
-              names.push(res.data.lecture_items.filter(x => x.lecture_item_id === parseInt(element, 10))[0].name);
-              // names.push(res.data.lecture_items.filter(x => x.lecture_item_id == element)[0].name);
-            });
-
-            // 강의 아이템 순회
-            for (let index = 0; index < keys.length; index += 1) {
+            const names = lectureItems.map(x => x.name);
+            for (let index = 0; index < names.length; index += 1) {
               result[index] = [];
-              // 학생의 수 (공통 사용)
-              const studentCnt = filteredParticipation.lession.question.students.length;
               for (let index2 = 0; index2 < vm.nowOption.length; index2 += 1) {
-                // 우선, '문항 / 전체 / '에 대해서만 계산
-                if (vm.nowOption[index2][2] === '집중도') {
-                  const concentrations = [];
-                  filteredConcentration.lession.question.items[index].list.forEach((element) => {
-                    const fixedStartTime = new Date(element.start_time);
-                    const fixedEndTime = new Date(element.end_time);
-                    const spendedTimes = ((fixedEndTime - fixedStartTime) / 1000);
-                    const standard = filteredConcentration.lession.question.items[index].response_time;
-                    concentrations.push((standard / spendedTimes) < 1 ? standard / spendedTimes : 1); // 1보다 크면 1 처리 : 서버 요구사항
-                  });
-                  let sum = 0.0;
-                  concentrations.forEach((element) => {
-                    sum += element;
-                  });
-                  // 아이템별 평균 집중도 : 전체 학생수로 나눈 값을 사용
-                  const concentrationAverage = sum / studentCnt;
-                  result[index].push((concentrationAverage * 100).toFixed(2));
-                } else if (vm.nowOption[index2][2] === '이해도') {
-                  let understandingSum = 0;
-                  filteredUnderstanding.lession.question.items[keys[index]].forEach((element) => {
-                    understandingSum += element.ratio;
-                  });
-                  const singleItemLength = filteredUnderstanding.lession.question.items[keys[index]].length;
-                  const understanding = understandingSum / singleItemLength;
-                  result[index].push((understanding * 100).toFixed(2));
-                } else if (vm.nowOption[index2][2] === '참여도') {
-                  // 문항별 제출 수
-                  const submitCnt = filteredParticipation.lession.question.items[keys[index]].length;
-                  // 문항별 제출자의 수 / 학생의 수
-                  const participationAverage = submitCnt / studentCnt;
-                  result[index].push((participationAverage * 100).toFixed(2));
-                } else if (vm.nowOption[index2][2] === '전체') {
-                  result[index].push(5);
-                }
-                // result[index].push((index * index2 * 10) + 20);
+                result[index].push(0); // 0으로 초기화
               }
             }
 
+            // nowOption(선택한 옵션목록) 순회
+            for (let index = 0; index < vm.nowOption.length; index += 1) {
+              // 집중도이면
+              if (vm.nowOption[index][2] === '집중도') {
+                // 집중도.lession 있는지 확인
+                if (filteredConcentration.lession !== undefined) { // 있으면 하나씩 계산해서 result에 값 push
+                  // 자료
+                  if (filteredConcentration.lession.note !== undefined &&
+                    filteredConcentration.lession.note.items !== undefined) {
+                    // 자료 item 순회
+                    for (let index2 = 0; index2 < filteredConcentration.lession.note.items.length; index2 += 1) {
+                      // 자료의 집중도는 현재 미구현
+                    }
+                  }
+                  // 실습
+                  if (filteredConcentration.lession.practice !== undefined &&
+                    filteredConcentration.lession.practice.items !== undefined) {
+                    // 실습 item 순회
+                    for (let index2 = 0; index2 < filteredConcentration.lession.practice.items.length; index2 += 1) {
+                      // 실습의 집중도는 현재 미구현
+                    }
+                  }
+                  // 문항
+                  if (filteredConcentration.lession.question !== undefined &&
+                    filteredConcentration.lession.question.items !== undefined) {
+                    // 문항 items 순회 (각 문항 아이템별로 제출한 기록을 몰아놓은 객체)
+                    for (let index2 = 0; index2 < filteredConcentration.lession.question.items.length; index2 += 1) {
+                      let singleItemConcentrationSum = 0; // 단일 문항 아이템 집중도 계산결과
+                      // - 계산식 -
+                      // 문항 items의 list 순회 ( 각 문항 아이템별로 제출한 기록을 하나 하나 순회)
+                      const responseTime = filteredConcentration.lession.question.items[index2].response_time;
+                      filteredConcentration.lession.question.items[index2].list.forEach((element) => {
+                        // 제출 결과들의 집중도를 모두 더한다.
+                        const fixedStartTime = new Date(element.start_time);
+                        const fixedEndTime = new Date(element.end_time);
+                        const spendedTimes = ((fixedEndTime - fixedStartTime) / 1000);
+                        const standard = responseTime;
+                        singleItemConcentrationSum += ((standard / spendedTimes) < 1 ? standard / spendedTimes : 1); // 1보다 크면 1 처리 : 서버 요구사항
+                      });
+                      // 모두 더한 값을 학생 수로 나누어 알맞은 위치에 넣는다.
+                      const index3 = lectureItems.findIndex(element =>
+                        (element.lecture_item_id === filteredConcentration.lession.question.items[index2].item_id));
+                      result[index3][index] = ((singleItemConcentrationSum / vm.classStudentCount) * 100).toFixed(2);
+                    }
+                  }
+                  // 설문
+                  if (filteredConcentration.lession.survey !== undefined &&
+                    filteredConcentration.lession.survey.items !== undefined) {
+                    // item 순회
+                    // 설문 items 순회 (각 설문 아이템별로 제출한 기록을 몰아놓은 객체)
+                    for (let index2 = 0; index2 < filteredConcentration.lession.survey.items.length; index2 += 1) {
+                      let singleItemConcentrationSum = 0; // 단일 설문 아이템 집중도 계산결과
+                      // - 계산식 -
+                      // 설문 items의 list 순회 ( 각 설문 아이템별로 제출한 기록을 하나 하나 순회)
+                      const responseTime = filteredConcentration.lession.survey.items[index2].response_time;
+                      filteredConcentration.lession.survey.items[index2].list.forEach((element) => {
+                        // 제출 결과들의 집중도를 모두 더한다.
+                        const fixedStartTime = new Date(element.start_time);
+                        const fixedEndTime = new Date(element.end_time);
+                        const spendedTimes = ((fixedEndTime - fixedStartTime) / 1000);
+                        const standard = responseTime;
+                        singleItemConcentrationSum += ((standard / spendedTimes) < 1 ? standard / spendedTimes : 1); // 1보다 크면 1 처리 : 서버 요구사항
+                      });
+                      // 모두 더한 값을 학생 수로 나누어 알맞은 위치에 넣는다.
+                      const index3 = lectureItems.findIndex(element =>
+                        (element.lecture_item_id === filteredConcentration.lession.survey.items[index2].item_id));
+                      result[index3][index] = ((singleItemConcentrationSum / vm.classStudentCount) * 100).toFixed(2);
+                    }
+                  }
+                }
+              }
+              // 이해도이면
+              if (vm.nowOption[index][2] === '이해도') {
+                // 이해도.lession 있는지 확인
+                if (filteredUnderstanding.lession !== undefined) { // 있으면 하나씩 계산해서 result에 값 push
+                  // 문항
+                  if (filteredUnderstanding.lession.question !== undefined &&
+                    filteredUnderstanding.lession.question.items !== undefined) {
+                    // TODO 이해도 지금 하나도 안들어와서 작업해야합니다.
+                  }
+                }
+              }
+              // 참여도이면
+              if (vm.nowOption[index][2] === '참여도') {
+                // 참여도.lession 있는지 확인
+                if (filteredParticipation.lession !== undefined) { // 있으면 하나씩 계산해서 result에 값 push
+                  // 자료
+                  if (filteredParticipation.lession.note !== undefined &&
+                    filteredParticipation.lession.note.items !== undefined) {
+                    // items key 추출
+                    const keys = Object.keys(filteredParticipation.lession.note.items);
+                    // items 배열 순회
+                    for (let index2 = 0; index2 < keys.length; index2 += 1) {
+                      // 해당 아이템 참여도 = 열람갯수 / 전체 학생수
+                      const singleItemParticipation = filteredParticipation.lession.note.items[keys[index2]].length / vm.classStudentCount;
+                      const index3 = lectureItems.findIndex(element =>
+                        (element.lecture_item_id === filteredParticipation.lession.note.items[keys[index2]][0].item_id));
+                      result[index3][index] = (singleItemParticipation * 100).toFixed(2);
+                    }
+                  }
+
+                  // 실습
+                  if (filteredParticipation.lession.practice !== undefined &&
+                    filteredParticipation.lession.practice.items !== undefined) {
+                    // items key 추출
+                    const keys = Object.keys(filteredParticipation.lession.practice.items);
+                    // items 배열 순회
+                    for (let index2 = 0; index2 < keys.length; index2 += 1) {
+                      // 해당 아이템 참여도 = 열람갯수 / 전체 학생수
+                      const singleItemParticipation = filteredParticipation.lession.practice.items[keys[index2]].length / vm.classStudentCount;
+                      const index3 = lectureItems.findIndex(element =>
+                        (element.lecture_item_id === filteredParticipation.lession.practice.items[keys[index2]][0].item_id));
+                      result[index3][index] = (singleItemParticipation * 100).toFixed(2);
+                    }
+                  }
+
+                  // 문항
+                  if (filteredParticipation.lession.question !== undefined &&
+                    filteredParticipation.lession.question.items !== undefined) {
+                    // items key 추출
+                    const keys = Object.keys(filteredParticipation.lession.question.items);
+                    // items 배열 순회
+                    for (let index2 = 0; index2 < keys.length; index2 += 1) {
+                      // 해당 아이템 참여도 = 열람갯수 / 전체 학생수
+                      const singleItemParticipation = filteredParticipation.lession.question.items[keys[index2]].length / vm.classStudentCount;
+                      const index3 = lectureItems.findIndex(element =>
+                        (element.lecture_item_id === filteredParticipation.lession.question.items[keys[index2]][0].item_id));
+                      result[index3][index] = (singleItemParticipation * 100).toFixed(2);
+                    }
+                  }
+
+                  // 설문
+                  if (filteredParticipation.lession.survey !== undefined &&
+                    filteredParticipation.lession.survey.items !== undefined) {
+                    // items key 추출
+                    const keys = Object.keys(filteredParticipation.lession.survey.items);
+                    // items 배열 순회
+                    for (let index2 = 0; index2 < keys.length; index2 += 1) {
+                      // 해당 아이템 참여도 = 열람갯수 / 전체 학생수
+                      const singleItemParticipation = filteredParticipation.lession.survey.items[keys[index2]].length / vm.classStudentCount;
+                      const index3 = lectureItems.findIndex(element =>
+                        (element.lecture_item_id === filteredParticipation.lession.survey.items[keys[index2]][0].item_id));
+                      result[index3][index] = (singleItemParticipation * 100).toFixed(2);
+                    }
+                  }
+
+/*                   for (let index2 = 0; index2 < names.length; index2 += 1) {
+                    result[index2][index] = 1;
+                  } */
+                }
+              }
+            }
+
+            /*
+             // 집중도
+            if (filteredConcentration.lession !== undefined) {
+              // 자료
+              if (filteredConcentration.lession.note.items !== undefined) {
+                // 키값이 객체의 프로퍼티로 넘어와서 추출
+                const keys = Object.keys(filteredConcentration.lession.note.items);
+                keys.forEach((element) => {
+                  // 항목명 추출
+                  names.push(lectureItems.filter(x => x.lecture_item_id === parseInt(element, 10))[0].name);
+                });
+              }
+              // 실습
+              if (filteredConcentration.lession.practice.items !== undefined) {
+
+              }
+              // 문항
+              if (filteredConcentration.lession.question.items !== undefined) {
+
+              }
+              // 설문
+              if (filteredConcentration.lession.survey.items !== undefined) {
+
+              }
+            } else {
+              for (let index = 0; index < names.length; index += 1 ) {
+
+              }
+            }
+
+            // 이해도
+            if (filteredUnderstanding.lession !== undefined) {
+              // 자료
+              // 실습
+              // 문항
+              // 설문
+            }
+
+            // 참여도
+            if (filteredParticipation.lession !== undefined) {
+              // 자료
+              // 실습
+              // 문항
+              // 설문
+            } */
+
+
+
+            /* // lession 객체 유무 체크
+            if (filteredConcentration.lession !== undefined) {
+              if (filteredConcentration.lession.note.items !== undefined) { // 자료
+                // 키값이 객체의 프로퍼티로 넘어와서 추출
+                const keys = Object.keys(filteredConcentration.lession.note.items);
+                keys.forEach((element) => {
+                  // 항목명 추출
+                  names.push(lectureItems.filter(x => x.lecture_item_id === parseInt(element, 10))[0].name);
+                });
+                // 강의 아이템 순회
+                for (let index = 0; index < keys.length; index += 1) {
+                  result[itemIndex] = [];
+                  for (let index2 = 0; index2 < vm.nowOption.length; index2 += 1) {
+                    if (vm.nowOption[index2][2] === '집중도') {
+                      result[itemIndex].push(0);
+                    } else if (vm.nowOption[index2][2] === '이해도') {
+                      result[itemIndex].push(0);
+                    } else if (vm.nowOption[index2][2] === '참여도') {
+                      let itemCnt = 0;
+                      let submitCnt = 0;
+                      // 아이템 갯수
+                      itemCnt += Object.keys(filteredParticipation.lession.note.items).length;
+                      // 제출 갯수
+                      filteredParticipation.lession.note.students.forEach((element) => {
+                        submitCnt += element.list.length;
+                      });
+                      // 학생들이 제출한 갯수의 합 / item 갯수 * 학생수
+                      const participationAverage = submitCnt / (itemCnt * vm.classStudentCount);
+                      result[itemIndex].push((participationAverage * 100).toFixed(2));
+                    }
+                  }
+                  itemIndex += 1;
+                }
+              }
+              if (filteredConcentration.lession.practice.items !== undefined) { // 실습
+                const keys = Object.keys(filteredConcentration.lession.practice.items);
+                keys.forEach((element) => {
+                  names.push(lectureItems.filter(x => x.lecture_item_id === parseInt(element, 10))[0].name);
+                });
+                // 강의 아이템 순회
+                for (let index = 0; index < keys.length; index += 1) {
+                  result[itemIndex] = [];
+                  for (let index2 = 0; index2 < vm.nowOption.length; index2 += 1) {
+                    if (vm.nowOption[index2][2] === '집중도') {
+                      result[itemIndex].push(0);
+                    } else if (vm.nowOption[index2][2] === '이해도') {
+                      result[itemIndex].push(0);
+                    } else if (vm.nowOption[index2][2] === '참여도') {
+                      let itemCnt = 0;
+                      let submitCnt = 0;
+                      // 아이템 갯수
+                      itemCnt += Object.keys(filteredParticipation.lession.practice.items).length;
+                      // 제출 갯수
+                      filteredParticipation.lession.practice.students.forEach((element) => {
+                        submitCnt += element.list.length;
+                      });
+                      // 학생들이 제출한 갯수의 합 / item 갯수 * 학생수
+                      const participationAverage = submitCnt / (itemCnt * vm.classStudentCount);
+                      result[itemIndex].push((participationAverage * 100).toFixed(2));
+                    }
+                  }
+                  itemIndex += 1;
+                }
+              }
+              if (filteredConcentration.lession.question.items !== undefined) { // 문항
+                const keys = Object.keys(filteredConcentration.lession.question.items);
+                keys.forEach((element) => {
+                  names.push(lectureItems.filter(x => x.lecture_item_id === parseInt(element, 10))[0].name);
+                });
+                // 강의 아이템 순회
+                for (let index = 0; index < keys.length; index += 1) {
+                  result[itemIndex] = [];
+                  for (let index2 = 0; index2 < vm.nowOption.length; index2 += 1) {
+                    if (vm.nowOption[index2][2] === '집중도') {
+                      const concentrations = [];
+                      filteredConcentration.lession.question.items[index].list.forEach((element) => {
+                        const fixedStartTime = new Date(element.start_time);
+                        const fixedEndTime = new Date(element.end_time);
+                        const spendedTimes = ((fixedEndTime - fixedStartTime) / 1000);
+                        const standard = filteredConcentration.lession.question.items[index].response_time;
+                        concentrations.push((standard / spendedTimes) < 1 ? standard / spendedTimes : 1); // 1보다 크면 1 처리 : 서버 요구사항
+                      });
+                      let sum = 0.0;
+                      concentrations.forEach((element) => {
+                        sum += element;
+                      });
+                      // 아이템 평균 집중도
+                      const concentrationAverage = sum / concentrations.length;
+                      result[itemIndex].push((concentrationAverage * 100).toFixed(2));
+                    } else if (vm.nowOption[index2][2] === '이해도') {
+                      let itemUnderstandingSum = 0;
+                      filteredUnderstanding.lession.question.items[keys[index]].forEach((element) => {
+                        itemUnderstandingSum += element.ratio;
+                      });
+                      const itemLength = filteredUnderstanding.lession.question.items[keys[index]].length;
+                      const lectureUnderstanding = itemUnderstandingSum / itemLength;
+                      result[itemIndex].push((lectureUnderstanding * 100).toFixed(2));
+                    } else if (vm.nowOption[index2][2] === '참여도') {
+                      let itemCnt = 0;
+                      let submitCnt = 0;
+                      // 아이템 갯수
+                      itemCnt += Object.keys(filteredParticipation.lession.question.items).length;
+                      // 제출 갯수
+                      filteredParticipation.lession.question.students.forEach((element) => {
+                        submitCnt += element.list.length;
+                      });
+                      // 학생들이 제출한 갯수의 합 / item 갯수 * 학생수
+                      const participationAverage = submitCnt / (itemCnt * vm.classStudentCount);
+                      result[itemIndex].push((participationAverage * 100).toFixed(2));
+                    }
+                  }
+                  itemIndex += 1;
+                }
+              }
+              if (filteredConcentration.lession.survey.items !== undefined) { // 설문
+                const keys = Object.keys(filteredConcentration.lession.survey.items);
+                keys.forEach((element) => {
+                  names.push(lectureItems.filter(x => x.lecture_item_id === parseInt(element, 10))[0].name);
+                });
+                // 강의 아이템 순회
+                for (let index = 0; index < keys.length; index += 1) {
+                  result[itemIndex] = [];
+                  for (let index2 = 0; index2 < vm.nowOption.length; index2 += 1) {
+                    if (vm.nowOption[index2][2] === '집중도') {
+                      const concentrations = [];
+                      filteredConcentration.lession.survey.items[index].list.forEach((element) => {
+                        const fixedStartTime = new Date(element.start_time);
+                        const fixedEndTime = new Date(element.end_time);
+                        const spendedTimes = ((fixedEndTime - fixedStartTime) / 1000);
+                        const standard = filteredConcentration.lession.survey.items[index].response_time;
+                        concentrations.push((standard / spendedTimes) < 1 ? standard / spendedTimes : 1); // 1보다 크면 1 처리 : 서버 요구사항
+                      });
+                      let sum = 0.0;
+                      concentrations.forEach((element) => {
+                        sum += element;
+                      });
+                      // 아이템 평균 집중도
+                      const concentrationAverage = sum / concentrations.length;
+                      result[itemIndex].push((concentrationAverage * 100).toFixed(2));
+                    } else if (vm.nowOption[index2][2] === '이해도') {
+                      result[itemIndex].push(0);
+                    } else if (vm.nowOption[index2][2] === '참여도') {
+                      let itemCnt = 0;
+                      let submitCnt = 0;
+                      // 아이템 갯수
+                      itemCnt += Object.keys(filteredParticipation.lession.survey.items).length;
+                      // 제출 갯수
+                      filteredParticipation.lession.survey.students.forEach((element) => {
+                        submitCnt += element.list.length;
+                      });
+                      // 학생들이 제출한 갯수의 합 / item 갯수 * 학생수
+                      const participationAverage = submitCnt / (itemCnt * vm.classStudentCount);
+                      result[itemIndex].push((participationAverage * 100).toFixed(2));
+                    }
+                  }
+                  itemIndex += 1;
+                }
+              } */
+
+              /* // 강의 아이템 순회
+              for (let index = 0; index < keys.length; index += 1) {
+                result[index] = [];
+                for (let index2 = 0; index2 < vm.nowOption.length; index2 += 1) {
+                  if (vm.nowOption[index2][2] === '집중도') {
+                    const concentrations = [];
+                    filteredConcentration.lession.question.items[index].list.forEach((element) => {
+                      const fixedStartTime = new Date(element.start_time);
+                      const fixedEndTime = new Date(element.end_time);
+                      const spendedTimes = ((fixedEndTime - fixedStartTime) / 1000);
+                      const standard = filteredConcentration.lession.question.items[index].response_time;
+                      concentrations.push((standard / spendedTimes) < 1 ? standard / spendedTimes : 1); // 1보다 크면 1 처리 : 서버 요구사항
+                    });
+                    let sum = 0.0;
+                    concentrations.forEach((element) => {
+                      sum += element;
+                    });
+                    // 아이템별 평균 집중도 : 전체 학생수로 나눈 값을 사용
+                    const concentrationAverage = sum / studentCnt;
+                    result[index].push((concentrationAverage * 100).toFixed(2));
+                  } else if (vm.nowOption[index2][2] === '이해도') {
+                    let understandingSum = 0;
+                    filteredUnderstanding.lession.question.items[keys[index]].forEach((element) => {
+                      understandingSum += element.ratio;
+                    });
+                    const singleItemLength = filteredUnderstanding.lession.question.items[keys[index]].length;
+                    const understanding = understandingSum / singleItemLength;
+                    result[index].push((understanding * 100).toFixed(2));
+                  } else if (vm.nowOption[index2][2] === '참여도') {
+                    // 문항별 제출 수
+                    const submitCnt = filteredParticipation.lession.question.items[keys[index]].length;
+                    // 문항별 제출자의 수 / 학생의 수
+                    const participationAverage = submitCnt / studentCnt;
+                    result[index].push((participationAverage * 100).toFixed(2));
+                  } else if (vm.nowOption[index2][2] === '전체') {
+                    result[index].push(5);
+                  }
+                }
+              } */
+
+
             // 값 출력
             Array.prototype.push.apply(vm.chartCategories, names);
-            for (let index2 = 0; index2 < vm.nowOption.length; index2 += 1) {
+           /*  for (let index2 = 0; index2 < vm.nowOption.length; index2 += 1) {
               const data = [];
-              for (let index = 0; index < keys.length; index += 1) {
+              for (let index = 0; index < names.length; index += 1) {
+                data.push(result[index][index2]);
+              }
+              vm.chartData[index2] = [vm.compOptionName(vm.nowOption[index2][0], vm.nowOption[index2][1], vm.nowOption[index2][2]), ...data];
+            } */
+            vm.tableData = names.map((x, index) => ({
+              name: x,
+              value: result[index],
+              deviation: [],
+            }));
+
+            /* for (let index2 = 0; index2 < vm.nowOption.length; index2 += 1) {
+              const data = [];
+              for (let index = 0; index < names.length; index += 1) {
                 data.push(result[index][index2]);
               }
               vm.chartData[index2] = [vm.compOptionName(vm.nowOption[index2][0], vm.nowOption[index2][1], vm.nowOption[index2][2]), ...data];
@@ -699,8 +1133,9 @@
               name: x,
               value: result[index],
               deviation: [],
-            }));
+            })); */
 
+            // }
             vm.dataIsPrepared = true;
             break;
           }
@@ -718,105 +1153,209 @@
             vm.lectureName = payload2;
 
             const res = await analysisService.getLectureStudents({ classId: vm.classId });
-            vm.classStudentList = res.data;
+            vm.lectureStudentList = res.data;
             // const res2 = await lectureService.getLecture({ lectureId: payload });
             while (vm.chartData.length > 0)vm.chartData.pop(); // 초기화
             while (vm.chartCategories.length > 0)vm.chartCategories.pop(); // 초기화
             vm.tableData = [];
 
-            // 값 연산 - 자료는 서버 수정중이라 우선 문항에 대해서만
             const filteredParticipation = vm.allData.participation.filter(x => x.lectureId === payload)[0];
             const filteredConcentration = vm.allData.concentration.filter(x => x.lectureId === payload)[0];
             const filteredUnderstanding = vm.allData.understanding.filter(x => x.lectureId === payload)[0];
-            const result = [];
+            const result = []; // 최종 결과 입력할 2차원 배열
 
             // 아이템 키 정보 (일부 아이템 id를 키로 가지고 배열로 넘어오기 때문)
-            const keys = Object.keys(filteredParticipation.lession.question.items);
+            // const keys = Object.keys(filteredParticipation.lession.question.items);
 
             // 학생 순회
-            for (let index = 0; index < vm.classStudentList.length; index += 1) {
+            for (let index = 0; index < vm.lectureStudentList.length; index += 1) {
               result[index] = [];
               for (let index2 = 0; index2 < vm.nowOption.length; index2 += 1) {
-                // 우선, '문항 / 전체 / '에 대해서만 계산
                 if (vm.nowOption[index2][2] === '집중도') {
-                  // 한 학생의 아이템별 집중도를 저장할 배열
-                  const singleStudentConcentrationArray = [];
-                  // 한 학생의 아이템별 집중도를 모두 합한 값을 저장할 변수
-                  let SingleStudentConcentrationSum = 0;
-
-                  // 아이템 순회 - 아이템을 돌며, 한 학생의 아이템별 집중도를 구해서 singleStudentConcentrationArray 배열에 저장
-                  for (let index3 = 0; index3 < keys.length; index3 += 1) {
-                    const targetItemSubmitLogs = filteredConcentration.lession.question.items[index3];
-                    const targetItemTargetLog = targetItemSubmitLogs.list.filter(x => x.student_id === vm.classStudentList[index].user_id)[0];
-                    if (targetItemTargetLog === undefined) {
-                      singleStudentConcentrationArray.push(0);
-                    } else {
-                      const fixedStartTime = new Date(targetItemTargetLog.start_time);
-                      const fixedEndTime = new Date(targetItemTargetLog.end_time);
-                      const spendedTimes = ((fixedEndTime - fixedStartTime) / 1000);
-                      const standard = targetItemSubmitLogs.response_time;
-                      singleStudentConcentrationArray.push((standard / spendedTimes) < 1 ? standard / spendedTimes : 1); // 1보다 크면 1 처리 : 서버 요구사항
+                  let itemCnt = 0;
+                  if (filteredConcentration.lession !== undefined) {
+                    // 한 학생의 아이템별 집중도를 저장할 배열
+                    const singleStudentConcentrationArray = [];
+                    // 한 학생의 아이템별 집중도를 모두 합한 값을 저장할 변수
+                    let SingleStudentConcentrationSum = 0;
+                    if (filteredConcentration.lession.note !== undefined &&
+                      filteredConcentration.lession.note.items !== undefined) { // 자료
+                      // 키값이 객체의 프로퍼티로 넘어와서 추출
+                      const keys = Object.keys(filteredParticipation.lession.note.items);
+                      itemCnt += keys.length;
                     }
+                    if (filteredConcentration.lession.practice !== undefined &&
+                      filteredConcentration.lession.practice.items !== undefined) { // 실습
+                      const keys = Object.keys(filteredParticipation.lession.practice.items);
+                      itemCnt += keys.length;
+                    }
+                    if (filteredConcentration.lession.question !== undefined &&
+                      filteredConcentration.lession.question.items !== undefined) { // 문항
+                      const keys = Object.keys(filteredParticipation.lession.question.items);
+                      itemCnt += keys.length;
+                      // 아이템 순회 - 아이템을 돌며, 한 학생의 아이템별 집중도를 구해서 singleStudentConcentrationArray 배열에 저장
+                      for (let index3 = 0; index3 < keys.length; index3 += 1) {
+                        const targetItemSubmitLogs = filteredConcentration.lession.question.items[index3];
+                        const targetItemTargetLog = targetItemSubmitLogs.list.filter(x => x.student_id === vm.lectureStudentList[index].user_id)[0];
+                        if (targetItemTargetLog === undefined) {
+                          singleStudentConcentrationArray.push(0);
+                        } else {
+                          const fixedStartTime = new Date(targetItemTargetLog.start_time);
+                          const fixedEndTime = new Date(targetItemTargetLog.end_time);
+                          const spendedTimes = ((fixedEndTime - fixedStartTime) / 1000);
+                          const standard = targetItemSubmitLogs.response_time;
+                          singleStudentConcentrationArray.push((standard / spendedTimes) < 1 ? standard / spendedTimes : 1); // 1보다 크면 1 처리 : 서버 요구사항
+                        }
+                      }
+                    }
+                    if (filteredConcentration.lession.survey !== undefined &&
+                      filteredConcentration.lession.survey.items !== undefined) { // 설문
+                      const keys = Object.keys(filteredParticipation.lession.survey.items);
+                      itemCnt += keys.length;
+                      // 아이템 순회 - 아이템을 돌며, 한 학생의 아이템별 집중도를 구해서 singleStudentConcentrationArray 배열에 저장
+                      for (let index3 = 0; index3 < keys.length; index3 += 1) {
+                        const targetItemSubmitLogs = filteredConcentration.lession.survey.items[index3];
+                        const targetItemTargetLog = targetItemSubmitLogs.list.filter(x => x.student_id === vm.lectureStudentList[index].user_id)[0];
+                        if (targetItemTargetLog === undefined) {
+                          singleStudentConcentrationArray.push(0);
+                        } else {
+                          const fixedStartTime = new Date(targetItemTargetLog.start_time);
+                          const fixedEndTime = new Date(targetItemTargetLog.end_time);
+                          const spendedTimes = ((fixedEndTime - fixedStartTime) / 1000);
+                          const standard = targetItemSubmitLogs.response_time;
+                          singleStudentConcentrationArray.push((standard / spendedTimes) < 1 ? standard / spendedTimes : 1); // 1보다 크면 1 처리 : 서버 요구사항
+                        }
+                      }
+                    }
+                    if (itemCnt === 0) { // 아이템이 하나도 없어도 0
+                      result[index].push(0);
+                    } else {
+                      // 저장된 값을 모두 더함
+                      singleStudentConcentrationArray.forEach((element) => {
+                        SingleStudentConcentrationSum += element;
+                      });
+                      // 더한 값을 item 길이로 나눠서 평균을 구함
+                      const concentration = SingleStudentConcentrationSum / itemCnt;
+                      result[index].push((concentration * 100).toFixed(2));
+                    }
+                  } else { // 포함된 lession 객체가 없으면 0 입력
+                    result[index].push(0);
                   }
-                  // 저장된 값을 모두 더함
-                  singleStudentConcentrationArray.forEach((element) => {
-                    SingleStudentConcentrationSum += element;
-                  });
-                  // 더한 값을 item 길이로 나눠서 평균을 구함
-                  const concentration = SingleStudentConcentrationSum / keys.length;
-                  result[index].push((concentration * 100).toFixed(2));
                 } else if (vm.nowOption[index2][2] === '이해도') {
-                  // 한 학생의 아이템별 이해도를 저장할 배열
-                  const singleStudentUnderstandingArray = [];
-                  // 한 학생의 아이템별 이해도를 모두 합한 값을 저장할 변수
-                  let SingleStudentUnderstandingSum = 0;
+                  if (filteredUnderstanding.lession !== undefined &&
+                    filteredUnderstanding.lession.question !== undefined &&
+                    filteredUnderstanding.lession.question.items !== undefined) { // 문항
+                    // 한 학생의 아이템별 이해도를 저장할 배열
+                    const singleStudentUnderstandingArray = [];
+                    // 한 학생의 아이템별 이해도를 모두 합한 값을 저장할 변수
+                    let SingleStudentUnderstandingSum = 0;
 
-                  // 아이템 순회 - 아이템을 돌며, 한 학생의 아이템별 이해도를 구해서 singleStudentUnderstandingArray 배열에 저장
-                  for (let index3 = 0; index3 < keys.length; index3 += 1) {
-                    const targetItemSubmitLogs = filteredUnderstanding.lession.question.items[keys[index3]];
-                    const targetItemTargetLog = targetItemSubmitLogs.filter(x => x.student_id === vm.classStudentList[index].user_id)[0];
-                    if (targetItemTargetLog === undefined) {
-                      singleStudentUnderstandingArray.push(0);
-                    } else {
-                      singleStudentUnderstandingArray.push(targetItemTargetLog.ratio);
+                    const keys = Object.keys(filteredUnderstanding.lession.question.items);
+                    // 아이템 순회 - 아이템을 돌며, 한 학생의 아이템별 이해도를 구해서 singleStudentUnderstandingArray 배열에 저장
+                    for (let index3 = 0; index3 < keys.length; index3 += 1) {
+                      const targetItemSubmitLogs = filteredUnderstanding.lession.question.items[keys[index3]];
+                      const targetItemTargetLog = targetItemSubmitLogs.filter(x => x.student_id === vm.lectureStudentList[index].user_id)[0];
+                      if (targetItemTargetLog === undefined) {
+                        singleStudentUnderstandingArray.push(0);
+                      } else {
+                        singleStudentUnderstandingArray.push(targetItemTargetLog.ratio);
+                      }
                     }
+                    // 저장된 값을 모두 더함
+                    singleStudentUnderstandingArray.forEach((element) => {
+                      SingleStudentUnderstandingSum += element;
+                    });
+                    // 더한 값을 item 길이로 나눠서 평균을 구함
+                    const understanding = SingleStudentUnderstandingSum / keys.length;
+                    result[index].push((understanding * 100).toFixed(2));
+                  } else { // 과목에 강의가 없으면 0
+                    result[index].push(0);
                   }
-                  // 저장된 값을 모두 더함
-                  singleStudentUnderstandingArray.forEach((element) => {
-                    SingleStudentUnderstandingSum += element;
-                  });
-                  // 더한 값을 item 길이로 나눠서 평균을 구함
-                  const understanding = SingleStudentUnderstandingSum / keys.length;
-                  result[index].push((understanding * 100).toFixed(2));
                 } else if (vm.nowOption[index2][2] === '참여도') {
-                  // 한 학생의 아이템별 이해도를 저장할 배열
-                  const singleStudentParticipationArray = [];
-                  // 한 학생의 아이템별 이해도를 모두 합한 값을 저장할 변수
-                  let SingleStudenttParticipationSum = 0;
+                  if (filteredParticipation.lession !== undefined) {
+                    // 한 학생의 아이템별 참여도를 저장할 배열
+                    const singleStudentParticipationArray = [];
+                    // 한 학생의 아이템별 참여도를 모두 합한 값을 저장할 변수
+                    let SingleStudenttParticipationSum = 0;
 
-                  // 아이템 순회 - 아이템을 돌며, 한 학생의 아이템별 이해도를 구해서 singleStudentUnderstandingArray 배열에 저장
-                  for (let index3 = 0; index3 < keys.length; index3 += 1) {
-                    const targetItemSubmitLogs = filteredUnderstanding.lession.question.items[keys[index3]];
-                    const targetItemTargetLog = targetItemSubmitLogs.filter(x => x.student_id === vm.classStudentList[index].user_id)[0];
-                    if (targetItemTargetLog === undefined) {
-                      singleStudentParticipationArray.push(0);
-                    } else {
-                      singleStudentParticipationArray.push(1);
+                    if (filteredParticipation.lession.note !== undefined &&
+                      filteredParticipation.lession.note.items !== undefined) { // 자료
+                      const keys = Object.keys(filteredParticipation.lession.note.items);
+                      // 아이템 순회 - 아이템을 돌며, 한 학생의 아이템별 집중도를 구해서 singleStudentConcentrationArray 배열에 저장
+                      for (let index3 = 0; index3 < keys.length; index3 += 1) {
+                        const targetItemSubmitLogs = filteredParticipation.lession.note.items[keys[index3]];
+                        const targetItemTargetLog = targetItemSubmitLogs.filter(x => x.student_id === vm.lectureStudentList[index].user_id)[0];
+                        if (targetItemTargetLog === undefined) {
+                          if (index === 2) {
+                            console.log('push(0), index3 = ', index3);
+                          }
+                          singleStudentParticipationArray.push(0);
+                        } else {
+                          if (index === 2) {
+                            console.log('push(1), index3 = ', index3);
+                          }
+                          singleStudentParticipationArray.push(1);
+                        }
+                      }
                     }
+                    if (filteredParticipation.lession.practice !== undefined &&
+                      filteredParticipation.lession.practice.items !== undefined) { // 실습
+                      const keys = Object.keys(filteredParticipation.lession.practice.items);
+                      // 아이템 순회 - 아이템을 돌며, 한 학생의 아이템별 집중도를 구해서 singleStudentConcentrationArray 배열에 저장
+                      for (let index3 = 0; index3 < keys.length; index3 += 1) {
+                        const targetItemSubmitLogs = filteredParticipation.lession.practice.items[[keys[index3]]];
+                        const targetItemTargetLog = targetItemSubmitLogs.filter(x => x.student_id === vm.lectureStudentList[index].user_id)[0];
+                        if (targetItemTargetLog === undefined) {
+                          singleStudentParticipationArray.push(0);
+                        } else {
+                          singleStudentParticipationArray.push(1);
+                        }
+                      }
+                    }
+                    if (filteredParticipation.lession.question !== undefined &&
+                      filteredParticipation.lession.question.items !== undefined) { // 문항
+                      const keys = Object.keys(filteredParticipation.lession.question.items);
+                      // 아이템 순회 - 아이템을 돌며, 한 학생의 아이템별 집중도를 구해서 singleStudentConcentrationArray 배열에 저장
+                      for (let index3 = 0; index3 < keys.length; index3 += 1) {
+                        const targetItemSubmitLogs = filteredParticipation.lession.question.items[keys[index3]];
+                        const targetItemTargetLog = targetItemSubmitLogs.filter(x => x.student_id === vm.lectureStudentList[index].user_id)[0];
+                        if (targetItemTargetLog === undefined) {
+                          singleStudentParticipationArray.push(0);
+                        } else {
+                          singleStudentParticipationArray.push(1);
+                        }
+                      }
+                    }
+                    if (filteredParticipation.lession.survey !== undefined &&
+                      filteredParticipation.lession.survey.items !== undefined) { // 설문
+                      const keys = Object.keys(filteredParticipation.lession.survey.items);
+                      // 아이템 순회 - 아이템을 돌며, 한 학생의 아이템별 집중도를 구해서 singleStudentConcentrationArray 배열에 저장
+                      for (let index3 = 0; index3 < keys.length; index3 += 1) {
+                        const targetItemSubmitLogs = filteredParticipation.lession.survey.items[keys[index3]];
+                        const targetItemTargetLog = targetItemSubmitLogs.filter(x => x.student_id === vm.lectureStudentList[index].user_id)[0];
+                        if (targetItemTargetLog === undefined) {
+                          singleStudentParticipationArray.push(0);
+                        } else {
+                          singleStudentParticipationArray.push(1);
+                        }
+                      }
+                    }
+                    // 저장된 값을 모두 더함
+                    singleStudentParticipationArray.forEach((element) => {
+                      SingleStudenttParticipationSum += element;
+                    });
+                    // 더한 값을 item 길이로 나눠서 평균을 구함
+                    const participation = SingleStudenttParticipationSum / singleStudentParticipationArray.length;
+                    result[index].push((participation * 100).toFixed(2));
+                  } else {
+                    result[index].push(0);
                   }
-                  // 저장된 값을 모두 더함
-                  singleStudentParticipationArray.forEach((element) => {
-                    SingleStudenttParticipationSum += element;
-                  });
-                  // 더한 값을 item 길이로 나눠서 평균을 구함
-                  const participation = SingleStudenttParticipationSum / keys.length;
-                  result[index].push((participation * 100).toFixed(2));
                 } else if (vm.nowOption[index2][2] === '전체') {
                   result[index].push(5);
                 }
               }
             }
-            vm.tableData = vm.classStudentList.map((x, index) => ({
+            vm.tableData = vm.lectureStudentList.map((x, index) => ({
               name: x.name,
               value: result[index],
             }));
@@ -826,7 +1365,7 @@
           }
           case 'STUDENT_ANALYSIS' : {
             const res = await analysisService.getLectureStudents({ classId: vm.classId });
-            vm.classStudentList = res.data;
+            vm.lectureStudentList = res.data;
             vm.selectedStudentId = '';
             vm.mode = '학생 선택';
             break;
@@ -835,84 +1374,163 @@
             vm.category = '강의 이름';
             vm.mode = '학생별 분석';
             // console.log('vm.selectedStudentId = ', vm.selectedStudentId);
-            vm.selectedStudentEmail = vm.classStudentList.filter(x => x.user_id === vm.selectedStudentId)[0].email_id;
+            vm.selectedStudentEmail = vm.lectureStudentList.filter(x => x.user_id === vm.selectedStudentId)[0].email_id;
 
             // 초기화
             while (vm.chartCategories.length > 0)vm.chartCategories.pop();
             while (vm.chartData.length > 0)vm.chartData.pop();
             vm.tableData = [];
             vm.dataIsPrepared = false;
-
-            // 값 연산 - 자료는 서버 수정중이라 우선 문항에 대해서만
             const result = [];
             // 강의 순회
             for (let index = 0; index < vm.allData.classInfo.lectures.length; index += 1) {
               result[index] = [];
               // 옵션 순회
               for (let index2 = 0; index2 < vm.nowOption.length; index2 += 1) {
-                // 우선, '문항 / 전체 / '에 대해서만 계산
                 if (vm.nowOption[index2][2] === '집중도') {
-                  // 아이템별 집중력을 저장할 2차원 배열
-                  const concentrations = [];
-                  for (let index3 = 0; index3 < vm.allData.concentration[index].lession.question.items.length; index3 += 1) {
-                    vm.allData.concentration[index].lession.question.items[index3].list.forEach((element) => {
-                      if (element.student_id === vm.selectedStudentId) {
-                        const fixedStartTime = new Date(element.start_time);
-                        const fixedEndTime = new Date(element.end_time);
-                        const spendedTimes = ((fixedEndTime - fixedStartTime) / 1000);
-                        // console.log('spendedTimes = ', spendedTimes);
-                        const standard = vm.allData.concentration[index].lession.question.items[index3].response_time;
-                        // console.log('standard = ', standard);
-                        concentrations.push((standard / spendedTimes) < 1 ? standard / spendedTimes : 1); // 1보다 크면 1 처리 : 서버 요구사항
-                      }
-                    });
-                  }
-                  let sum = 0.0;
-                  concentrations.forEach((element) => {
-                    sum += element;
-                  });
-                  // 아이템별 평균 집중도 : 전체 학생수로 나눈 값을 사용
-                  const concentrationAverages = (sum / vm.allData.concentration[index].lession.question.items.length);
-                  result[index].push((concentrationAverages * 100).toFixed(2));
-                } else if (vm.nowOption[index2][2] === '이해도') {
-                  // 단일 학생의 강의 아이템별 이해도를 저장할 배열
-                  const singleStudentUnderstandingForItemsArray = [];
-                  // 단일 학생의 강의 아이템별 이해도의 합계를 저장할 변수
-                  let singleStudentUnderstandingForItemsSum = 0;
+                  if (vm.allData.concentration[index].lession !== undefined) {
+                    // 아이템별 집중력을 저장할 2차원 배열
+                    const concentrations = [];
 
-                  const keys = Object.keys(vm.allData.understanding[index].lession.question.items);
-                  for (let index3 = 0; index3 < keys.length; index3 += 1) {
-                    const targetItemLog = vm.allData.understanding[index].lession.question.items[keys[index3]].filter(element => element.student_id === vm.selectedStudentId)[0];
-                    if (targetItemLog === undefined) {
-                      singleStudentUnderstandingForItemsArray.push(0);
-                    } else {
-                      singleStudentUnderstandingForItemsArray.push(targetItemLog.ratio);
+                    if (vm.allData.concentration[index].lession.note !== undefined &&
+                      vm.allData.concentration[index].lession.note.items !== undefined) {
+                      // 서버 스펙 미구현
                     }
+                    if (vm.allData.concentration[index].lession.practice !== undefined &&
+                      vm.allData.concentration[index].lession.practice.items !== undefined) {
+                      // 서버 스펙 미구현
+                    }
+                    if (vm.allData.concentration[index].lession.question !== undefined &&
+                      vm.allData.concentration[index].lession.question.items !== undefined) {
+                      for (let index3 = 0; index3 < vm.allData.concentration[index].lession.question.items.length; index3 += 1) {
+                        vm.allData.concentration[index].lession.question.items[index3].list.forEach((element) => {
+                          if (element.student_id === vm.selectedStudentId) {
+                            const fixedStartTime = new Date(element.start_time);
+                            const fixedEndTime = new Date(element.end_time);
+                            const spendedTimes = ((fixedEndTime - fixedStartTime) / 1000);
+                            // console.log('spendedTimes = ', spendedTimes);
+                            const standard = vm.allData.concentration[index].lession.question.items[index3].response_time;
+                            // console.log('standard = ', standard);
+                            concentrations.push((standard / spendedTimes) < 1 ? standard / spendedTimes : 1); // 1보다 크면 1 처리 : 서버 요구사항
+                          }
+                        });
+                      }
+                    }
+                    if (vm.allData.concentration[index].lession.survey !== undefined &&
+                      vm.allData.concentration[index].lession.survey.items !== undefined) {
+                      for (let index3 = 0; index3 < vm.allData.concentration[index].lession.survey.items.length; index3 += 1) {
+                        vm.allData.concentration[index].lession.survey.items[index3].list.forEach((element) => {
+                          if (element.student_id === vm.selectedStudentId) {
+                            const fixedStartTime = new Date(element.start_time);
+                            const fixedEndTime = new Date(element.end_time);
+                            const spendedTimes = ((fixedEndTime - fixedStartTime) / 1000);
+                            // console.log('spendedTimes = ', spendedTimes);
+                            const standard = vm.allData.concentration[index].lession.survey.items[index3].response_time;
+                            // console.log('standard = ', standard);
+                            concentrations.push((standard / spendedTimes) < 1 ? standard / spendedTimes : 1); // 1보다 크면 1 처리 : 서버 요구사항
+                          }
+                        });
+                      }
+                    }
+                    if (concentrations.length !== 0) {
+                      let sum = 0.0;
+                      concentrations.forEach((element) => {
+                        sum += element;
+                      });
+                      // 아이템별 평균 집중도 : 전체 학생수로 나눈 값을 사용
+                      const concentrationAverages = (sum / concentrations.length);
+                      result[index].push((concentrationAverages * 100).toFixed(2));
+                    } else { // 집중도 계산할 아이템이 없으면
+                      result[index].push(0);
+                    }
+                  } else { // lession 객체가 없으면 0
+                    result[index].push(0);
                   }
-                  // 이해도 합을 구함
-                  singleStudentUnderstandingForItemsArray.forEach((element) => {
-                    singleStudentUnderstandingForItemsSum += element;
-                  });
-                  // 이해도 평균을 구함
-                  const understanding = singleStudentUnderstandingForItemsSum / keys.length;
-                  result[index].push((understanding * 100).toFixed(2));
-                } else if (vm.nowOption[index2][2] === '참여도') {
-                  // 강의에 아이템이 몇개 있는가 (우선 문항만)
-                  const keys = Object.keys(vm.allData.participation[index].lession.question.items);
-                  const itemCnt = keys.length;
-                  // 해당 학생이 제출하였는가
-                  let submitCnt = 0;
-                  for (let index3 = 0; index3 < keys.length; index3 += 1) {
-                    vm.allData.participation[index].lession.question.items[keys[index3]].forEach((element) => {
-                      if (element.student_id === vm.selectedStudentId) submitCnt += 1;
+                } else if (vm.nowOption[index2][2] === '이해도') {
+                  if (vm.allData.understanding[index].lession !== undefined &&
+                    vm.allData.understanding[index].lession.question !== undefined &&
+                    vm.allData.understanding[index].lession.question.items !== undefined) {
+                    // 단일 학생의 강의 아이템별 이해도를 저장할 배열
+                    const singleStudentUnderstandingForItemsArray = [];
+                    // 단일 학생의 강의 아이템별 이해도의 합계를 저장할 변수
+                    let singleStudentUnderstandingForItemsSum = 0;
+
+                    const keys = Object.keys(vm.allData.understanding[index].lession.question.items);
+                    for (let index3 = 0; index3 < keys.length; index3 += 1) {
+                      const targetItemLog = vm.allData.understanding[index].lession.question.items[keys[index3]].filter(element => element.student_id === vm.selectedStudentId)[0];
+                      if (targetItemLog === undefined) {
+                        singleStudentUnderstandingForItemsArray.push(0);
+                      } else {
+                        singleStudentUnderstandingForItemsArray.push(targetItemLog.ratio);
+                      }
+                    }
+                    // 이해도 합을 구함
+                    singleStudentUnderstandingForItemsArray.forEach((element) => {
+                      singleStudentUnderstandingForItemsSum += element;
                     });
+                    // 이해도 평균을 구함
+                    const understanding = singleStudentUnderstandingForItemsSum / keys.length;
+                    result[index].push((understanding * 100).toFixed(2));
+                  } else {
+                    result[index].push(0);
                   }
-                  const participation = submitCnt / itemCnt;
-                  result[index].push((participation * 100).toFixed(2));
+                } else if (vm.nowOption[index2][2] === '참여도') {
+                  if (vm.allData.participation[index].lession !== undefined) {
+                    let itemCnt = 0;
+                    let submitCnt = 0;
+                    // lecture에 note 포함되어 있는가
+                    if (vm.allData.participation[index].lession.note.items !== undefined) {
+                      const keys = Object.keys(vm.allData.participation[index].lession.note.items);
+                      itemCnt += Object.keys(vm.allData.participation[index].lession.note.items).length;
+                      for (let index3 = 0; index3 < keys.length; index3 += 1) {
+                        vm.allData.participation[index].lession.note.items[keys[index3]].forEach((element) => {
+                          if (element.student_id === vm.selectedStudentId) submitCnt += 1;
+                        });
+                      }
+                    }
+                    // lecture에 practice 포함되어 있는가
+                    if (vm.allData.participation[index].lession.practice.items !== undefined) {
+                      const keys = Object.keys(vm.allData.participation[index].lession.practice.items);
+                      itemCnt += Object.keys(vm.allData.participation[index].lession.practice.items).length;
+                      for (let index3 = 0; index3 < keys.length; index3 += 1) {
+                        vm.allData.participation[index].lession.practice.items[keys[index3]].forEach((element) => {
+                          if (element.student_id === vm.selectedStudentId) submitCnt += 1;
+                        });
+                      }
+                    }
+                    // lecture에 question 포함되어 있는가
+                    if (vm.allData.participation[index].lession.question.items !== undefined) {
+                      const keys = Object.keys(vm.allData.participation[index].lession.question.items);
+                      itemCnt += Object.keys(vm.allData.participation[index].lession.question.items).length;
+                      for (let index3 = 0; index3 < keys.length; index3 += 1) {
+                        vm.allData.participation[index].lession.question.items[keys[index3]].forEach((element) => {
+                          if (element.student_id === vm.selectedStudentId) submitCnt += 1;
+                        });
+                      }
+                    }
+                    // lecture에 survey 포함되어 있는가
+                    if (vm.allData.participation[index].lession.survey.items !== undefined) {
+                      const keys = Object.keys(vm.allData.participation[index].lession.survey.items);
+                      itemCnt += Object.keys(vm.allData.participation[index].lession.survey.items).length;
+                      for (let index3 = 0; index3 < keys.length; index3 += 1) {
+                        vm.allData.participation[index].lession.survey.items[keys[index3]].forEach((element) => {
+                          if (element.student_id === vm.selectedStudentId) submitCnt += 1;
+                        });
+                      }
+                    }
+                    if (itemCnt !== 0) { // 포함된 아이템이 하나라도 있으면
+                      // 학생이 제출한 갯수의 합 / item 갯수
+                      const participationAverage = submitCnt / itemCnt;
+                      result[index].push((participationAverage * 100).toFixed(2));
+                    } else { // 아이템이 없으면
+                      result[index].push(0);
+                    }
+                  } else {
+                    result[index].push(0);
+                  }
                 } else if (vm.nowOption[index2][2] === '전체') {
                   result[index].push(5);
                 }
-                // result[index].push((index * index2 * 10) + 20);
               }
             }
 

@@ -390,6 +390,29 @@ export default {
       }
       vm.inputHead.lcItemOffset = null;
 
+      // 문항 - 단답에 답이 없으면 제출 불가
+      if (vm.inputBody.questionType === 'SHORT_ANSWER' &&
+        vm.inputTail.answer[0] === '') {
+        vm.$notify({
+          title: '생성 실패',
+          message: '문항 - 단답 : 답을 입력해주세요.',
+          type: 'error',
+          duration: 5000,
+        });
+        return;
+      }
+      // 문항 - 객관에 답이 없으면 제출 불가
+      if (vm.inputBody.questionType === 'MULTIPLE_CHOICE' &&
+        vm.inputTail.answer.length === 0) {
+        vm.$notify({
+          title: '생성 실패',
+          message: '문항 - 객관 : 하나 이상의 답을 선택해주세요.',
+          type: 'error',
+          duration: 5000,
+        });
+        return;
+      }
+
       // 보기가 하나도 없는 객관식 문항은 생성 불가
       if (vm.inputHead.lcItemType === 'question' &&
       vm.inputBody.questionType === 'MULTIPLE_CHOICE' &&
