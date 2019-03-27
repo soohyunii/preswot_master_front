@@ -21,9 +21,9 @@
       </el-form-item>
 
       <el-form-item label="학과선택">
-        <el-select v-model="input.department_name" :disabled="input.boolean" @change="categoryTeacherChange()">
+        <el-select v-model="input.department_name" :disabled="input.boolean" @change="categoryDeptChange()">
         <!-- <el-select v-model="input.department_name" multiple placeholder="선택" 
-        @change="categoryTeacherChange()">  -->
+        @change="categoryDeptChange()">  -->
           <el-option 
             v-for="department_name in input.department_list"
             :key="department_name"
@@ -54,7 +54,7 @@
 
       <br/><br/><br/><br/><br/><br/>
       <el-form-item label="주강사선택">
-        <el-select id="teacher-choice" v-model="input.user_email_id" :disabled="input.isActive" style="width:140px;">  
+        <el-select id="teacher-choice" v-model="input.main_teacher_email_id" :disabled="input.isActive" style="width:140px;">  
           <el-option 
             v-for="element in input.teacher_list"
             :key="element.email_id"
@@ -67,7 +67,7 @@
       </el-form-item> 
 
       <el-form-item label="부강사선택">
-        <el-select id="teacher2-choice" v-model="input.user_value" multiple :disabled="input.isActive" style="width:300px;">  
+        <el-select id="teacher2-choice" v-model="input.sub_teacher_email_id" multiple :disabled="input.isActive" style="width:300px;">  
           <el-option 
             v-for="element in input.teacher_list"
             :key="element.email_id"
@@ -160,7 +160,7 @@ export default {
       end_date: new Date(),
       capacity: 0,
       description: '',
-      user_value: [],
+      sub_teacher_email_id: [],
     };
     return {
       initialInput,
@@ -169,19 +169,28 @@ export default {
   },
   async mounted() {
     const vm = this;
-    const uniNameLists = await masterService.getUniNameLists();
-    vm.input.university_list = uniNameLists.data.map(element => element.name);
+    const userArray = [];
     if (vm.isEdit) {
       const res = await masterService.getMasterClass({ class_id: vm.classId });
+      for (let i = 0; i < res.data.user_classes.length; i += 1) {
+        if (res.data.user_classes[i].user.email_id === res.data.master.email_id) {
+          res.data.user_classes.splice(i, 1);
+        }
+        userArray[i] = res.data.user_classes[i].user.email_id;
+      }
+      const uniNameLists = await masterService.getUniNameLists();
+      vm.input.university_list = uniNameLists.data.map(element => element.name);
       const readDepartmentList = await masterService.getDeptLists({
-        name: res.data.university_name });
+        university_name: res.data.university_name });
       vm.input.department_list = readDepartmentList.data.map(element => element.name);
       const readTeacherList = await masterService.getUserLists(1, res.data.university_name,
       res.data.department_name);
       vm.input.teacher_list = readTeacherList.data;
       vm.input.university_name = res.data.university_name || vm.initialInput.university_name;
       vm.input.department_name = res.data.department_name || vm.initialInput.department_name;
-      vm.$set(vm.input, 'user_email_id', res.data.user_email_id || vm.initialInput.user_email_id);
+      vm.$set(vm.input, 'main_teacher_email_id', res.data.master.email_id || vm.initialInput.master.email_id);
+      vm.$set(vm.input, 'sub_teacher_email_id', userArray ||
+        vm.initialInput.sub_teacher_email_id);
       vm.input.code = res.data.code || vm.initialInput.code;
       vm.input.day_of_week = res.data.day_of_week || vm.initialInput.day_of_week;
       vm.input.name = res.data.name || vm.initialInput.name;
@@ -226,7 +235,8 @@ export default {
                 type: 'error',
                 duration: 0,
               });
-            } else if (vm.input.isActive === false && vm.input.teacher_email_id === undefined) {
+            } else if (vm.input.isActive === false &&
+              vm.input.main_teacher_email_id === undefined) {
               vm.$notify({
                 title: '과목 수정 실패',
                 message: '강사를 선택 해주세요',
@@ -256,7 +266,8 @@ export default {
                 type: 'error',
                 duration: 0,
               });
-            } else if (vm.input.isActive === false && vm.input.user_email_id === undefined) {
+            } else if (vm.input.isActive === false &&
+              vm.input.main_teacher_email_id === undefined) {
               vm.$notify({
                 title: '과목 등록 실패',
                 message: '강사를 선택 해주세요',
@@ -285,18 +296,20 @@ export default {
         element => element.name);
       if (vm.input.university_name !== undefined && vm.input.department_name !== undefined) {
         vm.input.department_name = undefined;
-        vm.input.teacher_email_id = undefined;
+        vm.input.main_teacher_email_id = undefined;
+        vm.input.sub_teacher_email_id = [];
       }
     },
-    async categoryTeacherChange() {
+    async categoryDeptChange() {
       const vm = this;
       const teacherNameLists = await masterService.getUserLists(1,
         vm.input.university_name, vm.input.department_name);
       vm.input.teacher_list = await teacherNameLists.data;
       if (vm.input.university_name !== undefined &&
         vm.input.department_name !== undefined &&
-        vm.input.teacher_email_id !== undefined) {
-        vm.input.teacher_email_id = undefined;
+        vm.input.main_teacher_email_id !== undefined) {
+        vm.input.main_teacher_email_id = undefined;
+        vm.input.sub_teacher_email_id = [];
       }
     },
     async categoryNone() {
@@ -316,7 +329,7 @@ export default {
     'input.isActive': function handler(newVal) {
       const vm = this;
       if (newVal) {
-        vm.input.user_email_id = null;
+        vm.input.main_teacher_email_id = null;
         vm.input.day_of_week = 0;
         vm.input.start_time = null;
         vm.input.end_time = null;

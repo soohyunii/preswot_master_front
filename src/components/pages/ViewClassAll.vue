@@ -6,8 +6,15 @@
   	  <div class="class_detail">
   	  	<div class="detail_top" v-model="class_name" :list="list"> 과목명 : {{list.name}} </div>
         <div class="detail_isActive" v-if="isActive==true"> 현재 비활성화 과목입니다 </div>
-  	  	<div class="detail" v-if="isActive==false" v-model="teacher_name" :list="list"> 강사명 : {{list.teacher_email_id}} </div>
-  	  	<div class="detail" v-if="isActive==false" v-model="capacity" :list="list"> 정원 : {{list.capacity}} 명</div>
+  	  	<div class="detail" v-if="isActive==false" v-model="main_teacher_name" :list="list"> 강사명 : {{main_teacher_name}} </div>
+        <div class="detail2" v-if="isActive==false"> 부강사 : </div>
+          
+          <!-- <div class="sub_detail" v-model="userArray" v-for="sub_user in list.user_classes">{{sub_user.user.name}}</div> -->
+          <div class="sub_detail" v-model="userArray" v-for="sub_user in list.user_classes">
+            <span v-if="userArray !== []">{{sub_user.user.name}}</span>
+          </div>
+          
+  	  	<div class="detail_horizon3" v-if="isActive==false" v-model="capacity" :list="list"> 정원 : {{list.capacity}} 명</div>
         <div class="detail_horizon" v-if="isActive==false" v-model="start_date" :list="list">강의날짜 : {{list.start_date}}  ~ </div> <div class="detail_horizon2" v-model="end_date" :list="list"> {{list.end_date}} </div>
   	  	<!-- <div class="detail_horizon3" v-if="isActive==false" v-model="start_time" :list="list">강의시간: {{list.start_time}}  ~ </div> <div class="detail_horizon4" v-model="end_time" :list="list">
         {{list.end_time}}</div> -->
@@ -104,7 +111,8 @@ export default {
       student: [],
       buttonType: '',
       class_name: '',
-      teacher_name: '',
+      main_teacher_name: '',
+      sub_teacher_name: '',
       capacity: 0,
       start_date: new Date(),
       end_date: new Date(),
@@ -113,6 +121,7 @@ export default {
       location: '',
       isActive: true,
       buttonShow: false,
+      userArray: [],
     };
   },
   computed: {
@@ -124,10 +133,21 @@ export default {
   async mounted() {
     const vm = this;
     const class_id = vm.classId;
+    const userArray = [];
     const res = await masterService.getMasterClass({ class_id });
     vm.list = res.data;
     if (res.data.isActive === false) {
       vm.isActive = false;
+      if (res.data.user_classes.length !== 0) {
+        for (let i = 0; i < res.data.user_classes.length; i += 1) {
+          if (res.data.user_classes[i].user.email_id === res.data.master.email_id) {
+            vm.main_teacher_name = res.data.user_classes[i].user.name;
+            res.data.user_classes.splice(i, 1);
+          } else {
+            userArray[i] = res.data.user_classes[i].user.email_id;
+          }
+        }
+      }
     } else {
       vm.isActive = true;
     }
@@ -136,6 +156,7 @@ export default {
     async classOnChange() {
       const vm = this;
       vm.buttonType = 'classOnChange';
+      console.log(vm.userArray);
     },
     async lectureOnChange() {
       const vm = this;
@@ -222,31 +243,40 @@ export default {
     margin-bottom:5px;
   }
   .detail_horizon{
-    margin-top:6px;
+    position: relative;
+    float: left;
     width:300px;
+    height: 20px;
     margin-bottom:5px;
+    /*border: 1px solid blue;*/
   }
   .detail_horizon2{
     position: relative;
-    top: -23px;
-    left: 170px;
+    float: left;
+    left: -130px;
     width:150px;
+    /*border: 1px solid red;*/
   }
   .detail_horizon3{
-    margin-top:-15px;
-    width:470px;
+    position: relative;
+    float: left;
+    /*margin-top: 5px;*/
+    width: 100%;
     margin-bottom:5px;
-    border: 1px solid red;
+    /*border: 1px solid green;*/
   }
   .detail_horizon4{
     position:relative;
     top:-23px;
     left:125px;
     width:100px;
-    border: 1px solid blue;
   }
   .detail_bottom{
-    margin-top:-18px;
+    position: relative;
+    float: left;
+    margin-top:0px;
+    width: 470px;
+    /*border: 1px solid blue;*/
   }
   .detail_isActive{
     margin-top: 30px;
@@ -259,6 +289,23 @@ export default {
   .center-align-btn {
     margin: 0 0 0 40%;
     width: 22%;
+  }
+  .detail2 {
+    margin-top:0px;
+    /*width:220px;*/
+    /*width: 100%;*/
+    margin-bottom:5px;
+    float: left;
+    /*border: 1px solid blue;*/
+  }
+  .sub_detail {
+    /*display: inline-block;
+    position: relative;
+    width: 30%;*/
+    margin-top: 0;
+    margin-left: 5px;
+    float: left;
+    /*border: 1px solid red;*/
   }
 }
 </style>
