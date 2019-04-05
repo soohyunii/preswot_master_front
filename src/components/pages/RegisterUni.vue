@@ -10,7 +10,7 @@
     <el-form :model="input" ref="elForm" label-position="left" label-width="125px" style="max-width: 800px;" class="elForm-label">
 
       <el-form-item label="대학 코드">
-        <el-input v-model="input.code" class="subject-title"></el-input> &nbsp; <font color="red" size="5em">*</font>
+        <el-input v-model="input.code" class="subject-title"></el-input> 
       </el-form-item>
 
       <el-form-item label="대학명">

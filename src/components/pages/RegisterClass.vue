@@ -37,7 +37,6 @@
 
       <el-form-item label="과목코드">
         <el-input v-model="input.code" class="subject-title"></el-input>
-        &nbsp; <font color="red" size="5em">*</font>
       </el-form-item>
 
       <el-form-item label="과목명">
